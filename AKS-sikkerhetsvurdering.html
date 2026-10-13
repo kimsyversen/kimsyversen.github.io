@@ -1,0 +1,1369 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AKS-sikkerhetsvurdering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: én lesekolonne (maks 48rem) under en klebrig fanerad; kort brukes bare for risikoene, resten er flat tekst */
+:root{
+  --bg:#EDF1F2; --surface:#FFFFFF; --ink:#13212A; --muted:#55656F; --line:#CFD9DD;
+  --accent:#1B5B85; --accent-ink:#FFFFFF; --accent-soft:#DDEAF2;
+  --flag:#8F5E07; --flag-soft:#F6ECD8;
+  --ok:#2C7549; --ok-soft:#DCEFE3; --part:#8F5E07; --part-soft:#F6ECD8;
+  --miss:#AD3328; --miss-soft:#F7E0DD; --unk:#5F6E77; --unk-soft:#E2E8EA;
+  --code-bg:#E3E9EB;
+  --fig:#FFFFFF; --zone:#F3F6F7; --box:#FFFFFF; --ms:#E6ECEE;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1518; --surface:#162126; --ink:#E2EAED; --muted:#9BABB3; --line:#2A3A40;
+    --accent:#7CB6DC; --accent-ink:#0E1518; --accent-soft:#1C3443;
+    --flag:#E2AA45; --flag-soft:#3A2E17;
+    --ok:#6CC28C; --ok-soft:#173326; --part:#E2AA45; --part-soft:#3A2E17;
+    --miss:#F07E72; --miss-soft:#3D1F1C; --unk:#9AA7AE; --unk-soft:#243136;
+    --code-bg:#1D2A30; --fig:#111A1E; --zone:#17232A; --box:#1E2C33; --ms:#131D22; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1518; --surface:#162126; --ink:#E2EAED; --muted:#9BABB3; --line:#2A3A40;
+  --accent:#7CB6DC; --accent-ink:#0E1518; --accent-soft:#1C3443;
+  --flag:#E2AA45; --flag-soft:#3A2E17;
+  --ok:#6CC28C; --ok-soft:#173326; --part:#E2AA45; --part-soft:#3A2E17;
+  --miss:#F07E72; --miss-soft:#3D1F1C; --unk:#9AA7AE; --unk-soft:#243136;
+  --code-bg:#1D2A30; --fig:#111A1E; --zone:#17232A; --box:#1E2C33; --ms:#131D22; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:1rem/1.6 var(--body)}
+.wrap{max-width:48rem;margin:0 auto;padding-inline:16px;padding-block:28px 72px}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,7vw,3.2rem);font-weight:800;font-stretch:118%;line-height:1.02;letter-spacing:-0.01em}
+h2{font-size:1.5rem;font-weight:750;font-stretch:108%;line-height:1.2}
+h3{font-size:1.12rem;font-weight:700;font-stretch:104%;line-height:1.25}
+p{margin:0}
+code,pre{font-family:var(--mono)}
+.eyebrow{font:500 0.78rem/1.4 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:1.08rem;max-width:62ch;color:var(--ink)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font:0.82rem/1.5 var(--mono);color:var(--muted)}
+.meta b{font-weight:500;color:var(--ink)}
+header.top{display:grid;gap:14px;padding-bottom:20px}
+
+.tag{display:inline-block;font:500 0.7rem/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 5px;white-space:nowrap;vertical-align:1px}
+
+/* faner */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:26px;scrollbar-width:thin}
+.tabs button{font:600 0.95rem/1 var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px 10px 11px;white-space:nowrap;cursor:pointer}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.panel{display:grid;gap:34px}
+section{display:grid;gap:14px}
+.sub{color:var(--muted);max-width:64ch}
+
+/* kortversjon */
+.short{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
+.short li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:baseline}
+.short li::before{counter-increment:s;content:counter(s);font:700 1.3rem/1 var(--display);color:var(--accent)}
+
+/* ordliste */
+.gloss{display:grid;grid-template-columns:1fr;gap:16px 28px;margin:0}
+@media (min-width:640px){.gloss{grid-template-columns:1fr 1fr}}
+.gloss div{min-width:0;border-top:1px solid var(--line);padding-top:10px}
+.gloss dt{font:700 1rem/1.3 var(--display);font-stretch:104%}
+.gloss dd{margin:4px 0 0}
+.gloss dd.sec{font-size:0.9rem;color:var(--muted)}
+.gloss dd.sec b{color:var(--ink);font-weight:600}
+
+/* ansvarsstabel */
+.stack{display:grid;gap:6px}
+.layer{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:11px 14px;cursor:pointer}
+.layer:hover{border-color:var(--accent)}
+.layer[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.layer span:first-child{min-width:0}
+.own{font:500 0.72rem/1.6 var(--mono);letter-spacing:0.03em;border:1px solid currentColor;border-radius:3px;padding:0 6px;white-space:nowrap}
+.own.ms{color:var(--unk)} .own.plat{color:var(--accent)} .own.app{color:var(--flag)} .own.delt{color:var(--ink);border-style:dashed}
+.layer-detail{background:var(--accent-soft);border-radius:8px;padding:14px 16px;display:grid;gap:6px}
+.layer-detail h3{font-size:1rem}
+
+/* metode */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:18px;counter-reset:st}
+.steps>li{display:grid;grid-template-columns:2.4rem 1fr;gap:12px}
+.steps>li::before{counter-increment:st;content:counter(st);font:800 1.7rem/1 var(--display);font-stretch:112%;color:var(--accent)}
+.steps>li>div{min-width:0;display:grid;gap:5px}
+.out{font-size:0.88rem;color:var(--muted)}
+.out b{font-weight:600;color:var(--ink)}
+
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.count{font:500 0.85rem var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.qlist{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.qlist label{display:grid;grid-template-columns:1.4rem 1fr;gap:8px;align-items:start;padding:7px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.qlist input{margin:4px 0 0;accent-color:var(--accent);width:1rem;height:1rem}
+.qlist input:checked+span{color:var(--muted)}
+
+/* kode */
+.cmd{display:flex;align-items:flex-start;gap:6px;background:var(--code-bg);border-radius:6px;margin-top:6px}
+.cmd pre{margin:0;flex:1;min-width:0;overflow-x:auto;padding:9px 12px;font-size:0.8rem;line-height:1.55;white-space:pre}
+.cmd pre .c{color:var(--muted)}
+.copy{flex:none;font:500 0.75rem/1 var(--mono);color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 8px;margin:6px 6px 0 0;cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+.note{font-size:0.88rem;color:var(--muted)}
+
+/* topp 10 */
+.callout{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px 16px;display:grid;gap:8px}
+.callout h3{color:var(--flag);font-size:1rem}
+.callout ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
+
+.tally{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.tally-row{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;font-size:0.9rem;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:0.7rem;height:0.7rem;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--unk-soft)}
+.bar span{display:block;height:100%;transition:width .25s ease}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:8px 11px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.danger{color:var(--miss);border-color:var(--miss)}
+.msg{font-size:0.85rem;color:var(--muted)}
+textarea.out-text{width:100%;min-height:10rem;font:0.8rem/1.5 var(--mono);background:var(--code-bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.path-desc{font-size:0.93rem;color:var(--muted);min-height:1.5em}
+
+.risks{display:grid;gap:14px}
+.risk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px 14px;display:grid;gap:9px}
+.risk-head{display:flex;gap:12px;align-items:baseline}
+.rid{flex:none;font:500 0.85rem/1.6 var(--mono);color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:0 7px}
+.risk-head>div{min-width:0}
+.en{font:0.78rem/1.4 var(--mono);color:var(--muted);margin-top:2px}
+.lbl{font:500 0.72rem/1.4 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.checks{margin:0;padding-left:1.1rem;display:grid;gap:6px}
+.checks li{min-width:0}
+.finding{font-size:0.92rem}
+.paths{display:flex;flex-wrap:wrap;gap:4px}
+.paths span{font:0.72rem/1.6 var(--mono);color:var(--muted);background:var(--bg);border-radius:3px;padding:0 6px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+.seg .lbl{margin-right:2px}
+.sr{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.pill{font:600 0.8rem/1 var(--body);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;user-select:none}
+.pill:hover{border-color:var(--ink)}
+input:checked+.pill.v-ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+input:checked+.pill.v-part{background:var(--part-soft);color:var(--part);border-color:var(--part)}
+input:checked+.pill.v-miss{background:var(--miss-soft);color:var(--miss);border-color:var(--miss)}
+input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-color:var(--unk)}
+
+/* relevans */
+.cols{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:680px){.cols{grid-template-columns:1fr 1fr}}
+.col{min-width:0;display:grid;gap:10px;align-content:start}
+.col h3{display:flex;align-items:center;gap:8px}
+.col ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.col li{border-top:1px solid var(--line);padding-top:8px;font-size:0.95rem}
+.col li b{font-weight:600}
+.col.yes h3::before,.col.no h3::before{content:"";width:0.7rem;height:0.7rem;border-radius:2px;flex:none}
+.col.yes h3::before{background:var(--accent)}
+.col.no h3::before{background:var(--unk)}
+
+.sources{margin:0;padding-left:1.2rem;display:grid;gap:9px;font-size:0.93rem}
+.sources span{display:block;color:var(--muted);font-size:0.85rem}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:grid;gap:6px}
+
+/* risikokart */
+.rchips{display:flex;flex-wrap:wrap;gap:6px}
+.rchip{display:inline-flex;align-items:center;gap:6px;font:600 0.8rem/1 var(--mono);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer}
+.rchip:hover{border-color:var(--accent)}
+.rchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.dotst{width:0.6rem;height:0.6rem;border-radius:50%;background:var(--accent);flex:none}
+.dotst.st-ok{background:var(--ok)} .dotst.st-part{background:var(--part)} .dotst.st-miss{background:var(--miss)} .dotst.st-unk{background:var(--unk)}
+.dg-sum{font-size:0.95rem;max-width:75ch;min-height:3.2em}
+.fig-wide{width:min(1260px,calc(100vw - 32px));margin:0 0 0 calc((100% - min(1260px,calc(100vw - 32px))) / 2);display:grid;gap:10px;scroll-margin-top:64px}
+.dg-scroll{position:relative;overflow-x:auto;background:var(--fig);border:1px solid var(--line);border-radius:10px}
+.dg{display:block;width:100%;min-width:960px;height:auto;user-select:none;-webkit-user-select:none}
+.dg .zn{fill:var(--zone);stroke:var(--line)}
+.dg .zn-ms{fill:var(--ms);stroke:var(--unk);stroke-dasharray:6 4}
+.dg .chev{fill:var(--accent-soft)}
+.dg .chev-t{fill:var(--accent);font:700 13px var(--display)}
+.dg .own-t,.dg .ms-t{fill:var(--muted);font:500 10.5px var(--mono);letter-spacing:0.06em}
+.dg .note-t{fill:var(--muted);font:11.5px var(--body)}
+.dg .box{cursor:pointer;outline:none}
+.dg .box rect{fill:var(--box);stroke:var(--line);stroke-width:1}
+.dg .box .t{fill:var(--ink);font:700 13.5px var(--display)}
+.dg .box .s{fill:var(--muted);font:11px var(--body)}
+.dg .box:hover rect,.dg .box:focus-visible rect{stroke:var(--accent);stroke-width:1.5}
+.dg .box.hit rect{stroke:var(--accent);stroke-width:2.5}
+.dg .box.sel rect{stroke:var(--ink);stroke-width:2.5}
+.dg .ln{fill:none;stroke:var(--muted);stroke-width:1.4}
+.dg .ln.dash{stroke-dasharray:4 3}
+.dg .ah{fill:var(--muted)}
+.dg .al{fill:var(--muted);font:500 10.5px var(--mono);paint-order:stroke;stroke:var(--fig);stroke-width:4px;stroke-linejoin:round}
+.dg .mk{cursor:pointer;outline:none;transition:opacity .15s ease}
+.dg .mk rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.dg .mk text{fill:var(--accent);font:600 10.5px var(--mono);pointer-events:none}
+.dg .mk.st-ok rect{fill:var(--ok-soft);stroke:var(--ok)} .dg .mk.st-ok text{fill:var(--ok)}
+.dg .mk.st-part rect{fill:var(--part-soft);stroke:var(--part)} .dg .mk.st-part text{fill:var(--part)}
+.dg .mk.st-miss rect{fill:var(--miss-soft);stroke:var(--miss)} .dg .mk.st-miss text{fill:var(--miss)}
+.dg .mk.st-unk rect{fill:var(--unk-soft);stroke:var(--unk)} .dg .mk.st-unk text{fill:var(--ink)}
+.dg .mk:hover rect,.dg .mk:focus-visible rect{stroke-width:2}
+.dg.dim .mk{opacity:0.18}
+.dg.dim .mk.on{opacity:1}
+.dg .mk.on rect{stroke:var(--ink);stroke-width:2}
+.dg .mk.cur rect{stroke:var(--ink);stroke-width:3}
+figcaption{display:grid;gap:8px}
+.cap{font-size:0.9rem;color:var(--muted);max-width:95ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:0.82rem;color:var(--muted);align-items:center}
+.legend>span{display:inline-flex;align-items:center;gap:6px}
+.lg-mk{font:600 0.68rem/1.5 var(--mono);font-style:normal;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 4px}
+.lg-mk.st-ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.lg-mk.st-part{border-color:var(--part);background:var(--part-soft);color:var(--part)}
+.lg-mk.st-miss{border-color:var(--miss);background:var(--miss-soft);color:var(--miss)}
+.lg-mk.st-unk{border-color:var(--unk);background:var(--unk-soft);color:var(--ink)}
+.lg-ms{display:inline-block;width:1.1rem;height:0.8rem;border:1.5px dashed var(--unk);background:var(--ms);border-radius:2px}
+.lg-ew{display:inline-block;width:1.6rem;border-top:1.5px dashed var(--muted)}
+.hint{display:none}
+@media (max-width:1060px){.hint{display:block}}
+.pop{position:absolute;z-index:5;width:min(320px,82vw);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.22);padding:12px 14px;display:grid;gap:8px;font-size:0.88rem;line-height:1.5}
+.pop:focus{outline:none}
+.pop:focus-visible{outline:2px solid var(--accent)}
+.pop-h{display:flex;gap:8px;align-items:baseline}
+.pop-h strong{font:700 0.98rem/1.3 var(--display);flex:1;min-width:0}
+.pop-x{flex:none;font:500 0.72rem/1 var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:4px;padding:4px 6px;cursor:pointer}
+.pop ul{margin:0;padding-left:1rem;display:grid;gap:6px}
+.pop .btn{justify-self:start}
+.pop-st{color:var(--muted)}
+.linkbtn{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:left}
+.idtag{flex:none;font:600 0.74rem/1.6 var(--mono);color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:3px;padding:0 5px}
+.idtag.st-ok{color:var(--ok);background:var(--ok-soft);border-color:var(--ok)}
+.idtag.st-part{color:var(--part);background:var(--part-soft);border-color:var(--part)}
+.idtag.st-miss{color:var(--miss);background:var(--miss-soft);border-color:var(--miss)}
+.idtag.st-unk{color:var(--ink);background:var(--unk-soft);border-color:var(--unk)}
+.mx-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.mx{border-collapse:collapse;width:100%;min-width:700px;font-size:0.85rem}
+.mx th,.mx td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.mx thead th{font:500 0.7rem/1.4 var(--mono);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.mx tbody tr:last-child th,.mx tbody tr:last-child td{border-bottom:0}
+.mx tbody th{width:15rem}
+.mx tr.on{background:var(--accent-soft)}
+.mx-btn{display:flex;gap:8px;align-items:baseline;text-align:left;font:600 0.85rem/1.35 var(--body);color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
+.mx-btn:hover .nm{text-decoration:underline;text-underline-offset:2px}
+.risk{scroll-margin-top:64px}
+.risk.flash{outline:3px solid var(--accent);outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Veileder for nybegynnere · Azure Kubernetes Service</p>
+    <h1>AKS-sikkerhets&shy;vurdering</h1>
+    <p class="lead">Hva du må forstå, hvordan du går frem, og de ti vanligste risikoene når et plattformteam kjører Kubernetes i Azure for flere applikasjonsteam.</p>
+    <div class="meta">
+      <span><b>Rammeverk</b> OWASP Kubernetes Top 10 (2025)</span>
+      <span><b>Fasit for Azure</b> Microsoft Learn, AKS</span>
+      <span><b>Fakta sjekket</b> 8. okt. 2026</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Deler av veilederen">
+    <button type="button" role="tab" id="t-grunnlag" data-tab="grunnlag" aria-controls="p-grunnlag" aria-selected="true">1 · Grunnlag</button>
+    <button type="button" role="tab" id="t-metode" data-tab="metode" aria-controls="p-metode" aria-selected="false" tabindex="-1">2 · Fremgangsmåte</button>
+    <button type="button" role="tab" id="t-topp10" data-tab="topp10" aria-controls="p-topp10" aria-selected="false" tabindex="-1">3 · Topp 10</button>
+    <button type="button" role="tab" id="t-arkitektur" data-tab="arkitektur" aria-controls="p-arkitektur" aria-selected="false" tabindex="-1">4 · Arkitektur</button>
+    <button type="button" role="tab" id="t-relevans" data-tab="relevans" aria-controls="p-relevans" aria-selected="false" tabindex="-1">5 · Relevant eller ikke</button>
+    <button type="button" role="tab" id="t-runtime" data-tab="runtime" aria-controls="p-runtime" aria-selected="false" tabindex="-1">6 · Runtime</button>
+    <button type="button" role="tab" id="t-kilder" data-tab="kilder" aria-controls="p-kilder" aria-selected="false" tabindex="-1">Kilder</button>
+  </nav>
+
+  <!-- 1 GRUNNLAG -->
+  <div class="panel" role="tabpanel" id="p-grunnlag" aria-labelledby="t-grunnlag">
+    <section>
+      <h2>Kortversjon</h2>
+      <ol class="short">
+        <li><span>Microsoft drifter control plane i AKS. Du vurderer det plattformteamet har konfigurert rundt det, og rammene applikasjonsteamene jobber innenfor.</span></li>
+        <li><span>Hovedspørsmålet er: hva kan et appteam, en stjålet identitet eller en kompromittert pod gjøre, og hva stopper dem? <span class="tag">[inference]</span></span></li>
+        <li><span>Bruk OWASP Kubernetes Top 10 som sjekkliste og Microsofts AKS-anbefalinger som fasit for hvordan det bør se ut i Azure.</span></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Hvem eier hva</h2>
+      <p class="sub">Trykk på et lag for å se hvem som eier det og hva du ser etter. Microsofts del er hentet fra Microsoft Learn. Fordelingen mellom plattformteam og appteam er typisk, men må avklares hos dem. <span class="tag">[inference]</span></p>
+      <div class="stack" id="stack">
+        <button type="button" class="layer" data-layer="0" aria-pressed="false"><span>Pipeline og container registry</span><span class="own delt">DELT</span></button>
+        <button type="button" class="layer" data-layer="1" aria-pressed="false"><span>Workloads: images, YAML, bruk av secrets</span><span class="own app">APPTEAM</span></button>
+        <button type="button" class="layer" data-layer="2" aria-pressed="false"><span>Namespaces og tilganger per team</span><span class="own delt">DELT</span></button>
+        <button type="button" class="layer" data-layer="3" aria-pressed="false"><span>Plattformtjenester i clusteret: ingress, policy, logging</span><span class="own plat">PLATTFORM</span></button>
+        <button type="button" class="layer" data-layer="4" aria-pressed="false"><span>Noder (Azure-VM-er i deres VNet)</span><span class="own delt">DELT</span></button>
+        <button type="button" class="layer" data-layer="5" aria-pressed="true"><span>Cluster-konfigurasjon: identitet, nettverk, versjon, add-ons</span><span class="own plat">PLATTFORM</span></button>
+        <button type="button" class="layer" data-layer="6" aria-pressed="false"><span>Control plane: API-server, etcd, scheduler</span><span class="own ms">MICROSOFT</span></button>
+      </div>
+      <div class="layer-detail" id="layerDetail" aria-live="polite">
+        <h3>Cluster-konfigurasjon</h3>
+        <p>Plattformteamet bestemmer hvordan AKS-ressursen er satt opp: Entra ID-integrasjon, om API-serveren er privat, nettverksmodell, versjon og upgrade channel, og hvilke add-ons som er på.</p>
+        <p class="note">Ser etter: offentlig API-server, lokale kontoer, manglende auto-upgrade, ingen Defender eller Azure Policy.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Kubernetes på fem minutter</h2>
+      <p class="sub">Kubernetes kjører containere på en gruppe maskiner og holder dem i ønsket tilstand. Alt styres gjennom ett API. Her er begrepene du møter, og hvorfor de betyr noe for sikkerheten.</p>
+      <dl class="gloss">
+        <div><dt>Cluster</dt><dd>Control plane pluss noder.</dd><dd class="sec"><b>Sikkerhet:</b> Microsoft skriver at sikkerhetsdomenet er hele clusteret, og at Kubernetes ikke er trygt for hostile multi-tenancy.</dd></div>
+        <div><dt>API-server</dt><dd>Inngangsdøren. kubectl, pipelines og portalen snakker med den.</dd><dd class="sec"><b>Sikkerhet:</b> Den som når den med gyldig identitet, kan gjøre alt rettighetene tillater.</dd></div>
+        <div><dt>Node</dt><dd>En Azure-VM som kjører containerne.</dd><dd class="sec"><b>Sikkerhet:</b> Bryter noen ut av en container, står de på noden sammen med andre teams pods.</dd></div>
+        <div><dt>Pod</dt><dd>Minste kjørbare enhet: én eller flere containere.</dd><dd class="sec"><b>Sikkerhet:</b> Innstillingene (securityContext) avgjør om den kjører som root eller privilegert.</dd></div>
+        <div><dt>Namespace</dt><dd>Logisk avdeling, ofte én per team eller app.</dd><dd class="sec"><b>Sikkerhet:</b> Grense for tilganger og regler, men ingen hard isolasjon.</dd></div>
+        <div><dt>RBAC</dt><dd>Regler for hvem som kan gjøre hva: Role, ClusterRole og bindinger. I AKS koblet til Entra ID.</dd><dd class="sec"><b>Sikkerhet:</b> Det viktigste enkeltområdet du vurderer.</dd></div>
+        <div><dt>ServiceAccount</dt><dd>Identiteten en pod har mot Kubernetes-API-et.</dd><dd class="sec"><b>Sikkerhet:</b> En angriper i podden arver rettighetene.</dd></div>
+        <div><dt>Workload identity</dt><dd>Gir en pod en Entra-identitet uten lagret passord.</dd><dd class="sec"><b>Sikkerhet:</b> Fjerner lagrede secrets, men rollene i Azure må være smale.</dd></div>
+        <div><dt>Admission control</dt><dd>Sjekker et manifest før det slippes inn i clusteret. Pod Security Admission og Azure Policy er eksempler.</dd><dd class="sec"><b>Sikkerhet:</b> Her håndhever plattformen reglene for appteamene.</dd></div>
+        <div><dt>NetworkPolicy</dt><dd>Brannmurregler mellom pods.</dd><dd class="sec"><b>Sikkerhet:</b> Uten dem kan alle pods nå alle pods.</dd></div>
+        <div><dt>Secret</dt><dd>Kubernetes-objekt for passord og nøkler.</dd><dd class="sec"><b>Sikkerhet:</b> Bare base64-kodet i manifestet, ikke kryptert.</dd></div>
+        <div><dt>Ingress / Gateway</dt><dd>Slik når trafikk utenfra appene.</dd><dd class="sec"><b>Sikkerhet:</b> Ofte den mest eksponerte komponenten.</dd></div>
+      </dl>
+    </section>
+  </div>
+
+  <!-- 2 METODE -->
+  <div class="panel" role="tabpanel" id="p-metode" aria-labelledby="t-metode" hidden>
+    <section>
+      <h2>Seks steg</h2>
+      <ol class="steps">
+        <li><div><h3>Avgrens og forstå modellen</h3><p>Hvor mange clustere og miljøer? AKS Automatic eller Standard? Automatic har flere sikkerhetskontroller på fra start, Standard krever at plattformteamet slår dem på selv. Lag en enkel oversikt over hva plattformteamet eier og hva appteamene eier.</p><p class="out"><b>Resultat:</b> omfang og ansvarsfordeling.</p></div></li>
+        <li><div><h3>Skaff lesetilgang</h3><p>Reader i Azure på clusterets ressursgruppe, tilgang til Defender for Cloud og Azure Policy, og lesetilgang i clusteret. Unngå admin-kubeconfig.</p><p class="note">Merk: AKS-rollen «Azure Kubernetes Service RBAC Reader» kan ikke se roles, role bindings eller secrets. Avtal at plattformteamet kjører RBAC-sjekkene sammen med deg.</p><p class="out"><b>Resultat:</b> du ser det du trenger uten å kunne endre noe.</p></div></li>
+        <li><div><h3>Intervju plattformteamet</h3><p>Bruk spørsmålene under. Be om arkitekturskisse og infrastrukturkoden (Terraform eller Bicep). Den viser hvordan det er ment å være. Sammenlign skissen med risikokartet under fanen Arkitektur.</p><p class="out"><b>Resultat:</b> ønsket design, og hvor du skal lete etter avvik.</p></div></li>
+        <li><div><h3>Sjekk konfigurasjonen</h3><p>Gå gjennom topp 10: Azure-laget (portal eller az), Kubernetes-laget (kubectl), og pipeline og register. Ta minst ett appteams namespace i detalj.</p><p class="out"><b>Resultat:</b> funn med bevis.</p></div></li>
+        <li><div><h3>La verktøyene jobbe</h3><p>Defender for Cloud-anbefalinger, Azure Policy compliance, og gjerne Kubescape. Verktøy finner feilkonfigurasjon, men sjelden svakheter i tilgangsmodell og rutiner. <span class="tag">[inference]</span></p><p class="out"><b>Resultat:</b> bred dekning og kontroll av egne funn.</p></div></li>
+        <li><div><h3>Vurder og prioriter</h3><p>Gå gjennom de tre attack paths under Topp 10. Ranger funn etter konsekvens og hvor lett de kan utnyttes. Gi hvert funn en eier (plattform eller appteam) og et konkret tiltak.</p><p class="out"><b>Resultat:</b> prioritert rapport.</p></div></li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="qhead"><h2>Spørsmål til plattformteamet</h2><span class="count" id="qCount">0 av 10 avklart</span></div>
+      <p class="sub">Kryss av etter hvert. Avkryssingen lagres bare i denne nettleseren.</p>
+      <ul class="qlist" id="qlist">
+        <li><label><input type="checkbox" id="q1"><span>Bruker dere AKS Automatic eller Standard, og hvor mange clustere har dere per miljø?</span></label></li>
+        <li><label><input type="checkbox" id="q2"><span>Deler appteamene cluster? Ligger prod og test i samme cluster?</span></label></li>
+        <li><label><input type="checkbox" id="q3"><span>Hvordan får team og personer tilgang, og hvem har cluster-admin i dag?</span></label></li>
+        <li><label><input type="checkbox" id="q4"><span>Er lokale kontoer slått av, og krever dere MFA for administrasjon?</span></label></li>
+        <li><label><input type="checkbox" id="q5"><span>Hvordan deployer appteamene: pipeline, GitOps eller kubectl direkte? Med hvilken identitet?</span></label></li>
+        <li><label><input type="checkbox" id="q6"><span>Hvilke regler håndheves for workloads (Pod Security, Azure Policy), og i hvilken modus? Hvem gir unntak?</span></label></li>
+        <li><label><input type="checkbox" id="q7"><span>Er API-serveren privat eller IP-begrenset? Hvordan styres trafikk inn, mellom pods og ut?</span></label></li>
+        <li><label><input type="checkbox" id="q8"><span>Hvor ligger secrets, og hvordan får apper tilgang til Azure-ressurser?</span></label></li>
+        <li><label><input type="checkbox" id="q9"><span>Hvordan og hvor ofte oppgraderes cluster, noder og tredjepartskomponenter?</span></label></li>
+        <li><label><input type="checkbox" id="q10"><span>Hvor går audit-logger og Defender-varsler, og hvem reagerer på dem?</span></label></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Kommandoer med lesetilgang</h2>
+      <p class="sub"><code>&lt;rg&gt;</code>, <code>&lt;cluster&gt;</code> og <code>&lt;ns&gt;</code> er plassholdere. Kommandoene leser bare, de endrer ingenting. RBAC-kommandoen krever mer enn RBAC Reader.</p>
+      <div class="cmd"><pre><code><span class="c"># Versjon og tilgjengelige oppgraderinger</span>
+az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+
+<span class="c"># Hele konfigurasjonen. Se etter disableLocalAccounts,
+# aadProfile, apiServerAccessProfile, networkProfile, securityProfile</span>
+az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; -o json
+
+<span class="c"># Hvilke IP-er slipper til API-serveren?</span>
+az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; --query apiServerAccessProfile.authorizedIpRanges
+
+<span class="c"># Pod Security-nivå per namespace</span>
+kubectl get ns -L pod-security.kubernetes.io/enforce
+
+<span class="c"># Network policies i alle namespaces</span>
+kubectl get networkpolicies -A
+
+<span class="c"># Services og hvordan de er eksponert (se etter LoadBalancer)</span>
+kubectl get svc -A
+
+<span class="c"># Hvem har hvilke roller (krever tilgang til RBAC-objekter)</span>
+kubectl get clusterrolebindings,rolebindings -A -o wide</code></pre><button type="button" class="copy">Kopier</button></div>
+    </section>
+  </div>
+
+  <!-- 3 TOPP 10 -->
+  <div class="panel" role="tabpanel" id="p-topp10" aria-labelledby="t-topp10" hidden>
+    <section>
+      <h2>De ti vanligste risikoene</h2>
+      <p class="sub">Basert på OWASP Kubernetes Top 10, utgave 2025, oversatt til hva du sjekker i AKS. OWASP rangerer etter erfaring og skriver at de håper å støtte lista med innsamlede data senere. Sett status per punkt mens du jobber. Statusen lagres bare i denne nettleseren.</p>
+    </section>
+
+    <aside class="callout" id="aktuelt">
+      <h3>Aktuelt per 8. oktober 2026</h3>
+      <ul>
+        <li><b>Versjoner:</b> AKS støtter tre minor-versjoner, hver i 12 måneder fra GA. Ifølge Microsofts kalender gikk 1.33 ut av vanlig støtte i juli 2026, og 1.34 går ut i november 2026. Eldre versjoner er bare støttet med LTS, som også har sluttdatoer.</li>
+        <li><b>Ingress NGINX:</b> Prosjektet fikk vedlikehold til mars 2026, deretter ingen sikkerhetsfikser. Microsoft patcher NGINX i application routing add-on ut november 2026 og peker på Gateway API som veien videre. Egeninstallert ingress-nginx er dermed et funn. <span class="tag">[inference]</span></li>
+        <li><b>Azure Linux 2.0:</b> Ingen sikkerhetsoppdateringer siden 30. november 2025. Fra 31. oktober 2026 fjernes node-images, og node pools kan ikke skaleres.</li>
+        <li><b>Pod-managed identity:</b> Avviklet i 2022. AKS-add-on for dette var støttet til september 2025. Er det fortsatt i bruk, er det et funn.</li>
+      </ul>
+    </aside>
+
+    <div class="tally" aria-live="polite">
+      <div class="tally-row" id="tally">
+        <span><i class="dot" style="background:var(--ok)"></i>OK <b id="n-ok">0</b></span>
+        <span><i class="dot" style="background:var(--part)"></i>Delvis <b id="n-part">0</b></span>
+        <span><i class="dot" style="background:var(--miss)"></i>Mangler <b id="n-miss">0</b></span>
+        <span><i class="dot" style="background:var(--unk)"></i>Ikke vurdert <b id="n-none">11</b></span>
+      </div>
+      <div class="bar" aria-hidden="true"><span id="b-ok" style="background:var(--ok);width:0"></span><span id="b-part" style="background:var(--part);width:0"></span><span id="b-miss" style="background:var(--miss);width:0"></span><span id="b-unk" style="background:var(--unk);width:0"></span></div>
+      <div class="tools">
+        <button type="button" class="btn" id="copySummary">Kopier status som tekst</button>
+        <button type="button" class="btn" id="resetBtn">Nullstill</button>
+        <span id="resetConfirm" hidden><button type="button" class="btn danger" id="resetYes">Ja, nullstill alt</button> <button type="button" class="btn" id="resetNo">Avbryt</button></span>
+        <span class="msg" id="copyMsg" aria-live="polite"></span>
+      </div>
+      <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status som tekst"></textarea>
+    </div>
+
+    <section>
+      <h3>Filtrer etter attack path</h3>
+      <div class="chips" role="group" aria-label="Attack path">
+        <button type="button" class="chip" data-path="alle" aria-pressed="true">Alle</button>
+        <button type="button" class="chip" data-path="tilgang" aria-pressed="false">Stolen credentials</button>
+        <button type="button" class="chip" data-path="app" aria-pressed="false">Compromised workload</button>
+        <button type="button" class="chip" data-path="leveranse" aria-pressed="false">Supply chain</button>
+      </div>
+      <p class="path-desc" id="pathDesc">Viser alle punktene. Koblingen mellom attack path og punkt er min vurdering. <span class="tag">[inference]</span></p>
+    </section>
+
+    <div class="risks" id="risks">
+
+      <article class="risk" data-id="K01" data-title="Usikker workload-konfigurasjon" data-paths="app leveranse">
+        <div class="risk-head"><span class="rid">K01</span><div><h3>Usikker workload-konfigurasjon</h3><p class="en">Insecure Workload Configurations</p></div></div>
+        <p>Containere som kjører som root eller privilegert, eller som får tilgang til nodens filsystem (hostPath) eller nettverk (hostNetwork). En sårbar app kan da gi fotfeste på noden, der andre teams pods også kjører.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Hvilket Pod Security Standards-nivå håndheves per namespace: baseline eller restricted?
+            <div class="cmd"><pre><code>kubectl get ns -L pod-security.kubernetes.io/enforce</code></pre><button type="button" class="copy">Kopier</button></div></li>
+          <li>Er Azure Policy add-on eller deployment safeguards på, og håndheves reglene (enforce), ikke bare logges?</li>
+          <li>Hva sier Defender for Cloud om privilegerte containere og root?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Namespaces uten håndhevet nivå, policy som bare logger, brede unntak.</p>
+        <div class="paths"><span>Compromised workload</span><span>Supply chain</span></div>
+        <div class="seg" data-id="K01"></div>
+      </article>
+
+      <article class="risk" data-id="K02" data-title="For brede tilganger" data-paths="tilgang app">
+        <div class="risk-head"><span class="rid">K02</span><div><h3>For brede tilganger</h3><p class="en">Overly Permissive Authorization Configurations</p></div></div>
+        <p>For mange med cluster-admin, appteam med rettigheter i hele clusteret, eller service accounts som kan lese secrets eller opprette pods. Rettigheter som ser små ut, som å opprette pods, kan ofte brukes til å skaffe seg mer. <span class="tag">[inference]</span></p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Brukes Azure RBAC for Kubernetes, med AKS-rollene (Reader, Writer, Admin, Cluster Admin) tildelt på namespace-nivå?</li>
+          <li>Hvem har cluster-admin, og hvilke service accounts har brede roller?
+            <div class="cmd"><pre><code>kubectl get clusterrolebindings,rolebindings -A -o wide</code></pre><button type="button" class="copy">Kopier</button></div></li>
+          <li>Hvem har Azure-roller på selve AKS-ressursen, og hvem kan hente admin-kubeconfig?</li>
+          <li>Har deploy-pipelinen bare rettighetene den trenger? Microsoft fraråder cluster-admin for pipelines.</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Utviklergruppe med cluster-admin «midlertidig», pipeline med cluster-admin, default service account med ekstra roller.</p>
+        <div class="paths"><span>Stolen credentials</span><span>Compromised workload</span></div>
+        <div class="seg" data-id="K02"></div>
+      </article>
+
+      <article class="risk" data-id="K03" data-title="Svak håndtering av secrets" data-paths="tilgang app leveranse">
+        <div class="risk-head"><span class="rid">K03</span><div><h3>Svak håndtering av secrets</h3><p class="en">Secrets Management Failures</p></div></div>
+        <p>Passord og nøkler i git, YAML, miljøvariabler eller images. En Kubernetes Secret er bare base64-kodet i manifestet, ikke kryptert.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Hentes secrets fra Key Vault med Key Vault-provider for Secrets Store CSI Driver?</li>
+          <li>Er KMS-kryptering av secrets i etcd slått på der kravene tilsier det?</li>
+          <li>Hvem kan lese Secrets i hvert namespace?</li>
+          <li>Er lagrede nøkler erstattet med workload identity der det går?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Service principal-secret lagret som Kubernetes Secret, secrets i Helm values i git.</p>
+        <div class="paths"><span>Stolen credentials</span><span>Compromised workload</span><span>Supply chain</span></div>
+        <div class="seg" data-id="K03"></div>
+      </article>
+
+      <article class="risk" data-id="K04" data-title="Mangler policy enforcement i clusteret" data-paths="app leveranse">
+        <div class="risk-head"><span class="rid">K04</span><div><h3>Mangler policy enforcement i clusteret</h3><p class="en">Lack Of Cluster Level Policy Enforcement</p></div></div>
+        <p>Ingen admission control som stopper farlige manifest før de kjører, eller regler som bare logger. Da hviler sikkerheten på at hvert appteam alltid gjør alt riktig.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Er Azure Policy add-on på, og er AKS-policyene tildelt med effekt Deny, ikke bare Audit?</li>
+          <li>Tillates bare images fra godkjente registre, for eksempel egen Azure Container Registry?</li>
+          <li>Er deployment safeguards i Warning- eller Enforcement-modus?</li>
+          <li>Hvem kan gi unntak, og er unntakene dokumentert og tidsbegrenset?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Alt i Audit-modus, hele namespaces unntatt.</p>
+        <div class="paths"><span>Compromised workload</span><span>Supply chain</span></div>
+        <div class="seg" data-id="K04"></div>
+      </article>
+
+      <article class="risk" data-id="K05" data-title="Manglende network segmentation" data-paths="app">
+        <div class="risk-head"><span class="rid">K05</span><div><h3>Manglende network segmentation</h3><p class="en">Missing Network Segmentation Controls</p></div></div>
+        <p>Uten network policies kan alle pods nå alle pods. I AKS er egress fra clusteret ubegrenset som standard. En kompromittert pod kan da nå andre teams tjenester og sende data ut.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Finnes en default-deny-policy i hvert namespace?
+            <div class="cmd"><pre><code>kubectl get networkpolicies -A</code></pre><button type="button" class="copy">Kopier</button></div></li>
+          <li>Hvilken network policy engine er valgt (feltet networkPolicy i clusterets network profile)?</li>
+          <li>Går egress via Azure Firewall eller FQDN-filtrering?</li>
+          <li>Bruker interne tjenester intern ingress med privat IP?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Ingen network policies, fri egress til internett.</p>
+        <div class="paths"><span>Compromised workload</span></div>
+        <div class="seg" data-id="K05"></div>
+      </article>
+
+      <article class="risk" data-id="K06" data-title="Eksponerte Kubernetes-komponenter" data-paths="tilgang">
+        <div class="risk-head"><span class="rid">K06</span><div><h3>Eksponerte Kubernetes-komponenter</h3><p class="en">Overly Exposed Kubernetes Components</p></div></div>
+        <p>API-serveren i AKS har som standard en offentlig adresse. En lekket kubeconfig eller et stjålet token kan da brukes fra hvor som helst.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Er clusteret privat, eller bruker det API server VNet integration?</li>
+          <li>Er en offentlig API-server begrenset til kjente IP-adresser? Tomt svar betyr ingen begrensning, med mindre clusteret er privat. <span class="tag">[inference]</span>
+            <div class="cmd"><pre><code>az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; --query apiServerAccessProfile.authorizedIpRanges</code></pre><button type="button" class="copy">Kopier</button></div></li>
+          <li>Hvilke Services er eksponert med load balancer eller ingress, og skal de være det?
+            <div class="cmd"><pre><code>kubectl get svc -A</code></pre><button type="button" class="copy">Kopier</button></div></li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Offentlig API-server uten IP-begrensning, admin-verktøy eksponert mot internett.</p>
+        <div class="paths"><span>Stolen credentials</span></div>
+        <div class="seg" data-id="K06"></div>
+      </article>
+
+      <article class="risk" data-id="K07" data-title="Feilkonfigurerte og sårbare cluster-komponenter" data-paths="app">
+        <div class="risk-head"><span class="rid">K07</span><div><h3>Feilkonfigurerte og sårbare cluster-komponenter</h3><p class="en">Misconfigured And Vulnerable Cluster Components</p></div></div>
+        <p>Utdatert Kubernetes-versjon, upatchede noder og glemte tredjepartskomponenter som ingress controllers og operators. Utenfor støtte kommer ingen sikkerhetsfikser.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Er versjonen innenfor AKS-støtte? Se boksen «Aktuelt» over.
+            <div class="cmd"><pre><code>az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;</code></pre><button type="button" class="copy">Kopier</button></div></li>
+          <li>Hvilken auto-upgrade channel (none, patch, stable, rapid) og hvilken node OS upgrade channel er valgt?</li>
+          <li>Hvilket OS kjører node pools? Azure Linux 2.0 får ikke lenger sikkerhetsoppdateringer.</li>
+          <li>Finnes en liste over add-ons og tredjepartskomponenter, med eier og oppdateringsrutine?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Auto-upgrade av uten manuell rutine, ingress-nginx installert med Helm og glemt.</p>
+        <div class="paths"><span>Compromised workload</span></div>
+        <div class="seg" data-id="K07"></div>
+      </article>
+
+      <article class="risk" data-id="K08" data-title="Fra cluster til Azure" data-paths="app">
+        <div class="risk-head"><span class="rid">K08</span><div><h3>Fra cluster til Azure</h3><p class="en">Cluster-To-Cloud Lateral Movement</p></div></div>
+        <p>En kompromittert pod bruker nodens eller appens Azure-identitet til å nå andre Azure-ressurser. Med brede roller går skaden fra én pod til store deler av Azure-miljøet.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Brukes Microsoft Entra Workload ID? Pod-managed identity er avviklet.</li>
+          <li>Hvilke Azure-roller har clusterets kubelet identity og hver workload identity, og på hvilket nivå: ressurs, ressursgruppe eller abonnement?</li>
+          <li>Kan pods nå metadata service (IMDS) på 169.254.169.254? OWASP anbefaler å blokkere den med network policy.</li>
+          <li>Ligger det statiske service principal-secrets i clusteret?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Workload identity med Contributor på hele abonnementet.</p>
+        <div class="paths"><span>Compromised workload</span></div>
+        <div class="seg" data-id="K08"></div>
+      </article>
+
+      <article class="risk" data-id="K09" data-title="Svak autentisering" data-paths="tilgang">
+        <div class="risk-head"><span class="rid">K09</span><div><h3>Svak autentisering</h3><p class="en">Broken Authentication Mechanisms</p></div></div>
+        <p>Delte admin-kubeconfig-filer, lokale kontoer slått på, langlivede tokens eller manglende MFA. Statiske admin-credentials går utenom Entra ID, og dermed utenom MFA og Conditional Access.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Er Entra ID-integrasjon på, og er lokale kontoer av? Se etter <code>disableLocalAccounts: true</code> i <code>az aks show</code>.</li>
+          <li>Krever Conditional Access MFA for de som administrerer clusterne?</li>
+          <li>Bruker pipelinen workload identity federation i stedet for lagrede secrets?</li>
+          <li>Får brukere «Cluster User»-rollen (henter kubeconfig, gir ingen rettigheter i clusteret alene) i stedet for admin-kubeconfig?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Lokale kontoer på, admin-kubeconfig delt i et team eller lagret i en pipeline.</p>
+        <div class="paths"><span>Stolen credentials</span></div>
+        <div class="seg" data-id="K09"></div>
+      </article>
+
+      <article class="risk" data-id="K10" data-title="Utilstrekkelig logging og overvåking" data-paths="tilgang app leveranse">
+        <div class="risk-head"><span class="rid">K10</span><div><h3>Utilstrekkelig logging og overvåking</h3><p class="en">Inadequate Logging And Monitoring</p></div></div>
+        <p>Ingen audit-logg fra API-serveren, ingen varsler, eller ingen som følger opp. Da ser dere ikke misbruk, og kan ikke etterforske i ettertid.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Sender diagnostic settings på AKS-ressursen <code>kube-audit</code>, <code>kube-audit-admin</code> og <code>guard</code> til Log Analytics?</li>
+          <li>Er Defender for Containers på, for runtime-deteksjon?</li>
+          <li>Havner varslene i SOC eller SIEM, og finnes en plan for å håndtere dem?</li>
+          <li>Hvor lenge lagres loggene, og hvem kan slette dem?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Diagnostikk ikke satt opp, Defender på, men ingen leser varslene.</p>
+        <div class="paths"><span>Stolen credentials</span><span>Compromised workload</span><span>Supply chain</span></div>
+        <div class="seg" data-id="K10"></div>
+      </article>
+
+      <article class="risk" data-id="SC" data-title="Supply chain: images og pipeline" data-paths="leveranse">
+        <div class="risk-head"><span class="rid">Ekstra</span><div><h3>Supply chain: images og pipeline</h3><p class="en">Supply Chain Vulnerabilities (K02 i 2022-utgaven)</p></div></div>
+        <p>Images fra ukjente kilder, sårbare biblioteker, eller en pipeline mange kan endre. Punktet var K02 i 2022-lista og har ikke egen plass i 2025-utgaven, men Microsoft behandler det som et eget område.</p>
+        <div><span class="lbl">Sjekk i AKS</span></div>
+        <ul class="checks">
+          <li>Skannes images i CI og løpende i registeret, for eksempel med Defender for Containers?</li>
+          <li>Tillates bare images fra godkjente registre?</li>
+          <li>Signeres og verifiseres images? Microsoft nevner Notary v2.</li>
+          <li>Er Image Cleaner på, for å fjerne ubrukte sårbare images fra nodene?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typiske funn</span>Images rett fra offentlige registre i produksjon, ingen skanning etter deployment.</p>
+        <div class="paths"><span>Supply chain</span></div>
+        <div class="seg" data-id="SC"></div>
+      </article>
+    </div>
+  </div>
+
+  <!-- 4 ARKITEKTUR -->
+  <div class="panel" role="tabpanel" id="p-arkitektur" aria-labelledby="t-arkitektur" hidden>
+    <section>
+      <h2>Risikokart over arkitekturen</h2>
+      <p class="sub">En typisk AKS-plattform med flere appteam, fra kode til drift. Hver markør viser hvor en risiko oppstår eller må kontrolleres. Fargen følger statusen du setter under Topp 10.</p>
+      <div class="rchips" id="dgChips" role="group" aria-label="Vis risiko i diagrammet"></div>
+      <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
+    </section>
+
+    <figure class="fig-wide" id="dgFig">
+      <div class="dg-scroll" id="dgScroll">
+        <svg class="dg" id="dg" viewBox="0 52 1240 700" role="group" aria-labelledby="dgCap"></svg>
+        <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
+      </div>
+      <figcaption id="dgCap">
+        <span class="cap">Verdikjeden går fra kode (1) via tilgang og styring (2) til kjøring i clusteret (3) og Azure-tjenester og internett (4). Overvåking (5) gjelder alle lag. Trykk på en markør for å se hvorfor risikoen ligger der, eller på en boks for å se alle risikoene i den.</span>
+        <span class="legend">
+          <span><i class="lg-mk">K01</i>Ikke vurdert</span>
+          <span><i class="lg-mk st-ok">K01</i>OK</span>
+          <span><i class="lg-mk st-part">K01</i>Delvis</span>
+          <span><i class="lg-mk st-miss">K01</i>Mangler</span>
+          <span><i class="lg-mk st-unk">K01</i>Ukjent</span>
+          <span><i class="lg-ms"></i>Microsoft drifter</span>
+          <span><i class="lg-ew"></i>Øst-vest-trafikk mellom namespaces</span>
+          <span>SC = supply chain (ekstra punkt)</span>
+        </span>
+      </figcaption>
+    </figure>
+    <p class="note hint">Diagrammet er bredt. Dra sideveis i det, eller bruk tabellen under.</p>
+
+    <section>
+      <h2>Risiko per del av verdikjeden</h2>
+      <p class="sub">Samme plassering som i diagrammet. Trykk på en risiko for å vise den i diagrammet.</p>
+      <div class="mx-wrap">
+        <table class="mx">
+          <thead><tr><th scope="col">Risiko</th><th scope="col">1 · Kode og bygg</th><th scope="col">2 · Tilgang og styring</th><th scope="col">3 · Kjøring</th><th scope="col">4 · Azure og internett</th><th scope="col">5 · Overvåking</th></tr></thead>
+          <tbody id="dgMatrix"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h3>Før du bruker kartet</h3>
+      <p class="sub">Dette er en typisk referansearkitektur, ikke plattformteamets faktiske oppsett. Vanlige avvik er GitOps, der en agent i clusteret henter fra git i stedet for at pipelinen deployer, Application Gateway for Containers som ingress utenfor clusteret, og egne clustere per miljø. Be om deres arkitekturskisse og tegn risikoene inn der de hører hjemme hos dem.</p>
+      <p class="sub">Plasseringen av risikoene og eierskapet per sone er min vurdering ut fra OWASP og Microsoft. <span class="tag">[inference]</span></p>
+    </section>
+  </div>
+
+  <!-- 5 RELEVANS -->
+  <div class="panel" role="tabpanel" id="p-relevans" aria-labelledby="t-relevans" hidden>
+    <section>
+      <h2>Hva er relevant, og hva er det ikke?</h2>
+      <p class="sub">Microsoft skriver at de drifter control plane, mens kunden har ansvar for workloads, nodekonfigurasjon, nettverk, identitet og data. Bruk tiden der kunden faktisk kan gjøre feil.</p>
+      <div class="cols">
+        <div class="col yes">
+          <h3>Bruk tiden her</h3>
+          <ul>
+            <li><b>Identitet og tilgang:</b> Entra ID, RBAC, lokale kontoer, pipeline-identitet.</li>
+            <li><b>Eksponering:</b> API-server, ingress og load balancers.</li>
+            <li><b>Nettverk:</b> mellom pods og ut av clusteret (egress).</li>
+            <li><b>Regler for workloads:</b> Pod Security og Azure Policy, og om de faktisk håndheves.</li>
+            <li><b>Secrets</b> og appenes Azure-identiteter.</li>
+            <li><b>Livssyklus:</b> versjoner, upgrade channels, add-ons og tredjepartskomponenter.</li>
+            <li><b>Oppdagelse:</b> logging, Defender og hvem som reagerer.</li>
+            <li><b>Images og pipeline.</b></li>
+            <li><b>Skille mellom appteam:</b> sikkerhetsdomenet er hele clusteret, så namespaces alene skiller ikke team trygt.</li>
+          </ul>
+        </div>
+        <div class="col no">
+          <h3>Mindre relevant nå</h3>
+          <ul>
+            <li><b>Herding og patching av control plane</b> (API-server, etcd, scheduler): Microsoft drifter det.</li>
+            <li><b>CIS-sjekker av control plane-noder og -filer:</b> ikke synlige for kunden i AKS. <span class="tag">[inference]</span></li>
+            <li><b>Fysisk sikkerhet og hypervisor:</b> Microsoft.</li>
+            <li><b>FIPS node pools:</b> bare ved regulatoriske krav, som FedRAMP.</li>
+            <li><b>Confidential Containers og Pod Sandboxing:</b> i preview, bare for spesielle isolasjonsbehov.</li>
+            <li><b>Service mesh og mTLS-detaljer:</b> ta senere, hvis de bruker det. <span class="tag">[inference]</span></li>
+            <li><b>Windows node pools:</b> bare hvis de finnes.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Sjekk modus først: i AKS Automatic er blant annet Azure RBAC, workload identity, deployment safeguards og Pod Security baseline i enforce-modus forhåndskonfigurert. Da flytter vurderingen seg mot unntak og appteamenes bruk.</p>
+    </section>
+  </div>
+
+  <!-- 6 RUNTIME -->
+  <div class="panel" role="tabpanel" id="p-runtime" aria-labelledby="t-runtime" hidden>
+    <section>
+      <h2>Runtime detection, kort fortalt</h2>
+      <p class="sub">Runtime detection overvåker det som skjer i en kjørende container: prosesser, systemkall, filtilgang, nettverk og kall mot Kubernetes API-et. Det supplerer bildeskanning og admission control, som bare ser konfigurasjon og image før oppstart. Det er kontrollen som kan oppdage en angriper som allerede er inne.</p>
+    </section>
+
+    <section>
+      <h2>Seks steg for å innføre det</h2>
+      <ol class="steps">
+        <li><div><h3>Start med trusselscenarioene</h3><p>Knytt dem til risikokortene: shell i container, privilegerte pods og hostPath (K01), lesing av secrets (K03), og kall mot IMDS for å hente nodens identitet (K08). Hvert scenario gir et konkret signal du må kunne se.</p><p class="out"><b>Resultat:</b> 5–10 scenarioer med observerbare signaler.</p></div></li>
+        <li><div><h3>Kartlegg baseline per workload</h3><p>Hvilke prosesser, utgående mål og filstier er normale for hver app? Uten baseline blir alt avvik, og varslene drukner. Start med appene som har størst eksponering.</p><p class="out"><b>Resultat:</b> normal atferd per workload.</p></div></li>
+        <li><div><h3>Velg datakilder</h3><p>Kernel-sensorer (typisk eBPF) på nodene gir prosess- og nettverkssignaler. Kubernetes audit-logg gir API-hendelser. Defender for Containers kan gi runtime-varsler, men hva som dekkes må sjekkes mot dokumentasjonen før dere velger. <span class="tag">[unverified]</span></p><p class="out"><b>Resultat:</b> dekningskart: hvilket scenario fanges av hvilken kilde.</p></div></li>
+        <li><div><h3>Kjør i monitor-modus først</h3><p>Varsle uten å blokkere i én til to uker. Tun reglene mot baseline. Slå på blokkering først når falske positiver er kjente og få.</p><p class="out"><b>Resultat:</b> regelsett tunet mot egne workloads.</p></div></li>
+        <li><div><h3>Simuler angrep i et testmiljø</h3><p>Kjør kontrollerte handlinger: <code>kubectl exec</code> med shell, kall mot 169.254.169.254 fra en vanlig pod, mount av hostPath, og skriving til <code>/etc</code>. Mål om alarm går, hvor raskt, og om varselet er godt nok til å handle på. Dette er den viktigste testen.</p><p class="out"><b>Resultat:</b> testresultat per scenario, med tid til varsel.</p></div></li>
+        <li><div><h3>Definer driftsmodell før innføring</h3><p>Hvem triagerer varslene, i hvilket SIEM, hvor lenge logger beholdes, og hva er responsen: isolere pod, ta bilde av node, varsle appteamet. Mål falske positiver per uke og tid fra hendelse til varsel.</p><p class="out"><b>Resultat:</b> eier, responsrutine og nøkkeltall.</p></div></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Hva kan oppdages?</h2>
+      <p class="sub">Skillet er hvor sikkert hendelsen i seg selv kan observeres. Om den var ondsinnet, må du avgjøre med kontekst. <span class="tag">[inference]</span></p>
+      <div class="cols">
+        <div class="col yes">
+          <h3>Sikkert observerbart</h3>
+          <ul>
+            <li><b>Shell eller exec</b> inn i en container (audit-logg og prosessobservasjon).</li>
+            <li><b>Binær som ikke fantes i imaget</b> og kjøres.</li>
+            <li><b>Endring av kritiske filer</b>, nye setuid-binærer.</li>
+            <li><b>Nye rolebindings</b> eller <code>get</code> på secrets i API-et.</li>
+            <li><b>Kontakt med kjente ondsinnede mål</b>, hvis threat intel er oppdatert.</li>
+            <li><b>Privilegerte pods, hostPath og hostNetwork</b>, som også kan sjekkes statisk.</li>
+          </ul>
+        </div>
+        <div class="col no">
+          <h3>Falske positiver eller krever kontekst</h3>
+          <ul>
+            <li><b>Shell under legitim feilsøking</b> (kubectl debug, driftsarbeid).</li>
+            <li><b>Oppstartskript, cron-jobber, health checks</b> og package managers ved normal drift.</li>
+            <li><b>Kall mot IMDS</b> fra apper som bruker managed identity. <span class="tag">[inference]</span></li>
+            <li><b>Sidecars, init containers og DaemonSets</b> som ser ut som uventet prosess eller nettverk på noden.</li>
+            <li><b>Lasttest og service discovery</b> som ligner portscan.</li>
+            <li><b>Høy CPU eller krypto-bruk</b> i legitime apper.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">En enkelt regelutløsning uten baseline eller kontekst er ikke nok til å konkludere. Den gir et spørsmål til triage, ikke et funn.</p>
+    </section>
+
+    <section>
+      <h2>Sjekk det statiske først</h2>
+      <p class="sub">Privilegerte oppsett er enklere å finne i manifestene enn i runtime. Kommandoen under er skrevet for å kjøre med lesetilgang og krever <code>jq</code>. Den er ikke kjørt mot et cluster her. <span class="tag">[unverified]</span></p>
+      <div class="cmd"><pre><code><span class="c"># Pods med hostNetwork, hostPID, privilegert container eller hostPath</span>
+kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or any(.spec.containers[]?; .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Kopier</button></div>
+      <p class="note">Verifisering: funksjonene i Defender for Containers, Falco og Tetragon er ikke kontrollert mot dokumentasjonen her. Start med <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction" target="_blank" rel="noopener">Introduction to Microsoft Defender for Containers</a> før dere velger verktøy.</p>
+    </section>
+  </div>
+
+  <!-- KILDER -->
+  <div class="panel" role="tabpanel" id="p-kilder" aria-labelledby="t-kilder" hidden>
+    <section>
+      <h2>Kilder</h2>
+      <p class="sub">Alle åpnet 8. oktober 2026. Datoer i parentes er sidens egen «sist oppdatert».</p>
+      <ol class="sources">
+        <li><a href="https://kubernetes-top10.owasp.org/" target="_blank" rel="noopener">OWASP Kubernetes Top Ten</a><span>2025- og 2022-lista. Detaljer fra K06, K07 og K08.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/secure-aks" target="_blank" rel="noopener">Secure your Azure Kubernetes Service (AKS) deployment</a><span>Microsoft Learn (18.09.2026). Anbefalinger per område, standardinnstillinger for API-server og egress.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">Security concepts for applications and clusters in AKS</a><span>Microsoft Learn (11.09.2026). Ansvar for control plane, AKS Automatic, multi-tenancy, secrets, Azure Linux 2.0.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">Supported Kubernetes versions in AKS</a><span>Microsoft Learn (18.09.2026). Støttepolicy, kalender og LTS.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-cluster-authorization" target="_blank" rel="noopener">Cluster authorization concepts</a><span>Microsoft Learn. AKS RBAC-rollene og hva Reader ikke kan se.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges" target="_blank" rel="noopener">API server authorized IP ranges</a><span>Microsoft Learn. Kommandoen for å lese IP-begrensningen.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/local-accounts" target="_blank" rel="noopener">Manage local accounts</a><span>Microsoft Learn. Feltet disableLocalAccounts.</span></li>
+        <li><a href="https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/" target="_blank" rel="noopener">Ingress NGINX Retirement: What You Need to Know</a><span>Kubernetes-bloggen, 11.11.2025.</span></li>
+        <li><a href="https://learn.microsoft.com/azure/aks/concepts-network-ingress" target="_blank" rel="noopener">Ingress in AKS</a> og <a href="https://blog.aks.azure.com/2025/11/13/ingress-nginx-update" target="_blank" rel="noopener">AKS-bloggen om Ingress-NGINX</a><span>Microsofts støtte for application routing ut november 2026.</span></li>
+        <li><a href="https://docs.azure.cn/en-us/aks/use-azure-ad-pod-identity" target="_blank" rel="noopener">Use Microsoft Entra pod-managed identities in AKS</a><span>Microsoft-dokumentasjon (Azure China-speil). Avvikling og støtte til september 2025.</span></li>
+      </ol>
+    </section>
+  </div>
+
+  <footer>
+    <p>Merket <span class="tag">[inference]</span> er min vurdering, ikke hentet direkte fra en kilde. Påstander om AKS, OWASP og datoer er sjekket mot kildene over. Begrepsforklaringene er generell Kubernetes-kunnskap.</p>
+    <p>az-kommandoene er hentet fra Microsoft Learn. kubectl-kommandoene er vanlige standardkommandoer, men ingen av kommandoene er kjørt mot et cluster her. <span class="tag">[unverified]</span></p>
+    <p>Datoer og versjoner endrer seg. Sjekk «Aktuelt»-boksen mot kildene før du bruker den i en rapport.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var store = {
+    get: function(k, d){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+
+  /* Faner */
+  var tabs = $$('[role="tab"]');
+  var ids = tabs.map(function(t){ return t.getAttribute('data-tab'); });
+  function show(id, focus){
+    if (ids.indexOf(id) < 0) id = 'grunnlag';
+    tabs.forEach(function(t){
+      var on = t.getAttribute('data-tab') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+      if (on){
+        var bar = t.parentNode;
+        if (t.offsetLeft < bar.scrollLeft || t.offsetLeft + t.offsetWidth > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = Math.max(0, t.offsetLeft - 12);
+      }
+    });
+    ids.forEach(function(x){ var p = document.getElementById('p-' + x); if (p) p.hidden = (x !== id); });
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    store.set('aks-tab', id);
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ show(t.getAttribute('data-tab')); });
+    t.addEventListener('keydown', function(e){
+      var n = null;
+      if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+      if (n !== null){ e.preventDefault(); show(tabs[n].getAttribute('data-tab'), true); }
+    });
+  });
+  var start = (location.hash || '').replace('#', '');
+  var prevTab = store.get('aks-tab', null);
+  var archSeen = store.get('aks-arch-seen', false);
+  /* Den som har brukt siden før, ser den nye fanen én gang */
+  show(ids.indexOf(start) >= 0 ? start : (prevTab && !archSeen ? 'arkitektur' : (prevTab || 'grunnlag')));
+  store.set('aks-arch-seen', true);
+
+  /* Ansvarsstabel */
+  var layers = [
+    { t: 'Pipeline og container registry', d: 'Ofte eier plattformteamet container registry og pipeline-malene, mens appteamene bygger egne images.', s: 'Ser etter: images fra offentlige registre, ingen skanning, pipeline med cluster-admin eller lagrede secrets.' },
+    { t: 'Workloads', d: 'Appteamene skriver YAML eller Helm-charts, velger images og bestemmer hvordan appen bruker secrets, innenfor plattformens regler.', s: 'Ser etter: root og privilegerte containere, secrets i YAML, manglende network policies for egen app.' },
+    { t: 'Namespaces og tilganger', d: 'Plattformteamet lager namespaces, tilganger og regler. Appteamene jobber innenfor dem.', s: 'Ser etter: appteam med rettigheter i hele clusteret, prod og test i samme namespace, svake skiller mellom team.' },
+    { t: 'Plattformtjenester i clusteret', d: 'Felles komponenter plattformteamet drifter: ingress eller gateway, Azure Policy, logging, Secrets Store CSI Driver, GitOps-agent.', s: 'Ser etter: utdaterte komponenter som ingress-nginx, policyer bare i audit-modus, manglende eier.' },
+    { t: 'Noder', d: 'Microsoft leverer node-images med sikkerhetsoppdateringer. Plattformteamet velger OS, upgrade channel og når oppdateringer rulles ut.', s: 'Ser etter: node OS upgrade channel av, Azure Linux 2.0, SSH-tilgang som ikke trengs.' },
+    { t: 'Cluster-konfigurasjon', d: 'Plattformteamet bestemmer hvordan AKS-ressursen er satt opp: Entra ID-integrasjon, om API-serveren er privat, nettverksmodell, versjon og upgrade channel, og hvilke add-ons som er på.', s: 'Ser etter: offentlig API-server, lokale kontoer, manglende auto-upgrade, ingen Defender eller Azure Policy.' },
+    { t: 'Control plane', d: 'Microsoft drifter, herder og patcher API-server, etcd og scheduler. Hvert cluster har sitt eget control plane.', s: 'Du vurderer ikke selve control plane, bare hvem som når det og med hvilke rettigheter (se cluster-konfigurasjon).' }
+  ];
+  var layerBtns = $$('.layer');
+  var detail = $('#layerDetail');
+  function pick(i){
+    layerBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-layer') === String(i) ? 'true' : 'false'); });
+    var L = layers[i];
+    detail.innerHTML = '';
+    var h = document.createElement('h3'); h.textContent = L.t;
+    var p = document.createElement('p'); p.textContent = L.d;
+    var n = document.createElement('p'); n.className = 'note'; n.textContent = L.s;
+    detail.appendChild(h); detail.appendChild(p); detail.appendChild(n);
+  }
+  layerBtns.forEach(function(b){ b.addEventListener('click', function(){ pick(Number(b.getAttribute('data-layer'))); }); });
+
+  /* Spørsmål */
+  var qs = $$('#qlist input');
+  var qState = store.get('aks-q', {});
+  function qCount(){
+    var n = qs.filter(function(q){ return q.checked; }).length;
+    $('#qCount').textContent = n + ' av ' + qs.length + ' avklart';
+  }
+  qs.forEach(function(q){
+    q.checked = !!qState[q.id];
+    q.addEventListener('change', function(){ qState[q.id] = q.checked; store.set('aks-q', qState); qCount(); });
+  });
+  qCount();
+
+  /* Kopier */
+  function selectNode(node){
+    try { var r = document.createRange(); r.selectNodeContents(node); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch(e){}
+  }
+  function copyText(text, onOk, onFail){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(onOk, onFail);
+    } else { onFail(); }
+  }
+  $$('.cmd .copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code = btn.parentNode.querySelector('code');
+      copyText(code.textContent, function(){
+        btn.textContent = 'Kopiert';
+        setTimeout(function(){ btn.textContent = 'Kopier'; }, 1600);
+      }, function(){
+        selectNode(code);
+        btn.textContent = 'Merket, kopier selv';
+        setTimeout(function(){ btn.textContent = 'Kopier'; }, 2400);
+      });
+    });
+  });
+
+  /* Status */
+  var OPTS = [['ok','OK'],['part','Delvis'],['miss','Mangler'],['unk','Ukjent']];
+  var LABEL = { ok:'OK', part:'Delvis', miss:'Mangler', unk:'Ukjent' };
+  var status = store.get('aks-status', {});
+  var segs = $$('.seg');
+  segs.forEach(function(seg){
+    var id = seg.getAttribute('data-id');
+    var lab = document.createElement('span'); lab.className = 'lbl'; lab.textContent = 'Status';
+    seg.setAttribute('role', 'radiogroup');
+    seg.setAttribute('aria-label', 'Status for ' + id);
+    seg.appendChild(lab);
+    OPTS.forEach(function(o){
+      var inp = document.createElement('input');
+      inp.type = 'radio'; inp.className = 'sr'; inp.name = 'st-' + id; inp.id = 'st-' + id + '-' + o[0]; inp.value = o[0];
+      if (status[id] === o[0]) inp.checked = true;
+      var l = document.createElement('label');
+      l.htmlFor = inp.id; l.className = 'pill v-' + o[0]; l.textContent = o[1];
+      inp.addEventListener('change', function(){ status[id] = o[0]; store.set('aks-status', status); tally(); });
+      seg.appendChild(inp); seg.appendChild(l);
+    });
+  });
+  function tally(){
+    var total = segs.length, c = { ok:0, part:0, miss:0, unk:0 };
+    segs.forEach(function(s){ var v = status[s.getAttribute('data-id')]; if (c.hasOwnProperty(v)) c[v]++; });
+    var none = total - c.ok - c.part - c.miss - c.unk;
+    $('#n-ok').textContent = c.ok;
+    $('#n-part').textContent = c.part;
+    $('#n-miss').textContent = c.miss;
+    $('#n-none').textContent = none + c.unk;
+    ['ok','part','miss'].forEach(function(k){ $('#b-' + k).style.width = (c[k] / total * 100) + '%'; });
+    $('#b-unk').style.width = (c.unk / total * 100) + '%';
+    paintDiagram();
+  }
+  tally();
+
+  function summary(){
+    var d = new Date();
+    var lines = ['AKS-sikkerhetsvurdering, status ' + d.toLocaleDateString('nb-NO'), ''];
+    segs.forEach(function(s){
+      var id = s.getAttribute('data-id');
+      var art = s.closest('.risk');
+      var name = art ? art.getAttribute('data-title') : id;
+      lines.push((id === 'SC' ? 'Ekstra' : id) + ' ' + name + ': ' + (LABEL[status[id]] || 'Ikke vurdert'));
+    });
+    var n = qs.filter(function(q){ return q.checked; }).length;
+    lines.push('', 'Spørsmål til plattformteamet: ' + n + ' av ' + qs.length + ' avklart');
+    return lines.join('\n');
+  }
+  var out = $('#summaryOut'), msg = $('#copyMsg');
+  $('#copySummary').addEventListener('click', function(){
+    var text = summary();
+    copyText(text, function(){
+      out.hidden = true; msg.textContent = 'Kopiert til utklippstavlen.';
+    }, function(){
+      out.value = text; out.hidden = false; out.focus(); out.select();
+      msg.textContent = 'Teksten er merket. Kopier den selv.';
+    });
+  });
+  $('#resetBtn').addEventListener('click', function(){ $('#resetConfirm').hidden = false; $('#resetBtn').hidden = true; });
+  $('#resetNo').addEventListener('click', function(){ $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false; });
+  $('#resetYes').addEventListener('click', function(){
+    status = {}; store.set('aks-status', status);
+    $$('.seg input').forEach(function(i){ i.checked = false; });
+    tally();
+    $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false;
+    msg.textContent = 'Statusen er nullstilt.';
+  });
+
+  /* Filter */
+  var DESC = {
+    alle: 'Viser alle punktene. Koblingen mellom attack path og punkt er min vurdering.',
+    tilgang: 'Stolen credentials: en utviklers laptop, et token eller pipeline-credentials havner hos en angriper, som går rett på API-serveren.',
+    app: 'Compromised workload: en angriper utnytter en feil i en app og får kjøre kode i en pod. Spørsmålet er hvor langt de kommer derfra.',
+    leveranse: 'Supply chain: et ondsinnet eller sårbart image, eller en endret pipeline, deployes til clusteret.'
+  };
+  var chips = $$('.chip');
+  var desc = $('#pathDesc');
+  chips.forEach(function(ch){
+    ch.addEventListener('click', function(){
+      var p = ch.getAttribute('data-path');
+      chips.forEach(function(c){ c.setAttribute('aria-pressed', c === ch ? 'true' : 'false'); });
+      $$('.risk').forEach(function(r){
+        r.hidden = !(p === 'alle' || (' ' + r.getAttribute('data-paths') + ' ').indexOf(' ' + p + ' ') >= 0);
+      });
+      desc.textContent = DESC[p] + ' ';
+      var tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = '[inference]';
+      desc.appendChild(tag);
+    });
+  });
+
+  /* Risikokart */
+  var NS = 'http://www.w3.org/2000/svg';
+  var dgReady = false;
+  var dgSvg = document.getElementById('dg');
+  var pop = document.getElementById('dgPop');
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var RISKS = ['K01','K02','K03','K04','K05','K06','K07','K08','K09','K10','SC'];
+  var ST = ['st-none','st-ok','st-part','st-miss','st-unk'];
+
+  var ZONES = [
+    { x:20,   y:64,  w:230,  h:508, n:'1', t:'Kode og bygg',          o:'APPTEAM OG PLATTFORM' },
+    { x:280,  y:64,  w:280,  h:508, n:'2', t:'Tilgang og styring',    o:'PLATTFORM' },
+    { x:590,  y:64,  w:420,  h:508, n:'3', t:'Kjøring i clusteret',   o:'PLATTFORM OG APPTEAM' },
+    { x:1040, y:64,  w:180,  h:508, n:'4', t:'Azure og internett',    o:'DELT' },
+    { x:20,   y:604, w:1200, h:136, n:'5', t:'Overvåking og respons', o:'PLATTFORM OG SOC', cw:280, note:'Samler logger og varsler fra alle lag' }
+  ];
+  /* st = steg i verdikjeden (1 til 5) */
+  var COMP = {
+    dev:   { x:36,   y:116, w:198, h:52,  st:1, t:'Utviklere',          s:'Appteam skriver kode og YAML' },
+    git:   { x:36,   y:194, w:198, h:76,  st:1, t:'Git-repo',           s:'Kode, YAML, Helm values' },
+    ci:    { x:36,   y:290, w:198, h:76,  st:1, t:'CI/CD-pipeline',     s:'Bygger, skanner, deployer' },
+    acr:   { x:36,   y:400, w:198, h:76,  st:1, t:'Container registry', s:'Azure Container Registry' },
+    entra: { x:296,  y:116, w:116, h:80,  st:2, t:'Entra ID',           s:'Pålogging, MFA' },
+    arm:   { x:428,  y:116, w:116, h:80,  st:2, t:'Azure (ARM)',        s:'AKS-ressursen' },
+    api:   { x:300,  y:276, w:240, h:76,  st:2, t:'API server',         s:'Alle kall til clusteret' },
+    adm:   { x:300,  y:372, w:240, h:76,  st:2, t:'Admission control',  s:'Pod Security, Azure Policy' },
+    etcd:  { x:300,  y:468, w:240, h:72,  st:2, t:'etcd',               s:'Cluster-tilstand og Secrets' },
+    nsA:   { x:606,  y:116, w:188, h:96,  st:3, t:'Namespace: team A',  s:'Pods, ServiceAccounts', s2:'Secrets, NetworkPolicy', short:'Namespace' },
+    nsB:   { x:606,  y:252, w:188, h:76,  st:3, t:'Namespace: team B',  s:'Samme oppsett per team' },
+    ing:   { x:828,  y:116, w:166, h:84,  st:3, t:'Ingress / Gateway',  s:'Trafikk inn' },
+    egress:{ x:828,  y:252, w:166, h:84,  st:3, t:'Egress-kontroll',    s:'Azure Firewall eller NAT' },
+    plat:  { x:606,  y:360, w:388, h:76,  st:3, t:'Plattformkomponenter', s:'Add-ons, operators, CSI Driver, Defender-komponenter' },
+    nodes: { x:606,  y:460, w:388, h:76,  st:3, t:'Node pools',         s:'Azure-VM-er i ditt VNet: OS-image, kubelet, IMDS' },
+    ew:    { link:true, mx:683, my:223,  st:3, t:'Øst-vest-trafikk mellom namespaces', short:'Øst-vest-trafikk' },
+    inet:  { x:1056, y:116, w:148, h:220, st:4, t:'Internett',          s:'Brukere inn', s2:'Eksterne API-er ut' },
+    kv:    { x:1056, y:360, w:148, h:76,  st:4, t:'Key Vault',          s:'Secrets og nøkler' },
+    data:  { x:1056, y:460, w:148, h:76,  st:4, t:'Data-tjenester',     s:'SQL, Storage o.l.' },
+    logs:  { x:36,   y:646, w:378, h:76,  st:5, t:'Log Analytics',      s:'kube-audit, kube-audit-admin, guard' },
+    def:   { x:430,  y:646, w:378, h:76,  st:5, t:'Defender for Containers', s:'Skanning og runtime-varsler' },
+    soc:   { x:824,  y:646, w:378, h:76,  st:5, t:'SOC / SIEM',         s:'Hvem reagerer på varslene?' }
+  };
+  var ARROWS = [
+    { d:'M135 168 V194', l:'commit', x:142, y:185 },
+    { d:'M135 270 V290', l:'trigger', x:142, y:284 },
+    { d:'M135 366 V400', l:'push image', x:142, y:387 },
+    { d:'M234 142 H296', l:'login', x:265, y:136, a:'middle' },
+    { d:'M234 326 H300', l:'deploy', x:267, y:320, a:'middle' },
+    { d:'M354 196 V276', l:'token', x:360, y:236 },
+    { d:'M486 196 V276', l:'konfig', x:492, y:236 },
+    { d:'M420 352 V372', l:'valider', x:428, y:366 },
+    { d:'M420 448 V468', l:'lagre', x:428, y:462 },
+    { d:'M540 330 H572 V498 H606', l:'styrer noder', x:584, y:414, rot:true },
+    { d:'M1056 150 H994', l:'HTTPS inn', x:1025, y:144, a:'middle' },
+    { d:'M828 150 H794', l:'ruter', x:811, y:144, a:'middle' },
+    { d:'M700 212 V252', l:'øst-vest', x:722, y:236, dash:true, both:true },
+    { d:'M794 294 H828', l:'ut', x:811, y:288, a:'middle' },
+    { d:'M994 294 H1056', l:'egress', x:1025, y:288, a:'middle' },
+    { d:'M994 398 H1056', l:'secrets', x:1025, y:392, a:'middle' },
+    { d:'M994 498 H1056', l:'identitet', x:1025, y:492, a:'middle' },
+    { d:'M135 476 V588 H800 V536', l:'image pull', x:470, y:583, a:'middle' }
+  ];
+  /* [risiko, komponent, hvorfor den ligger her] */
+  var PLACE = [
+    ['K01','git','Manifest og Helm-charts bestemmer securityContext, privileged, hostPath og hostNetwork.'],
+    ['K01','nsA','Usikre innstillinger tar effekt når podden kjører.'],
+    ['K01','nodes','Bryter en container ut, står angriperen på noden sammen med andre teams pods.'],
+    ['K02','arm','Azure-roller på AKS-ressursen styrer hvem som kan endre oppsettet og hente kubeconfig.'],
+    ['K02','api','Azure RBAC eller Kubernetes RBAC avgjør hva hver identitet får gjøre i clusteret.'],
+    ['K02','ci','Deploy-identiteten får ofte for mye. Microsoft fraråder cluster-admin for pipelines.'],
+    ['K02','nsA','ServiceAccounts med roller som kan lese secrets eller opprette pods.'],
+    ['K03','git','Secrets i kode, YAML eller Helm values.'],
+    ['K03','ci','Lagrede credentials i pipeline-variabler.'],
+    ['K03','etcd','Kubernetes Secrets lagres her. Sjekk om KMS-kryptering er slått på.'],
+    ['K03','nsA','Secrets montert i pods eller satt som miljøvariabler.'],
+    ['K03','kv','Key Vault bør være kilden, hentet med Secrets Store CSI Driver.'],
+    ['K04','adm','Her slippes manifest inn eller avvises. Audit-modus stopper ingenting.'],
+    ['K04','arm','Azure Policy-tildelinger, effekt (Deny eller Audit) og unntak styres i Azure.'],
+    ['K05','ew','Uten NetworkPolicy kan pods i ulike namespaces nå hverandre fritt.'],
+    ['K05','egress','Egress er ubegrenset som standard i AKS. Uten Azure Firewall eller FQDN-filter kan data sendes ut.'],
+    ['K06','api','Offentlig endepunkt som standard. Bør være privat eller begrenset til kjente IP-adresser.'],
+    ['K06','ing','Hvilke Services og ruter er eksponert mot internett, og skal de være det?'],
+    ['K07','ing','Ingress NGINX får ingen sikkerhetsfikser fra prosjektet etter mars 2026. Microsofts application routing add-on får patcher ut november 2026.'],
+    ['K07','plat','Add-ons, operators og tredjepartskomponenter trenger eier og oppdateringsrutine.'],
+    ['K07','nodes','Kubernetes-versjon, node-OS og upgrade channel. Azure Linux 2.0 får ikke lenger patcher.'],
+    ['K08','nsA','Workload identity knytter en ServiceAccount til en Entra-identitet. Rollene i Azure avgjør skadeomfanget.'],
+    ['K08','nodes','En pod kan prøve å nå IMDS (169.254.169.254) og hente nodens Azure-identitet.'],
+    ['K08','data','Målet: Azure-ressurser som nås med en identitet hentet fra clusteret.'],
+    ['K09','entra','MFA og Conditional Access for alle som administrerer clusteret.'],
+    ['K09','api','Lokale kontoer og admin-kubeconfig går utenom Entra ID.'],
+    ['K09','ci','Pipelinen bør bruke workload identity federation, ikke lagrede credentials.'],
+    ['K10','logs','Audit-logger fra control plane må sendes hit med diagnostic settings.'],
+    ['K10','def','Runtime-varsler for noder, workloads og control plane.'],
+    ['K10','soc','Varsler uten noen som reagerer gir ingen beskyttelse.'],
+    ['SC','git','Avhengigheter og base-images velges her.'],
+    ['SC','ci','Skanning i CI. En pipeline mange kan endre, er selv et mål.'],
+    ['SC','acr','Løpende skanning, signering og bare godkjente registre.']
+  ];
+
+  var boxEls = {}, mkEls = [], selRisk = null, selComp = null, lastAnchor = null;
+
+  function svgEl(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function svgText(parent, x, y, cls, s, anchor){
+    var t = svgEl('text', { x:x, y:y }, parent);
+    if (cls) t.setAttribute('class', cls);
+    if (anchor) t.setAttribute('text-anchor', anchor);
+    t.textContent = s;
+    return t;
+  }
+  function htmlEl(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function riskTitle(r){ var c = document.querySelector('.risk[data-id="' + r + '"]'); return c ? c.getAttribute('data-title') : r; }
+  function placesOf(r){ return PLACE.filter(function(p){ return p[0] === r; }); }
+  function placesAt(id){ return PLACE.filter(function(p){ return p[1] === id; }); }
+  function stOf(r){ return status[r] || 'none'; }
+  function stText(r){ return LABEL[status[r]] || 'Ikke vurdert'; }
+  function setSt(e, r){ ST.forEach(function(s){ e.classList.remove(s); }); e.classList.add('st-' + stOf(r)); }
+  function markerEl(r, id){
+    for (var i = 0; i < mkEls.length; i++) if (mkEls[i].getAttribute('data-r') === r && mkEls[i].getAttribute('data-c') === id) return mkEls[i];
+    return null;
+  }
+  function idTag(r){ var s = htmlEl('span', 'idtag', r); s.setAttribute('data-st-r', r); setSt(s, r); return s; }
+
+  function buildDiagram(){
+    if (!dgSvg) return;
+    var defs = svgEl('defs', {}, dgSvg);
+    var am = svgEl('marker', { id:'dgArrow', viewBox:'0 0 10 10', refX:'9', refY:'5', markerWidth:'7', markerHeight:'7', orient:'auto-start-reverse' }, defs);
+    svgEl('path', { d:'M0,0 L10,5 L0,10 z', 'class':'ah' }, am);
+
+    ZONES.forEach(function(z){
+      svgEl('rect', { x:z.x, y:z.y, width:z.w, height:z.h, rx:10, 'class':'zn' }, dgSvg);
+      var cx = z.x + 8, cy = z.y + 8, cw = z.cw || (z.w - 16);
+      svgEl('polygon', { points:[cx + ',' + cy, (cx + cw - 10) + ',' + cy, (cx + cw) + ',' + (cy + 12), (cx + cw - 10) + ',' + (cy + 24), cx + ',' + (cy + 24)].join(' '), 'class':'chev' }, dgSvg);
+      svgText(dgSvg, cx + 10, cy + 17, 'chev-t', z.n + ' · ' + z.t);
+      if (z.cw) svgText(dgSvg, cx + cw + 16, cy + 16, 'own-t', z.o);
+      else svgText(dgSvg, z.x + 12, z.y + 48, 'own-t', z.o);
+      if (z.note) svgText(dgSvg, z.x + z.w - 16, cy + 16, 'note-t', z.note, 'end');
+    });
+    svgEl('rect', { x:290, y:248, width:260, height:314, rx:8, 'class':'zn-ms' }, dgSvg);
+    svgText(dgSvg, 420, 556, 'ms-t', 'CONTROL PLANE · MICROSOFT DRIFTER', 'middle');
+
+    ARROWS.forEach(function(a){
+      var p = svgEl('path', { d:a.d, 'class':'ln' + (a.dash ? ' dash' : ''), 'marker-end':'url(#dgArrow)' }, dgSvg);
+      if (a.both) p.setAttribute('marker-start', 'url(#dgArrow)');
+    });
+
+    Object.keys(COMP).forEach(function(id){
+      var c = COMP[id];
+      if (c.link) return;
+      var g = svgEl('g', { 'class':'box', 'data-c':id, role:'button', tabindex:'0' }, dgSvg);
+      svgEl('rect', { x:c.x, y:c.y, width:c.w, height:c.h, rx:6 }, g);
+      svgText(g, c.x + 10, c.y + 22, 't', c.t);
+      if (c.s) svgText(g, c.x + 10, c.y + 39, 's', c.s);
+      if (c.s2) svgText(g, c.x + 10, c.y + 53, 's', c.s2);
+      var n = placesAt(id).length;
+      g.setAttribute('aria-label', c.t + ': ' + n + (n === 1 ? ' risiko' : ' risikoer'));
+      boxEls[id] = g;
+    });
+
+    ARROWS.forEach(function(a){
+      var t = svgText(dgSvg, a.x, a.y, 'al', a.l, a.a || (a.rot ? 'middle' : null));
+      if (a.rot) t.setAttribute('transform', 'rotate(-90 ' + a.x + ' ' + a.y + ')');
+    });
+
+    var count = {};
+    PLACE.forEach(function(p){
+      var r = p[0], id = p[1], c = COMP[id], x, y;
+      if (c.link){ x = c.mx; y = c.my; }
+      else { var i = count[id] || 0; count[id] = i + 1; x = c.x + 10 + i * 39; y = c.y + c.h - 26; }
+      var g = svgEl('g', { 'class':'mk', 'data-r':r, 'data-c':id, role:'button', tabindex:'0' }, dgSvg);
+      g.setAttribute('aria-label', r + ' ' + riskTitle(r) + ', ' + c.t);
+      svgEl('rect', { x:x, y:y, width:34, height:18, rx:4 }, g);
+      svgText(g, x + 17, y + 13, null, r, 'middle');
+      mkEls.push(g);
+    });
+    dgReady = true;
+  }
+
+  function paintDiagram(){
+    if (!dgReady) return;
+    mkEls.forEach(function(m){ setSt(m, m.getAttribute('data-r')); });
+    $$('[data-st-r]').forEach(function(e){ setSt(e, e.getAttribute('data-st-r')); });
+    var st = pop && !pop.hidden ? pop.querySelector('.pop-st') : null;
+    if (st && selRisk) st.textContent = 'Status: ' + stText(selRisk);
+    writeSummary();
+  }
+
+  function writeSummary(){
+    var el = document.getElementById('dgSummary');
+    if (!el) return;
+    if (selRisk){
+      var ps = placesOf(selRisk);
+      el.textContent = selRisk + ' ' + riskTitle(selRisk) + ' ligger i ' + ps.length + (ps.length === 1 ? ' del' : ' deler') + ' av arkitekturen: ' +
+        ps.map(function(p){ return COMP[p[1]].t; }).join(', ') + '. Status: ' + stText(selRisk) + '.';
+    } else if (selComp){
+      var pc = placesAt(selComp);
+      el.textContent = COMP[selComp].t + ': ' + (pc.length ? pc.map(function(p){ return p[0]; }).join(', ') : 'ingen av topp 10-risikoene') + '.';
+    } else {
+      var counts = Object.keys(boxEls).map(function(id){ return [id, placesAt(id).length]; })
+        .filter(function(c){ return c[1] > 0; })
+        .sort(function(a, b){ return b[1] - a[1]; });
+      var cut = counts.length ? counts[Math.min(4, counts.length - 1)][1] : 0;
+      var top = counts.filter(function(c){ return c[1] >= cut; });
+      el.textContent = 'Flest risikoer samlet: ' + top.map(function(c){ return COMP[c[0]].t + ' (' + c[1] + ')'; }).join(', ') +
+        '. Velg en risiko over, eller trykk på en markør eller boks i diagrammet.';
+    }
+  }
+
+  function applySel(){
+    if (!dgReady) return;
+    dgSvg.classList.toggle('dim', !!selRisk);
+    mkEls.forEach(function(m){ m.classList.toggle('on', !!selRisk && m.getAttribute('data-r') === selRisk); });
+    Object.keys(boxEls).forEach(function(id){
+      var b = boxEls[id];
+      b.classList.toggle('hit', !!selRisk && placesAt(id).some(function(p){ return p[0] === selRisk; }));
+      b.classList.toggle('sel', selComp === id);
+    });
+    $$('.rchip').forEach(function(ch){
+      var r = ch.getAttribute('data-r');
+      ch.setAttribute('aria-pressed', (r === 'alle' ? !selRisk : r === selRisk) ? 'true' : 'false');
+    });
+    $$('#dgMatrix tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-r') === selRisk); });
+    writeSummary();
+  }
+
+  function popHead(title, r){
+    var h = htmlEl('div', 'pop-h');
+    if (r) h.appendChild(idTag(r));
+    var s = htmlEl('strong', null, title); s.id = 'dgPopTitle';
+    h.appendChild(s);
+    var x = htmlEl('button', 'pop-x', 'Lukk'); x.type = 'button';
+    x.addEventListener('click', function(){ closePop(true); });
+    h.appendChild(x);
+    return h;
+  }
+
+  function showPop(anchor){
+    lastAnchor = anchor;
+    pop.hidden = false;
+    var VBY = 52; /* viewBox starter på y = 52 */
+    var box = dgSvg.getBoundingClientRect(), s = box.width / 1240, bb = anchor.getBBox();
+    var pw = pop.offsetWidth, ph = pop.offsetHeight;
+    var left = Math.max(8, Math.min(bb.x * s, box.width - pw - 8));
+    var top = (bb.y + bb.height - VBY) * s + 8;
+    if (top + ph > box.height - 4) top = Math.max(4, (bb.y - VBY) * s - ph - 8);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+    try { pop.focus({ preventScroll: true }); } catch(e){ pop.focus(); }
+    try { pop.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch(e){}
+  }
+
+  function closePop(restoreFocus){
+    if (!pop || pop.hidden) return;
+    pop.hidden = true;
+    mkEls.forEach(function(m){ m.classList.remove('cur'); });
+    if (restoreFocus && lastAnchor){ try { lastAnchor.focus({ preventScroll: true }); } catch(e){} }
+  }
+
+  function openRisk(r, id, anchor){
+    if (!anchor) return;
+    selRisk = r; selComp = null; applySel();
+    pop.innerHTML = '';
+    pop.appendChild(popHead(riskTitle(r), r));
+    var why = PLACE.filter(function(p){ return p[0] === r && p[1] === id; })[0];
+    var p1 = htmlEl('p');
+    p1.appendChild(htmlEl('b', null, COMP[id].t + ': '));
+    p1.appendChild(document.createTextNode(why ? why[2] : ''));
+    pop.appendChild(p1);
+    var others = placesOf(r).filter(function(p){ return p[1] !== id; });
+    if (others.length){
+      var p2 = htmlEl('p');
+      p2.appendChild(document.createTextNode('Også i: '));
+      others.forEach(function(o, i){
+        if (i) p2.appendChild(document.createTextNode(', '));
+        var b = htmlEl('button', 'linkbtn', COMP[o[1]].t); b.type = 'button';
+        b.addEventListener('click', function(){ openRisk(r, o[1], markerEl(r, o[1])); });
+        p2.appendChild(b);
+      });
+      pop.appendChild(p2);
+    }
+    pop.appendChild(htmlEl('p', 'pop-st', 'Status: ' + stText(r)));
+    var go = htmlEl('button', 'btn', 'Åpne sjekklisten for ' + r); go.type = 'button';
+    go.addEventListener('click', function(){ openChecklist(r); });
+    pop.appendChild(go);
+    mkEls.forEach(function(m){ m.classList.toggle('cur', m === anchor); });
+    showPop(anchor);
+  }
+
+  function openComp(id, anchor){
+    selComp = id; selRisk = null; applySel();
+    pop.innerHTML = '';
+    pop.appendChild(popHead(COMP[id].t));
+    var ps = placesAt(id);
+    if (!ps.length) pop.appendChild(htmlEl('p', null, 'Ingen av topp 10-risikoene er plassert her.'));
+    else {
+      var ul = htmlEl('ul');
+      ps.forEach(function(p){
+        var li = htmlEl('li');
+        var b = htmlEl('button', 'linkbtn', p[0] + ' ' + riskTitle(p[0])); b.type = 'button';
+        b.addEventListener('click', function(){ openRisk(p[0], id, markerEl(p[0], id)); });
+        li.appendChild(b);
+        li.appendChild(document.createTextNode(': ' + p[2]));
+        ul.appendChild(li);
+      });
+      pop.appendChild(ul);
+    }
+    mkEls.forEach(function(m){ m.classList.remove('cur'); });
+    showPop(anchor);
+  }
+
+  function openChecklist(r){
+    closePop(false);
+    show('topp10');
+    var card = document.querySelector('.risk[data-id="' + r + '"]');
+    if (!card) return;
+    if (card.hidden){ var all = document.querySelector('.chip[data-path="alle"]'); if (all) all.click(); }
+    card.scrollIntoView({ block: 'start' });
+    card.classList.add('flash');
+    setTimeout(function(){ card.classList.remove('flash'); }, 1800);
+  }
+
+  if (dgSvg && pop){
+    buildDiagram();
+
+    dgSvg.addEventListener('click', function(e){
+      var m = e.target.closest ? e.target.closest('.mk') : null;
+      if (m){ openRisk(m.getAttribute('data-r'), m.getAttribute('data-c'), m); return; }
+      var b = e.target.closest ? e.target.closest('.box') : null;
+      if (b){ openComp(b.getAttribute('data-c'), b); return; }
+      closePop(false); selRisk = null; selComp = null; applySel();
+    });
+    dgSvg.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var t = e.target;
+      if (t.classList && (t.classList.contains('mk') || t.classList.contains('box'))){
+        e.preventDefault();
+        t.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePop(true); });
+
+    var chipBox = document.getElementById('dgChips');
+    ['alle'].concat(RISKS).forEach(function(r){
+      var b = htmlEl('button', 'rchip'); b.type = 'button';
+      b.setAttribute('data-r', r);
+      b.setAttribute('aria-pressed', r === 'alle' ? 'true' : 'false');
+      if (r === 'alle') b.textContent = 'Alle';
+      else {
+        var d = htmlEl('span', 'dotst'); d.setAttribute('data-st-r', r);
+        b.appendChild(d);
+        b.appendChild(document.createTextNode(r));
+        b.title = riskTitle(r);
+        b.setAttribute('aria-label', r + ' ' + riskTitle(r));
+      }
+      b.addEventListener('click', function(){
+        closePop(false); selComp = null;
+        selRisk = (r === 'alle' || selRisk === r) ? null : r;
+        applySel();
+      });
+      chipBox.appendChild(b);
+    });
+
+    var tb = document.getElementById('dgMatrix');
+    RISKS.forEach(function(r){
+      var tr = htmlEl('tr'); tr.setAttribute('data-r', r);
+      var th = htmlEl('th'); th.scope = 'row';
+      var b = htmlEl('button', 'mx-btn'); b.type = 'button';
+      b.appendChild(idTag(r));
+      b.appendChild(htmlEl('span', 'nm', riskTitle(r)));
+      b.addEventListener('click', function(){
+        closePop(false); selComp = null; selRisk = r; applySel();
+        var f = document.getElementById('dgFig');
+        if (f) f.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+      th.appendChild(b); tr.appendChild(th);
+      for (var s = 1; s <= 5; s++){
+        var names = [];
+        placesOf(r).forEach(function(p){
+          var c = COMP[p[1]];
+          if (c.st === s){ var nm = c.short || c.t; if (names.indexOf(nm) < 0) names.push(nm); }
+        });
+        tr.appendChild(htmlEl('td', null, names.join(', ')));
+      }
+      tb.appendChild(tr);
+    });
+
+    paintDiagram();
+    applySel();
+  }
+})();
+</script>
+
+</body></html>
