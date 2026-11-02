@@ -1,0 +1,1519 @@
+<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Developer Workstation Risk Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: same system as the AKS guide. One reading column (max 48rem) under a sticky tab bar; the risk map breaks out to full width; cards only for the ten risks */
+:root{
+  --bg:#EEF0F4; --surface:#FFFFFF; --ink:#141A2E; --muted:#555E73; --line:#D1D6E1;
+  --accent:#3B4699; --accent-ink:#FFFFFF; --accent-soft:#E2E5F4;
+  --flag:#8F5E07; --flag-soft:#F6ECD8;
+  --ok:#2C7549; --ok-soft:#DCEFE3; --part:#8F5E07; --part-soft:#F6ECD8;
+  --miss:#AD3328; --miss-soft:#F7E0DD; --unk:#626A7C; --unk-soft:#E3E6EC;
+  --code-bg:#E4E7EE;
+  --fig:#FFFFFF; --zone:#F4F5F9; --box:#FFFFFF; --sb:#EEF0FA;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1220; --surface:#171B2C; --ink:#E3E6F0; --muted:#9EA5B8; --line:#2C3247;
+    --accent:#A8B2F2; --accent-ink:#0F1220; --accent-soft:#262C4F;
+    --flag:#E2AA45; --flag-soft:#3A2E17;
+    --ok:#6CC28C; --ok-soft:#173326; --part:#E2AA45; --part-soft:#3A2E17;
+    --miss:#F07E72; --miss-soft:#3D1F1C; --unk:#A0A7B6; --unk-soft:#262B3A;
+    --code-bg:#1F2436; --fig:#121624; --zone:#181C2D; --box:#1F2438; --sb:#1C2140; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1220; --surface:#171B2C; --ink:#E3E6F0; --muted:#9EA5B8; --line:#2C3247;
+  --accent:#A8B2F2; --accent-ink:#0F1220; --accent-soft:#262C4F;
+  --flag:#E2AA45; --flag-soft:#3A2E17;
+  --ok:#6CC28C; --ok-soft:#173326; --part:#E2AA45; --part-soft:#3A2E17;
+  --miss:#F07E72; --miss-soft:#3D1F1C; --unk:#A0A7B6; --unk-soft:#262B3A;
+  --code-bg:#1F2436; --fig:#121624; --zone:#181C2D; --box:#1F2438; --sb:#1C2140; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:1rem/1.6 var(--body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:11;background:var(--bg)}
+.wrap{max-width:48rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,7vw,3.2rem);font-weight:800;font-stretch:118%;line-height:1.02;letter-spacing:-0.01em}
+h2{font-size:1.5rem;font-weight:750;font-stretch:108%;line-height:1.2}
+h3{font-size:1.12rem;font-weight:700;font-stretch:104%;line-height:1.25}
+p{margin:0}
+code,pre{font-family:var(--mono)}
+code{font-size:0.88em;overflow-wrap:anywhere}
+.eyebrow{font:500 0.78rem/1.4 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:1.08rem}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font:0.82rem/1.5 var(--mono);color:var(--muted)}
+.meta b{font-weight:500;color:var(--ink)}
+header.top{display:grid;gap:14px;padding-bottom:20px}
+.tag{display:inline-block;font:500 0.7rem/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 5px;white-space:nowrap;vertical-align:1px}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:26px;scrollbar-width:thin}
+.tabs button{font:600 0.95rem/1 var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px 10px 11px;white-space:nowrap;cursor:pointer}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.panel{display:grid;gap:34px;container-type:inline-size}
+section{display:grid;gap:14px;min-width:0}
+.sub{color:var(--muted)}
+.note{font-size:0.88rem;color:var(--muted)}
+
+.short{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
+.short li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:baseline}
+.short li::before{counter-increment:s;content:counter(s);font:700 1.3rem/1 var(--display);color:var(--accent)}
+.short li span{min-width:0}
+
+/* code */
+.cmd{display:flex;align-items:flex-start;gap:6px;background:var(--code-bg);border-radius:6px;margin-top:6px;min-width:0}
+.cmd pre{margin:0;flex:1;min-width:0;overflow-x:auto;padding:9px 12px;font-size:0.8rem;line-height:1.55;white-space:pre}
+.cmd pre .c{color:var(--muted)}
+.copy{flex:none;font:500 0.75rem/1 var(--mono);color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 8px;margin:6px 6px 0 0;cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+
+/* callout and tally */
+.callout{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px 16px;display:grid;gap:8px}
+.callout h3{color:var(--flag);font-size:1rem}
+.callout ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
+.tally{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.tally-row{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;font-size:0.9rem;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:0.7rem;height:0.7rem;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--unk-soft)}
+.bar span{display:block;height:100%;transition:width .25s ease}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:8px 11px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.danger{color:var(--miss);border-color:var(--miss)}
+.msg{font-size:0.85rem;color:var(--muted)}
+textarea.out-text{width:100%;min-height:10rem;font:0.8rem/1.5 var(--mono);background:var(--code-bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.path-desc{font-size:0.93rem;color:var(--muted);min-height:1.5em}
+
+/* risk cards */
+.risks{display:grid;gap:14px}
+.risk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px 14px;display:grid;gap:9px;scroll-margin-top:64px;min-width:0}
+.risk.flash{outline:3px solid var(--accent);outline-offset:3px}
+.risk:focus{outline:none}
+.risk:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.dg .ln.dash{stroke-dasharray:5 3}
+.ir{margin:0;padding-left:1.3rem;display:grid;gap:10px}
+.ir li{min-width:0}
+.risk-head{display:flex;gap:12px;align-items:baseline}
+.rid{flex:none;font:500 0.85rem/1.6 var(--mono);color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:0 7px}
+.risk-head>div{min-width:0}
+.en{font:0.78rem/1.4 var(--mono);color:var(--muted);margin-top:2px}
+.lbl{font:500 0.72rem/1.4 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.checks{margin:0;padding-left:1.1rem;display:grid;gap:6px}
+.checks li{min-width:0}
+.finding{font-size:0.92rem}
+.paths{display:flex;flex-wrap:wrap;gap:4px}
+.paths span{font:0.72rem/1.6 var(--mono);color:var(--muted);background:var(--bg);border-radius:3px;padding:0 6px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+.sr{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.pill{font:600 0.8rem/1 var(--body);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;user-select:none}
+.pill:hover{border-color:var(--ink)}
+input:checked+.pill.v-ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+input:checked+.pill.v-part{background:var(--part-soft);color:var(--part);border-color:var(--part)}
+input:checked+.pill.v-miss{background:var(--miss-soft);color:var(--miss);border-color:var(--miss)}
+input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-color:var(--unk)}
+
+/* tables */
+.tbl-wrap{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.tbl{border-collapse:collapse;width:100%;min-width:720px;font-size:0.86rem}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
+.tbl thead th{font:500 0.7rem/1.4 var(--mono);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:0}
+.tbl tbody th{font-weight:600}
+.tbl-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tbl td,.tbl th{overflow-wrap:break-word}
+.tbl,.mx{table-layout:fixed}
+.tbl.start{min-width:560px}
+.tbl.start .c-id{width:5.5rem} .tbl.start .c-fr{width:10rem}
+.more-list{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.more-d{border-bottom:1px solid var(--line);padding:9px 10px}
+.more-d:last-child{border-bottom:0}
+.more-d summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline;font-weight:600;font-size:0.9rem}
+.more-d summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.more-d summary::-webkit-details-marker{display:none}
+.more-d summary::before{content:"\25B8";color:var(--accent);width:0.8em;transition:transform .15s ease}
+.more-d[open] summary::before{transform:rotate(90deg)}
+.more-d .ctl{margin-top:4px;font-size:0.88rem}
+.lvl.t{color:var(--accent);background:var(--accent-soft)}
+.more-d .btn{margin-top:8px}
+.more-d .why{margin-top:8px;font-size:0.85rem;color:var(--muted);line-height:1.55}
+.cl{display:block}
+.cl + .cl{margin-top:5px}
+.mx .c-rk{width:27%} .mx .c-in{width:16%} .mx .c-z{width:19%} .mx .c-z3{width:57%}
+.lvl{display:inline-block;font:600 0.72rem/1.6 var(--mono);border-radius:3px;padding:0 6px;white-space:nowrap}
+.lvl.h{color:var(--miss);background:var(--miss-soft)}
+.lvl.m{color:var(--part);background:var(--part-soft)}
+.lvl.l{color:var(--unk);background:var(--unk-soft)}
+
+/* verification */
+.personas{display:grid;grid-template-columns:1fr;gap:14px}
+.persona{border-top:2px solid var(--accent);padding-top:10px;display:grid;gap:8px;min-width:0}
+.persona h3{font-size:1.05rem}
+.persona .role{font:0.8rem/1.4 var(--mono);color:var(--muted)}
+.persona ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
+.cols{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:680px){.cols{grid-template-columns:1fr 1fr 1fr}}
+.col{min-width:0;display:grid;gap:8px;align-content:start}
+.col h3{font-size:1rem}
+.col ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.9rem}
+
+.sources{margin:0;padding-left:1.2rem;display:grid;gap:9px;font-size:0.93rem}
+.sources span{display:block;color:var(--muted);font-size:0.85rem}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:grid;gap:6px}
+
+/* risk map */
+.rchips{display:flex;flex-wrap:wrap;gap:6px}
+.rchip{display:inline-flex;align-items:center;gap:6px;font:600 0.8rem/1 var(--mono);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer}
+.rchip:hover{border-color:var(--accent)}
+.rchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.dotst{width:0.6rem;height:0.6rem;border-radius:50%;background:var(--accent);flex:none}
+.dotst.st-ok{background:var(--ok)} .dotst.st-part{background:var(--part)} .dotst.st-miss{background:var(--miss)} .dotst.st-unk{background:var(--unk)}
+.dg-sum{font-size:0.95rem;min-height:3.2em}
+.fig-wide{width:min(1260px,calc(100vw - 32px));margin:0 0 0 calc((100% - min(1260px,calc(100vw - 32px))) / 2);display:grid;gap:10px;scroll-margin-top:64px}
+.dg-scroll{position:relative;overflow-x:auto;background:var(--fig);border:1px solid var(--line);border-radius:10px}
+.dg{display:block;width:100%;min-width:980px;height:auto;user-select:none;-webkit-user-select:none}
+.dg .zn{fill:var(--zone);stroke:var(--line)}
+.dg .zn-sb{fill:var(--sb);stroke:var(--accent);stroke-dasharray:6 4;stroke-opacity:0.7}
+.dg .chev{fill:var(--accent-soft)}
+.dg .chev-t{fill:var(--accent);font:700 13px var(--display)}
+.dg .own-t,.dg .sb-t{fill:var(--muted);font:500 10.5px var(--mono);letter-spacing:0.06em}
+.dg .note-t{fill:var(--muted);font:11.5px var(--body)}
+.dg .box{cursor:pointer;outline:none}
+.dg .box rect{fill:var(--box);stroke:var(--line);stroke-width:1}
+.dg .box .t{fill:var(--ink);font:700 13.5px var(--display)}
+.dg .box .s{fill:var(--muted);font:11px var(--body)}
+.dg .box .vt{fill:var(--ink);font:600 10.5px var(--mono);letter-spacing:0.12em}
+.dg .box:hover rect,.dg .box:focus-visible rect{stroke:var(--accent);stroke-width:1.5}
+.dg .box.hit rect{stroke:var(--accent);stroke-width:2.5}
+.dg .box.sel rect{stroke:var(--ink);stroke-width:2.5}
+.dg .ln{fill:none;stroke:var(--muted);stroke-width:1.4}
+.dg .ah{fill:var(--muted)}
+.dg .al{fill:var(--muted);font:500 10.5px var(--mono);paint-order:stroke;stroke:var(--fig);stroke-width:4px;stroke-linejoin:round}
+.dg .mk{cursor:pointer;outline:none;transition:opacity .15s ease}
+.dg .mk rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.dg .mk text{fill:var(--accent);font:600 10.5px var(--mono);pointer-events:none}
+.dg .mk.st-ok rect{fill:var(--ok-soft);stroke:var(--ok)} .dg .mk.st-ok text{fill:var(--ok)}
+.dg .mk.st-part rect{fill:var(--part-soft);stroke:var(--part)} .dg .mk.st-part text{fill:var(--part)}
+.dg .mk.st-miss rect{fill:var(--miss-soft);stroke:var(--miss)} .dg .mk.st-miss text{fill:var(--miss)}
+.dg .mk.st-unk rect{fill:var(--unk-soft);stroke:var(--unk)} .dg .mk.st-unk text{fill:var(--ink)}
+.dg .mk.x rect{fill:var(--unk-soft);stroke:var(--muted);stroke-dasharray:3 2}
+.dg .mk.x text{fill:var(--ink)}
+.dg .mk:hover rect,.dg .mk:focus-visible rect{stroke-width:2}
+.dg.dim .mk{opacity:0.18}
+.dg.dim .mk.on{opacity:1}
+.dg .mk.on rect{stroke:var(--ink);stroke-width:2}
+.dg .mk.cur rect{stroke:var(--ink);stroke-width:3}
+figcaption{display:grid;gap:8px}
+/* caption and legend sit in the reading column, though the figure is wider */
+figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw) / 2))}
+.cap{font-size:0.9rem;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:0.82rem;color:var(--muted);align-items:center}
+.legend>span{display:inline-flex;align-items:center;gap:6px}
+.lg-mk{font:600 0.68rem/1.5 var(--mono);font-style:normal;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 4px}
+.lg-mk.st-ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.lg-mk.st-part{border-color:var(--part);background:var(--part-soft);color:var(--part)}
+.lg-mk.st-miss{border-color:var(--miss);background:var(--miss-soft);color:var(--miss)}
+.lg-mk.x{border-color:var(--muted);border-style:dashed;background:var(--unk-soft);color:var(--ink)}
+.lg-mk.st-unk{border-color:var(--unk);background:var(--unk-soft);color:var(--ink)}
+.lg-sb{display:inline-block;width:1.1rem;height:0.8rem;border:1.5px dashed var(--accent);background:var(--sb);border-radius:2px}
+.hint{display:none}
+@media (max-width:1060px){.hint{display:block}}
+.pop{position:absolute;z-index:5;max-height:min(70vh,560px);overflow-y:auto;width:min(330px,82vw);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 28px rgba(10,14,30,0.22);padding:12px 14px;display:grid;gap:8px;font-size:0.88rem;line-height:1.5}
+.pop:focus{outline:none}
+.pop:focus-visible{outline:2px solid var(--accent)}
+.pop-h{display:flex;gap:8px;align-items:baseline}
+.pop-h strong{font:700 0.98rem/1.3 var(--display);flex:1;min-width:0}
+.pop-x{flex:none;font:500 0.72rem/1 var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:4px;padding:4px 6px;cursor:pointer}
+.pop ul{margin:0;padding-left:1rem;display:grid;gap:6px}
+.pop .btn{justify-self:start}
+.pop-st{color:var(--muted)}
+.linkbtn{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:left}
+.idtag{flex:none;font:600 0.74rem/1.6 var(--mono);color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:3px;padding:0 5px}
+.idtag.st-ok{color:var(--ok);background:var(--ok-soft);border-color:var(--ok)}
+.idtag.st-part{color:var(--part);background:var(--part-soft);border-color:var(--part)}
+.idtag.st-miss{color:var(--miss);background:var(--miss-soft);border-color:var(--miss)}
+.idtag.st-unk{color:var(--ink);background:var(--unk-soft);border-color:var(--unk)}
+.mx{border-collapse:collapse;width:100%;min-width:700px;font-size:0.85rem}
+.mx th,.mx td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.mx thead th{font:500 0.7rem/1.4 var(--mono);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted)}
+.mx tbody tr:last-child th,.mx tbody tr:last-child td{border-bottom:0}
+.mx td,.mx th{overflow-wrap:break-word}
+.mx tr.on,.tbl tr.on{background:var(--accent-soft)}
+.dg .box.hit:focus-visible rect,.dg .box.sel:focus-visible rect{stroke:var(--accent);stroke-width:3.5;stroke-dasharray:none}
+.idtag.x{color:var(--muted);background:var(--unk-soft);border-color:var(--unk);border-style:dashed}
+.rchip.x{color:var(--muted)}
+.rchip.x .dotst{background:transparent;border:1.5px dashed var(--unk)}
+.chip-lbl{font:500 0.72rem/1 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:4px}
+#more{scroll-margin-top:64px}
+.mx-btn{display:flex;gap:8px;align-items:baseline;text-align:left;font:600 0.85rem/1.35 var(--body);color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
+.mx-btn:hover .nm{text-decoration:underline;text-underline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Risk map · VS Code, git CLI and local AI agents</p>
+    <h1>Developer workstation risk map</h1>
+    <p class="lead">Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, what to check for each, and seven further risks to keep in view.</p>
+    <div class="meta">
+      <span><b>Frameworks</b> OWASP Agentic Top 10 (2026), MCP Top 10 (beta)</span>
+      <span><b>Vendor sources</b> VS Code, Claude Code, OpenAI Codex, GitHub, Microsoft Defender, npm, Git</span>
+      <span><b>Facts checked</b> 29 Oct 2026; corrections 30 Oct and 1 Nov 2026</span>
+      <span><b>Review</b> persona-based passes and two audit rounds, records not attached</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Parts of the risk map">
+    <button type="button" role="tab" id="t-map" data-tab="map" aria-controls="p-map" aria-selected="true">1 · Risk map</button>
+    <button type="button" role="tab" id="t-top10" data-tab="top10" aria-controls="p-top10" aria-selected="false" tabindex="-1">2 · Top 10</button>
+    <button type="button" role="tab" id="t-review" data-tab="review" aria-controls="p-review" aria-selected="false" tabindex="-1">3 · Review</button>
+    <button type="button" role="tab" id="t-sources" data-tab="sources" aria-controls="p-sources" aria-selected="false" tabindex="-1">Sources</button>
+  </nav>
+
+  <!-- 1 MAP -->
+  <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
+    <section>
+      <h2>In short</h2>
+      <ol class="short">
+        <li><span>Everything on the laptop starts with the developer's rights: VS Code, extensions, agents, MCP servers and install scripts. A sandbox or per-tool permission narrows that only where it is on and covers the tool. Everything else can read what the developer can.</span></li>
+        <li><span>The main question is: what can untrusted content, a bad add-on or a stolen token make the machine do, and what stops it? <span class="tag">[inference]</span></span></li>
+        <li><span>Several documented 2025 and 2026 incidents entered through things developers fetch: repos, extensions, packages and agent add-ons. The incidents cited here are a sample, not a defined dataset, so no share is claimed.</span></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Risk map of the workstation</h2>
+      <p class="sub">A typical enterprise developer machine, from what comes in to what goes out. Each marker shows where a risk enters or must be controlled. D01 to D10 are the top 10, coloured by the status you set under Top 10. D11 to D17, with dashed markers, are the further risks listed below the map.</p>
+      <div class="rchips" id="dgChips" role="group" aria-label="Show a top 10 risk in the diagram"></div>
+      <div class="rchips" id="dgChipsX" role="group" aria-label="Show a further risk, D11 to D17, in the diagram"><span class="chip-lbl">More risks</span></div>
+      <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
+    </section>
+
+    <figure class="fig-wide" id="dgFig">
+      <div class="dg-scroll" id="dgScroll">
+        <svg class="dg" id="dg" viewBox="0 52 1240 712" role="group" aria-labelledby="dgCap"></svg>
+        <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
+      </div>
+      <figcaption id="dgCap">
+        <span class="cap">Untrusted inputs (1) reach the workstation (2), where VS Code, extensions and the agent act with the developer's rights. Traffic leaves through the egress boundary (3), a control point only where traffic is forced through a proxy or gateway. Governance and monitoring (4) covers every layer.</span>
+        <span class="cap">The dashed two-way line starts outbound but carries commands back in. Arrows show selected paths, not every data flow. Select a marker or a box to see its risks.</span>
+        <span class="legend">
+          <span><i class="lg-mk">D01</i>Not assessed</span>
+          <span><i class="lg-mk st-ok">D01</i>OK (tested, with evidence; see Top 10)</span>
+          <span><i class="lg-mk st-part">D01</i>Partial</span>
+          <span><i class="lg-mk st-miss">D01</i>Missing</span>
+          <span><i class="lg-mk st-unk">D01</i>Unknown</span>
+          <span><i class="lg-mk x">D11</i>More risks, not in the top 10 (no status)</span>
+          <span><i class="lg-sb"></i>Agent sandbox, if enabled (covers agent commands; MCP coverage depends on the agent)</span>
+        </span>
+      </figcaption>
+    </figure>
+    <p class="note hint">The diagram is wide. Drag sideways in it, or use the table below.</p>
+
+    <section>
+      <h2>Risk by zone</h2>
+      <p class="sub">The same placement as the diagram, for the top 10 risks. D11 to D17 are in the same layout under More risks. Select a risk to show it in the diagram.</p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk by zone table">
+        <table class="mx">
+          <colgroup><col class="c-rk"><col class="c-in"><col class="c-z"><col class="c-z"><col class="c-z"></colgroup>
+          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Inputs</th><th scope="col">2 · Workstation</th><th scope="col">3 · Outbound</th><th scope="col">4 · Governance</th></tr></thead>
+          <tbody id="dgMatrix"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="more">
+      <h2>More risks</h2>
+      <p class="sub">Seven risks outside the top 10 that belong in a full assessment, placed the same way as the diagram. They have dashed markers in the diagram. Select a risk to show it in the diagram.</p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="More risks table">
+        <table class="mx">
+          <colgroup><col class="c-rk"><col class="c-in"><col class="c-z"><col class="c-z"><col class="c-z"></colgroup>
+          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Inputs</th><th scope="col">2 · Workstation</th><th scope="col">3 · Outbound</th><th scope="col">4 · Governance</th></tr></thead>
+          <tbody id="moreRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="first">
+      <h2>Relevance and first control</h2>
+      <p class="sub">All 17 risks in the order of the two tables above. Open a risk for its description and first control. For D01 to D10 the first control and its friction come from Where to start under Top 10. For D11 to D17 relevance is my judgement for an enterprise developer fleet. <span class="tag">[inference]</span></p>
+      <div class="more-list" id="moreDetails"></div>
+    </section>
+
+    <section>
+      <h3>Before you use the map</h3>
+      <p class="sub">This is a reference layout, not your organisation's setup. Common differences: agents used only in the terminal, all agent work in dev containers or cloud sessions, an internal package proxy, and VS Code forks such as Cursor or Windsurf. Draw your own variant and move the markers.</p>
+      <p class="sub">The placement of risks and the owner per zone are my judgement based on the sources. <span class="tag">[inference]</span></p>
+    </section>
+  </div>
+
+  <!-- 2 TOP 10 -->
+  <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
+    <section>
+      <h2>The ten risks</h2>
+      <p class="sub">Proposed, not measured: the order weighs how often each risk appears in the cited reporting against how far the damage reaches. D09 and D10 are a control gap and a data governance risk, not attack paths. VS Code tunnels (D13), used in real attacks, are the strongest candidate to move up. The order and OWASP mapping are my judgement. <span class="tag">[inference]</span></p>
+    </section>
+
+    <aside class="callout" id="current">
+      <h3>Current as of 1 November 2026</h3>
+      <ul id="currentList">
+        <li><b>npm:</b> npm 12 has been out since July 2026 (12.2.1 is current on the npm registry). It no longer runs dependency install scripts unless they are approved. It still runs the project's own <code>.npm-extension.mjs</code> or <code>.npm-extension.cjs</code> on <code>npm install</code> (not on <code>npm ci</code>), and <code>dangerously-allow-all-scripts</code> switches script approval off.</li>
+        <li><b>GitSpawn:</b> at publication on 1 September 2026, four of eight findings across seven agents were unpatched, including a second Claude Code path still open on 2.1.252. It needs a repo that arrives as files with its <code>.git</code> folder; a normal clone does not carry it. A global <code>core.fsmonitor</code> of false does not help, because the repo's own config wins.</li>
+        <li><b>Plugin4Shell:</b> fixed in Claude Code 2.1.179 and Codex 0.146.0. At disclosure on 18 September Copilot had no client fix and Gemini CLI was not being fixed.</li>
+        <li><b>GitHub package firewall:</b> public preview since 20 October 2026 for GitHub Enterprise Cloud, npm only.</li>
+        <li><b>Sandboxes on Windows:</b> Claude Code does not sandbox on native Windows (WSL2 only). VS Code's Windows sandbox is experimental and needs a recent Windows 11 build.</li>
+      </ul>
+    </aside>
+
+    <section>
+      <h3>Where to start</h3>
+      <p class="sub">One first control per risk that gives visible value at fleet scale. Suggested by the endpoint reviewer; the friction is their estimate. <span class="tag">[inference]</span></p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
+        <table class="tbl start">
+          <colgroup><col class="c-id"><col><col class="c-fr"></colgroup>
+          <thead><tr><th scope="col">Risk</th><th scope="col">First control</th><th scope="col">Friction</th></tr></thead>
+          <tbody id="startRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="statusdef">
+      <h3>What a status means</h3>
+      <p class="sub"><b>OK:</b> in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; this page stores only the status, in this browser. <b>Partial:</b> covers some products, platforms or users. <b>Missing:</b> not in place. <b>Unknown:</b> looked at but not confirmed. <b>Not assessed:</b> nobody has looked yet. These definitions are mine. <span class="tag">[inference]</span></p>
+    </section>
+
+    <div class="tally" aria-live="polite">
+      <div class="tally-row">
+        <span><i class="dot" style="background:var(--ok)"></i>OK <b id="n-ok">0</b></span>
+        <span><i class="dot" style="background:var(--part)"></i>Partial <b id="n-part">0</b></span>
+        <span><i class="dot" style="background:var(--miss)"></i>Missing <b id="n-miss">0</b></span>
+        <span><i class="dot" style="background:var(--unk)"></i>Unknown <b id="n-unk">0</b></span>
+        <span><i class="dot" style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--unk)"></i>Not assessed <b id="n-none">10</b></span>
+      </div>
+      <div class="bar" aria-hidden="true"><span id="b-ok" style="background:var(--ok);width:0"></span><span id="b-part" style="background:var(--part);width:0"></span><span id="b-miss" style="background:var(--miss);width:0"></span><span id="b-unk" style="background:var(--unk);width:0"></span></div>
+      <div class="tools">
+        <button type="button" class="btn" id="copySummary">Copy status as text</button>
+        <button type="button" class="btn" id="resetBtn">Reset</button>
+        <span id="resetConfirm" hidden><button type="button" class="btn danger" id="resetYes">Yes, reset all</button> <button type="button" class="btn" id="resetNo">Cancel</button></span>
+        <span class="msg" id="copyMsg" aria-live="polite"></span>
+      </div>
+      <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status as text"></textarea>
+    </div>
+
+    <section>
+      <h3>Filter by attack path</h3>
+      <div class="chips" role="group" aria-label="Attack path">
+        <button type="button" class="chip" data-path="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-path="content" aria-pressed="false">Poisoned content</button>
+        <button type="button" class="chip" data-path="repo" aria-pressed="false">Booby-trapped project</button>
+        <button type="button" class="chip" data-path="supply" aria-pressed="false">Supply chain</button>
+        <button type="button" class="chip" data-path="creds" aria-pressed="false">Stolen tokens</button>
+      </div>
+      <p class="path-desc" id="pathDesc">Shows all ten. The link between attack path and risk is my judgement. <span class="tag">[inference]</span></p>
+    </section>
+
+    <div class="risks" id="risks">
+
+      <article class="risk" data-id="D01" data-title="Malicious packages and install scripts" data-paths="supply creds">
+        <div class="risk-head"><span class="rid">D01</span><div><h3>Malicious packages and install scripts</h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
+        <p>A package install can run code before anyone reads it. ChainDrop (Microsoft, 4 August 2026) used a preinstall script in more than 400 npm packages to steal credentials and republish packages. Some copies had valid provenance from a real CI workflow, so provenance alone does not prove safety.</p>
+        <p>In August 2025 the s1ngularity malware ran installed AI CLIs with their permission checks off to search the disk for secrets.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is npm 12 (released July 2026) or later in use? It runs dependency install scripts only when approved. It needs Node.js 22.22.2, 24.15.0 or 26 and later, so plan it as a fleet change.
+            <div class="cmd"><pre><code>npm --version
+npm config get ignore-scripts min-release-age dangerously-allow-all-scripts ignore-extension extension-file</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Do any projects bypass or widen script approval? <code>dangerously-allow-all-scripts</code> runs every dependency install script; npm calls it a migration escape hatch only. Review <code>allowScripts</code> grants in <code>package.json</code> and <code>.npmrc</code>, since a repo can carry its own <span class="tag">[inference]</span>. <span class="tag">[not run here]</span></li>
+          <li>Is project code that runs outside script approval reviewed? <code>npm install</code> runs a root <code>.npm-extension.mjs</code> or <code>.npm-extension.cjs</code> before dependencies resolve; <code>npm ci</code> only checks its recorded hash. <code>ignore-extension</code> or <code>ignore-scripts</code> skips it. The docs do not say whether script approval covers it, so treat it as uncovered <span class="tag">[inference]</span>. Put these files under code-owner review (D02).</li>
+          <li>Is there a cooldown before new versions install? <code>min-release-age</code> in a managed npmrc is only a default: a command-line flag, an environment variable or a project <code>.npmrc</code> overrides it. To enforce it, use the registry or a package firewall (GitHub's is in public preview, npm only).</li>
+          <li>Is there a route for urgent security fixes? If a cooldown blocks the fix <code>npm audit fix</code> would install, npm keeps the vulnerable version and warns. <code>min-release-age-exclude</code> exempts named packages. Agree who grants exceptions and for how long. <span class="tag">[inference]</span> for the process.</li>
+          <li>Do installs go through an internal registry or proxy rather than straight to public registries?</li>
+          <li>Are pnpm, Yarn, pip and other package managers covered too? <span class="tag">[inference]</span></li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>npm 10 or 11 with scripts on, no cooldown or one that a flag or project file can undo, provenance treated as proof of safety, script approval switched off or widened, root extension files nobody reviews.</p>
+        <div class="paths"><span>Supply chain</span><span>Stolen tokens</span></div>
+        <div class="seg" data-id="D01"></div>
+      </article>
+
+      <article class="risk" data-id="D02" data-title="Code runs when a project is opened" data-paths="repo">
+        <div class="risk-head"><span class="rid">D02</span><div><h3>Code runs when a project is opened</h3><p class="en">OWASP ASI05 Unexpected Code Execution</p></div></div>
+        <p>Project files that survive a clone can name a program to run: <code>.vscode/tasks.json</code>, workspace settings, <code>.devcontainer/devcontainer.json</code> (its <code>initializeCommand</code> runs on the host), <code>.claude/settings.json</code>, <code>.mcp.json</code> and npm's root <code>.npm-extension</code> files. North Korea's Contagious Interview campaign sends fake coding tests whose tasks.json runs on folder open.</p>
+        <p><code>.git/config</code> and hooks arrive only when a project is shared as files, such as a zip. In GitSpawn (September 2026), background Git calls in seven agents ran a command from that config, sometimes before the trust prompt.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is Workspace Trust left on, and do developers choose restricted mode for unreviewed code? CLI agents have their own trust prompts, and GitSpawn showed that some run code before them.</li>
+          <li>Are automatic tasks kept off? <code>task.allowAutomaticTasks</code> is <code>off</code> by default, but VS Code asks once per workspace whether to allow them, and <code>on</code> runs them in every trusted workspace without asking. Automatic tasks never run in an untrusted workspace. Decide whether developers may answer Allow, and check that no settings file sets <code>on</code>.</li>
+          <li>Are agents on current versions? See the Current box above.</li>
+          <li>Did the repo arrive as files rather than as a clone? Then read its Git config before an agent opens the folder, and look in <code>.git/hooks</code> too. Look for fsmonitor, hookspath, sshcommand, pager, editor, filter, textconv and include.
+            <div class="cmd"><pre><code>git config --file &lt;repo&gt;/.git/config --list --show-origin</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Do not rely on <code>git config --global core.fsmonitor false</code>. A repo's own config overrides it; this was tested here. An environment override (<code>GIT_CONFIG_COUNT</code>) does block it, but it also breaks legitimate fsmonitor use, and it does not cover the other command-bearing settings.</li>
+          <li>Do changes to <code>.vscode/</code>, <code>.claude/</code>, <code>.devcontainer/</code>, <code>AGENTS.md</code>, <code>.npm-extension.*</code> and <code>.npmrc</code> need code-owner approval? A CODEOWNERS file on its own only requests review. Turn on <b>Require review from Code Owners</b> in branch protection or a ruleset, give CODEOWNERS itself an owner, and review who can bypass the rule. <span class="tag">[inference]</span> for the bypass point.</li>
+          <li>Is Git patched for CVE-2025-48384 on macOS and Linux? Windows is not affected. Distributions backport fixes without changing the version string, so use vulnerability-management inventory rather than <code>git --version</code>.</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>Trust granted to every folder, repos from shared drives opened straight in an agent, no review on config folders.</p>
+        <div class="paths"><span>Booby-trapped project</span></div>
+        <div class="seg" data-id="D02"></div>
+      </article>
+
+      <article class="risk" data-id="D03" data-title="Malicious or hijacked extensions" data-paths="supply">
+        <div class="risk-head"><span class="rid">D03</span><div><h3>Malicious or hijacked extensions</h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
+        <p>An extension runs with the developer's rights. In July 2025 the official Amazon Q Developer extension 1.84.0 shipped with malicious code added through a mis-scoped GitHub token; AWS says it failed to run because of a syntax error.</p>
+        <p>GlassWorm has hit Open VSX in waves since October 2025, and its 2026 variants also install into VS Code, Cursor and Windsurf. Cursor, Windsurf and VSCodium use Open VSX by default.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is the <code>AllowedExtensions</code> policy deployed (VS Code 1.96 or later), seeded from the current inventory? It overrides the user setting. It is not an integrity control: for a local VSIX, Microsoft says it does not verify origin, stop changes to installed files, or limit runtime permissions. Add a private marketplace and file-integrity monitoring of extension folders <span class="tag">[inference]</span>.</li>
+          <li>Is <code>ExtensionsAutoUpdateDelay</code> set, so a new extension version waits some hours before it installs?</li>
+          <li>Do you need a private marketplace (<code>ExtensionGalleryServiceUrl</code>, or GitHub's private marketplace for Enterprise customers)?</li>
+          <li>Which editors are approved? Forks are not governed by VS Code policies, so block unapproved editors with application control. <span class="tag">[inference]</span></li>
+          <li>Which extensions are installed? <span class="tag">[not run here]</span>
+            <div class="cmd"><pre><code>code --list-extensions --show-versions</code></pre><button type="button" class="copy">Copy</button></div></li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>No allowlist, extensions from unknown publishers, forks outside policy.</p>
+        <div class="paths"><span>Supply chain</span></div>
+        <div class="seg" data-id="D03"></div>
+      </article>
+
+      <article class="risk" data-id="D04" data-title="Secrets and long-lived tokens on the machine" data-paths="creds supply repo">
+        <div class="risk-head"><span class="rid">D04</span><div><h3>Secrets and long-lived tokens on the machine</h3><p class="en">OWASP ASI03 Identity and Privilege Abuse · MCP01 Token Mismanagement</p></div></div>
+        <p>A developer laptop holds SSH keys, Git, cloud and npm tokens, .env files, and now agent tokens and transcripts. Any process running as the user can read unprotected credential files and use credentials exposed through a helper or agent. Infostealers now collect AI agent tokens too (Gen Digital, September 2026).</p>
+        <p>Sandboxes do not change that by default: Claude Code's sandbox reads <code>~/.ssh</code> and <code>~/.aws</code> unless denied, VS Code passes Git and GitHub CLI credentials in, and Dev Containers forward the SSH agent and reuse local Git credentials.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is a Git credential helper set to <code>store</code>? It saves credentials unencrypted in <code>~/.git-credentials</code>. The command shows every scope, including system.
+            <div class="cmd"><pre><code>git config --show-origin --get-all credential.helper</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Are SSH keys protected by more than file permissions? A key in an SSH agent can be used without its file, so control who can reach the agent socket <span class="tag">[inference]</span>. Load keys with <code>ssh-add -t</code> (lifetime), <code>-c</code> (confirm each use) and <code>-h</code> (limit destinations; OpenSSH 8.9 or later). <span class="tag">[not run here]</span></li>
+          <li>Are secret files kept out of agent reads, not only edits? Treat four controls separately: read restriction, edit approval, command isolation, and whether the secret is on the machine at all.
+            <ul class="checks">
+              <li>VS Code: <code>chat.tools.edits.autoApprove</code> with <code>"**/.env": false</code> only gates edits. GitHub's managed <code>permissions.deny</code> with <code>Read(...)</code> rules blocks reads, but only in Copilot Agent Host sessions. <code>sandbox.userPolicy.filesystem.deniedPaths</code> covers processes the agent starts.</li>
+              <li>Claude Code: <code>Read(...)</code> deny rules in <code>permissions.deny</code> block the Read tool and are merged into the sandbox. <code>sandbox.filesystem.denyRead</code> or <code>sandbox.credentials</code> alone covers shell commands only. <code>Read(./.env)</code> matches only the start folder; <code>Read(.env)</code> matches any depth. Add rules for <code>~/.ssh</code> and cloud credential folders.</li>
+              <li>Codex: <code>[permissions.filesystem] deny_read</code> in <code>requirements.toml</code>, which users cannot weaken. On native Windows it applies to direct file tools, not to shell subprocess reads.</li>
+            </ul></li>
+          <li>Do GitHub and npm tokens expire, and are they narrowly scoped? Can a developer laptop reach production with its own credentials?</li>
+          <li>Are agent config files with tokens watched for change? Research by Mitiga showed an install script planting a hook that rewrote MCP server addresses in <code>~/.claude.json</code> to capture OAuth tokens.</li>
+          <li>How long do agents keep transcripts? Claude Code: <code>cleanupPeriodDays</code>.</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>Broad tokens that never expire, the store helper in use, production keys in .env files.</p>
+        <div class="paths"><span>Stolen tokens</span><span>Supply chain</span><span>Booby-trapped project</span></div>
+        <div class="seg" data-id="D04"></div>
+      </article>
+
+      <article class="risk" data-id="D05" data-title="Prompt injection and poisoned instruction files" data-paths="content repo">
+        <div class="risk-head"><span class="rid">D05</span><div><h3>Prompt injection and poisoned instruction files</h3><p class="en">OWASP ASI01 Agent Goal Hijack</p></div></div>
+        <p>Text the agent reads can redirect it: a web page, issue, README, code comment, file name or MCP tool output. Agents load instruction files such as AGENTS.md and CLAUDE.md as instructions, so these carry more weight.</p>
+        <p>In October 2026 Forever Security reported a planted AGENTS.md in a customer's Downloads folder that tried to make Codex install a malicious npm package. In testing, Codex followed it in more than 90% of attempts.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Do developers start agents only inside a project folder, never in the home folder or Downloads?</li>
+          <li>Are AGENTS.md, CLAUDE.md and other rule files reviewed like code, for example through CODEOWNERS?</li>
+          <li>Are unreviewed repos opened in VS Code restricted mode? It disables agents in VS Code only; CLI agents rely on their own trust prompts.</li>
+          <li>Are there instruction files you did not write? Each command lists files to review.
+            <div class="cmd"><pre><code><span class="c"># macOS and Linux</span>
+find ~/Downloads ~ -maxdepth 4 \( -name AGENTS.md -o -name CLAUDE.md \) -not -path '*/node_modules/*' 2&gt;/dev/null | sort -u
+<span class="c"># Windows PowerShell</span>
+Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorAction SilentlyContinue | Select-Object FullName</code></pre><button type="button" class="copy">Copy</button></div></li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>Agents started from the home folder or Downloads, instruction files changed without review, fetch allowed for any domain.</p>
+        <div class="paths"><span>Poisoned content</span><span>Booby-trapped project</span></div>
+        <div class="seg" data-id="D05"></div>
+      </article>
+
+      <article class="risk" data-id="D06" data-title="Untrusted MCP servers, plugins and skills" data-paths="supply content creds">
+        <div class="risk-head"><span class="rid">D06</span><div><h3>Untrusted MCP servers, plugins and skills</h3><p class="en">OWASP ASI04 · MCP03 Tool Poisoning · MCP07 Insufficient Authentication and Authorization · AST01 Malicious Skills</p></div></div>
+        <p>A local MCP server runs as the developer, and its tool descriptions go straight into the model's context. A remote one holds its own tokens, sees what the agent sends and can return prompt injection. ClawHavoc put more than 1,000 malicious skills on ClawHub in early 2026.</p><p>In Plugin4Shell (September 2026), Claude Code, Codex and Copilot ran <code>git checkout &lt;SHA&gt;</code> for a pinned plugin without checking the result, so a branch named after the hash could win. It needs control of the plugin's repo, an update that re-pins it, and a Git host that allows hash-named branches.</p>
+        <p>CSA says automatic updates, then on by default, made it zero-click; Claude Code's docs now leave them off for third-party marketplaces.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>VS Code: is <code>ChatMCP</code> (<code>chat.mcp.access</code>) limited to the registry, with <code>ChatAllowedMcpServers</code> or a private registry (<code>McpGalleryServiceUrl</code>)? Microsoft's docs and source code disagree on its values <span class="tag">[contested]</span>, so confirm with Policy Diagnostics. It does not cover MCP servers the Copilot runtime finds on its own.</li>
+          <li>Claude Code: <code>allowedMcpServers</code> with <code>allowManagedMcpServersOnly</code>, and <code>strictKnownMarketplaces</code> for plugins. A list with only URL entries blocks local stdio servers, so list the ones you allow too.</li>
+          <li>Codex: an <code>[mcp_servers.&lt;name&gt;]</code> allowlist in <code>requirements.toml</code>, matched on <code>identity.command</code> (stdio) or <code>identity.url</code> (remote); use the structured command form to pin arguments. An empty <code>mcp_servers</code> table disables all servers. Plugin-bundled servers need <code>plugins.&lt;plugin&gt;.mcp_servers.&lt;server&gt;</code> entries. For plugin sources, set <code>[marketplaces] restrict_to_allowed_sources = true</code> with <code>marketplaces.allowed_sources</code>; bundled and remotely installed workspace plugins have separate controls.</li>
+          <li>Which remote MCP servers are in use, who runs them, and what data and tokens do they receive? Treat each as a supplier. <span class="tag">[inference]</span></li>
+          <li>Do MCP servers use short-lived, narrowly scoped tokens?</li>
+          <li>Do MCP servers you or a supplier run refuse tokens not issued for them? The MCP security guidance forbids token passthrough: forwarding a client's token unchanged to a downstream API. A proxy server with a static client ID for a third-party OAuth service should get consent per client. Source: the draft specification <span class="tag">[may be outdated]</span>.</li>
+          <li>Do local MCP servers that use HTTP check the <code>Origin</code> header, bind to localhost and require authentication? The MCP specification (2025-06-18) says servers must validate <code>Origin</code> and should bind to localhost and authenticate, to stop DNS rebinding <span class="tag">[may be outdated]</span>.</li>
+          <li>Are automatic plugin updates set on purpose for each marketplace? Claude Code's defaults differ by marketplace type, so decide whether a new plugin version may install without review.</li>
+          <li>Are agents patched for Plugin4Shell (Claude Code 2.1.179, Codex 0.146.0 or later)?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>MCP servers started from any source, broad personal tokens in MCP config, plugins from personal GitHub repos.</p>
+        <div class="paths"><span>Supply chain</span><span>Poisoned content</span><span>Stolen tokens</span></div>
+        <div class="seg" data-id="D06"></div>
+      </article>
+
+      <article class="risk" data-id="D07" data-title="No sandbox and open network" data-paths="content supply creds">
+        <div class="risk-head"><span class="rid">D07</span><div><h3>No sandbox and open network</h3><p class="en">OWASP ASI05 · makes exfiltration in ASI01 and ASI03 possible</p></div></div>
+        <p>Claude Code's sandbox is off by default and does not run on native Windows. It covers shell commands only; hooks, local MCP servers and <code>apiKeyHelper</code> run outside it, and the Read, Edit and WebFetch tools follow permission rules instead.</p>
+        <p>Codex sandboxes commands by default (network off, writes limited to the workspace) but by default leaves reads open. VS Code's agent sandbox leaves network on by default, is experimental on Windows, and is not a virtual machine or user-account boundary. A dev container gets Git credentials and the SSH agent by default.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is sandboxing required centrally? VS Code: <code>ChatAgentSandboxEnabled</code> is deprecated; Microsoft points to the Copilot managed setting <code>sandbox.enabled</code> and calls managed enforcement a preview. Claude Code: <code>sandbox.enabled</code>, <code>failIfUnavailable</code> (refuse to start where the sandbox cannot run, such as native Windows) and <code>allowUnsandboxedCommands: false</code>.</li>
+          <li>What is the effective policy? When the sandbox is admin-required, Claude Code ignores loosening settings from a repository but still honours user settings and <code>--settings</code>, which can add <code>excludedCommands</code>, write paths and socket access <span class="tag">[inference]</span>. Lock with <code>allowManagedReadPathsOnly</code> and <code>allowManagedDomainsOnly</code>, and pin <code>enableWeakerNestedSandbox</code>, <code>enableWeakerNetworkIsolation</code>, <code>network.allowAllUnixSockets</code> and <code>network.allowLocalBinding</code> to <code>false</code> <span class="tag">[inference]</span>.</li>
+          <li>Codex: is <code>danger-full-access</code> blocked in <code>requirements.toml</code>? From Codex 0.138.0 use <code>allowed_permission_profiles</code> with a managed <code>default_permissions</code>; older deployments use <code>allowed_sandbox_modes = ["read-only", "workspace-write"]</code>. Settings in <code>config.toml</code> and <code>managed_config.toml</code> are defaults users can change, not requirements.</li>
+          <li>Is outbound access allowlisted? Claude Code: <code>sandbox.network.allowedDomains</code> with <code>allowManagedDomainsOnly</code> covers shell commands; <code>WebFetch(domain:...)</code> allow rules only pre-approve fetches and are not an allowlist. VS Code: <code>sandbox.userPolicy.network.allowOutbound</code> for commands, <code>ChatAgentNetworkFilter</code> for the fetch tool and integrated browser. Codex: <code>[experimental_network]</code> in <code>requirements.toml</code> for commands, with <code>enabled = true</code>; limited Windows support. Web search, MCP and apps have separate controls.</li>
+          <li>Is an allowed domain still a way out? An allowed service such as <code>github.com</code> can receive data into an attacker's account. Anthropic warns that broad domains create exfiltration paths and that hostname-only filtering without TLS inspection can be bypassed, for example by domain fronting. Keep the list short, and restrict by account, tenant or operation where the service allows it.</li>
+          <li>Which local services can a command reach? Docker and other Unix sockets and unauthenticated localhost services can give a command more power than file and domain rules suggest; Anthropic names these sockets as ways around its sandbox. Keep the Docker socket out of agent sessions, leave <code>sandbox.network.allowAllUnixSockets</code> and <code>allowLocalBinding</code> (macOS) off, and require authentication on local services.</li>
+          <li>On Windows: is there a plan for WSL2 or dev containers? VS Code's Windows sandbox needs Windows 11 25H2 build 26200.9550 or 26H1 build 28000.3086 or later.</li>
+          <li>Is high-risk work, such as unknown repos and autonomous runs, done in a dev container or cloud session with credential forwarding turned off where it is not needed?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>Sandbox off, network open, a Windows fleet assumed to be sandboxed, autonomous runs on the main laptop.</p>
+        <div class="paths"><span>Poisoned content</span><span>Supply chain</span><span>Stolen tokens</span></div>
+        <div class="seg" data-id="D07"></div>
+      </article>
+
+      <article class="risk" data-id="D08" data-title="Approval bypass" data-paths="content repo">
+        <div class="risk-head"><span class="rid">D08</span><div><h3>Approval bypass</h3><p class="en">OWASP ASI02 Tool Misuse · ASI09 Human-Agent Trust Exploitation</p></div></div>
+        <p>Approval prompts fail when they are switched off (Allow all, Autopilot, bypass modes, or a project file), or when the prompt shows something other than what happens. CVE-2025-53773 let a prompt injection make Copilot write <code>"chat.tools.autoApprove": true</code> into workspace settings.</p>
+        <p>GhostApproval (Wiz, July 2026) used repo symlinks to make six agents write outside the project, such as to <code>~/.ssh/authorized_keys</code>; in some, the prompt named a harmless file or came after the write. Anthropic disputed that it is a vulnerability.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is the VS Code policy <code>ChatToolsAutoApprove</code> set to block global auto-approve? It also takes Assisted permissions, Allow all and Autopilot out of use.</li>
+          <li>Do high-risk tools always ask? <code>ChatToolsEligibleForAutoApproval</code> can require approval for named tools, but it does not stop Assisted permissions or approvals saved earlier in a Copilot harness session.</li>
+          <li>Claude Code: are <code>permissions.disableBypassPermissionsMode</code> and, where needed, <code>permissions.disableAutoMode</code> set to <code>"disable"</code> in managed settings? Anthropic's settings reference also accepts <code>disableAutoMode</code> at top level. Check enforcement on the deployed version.</li>
+          <li>Codex: does <code>requirements.toml</code> set <code>allowed_approval_policies = ["on-request"]</code>, so <code>--ask-for-approval never</code> is refused? Combine it with the sandbox limit under D07 to block <code>--yolo</code>. Optional command rules in <code>[rules]</code> can force a prompt or forbid matching commands.</li>
+          <li>Codex: <code>on-request</code> does not mean a person decides: with <code>approvals_reviewer = "auto_review"</code> an automatic reviewer can answer. To require a human, set <code>allowed_approvals_reviewers = ["user"]</code> in <code>requirements.toml</code>. This sets who reviews requests, not which actions need approval. <span class="tag">[not run here]</span></li>
+          <li>Copilot: do managed <code>permissions.ask</code> rules cover the actions that must never be approved silently? GitHub says a managed ask rule always needs a fresh approval, which bypass modes, auto-approval, hooks and saved grants cannot satisfy. It applies to Agent Host sessions only.</li>
+          <li>Are approvals granted for the session rather than for the workspace or user?</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>Allow all used daily to save time, bypass flags in shell aliases, no central policy.</p>
+        <div class="paths"><span>Poisoned content</span><span>Booby-trapped project</span></div>
+        <div class="seg" data-id="D08"></div>
+      </article>
+
+      <article class="risk" data-id="D09" data-title="No inventory, version floor or agent telemetry" data-paths="content repo supply creds">
+        <div class="risk-head"><span class="rid">D09</span><div><h3>No inventory, version floor or agent telemetry</h3><p class="en">OWASP MCP08 Lack of Audit and Telemetry · ASI10 Rogue Agents (secondary, detection side)</p></div></div>
+        <p>You cannot act on the next GitSpawn without knowing which agents and versions run where. A Defender process event records the command lines of the new process and its parent, but only the grandparent's name and ID. It does not record the task, prompt, approval or agent session.</p>
+        <p>Forever Security caught the planted AGENTS.md by watching the agent, not only the user. VS Code ignores a policy value with a syntax error, so policies can fail quietly.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is there an inventory of agents, versions, extensions and MCP servers per machine, for example from Defender for Endpoint and Intune?</li>
+          <li>Is a minimum version enforced? Claude Code: <code>requiredMinimumVersion</code>, set to a current build rather than the first fixed one. Codex permission-profile requirements need 0.138.0 or later, so set the version floor before relying on them.</li>
+          <li>Is managed-settings JSON validated before rollout? A Claude Code managed settings file, plist or HKLM value that is not valid JSON stops Claude Code from starting, and a developer with local admin rights can edit the managed policy itself.</li>
+          <li>Can you see which commands agents started? A first Defender advanced hunting query <span class="tag">[not run here]</span>. It matches only events where the initiating process or its parent looks like an agent, so deeper processes and renamed agents are missed. Join on process IDs and creation times to rebuild the chain:
+            <div class="cmd"><pre><code>DeviceProcessEvents
+| where InitiatingProcessCommandLine has_any ("claude", "codex", "copilot")
+    or InitiatingProcessParentFileName has_any ("claude", "codex", "copilot")
+| project Timestamp, DeviceName, InitiatingProcessParentFileName,
+    InitiatingProcessParentId, InitiatingProcessId,
+    InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Does agent telemetry reach the SIEM? VS Code: <code>CopilotOtelEnabled</code> and <code>CopilotOtelEndpoint</code>. Decide whether to capture prompt content (<code>CopilotOtelCaptureContent</code>). VS Code says hooks are not a complete audit trail.</li>
+          <li>Are policies actually applied? In VS Code run <b>Developer: Policy Diagnostics</b>; in Claude Code run <code>/status</code> and look for Enterprise managed settings on the Setting sources line.</li>
+          <li>Does each policy reach every harness? Some do not: <code>ChatMCP</code> misses MCP servers the Copilot runtime finds itself, and <code>ChatToolsEligibleForAutoApproval</code> does not stop Assisted permissions or saved approvals. Test each one with a real session.</li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>No agent inventory, updates left to each user, telemetry off, hooks treated as a full audit log.</p>
+        <div class="paths"><span>Poisoned content</span><span>Booby-trapped project</span><span>Supply chain</span><span>Stolen tokens</span></div>
+        <div class="seg" data-id="D09"></div>
+      </article>
+
+      <article class="risk" data-id="D10" data-title="Code and context sent to unapproved AI services" data-paths="">
+        <div class="risk-head"><span class="rid">D10</span><div><h3>Code and context sent to unapproved AI services</h3><p class="en">Data governance, not an OWASP attack class</p></div></div>
+        <p>Model requests can include code, files the agent read, terminal output, tool results and sometimes secrets. The risk is where they go: a personal account, a provider without a company agreement, or an own-key model, where VS Code says content filtering is not guaranteed. In July 2026 Grok Build CLI was found uploading whole Git repositories to xAI's storage.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is <code>ChatApprovedAccountOrganizations</code> set to your approved GitHub organisations? It checks the signed-in account's organisation membership, so a personal account that is a member can qualify; it does not require a company-managed identity. <code>*</code> accepts any signed-in GitHub or GHE account, so do not use it to restrict membership.</li>
+          <li>Claude Code: <code>forceLoginMethod</code> and <code>forceLoginOrgUUID</code> in managed settings.</li>
+          <li>Which agents and providers are approved, and is the list enforced on the machine, not only written in a policy? In VS Code the Claude and Codex harnesses are turned off when Copilot enterprise-managed settings apply.</li>
+          <li>Does session sync to GitHub (<code>CopilotSessionSync</code>) fit your data rules?</li>
+          <li>Does the agreement with each approved provider settle retention, use for training, data residency, subprocessors and deletion? Pinning the account is not enough without these terms. <span class="tag">[inference]</span></li>
+        </ul>
+        <p class="finding"><span class="lbl">Typical findings</span>Personal subscriptions on work laptops, no list of approved providers, own-key models in use.</p>
+        <div class="paths"><span>Governance</span></div>
+        <div class="seg" data-id="D10"></div>
+      </article>
+    </div>
+
+    <section id="respond">
+      <h2>If something got in</h2>
+      <p class="sub">Removing a planted instruction file or updating the agent does not undo what already ran. In Forever Security's case Codex first changed its own settings, which then applied to every later Codex session in any project. The order below is my judgement. <span class="tag">[inference]</span></p>
+      <ol class="ir">
+        <li><b>Isolate the device</b> through your endpoint tool before cleaning it, so stolen sessions and any open tunnel stop working from that machine. Keep it powered on and do not wipe it yet.</li>
+        <li><b>Preserve evidence before any cleanup or rebuild.</b> Microsoft's incident-response guidance says not to destroy forensic evidence. Copy to storage the user cannot change: agent transcripts (they age out; see Claude Code's <code>cleanupPeriodDays</code>), agent and MCP config, shell history, planted files, package artifacts, and endpoint, code host, cloud and identity logs. <span class="tag">[inference]</span> Collect quickly, so revoking access is not delayed.</li>
+        <li><b>Revoke tokens and sessions</b>, not only passwords: GitHub, npm, cloud, SSH keys, MCP OAuth tokens and the agents' own sign-in tokens. Forever Security advises assuming the agent login token leaked, since a stolen token works as a live session.</li>
+        <li><b>Look for persistence outside the repo</b>: user-level agent config such as <code>~/.codex/config.toml</code>, <code>~/.claude/settings.json</code> and MCP addresses in <code>~/.claude.json</code>, VS Code user settings, user tasks and extensions, global Git config and hooks, shell startup files, and services or scheduled jobs, including a <code>code tunnel</code> service.</li>
+        <li><b>Follow the identity downstream</b>: pushes, pull requests, workflow runs, package publishes, and cloud and SaaS sign-ins or changes made with the developer's credentials during the window.</li>
+        <li><b>Recover from a known-good state</b> once the evidence is preserved and the scope is clear: rebuild or restore the machine, reissue credentials after the rebuild, and check repos and packages the identity could change.</li>
+      </ol>
+    </section>
+  </div>
+
+<!-- 3 REVIEW -->
+  <div class="panel" role="tabpanel" id="p-review" aria-labelledby="t-review" hidden>
+    <section>
+      <h2>How the analysis was checked</h2>
+      <p class="sub" id="reviewIntro">The earlier drafts were checked in persona-based review passes. Their notes and test records are not attached to this page, so treat them as structured self-checks rather than independent reviews. Their findings and the changes they caused are listed below. The Git behaviour they flagged was re-run on 29 October and 1 November 2026; see Evidence status.</p>
+      <div class="personas" id="personas"></div>
+    </section>
+    <section>
+      <h2>Merge check, 29 October 2026</h2>
+      <p class="sub">The separate More risks tab was merged into the Risk map. Three more persona-based passes checked the merge before it was published. Afterwards the further risks were renamed from E01 to E07 to D11 to D17 and given their own markers in the diagram.</p>
+      <div class="personas">
+        <div class="persona"><h3>Content-integrity auditor</h3><p class="role">Did anything get lost or changed by accident?</p>
+          <ul>
+            <li>Compared old and new versions field by field. Every further risk kept its ID, title, description, relevance and control, and the top 10, sources and review data were unchanged.</li>
+            <li>Found that old links to the More risks section no longer reached it. Fixed.</li>
+          </ul></div>
+        <div class="persona"><h3>Security architect</h3><p class="role">Are the further risks placed and scoped correctly?</p>
+          <ul>
+            <li>Policy gaps between agent harnesses repeated points already in the top 10, so it was folded into D09 as a check. There are now seven further risks instead of eight.</li>
+            <li>Widened where several risks sit in the map, and rewrote VS Code tunnels and remote sessions as inbound remote access, with Microsoft's Dev Tunnels policies and Claude Code's remote-control switch as controls.</li>
+            <li>Noted that VS Code tunnels have real-world use while D09 and D10 do not. The top 10 now says so.</li>
+          </ul></div>
+        <div class="persona"><h3>QA and accessibility engineer</h3><p class="role">Does the merged map work by mouse, keyboard and screen reader?</p>
+          <ul>
+            <li>Confirmed every chip, table button and popover link outlines the right boxes, with no script errors and no sideways page scroll in light or dark at phone and desktop width.</li>
+            <li>Fixed: keyboard focus hidden on outlined boxes, focus lost after popover links, a table wider than its column, an over-tall popover, and table rows that read the full description as a header.</li>
+          </ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Review round, 29 October 2026</h2>
+      <p class="sub">Five reviewer lenses raised 22 findings. Each was checked against the source named below before the page changed; all were taken over, some in narrower form.</p>
+      <div class="personas">
+        <div class="persona"><h3>Security architect</h3><p class="role">Is the map drawn correctly?</p>
+          <ul>
+            <li>Rewrote the opening line: the same user account does not mean the same effective access once sandboxes and tool permissions apply.</li>
+            <li>D07 now describes defaults per product. Codex sandboxes commands with network off by default (OpenAI docs).</li>
+            <li>Added direct network paths from the terminal and from extensions, a two-way tunnel path, and a box for remote MCP servers. The egress point is now labelled as a conceptual boundary.</li>
+          </ul></div>
+        <div class="persona"><h3>Offensive security researcher</h3><p class="role">Are attack prerequisites stated correctly?</p>
+          <ul>
+            <li>D02 separates clones from repos received as files. Manifold's write-up says a clone does nothing; re-run here, a clone carried no config or hooks but did carry tracked <code>.vscode/</code>.</li>
+            <li>GitSpawn is described as unsafe background Git calls, not seven fsmonitor runs: ultrareview used another key and Codex differed in mechanism (Manifold).</li>
+            <li>Added <code>task.allowAutomaticTasks</code> (VS Code tasks docs) and the Plugin4Shell prerequisites (CSA research note).</li>
+          </ul></div>
+        <div class="persona"><h3>Developer-platform engineer</h3><p class="role">Do the controls do what the page says?</p>
+          <ul>
+            <li>D04 separates read restriction from edit approval. <code>chat.tools.edits.autoApprove</code> only gates edits (VS Code security docs).</li>
+            <li>Claude Code sandbox limits do not cover the Read or WebFetch tools (Anthropic sandboxing docs). Checks added to D04 and D07.</li>
+            <li>Resolved the VSIX question, made CODEOWNERS enforcement explicit, qualified the worktree advice, and added Codex <code>requirements.toml</code> controls to D04, D06, D07, D08 and D09.</li>
+          </ul></div>
+        <div class="persona"><h3>Incident responder and data governance</h3><p class="role">Can a team detect, respond and govern?</p>
+          <ul>
+            <li>D09 credits Defender with process command lines and names what it lacks (DeviceProcessEvents schema). The audit round below narrowed this: the schema has the initiating process's command line but not its parent's.</li>
+            <li>D10 no longer says every prompt carries code, and asks for retention, training, residency, subprocessor and deletion terms.</li>
+            <li>Added an incident-response section and widened D16 to signed-in browser sessions.</li>
+          </ul></div>
+        <div class="persona"><h3>Assurance and QA</h3><p class="role">Are claims and the page itself sound?</p>
+          <ul>
+            <li>The ranking is now a proposed priority order, and review claims without records were reworded.</li>
+            <li>Fixed the tally, which counted Unknown as Not assessed. Unknown now has its own count.</li>
+            <li>Opening a checklist from the map now moves keyboard focus to the card, and the page declares its language.</li>
+          </ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Audit round, 29 October 2026</h2>
+      <p class="sub">An outside audit raised findings on controls, the diagram, the response sequence and some wording. Each was checked against the primary source before the page changed. All held; some were adopted in narrower form, as noted. Where a source could not settle a point, the page says so.</p>
+      <div class="personas">
+        <div class="persona"><h3>Controls and checks</h3><p class="role">D01, D04, D06, D07, D08, D11</p>
+          <ul>
+            <li>D01: a managed npmrc is a default, not enforcement. npm applies command line, environment, project, user, then global (npm docs). Added a route for urgent fixes, since a cooldown can block <code>npm audit fix</code>.</li>
+            <li>D04 and D08: added GitHub's managed <code>permissions.deny</code> with <code>Read(...)</code>, its Agent Host limit, <code>sandbox.userPolicy.filesystem.deniedPaths</code>, and managed <code>permissions.ask</code>.</li>
+            <li>D06 and D07: added local services and sockets, local HTTP MCP checks (Origin, localhost, authentication) and the allowed-domain exfiltration route, with Anthropic's own warning on hostname filtering.</li>
+            <li>D08: in Codex, <code>on-request</code> can still be answered by automatic review. Added <code>allowed_approvals_reviewers</code> with <code>["user"]</code>, which OpenAI documents for manual approval (confirmed 30 October).</li>
+            <li>D11: branch protection does not cover CI that runs before merge. Added a CI boundary (GitHub secure use reference). The pre-merge trigger point is marked as inference.</li>
+          </ul></div>
+        <div class="persona"><h3>Diagram</h3><p class="role">Are the paths drawn that the text describes?</p>
+          <ul>
+            <li>Added direct Read and Edit arrows from the agent to workspace files and agent local data, outside the shell sandbox.</li>
+            <li>Added a Local services box (Docker and other sockets, localhost ports) and an arrow from the agent.</li>
+            <li>Added the return of remote MCP results to the agent and remote MCP access to downstream SaaS.</li>
+            <li>The remote MCP box no longer implies a supplier runs it: ownership is separate from location (MCP architecture overview).</li>
+            <li>Package fetches now enter the terminal rather than the workspace files box, and the credentials and workspace files boxes swapped places to keep the new arrows clear.</li>
+          </ul></div>
+        <div class="persona"><h3>Wording and assurance</h3><p class="role">D06, D09, D16, response section, statuses</p>
+          <ul>
+            <li>D06: plugin updates are automatic only where the marketplace has them on, and Claude Code defaults differ by marketplace type. The unverified Codex side was removed on 1 November.</li>
+            <li>D09: the Defender schema has the initiating process's command line but not its parent's. The query now includes copilot and is labelled an initial query with incomplete coverage.</li>
+            <li>"Most 2025 and 2026 incidents" became "Several documented" incidents. D16's quarter of sessions is attributed to Forever Security's customer telemetry.</li>
+            <li>Response section: evidence is preserved before cleanup or rebuild, and the Codex persistence is described as the user's sessions, not the whole computer.</li>
+            <li>Added a definition of OK: a named product and operating system, with evidence and date.</li>
+          </ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Verification round, 29 October 2026</h2>
+      <p class="sub">A further audit raised ten findings. Each was checked against its source before the page changed; all ten changed the content, some in narrower form. A suggested field for product, operating system, version, assessor, evidence and date was not built: the page stores status only, a documented limit. Unconfirmed points are marked in the text.</p>
+      <div class="personas">
+        <div class="persona"><h3>Controls and checks</h3><p class="role">Findings 1 to 5</p>
+          <ul>
+            <li>npm: <code>npm install</code> runs a root <code>.npm-extension.mjs</code> or <code>.cjs</code>; <code>npm ci</code> does not (npm v12 docs). Added to D01, D02 and the Current box, with <code>dangerously-allow-all-scripts</code> and a review of <code>allowScripts</code> grants. Whether script approval covers the file is marked inference.</li>
+            <li>Codex: an empty <code>mcp_servers</code> table disables all servers, and plugin-bundled servers use <code>plugins.&lt;plugin&gt;.mcp_servers</code> (OpenAI managed configuration). The 30 October check confirmed that OpenAI documents separate rules for Git marketplace sources, bundled plugins and workspace plugins.</li>
+            <li>D06 now covers token audience, token passthrough and per-client consent for proxy servers (MCP security best practices, draft).</li>
+            <li>D07 now asks for the effective sandbox policy and lists the helper processes outside it (Anthropic sandbox docs).</li>
+            <li>D04 separates reading credential files from using exposed helpers or agents, and adds <code>ssh-add -t</code>, <code>-c</code> and <code>-h</code> (OpenBSD man page).</li>
+          </ul></div>
+        <div class="persona"><h3>Diagram</h3><p class="role">Findings 6 and 7</p>
+          <ul>
+            <li>Added a browser profile box outside the shell sandbox, and arrows from the terminal to local services, from local MCP servers to the agent and from model providers back. The top row was narrowed to fit.</li>
+            <li>The caption said arrows show selected paths, not every data flow, and split access to a remote MCP server from its access to downstream SaaS. That split is now in the D06 map notes.</li>
+          </ul></div>
+        <div class="persona"><h3>Mapping, output quality and accessibility</h3><p class="role">Findings 8 to 10</p>
+          <ul>
+            <li>D09 now maps first to OWASP MCP08 Lack of Audit and Telemetry, with ASI10 as a secondary relationship (OWASP MCP Top 10, beta).</li>
+            <li>D11 now covers plausible but wrong or insecure agent code, gated by human review and security testing. GitHub's guidance does not address agent-written tests, so that check is marked inference.</li>
+            <li>Every marker, risk chip and map table button now carries its status in its accessible name and refreshes when the status changes.</li>
+          </ul></div>
+        <div class="persona"><h3>Found while checking</h3><p class="role">Not in the audit</p>
+          <ul>
+            <li>Claude Code approval keys: the location of <code>disableAutoMode</code> was initially marked contested. Resolved on 30 October: the current settings reference explicitly accepts both the top-level and nested forms.</li>
+            <li>Plugin4Shell: CSA reports automatic plugin updates on by default in Claude Code and Codex; Claude Code's docs differ by marketplace type. It was marked contested; D06 now attributes the default to CSA.</li>
+            <li>Codex <code>[experimental_network]</code> needs <code>enabled = true</code>; domain rules alone do not turn the proxy on.</li>
+          </ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Source corrections, 30 October 2026</h2>
+      <p>Six findings were corrected against current official documentation:</p>
+      <ul><li>D14: plugin-only settings still permit plugin customisations.</li>
+        <li>D10: the VS Code account gate checks organisation membership, not company ownership.</li>
+        <li>D07: WebFetch approval rules are not a destination allowlist.</li>
+        <li>D08: both disableAutoMode locations are documented.</li>
+        <li>D06: Codex marketplace source restrictions have an official reference with stated scope limits.</li>
+        <li>D08: the user approval-reviewer value is documented.</li></ul>
+      <p class="note">This was a document and source review. It did not rerun product enforcement tests or independently verify the earlier review and test records. Unrelated unresolved findings remain open.</p>
+    </section>
+
+    <section>
+      <h2>Fact check, 1 November 2026</h2>
+      <p>Statements were checked against their sources, and long ones were shortened. Changed:</p>
+      <ul><li>D03: GlassWorm reaches other editors, not every editor.</li>
+        <li>D04: <code>Read(./.env)</code> matches only the start folder; Dev Containers reuse local Git credentials and forward the SSH agent, as Microsoft words it.</li>
+        <li>D05: the planted AGENTS.md was reported in October; no find date is given.</li>
+        <li>D07: Codex leaves reads open by default; VS Code calls managed sandbox enforcement a preview.</li>
+        <li>D08: GhostApproval's misleading prompts hit some agents, not all.</li>
+        <li>D09: a local admin can edit any managed policy.</li>
+        <li>D10: the repo upload was Grok Build.</li>
+        <li>Map notes: background Git calls are GitSpawn, not Check Point; servers must check Origin and should bind to localhost and authenticate (MCP spec); VS Code has an MCP allowlist but no plugin marketplace lock.</li>
+        <li>Review and sources: Gen Digital counts protected users with detections; ClawHavoc's ClawHub count cites Antiy CERT.</li>
+        <li>Removed, since no source states them: that <code>ChatAgentNetworkFilter</code> skips terminal commands, two example tool names (D08) and a Codex update default (D06).</li>
+        <li>Long paragraphs were shortened, and past review notes that no longer match the page were put in the past tense.</li>
+      </ul>
+      <p class="note">The Git tests were re-run on Git 2.54.0 with the same results. No product enforcement tests were run.</p>
+    </section>
+
+    <section>
+      <h2>Evidence status</h2>
+      <div class="cols" id="evidence"></div>
+    </section>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
+    <section>
+      <h2>Sources</h2>
+      <p class="sub">The original review records these sources as opened on 29 October 2026. The six corrections dated 30 October used Microsoft's policy reference, Anthropic's settings and permissions references, and OpenAI's managed-configuration documentation. The 1 November fact check rechecked statements against them and added Grok Build and Antiy CERT. Dates in brackets are the page's own publication or update date.</p>
+      <ol class="sources" id="sourceList"></ol>
+    </section>
+  </div>
+
+  <footer>
+    <p>Marked <span class="tag">[inference]</span> is my judgement, not taken directly from a source. Marked <span class="tag">[unverified]</span> or <span class="tag">[not run here]</span> was not checked against a source or a real system here.</p>
+    <p>The git commands were re-run on 29 October 2026 on Git 2.43.0 and on 1 November 2026 on Git 2.54.0 in throwaway repos, including a normal clone and a copied folder. The npm, VS Code, PowerShell and Defender hunting commands were not run here.</p>
+    <p>Versions and dates change quickly in this area. Check the "Current" box against the sources before you use it in a report.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var store = {
+    get: function(k, d){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function htmlEl(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function listCell(items){
+    var td = htmlEl('td');
+    items.forEach(function(x, i){
+      var s = htmlEl('span', 'cl', x);
+      if (i < items.length - 1) s.appendChild(htmlEl('span', 'sr', ', '));
+      td.appendChild(s);
+    });
+    return td;
+  }
+
+  /* Tabs */
+  var tabs = $$('[role="tab"]');
+  var ids = tabs.map(function(t){ return t.getAttribute('data-tab'); });
+  function show(id, focus){
+    if (ids.indexOf(id) < 0) id = 'map';
+    tabs.forEach(function(t){
+      var on = t.getAttribute('data-tab') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+      if (on){
+        var bar = t.parentNode;
+        if (t.offsetLeft < bar.scrollLeft || t.offsetLeft + t.offsetWidth > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = Math.max(0, t.offsetLeft - 12);
+      }
+    });
+    ids.forEach(function(x){ var p = document.getElementById('p-' + x); if (p) p.hidden = (x !== id); });
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    store.set('dev-tab', id);
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ show(t.getAttribute('data-tab')); });
+    t.addEventListener('keydown', function(e){
+      var n = null;
+      if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+      if (n !== null){ e.preventDefault(); show(tabs[n].getAttribute('data-tab'), true); }
+    });
+  });
+  function toMore(){ show('map'); var m = document.getElementById('more'); if (m) setTimeout(function(){ m.scrollIntoView({ block: 'start' }); }, 0); }
+  var start = (location.hash || '').replace('#', '');
+  if (start === 'more') toMore();
+  else show(ids.indexOf(start) >= 0 ? start : store.get('dev-tab', 'map'));
+  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (h === 'more') toMore(); else if (ids.indexOf(h) >= 0) show(h); });
+
+  /* Copy */
+  function selectNode(node){
+    try { var r = document.createRange(); r.selectNodeContents(node); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch(e){}
+  }
+  function copyText(text, onOk, onFail){
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(onOk, onFail); }
+      else { onFail(); }
+    } catch(e){ onFail(); }
+  }
+  $$('.cmd .copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code = btn.parentNode.querySelector('code');
+      copyText(code.textContent, function(){
+        btn.textContent = 'Copied';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 1600);
+      }, function(){
+        selectNode(code);
+        btn.textContent = 'Selected, copy it yourself';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 2400);
+      });
+    });
+  });
+
+  /* Status */
+  var OPTS = [['ok','OK'],['part','Partial'],['miss','Missing'],['unk','Unknown']];
+  var LABEL = { ok:'OK', part:'Partial', miss:'Missing', unk:'Unknown' };
+  var status = store.get('dev-status', {});
+  var segs = $$('.seg');
+  segs.forEach(function(seg){
+    var id = seg.getAttribute('data-id');
+    var lab = htmlEl('span', 'lbl', 'Status');
+    seg.setAttribute('role', 'radiogroup');
+    seg.setAttribute('aria-label', 'Status for ' + id);
+    seg.appendChild(lab);
+    OPTS.forEach(function(o){
+      var inp = document.createElement('input');
+      inp.type = 'radio'; inp.className = 'sr'; inp.name = 'st-' + id; inp.id = 'st-' + id + '-' + o[0]; inp.value = o[0];
+      if (status[id] === o[0]) inp.checked = true;
+      var l = document.createElement('label');
+      l.htmlFor = inp.id; l.className = 'pill v-' + o[0]; l.textContent = o[1];
+      inp.addEventListener('change', function(){ status[id] = o[0]; store.set('dev-status', status); tally(); });
+      seg.appendChild(inp); seg.appendChild(l);
+    });
+  });
+  function tally(){
+    var total = segs.length, c = { ok:0, part:0, miss:0, unk:0 };
+    segs.forEach(function(s){ var v = status[s.getAttribute('data-id')]; if (c.hasOwnProperty(v)) c[v]++; });
+    var none = total - c.ok - c.part - c.miss - c.unk;
+    $('#n-ok').textContent = c.ok;
+    $('#n-part').textContent = c.part;
+    $('#n-miss').textContent = c.miss;
+    $('#n-unk').textContent = c.unk;
+    $('#n-none').textContent = none;
+    ['ok','part','miss','unk'].forEach(function(k){ $('#b-' + k).style.width = (c[k] / total * 100) + '%'; });
+    paintDiagram();
+  }
+
+  function summary(){
+    var d = new Date();
+    var lines = ['Developer workstation risk map, status ' + d.toLocaleDateString('en-GB'), ''];
+    segs.forEach(function(s){
+      var id = s.getAttribute('data-id');
+      var art = s.closest('.risk');
+      lines.push(id + ' ' + (art ? art.getAttribute('data-title') : '') + ': ' + (LABEL[status[id]] || 'Not assessed'));
+    });
+    lines.push('', 'OK means the control is in place and tested for a named product and operating system, with evidence and date recorded outside this page.');
+    return lines.join('\n');
+  }
+  var out = $('#summaryOut'), msg = $('#copyMsg');
+  $('#copySummary').addEventListener('click', function(){
+    var text = summary();
+    copyText(text, function(){ out.hidden = true; msg.textContent = 'Copied to the clipboard.'; },
+      function(){ out.value = text; out.hidden = false; out.focus(); out.select(); msg.textContent = 'The text is selected. Copy it yourself.'; });
+  });
+  $('#resetBtn').addEventListener('click', function(){ $('#resetConfirm').hidden = false; $('#resetBtn').hidden = true; });
+  $('#resetNo').addEventListener('click', function(){ $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false; });
+  $('#resetYes').addEventListener('click', function(){
+    status = {}; store.set('dev-status', status);
+    $$('.seg input').forEach(function(i){ i.checked = false; });
+    tally();
+    $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false;
+    msg.textContent = 'Status reset.';
+  });
+
+  /* Filter */
+  var DESC = {
+    all: 'Shows all ten. The link between attack path and risk is my judgement.',
+    content: 'Poisoned content: a web page, issue, README or tool output carries instructions, and the agent acts on them with the developer’s rights.',
+    repo: 'Booby-trapped project: a repo, archive or shared folder is built so that opening it, or letting an agent look at it, runs code.',
+    supply: 'Supply chain: an extension, package, MCP server, plugin or skill is malicious from the start or turns malicious in an update.',
+    creds: 'Stolen tokens: malware or a hijacked agent collects keys and tokens from the machine and uses them elsewhere.'
+  };
+  var chips = $$('.chip');
+  var desc = $('#pathDesc');
+  chips.forEach(function(ch){
+    ch.addEventListener('click', function(){
+      var p = ch.getAttribute('data-path');
+      chips.forEach(function(c){ c.setAttribute('aria-pressed', c === ch ? 'true' : 'false'); });
+      $$('.risk').forEach(function(r){
+        r.hidden = !(p === 'all' || (' ' + r.getAttribute('data-paths') + ' ').indexOf(' ' + p + ' ') >= 0);
+      });
+      desc.textContent = DESC[p] + ' ';
+      desc.appendChild(htmlEl('span', 'tag', '[inference]'));
+    });
+  });
+
+  /* More risks, review and sources (data) */
+  var MORE = [{"id": "D11", "t": "Agent changes reach shared repos and pipelines unchecked", "d": "The agent pushes, opens pull requests or starts workflows with the developer's identity. Branch protection governs what merges, not what runs: workflows can run before anything merges. [inference] GitHub's secure use reference treats repository write access as access to its secrets. GitHub also says generated code can look valid while being wrong.", "l": "m", "c": "For what merges: required review and narrowly scoped tokens. For what runs: least-privilege GITHUB_TOKEN permissions, environments with required reviewers, CODEOWNERS on workflow files and ephemeral runners. Claude Code ask rules are not a boundary: git -C . push does not match Bash(git push *). Add security scans, and check changed tests still fail when behaviour breaks. [inference]"}, {"id": "D12", "t": "Destructive actions with no attacker involved", "d": "VS Code warns that even without malicious intent an agent may provision cloud resources, change infrastructure, push code or trigger a deployment, all with the developer's credentials.", "l": "m", "c": "Keep production credentials off developer machines. A separate Git worktree keeps agent edits apart from yours, but it does not limit credentials, network access, other folders or the shared .git metadata, so pair it with a sandbox or container and backups you can restore. [inference]"}, {"id": "D13", "t": "VS Code tunnels used as a backdoor", "d": "Attackers with a foothold start a VS Code tunnel with code tunnel, from VS Code or the standalone CLI, and can install it as a service. They then control the machine through Microsoft infrastructure. Unit 42 reported this from Stately Taurus in 2024, and SentinelLabs in Operation Digital Eye.", "l": "h", "c": "On Windows, use the Dev Tunnels policies (Disable Dev Tunnels, or allow only your Entra tenant). Alert on code tunnel processes, since Microsoft does not say whether the policies cover the code CLI."}, {"id": "D14", "t": "Poisoned agent memory", "d": "Agent memory can keep an attacker's instructions alive after the first session (OWASP ASI06). AST01 describes skills that write into an agent's identity file.", "l": "m", "c": "Turn off agent memory where it is not needed (Claude Code autoMemoryEnabled). Block standalone customisations with ChatStrictPluginOnlyCustomization (VS Code) or strictPluginOnlyCustomization (Claude Code). Customisations from plugins are still allowed, so also restrict plugins and marketplaces; Anthropic recommends pairing its setting with strictKnownMarketplaces."}, {"id": "D15", "t": "Remote sessions and remote control reach the laptop", "d": "Session sync to GitHub, sharing the machine as a GitHub environment through Mission Control, and Claude Code Remote Control widen who and what can reach agent sessions on the machine.", "l": "m", "c": "Decide ChatAgentHostGitHubEnvironments and CopilotSessionSync by policy, and set Claude Code disableRemoteControl where remote control is not needed."}, {"id": "D16", "t": "Agent-driven browsing", "d": "Browser tools let the agent open pages that can drop files or carry instructions. In Forever Security's customer telemetry, about a quarter of agent sessions open a browser. A browser that is already signed in also lets the agent act in those web apps as the user. [inference]", "l": "m", "c": "Limit browser tools (BrowserChatTools) and apply the domain allowlist (ChatAgentNetworkFilter). In Codex, set browser origin rules under [browser_use] and decide on computer_use, which can drive a browser as a native app. Give agents a browser profile without the user's sign-ins. [inference] for the profile."}, {"id": "D17", "t": "Telemetry becomes a sensitive data store", "d": "Capturing prompt, response and tool content (CopilotOtelCaptureContent) copies code, and any secrets in it, into the logging pipeline.", "l": "l", "c": "Capture metadata by default, and content only where the SIEM is approved for it."}];
+  var PERSONAS = [{"n": "Offensive security lead", "r": "Red team: are these the right risks, in the right order, in the right place?", "f": ["The ranking broke its own rule. It claimed to rank by observed exploitation, yet put prompt injection and approval bypass first, while packages, booby-trapped repos and extensions drove the 2025 and 2026 incidents. The list was reordered.", "The advice to set core.fsmonitor to false globally gave false assurance, because a repo's own config wins. Reproduced in a throwaway repo and replaced with patched agents, a config check before opening, and review on config folders.", "The sandbox boundary was drawn too wide. Claude Code runs MCP servers and hooks outside its sandbox, and dev containers forward credentials and run initializeCommand on the host. MCP servers now sit outside the boundary and .devcontainer is part of D02.", "s1ngularity was filed under approval bypass, but the malware already ran code through an install script. It moved to D01, and each incident now has one home.", "Added: the compromised official Amazon Q extension, the worm-to-repo loop on the code host, VS Code tunnels as a backdoor (now D13), and the point that provenance is not proof of safety."]}, {"n": "Endpoint and developer-platform engineer", "r": "Fleet view: do the settings, commands and versions exist, and do they work at scale?", "f": ["Most names matched current docs, including AllowedExtensions, ChatToolsAutoApprove, chat.tools.edits.autoApprove, ChatApprovedAccountOrganizations, the Copilot OpenTelemetry policies and the Claude managed keys.", "Windows sandboxing was overstated. Claude Code does not sandbox on native Windows, and VS Code's Windows sandbox is experimental and needs recent Windows 11 builds. The VS Code sandbox device policies do not enforce anything for Copilot harness sessions.", "The chat.mcp.access values were wrong as written. The security page says registryOnly and off, the source code says none, registry and all. Now marked contested.", "ChatAgentNetworkFilter covers the fetch tool and the integrated browser. Corrected.", "A deployment hazard was missing: a Claude managed settings file that is not valid JSON stops Claude Code from starting. Added to D09.", "Several quick checks were fixed: credential.helper across all scopes, a config check that reads a received repo without entering it, a PowerShell variant, and npm checks that return a useful answer. CVE-2025-48384 does not affect Windows."]}, {"n": "Auditor and fact-checker", "r": "Assurance: is every date, number, CVE and attribution right?", "f": ["Most claims held up against primary sources. The rest needed attribution or scope fixes, and one was a real technical error. The pass kept no count, so no figure is given.", "Confirmed dates and IDs for the OWASP lists, CVE-2025-53773, CVE-2025-48384 (in CISA KEV from 25 August 2025), CVE-2026-21852, CVE-2026-19592, GitSpawn, Plugin4Shell, ChainDrop, npm 12 and the package firewall.", "Flagged the same core.fsmonitor error as the other two passes. The behaviour was re-run in a throwaway repo on 29 October 2026.", "Narrowed several claims: CVE-2025-59536 covers code run through project config before trust, and the hooks finding had no CVE; 1,184 ClawHavoc skills is a minimum count; not all six GhostApproval agents showed a misleading dialog; Gen Digital's figures count protected users with detections, not confirmed infections.", "Softened wording: Microsoft calls a dev container an additional boundary rather than a stronger one, and one VS Code page says restricted permission levels stay visible but disabled."]}];
+  var EVIDENCE = [{"h": "Verified here", "i": ["Setting and policy names against the VS Code and Claude Code docs, both updated in October 2026.", "Git behaviour in throwaway repos, run 29 October 2026 on Git 2.43.0 and re-run 1 November 2026 on Git 2.54.0: a repo's own core.fsmonitor overrides the global value; the environment override and git -c both block it; a normal clone carries no config or hooks but keeps tracked .vscode files; a copied folder with .git runs the command.", "npm 12.0.0 was released on 8 July 2026, 12.2.1 is current, and npm 12 needs Node.js 22.22.2, 24.15.0 or 26 (npm registry).", "Incidents and CVEs against the vendor advisory or the original research where one was available.", "Against vendor docs on 29 October 2026: Codex sandbox defaults and requirements.toml keys, VS Code automatic tasks and VSIX allowlists, GitHub code-owner rules, Claude Code sandbox scope and Defender process columns.", "In the audit round: Copilot managed permissions, Actions secure use, npm config precedence, MCP transport security (2025-06-18), Claude Code plugin update defaults, Codex automatic review and Microsoft incident-response guidance.", "Second pass, 29 October 2026: npm 12 script approval, Claude Code sandbox helpers, Codex mcp_servers tables and approval reviewers, MCP security best practices (draft), ssh-add options, OWASP MCP Top 10 names, GitHub generated-code guidance, VS Code, Claude Code and Codex setting names, and the Plugin4Shell, GitSpawn and ChainDrop figures.", "Source corrections, 30 October 2026: six findings checked against current Microsoft policy, Anthropic settings and permissions, and OpenAI managed-configuration documentation. Updated D06, D07, D08, D10 and D14, the map summaries and source notes. No product enforcement tests were run in this correction pass.", "Fact check, 1 November 2026: every statement rechecked against its source, then corrected, shortened or cut. Git re-run on 2.54.0. GitHub's sandbox.userPolicy keys confirmed. Grok Build and Antiy CERT sources added."]}, {"h": "My judgement", "i": ["The priority order, which is not scored, and the mapping to OWASP IDs.", "Where each risk sits on the map, and the owner per zone.", "Relevance of the further risks, and the friction estimates for first controls."]}, {"h": "Still open", "i": ["The valid chat.mcp.access values, since Microsoft's docs and source disagree.", "Whether ChatToolsAutoApprove hides the permission levels or leaves them visible but disabled, since two VS Code pages say different things.", "Whether VS Code blocks reads of secret files outside Agent Host sessions. GitHub documents managed Read(...) deny rules for Copilot Agent Host sessions only; none was found for other harnesses, which does not mean none exists.", "How Codex [experimental_network] behaves on Windows; OpenAI says support is limited.", "Whether Claude Code releases after 2.1.252 closed the second GitSpawn path. No source says.", "Copilot's Plugin4Shell status after September 2026.", "The npm, VS Code, PowerShell and Defender hunting commands were not run on a managed machine.", "How an empty Codex mcp_servers table treats plugin-bundled servers was not tested. OpenAI documents separate controls for bundled, workspace and Git-sourced plugins; check each route in use.", "Whether npm script approval covers the root .npm-extension file. The npm page is silent."]}];
+  var SOURCES = [{"t": "Secure AI-assisted development in VS Code", "u": "https://code.visualstudio.com/docs/agents/run/security", "n": "Microsoft (October 2026). Trust boundaries, approvals, sandbox, risk categories, policy gaps per harness."}, {"t": "Centrally manage VS Code settings with policies", "u": "https://code.visualstudio.com/docs/enterprise/policies", "n": "Microsoft (28.10.2026). Policy names and behaviour, including the approved-organisation membership gate and plugin-only customisation scope. Rechecked for the six corrections on 30.10.2026."}, {"t": "Manage approvals and permissions", "u": "https://code.visualstudio.com/docs/agents/run/approvals", "n": "Microsoft. Permission levels and terminal auto-approval."}, {"t": "Manage extensions in enterprise environments", "u": "https://code.visualstudio.com/docs/enterprise/extensions", "n": "Microsoft. AllowedExtensions and the private marketplace."}, {"t": "Claude Code: example settings files", "u": "https://code.claude.com/docs/en/settings-example", "n": "Anthropic. Managed settings keys for permissions, MCP, plugins, sandbox and versions."}, {"t": "OWASP Top 10 for Agentic Applications for 2026", "u": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/", "n": "OWASP GenAI Security Project (9.12.2025). ASI names cross-checked against secondary summaries."}, {"t": "OWASP MCP Top 10", "u": "https://owasp.org/www-project-mcp-top-10/", "n": "OWASP. Beta (phase 3). MCP01 to MCP10."}, {"t": "OWASP Agentic Skills Top 10: AST01 Malicious Skills", "u": "https://owasp.org/www-project-agentic-skills-top-10/ast01.html", "n": "OWASP. ClawHavoc and skill persistence."}, {"t": "GitHub Copilot: Remote Code Execution via Prompt Injection (CVE-2025-53773)", "u": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection", "n": "Embrace The Red, original research."}, {"t": "Researcher uncovers 30+ flaws in AI coding tools (IDEsaster)", "u": "https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html", "n": "The Hacker News (December 2025)."}, {"t": "North Korea-linked hackers target developers with VS Code projects", "u": "https://thehackernews.com/2026/01/north-korea-linked-hackers-target.html", "n": "The Hacker News (January 2026). tasks.json with runOn: folderOpen."}, {"t": "Organizations warned of exploited Git vulnerability", "u": "https://www.securityweek.com/organizations-warned-of-exploited-git-vulnerability/", "n": "SecurityWeek. CVE-2025-48384 in CISA KEV. Fixed versions from Computing."}, {"t": "Malicious .git configs can make Claude, Codex, Cursor and other AI agents run attacker code", "u": "https://thehackernews.com/2026/09/malicious-git-configs-can-make-claude.html", "n": "The Hacker News (2.9.2026). GitSpawn by Manifold Security, versions and mitigations."}, {"t": "Claude Code flaws left AI tool wide open to hackers", "u": "https://www.itpro.com/software/development/claude-code-flaws-left-ai-tool-wide-open-to-hackers-heres-what-developers-need-to-know", "n": "ITPro (27.2.2026). Check Point findings, CVE-2025-59536 and CVE-2026-21852."}, {"t": "GhostApproval: a trust boundary gap in six AI coding agents", "u": "https://labs.cloudsecurityalliance.org/research/csa-research-note-ghostapproval-ai-coding-agents-20260715-cs/", "n": "Cloud Security Alliance (15.7.2026), on Wiz research of 8.7.2026."}, {"t": "73 Open VSX sleeper extensions linked to GlassWorm", "u": "https://socket.dev/blog/73-open-vsx-sleeper-extensions-glassworm", "n": "Socket (25.4.2026). Earlier wave: socket.dev/blog/open-vsx-transitive-glassworm-campaign."}, {"t": "s1ngularity: Nx build system package compromised", "u": "https://stepsecurity.io/blog/supply-chain-security-alert-popular-nx-build-system-package-compromised-with-data-stealing-malware", "n": "StepSecurity (August 2025). Malware abusing local AI CLIs."}, {"t": "ChainDrop supply chain compromise: anatomy of a self-propagating worm", "u": "https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/", "n": "Microsoft Threat Intelligence (4.8.2026). Mitigations and Defender detections."}, {"t": "Upcoming breaking changes for npm v12", "u": "https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/", "n": "GitHub (9.6.2026). Current npm release checked on the npm registry, 29.10.2026."}, {"t": "GitHub package firewall in public preview", "u": "https://github.blog/changelog/2026-10-20-github-package-firewall-in-public-preview/", "n": "GitHub (20.10.2026)."}, {"t": "ToxicSkills: malicious AI agent skills on ClawHub", "u": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/", "n": "Snyk (5.2.2026)."}, {"t": "AI coding agents' 0-click RCE flaw (Plugin4Shell)", "u": "https://www.theregister.com/a/5297335", "n": "The Register (September 2026), on research by Air Security."}, {"t": "Infostealers have found a new target: your AI agent", "u": "https://www.gendigital.com/blog/insights/research/infostealers-your-ai-agent", "n": "Gen Digital (8.9.2026)."}, {"t": "AI coding agents fall for malicious instructions planted in the Downloads folder", "u": "https://www.helpnetsecurity.com/2026/10/26/ai-coding-agents-malware-openai-codex/", "n": "Help Net Security (26.10.2026), on Forever Security research."}, {"t": "Stealing MCP tokens in Claude Code via ~/.claude.json", "u": "https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm", "n": "Mitiga (5.5.2026)."}, {"t": "git-credential-store", "u": "https://git-scm.com/docs/git-credential-store", "n": "Git documentation. The store helper keeps credentials in plaintext."}, {"t": "Operation Digital Eye: China APT targets Europe via VS Code tunnels", "u": "https://securityaffairs.com/171879/uncategorized/operation-digital-china-apt-targets-europe.html", "n": "Security Affairs (11.12.2024), on SentinelLabs and Tinexta Cyber research."}, {"t": "Claude Code: sandboxing", "u": "https://code.claude.com/docs/en/sandboxing", "n": "Anthropic. Platforms (no native Windows), what runs outside the sandbox, default read scope, limits of hostname filtering, Unix and Docker sockets."}, {"t": "Claude Code: deploy managed settings", "u": "https://code.claude.com/docs/en/managed-settings", "n": "Anthropic. Delivery per OS, malformed files stop Claude Code, local admin caveat."}, {"t": "VS Code: agent sandboxing", "u": "https://code.visualstudio.com/docs/agents/run/agent-sandboxing", "n": "Microsoft. Windows 11 requirements, default network, credential pass-through, managed enforcement in preview."}, {"t": "Sharing Git credentials with your container", "u": "https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials", "n": "Microsoft. Dev Containers copy .gitconfig, reuse local Git credentials and forward the SSH agent."}, {"t": "Dev Container metadata reference", "u": "https://containers.dev/implementors/json_reference/", "n": "Dev Containers spec. initializeCommand runs on the host."}, {"t": "AWS security bulletin AWS-2025-015", "u": "https://aws.amazon.com/security/security-bulletins/AWS-2025-015/", "n": "AWS (23.7.2025). Amazon Q Developer extension 1.84.0."}, {"t": "Git arbitrary file write (CVE-2025-48384)", "u": "https://securitylabs.datadoghq.com/articles/git-arbitrary-file-write/", "n": "Datadog Security Labs. Windows not affected."}, {"t": "VS Code source: McpAccessValue", "u": "https://github.com/microsoft/vscode/blob/main/src/vs/platform/mcp/common/mcpManagement.ts", "n": "Microsoft. chat.mcp.access values none, registry, all."}, {"t": "Plugin4Shell research note", "u": "https://labs.cloudsecurityalliance.org/research/csa-research-note-plugin4shell-ai-coding-agent-supply-chain/", "n": "Cloud Security Alliance (September 2026). Patched versions and Copilot status. Opened by the fact-checker."}, {"t": "Stately Taurus abuses VS Code in Southeast Asian espionage", "u": "https://unit42.paloaltonetworks.com/stately-taurus-abuses-vscode-southeast-asian-espionage", "n": "Unit 42 (September 2024). First reported real-world use of code tunnel."}, {"t": "Dev Tunnels policies", "u": "https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/policies", "n": "Microsoft. Windows-only Group Policy for Dev Tunnels and the Remote - Tunnels extension."}, {"t": "Claude Code settings reference", "u": "https://code.claude.com/docs/en/settings-reference", "n": "Anthropic. Plugin-only customisation scope, strictKnownMarketplaces, autoMemoryEnabled, disableRemoteControl and allowManagedHooksOnly. Explicitly accepts disableAutoMode at top level and under permissions. Rechecked for the six corrections on 30.10.2026."}, {"t": "VS Code Remote Tunnels", "u": "https://code.visualstudio.com/docs/remote/tunnels", "n": "Microsoft. code tunnel from VS Code or the standalone CLI, and code tunnel service install."}, {"t": "GitSpawn: a single flaw lets untrusted repos run code", "u": "https://www.manifold.security/blog/ai-coding-agents-git-hijack", "n": "Manifold Security (1.9.2026). Original research: clone does nothing, ultrareview uses another key, Codex mechanism differs."}, {"t": "Integrate with external tools via tasks", "u": "https://code.visualstudio.com/docs/debugtest/tasks", "n": "Microsoft (28.10.2026). task.allowAutomaticTasks and runOn: folderOpen."}, {"t": "Codex: agent approvals and security", "u": "https://developers.openai.com/codex/agent-approvals-security", "n": "OpenAI. Default sandbox with command network off."}, {"t": "Codex managed configuration", "u": "https://learn.chatgpt.com/docs/enterprise/managed-configuration", "n": "OpenAI. requirements.toml: approval policies and the user reviewer, permission profiles, deny_read, MCP identities, network, browser, remote control and marketplace source restrictions, including their scope limits. Rechecked for the six corrections on 30.10.2026."}, {"t": "About code owners", "u": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners", "n": "GitHub. Review requests versus required code-owner approval, and owning CODEOWNERS itself."}, {"t": "DeviceProcessEvents table", "u": "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table", "n": "Microsoft (7.8.2026). Command lines of the created and initiating process; parent file name, ID and creation time, but no parent command line."}, {"t": "Secure use reference (GitHub Actions)", "u": "https://docs.github.com/en/actions/reference/security/secure-use", "n": "GitHub. Least-privilege GITHUB_TOKEN, environments with required reviewers, ephemeral runners, CODEOWNERS on workflows, repository write access and secrets."}, {"t": "Enterprise managed settings for GitHub Copilot", "u": "https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings", "n": "GitHub. Managed permissions (deny, ask, allow), Read(...) rules, Agent Host scope, sandbox deniedPaths."}, {"t": "MCP specification: transports (Streamable HTTP)", "u": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#security-warning", "n": "Model Context Protocol, version 2025-06-18. Origin validation, localhost binding, authentication. Newer versions were not compared."}, {"t": "MCP architecture overview", "u": "https://modelcontextprotocol.io/docs/learn/architecture", "n": "Model Context Protocol. A server is the program that serves context, regardless of where it runs; local and remote servers use different transports."}, {"t": "npm config", "u": "https://docs.npmjs.com/cli/v11/using-npm/config", "n": "npm. Precedence cli, env, project, user, global; min-release-age and min-release-age-exclude."}, {"t": "Claude Code: discover and install plugins", "u": "https://code.claude.com/docs/en/plugins/install", "n": "Anthropic. Auto-update defaults per marketplace type."}, {"t": "Codex: automatic review", "u": "https://learn.chatgpt.com/codex/sandboxing/auto-review", "n": "OpenAI. Automatic review of escalation requests under the on-request policy."}, {"t": "Plan incident response", "u": "https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents", "n": "Microsoft Learn. Balance urgency with precision; do no harm; do not destroy forensic evidence."}, {"t": "npm: .npm-extension", "u": "https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/", "n": "npm. Root extension file run by npm install, not npm ci; transformManifest limits; ignore-extension; extension-file."}, {"t": "npm config (v12)", "u": "https://docs.npmjs.com/cli/v12/using-npm/config", "n": "npm. allow-scripts, dangerously-allow-all-scripts, ignore-scripts, ignore-extension, extension-file, min-release-age."}, {"t": "MCP security best practices (draft specification)", "u": "https://modelcontextprotocol.io/specification/draft/basic/security_best_practices", "n": "Model Context Protocol. Confused deputy and per-client consent, token passthrough and audience validation, local server compromise."}, {"t": "ssh-add(1)", "u": "https://man.openbsd.org/ssh-add.1", "n": "OpenBSD. -t maximum lifetime, -c confirmation on each use, -h destination constraints (OpenSSH 8.9 or later)."}, {"t": "Responsible use of GitHub Copilot cloud agent", "u": "https://docs.github.com/en/copilot/responsible-use/copilot-coding-agent", "n": "GitHub. Generated code can look valid while being wrong; automated checks supplement human review."}, {"t": "Claude Code: permissions", "u": "https://code.claude.com/docs/en/permissions", "n": "Anthropic. Permission rules and modes, WebFetch domain approvals, and disabling bypass and auto mode. Rechecked for the six corrections on 30.10.2026."}, {"t": "Grok Build uploaded entire Git repositories to xAI storage, not just files it read", "u": "https://thehackernews.com/2026/07/grok-build-uploads-entire-git.html", "n": "The Hacker News (July 2026). Researcher cereblab, Grok Build CLI 0.2.93."}, {"t": "ClawHavoc: analysis of large-scale poisoning campaign targeting the OpenClaw skill market for AI agents", "u": "https://www.antiy.net/p/clawhavoc-analysis-of-large-scale-poisoning-campaign-targeting-the-openclaw-skill-market-for-ai-agents/", "n": "Antiy CERT (6.2.2026). At least 1,184 malicious skills on ClawHub; Koi Security named the campaign."}];
+  var START = [["D01", "A release cooldown (min-release-age) as a managed npmrc default, enforced at the registry or firewall where it must hold; npm 12 per team later", "Low"], ["D02", "Minimum agent versions, plus Git patching from vulnerability management", "Low"], ["D03", "AllowedExtensions at publisher level, seeded from the current inventory", "Moderate"], ["D04", "Expiry policy for GitHub and npm tokens", "None on the laptop"], ["D05", "CODEOWNERS review on AGENTS.md, CLAUDE.md, .vscode/, .claude/, .devcontainer/ and .npm-extension.*", "None on the laptop"], ["D06", "VS Code MCP registry mode plus Claude Code strictKnownMarketplaces", "Moderate"], ["D07", "Claude Code sandbox on macOS and WSL2 first, with failIfUnavailable", "Low on macOS"], ["D08", "Block global auto-approve and bypass mode by policy", "Low"], ["D09", "Agent and Git version inventory from Defender for Endpoint and Intune", "Low"], ["D10", "Restrict AI sign-in to approved organisations; verify company-managed identity separately", "Low"]];
+
+  var pw = $('#personas');
+  PERSONAS.forEach(function(p){
+    var d = htmlEl('div', 'persona');
+    d.appendChild(htmlEl('h3', null, p.n));
+    d.appendChild(htmlEl('p', 'role', p.r));
+    var ul = htmlEl('ul');
+    p.f.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
+    d.appendChild(ul);
+    pw.appendChild(d);
+  });
+  var ev = $('#evidence');
+  EVIDENCE.forEach(function(c){
+    var d = htmlEl('div', 'col');
+    d.appendChild(htmlEl('h3', null, c.h));
+    var ul = htmlEl('ul');
+    c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
+    d.appendChild(ul);
+    ev.appendChild(d);
+  });
+  var sl = $('#sourceList');
+  SOURCES.forEach(function(s){
+    var li = htmlEl('li');
+    var a = htmlEl('a', null, s.t); a.href = s.u; a.target = '_blank'; a.rel = 'noopener';
+    li.appendChild(a);
+    li.appendChild(htmlEl('span', null, s.n));
+    sl.appendChild(li);
+  });
+
+  /* Risk map */
+  var NS = 'http://www.w3.org/2000/svg';
+  var dgReady = false;
+  var dgSvg = document.getElementById('dg');
+  var pop = document.getElementById('dgPop');
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var RISKS = ['D01','D02','D03','D04','D05','D06','D07','D08','D09','D10'];
+  var ST = ['st-none','st-ok','st-part','st-miss','st-unk'];
+  var VBY = 52, VBW = 1240;
+
+  var ZONES = [
+    { x:20,  y:64,  w:236,  h:520, n:'1', t:'Untrusted inputs',      o:'INTERNET AND SUPPLIERS' },
+    { x:280, y:64,  w:640,  h:520, n:'2', t:'Developer workstation', o:'DEVELOPER, WITH THE ENDPOINT TEAM', cw:300 },
+    { x:984, y:64,  w:236,  h:520, n:'3', t:'Outbound services',     o:'SUPPLIERS AND YOUR TENANTS' },
+    { x:20,  y:616, w:1200, h:140, n:'4', t:'Governance and monitoring', o:'IT, SECURITY AND SOC', cw:300, note:'Sets policy for, and collects events from, every layer' }
+  ];
+  /* st = zone 1 to 4 */
+  var COMP = {
+    repo:   { x:36,   y:124, w:204, h:72, st:1, t:'Repos and shared files', s:'Clone, zip, drive, Downloads', short:'Repos' },
+    ext:    { x:36,   y:212, w:204, h:72, st:1, t:'Extension marketplaces', s:'VS Code Marketplace, Open VSX', short:'Extension marketplaces' },
+    web:    { x:36,   y:300, w:204, h:72, st:1, t:'Web, issues and docs', s:'Pages, PRs, tickets, READMEs', short:'Web and issues' },
+    addon:  { x:36,   y:388, w:204, h:72, st:1, t:'Agent add-ons', s:'MCP registries, plugins, skills' },
+    pkg:    { x:36,   y:476, w:204, h:72, st:1, t:'Package registries', s:'npm, PyPI and others' },
+    vscode: { x:296,  y:124, w:140, h:80, st:2, t:'VS Code', s:'Trust, settings, tasks' },
+    exth:   { x:452,  y:124, w:140, h:80, st:2, t:'Extensions', s:'Host runs as the user' },
+    instr:  { x:604,  y:124, w:150, h:80, st:2, t:'Instruction files', s:'AGENTS.md, CLAUDE.md' },
+    browser:{ x:768,  y:124, w:136, h:80, st:2, t:'Browser profile', s:'Signed-in sessions' },
+    agent:  { x:296,  y:240, w:608, h:96, st:2, t:'Agent harness', s:'Copilot, Claude Code, Codex and others', s2:'Model loop, tool calls, approvals, permission modes' },
+    term:   { x:296,  y:380, w:248, h:80, st:2, t:'Terminal and git CLI', s:'Shell, git, npm, pip: run as the user', short:'Terminal and git' },
+    svc:    { x:568,  y:380, w:140, h:80, st:2, t:'Local services', s:'Docker, sockets', short:'Local services' },
+    mcp:    { x:732,  y:380, w:172, h:80, st:2, t:'MCP servers (local)', s:'stdio or local HTTP', short:'MCP servers' },
+    files:  { x:504,  y:492, w:186, h:80, st:2, t:'Workspace files', s:'.vscode, .git/config, .env' },
+    creds:  { x:296,  y:492, w:190, h:80, st:2, t:'Credentials', s:'SSH, git, gh, az, npm tokens' },
+    adata:  { x:708,  y:492, w:196, h:80, st:2, t:'Agent local data', s:'Tokens, transcripts, MCP config' },
+    egress: { x:944,  y:124, w:18,  h:424, st:3, t:'Egress boundary (conceptual)', vert:'EGRESS', mx:936, my:172, vy:336, short:'Egress' },
+    llm:    { x:1000, y:124, w:204, h:72, st:3, t:'Model providers', s:'Requests, context, tool output' },
+    code:   { x:1000, y:212, w:204, h:72, st:3, t:'Code host and CI', s:'Push, pull requests, Actions' },
+    cloud:  { x:1000, y:300, w:204, h:72, st:3, t:'Cloud and SaaS', s:'Azure, M365, MCP-linked apps' },
+    mcpr:   { x:1000, y:388, w:204, h:72, st:3, t:'Remote MCP servers', s:'HTTP, run by a supplier or you', short:'Remote MCP' },
+    inet:   { x:1000, y:476, w:204, h:72, st:3, t:'Any internet domain', s:'Exfiltration, C2 servers', short:'Internet' },
+    policy: { x:36,   y:664, w:372, h:76, st:4, t:'Device policy (MDM)', s:'VS Code policies, agent managed settings, Intune', short:'Device policy' },
+    edr:    { x:424,  y:664, w:372, h:76, st:4, t:'Endpoint detection', s:'Defender for Endpoint: process and file events' },
+    tele:   { x:812,  y:664, w:392, h:76, st:4, t:'Agent telemetry and SOC', s:'OpenTelemetry, hooks, SIEM, response', short:'Agent telemetry' }
+  };
+  var ARROWS = [
+    { d:'M240 160 H296', l:'open', x:268, y:154, a:'middle' },
+    { d:'M240 248 H270 V188 H296', l:'install', x:262, y:218, rot:true },
+    { d:'M240 316 H296', l:'read', x:268, y:310, a:'middle' },
+    { d:'M240 424 H276 V328 H296', l:'add', x:268, y:378, rot:true },
+    { d:'M240 512 H268 V444 H296', l:'fetch', x:261, y:488, rot:true },
+    { d:'M436 164 H452' },
+    { d:'M366 204 V240', l:'hosts', x:372, y:226 },
+    { d:'M522 204 V240', l:'tools', x:528, y:226 },
+    { d:'M679 204 V240', l:'instructions', x:685, y:226 },
+    { d:'M836 204 V240', l:'pages', x:842, y:226 },
+    { d:'M443 336 V380', l:'runs', x:449, y:362 },
+    { d:'M818 336 V380', l:'starts', x:824, y:362 },
+    { d:'M872 380 V336', l:'output', x:878, y:362 },
+    { d:'M544 420 H568' },
+    { d:'M638 336 V380', l:'reaches', x:644, y:362 },
+    { d:'M556 336 V492', l:'read, edit', x:562, y:362 },
+    { d:'M720 336 V492', l:'read, edit', x:726, y:362 },
+    { d:'M520 460 V492', l:'writes', x:514, y:473, a:'end' },
+    { d:'M389 460 V492', l:'reads', x:395, y:473 },
+    { d:'M806 460 V492', l:'tokens', x:812, y:473 },
+    { d:'M904 288 H944' },
+        { d:'M904 420 H944' },
+    { d:'M904 170 H944' },
+    { d:'M962 160 H1000' },
+    { d:'M1000 184 H962' },
+    { d:'M962 248 H1000' },
+    { d:'M962 336 H1000' },
+    { d:'M962 424 H1000' },
+    { d:'M962 512 H1000' },
+    { d:'M944 312 H904' },
+    { d:'M1000 444 H962' },
+    { d:'M1102 388 V372' },
+    { d:'M536 460 V478 H944', l:'direct network', x:630, y:474, a:'middle' },
+    { d:'M560 124 V114 H948 V124', l:'extension traffic', x:800, y:110, a:'middle' },
+    { d:'M312 124 V102 H957 V124', l:'tunnel: commands come back in', x:322, y:114, both:true, dash:true }
+  ];
+  var PLACE = [["D01", "pkg", "ChainDrop in August 2026 put a credential-stealing worm into more than 400 npm packages through a preinstall script."], ["D01", "term", "Before npm 12, npm install ran dependency install scripts by default. s1ngularity used that foothold to drive local AI CLIs."], ["D01", "files", "Install scripts run inside the workspace and can change any file in it."], ["D01", "agent", "Agents install dependencies with no human looking at each package. GitHub names agents and CI as especially exposed."], ["D01", "code", "Stolen npm and GitHub tokens let the worm republish packages. Some copies carried valid provenance from a real CI workflow."], ["D02", "repo", "Fake job tests, shared archives and synced folders deliver projects built to run code when opened. They keep .git/config and hooks; a normal clone drops those but keeps tracked .vscode and .claude files."], ["D02", "vscode", "In a trusted workspace, a folderOpen task runs once automatic tasks are allowed (task.allowAutomaticTasks, off by default with a one-time prompt). Restricted mode blocks tasks and agents in VS Code until the code is reviewed."], ["D02", "files", ".vscode/tasks.json, .git/config, .devcontainer/devcontainer.json, .claude/settings.json and .mcp.json can all name a command to run."], ["D02", "term", "Git runs a core.fsmonitor helper on git status, and hooks on checkout, when the repo arrived with its own .git folder. A global setting does not override the repo's own config."], ["D02", "agent", "GitSpawn: background Git calls in several agents ran a command from the repo's Git config, sometimes before the trust prompt. Separately, Check Point found Claude Code running project config before trust (CVE-2025-59536)."], ["D02", "code", "Worms with stolen GitHub tokens push these config files into other repos, so the next clone carries the trap. Require review on config folders."], ["D03", "ext", "The official Amazon Q extension 1.84.0 shipped with injected code in 2025. GlassWorm has hit Open VSX repeatedly since October 2025."], ["D03", "exth", "Extensions run with the user's rights and can read any file the user can. GlassWorm's 2026 variants also install into other editors, such as VS Code, Cursor and Windsurf."], ["D03", "policy", "AllowedExtensions and an auto-update delay are the central controls in VS Code. They match declared identifiers and do not verify a VSIX package's origin. Forks need their own controls."], ["D04", "creds", "SSH keys, gh, az and npm tokens, and ~/.git-credentials (plaintext with the store helper) sit in predictable places."], ["D04", "files", ".env files and local config end up in agent context unless reads are blocked. Edit approval does not block reads. Read(./.env) matches only the start folder; Read(.env) matches any depth."], ["D04", "adata", "Infostealers now collect agent tokens, MCP configuration and prompt histories (Gen Digital, September 2026)."], ["D04", "term", "Sandboxed commands can still read credentials by default: Claude Code's sandbox reads ~/.ssh unless denied, and VS Code passes Git and gh credentials in."], ["D04", "cloud", "Long-lived, broad tokens turn one compromised laptop into cloud and SaaS access."], ["D04", "agent", "The agent's own Read and Edit tools open workspace files and agent config directly, outside the shell sandbox. Read deny rules, not only sandbox rules, decide whether .env files and ~/.ssh reach the model."], ["D05", "web", "Pages, issues, pull requests and READMEs can carry hidden instructions that the agent reads as commands."], ["D05", "repo", "A repo or a download can bring its own instruction files. Forever Security reported a planted AGENTS.md in a customer's Downloads folder in October 2026."], ["D05", "instr", "Agents are built to obey AGENTS.md, CLAUDE.md and rule files. VS Code notes that instructions guide the model and are not an enforcement boundary."], ["D05", "agent", "The model cannot reliably tell instructions from data. An agent started in the home folder or Downloads also reads far more than the project."], ["D05", "mcp", "MCP tool output goes straight into the model context, so a tool that reads attacker text passes it on."], ["D05", "mcpr", "Results from a remote MCP server return into the agent's context, so a server that relays attacker-controlled text passes prompt injection on."], ["D06", "addon", "Malicious skills (ClawHavoc on ClawHub) and swapped plugins (Plugin4Shell, research) arrive through add-on marketplaces."], ["D06", "mcp", "Local MCP servers run as the user. Their tool descriptions enter the model context, where poisoned text acts as instructions."], ["D06", "agent", "Plugin4Shell needed no click where automatic plugin updates were on. Current defaults differ by product and marketplace."], ["D06", "cloud", "MCP servers hold tokens for SaaS and cloud, so a bad server reaches well beyond the laptop. Access to the server and the server's access downstream are separate checks (token audience, no token passthrough)."], ["D06", "mcpr", "Remote MCP servers, whoever runs them, hold their own tokens, receive what the agent sends and return results into the model context. Allowlist them by URL. The MCP spec says they must accept only tokens issued for them and must not pass a client's token on."], ["D06", "policy", "VS Code, Claude Code and Codex each support an MCP allowlist. Claude Code and Codex can also restrict plugin marketplace sources; VS Code can set which plugins are enabled."], ["D06", "svc", "A local MCP server that uses HTTP rather than stdio can be reached by other local processes and, through DNS rebinding, by web pages. The MCP specification says it must validate Origin and should bind to localhost and authenticate."], ["D07", "agent", "Claude Code's sandbox covers shell commands only. Read, Edit and WebFetch follow permission rules instead. A WebFetch allow rule pre-approves matching requests; others fall to the permission mode, not an automatic block."], ["D07", "term", "Without a sandbox, commands run with the user's full file access. Codex sandboxes commands by default; Claude Code's sandbox is off by default and has no native Windows support. Commands can also open their own network connections."], ["D07", "mcp", "Claude Code runs local MCP servers, hooks, plugin monitors, LSP servers, the status line command and apiKeyHelper outside its sandbox with full access. VS Code can sandbox stdio servers on macOS and Linux."], ["D07", "svc", "Docker sockets, other Unix sockets and unauthenticated localhost services can give a command more reach than file and domain rules suggest. Anthropic names the Docker socket and Unix sockets as ways around the sandbox."], ["D07", "egress", "VS Code's agent sandbox leaves outbound network on by default; Codex keeps command network off by default. Without a domain allowlist, exfiltration is one request away. This is only a control point if traffic is forced through a proxy."], ["D07", "inet", "Any domain works for exfiltration and command and control when egress is open. An allowed service such as GitHub can also receive data into an attacker-controlled account."], ["D08", "agent", "Allow all, Autopilot and bypass modes remove the approval prompt. Assisted permissions use a model judge, which VS Code says is not a security boundary."], ["D08", "vscode", "A workspace settings file can switch on auto-approve. CVE-2025-53773 had the agent write that setting itself."], ["D08", "term", "Terminal auto-approve rules use best-effort command parsing. VS Code warns that aliases and quote tricks can slip past them."], ["D08", "policy", "ChatToolsAutoApprove in VS Code and disableBypassPermissionsMode in Claude Code lock this centrally."], ["D09", "policy", "Without an inventory of agents, versions, extensions and MCP servers you cannot tell who is exposed when the next flaw lands."], ["D09", "edr", "Defender records the command lines of a new process and of its parent. That shows an agent started a command, but not the prompt, task or approval behind it."], ["D09", "tele", "Agent telemetry (OpenTelemetry export in Copilot) shows tool calls. VS Code says hooks are not a complete audit trail."], ["D09", "agent", "Many 2026 fixes need a minimum agent version. Pin a current one centrally where the tool supports it."], ["D10", "llm", "Requests can carry selected code, file contents, terminal output and tool results to the model provider."], ["D10", "mcpr", "A remote MCP server is another recipient of code and context, with its own retention and location."], ["D10", "agent", "Personal accounts, own-key models and third-party harnesses may fall outside company terms and policy."], ["D10", "policy", "Restrict sign-in to approved organisations: ChatApprovedAccountOrganizations in VS Code and forceLoginOrgUUID in Claude Code. The VS Code gate checks membership, not company ownership of the GitHub account; its * value accepts any signed-in GitHub or GHE account."], ["D11", "agent", "The agent decides to push, open pull requests or start workflows, using the developer's identity. It can also write plausible code that adds vulnerabilities or changes tests to hide defects [inference]."], ["D11", "term", "git push runs from the terminal. Ask rules such as Bash(git push *) are easy to slip past, for example with git -C . push."], ["D11", "mcp", "A GitHub MCP server can open pull requests and start workflows without any git command."], ["D11", "code", "Branch protection and required review control what merges, not what runs. Workflows can run before merge, so add a CI boundary: restricted workflow permissions, protected environments with required reviewers and isolated, ephemeral runners."], ["D12", "agent", "VS Code warns that an agent may provision cloud resources, change infrastructure or trigger a deployment even without malicious intent."], ["D12", "files", "VS Code notes that the agent can create, modify and delete files in the workspace, and that edits go straight to disk."], ["D12", "creds", "The agent can do whatever the developer's credentials allow. Production credentials on the laptop raise the stakes."], ["D12", "cloud", "Changes to cloud and SaaS made with the developer's credentials are where accidental damage lands."], ["D13", "vscode", "code tunnel, from VS Code or the standalone CLI, gives remote control of the machine. It can also be installed as a service."], ["D13", "egress", "The tunnel connection starts outbound through Microsoft infrastructure but carries commands back in, and blends in with normal traffic. Decide at the proxy whether the tunnel service is allowed."], ["D13", "edr", "Alert on code tunnel processes and on tunnels installed as a service."], ["D13", "policy", "On Windows, the Dev Tunnels policies can turn tunnels off or limit them to your Entra tenant."], ["D14", "adata", "Agent memory persists between sessions, so an injected instruction can come back in every new session."], ["D14", "addon", "OWASP AST01 describes malicious skills that write into the agent's identity file and survive uninstall."], ["D14", "policy", "Turn memory off where it is not needed (Claude Code autoMemoryEnabled). Block standalone customisations and separately restrict permitted plugins and marketplaces; plugin-only settings still permit eligible plugin customisations."], ["D15", "agent", "Sharing the machine as a GitHub environment (Mission Control) or turning on Claude Code Remote Control lets agent sessions here be reached from other devices."], ["D15", "code", "Session sync sends Copilot session history to GitHub.com (CopilotSessionSync)."], ["D15", "policy", "ChatAgentHostGitHubEnvironments, CopilotSessionSync and Claude Code disableRemoteControl decide this centrally."], ["D15", "egress", "These features keep connections open to outside services, which the egress point can see and limit. [inference]"], ["D16", "agent", "Browser tools let the agent open pages on its own. In Forever Security's customer telemetry about a quarter of agent sessions open a browser."], ["D16", "web", "A page the agent visits can drop files into Downloads or carry instructions for the agent."], ["D16", "egress", "ChatAgentNetworkFilter limits which domains the fetch tool and the integrated browser can reach."], ["D16", "cloud", "A signed-in browser lets the agent act in web apps as the user. [inference]"], ["D17", "tele", "Capturing prompt, response and tool content copies code, and any secrets in it, into the logging pipeline."], ["D17", "policy", "CopilotOtelCaptureContent decides centrally whether content is captured."], ["D16", "browser", "Browser tools let the agent drive a browser. A signed-in profile carries the user's web sessions, which the agent reaches through tools outside the shell sandbox. [inference]"]];
+
+  var boxEls = {}, mkEls = [], selRisk = null, selComp = null, lastAnchor = null;
+  var MOREBY = {}; MORE.forEach(function(m){ MOREBY[m.id] = m; });
+  var XIDS = MORE.map(function(m){ return m.id; });
+  var ALL = RISKS.concat(XIDS);
+  function isX(r){ return !!MOREBY[r]; }
+
+  function markerLabel(r, id){
+    return r + ' ' + riskTitle(r) + (isX(r) ? ' (more risks)' : ', status: ' + stText(r)) + ', ' + COMP[id].t;
+  }
+  function svgEl(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function svgText(parent, x, y, cls, s, anchor){
+    var t = svgEl('text', { x:x, y:y }, parent);
+    if (cls) t.setAttribute('class', cls);
+    if (anchor) t.setAttribute('text-anchor', anchor);
+    t.textContent = s;
+    return t;
+  }
+  function riskTitle(r){
+    if (isX(r)) return MOREBY[r].t;
+    var c = document.querySelector('.risk[data-id="' + r + '"]'); return c ? c.getAttribute('data-title') : r;
+  }
+  function placesOf(r){ return PLACE.filter(function(p){ return p[0] === r; }); }
+  function placesAt(id){ return PLACE.filter(function(p){ return p[1] === id; }); }
+  function stOf(r){ return status[r] || 'none'; }
+  function stText(r){ return LABEL[status[r]] || 'Not assessed'; }
+  function setSt(e, r){ ST.forEach(function(s){ e.classList.remove(s); }); e.classList.add('st-' + stOf(r)); }
+  function markerEl(r, id){
+    for (var i = 0; i < mkEls.length; i++) if (mkEls[i].getAttribute('data-r') === r && mkEls[i].getAttribute('data-c') === id) return mkEls[i];
+    return null;
+  }
+  function idTag(r){
+    if (isX(r)) return htmlEl('span', 'idtag x', r);
+    var s = htmlEl('span', 'idtag', r); s.setAttribute('data-st-r', r); setSt(s, r); return s;
+  }
+
+  function buildDiagram(){
+    if (!dgSvg) return;
+    var defs = svgEl('defs', {}, dgSvg);
+    var am = svgEl('marker', { id:'dgArrow', viewBox:'0 0 10 10', refX:'9', refY:'5', markerWidth:'7', markerHeight:'7', orient:'auto-start-reverse' }, defs);
+    svgEl('path', { d:'M0,0 L10,5 L0,10 z', 'class':'ah' }, am);
+
+    ZONES.forEach(function(z){
+      svgEl('rect', { x:z.x, y:z.y, width:z.w, height:z.h, rx:10, 'class':'zn' }, dgSvg);
+      var cx = z.x + 8, cy = z.y + 8, cw = z.cw || (z.w - 16);
+      svgEl('polygon', { points:[cx + ',' + cy, (cx + cw - 10) + ',' + cy, (cx + cw) + ',' + (cy + 12), (cx + cw - 10) + ',' + (cy + 24), cx + ',' + (cy + 24)].join(' '), 'class':'chev' }, dgSvg);
+      svgText(dgSvg, cx + 10, cy + 17, 'chev-t', z.n + ' · ' + z.t);
+      if (z.cw) svgText(dgSvg, cx + cw + 16, cy + 16, 'own-t', z.o);
+      else svgText(dgSvg, z.x + 12, z.y + 48, 'own-t', z.o);
+      if (z.note) svgText(dgSvg, z.x + z.w - 16, cy + 16, 'note-t', z.note, 'end');
+    });
+    svgEl('rect', { x:288, y:364, width:260, height:104, rx:8, 'class':'zn-sb' }, dgSvg);
+    svgText(dgSvg, 300, 376, 'sb-t', 'SANDBOX, IF ENABLED');
+
+    ARROWS.forEach(function(a){
+      var at = { d:a.d, 'class':'ln' + (a.dash ? ' dash' : ''), 'marker-end':'url(#dgArrow)' };
+      if (a.both) at['marker-start'] = 'url(#dgArrow)';
+      svgEl('path', at, dgSvg);
+    });
+
+    Object.keys(COMP).forEach(function(id){
+      var c = COMP[id];
+      var g = svgEl('g', { 'class':'box', 'data-c':id, role:'button', tabindex:'0' }, dgSvg);
+      svgEl('rect', { x:c.x, y:c.y, width:c.w, height:c.h, rx:c.vert ? 4 : 6 }, g);
+      if (c.vert){
+        var vx = c.x + c.w / 2 + 4, vy = c.vy;
+        var vt = svgText(g, vx, vy, 'vt', c.vert, 'middle');
+        vt.setAttribute('transform', 'rotate(-90 ' + vx + ' ' + vy + ')');
+      } else {
+        svgText(g, c.x + 10, c.y + 22, 't', c.t);
+        if (c.s) svgText(g, c.x + 10, c.y + 39, 's', c.s);
+        if (c.s2) svgText(g, c.x + 10, c.y + 54, 's', c.s2);
+      }
+      var ps = placesAt(id);
+      var nt = ps.filter(function(p){ return !isX(p[0]); }).length, nx = ps.length - nt;
+      g.setAttribute('aria-label', c.t + ': ' + nt + (nt === 1 ? ' top 10 risk' : ' top 10 risks') + (nx ? ', ' + nx + ' more' : ''));
+      boxEls[id] = g;
+    });
+
+    ARROWS.forEach(function(a){
+      if (!a.l) return;
+      var t = svgText(dgSvg, a.x, a.y, 'al', a.l, a.a || (a.rot ? 'middle' : null));
+      if (a.rot) t.setAttribute('transform', 'rotate(-90 ' + a.x + ' ' + a.y + ')');
+    });
+
+    var count = {};
+    PLACE.forEach(function(p){
+      var r = p[0], id = p[1], c = COMP[id], x, y;
+      var i = count[id] || 0; count[id] = i + 1;
+      if (c.vert){ x = c.mx; y = c.my + i * 24; }
+      else { x = c.x + 10 + i * 39; y = c.y + c.h - 26; }
+      var g = svgEl('g', { 'class':'mk' + (isX(r) ? ' x' : ''), 'data-r':r, 'data-c':id, role:'button', tabindex:'0' }, dgSvg);
+      g.setAttribute('aria-label', markerLabel(r, id));
+      svgEl('rect', { x:x, y:y, width:34, height:18, rx:4 }, g);
+      svgText(g, x + 17, y + 13, null, r, 'middle');
+      mkEls.push(g);
+    });
+    dgReady = true;
+  }
+
+  function paintDiagram(){
+    if (!dgReady) return;
+    mkEls.forEach(function(m){ var r = m.getAttribute('data-r'); if (!isX(r)){ setSt(m, r); m.setAttribute('aria-label', markerLabel(r, m.getAttribute('data-c'))); } });
+    $$('.rchip').forEach(function(ch){ var r = ch.getAttribute('data-r'); if (r !== 'all' && !isX(r)) ch.setAttribute('aria-label', r + ' ' + riskTitle(r) + ', status: ' + stText(r)); });
+    $$('#dgMatrix tr').forEach(function(tr){ var r = tr.getAttribute('data-r'), b = tr.querySelector('.mx-btn'); if (b && !isX(r)) b.setAttribute('aria-label', r + ' ' + riskTitle(r) + ', status: ' + stText(r)); });
+    $$('[data-st-r]').forEach(function(e){ setSt(e, e.getAttribute('data-st-r')); });
+    var st = pop && !pop.hidden ? pop.querySelector('.pop-st') : null;
+    if (st && selRisk && !isX(selRisk)) st.textContent = 'Status: ' + stText(selRisk);
+    writeSummary();
+  }
+
+  function writeSummary(){
+    var el = document.getElementById('dgSummary');
+    if (!el) return;
+    if (selRisk){
+      var ps = placesOf(selRisk);
+      el.textContent = selRisk + ': ' + riskTitle(selRisk) + '. Sits in ' + ps.length + (ps.length === 1 ? ' part' : ' parts') + ' of the map: ' +
+        ps.map(function(p){ return COMP[p[1]].t; }).join(', ') + '. ' +
+        (isX(selRisk) ? 'Listed under More risks, not in the top 10.' : 'Status: ' + stText(selRisk) + '.');
+    } else if (selComp){
+      var pc = placesAt(selComp);
+      el.textContent = COMP[selComp].t + ': ' + (pc.length ? pc.map(function(p){ return p[0]; }).join(', ') : 'no risks placed here') + '.';
+    } else {
+      var counts = Object.keys(boxEls).map(function(id){ return [id, placesAt(id).length]; })
+        .filter(function(c){ return c[1] > 0; })
+        .sort(function(a, b){ return b[1] - a[1]; });
+      var cut = counts.length ? counts[Math.min(3, counts.length - 1)][1] : 0;
+      var top = counts.filter(function(c){ return c[1] >= cut; });
+      el.textContent = 'Most risks meet in: ' + top.map(function(c){ return COMP[c[0]].t + ' (' + c[1] + ')'; }).join(', ') +
+        '. Pick a risk above, or select a marker or box in the diagram.';
+    }
+  }
+
+  function applySel(){
+    if (!dgReady) return;
+    dgSvg.classList.toggle('dim', !!selRisk);
+    mkEls.forEach(function(m){ m.classList.toggle('on', !!selRisk && m.getAttribute('data-r') === selRisk); });
+    Object.keys(boxEls).forEach(function(id){
+      var b = boxEls[id];
+      b.classList.toggle('hit', !!selRisk && placesAt(id).some(function(p){ return p[0] === selRisk; }));
+      b.classList.toggle('sel', selComp === id);
+    });
+    $$('.rchip').forEach(function(ch){
+      var r = ch.getAttribute('data-r');
+      ch.setAttribute('aria-pressed', (r === 'all' ? !selRisk : r === selRisk) ? 'true' : 'false');
+    });
+    $$('#dgMatrix tr, #moreRows tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-r') === selRisk); });
+    writeSummary();
+  }
+
+  function selectRisk(r, toggle){
+    closePop(false); selComp = null;
+    selRisk = (!r || r === 'all' || (toggle && selRisk === r)) ? null : r;
+    applySel();
+  }
+
+  function popHead(title, r){
+    var h = htmlEl('div', 'pop-h');
+    if (r) h.appendChild(idTag(r));
+    var s = htmlEl('strong', null, title); s.id = 'dgPopTitle';
+    h.appendChild(s);
+    var x = htmlEl('button', 'pop-x', 'Close'); x.type = 'button';
+    x.addEventListener('click', function(){ closePop(true); });
+    h.appendChild(x);
+    return h;
+  }
+
+  function showPop(anchor){
+    lastAnchor = anchor;
+    pop.hidden = false;
+    var box = dgSvg.getBoundingClientRect(), s = box.width / VBW, bb = anchor.getBBox();
+    var pw = pop.offsetWidth, ph = pop.offsetHeight;
+    var left = Math.max(8, Math.min(bb.x * s, box.width - pw - 8));
+    var top = (bb.y + bb.height - VBY) * s + 8;
+    if (top + ph > box.height - 4) top = Math.max(4, (bb.y - VBY) * s - ph - 8);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+    try { pop.focus({ preventScroll: true }); } catch(e){ pop.focus(); }
+    try { pop.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch(e){}
+  }
+
+  function closePop(restoreFocus){
+    if (!pop || pop.hidden) return;
+    pop.hidden = true;
+    mkEls.forEach(function(m){ m.classList.remove('cur'); });
+    if (restoreFocus && lastAnchor){ try { lastAnchor.focus({ preventScroll: true }); } catch(e){} }
+  }
+
+  function openRisk(r, id, anchor){
+    if (!anchor) return;
+    selRisk = r; selComp = null; applySel();
+    pop.innerHTML = '';
+    pop.appendChild(popHead(riskTitle(r), r));
+    var why = PLACE.filter(function(p){ return p[0] === r && p[1] === id; })[0];
+    var p1 = htmlEl('p');
+    p1.appendChild(htmlEl('b', null, COMP[id].t + ': '));
+    p1.appendChild(document.createTextNode(why ? why[2] : ''));
+    pop.appendChild(p1);
+    var others = placesOf(r).filter(function(p){ return p[1] !== id; });
+    if (others.length){
+      var p2 = htmlEl('p');
+      p2.appendChild(document.createTextNode('Also in: '));
+      others.forEach(function(o, i){
+        if (i) p2.appendChild(document.createTextNode(', '));
+        var b = htmlEl('button', 'linkbtn', COMP[o[1]].t); b.type = 'button';
+        b.addEventListener('click', function(){ openRisk(r, o[1], markerEl(r, o[1])); });
+        p2.appendChild(b);
+      });
+      pop.appendChild(p2);
+    }
+    var go;
+    if (isX(r)){
+      pop.appendChild(htmlEl('p', 'pop-st', 'Listed under More risks, not in the top 10. Relevance: ' + { h:'High', m:'Medium', l:'Low' }[MOREBY[r].l] + '.'));
+      go = htmlEl('button', 'btn', 'Show ' + r + ' in the More risks table'); go.type = 'button';
+      go.addEventListener('click', function(){ openMoreRow(r); });
+    } else {
+      pop.appendChild(htmlEl('p', 'pop-st', 'Status: ' + stText(r)));
+      go = htmlEl('button', 'btn', 'Open the checklist for ' + r); go.type = 'button';
+      go.addEventListener('click', function(){ openChecklist(r); });
+    }
+    pop.appendChild(go);
+    mkEls.forEach(function(m){ m.classList.toggle('cur', m === anchor); });
+    showPop(anchor);
+  }
+
+  function openComp(id, anchor){
+    selComp = id; selRisk = null; applySel();
+    pop.innerHTML = '';
+    pop.appendChild(popHead(COMP[id].t));
+    var ps = placesAt(id);
+    if (!ps.length) pop.appendChild(htmlEl('p', null, 'No risks are placed here.'));
+    else {
+      var ul = htmlEl('ul');
+      ps.forEach(function(p){
+        var li = htmlEl('li');
+        var b = htmlEl('button', 'linkbtn', p[0] + ' ' + riskTitle(p[0])); b.type = 'button';
+        b.addEventListener('click', function(){ openRisk(p[0], id, markerEl(p[0], id)); });
+        li.appendChild(b);
+        li.appendChild(document.createTextNode(': ' + p[2]));
+        ul.appendChild(li);
+      });
+      pop.appendChild(ul);
+    }
+    mkEls.forEach(function(m){ m.classList.remove('cur'); });
+    showPop(anchor);
+  }
+
+  function openMoreRow(r){
+    closePop(false);
+    var row = document.querySelector('#moreRows tr[data-x="' + r + '"]');
+    if (!row) return;
+    row.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    var bb = row.querySelector('.mx-btn');
+    if (bb){ try { bb.focus({ preventScroll: true }); } catch(e){} }
+  }
+
+  function openChecklist(r){
+    closePop(false);
+    show('top10');
+    var card = document.querySelector('.risk[data-id="' + r + '"]');
+    if (!card) return;
+    if (card.hidden){ var all = document.querySelector('.chip[data-path="all"]'); if (all) all.click(); }
+    card.scrollIntoView({ block: 'start' });
+    card.setAttribute('tabindex', '-1');
+    try { card.focus({ preventScroll: true }); } catch(e){ card.focus(); }
+    card.classList.add('flash');
+    setTimeout(function(){ card.classList.remove('flash'); }, 1800);
+  }
+
+  function toFigure(){
+    var f = document.getElementById('dgFig');
+    if (f) f.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  function makeChip(r, box){
+    var b = htmlEl('button', 'rchip' + (isX(r) ? ' x' : '')); b.type = 'button';
+    b.setAttribute('data-r', r);
+    b.setAttribute('aria-pressed', r === 'all' ? 'true' : 'false');
+    if (r === 'all') b.textContent = 'All';
+    else {
+      var d = htmlEl('span', 'dotst');
+      if (!isX(r)) d.setAttribute('data-st-r', r);
+      b.appendChild(d);
+      b.appendChild(document.createTextNode(r));
+      b.title = riskTitle(r);
+      b.setAttribute('aria-label', r + ' ' + riskTitle(r));
+    }
+    b.addEventListener('click', function(){ selectRisk(r, true); });
+    box.appendChild(b);
+  }
+
+  if (dgSvg && pop){
+    buildDiagram();
+
+    dgSvg.addEventListener('click', function(e){
+      var m = e.target.closest ? e.target.closest('.mk') : null;
+      if (m){ openRisk(m.getAttribute('data-r'), m.getAttribute('data-c'), m); return; }
+      var b = e.target.closest ? e.target.closest('.box') : null;
+      if (b){ openComp(b.getAttribute('data-c'), b); return; }
+      selectRisk(null);
+    });
+    dgSvg.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var t = e.target;
+      if (t.classList && (t.classList.contains('mk') || t.classList.contains('box'))){
+        e.preventDefault();
+        t.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePop(true); });
+
+    var chipBox = document.getElementById('dgChips');
+    ['all'].concat(RISKS).forEach(function(r){ makeChip(r, chipBox); });
+    var chipBoxX = document.getElementById('dgChipsX');
+    XIDS.forEach(function(r){ makeChip(r, chipBoxX); });
+
+    var SHORT = {
+      D11: 'Required review for what merges, and a separate CI boundary for what runs.',
+      D12: 'Keep production credentials off developer machines.',
+      D13: 'Dev Tunnels policies on Windows, and alerts on code tunnel processes.',
+      D14: 'Turn off unneeded memory, block standalone customisations, and separately restrict plugins and marketplaces.',
+      D15: 'Decide session sync, GitHub environments and Claude Code remote control by policy.',
+      D16: 'Limit browser tools and the domains they can reach.',
+      D17: 'Capture metadata by default, and content only where the SIEM is approved for it.'
+    };
+    /* One row builder, so Risk by zone and More risks share the same structure */
+    function zoneRow(r){
+      var tr = htmlEl('tr'); tr.setAttribute('data-r', r);
+      var th = htmlEl('th'); th.scope = 'row';
+      var b = htmlEl('button', 'mx-btn'); b.type = 'button';
+      b.appendChild(idTag(r));
+      b.appendChild(htmlEl('span', 'nm', riskTitle(r)));
+      b.addEventListener('click', function(){ selectRisk(r, false); toFigure(); });
+      th.appendChild(b); tr.appendChild(th);
+      for (var s = 1; s <= 4; s++){
+        var names = [];
+        placesOf(r).forEach(function(p){
+          var c = COMP[p[1]];
+          if (c.st === s){ var nm = c.short || c.t; if (names.indexOf(nm) < 0) names.push(nm); }
+        });
+        tr.appendChild(listCell(names));
+      }
+      return tr;
+    }
+    var tb = document.getElementById('dgMatrix');
+    RISKS.forEach(function(r){ tb.appendChild(zoneRow(r)); });
+    var mr = document.getElementById('moreRows');
+    var md = document.getElementById('moreDetails');
+    var STARTBY = {}; START.forEach(function(x){ STARTBY[x[0]] = x; });
+    RISKS.forEach(function(r){
+      var det = htmlEl('details', 'more-d'); det.id = 'first-' + r;
+      var sm = htmlEl('summary');
+      sm.appendChild(idTag(r));
+      sm.appendChild(htmlEl('span', null, riskTitle(r)));
+      sm.appendChild(htmlEl('span', 'lvl t', 'Top 10'));
+      det.appendChild(sm);
+      var st = STARTBY[r];
+      if (st){
+        var pc = htmlEl('p', 'ctl'); pc.appendChild(htmlEl('b', null, 'First control: ')); pc.appendChild(document.createTextNode(st[1]));
+        det.appendChild(pc);
+        var pf = htmlEl('p', 'why'); pf.appendChild(htmlEl('b', null, 'Friction: ')); pf.appendChild(document.createTextNode(st[2] + ' '));
+        pf.appendChild(htmlEl('span', 'tag', '[inference]'));
+        det.appendChild(pf);
+      }
+      var card = document.querySelector('.risk[data-id="' + r + '"] > p');
+      if (card){ var pd = card.cloneNode(true); pd.className = 'why'; det.appendChild(pd); }
+      var go = htmlEl('button', 'btn', 'Open the checklist for ' + r); go.type = 'button';
+      go.addEventListener('click', function(){ openChecklist(r); });
+      det.appendChild(go);
+      md.appendChild(det);
+    });
+    MORE.forEach(function(m){
+      var tr = zoneRow(m.id); tr.setAttribute('data-x', m.id); mr.appendChild(tr);
+      var det = htmlEl('details', 'more-d'); det.id = 'more-' + m.id;
+      var sm = htmlEl('summary');
+      sm.appendChild(idTag(m.id));
+      sm.appendChild(htmlEl('span', null, m.t));
+      sm.appendChild(htmlEl('span', 'lvl ' + m.l, { h:'High', m:'Medium', l:'Low' }[m.l]));
+      det.appendChild(sm);
+      var pc = htmlEl('p', 'ctl'); pc.appendChild(htmlEl('b', null, 'First control: ')); pc.appendChild(document.createTextNode(SHORT[m.id] || m.c));
+      det.appendChild(pc);
+      if (m.d) det.appendChild(htmlEl('p', 'why', m.d));
+      var pf = htmlEl('p', 'why'); pf.appendChild(htmlEl('b', null, 'Control in full: ')); pf.appendChild(document.createTextNode(m.c));
+      det.appendChild(pf);
+      md.appendChild(det);
+    });
+  }
+  var sr = $('#startRows');
+  START.forEach(function(r){
+    var tr = htmlEl('tr');
+    var th = htmlEl('th'); th.scope = 'row';
+    var b = htmlEl('button', 'mx-btn'); b.type = 'button';
+    b.appendChild(idTag(r[0]));
+    b.addEventListener('click', function(){ openChecklist(r[0]); });
+    th.appendChild(b); tr.appendChild(th);
+    tr.appendChild(htmlEl('td', null, r[1]));
+    tr.appendChild(htmlEl('td', null, r[2]));
+    sr.appendChild(tr);
+  });
+
+  tally();
+  applySel();
+})();
+</script>
+
+</body></html>

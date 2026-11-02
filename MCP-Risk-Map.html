@@ -1,0 +1,1183 @@
+<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>MCP Risk Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: same system as the AKS guide. One reading column (max 48rem) under a sticky tab bar; the risk map breaks out to full width; cards only for the ten risks */
+:root{
+  --bg:#EEF0F4; --surface:#FFFFFF; --ink:#141A2E; --muted:#555E73; --line:#D1D6E1;
+  --accent:#3B4699; --accent-ink:#FFFFFF; --accent-soft:#E2E5F4;
+  --flag:#8F5E07; --flag-soft:#F6ECD8;
+  --ok:#2C7549; --ok-soft:#DCEFE3; --part:#8F5E07; --part-soft:#F6ECD8;
+  --miss:#AD3328; --miss-soft:#F7E0DD; --unk:#626A7C; --unk-soft:#E3E6EC;
+  --code-bg:#E4E7EE;
+  --fig:#FFFFFF; --zone:#F4F5F9; --box:#FFFFFF; --sb:#EEF0FA;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1220; --surface:#171B2C; --ink:#E3E6F0; --muted:#9EA5B8; --line:#2C3247;
+    --accent:#A8B2F2; --accent-ink:#0F1220; --accent-soft:#262C4F;
+    --flag:#E2AA45; --flag-soft:#3A2E17;
+    --ok:#6CC28C; --ok-soft:#173326; --part:#E2AA45; --part-soft:#3A2E17;
+    --miss:#F07E72; --miss-soft:#3D1F1C; --unk:#A0A7B6; --unk-soft:#262B3A;
+    --code-bg:#1F2436; --fig:#121624; --zone:#181C2D; --box:#1F2438; --sb:#1C2140; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1220; --surface:#171B2C; --ink:#E3E6F0; --muted:#9EA5B8; --line:#2C3247;
+  --accent:#A8B2F2; --accent-ink:#0F1220; --accent-soft:#262C4F;
+  --flag:#E2AA45; --flag-soft:#3A2E17;
+  --ok:#6CC28C; --ok-soft:#173326; --part:#E2AA45; --part-soft:#3A2E17;
+  --miss:#F07E72; --miss-soft:#3D1F1C; --unk:#A0A7B6; --unk-soft:#262B3A;
+  --code-bg:#1F2436; --fig:#121624; --zone:#181C2D; --box:#1F2438; --sb:#1C2140; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:1rem/1.6 var(--body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:11;background:var(--bg)}
+.wrap{max-width:48rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,7vw,3.2rem);font-weight:800;font-stretch:118%;line-height:1.02;letter-spacing:-0.01em}
+h2{font-size:1.5rem;font-weight:750;font-stretch:108%;line-height:1.2}
+h3{font-size:1.12rem;font-weight:700;font-stretch:104%;line-height:1.25}
+p{margin:0}
+code,pre{font-family:var(--mono)}
+code{font-size:0.88em;overflow-wrap:anywhere}
+.eyebrow{font:500 0.78rem/1.4 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:1.08rem}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font:0.82rem/1.5 var(--mono);color:var(--muted)}
+.meta b{font-weight:500;color:var(--ink)}
+header.top{display:grid;gap:14px;padding-bottom:20px}
+.tag{display:inline-block;font:500 0.7rem/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 5px;white-space:nowrap;vertical-align:1px}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:26px;scrollbar-width:thin}
+.tabs button{font:600 0.95rem/1 var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px 10px 11px;white-space:nowrap;cursor:pointer}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.panel{display:grid;gap:34px;container-type:inline-size}
+section{display:grid;gap:14px;min-width:0}
+.sub{color:var(--muted)}
+.note{font-size:0.88rem;color:var(--muted)}
+
+.short{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
+.short li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:baseline}
+.short li::before{counter-increment:s;content:counter(s);font:700 1.3rem/1 var(--display);color:var(--accent)}
+.short li span{min-width:0}
+
+/* code */
+.cmd{display:flex;align-items:flex-start;gap:6px;background:var(--code-bg);border-radius:6px;margin-top:6px;min-width:0}
+.cmd pre{margin:0;flex:1;min-width:0;overflow-x:auto;padding:9px 12px;font-size:0.8rem;line-height:1.55;white-space:pre}
+.cmd pre .c{color:var(--muted)}
+.copy{flex:none;font:500 0.75rem/1 var(--mono);color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 8px;margin:6px 6px 0 0;cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+
+/* callout and tally */
+.callout{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px 16px;display:grid;gap:8px}
+.callout h3{color:var(--flag);font-size:1rem}
+.callout ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
+.tally{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.tally-row{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;font-size:0.9rem;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:0.7rem;height:0.7rem;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--unk-soft)}
+.bar span{display:block;height:100%;transition:width .25s ease}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:8px 11px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.danger{color:var(--miss);border-color:var(--miss)}
+.msg{font-size:0.85rem;color:var(--muted)}
+textarea.out-text{width:100%;min-height:10rem;font:0.8rem/1.5 var(--mono);background:var(--code-bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.path-desc{font-size:0.93rem;color:var(--muted);min-height:1.5em}
+
+/* risk cards */
+.risks{display:grid;gap:14px}
+.risk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px 14px;display:grid;gap:9px;scroll-margin-top:64px;min-width:0}
+.risk.flash{outline:3px solid var(--accent);outline-offset:3px}
+.risk:focus{outline:none}
+.risk:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.dg .ln.dash{stroke-dasharray:5 3}
+.ir{margin:0;padding-left:1.3rem;display:grid;gap:10px}
+.ir li{min-width:0}
+.risk-head{display:flex;gap:12px;align-items:baseline}
+.rid{flex:none;font:500 0.85rem/1.6 var(--mono);color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:0 7px}
+.risk-head>div{min-width:0}
+.en{font:0.78rem/1.4 var(--mono);color:var(--muted);margin-top:2px}
+.lbl{font:500 0.72rem/1.4 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.checks{margin:0;padding-left:1.1rem;display:grid;gap:6px}
+.checks li{min-width:0}
+.finding{font-size:0.92rem}
+.paths{display:flex;flex-wrap:wrap;gap:4px}
+.paths span{font:0.72rem/1.6 var(--mono);color:var(--muted);background:var(--bg);border-radius:3px;padding:0 6px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+.sr{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.pill{font:600 0.8rem/1 var(--body);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;user-select:none}
+.pill:hover{border-color:var(--ink)}
+input:checked+.pill.v-ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+input:checked+.pill.v-part{background:var(--part-soft);color:var(--part);border-color:var(--part)}
+input:checked+.pill.v-miss{background:var(--miss-soft);color:var(--miss);border-color:var(--miss)}
+input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-color:var(--unk)}
+
+/* tables */
+.tbl-wrap{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.tbl{border-collapse:collapse;width:100%;min-width:720px;font-size:0.86rem}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
+.tbl thead th{font:500 0.7rem/1.4 var(--mono);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:0}
+.tbl tbody th{font-weight:600}
+.tbl-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tbl td,.tbl th{overflow-wrap:break-word}
+.tbl,.mx{table-layout:fixed}
+.tbl.start{min-width:560px}
+.tbl.start .c-id{width:5.5rem} .tbl.start .c-fr{width:10rem}
+.more-list{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.more-d{border-bottom:1px solid var(--line);padding:9px 10px}
+.more-d:last-child{border-bottom:0}
+.more-d summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline;font-weight:600;font-size:0.9rem}
+.more-d summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.more-d summary::-webkit-details-marker{display:none}
+.more-d summary::before{content:"\25B8";color:var(--accent);width:0.8em;transition:transform .15s ease}
+.more-d[open] summary::before{transform:rotate(90deg)}
+.more-d .ctl{margin-top:4px;font-size:0.88rem}
+.lvl.t{color:var(--accent);background:var(--accent-soft)}
+.more-d .btn{margin-top:8px}
+.more-d .why{margin-top:8px;font-size:0.85rem;color:var(--muted);line-height:1.55}
+.cl{display:block}
+.cl + .cl{margin-top:5px}
+.mx .c-rk{width:27%} .mx .c-in{width:16%} .mx .c-z{width:19%} .mx .c-z3{width:57%}
+.lvl{display:inline-block;font:600 0.72rem/1.6 var(--mono);border-radius:3px;padding:0 6px;white-space:nowrap}
+.lvl.h{color:var(--miss);background:var(--miss-soft)}
+.lvl.m{color:var(--part);background:var(--part-soft)}
+.lvl.l{color:var(--unk);background:var(--unk-soft)}
+
+/* verification */
+.personas{display:grid;grid-template-columns:1fr;gap:14px}
+.persona{border-top:2px solid var(--accent);padding-top:10px;display:grid;gap:8px;min-width:0}
+.persona h3{font-size:1.05rem}
+.persona .role{font:0.8rem/1.4 var(--mono);color:var(--muted)}
+.persona ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
+.cols{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:680px){.cols{grid-template-columns:1fr 1fr 1fr}}
+.col{min-width:0;display:grid;gap:8px;align-content:start}
+.col h3{font-size:1rem}
+.col ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.9rem}
+
+.sources{margin:0;padding-left:1.2rem;display:grid;gap:9px;font-size:0.93rem}
+.sources span{display:block;color:var(--muted);font-size:0.85rem}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:grid;gap:6px}
+
+/* risk map */
+.rchips{display:flex;flex-wrap:wrap;gap:6px}
+.rchip{display:inline-flex;align-items:center;gap:6px;font:600 0.8rem/1 var(--mono);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer}
+.rchip:hover{border-color:var(--accent)}
+.rchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.dotst{width:0.6rem;height:0.6rem;border-radius:50%;background:var(--accent);flex:none}
+.dotst.st-ok{background:var(--ok)} .dotst.st-part{background:var(--part)} .dotst.st-miss{background:var(--miss)} .dotst.st-unk{background:var(--unk)}
+.dg-sum{font-size:0.95rem;min-height:3.2em}
+.fig-wide{width:min(1260px,calc(100vw - 32px));margin:0 0 0 calc((100% - min(1260px,calc(100vw - 32px))) / 2);display:grid;gap:10px;scroll-margin-top:64px}
+.dg-scroll{position:relative;overflow-x:auto;background:var(--fig);border:1px solid var(--line);border-radius:10px}
+.dg{display:block;width:100%;min-width:980px;height:auto;user-select:none;-webkit-user-select:none}
+.dg .zn{fill:var(--zone);stroke:var(--line)}
+.dg .zn-sb{fill:var(--sb);stroke:var(--accent);stroke-dasharray:6 4;stroke-opacity:0.7}
+.dg .chev{fill:var(--accent-soft)}
+.dg .chev-t{fill:var(--accent);font:700 13px var(--display)}
+.dg .own-t,.dg .sb-t{fill:var(--muted);font:500 10.5px var(--mono);letter-spacing:0.06em}
+.dg .note-t{fill:var(--muted);font:11.5px var(--body)}
+.dg .box{cursor:pointer;outline:none}
+.dg .box rect{fill:var(--box);stroke:var(--line);stroke-width:1}
+.dg .box .t{fill:var(--ink);font:700 13.5px var(--display)}
+.dg .box .s{fill:var(--muted);font:11px var(--body)}
+.dg .box .vt{fill:var(--ink);font:600 10.5px var(--mono);letter-spacing:0.12em}
+.dg .box:hover rect,.dg .box:focus-visible rect{stroke:var(--accent);stroke-width:1.5}
+.dg .box.hit rect{stroke:var(--accent);stroke-width:2.5}
+.dg .box.sel rect{stroke:var(--ink);stroke-width:2.5}
+.dg .ln{fill:none;stroke:var(--muted);stroke-width:1.4}
+.dg .ah{fill:var(--muted)}
+.dg .al{fill:var(--muted);font:500 10.5px var(--mono);paint-order:stroke;stroke:var(--fig);stroke-width:4px;stroke-linejoin:round}
+.dg .mk{cursor:pointer;outline:none;transition:opacity .15s ease}
+.dg .mk rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.dg .mk text{fill:var(--accent);font:600 10.5px var(--mono);pointer-events:none}
+.dg .mk.st-ok rect{fill:var(--ok-soft);stroke:var(--ok)} .dg .mk.st-ok text{fill:var(--ok)}
+.dg .mk.st-part rect{fill:var(--part-soft);stroke:var(--part)} .dg .mk.st-part text{fill:var(--part)}
+.dg .mk.st-miss rect{fill:var(--miss-soft);stroke:var(--miss)} .dg .mk.st-miss text{fill:var(--miss)}
+.dg .mk.st-unk rect{fill:var(--unk-soft);stroke:var(--unk)} .dg .mk.st-unk text{fill:var(--ink)}
+.dg .mk.x rect{fill:var(--unk-soft);stroke:var(--muted);stroke-dasharray:3 2}
+.dg .mk.x text{fill:var(--ink)}
+.dg .mk:hover rect,.dg .mk:focus-visible rect{stroke-width:2}
+.dg.dim .mk{opacity:0.18}
+.dg.dim .mk.on{opacity:1}
+.dg .mk.on rect{stroke:var(--ink);stroke-width:2}
+.dg .mk.cur rect{stroke:var(--ink);stroke-width:3}
+figcaption{display:grid;gap:8px}
+/* caption and legend sit in the reading column, though the figure is wider */
+figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw) / 2))}
+.cap{font-size:0.9rem;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:0.82rem;color:var(--muted);align-items:center}
+.legend>span{display:inline-flex;align-items:center;gap:6px}
+.lg-mk{font:600 0.68rem/1.5 var(--mono);font-style:normal;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 4px}
+.lg-mk.st-ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.lg-mk.st-part{border-color:var(--part);background:var(--part-soft);color:var(--part)}
+.lg-mk.st-miss{border-color:var(--miss);background:var(--miss-soft);color:var(--miss)}
+.lg-mk.x{border-color:var(--muted);border-style:dashed;background:var(--unk-soft);color:var(--ink)}
+.lg-mk.st-unk{border-color:var(--unk);background:var(--unk-soft);color:var(--ink)}
+.lg-sb{display:inline-block;width:1.1rem;height:0.8rem;border:1.5px dashed var(--accent);background:var(--sb);border-radius:2px}
+.hint{display:none}
+@media (max-width:1060px){.hint{display:block}}
+.pop{position:absolute;z-index:5;max-height:min(70vh,560px);overflow-y:auto;width:min(330px,82vw);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 28px rgba(10,14,30,0.22);padding:12px 14px;display:grid;gap:8px;font-size:0.88rem;line-height:1.5}
+.pop:focus{outline:none}
+.pop:focus-visible{outline:2px solid var(--accent)}
+.pop-h{display:flex;gap:8px;align-items:baseline}
+.pop-h strong{font:700 0.98rem/1.3 var(--display);flex:1;min-width:0}
+.pop-x{flex:none;font:500 0.72rem/1 var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:4px;padding:4px 6px;cursor:pointer}
+.pop ul{margin:0;padding-left:1rem;display:grid;gap:6px}
+.pop .btn{justify-self:start}
+.pop-st{color:var(--muted)}
+.linkbtn{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:left}
+.idtag{flex:none;font:600 0.74rem/1.6 var(--mono);color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:3px;padding:0 5px}
+.idtag.st-ok{color:var(--ok);background:var(--ok-soft);border-color:var(--ok)}
+.idtag.st-part{color:var(--part);background:var(--part-soft);border-color:var(--part)}
+.idtag.st-miss{color:var(--miss);background:var(--miss-soft);border-color:var(--miss)}
+.idtag.st-unk{color:var(--ink);background:var(--unk-soft);border-color:var(--unk)}
+.mx{border-collapse:collapse;width:100%;min-width:700px;font-size:0.85rem}
+.mx th,.mx td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.mx thead th{font:500 0.7rem/1.4 var(--mono);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted)}
+.mx tbody tr:last-child th,.mx tbody tr:last-child td{border-bottom:0}
+.mx td,.mx th{overflow-wrap:break-word}
+.mx tr.on,.tbl tr.on{background:var(--accent-soft)}
+.dg .box.hit:focus-visible rect,.dg .box.sel:focus-visible rect{stroke:var(--accent);stroke-width:3.5;stroke-dasharray:none}
+.idtag.x{color:var(--muted);background:var(--unk-soft);border-color:var(--unk);border-style:dashed}
+.rchip.x{color:var(--muted)}
+.rchip.x .dotst{background:transparent;border:1.5px dashed var(--unk)}
+.chip-lbl{font:500 0.72rem/1 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:4px}
+#more{scroll-margin-top:64px}
+.mx-btn{display:flex;gap:8px;align-items:baseline;text-align:left;font:600 0.85rem/1.35 var(--body);color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
+.mx-btn:hover .nm{text-decoration:underline;text-underline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Risk map · MCP servers and AI agents</p>
+    <h1>MCP risk map</h1>
+    <p class="lead">Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start. The detail is kept low on purpose. Exceptions exist.</p>
+    <div class="meta">
+      <span><b>Frameworks</b> OWASP MCP Top 10 (beta)</span>
+      <span><b>Vendor sources</b> MCP specification, Claude Code, OpenAI Codex, VS Code, Mitiga</span>
+      <span><b>Facts checked</b> 2 Nov 2026</span>
+      <span><b>Wider page</b> <a href="Developer-WS.html">Developer workstation risk map</a></span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Parts of the risk map">
+    <button type="button" role="tab" id="t-map" data-tab="map" aria-controls="p-map" aria-selected="true">1 · Risk map</button>
+    <button type="button" role="tab" id="t-risks" data-tab="risks" aria-controls="p-risks" aria-selected="false" tabindex="-1">2 · Risks</button>
+    <button type="button" role="tab" id="t-vscode" data-tab="vscode" aria-controls="p-vscode" aria-selected="false" tabindex="-1">3 · VS Code</button>
+    <button type="button" role="tab" id="t-evidence" data-tab="evidence" aria-controls="p-evidence" aria-selected="false" tabindex="-1">4 · Evidence</button>
+    <button type="button" role="tab" id="t-sources" data-tab="sources" aria-controls="p-sources" aria-selected="false" tabindex="-1">Sources</button>
+  </nav>
+
+  <!-- 1 MAP -->
+  <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
+    <section>
+      <h2>How MCP works</h2>
+      <ol class="short">
+        <li><span>The <b>client</b> is the app with the AI agent in it. A <b>server</b> offers <b>tools</b> that the agent can call.</span></li>
+        <li><span>A <b>local</b> server is a program on your computer. With the stdio transport the client starts it and talks to it over its standard streams. A server can also run behind an HTTP address, on your computer or elsewhere.</span></li>
+        <li><span>The agent sends data to a server and the server sends results back into the model's context.</span></li>
+      </ol>
+    </section>
+    <section>
+      <h2>In short</h2>
+      <ol class="short">
+        <li><span>An MCP server gives an AI agent tools. A local server runs as the developer. A remote server holds tokens and sees what the agent sends it.</span></li>
+        <li><span>The main questions are: which servers are allowed, what can each one reach, and who would notice if one changed? <span class="tag">[inference]</span></span></li>
+        <li><span>Only one MCP-specific attack is cited here (Mitiga, May 2026). The other risks come from OWASP categories or specification warnings, and no incident is cited for them.</span></li>
+      </ol>
+    </section>
+    <section>
+      <h2>Words used on this page</h2>
+      <dl style="display:grid;gap:10px;margin:0">
+        <div><dt style="font-weight:600">Token</dt><dd style="margin:0">A secret that proves you are logged in to a service. Whoever holds it can act as you.</dd></div>
+        <div><dt style="font-weight:600">Scope</dt><dd style="margin:0">What a token is allowed to do.</dd></div>
+        <div><dt style="font-weight:600">Allowlist</dt><dd style="margin:0">A list of the only servers that may be used.</dd></div>
+        <div><dt style="font-weight:600">Sandbox</dt><dd style="margin:0">A locked box that limits what a program can touch.</dd></div>
+        <div><dt style="font-weight:600">Prompt injection</dt><dd style="margin:0">Hidden instructions in text that the agent reads, which steer what it does.</dd></div>
+        <div><dt style="font-weight:600">DNS rebinding</dt><dd style="margin:0">A trick that lets a web page you visit talk to a server on your own computer. The specification says servers must check the <code>Origin</code> header to stop it.</dd></div>
+        <div><dt style="font-weight:600">Confused deputy</dt><dd style="margin:0">A proxy server that connects clients to another service can be tricked into giving an attacker a login code without the user agreeing.</dd></div>
+        <div><dt style="font-weight:600">Token passthrough</dt><dd style="margin:0">A server accepts a token that was not made for it and passes it on. The specification forbids this.</dd></div>
+        <div><dt style="font-weight:600">SSRF</dt><dd style="margin:0">Tricking a client into requesting addresses it should not, such as internal systems or a cloud metadata address.</dd></div>
+        <div><dt style="font-weight:600">Egress proxy</dt><dd style="margin:0">A gate that outbound traffic must pass. It can block internal destinations.</dd></div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Risk map of MCP</h2>
+      <p class="sub">From where servers and content come from, through the agent and its servers, to what goes out. Each marker shows where a risk enters or must be controlled. M01 to M08 are coloured by the status you set under Risks.</p>
+      <div class="rchips" id="dgChips" role="group" aria-label="Show a risk in the diagram"></div>
+      <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
+    </section>
+
+    <figure class="fig-wide" id="dgFig">
+      <div class="dg-scroll" id="dgScroll">
+        <svg class="dg" id="dg" viewBox="0 52 1240 712" role="group" aria-labelledby="dgCap"></svg>
+        <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
+      </div>
+      <figcaption id="dgCap">
+        <span class="cap">Servers, packages, config and content (1) reach the workstation (2), where the agent calls local servers and holds the tokens. Traffic leaves through the egress boundary (3), a control point only where traffic is forced through a proxy or gateway. Governance and monitoring (4) covers every layer.</span>
+        <span class="cap">Arrows show selected paths, not every data flow. Select a marker or a box to see its risks.</span>
+        <span class="legend">
+          <span><i class="lg-mk">M01</i>Not assessed</span>
+          <span><i class="lg-mk st-ok">M01</i>OK (tested, with evidence; see Risks)</span>
+          <span><i class="lg-mk st-part">M01</i>Partial</span>
+          <span><i class="lg-mk st-miss">M01</i>Missing</span>
+          <span><i class="lg-mk st-unk">M01</i>Unknown</span>
+        </span>
+      </figcaption>
+    </figure>
+    <p class="note hint">The diagram is wide. Drag sideways in it, or use the table below.</p>
+
+    <section>
+      <h2>Risk by zone</h2>
+      <p class="sub">The same placement as the diagram. Select a risk to show it in the diagram.</p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk by zone table">
+        <table class="mx">
+          <colgroup><col class="c-rk"><col class="c-in"><col class="c-z"><col class="c-z"><col class="c-z"></colgroup>
+          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Sources</th><th scope="col">2 · Workstation</th><th scope="col">3 · Outbound</th><th scope="col">4 · Governance</th></tr></thead>
+          <tbody id="dgMatrix"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h3>Before you use the map</h3>
+      <p class="sub">This is a reference layout, not your organisation's setup. Common differences: only remote servers, only local servers, servers inside dev containers, or an internal gateway in front of all servers. Draw your own variant and move the markers.</p>
+      <p class="sub">The placement of risks is my judgement based on the sources. <span class="tag">[inference]</span></p>
+    </section>
+  </div>
+
+  <!-- 2 RISKS -->
+  <div class="panel" role="tabpanel" id="p-risks" aria-labelledby="t-risks" hidden>
+    <section>
+      <h2>The eight risks</h2>
+      <p class="sub">Grouped from the OWASP MCP Top 10 and the specification's security guidance. The order and the grouping are my judgement. <span class="tag">[inference]</span> OWASP's list is in beta and may change.</p>
+    </section>
+
+    <aside class="callout" id="current">
+      <h3>Current as of 2 November 2026</h3>
+      <ul id="currentList">
+        <li><b>OWASP MCP Top 10:</b> in beta (phase 3). IDs and names can change.</li>
+        <li><b>Specification versions:</b> the Origin, localhost and security rules were checked against version 2026-07-28, the current one on 2 November 2026. They can change.</li>
+        <li><b>Claude Code:</b> the <code>managedMcpServers</code> setting needs version 2.1.259 or later.</li>
+        <li><b>Mitiga:</b> Anthropic told Mitiga the behaviour is out of scope and by design. Mitiga disagrees. This page does not take a side.</li>
+      </ul>
+    </aside>
+
+    <section>
+      <h3>Where to start</h3>
+      <p class="sub">One first control per risk. The friction is my estimate. <span class="tag">[inference]</span></p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
+        <table class="tbl start">
+          <colgroup><col class="c-id"><col><col class="c-fr"></colgroup>
+          <thead><tr><th scope="col">Risk</th><th scope="col">First control</th><th scope="col">Friction</th></tr></thead>
+          <tbody id="startRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="statusdef">
+      <h3>What a status means</h3>
+      <p class="sub"><b>OK:</b> in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; this page stores only the status, in this browser. <b>Partial:</b> covers some products, platforms or users. <b>Missing:</b> not in place. <b>Unknown:</b> looked at but not confirmed. <b>Not assessed:</b> nobody has looked yet. These definitions are mine. <span class="tag">[inference]</span></p>
+    </section>
+
+    <div class="tally" aria-live="polite">
+      <div class="tally-row">
+        <span><i class="dot" style="background:var(--ok)"></i>OK <b id="n-ok">0</b></span>
+        <span><i class="dot" style="background:var(--part)"></i>Partial <b id="n-part">0</b></span>
+        <span><i class="dot" style="background:var(--miss)"></i>Missing <b id="n-miss">0</b></span>
+        <span><i class="dot" style="background:var(--unk)"></i>Unknown <b id="n-unk">0</b></span>
+        <span><i class="dot" style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--unk)"></i>Not assessed <b id="n-none">8</b></span>
+      </div>
+      <div class="bar" aria-hidden="true"><span id="b-ok" style="background:var(--ok);width:0"></span><span id="b-part" style="background:var(--part);width:0"></span><span id="b-miss" style="background:var(--miss);width:0"></span><span id="b-unk" style="background:var(--unk);width:0"></span></div>
+      <div class="tools">
+        <button type="button" class="btn" id="copySummary">Copy status as text</button>
+        <button type="button" class="btn" id="resetBtn">Reset</button>
+        <span id="resetConfirm" hidden><button type="button" class="btn danger" id="resetYes">Yes, reset all</button> <button type="button" class="btn" id="resetNo">Cancel</button></span>
+        <span class="msg" id="copyMsg" aria-live="polite"></span>
+      </div>
+      <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status as text"></textarea>
+    </div>
+
+    <div class="risks" id="risks">
+
+      <article class="risk" data-id="M01" data-title="Unapproved MCP servers">
+        <div class="risk-head"><span class="rid">M01</span><div><h3>Unapproved MCP servers</h3><p class="en">OWASP MCP09 Shadow MCP Servers</p></div></div>
+        <p><b>In plain words:</b> Anyone can plug a new server into the agent, and the agent will use it. An approved list stops that.</p>
+        <p>By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is there an approved list of servers, and is it enforced?</li>
+          <li>Does the list cover both remote servers and local ones?</li>
+          <li>Is a server's name used as the control? Anthropic says the name is not a security control.</li>
+        </ul>
+        <details><summary>How to set it</summary><p class="note"><b>Claude Code:</b> <code>allowedMcpServers</code> with <code>allowManagedMcpServersOnly</code>, or a fixed set in <code>managed-mcp.json</code> (an empty <code>mcpServers</code> disables MCP). Once any <code>serverUrl</code> entry exists, every remote server must match a URL. Once any <code>serverCommand</code> entry exists, every stdio server must match a command. The denylist always wins. <b>Codex:</b> an <code>[mcp_servers.&lt;name&gt;]</code> allowlist in <code>requirements.toml</code>. <b>VS Code:</b> <code>ChatAllowedMcpServers</code>.</p></details>
+        <p class="finding"><span class="lbl">Typical findings</span>Any server allowed by default, allowlists with only URL entries, names used as the control. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M01"></div>
+      </article>
+
+      <article class="risk" data-id="M02" data-title="Tampered or malicious server code">
+        <div class="risk-head"><span class="rid">M02</span><div><h3>Tampered or malicious server code</h3><p class="en">OWASP MCP04 Supply Chain Attacks and Dependency Tampering · MCP03 Tool Poisoning</p></div></div>
+        <p><b>In plain words:</b> A local server is a program someone wrote. If it is bad from the start, or turns bad after an update, it runs with your rights.</p>
+        <p>A local server is code from a package or repo, and it runs as the developer. A server that is changed later, or that is bad from the start, can do what the developer can. No MCP-specific incident for this risk is cited here.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Are local servers allowed by exact command rather than by name?</li>
+          <li>Who wrote each approved server, and how does it update? <span class="tag">[inference]</span></li>
+        </ul>
+        <details><summary>How to set it</summary><p class="note"><b>Claude Code</b> matches <code>serverCommand</code> exactly but does not compare the <code>env</code> block. <b>Codex:</b> the string form of <code>command</code> does not check <code>args</code>, <code>cwd</code> or <code>env</code>; the structured form with <code>executable</code> and <code>args</code> is stricter.</p></details>
+        <p class="finding"><span class="lbl">Typical findings</span>Servers installed from any package, no review of updates. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M02"></div>
+      </article>
+
+      <article class="risk" data-id="M03" data-title="Local servers run commands as the user">
+        <div class="risk-head"><span class="rid">M03</span><div><h3>Local servers run commands as the user</h3><p class="en">OWASP MCP05 Command Injection and Execution</p></div></div>
+        <p><b>In plain words:</b> A local server is started by a command. Whoever controls that command controls what runs on your machine.</p>
+        <p>The MCP specification lists local server compromise as a risk: a malicious startup command in the client config, or a malicious payload in the server. The results it names are arbitrary code execution, no visibility and data exfiltration.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Does your client ask before it runs a server's command, and show the whole command? The specification (2026-07-28) says a client with one-click local setup must.</li>
+          <li>Does your client sandbox local servers? The specification says clients should run them with minimal default privileges.</li>
+          <li>Is stdio used where possible? The specification says server authors should use stdio, or restrict HTTP with an auth token or unix sockets.</li>
+        </ul>
+        
+        <p class="finding"><span class="lbl">Typical findings</span>One-click setup that hides the command, servers started with no sandbox. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M03"></div>
+      </article>
+
+      <article class="risk" data-id="M04" data-title="Prompt injection through tool output">
+        <div class="risk-head"><span class="rid">M04</span><div><h3>Prompt injection through tool output</h3><p class="en">OWASP MCP06 Prompt Injection via Contextual Payloads</p></div></div>
+        <p><b>In plain words:</b> The agent reads text that tools bring back. If that text hides instructions, the agent may follow them.</p>
+        <p>A tool can read pages, tickets or files that someone else wrote. Hidden instructions in that text can steer the agent. OWASP lists this as a category; no MCP-specific incident is cited here.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Which servers read content you do not control (web, tickets, mail, shared files)? <span class="tag">[inference]</span></li>
+          <li>Are those servers kept apart from servers that can write, send or run things? <span class="tag">[inference]</span></li>
+          <li>Does a person approve tool calls that change something? <span class="tag">[inference]</span></li>
+        </ul>
+        
+        <p class="finding"><span class="lbl">Typical findings</span>One agent holding both a reader of outside text and a server that can send or change things. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M04"></div>
+      </article>
+
+      <article class="risk" data-id="M05" data-title="MCP tokens stolen or redirected">
+        <div class="risk-head"><span class="rid">M05</span><div><h3>MCP tokens stolen or redirected</h3><p class="en">OWASP MCP01 Token Mismanagement and Secret Exposure</p></div></div>
+        <p><b>In plain words:</b> A token is a key to a service. If someone gets between you and the service, they can copy the key.</p>
+        <p>Mitiga (May 2026) showed an npm postinstall hook that edits <code>~/.claude.json</code> and points an MCP server URL at an attacker's localhost proxy. The proxy captured the OAuth token and refresh token; Atlassian was the example. It needs code execution on the machine through the npm install.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Do you watch <code>~/.claude.json</code> and project MCP files for changed server URLs? Mitiga recommends this.</li>
+          <li>Is there a baseline of approved MCP endpoints, with an alert on new local proxies? Mitiga recommends this too.</li>
+          <li>After a suspected case, is the config fixed as well as the tokens rotated? Mitiga says rotating tokens alone is not enough.</li>
+        </ul>
+        
+        <p class="finding"><span class="lbl">Typical findings</span>No watch on MCP config files, tokens that live as long as the account. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M05"></div>
+      </article>
+
+      <article class="risk" data-id="M06" data-title="Over-broad tokens and passed-through tokens">
+        <div class="risk-head"><span class="rid">M06</span><div><h3>Over-broad tokens and passed-through tokens</h3><p class="en">OWASP MCP02 Privilege Escalation via Scope Creep · MCP07 Insufficient Authentication and Authorization</p></div></div>
+        <p><b>In plain words:</b> A key that opens many doors does more harm when stolen. A server must also not reuse a key that was made for something else.</p>
+        <p>A stolen token with wide scope reaches further than a narrow one. The specification forbids token passthrough: an MCP server must not accept tokens that were not issued for it. It also warns that a proxy server with a static client ID can be abused (confused deputy).</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Are tokens short-lived and narrow? The specification recommends a progressive, least-privilege scope model.</li>
+          <li>Do servers you or a supplier run refuse tokens not issued for them?</li>
+          <li>Proxy servers with a static client ID: per-client consent, exact <code>redirect_uri</code> match and single-use OAuth <code>state</code>.</li>
+        </ul>
+        
+        <p class="finding"><span class="lbl">Typical findings</span>Broad personal tokens in MCP config, servers that forward whatever token they receive. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M06"></div>
+      </article>
+
+      <article class="risk" data-id="M07" data-title="Local HTTP servers and URLs from servers">
+        <div class="risk-head"><span class="rid">M07</span><div><h3>Local HTTP servers and URLs from servers</h3><p class="en">MCP specification: transports and security best practices</p></div></div>
+        <p><b>In plain words:</b> A server on your own computer can be reached by other programs, and sometimes by web pages. A server can also send your client to addresses it should not visit.</p>
+        <p>An MCP server that listens on local HTTP can be reached by other local programs and, through DNS rebinding, by web pages. The specification also warns that a malicious server can supply URLs that point at internal addresses, such as 169.254.169.254.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Local HTTP servers: do they check the <code>Origin</code> header (must), bind to 127.0.0.1 rather than 0.0.0.0 (should) and require authentication (should)? Source: specification 2026-07-28.</li>
+          <li>Does the client require HTTPS for server-supplied URLs, and block private and reserved IP ranges? The specification says should. It also says operators should consider an egress proxy.</li>
+          <li>Does the client open only http and https authorization URLs, reject <code>javascript:</code> and never use a shell command to open them? The specification says must.</li>
+        </ul>
+        
+        <p class="finding"><span class="lbl">Typical findings</span>A server left running on localhost with no token, bound to all interfaces. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M07"></div>
+      </article>
+
+      <article class="risk" data-id="M08" data-title="Over-sharing and no audit trail">
+        <div class="risk-head"><span class="rid">M08</span><div><h3>Over-sharing and no audit trail</h3><p class="en">OWASP MCP10 Context Injection and Over-Sharing · MCP08 Lack of Audit and Telemetry</p></div></div>
+        <p><b>In plain words:</b> If nobody knows which servers are in use, nobody knows what data has left.</p>
+        <p>Whatever the agent sends to an MCP server, and whatever the server returns into the model's context, leaves the laptop or reaches the model provider. Without a list of servers and usage logs, nobody can tell what was shared. OWASP lists both as categories; no MCP-specific incident is cited here.</p>
+        <div><span class="lbl">Check</span></div>
+        <ul class="checks">
+          <li>Is there a list of servers in use, who runs them and what data each receives? <span class="tag">[inference]</span></li>
+          <li>Can you see MCP use? Claude Code usage can be monitored with OpenTelemetry; <code>OTEL_LOG_TOOL_DETAILS=1</code> is the variable the docs name for tool details.</li>
+          <li>Has someone decided what may be sent to remote servers? <span class="tag">[inference]</span></li>
+        </ul>
+        
+        <p class="finding"><span class="lbl">Typical findings</span>No inventory, no usage logs, remote servers receiving whole files. <span class="tag">[inference]</span></p>
+        <div class="seg" data-id="M08"></div>
+      </article>
+
+    </div>
+  </div>
+
+  <style>
+    .tbl.vs{min-width:0}
+    @media (max-width:680px){
+      .tbl.vs colgroup,.tbl.vs thead{display:none}
+      .tbl.vs,.tbl.vs tbody,.tbl.vs tr,.tbl.vs th,.tbl.vs td{display:block;width:100%}
+      .tbl.vs tr{padding:8px 0;border-bottom:1px solid var(--line)}
+      .tbl.vs tbody tr:last-child{border-bottom:0}
+      .tbl.vs th,.tbl.vs td{border-bottom:0;padding:3px 10px}
+      .tbl.vs td:last-child{font:500 0.72rem/1.4 var(--mono);color:var(--muted)}
+      .tbl.vs td:last-child::before{content:"Risk ";}
+    }
+  </style>
+  <!-- 3 VS CODE -->
+  <div class="panel" role="tabpanel" id="p-vscode" aria-labelledby="t-vscode" hidden>
+    <section>
+      <h2>If you run MCP servers in VS Code</h2>
+      <p class="sub">What the VS Code documentation says about MCP, and which risk each point touches. The general risks still apply. Every row is from the VS Code docs on 2 November 2026 unless it is tagged <span class="tag">[inference]</span>. Nothing here was tested.</p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="VS Code and MCP table">
+        <table class="tbl vs">
+          <colgroup><col style="width:11rem"><col><col style="width:6rem"></colgroup>
+          <thead><tr><th scope="col">Topic</th><th scope="col">What VS Code does</th><th scope="col">Risk</th></tr></thead>
+          <tbody>
+          <tr><th scope="row">Ways a server gets added</th><td>From the MCP server gallery (Preview), <code>MCP: Add Server</code>, your user <code>mcp.json</code>, a repo's <code>.vscode/mcp.json</code> or root <code>.mcp.json</code>, a Dev Container's <code>devcontainer.json</code>, or <code>code --add-mcp</code>.</td><td>M01</td></tr>
+          <tr><th scope="row">Servers found in other apps</th><td><code>chat.mcp.discovery.enabled</code> picks the sources. GitHub Copilot CLI discovery is on by default. Claude Desktop, Cursor and Windsurf are off by default.</td><td>M01</td></tr>
+          <tr><th scope="row">Workspace Trust</th><td>Servers in <code>.vscode/mcp.json</code> and <code>.mcp.json</code> follow Workspace Trust. Restricted mode stops them from starting. In a trusted workspace they can start with no separate MCP prompt, also after the config changes.</td><td>M03</td></tr>
+          <tr><th scope="row">Autostart</th><td><code>chat.mcp.autostart</code> (experimental) defaults to <code>newAndOutdated</code>. When you send a chat message, VS Code starts servers that never ran or whose config changed. Setting it to <code>never</code> does not stop Copilot harness sessions from starting their own servers. Disable the server to stop it.</td><td>M03</td></tr>
+          <tr><th scope="row">Trust and autostart together</th><td>In a trusted repo, a new or changed server entry can start on your next chat message. <span class="tag">[inference]</span> Built from the two rows above. Not tested.</td><td>M03</td></tr>
+          <tr><th scope="row">Sandbox for local servers</th><td>A per-server sandbox for stdio servers: <code>sandboxEnabled</code> plus file and network rules. macOS and Linux only, not Windows. Tool confirmations for a sandboxed server are auto-approved.</td><td>M03, M04</td></tr>
+          <tr><th scope="row">Tool approval</th><td>Each MCP tool call needs approval, at session, workspace or user level. The permission levels Allow all and Autopilot approve every tool. The <code>ChatToolsAutoApprove</code> policy turns global auto-approval off.</td><td>M04</td></tr>
+          <tr><th scope="row">Logins and secrets</th><td>Sensitive input values for servers go in VS Code's secure credentials store. VS Code implements the MCP authorization specification for OAuth. The docs say not to commit secrets to a shared config.</td><td>M05, M06</td></tr>
+          <tr><th scope="row">Settings Sync</th><td>If you select MCP Servers in Settings Sync, your user-profile <code>mcp.json</code> syncs to your other devices. Workspace <code>.mcp.json</code> files do not. <span class="tag">[inference]</span> A bad entry on one device could reach the others. Not observed.</td><td>M05</td></tr>
+          <tr><th scope="row">What servers can ask of the model</th><td><code>chat.mcp.serverSampling</code> sets which models are exposed to servers for background requests.</td><td>M08</td></tr>
+          <tr><th scope="row">Organisation policy</th><td><code>ChatMCP</code> (<code>chat.mcp.access</code>), <code>ChatAllowedMcpServers</code>, <code>ChatAllowManagedMcpServersOnly</code>, <code>ChatDeniedMcpServers</code> and <code>McpGalleryServiceUrl</code>. When an allowlist is set, only matching servers may be installed or run. A deny rule always wins. The values of <code>chat.mcp.access</code> are left out because the sources disagree.</td><td>M01</td></tr>
+          <tr><th scope="row">Other agents inside VS Code</th><td>Claude and Codex harnesses cannot enforce Copilot enterprise-managed settings. They are disabled when those settings apply.</td><td>M01</td></tr>
+          <tr><th scope="row">Visibility</th><td><code>MCP: Show Installed Servers</code> lists the servers. Copilot Chat can export traces, metrics and events through OpenTelemetry, which covers tool execution.</td><td>M08</td></tr>
+          <tr><th scope="row">Example commands</th><td>The docs' own example runs <code>npx -y @playwright/mcp@latest</code>, an unpinned package. <span class="tag">[inference]</span> Pinning a version avoids a silent change.</td><td>M02</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section>
+      <h3>Limits</h3>
+      <p class="sub">VS Code has more than one kind of agent session (local and Copilot harness), and the settings do not always reach both. The rows say where the docs name a difference. Settings and policy names come from the docs; none was run on a managed machine.</p>
+    </section>
+  </div>
+
+  <!-- 3 EVIDENCE -->
+  <div class="panel" role="tabpanel" id="p-evidence" aria-labelledby="t-evidence" hidden>
+    <section>
+      <h2>Evidence status</h2>
+      <p class="sub">What was checked, what is my judgement, and what is still open. The full statement-by-statement record is in <code>MCP-Risk-Map.factcheck.md</code> in the repository.</p>
+      <div class="cols" id="evidence"></div>
+    </section>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
+    <section>
+      <h2>Sources</h2>
+      <p class="sub">All opened on 2 November 2026, except the Developer-WS page, which is on this site.</p>
+      <ol class="sources" id="sourceList"></ol>
+    </section>
+  </div>
+
+  <footer>
+    <p>Marked <span class="tag">[inference]</span> is my judgement, not taken directly from a source. Nothing on this page was tested on a real system.</p>
+    <p>No setting or command on this page was run on a managed machine.</p>
+    <p>Versions and dates change quickly in this area. Check the "Current" box against the sources before you use it in a report.</p>
+  </footer>
+</div>
+
+
+<script>
+(function(){
+  "use strict";
+  var store = {
+    get: function(k, d){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function htmlEl(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function listCell(items){
+    var td = htmlEl('td');
+    items.forEach(function(x, i){
+      var s = htmlEl('span', 'cl', x);
+      if (i < items.length - 1) s.appendChild(htmlEl('span', 'sr', ', '));
+      td.appendChild(s);
+    });
+    return td;
+  }
+
+  /* Tabs */
+  var tabs = $$('[role="tab"]');
+  var ids = tabs.map(function(t){ return t.getAttribute('data-tab'); });
+  function show(id, focus){
+    if (ids.indexOf(id) < 0) id = 'map';
+    tabs.forEach(function(t){
+      var on = t.getAttribute('data-tab') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+      if (on){
+        var bar = t.parentNode;
+        if (t.offsetLeft < bar.scrollLeft || t.offsetLeft + t.offsetWidth > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = Math.max(0, t.offsetLeft - 12);
+      }
+    });
+    ids.forEach(function(x){ var p = document.getElementById('p-' + x); if (p) p.hidden = (x !== id); });
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    store.set('mcp-tab', id);
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ show(t.getAttribute('data-tab')); });
+    t.addEventListener('keydown', function(e){
+      var n = null;
+      if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+      if (n !== null){ e.preventDefault(); show(tabs[n].getAttribute('data-tab'), true); }
+    });
+  });
+  function toMore(){ show('map'); var m = document.getElementById('more'); if (m) setTimeout(function(){ m.scrollIntoView({ block: 'start' }); }, 0); }
+  var start = (location.hash || '').replace('#', '');
+  if (start === 'more') toMore();
+  else show(ids.indexOf(start) >= 0 ? start : store.get('mcp-tab', 'map'));
+  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (h === 'more') toMore(); else if (ids.indexOf(h) >= 0) show(h); });
+
+  /* Copy */
+  function selectNode(node){
+    try { var r = document.createRange(); r.selectNodeContents(node); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch(e){}
+  }
+  function copyText(text, onOk, onFail){
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(onOk, onFail); }
+      else { onFail(); }
+    } catch(e){ onFail(); }
+  }
+  $$('.cmd .copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code = btn.parentNode.querySelector('code');
+      copyText(code.textContent, function(){
+        btn.textContent = 'Copied';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 1600);
+      }, function(){
+        selectNode(code);
+        btn.textContent = 'Selected, copy it yourself';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 2400);
+      });
+    });
+  });
+
+  /* Status */
+  var OPTS = [['ok','OK'],['part','Partial'],['miss','Missing'],['unk','Unknown']];
+  var LABEL = { ok:'OK', part:'Partial', miss:'Missing', unk:'Unknown' };
+  var status = store.get('mcp-status', {});
+  var segs = $$('.seg');
+  segs.forEach(function(seg){
+    var id = seg.getAttribute('data-id');
+    var lab = htmlEl('span', 'lbl', 'Status');
+    seg.setAttribute('role', 'radiogroup');
+    seg.setAttribute('aria-label', 'Status for ' + id);
+    seg.appendChild(lab);
+    OPTS.forEach(function(o){
+      var inp = document.createElement('input');
+      inp.type = 'radio'; inp.className = 'sr'; inp.name = 'st-' + id; inp.id = 'st-' + id + '-' + o[0]; inp.value = o[0];
+      if (status[id] === o[0]) inp.checked = true;
+      var l = document.createElement('label');
+      l.htmlFor = inp.id; l.className = 'pill v-' + o[0]; l.textContent = o[1];
+      inp.addEventListener('change', function(){ status[id] = o[0]; store.set('mcp-status', status); tally(); });
+      seg.appendChild(inp); seg.appendChild(l);
+    });
+  });
+  function tally(){
+    var total = segs.length, c = { ok:0, part:0, miss:0, unk:0 };
+    segs.forEach(function(s){ var v = status[s.getAttribute('data-id')]; if (c.hasOwnProperty(v)) c[v]++; });
+    var none = total - c.ok - c.part - c.miss - c.unk;
+    $('#n-ok').textContent = c.ok;
+    $('#n-part').textContent = c.part;
+    $('#n-miss').textContent = c.miss;
+    $('#n-unk').textContent = c.unk;
+    $('#n-none').textContent = none;
+    ['ok','part','miss','unk'].forEach(function(k){ $('#b-' + k).style.width = (c[k] / total * 100) + '%'; });
+    paintDiagram();
+  }
+
+  function summary(){
+    var d = new Date();
+    var lines = ['MCP risk map, status ' + d.toLocaleDateString('en-GB'), ''];
+    segs.forEach(function(s){
+      var id = s.getAttribute('data-id');
+      var art = s.closest('.risk');
+      lines.push(id + ' ' + (art ? art.getAttribute('data-title') : '') + ': ' + (LABEL[status[id]] || 'Not assessed'));
+    });
+    lines.push('', 'OK means the control is in place and tested for a named product and operating system, with evidence and date recorded outside this page.');
+    return lines.join('\n');
+  }
+  var out = $('#summaryOut'), msg = $('#copyMsg');
+  $('#copySummary').addEventListener('click', function(){
+    var text = summary();
+    copyText(text, function(){ out.hidden = true; msg.textContent = 'Copied to the clipboard.'; },
+      function(){ out.value = text; out.hidden = false; out.focus(); out.select(); msg.textContent = 'The text is selected. Copy it yourself.'; });
+  });
+  $('#resetBtn').addEventListener('click', function(){ $('#resetConfirm').hidden = false; $('#resetBtn').hidden = true; });
+  $('#resetNo').addEventListener('click', function(){ $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false; });
+  $('#resetYes').addEventListener('click', function(){
+    status = {}; store.set('mcp-status', status);
+    $$('.seg input').forEach(function(i){ i.checked = false; });
+    tally();
+    $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false;
+    msg.textContent = 'Status reset.';
+  });
+
+  /* Filter */
+  var DESC = {
+    all: 'Shows all ten. The link between attack path and risk is my judgement.',
+    content: 'Poisoned content: a web page, issue, README or tool output carries instructions, and the agent acts on them with the developer’s rights.',
+    repo: 'Booby-trapped project: a repo, archive or shared folder is built so that opening it, or letting an agent look at it, runs code.',
+    supply: 'Supply chain: an extension, package, MCP server, plugin or skill is malicious from the start or turns malicious in an update.',
+    creds: 'Stolen tokens: malware or a hijacked agent collects keys and tokens from the machine and uses them elsewhere.'
+  };
+  var chips = $$('.chip');
+  var desc = $('#pathDesc');
+  chips.forEach(function(ch){
+    ch.addEventListener('click', function(){
+      var p = ch.getAttribute('data-path');
+      chips.forEach(function(c){ c.setAttribute('aria-pressed', c === ch ? 'true' : 'false'); });
+      $$('.risk').forEach(function(r){
+        r.hidden = !(p === 'all' || (' ' + r.getAttribute('data-paths') + ' ').indexOf(' ' + p + ' ') >= 0);
+      });
+      desc.textContent = DESC[p] + ' ';
+      desc.appendChild(htmlEl('span', 'tag', '[inference]'));
+    });
+  });
+
+  /* More risks, review and sources (data) */
+  var MORE = [];
+  var PERSONAS = [];
+  var EVIDENCE = [{"h": "Verified here", "i": ["OWASP MCP Top 10 names and IDs (MCP01 to MCP10), read 2 November 2026. The project is in beta (phase 3).", "MCP specification 2026-07-28 (the current version), Streamable HTTP: Origin validation, localhost binding, authentication.", "MCP security best practices (2026-07-28): confused deputy, token passthrough, SSRF, local server compromise, authorization URL validation, scope minimisation.", "Mitiga, published 5 May 2026 and updated 30 October 2026: the steps, the Atlassian example, the dates and both vendor positions.", "Claude Code managed MCP page: managed-mcp.json, allowedMcpServers and deniedMcpServers, allowManagedMcpServersOnly, URL and command matching, OpenTelemetry.", "Codex managed configuration: mcp_servers allowlist, identity forms, empty table, string versus structured command.", "VS Code docs (agent customization, manage MCP servers, MCP configuration reference, AI security, policies, telemetry): the rows on the VS Code tab."]}, {"h": "My judgement", "i": ["The choice of eight risks, their order and the OWASP mapping.", "Where each risk sits on the map.", "Statements tagged [inference] (advice questions, not facts), and the friction estimates.", "Which VS Code facts are shown, and the risk each is tied to."]}, {"h": "Still open", "i": ["The specification can change. This page was checked against version 2026-07-28, the current one on 2 November 2026.", "Only one MCP-specific attack (Mitiga) is cited. For the other risks no incident was verified. That does not mean none exists.", "Anthropic told Mitiga the issue was out of scope and by design. Mitiga disagrees. This page does not take a side.", "The chat.mcp.access values: Microsoft's docs and source disagree, so none are stated.", "No setting or command on this page was run on a managed machine.", "VS Code has local and Copilot harness sessions. Settings do not always reach both."]}];
+  var SOURCES = [{"t": "OWASP MCP Top 10", "u": "https://owasp.org/www-project-mcp-top-10/", "n": "OWASP. Beta (phase 3). MCP01 to MCP10."}, {"t": "MCP specification: transports (Streamable HTTP)", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http#security-endpoint", "n": "Model Context Protocol, version 2026-07-28 (current). Origin validation, localhost binding, authentication."}, {"t": "MCP security best practices (2026-07-28)", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices", "n": "Model Context Protocol. Confused deputy, token passthrough, SSRF, local server compromise, authorization URL validation, scope minimisation."}, {"t": "Stealing MCP tokens in Claude Code via ~/.claude.json", "u": "https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm", "n": "Mitiga (5.5.2026, updated 30.10.2026). Attack steps, vendor response and recommendations."}, {"t": "Claude Code: managed MCP", "u": "https://code.claude.com/docs/en/managed-mcp", "n": "Anthropic. managed-mcp.json, allowlist and denylist matching, allowManagedMcpServersOnly, OpenTelemetry monitoring."}, {"t": "Codex managed configuration", "u": "https://learn.chatgpt.com/docs/enterprise/managed-configuration", "n": "OpenAI. requirements.toml mcp_servers allowlist and identity forms."}, {"t": "VS Code: Add MCP servers", "u": "https://code.visualstudio.com/docs/agent-customization/mcp-servers", "n": "Microsoft. Gallery, adding servers, trust warning."}, {"t": "VS Code: Manage MCP servers", "u": "https://code.visualstudio.com/docs/agents/run/manage-mcp-servers", "n": "Microsoft. Workspace Trust, autostart, sandbox, Settings Sync, Dev Containers."}, {"t": "VS Code: MCP configuration reference", "u": "https://code.visualstudio.com/docs/agents/reference/mcp-configuration", "n": "Microsoft. Settings, discovery sources, sandbox schema."}, {"t": "VS Code: AI security", "u": "https://code.visualstudio.com/docs/copilot/security", "n": "Microsoft. Tool approval, permission levels, secure credentials store, MCP sandboxing."}, {"t": "Centrally manage VS Code settings with policies", "u": "https://code.visualstudio.com/docs/enterprise/policies", "n": "Microsoft. ChatMCP, ChatAllowedMcpServers, ChatDeniedMcpServers, McpGalleryServiceUrl, ChatToolsAutoApprove."}, {"t": "VS Code: enterprise telemetry", "u": "https://code.visualstudio.com/docs/enterprise/telemetry", "n": "Microsoft. OpenTelemetry export from Copilot Chat."}, {"t": "Developer workstation risk map", "u": "Developer-WS.html", "n": "This site. The wider page this one was cut from; it covers MCP together with VS Code, git and agents."}];
+  var START = [["M01", "Claude Code allowManagedMcpServersOnly with an allowlist of both URLs and commands; the Codex and VS Code allowlists for those tools", "Moderate"], ["M02", "Allow local servers by exact command, not by name", "Low"], ["M03", "Check that each client shows the full command and asks before running it", "Low"], ["M04", "Keep servers that read outside content apart from servers that can write or send", "Moderate"], ["M05", "Alert on changes to ~/.claude.json and project MCP files", "Low"], ["M06", "Short-lived, narrowly scoped tokens per server", "Moderate"], ["M07", "Bind local HTTP servers to 127.0.0.1, check Origin and require a token", "Low"], ["M08", "A list of approved servers, and Claude Code usage export through OpenTelemetry", "Low"]];
+
+  var pw = $('#personas');
+  PERSONAS.forEach(function(p){
+    var d = htmlEl('div', 'persona');
+    d.appendChild(htmlEl('h3', null, p.n));
+    d.appendChild(htmlEl('p', 'role', p.r));
+    var ul = htmlEl('ul');
+    p.f.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
+    d.appendChild(ul);
+    pw.appendChild(d);
+  });
+  var ev = $('#evidence');
+  EVIDENCE.forEach(function(c){
+    var d = htmlEl('div', 'col');
+    d.appendChild(htmlEl('h3', null, c.h));
+    var ul = htmlEl('ul');
+    c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
+    d.appendChild(ul);
+    ev.appendChild(d);
+  });
+  var sl = $('#sourceList');
+  SOURCES.forEach(function(s){
+    var li = htmlEl('li');
+    var a = htmlEl('a', null, s.t); a.href = s.u; a.target = '_blank'; a.rel = 'noopener';
+    li.appendChild(a);
+    li.appendChild(htmlEl('span', null, s.n));
+    sl.appendChild(li);
+  });
+
+  /* Risk map */
+  var NS = 'http://www.w3.org/2000/svg';
+  var dgReady = false;
+  var dgSvg = document.getElementById('dg');
+  var pop = document.getElementById('dgPop');
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var RISKS = ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08"];
+  var ST = ['st-none','st-ok','st-part','st-miss','st-unk'];
+  var VBY = 52, VBW = 1240;
+
+  var ZONES = [{"x": 20, "y": 64, "w": 236, "h": 520, "n": "1", "t": "Server sources", "o": "INTERNET AND SUPPLIERS"}, {"x": 280, "y": 64, "w": 640, "h": 520, "n": "2", "t": "Developer workstation", "o": "DEVELOPER, WITH THE ENDPOINT TEAM", "cw": 300}, {"x": 984, "y": 64, "w": 236, "h": 520, "n": "3", "t": "Outbound services", "o": "SUPPLIERS AND YOUR TENANTS"}, {"x": 20, "y": 616, "w": 1200, "h": 140, "n": "4", "t": "Governance and monitoring", "o": "IT, SECURITY AND SOC", "cw": 300, "note": "Sets policy for, and collects events from, every layer"}];
+  var COMP = {"src": {"x": 36, "y": 124, "w": 204, "h": 72, "st": 1, "t": "Server sources", "s": "Registries, repos, vendors", "short": "Server sources"}, "content": {"x": 36, "y": 212, "w": 204, "h": 72, "st": 1, "t": "Content tools read", "s": "Pages, tickets, files", "short": "Outside content"}, "pkg": {"x": 36, "y": 304, "w": 204, "h": 72, "st": 1, "t": "Server packages", "s": "npm and other registries"}, "cfgin": {"x": 36, "y": 404, "w": 204, "h": 72, "st": 1, "t": "Shared config", "s": ".mcp.json, setup links", "short": "Shared config"}, "agent": {"x": 296, "y": 124, "w": 608, "h": 140, "st": 2, "t": "AI agent (MCP client)", "s": "Claude Code, Codex, VS Code", "s2": "Reads tool descriptions, calls tools, gets results", "short": "AI agent"}, "local": {"x": 296, "y": 300, "w": 290, "h": 80, "st": 2, "t": "Local MCP server (stdio)", "s": "Started by the client, runs as the user", "short": "Local server (stdio)"}, "lhttp": {"x": 614, "y": 300, "w": 290, "h": 80, "st": 2, "t": "Local MCP server (HTTP)", "s": "Listens on a localhost port", "short": "Local server (HTTP)"}, "cfgf": {"x": 296, "y": 400, "w": 190, "h": 80, "st": 2, "t": "MCP config", "s": "~/.claude.json, .mcp.json", "short": "MCP config"}, "files": {"x": 502, "y": 400, "w": 190, "h": 80, "st": 2, "t": "Files and logins", "s": "Code, .env, SSH, cloud", "short": "Files and logins"}, "tok": {"x": 708, "y": 400, "w": 196, "h": 80, "st": 2, "t": "MCP tokens", "s": "OAuth and API tokens"}, "egress": {"x": 944, "y": 124, "w": 18, "h": 424, "st": 3, "t": "Egress boundary (conceptual)", "vert": "EGRESS", "mx": 936, "my": 290, "vy": 470, "short": "Egress"}, "llm": {"x": 1000, "y": 124, "w": 204, "h": 72, "st": 3, "t": "Model provider", "s": "Context, tool results"}, "mcpr": {"x": 1000, "y": 212, "w": 204, "h": 72, "st": 3, "t": "Remote MCP servers", "s": "Run by a supplier or you", "short": "Remote MCP"}, "saas": {"x": 1000, "y": 300, "w": 204, "h": 72, "st": 3, "t": "SaaS and cloud APIs", "s": "Reached with the user's tokens", "short": "SaaS and cloud"}, "policy": {"x": 36, "y": 664, "w": 372, "h": 76, "st": 4, "t": "Device policy (MDM)", "s": "MCP allowlists, managed settings", "short": "Device policy"}, "edr": {"x": 424, "y": 664, "w": 372, "h": 76, "st": 4, "t": "Endpoint detection", "s": "File and process events"}, "tele": {"x": 812, "y": 664, "w": 392, "h": 76, "st": 4, "t": "Agent telemetry and SOC", "s": "OpenTelemetry, SIEM, response", "short": "Agent telemetry"}};
+  var ARROWS = [{"d": "M240 160 H296", "l": "add", "x": 268, "y": 154, "a": "middle"}, {"d": "M240 248 H296", "l": "output", "x": 268, "y": 242, "a": "middle"}, {"d": "M240 340 H296", "l": "install", "x": 268, "y": 334, "a": "middle"}, {"d": "M240 440 H296", "l": "config", "x": 268, "y": 434, "a": "middle"}, {"d": "M366 264 V300", "l": "tool calls", "x": 372, "y": 286}, {"d": "M520 300 V264", "l": "results", "x": 526, "y": 286}, {"d": "M760 264 V300"}, {"d": "M366 400 V380", "l": "starts", "x": 372, "y": 394}, {"d": "M540 380 V400", "l": "reads", "x": 546, "y": 394}, {"d": "M650 380 V400"}, {"d": "M830 380 V400", "l": "tokens", "x": 836, "y": 394}, {"d": "M904 150 H944"}, {"d": "M962 150 H1000"}, {"d": "M1000 182 H962"}, {"d": "M944 182 H904"}, {"d": "M904 232 H944"}, {"d": "M962 232 H1000"}, {"d": "M1000 260 H962"}, {"d": "M944 260 H904"}, {"d": "M904 340 H944"}, {"d": "M962 340 H1000"}, {"d": "M1102 284 V300"}];
+
+  var PLACE = [["M01", "src", "Servers come from many places. Anthropic says it does not security-audit or manage any MCP server."], ["M01", "cfgin", "A project can carry a file such as .mcp.json that names servers to start."], ["M01", "agent", "By default in Claude Code anyone can connect any MCP server, so each developer decides what the agent can reach."], ["M01", "policy", "Claude Code, Codex and VS Code each have an MCP allowlist. In Claude Code the denylist always wins, and serverName is not a security control."], ["M02", "pkg", "A server installed from a package runs that package's code. OWASP lists dependency tampering as MCP04."], ["M02", "local", "A local server's code runs as the user. The specification names arbitrary code execution, no visibility and data exfiltration for a compromised one."], ["M02", "agent", "OWASP lists Tool Poisoning as MCP03. The model reads tool descriptions, so a changed description can change what the agent does. [inference]"], ["M02", "policy", "Allow local servers by exact command. Claude Code does not compare the env block; the Codex string form does not check args, cwd or env."], ["M03", "cfgin", "A client with one-click local setup must get consent before running a command, and show the exact command in full (specification 2026-07-28)."], ["M03", "cfgf", "A malicious startup command in the client config is one of the compromise paths the specification names."], ["M03", "local", "A local server runs with the user's rights. The specification names arbitrary code execution, no visibility and data exfiltration."], ["M03", "files", "Data exfiltration is one of the consequences the specification names for a compromised local server."], ["M03", "agent", "The specification says clients should run local servers sandboxed with minimal default privileges."], ["M04", "content", "Pages, tickets and files that a tool reads can carry hidden instructions. OWASP lists this as MCP06."], ["M05", "pkg", "In Mitiga's research an npm postinstall hook edited ~/.claude.json. It needs code execution through the install."], ["M05", "cfgf", "The hook rewrote an MCP server URL to an attacker's localhost proxy, pre-set trust-dialog flags and added a project SessionStart hook."], ["M05", "lhttp", "The local proxy captured the OAuth bearer token (Atlassian was the example) and refresh tokens."], ["M05", "tok", "Mitiga says rotating tokens alone is not enough."], ["M05", "edr", "Mitiga recommends baselining approved MCP endpoints, watching ~/.claude.json and project MCP files, and alerting on new local proxies."], ["M06", "tok", "A stolen token with broad scope has a larger blast radius. The specification recommends progressive, least-privilege scopes."], ["M06", "mcpr", "An MCP server must not accept tokens that were not issued for it. The authorization specification forbids token passthrough."], ["M06", "saas", "A proxy server with a static client ID can be abused (confused deputy). Fixes: per-client consent, exact redirect_uri match, single-use state."], ["M07", "lhttp", "Servers must validate the Origin header to stop DNS rebinding, should bind to 127.0.0.1 rather than 0.0.0.0, and should authenticate (specification 2026-07-28)."], ["M07", "egress", "A malicious server can supply URLs that point at internal addresses such as 169.254.169.254. Clients should block private ranges; operators should consider an egress proxy."], ["M07", "agent", "Clients must allow only http and https authorization URLs, reject javascript: and similar, and not use shell commands to open URLs (specification 2026-07-28)."], ["M08", "agent", "OWASP lists Context Injection and Over-Sharing as MCP10: more context goes to a server than it needs."], ["M08", "policy", "Without a list of approved servers you cannot tell what is in use. OWASP lists this gap as MCP08."], ["M08", "tele", "Claude Code usage can be monitored with OpenTelemetry; OTEL_LOG_TOOL_DETAILS=1 is the variable the docs name for tool details."]];
+
+  var boxEls = {}, mkEls = [], selRisk = null, selComp = null, lastAnchor = null;
+  var MOREBY = {}; MORE.forEach(function(m){ MOREBY[m.id] = m; });
+  var XIDS = MORE.map(function(m){ return m.id; });
+  var ALL = RISKS.concat(XIDS);
+  function isX(r){ return !!MOREBY[r]; }
+
+  function markerLabel(r, id){
+    return r + ' ' + riskTitle(r) + (isX(r) ? ' (more risks)' : ', status: ' + stText(r)) + ', ' + COMP[id].t;
+  }
+  function svgEl(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function svgText(parent, x, y, cls, s, anchor){
+    var t = svgEl('text', { x:x, y:y }, parent);
+    if (cls) t.setAttribute('class', cls);
+    if (anchor) t.setAttribute('text-anchor', anchor);
+    t.textContent = s;
+    return t;
+  }
+  function riskTitle(r){
+    if (isX(r)) return MOREBY[r].t;
+    var c = document.querySelector('.risk[data-id="' + r + '"]'); return c ? c.getAttribute('data-title') : r;
+  }
+  function placesOf(r){ return PLACE.filter(function(p){ return p[0] === r; }); }
+  function placesAt(id){ return PLACE.filter(function(p){ return p[1] === id; }); }
+  function stOf(r){ return status[r] || 'none'; }
+  function stText(r){ return LABEL[status[r]] || 'Not assessed'; }
+  function setSt(e, r){ ST.forEach(function(s){ e.classList.remove(s); }); e.classList.add('st-' + stOf(r)); }
+  function markerEl(r, id){
+    for (var i = 0; i < mkEls.length; i++) if (mkEls[i].getAttribute('data-r') === r && mkEls[i].getAttribute('data-c') === id) return mkEls[i];
+    return null;
+  }
+  function idTag(r){
+    if (isX(r)) return htmlEl('span', 'idtag x', r);
+    var s = htmlEl('span', 'idtag', r); s.setAttribute('data-st-r', r); setSt(s, r); return s;
+  }
+
+  function buildDiagram(){
+    if (!dgSvg) return;
+    var defs = svgEl('defs', {}, dgSvg);
+    var am = svgEl('marker', { id:'dgArrow', viewBox:'0 0 10 10', refX:'9', refY:'5', markerWidth:'7', markerHeight:'7', orient:'auto-start-reverse' }, defs);
+    svgEl('path', { d:'M0,0 L10,5 L0,10 z', 'class':'ah' }, am);
+
+    ZONES.forEach(function(z){
+      svgEl('rect', { x:z.x, y:z.y, width:z.w, height:z.h, rx:10, 'class':'zn' }, dgSvg);
+      var cx = z.x + 8, cy = z.y + 8, cw = z.cw || (z.w - 16);
+      svgEl('polygon', { points:[cx + ',' + cy, (cx + cw - 10) + ',' + cy, (cx + cw) + ',' + (cy + 12), (cx + cw - 10) + ',' + (cy + 24), cx + ',' + (cy + 24)].join(' '), 'class':'chev' }, dgSvg);
+      svgText(dgSvg, cx + 10, cy + 17, 'chev-t', z.n + ' · ' + z.t);
+      if (z.cw) svgText(dgSvg, cx + cw + 16, cy + 16, 'own-t', z.o);
+      else svgText(dgSvg, z.x + 12, z.y + 48, 'own-t', z.o);
+      if (z.note) svgText(dgSvg, z.x + z.w - 16, cy + 16, 'note-t', z.note, 'end');
+    });
+
+    ARROWS.forEach(function(a){
+      var at = { d:a.d, 'class':'ln' + (a.dash ? ' dash' : ''), 'marker-end':'url(#dgArrow)' };
+      if (a.both) at['marker-start'] = 'url(#dgArrow)';
+      svgEl('path', at, dgSvg);
+    });
+
+    Object.keys(COMP).forEach(function(id){
+      var c = COMP[id];
+      var g = svgEl('g', { 'class':'box', 'data-c':id, role:'button', tabindex:'0' }, dgSvg);
+      svgEl('rect', { x:c.x, y:c.y, width:c.w, height:c.h, rx:c.vert ? 4 : 6 }, g);
+      if (c.vert){
+        var vx = c.x + c.w / 2 + 4, vy = c.vy;
+        var vt = svgText(g, vx, vy, 'vt', c.vert, 'middle');
+        vt.setAttribute('transform', 'rotate(-90 ' + vx + ' ' + vy + ')');
+      } else {
+        svgText(g, c.x + 10, c.y + 22, 't', c.t);
+        if (c.s) svgText(g, c.x + 10, c.y + 39, 's', c.s);
+        if (c.s2) svgText(g, c.x + 10, c.y + 54, 's', c.s2);
+      }
+      var ps = placesAt(id);
+      var nt = ps.filter(function(p){ return !isX(p[0]); }).length, nx = ps.length - nt;
+      g.setAttribute('aria-label', c.t + ': ' + nt + (nt === 1 ? ' top 10 risk' : ' top 10 risks') + (nx ? ', ' + nx + ' more' : ''));
+      boxEls[id] = g;
+    });
+
+    ARROWS.forEach(function(a){
+      if (!a.l) return;
+      var t = svgText(dgSvg, a.x, a.y, 'al', a.l, a.a || (a.rot ? 'middle' : null));
+      if (a.rot) t.setAttribute('transform', 'rotate(-90 ' + a.x + ' ' + a.y + ')');
+    });
+
+    var count = {};
+    PLACE.forEach(function(p){
+      var r = p[0], id = p[1], c = COMP[id], x, y;
+      var i = count[id] || 0; count[id] = i + 1;
+      if (c.vert){ x = c.mx; y = c.my + i * 24; }
+      else { x = c.x + 10 + i * 39; y = c.y + c.h - 26; }
+      var g = svgEl('g', { 'class':'mk' + (isX(r) ? ' x' : ''), 'data-r':r, 'data-c':id, role:'button', tabindex:'0' }, dgSvg);
+      g.setAttribute('aria-label', markerLabel(r, id));
+      svgEl('rect', { x:x, y:y, width:34, height:18, rx:4 }, g);
+      svgText(g, x + 17, y + 13, null, r, 'middle');
+      mkEls.push(g);
+    });
+    dgReady = true;
+  }
+
+  function paintDiagram(){
+    if (!dgReady) return;
+    mkEls.forEach(function(m){ var r = m.getAttribute('data-r'); if (!isX(r)){ setSt(m, r); m.setAttribute('aria-label', markerLabel(r, m.getAttribute('data-c'))); } });
+    $$('.rchip').forEach(function(ch){ var r = ch.getAttribute('data-r'); if (r !== 'all' && !isX(r)) ch.setAttribute('aria-label', r + ' ' + riskTitle(r) + ', status: ' + stText(r)); });
+    $$('#dgMatrix tr').forEach(function(tr){ var r = tr.getAttribute('data-r'), b = tr.querySelector('.mx-btn'); if (b && !isX(r)) b.setAttribute('aria-label', r + ' ' + riskTitle(r) + ', status: ' + stText(r)); });
+    $$('[data-st-r]').forEach(function(e){ setSt(e, e.getAttribute('data-st-r')); });
+    var st = pop && !pop.hidden ? pop.querySelector('.pop-st') : null;
+    if (st && selRisk && !isX(selRisk)) st.textContent = 'Status: ' + stText(selRisk);
+    writeSummary();
+  }
+
+  function writeSummary(){
+    var el = document.getElementById('dgSummary');
+    if (!el) return;
+    if (selRisk){
+      var ps = placesOf(selRisk);
+      el.textContent = selRisk + ': ' + riskTitle(selRisk) + '. Sits in ' + ps.length + (ps.length === 1 ? ' part' : ' parts') + ' of the map: ' +
+        ps.map(function(p){ return COMP[p[1]].t; }).join(', ') + '. ' +
+        (isX(selRisk) ? 'Listed under More risks, not in the top 10.' : 'Status: ' + stText(selRisk) + '.');
+    } else if (selComp){
+      var pc = placesAt(selComp);
+      el.textContent = COMP[selComp].t + ': ' + (pc.length ? pc.map(function(p){ return p[0]; }).join(', ') : 'no risks placed here') + '.';
+    } else {
+      var counts = Object.keys(boxEls).map(function(id){ return [id, placesAt(id).length]; })
+        .filter(function(c){ return c[1] > 0; })
+        .sort(function(a, b){ return b[1] - a[1]; });
+      var cut = counts.length ? counts[Math.min(3, counts.length - 1)][1] : 0;
+      var top = counts.filter(function(c){ return c[1] >= cut; });
+      el.textContent = 'Most risks meet in: ' + top.map(function(c){ return COMP[c[0]].t + ' (' + c[1] + ')'; }).join(', ') +
+        '. Pick a risk above, or select a marker or box in the diagram.';
+    }
+  }
+
+  function applySel(){
+    if (!dgReady) return;
+    dgSvg.classList.toggle('dim', !!selRisk);
+    mkEls.forEach(function(m){ m.classList.toggle('on', !!selRisk && m.getAttribute('data-r') === selRisk); });
+    Object.keys(boxEls).forEach(function(id){
+      var b = boxEls[id];
+      b.classList.toggle('hit', !!selRisk && placesAt(id).some(function(p){ return p[0] === selRisk; }));
+      b.classList.toggle('sel', selComp === id);
+    });
+    $$('.rchip').forEach(function(ch){
+      var r = ch.getAttribute('data-r');
+      ch.setAttribute('aria-pressed', (r === 'all' ? !selRisk : r === selRisk) ? 'true' : 'false');
+    });
+    $$('#dgMatrix tr, #moreRows tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-r') === selRisk); });
+    writeSummary();
+  }
+
+  function selectRisk(r, toggle){
+    closePop(false); selComp = null;
+    selRisk = (!r || r === 'all' || (toggle && selRisk === r)) ? null : r;
+    applySel();
+  }
+
+  function popHead(title, r){
+    var h = htmlEl('div', 'pop-h');
+    if (r) h.appendChild(idTag(r));
+    var s = htmlEl('strong', null, title); s.id = 'dgPopTitle';
+    h.appendChild(s);
+    var x = htmlEl('button', 'pop-x', 'Close'); x.type = 'button';
+    x.addEventListener('click', function(){ closePop(true); });
+    h.appendChild(x);
+    return h;
+  }
+
+  function showPop(anchor){
+    lastAnchor = anchor;
+    pop.hidden = false;
+    var box = dgSvg.getBoundingClientRect(), s = box.width / VBW, bb = anchor.getBBox();
+    var pw = pop.offsetWidth, ph = pop.offsetHeight;
+    var left = Math.max(8, Math.min(bb.x * s, box.width - pw - 8));
+    var top = (bb.y + bb.height - VBY) * s + 8;
+    if (top + ph > box.height - 4) top = Math.max(4, (bb.y - VBY) * s - ph - 8);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+    try { pop.focus({ preventScroll: true }); } catch(e){ pop.focus(); }
+    try { pop.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch(e){}
+  }
+
+  function closePop(restoreFocus){
+    if (!pop || pop.hidden) return;
+    pop.hidden = true;
+    mkEls.forEach(function(m){ m.classList.remove('cur'); });
+    if (restoreFocus && lastAnchor){ try { lastAnchor.focus({ preventScroll: true }); } catch(e){} }
+  }
+
+  function openRisk(r, id, anchor){
+    if (!anchor) return;
+    selRisk = r; selComp = null; applySel();
+    pop.innerHTML = '';
+    pop.appendChild(popHead(riskTitle(r), r));
+    var why = PLACE.filter(function(p){ return p[0] === r && p[1] === id; })[0];
+    var p1 = htmlEl('p');
+    p1.appendChild(htmlEl('b', null, COMP[id].t + ': '));
+    p1.appendChild(document.createTextNode(why ? why[2] : ''));
+    pop.appendChild(p1);
+    var others = placesOf(r).filter(function(p){ return p[1] !== id; });
+    if (others.length){
+      var p2 = htmlEl('p');
+      p2.appendChild(document.createTextNode('Also in: '));
+      others.forEach(function(o, i){
+        if (i) p2.appendChild(document.createTextNode(', '));
+        var b = htmlEl('button', 'linkbtn', COMP[o[1]].t); b.type = 'button';
+        b.addEventListener('click', function(){ openRisk(r, o[1], markerEl(r, o[1])); });
+        p2.appendChild(b);
+      });
+      pop.appendChild(p2);
+    }
+    var go;
+    if (isX(r)){
+      pop.appendChild(htmlEl('p', 'pop-st', 'Listed under More risks, not in the top 10. Relevance: ' + { h:'High', m:'Medium', l:'Low' }[MOREBY[r].l] + '.'));
+      go = htmlEl('button', 'btn', 'Show ' + r + ' in the More risks table'); go.type = 'button';
+      go.addEventListener('click', function(){ openMoreRow(r); });
+    } else {
+      pop.appendChild(htmlEl('p', 'pop-st', 'Status: ' + stText(r)));
+      go = htmlEl('button', 'btn', 'Open the checklist for ' + r); go.type = 'button';
+      go.addEventListener('click', function(){ openChecklist(r); });
+    }
+    pop.appendChild(go);
+    mkEls.forEach(function(m){ m.classList.toggle('cur', m === anchor); });
+    showPop(anchor);
+  }
+
+  function openComp(id, anchor){
+    selComp = id; selRisk = null; applySel();
+    pop.innerHTML = '';
+    pop.appendChild(popHead(COMP[id].t));
+    var ps = placesAt(id);
+    if (!ps.length) pop.appendChild(htmlEl('p', null, 'No risks are placed here.'));
+    else {
+      var ul = htmlEl('ul');
+      ps.forEach(function(p){
+        var li = htmlEl('li');
+        var b = htmlEl('button', 'linkbtn', p[0] + ' ' + riskTitle(p[0])); b.type = 'button';
+        b.addEventListener('click', function(){ openRisk(p[0], id, markerEl(p[0], id)); });
+        li.appendChild(b);
+        li.appendChild(document.createTextNode(': ' + p[2]));
+        ul.appendChild(li);
+      });
+      pop.appendChild(ul);
+    }
+    mkEls.forEach(function(m){ m.classList.remove('cur'); });
+    showPop(anchor);
+  }
+
+  function openMoreRow(r){
+    closePop(false);
+    var row = document.querySelector('#moreRows tr[data-x="' + r + '"]');
+    if (!row) return;
+    row.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    var bb = row.querySelector('.mx-btn');
+    if (bb){ try { bb.focus({ preventScroll: true }); } catch(e){} }
+  }
+
+  function openChecklist(r){
+    closePop(false);
+    show('risks');
+    var card = document.querySelector('.risk[data-id="' + r + '"]');
+    if (!card) return;
+    if (card.hidden){ var all = document.querySelector('.chip[data-path="all"]'); if (all) all.click(); }
+    card.scrollIntoView({ block: 'start' });
+    card.setAttribute('tabindex', '-1');
+    try { card.focus({ preventScroll: true }); } catch(e){ card.focus(); }
+    card.classList.add('flash');
+    setTimeout(function(){ card.classList.remove('flash'); }, 1800);
+  }
+
+  function toFigure(){
+    var f = document.getElementById('dgFig');
+    if (f) f.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  function makeChip(r, box){
+    var b = htmlEl('button', 'rchip' + (isX(r) ? ' x' : '')); b.type = 'button';
+    b.setAttribute('data-r', r);
+    b.setAttribute('aria-pressed', r === 'all' ? 'true' : 'false');
+    if (r === 'all') b.textContent = 'All';
+    else {
+      var d = htmlEl('span', 'dotst');
+      if (!isX(r)) d.setAttribute('data-st-r', r);
+      b.appendChild(d);
+      b.appendChild(document.createTextNode(r));
+      b.title = riskTitle(r);
+      b.setAttribute('aria-label', r + ' ' + riskTitle(r));
+    }
+    b.addEventListener('click', function(){ selectRisk(r, true); });
+    box.appendChild(b);
+  }
+
+  if (dgSvg && pop){
+    buildDiagram();
+
+    dgSvg.addEventListener('click', function(e){
+      var m = e.target.closest ? e.target.closest('.mk') : null;
+      if (m){ openRisk(m.getAttribute('data-r'), m.getAttribute('data-c'), m); return; }
+      var b = e.target.closest ? e.target.closest('.box') : null;
+      if (b){ openComp(b.getAttribute('data-c'), b); return; }
+      selectRisk(null);
+    });
+    dgSvg.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var t = e.target;
+      if (t.classList && (t.classList.contains('mk') || t.classList.contains('box'))){
+        e.preventDefault();
+        t.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePop(true); });
+
+    var chipBox = document.getElementById('dgChips');
+    ['all'].concat(RISKS).forEach(function(r){ makeChip(r, chipBox); });
+    var chipBoxX = document.getElementById('dgChipsX');
+    XIDS.forEach(function(r){ makeChip(r, chipBoxX); });
+
+    /* One row builder, so Risk by zone and More risks share the same structure */
+    function zoneRow(r){
+      var tr = htmlEl('tr'); tr.setAttribute('data-r', r);
+      var th = htmlEl('th'); th.scope = 'row';
+      var b = htmlEl('button', 'mx-btn'); b.type = 'button';
+      b.appendChild(idTag(r));
+      b.appendChild(htmlEl('span', 'nm', riskTitle(r)));
+      b.addEventListener('click', function(){ selectRisk(r, false); toFigure(); });
+      th.appendChild(b); tr.appendChild(th);
+      for (var s = 1; s <= 4; s++){
+        var names = [];
+        placesOf(r).forEach(function(p){
+          var c = COMP[p[1]];
+          if (c.st === s){ var nm = c.short || c.t; if (names.indexOf(nm) < 0) names.push(nm); }
+        });
+        tr.appendChild(listCell(names));
+      }
+      return tr;
+    }
+    var tb = document.getElementById('dgMatrix');
+    RISKS.forEach(function(r){ tb.appendChild(zoneRow(r)); });
+  }
+  var sr = $('#startRows');
+  START.forEach(function(r){
+    var tr = htmlEl('tr');
+    var th = htmlEl('th'); th.scope = 'row';
+    var b = htmlEl('button', 'mx-btn'); b.type = 'button';
+    b.appendChild(idTag(r[0]));
+    b.addEventListener('click', function(){ openChecklist(r[0]); });
+    th.appendChild(b); tr.appendChild(th);
+    tr.appendChild(htmlEl('td', null, r[1]));
+    tr.appendChild(htmlEl('td', null, r[2]));
+    sr.appendChild(tr);
+  });
+
+  tally();
+  applySel();
+})();
+</script>
+</body></html>
