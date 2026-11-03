@@ -128,3 +128,9 @@ The notes above use different names for the same passes. In Developer-WS.factche
 ## File names, 2 Nov 2026
 
 - Renamed the notes to `Developer-WS.plan.md`, `Developer-WS.decisions.md` and `Developer-WS.factcheck.md` so they match the page, now `Developer-WS.html`. Chose the page name as a prefix over a subfolder: the page keeps its URL, and the notes sort next to it.
+
+## 3 Nov 2026, "Made with AI" note
+
+- **Plain label and one sentence at the end of the footer**, under a hairline rule, in the page's own muted and ink colours. Chose this over a pill or badge to keep it quiet and avoid the template look. Colours use the page tokens, so dark mode follows.
+- **Wording:** "This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human." Same text on all five pages.
+- **Layout:** label and text in two columns on desktop, stacked under 560 px.

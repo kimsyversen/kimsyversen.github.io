@@ -61,3 +61,13 @@ Belongs to [threatmodelling.html](threatmodelling.html). Plan: [threatmodelling.
 ## 3 Nov 2026, third fact check
 
 - **Sourced the four responses to NIST**, since Microsoft's SDL material has no "transfer". Removed "insurance" from the Move card because no source backs it as part of the method.
+
+## 3 Nov 2026, "Made with AI" note
+
+- **Plain label and one sentence at the end of the footer**, under a hairline rule, in the page's own muted and ink colours. Chose this over a pill or badge to keep it quiet and avoid the template look. Colours use the page tokens, so dark mode follows.
+- **Wording:** "This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human." Same text on all five pages.
+- **Layout:** label and text in two columns on desktop, stacked under 560 px.
+
+## 3 Nov 2026, "Made with AI" note
+
+index.html has no decisions file. Same note as the other pages, centred in the footer with a faint cyan hairline to fit the dark theme.

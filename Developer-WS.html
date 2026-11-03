@@ -173,6 +173,9 @@ input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-col
 .sources{margin:0;padding-left:1.2rem;display:grid;gap:9px;font-size:0.93rem}
 .sources span{display:block;color:var(--muted);font-size:0.85rem}
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:grid;gap:6px}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
 
 /* risk map */
 .rchips{display:flex;flex-wrap:wrap;gap:6px}
@@ -825,6 +828,7 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
     <p>Marked <span class="tag">[inference]</span> is my judgement, not taken directly from a source. Marked <span class="tag">[unverified]</span> or <span class="tag">[not run here]</span> was not checked against a source or a real system here.</p>
     <p>The git commands were re-run on 29 October 2026 on Git 2.43.0 and on 1 November 2026 on Git 2.54.0 in throwaway repos, including a normal clone and a copied folder. The npm, VS Code, PowerShell and Defender hunting commands were not run here.</p>
     <p>Versions and dates change quickly in this area. Check the "Current" box against the sources before you use it in a report.</p>
+  <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
   </footer>
 </div>
 

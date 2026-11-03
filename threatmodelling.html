@@ -239,6 +239,9 @@ details p{margin-top:8px;color:var(--muted)}
 
 footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;font-size:0.85rem;color:var(--muted)}
 .src{display:flex;flex-wrap:wrap;gap:6px 22px;color:var(--ink)}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -428,6 +431,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
     </div>
     <p>The claims portal and all numbers are made up to show the method. They are not measurements. The element-to-letter table follows Microsoft's STRIDE-per-element method, as described by Larry Osterman in 2007. It is a working method, not a requirement. The four responses follow NIST's list (eliminate, disrupt, transfer responsibility, accept) under other names. All requirement IDs were looked up in ASVS 4.0.3 on 3 Nov 2026. ASVS 5.0 has since renumbered its requirements, so the IDs here only match 4.0.3. ASVS 7.2.2 covers the logging of denied requests; the alert on many denials is our addition.</p>
     <p>See also <a href="MCP-Risk-Map.html">MCP risk map</a> and <a href="Developer-WS.html">Developer workstation risk map</a>.</p>
+  <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
   </footer>
 </div>
 
