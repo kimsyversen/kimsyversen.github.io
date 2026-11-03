@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Threat modeling</title>
+<meta name="description" content="Four questions, one drawing and a short list of fixes. Threat modeling on a single page, explained with a fictional claims portal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* A printed worksheet: paper, ink, hairline rules and one red for threats. Same fonts as the other guides. */
+:root{
+  color-scheme:light;
+  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F;
+  --red:#B5321C; --red-soft:#F0DCD3; --hatch:rgba(181,50,28,.13); --hover:rgba(23,21,15,.035);
+  --m1:#E6E0D2; --m2:#EDC6B6; --m3:#DA7A62;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB;
+    --red:#F07A60; --red-soft:#3B211A; --hatch:rgba(240,122,96,.12); --hover:rgba(236,231,219,.04);
+    --m1:#211F19; --m2:#4A2B21; --m3:#8C3C29;
+  }
+}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+a:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
+h3{font-size:1rem;font-weight:700;line-height:1.25}
+p{margin:0}
+code{font-family:var(--mono);font-size:0.86em}
+.muted{color:var(--muted)}
+.small{font-size:0.88rem}
+.lbl{font:600 0.7rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+
+/* masthead */
+.mast{border-top:6px solid var(--rule);padding-top:10px}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
+h1{font-size:clamp(3rem,11.4vw,8.6rem);font-weight:800;font-stretch:112%;line-height:0.86;letter-spacing:-0.035em;margin:30px 0 0;margin-left:-0.04em}
+.intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px 56px;align-items:start;padding:26px 0 30px}
+.lead{font-size:clamp(1.15rem,2vw,1.42rem);line-height:1.42;max-width:36rem}
+.spec{margin:0;display:grid;grid-template-columns:auto 1fr;font-size:0.9rem;border-top:1px solid var(--line)}
+.spec dt,.spec dd{padding:7px 0;border-bottom:1px solid var(--line)}
+.spec dt{padding-right:18px}
+.spec dd{margin:0}
+@media (max-width:800px){.intro{grid-template-columns:1fr}}
+
+/* the four questions */
+.qs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule)}
+.q{padding:20px 24px 22px;border-left:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.q:first-child{border-left:0;padding-left:0}
+.q:last-child{padding-right:0}
+.q .n{font:800 3.8rem/0.85 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.q h2{font-size:1.22rem;font-stretch:100%;margin-top:6px}
+.q p{font-size:0.92rem;color:var(--muted)}
+.q .out{font-size:0.88rem;font-style:italic;color:var(--ink);margin-top:2px}
+.loop{position:relative;height:20px;margin:0 0 0 1rem;width:calc(75% + 24px + 0.15rem);border:1.5px solid var(--ink);border-top:0}
+.loop::before{content:"";position:absolute;left:-6px;top:-9px;border:5px solid transparent;border-top:0;border-bottom:9px solid var(--ink)}
+.loop::after{content:"";position:absolute;right:-1.5px;top:-6px;height:6px;border-right:1.5px solid var(--ink)}
+.loop span{position:absolute;left:50%;bottom:-0.72em;transform:translateX(-50%);background:var(--bg);padding:0 12px;font-size:0.88rem;font-style:italic;white-space:nowrap}
+@media (max-width:900px){
+  .qs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .q:nth-child(odd){border-left:0;padding-left:0}
+  .q:nth-child(even){padding-right:0}
+  .q:nth-child(n+3){border-top:1px solid var(--line)}
+  .loop{height:auto;width:auto;margin:0;border:0;border-top:1px solid var(--line);padding-top:12px}
+  .loop::before,.loop::after{display:none}
+  .loop span{position:static;transform:none;padding:0;white-space:normal}
+  .loop span::before{content:"↺ ";font-style:normal}
+}
+@media (max-width:520px){
+  .qs{grid-template-columns:1fr}
+  .q{border-left:0;padding-left:0;padding-right:0;grid-template-columns:2.4rem 1fr;column-gap:12px;row-gap:6px}
+  .q:nth-child(n+2){border-top:1px solid var(--line)}
+  .q .n{grid-row:1/span 3;font-size:2.7rem}
+  .q > :not(.n){grid-column:2}
+  .q h2{margin-top:0}
+}
+
+/* board */
+.board{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));margin-top:48px}
+.panel{grid-column:1/-1;min-width:0;border-top:1px solid var(--rule);padding:14px 0 44px;display:grid;gap:18px;align-content:start}
+.ph{display:grid;gap:4px}
+@media (min-width:1000px){
+  .c7{grid-column:span 7}.c5{grid-column:span 5}.c8{grid-column:span 8}.c4{grid-column:span 4}
+  .pl{padding-right:36px}
+  .pr{padding-left:36px;border-left:1px solid var(--line)}
+}
+
+.facts{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.facts div{padding:0 18px;border-left:1px solid var(--line);display:grid;gap:3px;align-content:start}
+.facts div:first-child{padding-left:0;border-left:0}
+.facts dd{margin:0;font-size:0.92rem}
+@media (max-width:640px){
+  .facts{grid-template-columns:1fr;gap:12px}
+  .facts div{padding:0;border-left:0}
+}
+
+/* figures */
+figure{margin:0;display:grid;gap:10px}
+.fig-scroll{overflow-x:auto}
+.fig-scroll svg{display:block;width:100%;height:auto;min-width:560px}
+.fig-scroll.sq svg{min-width:280px;max-width:360px}
+figcaption{font-size:0.86rem;color:var(--muted);max-width:44rem}
+figcaption b{color:var(--ink);font-weight:600;margin-right:6px}
+.fg text{font-family:var(--body)}
+.fg .zone{fill:none}
+.fg .bnd{fill:url(#hatch);stroke:var(--red);stroke-width:1.5;stroke-dasharray:6 5}
+.fg .zl{fill:var(--muted);font:600 10.5px var(--body);letter-spacing:0.12em}
+.fg .zl.r{fill:var(--red)}
+.fg .ent,.fg .prc{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.fg .stf{fill:var(--bg)}
+.fg .sto{stroke:var(--ink);stroke-width:1.5}
+.fg .t{fill:var(--ink);font:700 14px var(--display)}
+.fg .s{fill:var(--muted);font-size:11.5px;font-style:italic}
+.fg .ln{fill:none;stroke:var(--ink);stroke-width:1.2}
+.fg .al{fill:var(--muted);font:italic 11.5px var(--body)}
+.fg .mk{cursor:pointer;outline:none}
+.fg .mk circle{fill:var(--red);stroke:var(--bg);stroke-width:2}
+.fg .mk text{fill:var(--bg);font:700 13px var(--mono);pointer-events:none}
+.fg .mk:hover circle,.fg .mk:focus-visible circle{stroke:var(--ink);stroke-width:2}
+.fg .mk.on circle{fill:var(--ink);stroke:var(--ink)}
+.fg .cell{stroke:var(--bg);stroke-width:2}
+.fg .c-lo{fill:var(--m1)}.fg .c-mid{fill:var(--m2)}.fg .c-hi{fill:var(--m3)}
+.fg .ax{fill:var(--muted);font:500 12px var(--mono)}
+.fg .axt{fill:var(--ink);font:600 12.5px var(--body)}
+.fg .dot{cursor:pointer;outline:none}
+.fg .dot circle{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.fg .dot text{fill:var(--ink);font:700 14px var(--mono);pointer-events:none}
+.fg .dot:hover circle,.fg .dot:focus-visible circle{stroke-width:3}
+.fg .dot.on circle{fill:var(--ink)}.fg .dot.on text{fill:var(--bg)}
+
+.key{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:0.84rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.key li{display:flex;align-items:center;gap:7px}
+.key svg{width:24px;height:14px;flex:none;overflow:visible}
+.key .k{fill:none;stroke:var(--ink);stroke-width:1.3}
+
+/* STRIDE */
+.stride{margin:0;padding:0;list-style:none}
+.stride li{display:grid;grid-template-columns:2.2rem 1fr;gap:12px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
+.stride li:first-child{border-top:0;padding-top:0}
+.stride .L{font:800 1.6rem/1 var(--display);color:var(--red)}
+.stride b{font-weight:600}
+.stride span span{color:var(--muted);font-size:0.9rem}
+.per{border-collapse:collapse;width:100%;font-size:0.88rem;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.per th,.per td{padding:6px 0;text-align:center;border-top:1px solid var(--line)}
+.per thead th{font:700 0.8rem/1.4 var(--mono);color:var(--red);border-top:0;border-bottom:1px solid var(--rule)}
+.per tbody th,.per thead th:first-child{text-align:left;font-weight:400;padding-right:10px}
+.per thead th + th{width:1.9rem}
+.per .y,.per .o{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink);vertical-align:middle}
+.per .o{background:none;box-shadow:inset 0 0 0 1.5px var(--ink)}
+.tpl{display:grid;gap:6px;padding-top:14px;border-top:1px solid var(--line)}
+.say{font:italic 1.12rem/1.45 var(--body)}
+.say span{font:normal 500 0.84em var(--mono);color:var(--red)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;min-width:680px;font-size:0.9rem;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:12px 10px;border-top:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{padding-left:4px}
+.tbl thead th{font:600 0.68rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-top:8px;padding-bottom:8px;border-top:0;border-bottom:1px solid var(--rule)}
+.tbl tbody tr:first-child > *{border-top:0}
+.tbl tbody th{font:800 1.3rem/1.1 var(--display);color:var(--red);width:2.2rem}
+.tbl tr[data-t]{cursor:pointer;transition:background .12s}
+.tbl tr[data-t]:hover{background:var(--hover)}
+.tbl tr.on,.tbl tr.on:hover{background:var(--red-soft)}
+.tbl .n{font:500 0.9rem/1.5 var(--mono);white-space:nowrap}
+#tt td:nth-child(2){min-width:17rem}
+.ctl td:first-child{width:38%}
+.ctl td.ref{width:1%}
+.where{display:block;font:600 0.66rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.sc{white-space:nowrap}
+.sc b{font:600 0.95rem/1.5 var(--mono)}
+.sc i{display:block;position:relative;width:3.4rem;height:3px;margin-top:5px;background:var(--line)}
+.sc i::after{content:"";position:absolute;inset:0 auto 0 0;width:calc(var(--v) * 4%);background:var(--ink)}
+.sc.h b{color:var(--red)}.sc.h i::after{background:var(--red)}
+.sc.l b{color:var(--muted)}.sc.l i::after{background:var(--muted)}
+.resp{display:block;font:700 0.72rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:2px}
+.ref{display:block;font:0.76rem/1.5 var(--mono);color:var(--muted);margin-top:3px}
+td.ref{display:table-cell;margin:0;white-space:nowrap}
+
+.eq{font:700 1.3rem/1.3 var(--display);letter-spacing:-0.005em}
+.eq span{color:var(--red)}
+.bands{margin:0;padding:0;list-style:none;font-size:0.88rem;display:grid;gap:6px}
+.bands li{display:grid;grid-template-columns:14px 1fr;gap:10px;align-items:baseline}
+.sw{width:14px;height:14px;transform:translateY(2px)}
+.sw.m1{background:var(--m1);box-shadow:inset 0 0 0 1px var(--line)}.sw.m2{background:var(--m2)}.sw.m3{background:var(--m3)}
+
+/* four responses */
+.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.r{padding:0 22px;border-left:1px solid var(--line);display:grid;gap:6px;align-content:start}
+.r:first-child{padding-left:0;border-left:0}
+.r:last-child{padding-right:0}
+.r h3{font-size:1.7rem;font-weight:800;font-stretch:108%;letter-spacing:-0.02em}
+.r p{font-size:0.9rem;color:var(--muted)}
+.r .ex{color:var(--ink);margin-top:6px}
+.r .ex b{font:700 0.95rem var(--display);color:var(--red);margin-right:6px}
+@media (max-width:900px){
+  .four{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px}
+  .r:nth-child(odd){padding-left:0;border-left:0}
+  .r:nth-child(even){padding-right:0}
+}
+@media (max-width:520px){
+  .four{grid-template-columns:1fr}
+  .r{padding:16px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .r:first-child{padding-top:0;border-top:0}
+}
+
+.after{display:grid;grid-template-columns:auto 1fr;gap:4px 22px;align-items:center;padding-top:14px;border-top:1px solid var(--line)}
+.after .lbl{grid-column:1/-1}
+.nums{font:800 2.8rem/1 var(--display);font-stretch:108%;letter-spacing:-0.02em;white-space:nowrap}
+.nums s{color:var(--muted);text-decoration-color:var(--red);text-decoration-thickness:3px}
+.nums em{font-style:normal;font-weight:600;font-size:0.6em;color:var(--muted);margin:0 8px;vertical-align:0.18em}
+
+details{border-top:1px solid var(--line);padding-top:10px;font-size:0.9rem}
+details summary{cursor:pointer;font-weight:600}
+details p{margin-top:8px;color:var(--muted)}
+
+/* question 4 */
+.q4{margin:0;padding:0;list-style:none;counter-reset:q}
+.q4 li{padding:9px 0;border-top:1px solid var(--line);font-size:0.93rem}
+.q4 li:first-child{border-top:0;padding-top:0}
+.q4 b{font-family:var(--display);font-weight:700;display:block}
+.bul{margin:0;padding-left:1.1rem;display:grid;gap:4px;font-size:0.93rem}
+.bul li::marker{color:var(--red)}
+.check{margin:0;padding:0;list-style:none;display:grid;gap:7px;font-size:0.93rem}
+.check li{display:grid;grid-template-columns:1.4rem 1fr;gap:8px}
+.check li::before{content:"";width:0.95rem;height:0.95rem;margin-top:0.24rem;border:1.5px solid var(--ink)}
+
+footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;font-size:0.85rem;color:var(--muted)}
+.src{display:flex;flex-wrap:wrap;gap:6px 22px;color:var(--ink)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--ink)"/></marker>
+  <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--hatch);stroke-width:1.4"/></pattern>
+</defs></svg>
+
+<div class="page">
+
+  <header class="mast">
+    <div class="meta"><span>Security by design · A method on one page</span><span>Requirement IDs checked 3 Nov 2026</span></div>
+    <h1>Threat modeling</h1>
+    <div class="intro">
+      <p class="lead">Think like an attacker while changes are still cheap. Four questions and one drawing take you from idea to a short list of fixes. The example all the way through is a made-up claims portal.</p>
+      <dl class="spec">
+        <dt class="lbl">Threats</dt><dd>STRIDE, per element</dd>
+        <dt class="lbl">Scoring</dt><dd>Likelihood × impact</dd>
+        <dt class="lbl">Controls</dt><dd>OWASP ASVS 4.0.3</dd>
+        <dt class="lbl">Example</dt><dd>Fictional claims portal</dd>
+      </dl>
+    </div>
+  </header>
+
+  <ol class="qs" aria-label="The four questions">
+    <li class="q"><span class="n">1</span><h2>What are we working on?</h2><p>Set the scope, list what is worth protecting and draw the data flow with trust boundaries.</p><p class="out">You end with a drawing.</p></li>
+    <li class="q"><span class="n">2</span><h2>What can go wrong?</h2><p>Walk through each element with STRIDE. Write every threat as one sentence.</p><p class="out">You end with a threat list.</p></li>
+    <li class="q"><span class="n">3</span><h2>What do we do about it?</h2><p>Score each threat, choose a response, and give every control an owner and a test.</p><p class="out">You end with a ranked plan.</p></li>
+    <li class="q"><span class="n">4</span><h2>Did we do a good enough job?</h2><p>Look for gaps, run the tests and write down what you learned.</p><p class="out">You end done, or go round again.</p></li>
+  </ol>
+  <div class="loop"><span>Something changed? Start again at 1.</span></div>
+
+  <main class="board">
+
+    <section class="panel c7 pl" aria-labelledby="p1">
+      <div class="ph"><p class="lbl">Questions 1 and 2</p><h2 id="p1">The claims portal, with its threats</h2></div>
+      <dl class="facts">
+        <div><dt class="lbl">The system</dt><dd>Customers sign in, report damage and upload photos and documents. Claims handlers read them.</dd></div>
+        <div><dt class="lbl">In scope</dt><dd>Sign-in, upload and viewing. Not the handlers' internal system.</dd></div>
+        <div><dt class="lbl">Worth protecting</dt><dd>Customer documents, customer identities and uptime.</dd></div>
+      </dl>
+      <figure>
+        <div class="fig-scroll" tabindex="0" role="group" aria-label="Data flow diagram with threat markers">
+          <svg class="fg" viewBox="0 0 720 350" role="img" aria-label="Data flow diagram: customer, portal, external sign-in and document store, with a trust boundary around the portal and the store, and the six threats S, T, R, I, D and E placed next to the elements they affect" xmlns="http://www.w3.org/2000/svg"><rect class="zone" x="0" y="0" width="720" height="350"/><text class="zl" x="2" y="14">INTERNET</text><rect class="bnd" x="250" y="96" width="468" height="240"/><text class="zl r" x="716" y="86" text-anchor="end">OUR CLOUD · TRUST BOUNDARY</text><rect class="ent" x="14" y="170" width="150" height="58"/><text class="t" x="89" y="195" text-anchor="middle">Customer</text><text class="s" x="89" y="214" text-anchor="middle">web browser</text><rect class="ent" x="315" y="18" width="150" height="52"/><text class="t" x="390" y="41" text-anchor="middle">Sign-in</text><text class="s" x="390" y="58" text-anchor="middle">external provider</text><circle class="prc" cx="390" cy="199" r="52"/><text class="t" x="390" y="204" text-anchor="middle">Portal</text><rect class="stf" x="540" y="176" width="140" height="46"/><line class="sto" x1="540" y1="176" x2="680" y2="176"/><line class="sto" x1="540" y1="222" x2="680" y2="222"/><text class="t" x="610" y="204" text-anchor="middle">Document store</text><path class="ln" d="M166 199 H336" marker-start="url(#arr)" marker-end="url(#arr)"/><text class="al" x="208" y="188" text-anchor="middle">HTTPS</text><path class="ln" d="M390 72 V145" marker-start="url(#arr)" marker-end="url(#arr)"/><text class="al" x="400" y="118">sign-in</text><path class="ln" d="M444 199 H538" marker-start="url(#arr)" marker-end="url(#arr)"/><text class="al" x="491" y="188" text-anchor="middle">files</text><g class="mk" data-t="S" tabindex="0" role="button" aria-label="Threat S, spoofing, at the customer"><circle cx="89" cy="256" r="14"/><text x="89" y="260.5" text-anchor="middle">S</text></g><g class="mk" data-t="R" tabindex="0" role="button" aria-label="Threat R, repudiation, in the portal"><circle cx="350" cy="286" r="14"/><text x="350" y="290.5" text-anchor="middle">R</text></g><g class="mk" data-t="I" tabindex="0" role="button" aria-label="Threat I, information disclosure, in the portal"><circle cx="390" cy="286" r="14"/><text x="390" y="290.5" text-anchor="middle">I</text></g><g class="mk" data-t="E" tabindex="0" role="button" aria-label="Threat E, elevation of privilege, in the portal"><circle cx="430" cy="286" r="14"/><text x="430" y="290.5" text-anchor="middle">E</text></g><g class="mk" data-t="T" tabindex="0" role="button" aria-label="Threat T, tampering, in the document store"><circle cx="590" cy="252" r="14"/><text x="590" y="256.5" text-anchor="middle">T</text></g><g class="mk" data-t="D" tabindex="0" role="button" aria-label="Threat D, denial of service, in the document store"><circle cx="630" cy="252" r="14"/><text x="630" y="256.5" text-anchor="middle">D</text></g></svg>
+        </div>
+        <figcaption><b>Fig. 1</b>Data flow diagram. The red dashed line is a trust boundary: across it, we cannot trust the other side. Click a letter to follow that threat through the page.</figcaption>
+      </figure>
+      <ul class="key" aria-label="Legend">
+        <li><svg viewBox="0 0 24 14" aria-hidden="true"><rect class="k" x="1" y="1" width="22" height="12"/></svg>External entity</li>
+        <li><svg viewBox="0 0 24 14" aria-hidden="true"><circle class="k" cx="12" cy="7" r="6.5"/></svg>Process (running code)</li>
+        <li><svg viewBox="0 0 24 14" aria-hidden="true"><path class="k" d="M1 1.5H23M1 12.5H23"/></svg>Data store</li>
+        <li><svg viewBox="0 0 24 14" aria-hidden="true"><path class="k" d="M1 7H21M17 3.5L21.5 7L17 10.5"/></svg>Data flow</li>
+      </ul>
+      <p class="small muted">Draw the system as it is built, not as it was planned. Ask someone who built it to read the drawing.</p>
+    </section>
+
+    <section class="panel c5 pr" aria-labelledby="p2">
+      <div class="ph"><p class="lbl">Question 2</p><h2 id="p2">STRIDE: six ways to fail</h2></div>
+      <ul class="stride">
+        <li><span class="L">S</span><span><b>Spoofing.</b> <span>Are you who you say you are?</span></span></li>
+        <li><span class="L">T</span><span><b>Tampering.</b> <span>Can someone change data unseen?</span></span></li>
+        <li><span class="L">R</span><span><b>Repudiation.</b> <span>Can someone deny what they did?</span></span></li>
+        <li><span class="L">I</span><span><b>Information disclosure.</b> <span>Can the wrong person read it?</span></span></li>
+        <li><span class="L">D</span><span><b>Denial of service.</b> <span>Can someone stop the service?</span></span></li>
+        <li><span class="L">E</span><span><b>Elevation of privilege.</b> <span>Can someone do more than they should?</span></span></li>
+      </ul>
+      <p class="lbl">Ask only the letters that fit</p>
+      <table class="per">
+        <thead><tr><th scope="col"><span class="lbl" style="font-family:var(--body)">Element</span></th><th scope="col">S</th><th scope="col">T</th><th scope="col">R</th><th scope="col">I</th><th scope="col">D</th><th scope="col">E</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">External entity</th><td><i class="y" aria-label="yes"></i></td><td></td><td><i class="y" aria-label="yes"></i></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Process</th><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td></tr>
+          <tr><th scope="row">Data store</th><td></td><td><i class="y" aria-label="yes"></i></td><td><i class="o" aria-label="only if it is a log"></i></td><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td><td></td></tr>
+          <tr><th scope="row">Data flow</th><td></td><td><i class="y" aria-label="yes"></i></td><td></td><td><i class="y" aria-label="yes"></i></td><td><i class="y" aria-label="yes"></i></td><td></td></tr>
+        </tbody>
+      </table>
+      <p class="small muted">An open circle means only if the store is a log.</p>
+      <div class="tpl">
+        <p class="lbl">Write each threat as one sentence</p>
+        <p class="say">An attacker can <span>[do X]</span> because <span>[weakness]</span>, so <span>[harm]</span>.</p>
+        <p class="small muted">Then anyone can read it, and it can be ranked.</p>
+      </div>
+    </section>
+
+    <section class="panel c8 pl" aria-labelledby="p3">
+      <div class="ph"><p class="lbl">Questions 2 and 3</p><h2 id="p3">Threat register, ranked</h2></div>
+      <div class="tbl-wrap" tabindex="0">
+        <table class="tbl" id="tt">
+          <thead><tr><th>#</th><th>Threat</th><th title="Likelihood, 1 to 5">L</th><th title="Impact, 1 to 5">I</th><th>Score</th><th>Response and first control</th></tr></thead>
+          <tbody>
+            <tr data-t="I"><th scope="row">I</th><td><span class="where">Portal</span>A logged-in customer can read other people's documents because the portal does not check the owner when the document ID in the URL changes, so personal data leaks.</td><td class="n">4</td><td class="n">5</td><td class="sc h"><b>20</b><i style="--v:20"></i></td><td><span class="resp">Reduce</span>See the controls below. <span class="ref">ASVS 4.1.1, 4.1.3, 4.1.5, 4.2.1</span></td></tr>
+            <tr data-t="S"><th scope="row">S</th><td><span class="where">Customer</span>An attacker can act as a customer because a session token is stolen, so they read and change that customer's claim.</td><td class="n">3</td><td class="n">4</td><td class="sc m"><b>12</b><i style="--v:12"></i></td><td><span class="resp">Reduce</span>Sessions expire and logout ends the session. <span class="ref">ASVS 3.3.1, 3.3.2</span></td></tr>
+            <tr data-t="E"><th scope="row">E</th><td><span class="where">Portal</span>An attacker can upload a file that the portal opens or runs because the file type is not checked, so they take control of the service.</td><td class="n">2</td><td class="n">5</td><td class="sc m"><b>10</b><i style="--v:10"></i></td><td><span class="resp">Remove</span>The portal never opens files, it only stores and serves them. What is left: check file type and scan for malware. <span class="ref">ASVS 12.2.1, 12.4.2</span></td></tr>
+            <tr data-t="D"><th scope="row">D</th><td><span class="where">Portal and store</span>An attacker can upload many large files because there is no limit, so the store fills up and nobody can file a claim.</td><td class="n">3</td><td class="n">3</td><td class="sc m"><b>9</b><i style="--v:9"></i></td><td><span class="resp">Reduce</span>Size limit and a quota per customer. <span class="ref">ASVS 12.1.1, 12.1.3</span></td></tr>
+            <tr data-t="T"><th scope="row">T</th><td><span class="where">Document store</span>An attacker can swap an uploaded file because more than the portal can write to the store, so a claim gets fake evidence.</td><td class="n">2</td><td class="n">4</td><td class="sc m"><b>8</b><i style="--v:8"></i></td><td><span class="resp">Reduce</span>Only the portal can write to the store. <span class="ref">ASVS 12.4.1</span></td></tr>
+            <tr data-t="R"><th scope="row">R</th><td><span class="where">Portal</span>A customer can deny sending or changing a document because the portal does not log it, so nobody can prove anything.</td><td class="n">2</td><td class="n">3</td><td class="sc l"><b>6</b><i style="--v:6"></i></td><td><span class="resp">Accept</span>For now. The log from threat I gives some trail. Owner: product owner.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">The example has one threat per letter to stay short. A real session finds more.</p>
+    </section>
+
+    <section class="panel c4 pr" aria-labelledby="p4">
+      <div class="ph"><p class="lbl">Question 3</p><h2 id="p4">Score and rank</h2></div>
+      <p class="eq">Score = likelihood <span>×</span> impact</p>
+      <p class="small muted">Rate each from 1 to 5, then multiply. You get 1 to 25.</p>
+      <figure>
+        <div class="fig-scroll sq" tabindex="0" role="group" aria-label="Risk matrix">
+          <svg class="fg" viewBox="0 0 334 340" role="img" aria-label="Risk matrix, 1 to 5 on both axes. I is in the high zone, S, E, D and T in the middle zone, R in the low zone" xmlns="http://www.w3.org/2000/svg"><rect class="cell c-lo" x="46" y="232" width="56" height="56"/><rect class="cell c-lo" x="102" y="232" width="56" height="56"/><rect class="cell c-lo" x="158" y="232" width="56" height="56"/><rect class="cell c-lo" x="214" y="232" width="56" height="56"/><rect class="cell c-lo" x="270" y="232" width="56" height="56"/><rect class="cell c-lo" x="46" y="176" width="56" height="56"/><rect class="cell c-lo" x="102" y="176" width="56" height="56"/><rect class="cell c-lo" x="158" y="176" width="56" height="56"/><rect class="cell c-mid" x="214" y="176" width="56" height="56"/><rect class="cell c-mid" x="270" y="176" width="56" height="56"/><rect class="cell c-lo" x="46" y="120" width="56" height="56"/><rect class="cell c-lo" x="102" y="120" width="56" height="56"/><rect class="cell c-mid" x="158" y="120" width="56" height="56"/><rect class="cell c-mid" x="214" y="120" width="56" height="56"/><rect class="cell c-hi" x="270" y="120" width="56" height="56"/><rect class="cell c-lo" x="46" y="64" width="56" height="56"/><rect class="cell c-mid" x="102" y="64" width="56" height="56"/><rect class="cell c-mid" x="158" y="64" width="56" height="56"/><rect class="cell c-hi" x="214" y="64" width="56" height="56"/><rect class="cell c-hi" x="270" y="64" width="56" height="56"/><rect class="cell c-lo" x="46" y="8" width="56" height="56"/><rect class="cell c-mid" x="102" y="8" width="56" height="56"/><rect class="cell c-hi" x="158" y="8" width="56" height="56"/><rect class="cell c-hi" x="214" y="8" width="56" height="56"/><rect class="cell c-hi" x="270" y="8" width="56" height="56"/><text class="ax" x="74.0" y="306" text-anchor="middle">1</text><text class="ax" x="37" y="264.0" text-anchor="end">1</text><text class="ax" x="130.0" y="306" text-anchor="middle">2</text><text class="ax" x="37" y="208.0" text-anchor="end">2</text><text class="ax" x="186.0" y="306" text-anchor="middle">3</text><text class="ax" x="37" y="152.0" text-anchor="end">3</text><text class="ax" x="242.0" y="306" text-anchor="middle">4</text><text class="ax" x="37" y="96.0" text-anchor="end">4</text><text class="ax" x="298.0" y="306" text-anchor="middle">5</text><text class="ax" x="37" y="40.0" text-anchor="end">5</text><text class="axt" x="186.0" y="328" text-anchor="middle">Impact</text><text class="axt" transform="translate(11 148.0) rotate(-90)" text-anchor="middle">Likelihood</text><g class="dot" data-t="I" tabindex="0" role="button" aria-label="Threat I, information disclosure, likelihood 4, impact 5, score 20"><circle cx="298.0" cy="92.0" r="17"/><text x="298.0" y="97.0" text-anchor="middle">I</text></g><g class="dot" data-t="S" tabindex="0" role="button" aria-label="Threat S, spoofing, likelihood 3, impact 4, score 12"><circle cx="242.0" cy="148.0" r="17"/><text x="242.0" y="153.0" text-anchor="middle">S</text></g><g class="dot" data-t="E" tabindex="0" role="button" aria-label="Threat E, elevation of privilege, likelihood 2, impact 5, score 10"><circle cx="298.0" cy="204.0" r="17"/><text x="298.0" y="209.0" text-anchor="middle">E</text></g><g class="dot" data-t="D" tabindex="0" role="button" aria-label="Threat D, denial of service, likelihood 3, impact 3, score 9"><circle cx="186.0" cy="148.0" r="17"/><text x="186.0" y="153.0" text-anchor="middle">D</text></g><g class="dot" data-t="T" tabindex="0" role="button" aria-label="Threat T, tampering, likelihood 2, impact 4, score 8"><circle cx="242.0" cy="204.0" r="17"/><text x="242.0" y="209.0" text-anchor="middle">T</text></g><g class="dot" data-t="R" tabindex="0" role="button" aria-label="Threat R, repudiation, likelihood 2, impact 3, score 6"><circle cx="186.0" cy="204.0" r="17"/><text x="186.0" y="209.0" text-anchor="middle">R</text></g></svg>
+        </div>
+        <figcaption><b>Fig. 2</b>The six threats on the matrix. Click one to find it in the register.</figcaption>
+      </figure>
+      <ul class="bands">
+        <li><i class="sw m3"></i><span><b>High, 15 or more.</b> Fix before launch.</span></li>
+        <li><i class="sw m2"></i><span><b>Middle, 8 to 14.</b> Put in the plan, with a date.</span></li>
+        <li><i class="sw m1"></i><span><b>Low, 7 or less.</b> Accept or watch, in writing.</span></li>
+      </ul>
+      <details>
+        <summary>Why not DREAD?</summary>
+        <p>DREAD gives five numbers per threat: damage, reproducibility, exploitability, affected users and discoverability. It works, but two numbers mean less debate about what each one means, and they fit a normal risk matrix. Scores are a tool for discussion, not a calculation that is right.</p>
+      </details>
+    </section>
+
+    <section class="panel" aria-labelledby="p5">
+      <div class="ph"><p class="lbl">Question 3</p><h2 id="p5">Pick one of four responses</h2></div>
+      <div class="four">
+        <div class="r"><h3>Remove</h3><p>Take away the feature or the data that creates the threat.</p><p class="ex"><b>E</b>The portal never opens uploaded files.</p></div>
+        <div class="r"><h3>Reduce</h3><p>Add a control that makes it less likely or less harmful.</p><p class="ex"><b>I</b>An ownership check on every fetch.</p></div>
+        <div class="r"><h3>Move</h3><p>Let someone else carry it, with a ready-made service or insurance.</p><p class="ex"><b>S</b>Sign-in is run by an external provider.</p></div>
+        <div class="r"><h3>Accept</h3><p>Only in writing, with a named owner and a date to look again.</p><p class="ex"><b>R</b>Product owner, review in six months.</p></div>
+      </div>
+    </section>
+
+    <section class="panel c7 pl" aria-labelledby="p6">
+      <div class="ph"><p class="lbl">Question 3</p><h2 id="p6">Make controls provable (threat I)</h2></div>
+      <p class="small muted">Every control gets an owner and a test that shows it works. A control without a test is only a claim.</p>
+      <div class="tbl-wrap" tabindex="0">
+        <table class="tbl ctl" style="min-width:560px">
+          <thead><tr><th>Control</th><th>ASVS</th><th>Owner</th><th>How we show it works</th></tr></thead>
+          <tbody>
+            <tr><td>The server checks that the logged-in customer owns the document on every fetch.</td><td class="ref">4.1.1, 4.2.1</td><td>Developer</td><td>Test: customer A asks for customer B's document and is refused.</td></tr>
+            <tr><td>Customers reach only their own claims and nothing more.</td><td class="ref">4.1.3</td><td>Architect</td><td>Review of roles and access rules.</td></tr>
+            <tr><td>If the check fails or is missing, the answer is no.</td><td class="ref">4.1.5</td><td>Developer</td><td>Test: make the check throw an error and see that nothing is delivered.</td></tr>
+            <tr><td>Denied attempts are logged, and many denials raise an alert.</td><td class="ref">7.2.2</td><td>Operations</td><td>Send 50 denied requests and see the alert fire.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="after">
+        <p class="lbl">Residual risk for I</p>
+        <p class="nums" aria-label="20 becomes 5"><s>20</s><em>→</em>5</p>
+        <p class="small muted">Likelihood goes from 4 to 1, impact stays at 5. That is low. Review again after the tests pass.</p>
+      </div>
+    </section>
+
+    <section class="panel c5 pr" aria-labelledby="p7">
+      <div class="ph"><p class="lbl">Question 4</p><h2 id="p7">Good enough? Check, then repeat</h2></div>
+      <ul class="q4">
+        <li><b>Did we miss something?</b> Walk the drawing again with people who were not in the room. Is there another way to the data, or more people with access?</li>
+        <li><b>Do the controls work?</b> Run the tests above. Add security testing and code review where you can.</li>
+        <li><b>What did we learn?</b> Write down what was hard or overlooked, and take it into the next round.</li>
+      </ul>
+      <p class="lbl">Run it again when</p>
+      <ul class="bul">
+        <li>You add an integration, a new kind of data or a new trust boundary.</li>
+        <li>Something goes wrong, or you hear of an attack on something similar.</li>
+        <li>An accepted risk reaches its review date.</li>
+      </ul>
+      <p class="lbl">Done when</p>
+      <ul class="check">
+        <li>Scope, assets and drawing are written down.</li>
+        <li>Every threat is one sentence with a score and a level.</li>
+        <li>Every threat has one of the four responses and an owner.</li>
+        <li>Every control has a test, and the test has run.</li>
+        <li>You know when the model comes up again.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="src">
+      <a href="https://github.com/OWASP/ASVS/tree/v4.0.3/4.0/en">OWASP ASVS 4.0.3, chapters 3, 4, 7 and 12</a>
+      <a href="https://threatmodelingmanifesto.org/">Threat Modeling Manifesto</a>
+      <a href="https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats">Microsoft, STRIDE categories</a>
+    </div>
+    <p>The claims portal and all numbers are made up to show the method. They are not measurements. The element-to-letter table is a common rule of thumb, not a requirement. All requirement IDs were looked up in ASVS 4.0.3 on 3 Nov 2026.</p>
+    <p>See also <a href="MCP-Risk-Map.html">MCP risk map</a> and <a href="Developer-WS.html">Developer workstation risk map</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var cur = null;
+  function select(t){
+    cur = (cur === t) ? null : t;
+    document.querySelectorAll('[data-t]').forEach(function(el){
+      el.classList.toggle('on', cur !== null && el.getAttribute('data-t') === cur);
+    });
+  }
+  document.querySelectorAll('[data-t]').forEach(function(el){
+    el.addEventListener('click', function(){ select(el.getAttribute('data-t')); });
+    el.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(el.getAttribute('data-t')); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
