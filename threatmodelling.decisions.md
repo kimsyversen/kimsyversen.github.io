@@ -43,3 +43,21 @@ Belongs to [threatmodelling.html](threatmodelling.html). Plan: [threatmodelling.
 ## 3 Nov 2026, rename
 
 - **File renamed to `threatmodelling.html`** at the user's request, since the page is now in English. The plan and decisions notes were renamed to match. No other page linked to the old name.
+
+## 3 Nov 2026, fact check
+
+- **Fact check done** (see [threatmodelling.factcheck.md](threatmodelling.factcheck.md)). All cited ASVS 4.0.3 IDs match the requirement text.
+- **Move example no longer uses letter S**, because the register rates S as Reduce.
+- **Threat R reworded**: the threat I log only records denied requests, so it does not give an upload trail. Added a six-month review date.
+- **Footer now says** ASVS 5.0 renumbers requirements, and that the alert on many denials is our addition.
+- **STRIDE-per-element table sourced.** Larry Osterman (Microsoft blog archive, 2007) lists all four element rows. The footer now cites it instead of calling the table a rule of thumb.
+
+## 3 Nov 2026, second fact check
+
+- **Re-verified every claim from the primary sources** (see the second pass in [threatmodelling.factcheck.md](threatmodelling.factcheck.md)). The first pass had marked the question wording OK, but question 3 differed from the manifesto, so it was fixed.
+- **Threat T control reworded** to follow ASVS 12.4.1 (outside the web root, limited permissions) instead of claiming more than the requirement says.
+- **DREAD note and trust boundary caption reworded** to remove an opinion and an imprecise definition.
+
+## 3 Nov 2026, third fact check
+
+- **Sourced the four responses to NIST**, since Microsoft's SDL material has no "transfer". Removed "insurance" from the Move card because no source backs it as part of the method.
