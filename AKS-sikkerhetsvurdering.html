@@ -1,10 +1,10 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>AKS-sikkerhetsvurdering</title>
+<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AKS security assessment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
-/* Layout: én venstrejustert flate (maks 1260px) under en klebrig fanerad. Tekst holdes på 48rem; diagram og tabell (.wide) bruker hele bredden. Kort brukes bare for risikoene, resten er flat tekst */
+/* Layout: one left-aligned surface (max 1260px) under a sticky tab bar. Text is held to 48rem; the diagram and table (.wide) use the full width. Cards are used only for the risks, the rest is flat text */
 :root{
   --bg:#EDF1F2; --surface:#FFFFFF; --ink:#13212A; --muted:#55656F; --line:#CFD9DD;
   --accent:#1B5B85; --accent-ink:#FFFFFF; --accent-soft:#DDEAF2;
@@ -56,7 +56,7 @@ header.top{display:grid;gap:14px;padding-bottom:20px}
 
 .tag{display:inline-block;font:500 0.7rem/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 5px;white-space:nowrap;vertical-align:1px}
 
-/* faner */
+/* tabs */
 .tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:26px;scrollbar-width:thin}
 .tabs button{font:600 0.95rem/1 var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px 10px 11px;white-space:nowrap;cursor:pointer}
 .tabs button:hover{color:var(--ink)}
@@ -65,12 +65,12 @@ header.top{display:grid;gap:14px;padding-bottom:20px}
 section{display:grid;gap:14px}
 .sub{color:var(--muted);max-width:64ch}
 
-/* kortversjon */
+/* short version */
 .short{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
 .short li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:baseline}
 .short li::before{counter-increment:s;content:counter(s);font:700 1.3rem/1 var(--display);color:var(--accent)}
 
-/* ordliste */
+/* glossary */
 .gloss{display:grid;grid-template-columns:1fr;gap:16px 28px;margin:0}
 @media (min-width:640px){.gloss{grid-template-columns:1fr 1fr}}
 .gloss div{min-width:0;border-top:1px solid var(--line);padding-top:10px}
@@ -79,7 +79,7 @@ section{display:grid;gap:14px}
 .gloss dd.sec{font-size:0.9rem;color:var(--muted)}
 .gloss dd.sec b{color:var(--ink);font-weight:600}
 
-/* ansvarsstabel */
+/* responsibility stack */
 .stack{display:grid;gap:6px}
 .layer{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:11px 14px;cursor:pointer}
 .layer:hover{border-color:var(--accent)}
@@ -90,7 +90,7 @@ section{display:grid;gap:14px}
 .layer-detail{background:var(--accent-soft);border-radius:8px;padding:14px 16px;display:grid;gap:6px}
 .layer-detail h3{font-size:1rem}
 
-/* metode */
+/* method */
 .steps{list-style:none;margin:0;padding:0;display:grid;gap:18px;counter-reset:st}
 .steps>li{display:grid;grid-template-columns:2.4rem 1fr;gap:12px}
 .steps>li::before{counter-increment:st;content:counter(st);font:800 1.7rem/1 var(--display);font-stretch:112%;color:var(--accent)}
@@ -105,7 +105,7 @@ section{display:grid;gap:14px}
 .qlist input{margin:4px 0 0;accent-color:var(--accent);width:1rem;height:1rem}
 .qlist input:checked+span{color:var(--muted)}
 
-/* kode */
+/* code */
 .cmd{display:flex;align-items:flex-start;gap:6px;background:var(--code-bg);border-radius:6px;margin-top:6px}
 .cmd pre{margin:0;flex:1;min-width:0;padding:9px 12px;font-size:0.8rem;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .cmd pre .c{color:var(--muted)}
@@ -113,7 +113,7 @@ section{display:grid;gap:14px}
 .copy:hover{border-color:var(--accent)}
 .note{font-size:0.88rem;color:var(--muted)}
 
-/* topp 10 */
+/* top 10 */
 .callout{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px 16px;display:grid;gap:8px}
 .callout h3{color:var(--flag);font-size:1rem}
 .callout ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
@@ -157,7 +157,7 @@ input:checked+.pill.v-part{background:var(--part-soft);color:var(--part);border-
 input:checked+.pill.v-miss{background:var(--miss-soft);color:var(--miss);border-color:var(--miss)}
 input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-color:var(--unk)}
 
-/* relevans */
+/* relevance */
 .cols{display:grid;grid-template-columns:1fr;gap:18px}
 @media (min-width:680px){.cols{grid-template-columns:1fr 1fr}}
 .col{min-width:0;display:grid;gap:10px;align-content:start}
@@ -173,7 +173,7 @@ input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-col
 .sources span{display:block;color:var(--muted);font-size:0.85rem}
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:grid;gap:6px}
 
-/* risikokart */
+/* risk map */
 .rchips{display:flex;flex-wrap:wrap;gap:6px}
 .rchip{display:inline-flex;align-items:center;gap:6px;font:600 0.8rem/1 var(--mono);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer}
 .rchip:hover{border-color:var(--accent)}
@@ -250,7 +250,7 @@ figcaption{display:grid;gap:8px}
 .mx tr.on{background:var(--accent-soft)}
 .mx-btn{display:flex;gap:8px;align-items:baseline;text-align:left;font:600 0.85rem/1.35 var(--body);color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
 .mx-btn:hover .nm{text-decoration:underline;text-underline-offset:2px}
-/* smal skjerm: hver risiko blir et kort med fasene som etiketter, så tabellen aldri må rulles sideveis */
+/* narrow screen: each risk becomes a card with the phases as labels, so the table never has to scroll sideways */
 @media (max-width:860px){
   .mx,.mx tbody,.mx tr,.mx th,.mx td{display:block}
   .mx thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
@@ -267,364 +267,365 @@ figcaption{display:grid;gap:8px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
+
 <div class="wrap">
   <header class="top">
-    <p class="eyebrow">Veileder for nybegynnere · Azure Kubernetes Service</p>
-    <h1>AKS-sikkerhets&shy;vurdering</h1>
-    <p class="lead">Hva du må forstå, hvordan du går frem, og ti prioriterte risikoer når et plattformteam kjører Kubernetes i Azure for flere applikasjonsteam.</p>
+    <p class="eyebrow">Beginner's guide · Azure Kubernetes Service</p>
+    <h1>AKS security assessment</h1>
+    <p class="lead">What you need to understand, how to go about it, and ten prioritised risks when a platform team runs Kubernetes in Azure for several application teams.</p>
     <div class="meta">
-      <span><b>Rammeverk</b> OWASP Kubernetes Top 10 (2025)</span>
-      <span><b>AKS-kilder</b> Microsoft Learn, AKS-bloggen</span>
-      <span><b>Fakta sjekket</b> 1. nov. 2026</span>
+      <span><b>Framework</b> OWASP Kubernetes Top 10 (2025)</span>
+      <span><b>AKS sources</b> Microsoft Learn, the AKS blog</span>
+      <span><b>Facts checked</b> 1 Nov 2026</span>
     </div>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Deler av veilederen">
-    <button type="button" role="tab" id="t-grunnlag" data-tab="grunnlag" aria-controls="p-grunnlag" aria-selected="true">1 · Grunnlag</button>
-    <button type="button" role="tab" id="t-metode" data-tab="metode" aria-controls="p-metode" aria-selected="false" tabindex="-1">2 · Fremgangsmåte</button>
-    <button type="button" role="tab" id="t-topp10" data-tab="topp10" aria-controls="p-topp10" aria-selected="false" tabindex="-1">3 · Topp 10</button>
-    <button type="button" role="tab" id="t-arkitektur" data-tab="arkitektur" aria-controls="p-arkitektur" aria-selected="false" tabindex="-1">4 · Arkitektur</button>
-    <button type="button" role="tab" id="t-relevans" data-tab="relevans" aria-controls="p-relevans" aria-selected="false" tabindex="-1">5 · Relevant eller ikke</button>
+  <nav class="tabs" role="tablist" aria-label="Sections of the guide">
+    <button type="button" role="tab" id="t-basics" data-tab="basics" aria-controls="p-basics" aria-selected="true">1 · Basics</button>
+    <button type="button" role="tab" id="t-method" data-tab="method" aria-controls="p-method" aria-selected="false" tabindex="-1">2 · Method</button>
+    <button type="button" role="tab" id="t-top10" data-tab="top10" aria-controls="p-top10" aria-selected="false" tabindex="-1">3 · Top 10</button>
+    <button type="button" role="tab" id="t-architecture" data-tab="architecture" aria-controls="p-architecture" aria-selected="false" tabindex="-1">4 · Architecture</button>
+    <button type="button" role="tab" id="t-relevance" data-tab="relevance" aria-controls="p-relevance" aria-selected="false" tabindex="-1">5 · Relevant or not</button>
     <button type="button" role="tab" id="t-runtime" data-tab="runtime" aria-controls="p-runtime" aria-selected="false" tabindex="-1">6 · Runtime</button>
-    <button type="button" role="tab" id="t-kilder" data-tab="kilder" aria-controls="p-kilder" aria-selected="false" tabindex="-1">Kilder</button>
+    <button type="button" role="tab" id="t-sources" data-tab="sources" aria-controls="p-sources" aria-selected="false" tabindex="-1">Sources</button>
   </nav>
 
-  <!-- 1 GRUNNLAG -->
-  <div class="panel" role="tabpanel" id="p-grunnlag" aria-labelledby="t-grunnlag">
+  <!-- 1 BASICS -->
+  <div class="panel" role="tabpanel" id="p-basics" aria-labelledby="t-basics">
     <section>
-      <h2>Kortversjon</h2>
+      <h2>Short version</h2>
       <ol class="short">
-        <li><span>Microsoft drifter control plane i AKS. Du vurderer det plattformteamet har konfigurert rundt det, og rammene applikasjonsteamene jobber innenfor.</span></li>
-        <li><span>Hovedspørsmålet er: hva kan et appteam, en stjålet identitet eller en kompromittert pod gjøre, og hva stopper dem? <span class="tag">[inference]</span></span></li>
-        <li><span>Bruk OWASP Kubernetes Top 10 som sjekkliste og Microsofts AKS-anbefalinger som veiledning tilpasset egne krav.</span></li>
+        <li><span>Microsoft runs the control plane in AKS. You assess what the platform team has configured around it, and the limits the application teams work within.</span></li>
+        <li><span>The main question is: what can an app team, a stolen identity or a compromised pod do, and what stops them? <span class="tag">[inference]</span></span></li>
+        <li><span>Use the OWASP Kubernetes Top 10 as a checklist and Microsoft's AKS recommendations as guidance, adapted to your own requirements.</span></li>
       </ol>
     </section>
 
     <section>
-      <h2>Hvem eier hva</h2>
-      <p class="sub">Trykk på et lag for å se hvem som eier det og hva du ser etter. Microsofts del er hentet fra Microsoft Learn. Fordelingen mellom plattformteam og appteam er typisk, men må avklares hos dem. <span class="tag">[inference]</span></p>
+      <h2>Who owns what</h2>
+      <p class="sub">Tap a layer to see who owns it and what you look for. Microsoft's part comes from Microsoft Learn. The split between platform team and app team is typical, but must be confirmed with them. <span class="tag">[inference]</span></p>
       <div class="stack" id="stack">
-        <button type="button" class="layer" data-layer="0" aria-pressed="false"><span>Pipeline og container registry</span><span class="own delt">DELT</span></button>
-        <button type="button" class="layer" data-layer="1" aria-pressed="false"><span>Workloads: images, YAML, bruk av secrets</span><span class="own app">APPTEAM</span></button>
-        <button type="button" class="layer" data-layer="2" aria-pressed="false"><span>Namespaces og tilganger per team</span><span class="own delt">DELT</span></button>
-        <button type="button" class="layer" data-layer="3" aria-pressed="false"><span>Plattformtjenester i clusteret: ingress, policy, logging</span><span class="own plat">PLATTFORM</span></button>
-        <button type="button" class="layer" data-layer="4" aria-pressed="false"><span>Noder og nodepooler</span><span class="own delt">DELT</span></button>
-        <button type="button" class="layer" data-layer="5" aria-pressed="true"><span>Cluster-konfigurasjon: identitet, nettverk, versjon, add-ons</span><span class="own plat">PLATTFORM</span></button>
-        <button type="button" class="layer" data-layer="6" aria-pressed="false"><span>Control plane: API-server, etcd, scheduler</span><span class="own ms">MICROSOFT</span></button>
+        <button type="button" class="layer" data-layer="0" aria-pressed="false"><span>Pipeline and container registry</span><span class="own delt">SHARED</span></button>
+        <button type="button" class="layer" data-layer="1" aria-pressed="false"><span>Workloads: images, YAML, use of secrets</span><span class="own app">APP TEAM</span></button>
+        <button type="button" class="layer" data-layer="2" aria-pressed="false"><span>Namespaces and access per team</span><span class="own delt">SHARED</span></button>
+        <button type="button" class="layer" data-layer="3" aria-pressed="false"><span>Platform services in the cluster: ingress, policy, logging</span><span class="own plat">PLATFORM</span></button>
+        <button type="button" class="layer" data-layer="4" aria-pressed="false"><span>Nodes and node pools</span><span class="own delt">SHARED</span></button>
+        <button type="button" class="layer" data-layer="5" aria-pressed="true"><span>Cluster configuration: identity, network, version, add-ons</span><span class="own plat">PLATFORM</span></button>
+        <button type="button" class="layer" data-layer="6" aria-pressed="false"><span>Control plane: API server, etcd, scheduler</span><span class="own ms">MICROSOFT</span></button>
       </div>
       <div class="layer-detail" id="layerDetail" aria-live="polite">
-        <h3>Cluster-konfigurasjon</h3>
-        <p>Sjekk identitet, API-tilgang, nettverk, oppgraderinger og tillegg. Hvilke valg plattformteamet styrer, avhenger av AKS-modus.</p>
-        <p class="note">Ser etter: unødvendig API-eksponering, lokale kontoer og mangler i oppdatering, deteksjon eller policyhåndheving.</p>
+        <h3>Cluster configuration</h3>
+        <p>Check identity, API access, network, upgrades and add-ons. Which choices the platform team controls depends on the AKS mode.</p>
+        <p class="note">Look for: unnecessary API exposure, local accounts, and gaps in updates, detection or policy enforcement.</p>
       </div>
     </section>
 
     <section>
-      <h2>Kubernetes på fem minutter</h2>
-      <p class="sub">Kubernetes kjører containere på en gruppe maskiner og holder dem i ønsket tilstand. Clusterets ønskede tilstand styres gjennom Kubernetes-API-et. Her er begrepene du møter, og hvorfor de betyr noe for sikkerheten.</p>
+      <h2>Kubernetes in five minutes</h2>
+      <p class="sub">Kubernetes runs containers on a group of machines and keeps them in the desired state. The cluster's desired state is managed through the Kubernetes API. These are the terms you will meet, and why they matter for security.</p>
       <dl class="gloss">
-        <div><dt>Cluster</dt><dd>Control plane pluss noder.</dd><dd class="sec"><b>Sikkerhet:</b> Et delt cluster gir ikke hard isolasjon mellom gjensidig ubetrodde team.</dd></div>
-        <div><dt>API-server</dt><dd>Inngangen til Kubernetes-API-et, brukt av blant annet kubectl og deploy-verktøy.</dd><dd class="sec"><b>Sikkerhet:</b> Rollene styrer API-tilgangen. Admission control kan i tillegg stoppe endringer.</dd></div>
-        <div><dt>Node</dt><dd>Vanligvis en Azure-VM som kjører pods i AKS.</dd><dd class="sec"><b>Sikkerhet:</b> Et containerutbrudd kan ramme noden og andre pods på den.</dd></div>
-        <div><dt>Pod</dt><dd>Minste kjørbare enhet: én eller flere containere.</dd><dd class="sec"><b>Sikkerhet:</b> securityContext og imagets standardbruker påvirker rettighetene. Root og privileged er ulike forhold.</dd></div>
-        <div><dt>Namespace</dt><dd>Logisk avdeling, ofte én per team eller app.</dd><dd class="sec"><b>Sikkerhet:</b> Grense for tilganger og regler, men ingen hard isolasjon.</dd></div>
-        <div><dt>RBAC</dt><dd>Regler for hvem som kan gjøre hva: Role, ClusterRole og bindinger. Kan integreres med Entra ID i AKS.</dd><dd class="sec"><b>Sikkerhet:</b> Begrens rettighetene til det identiteten trenger.</dd></div>
-        <div><dt>ServiceAccount</dt><dd>Identiteten en pod har mot Kubernetes-API-et.</dd><dd class="sec"><b>Sikkerhet:</b> Et gyldig token for Kubernetes-API-et gir tilgang som den aktuelle ServiceAccount-en. Slå av automatisk montering når API-tilgang ikke trengs.</dd></div>
-        <div><dt>Workload identity</dt><dd>En app i en pod kan bytte et ServiceAccount-token mot et tilgangstoken fra Entra ID.</dd><dd class="sec"><b>Sikkerhet:</b> Erstatter lagrede påloggingshemmeligheter for støttede tjenester. Begrens fortsatt Azure-rettighetene.</dd></div>
-        <div><dt>Admission control</dt><dd>Kontrollerer endringer og enkelte tilkoblinger etter autentisering og autorisasjon. Lesing av objekter går utenom.</dd><dd class="sec"><b>Sikkerhet:</b> Pod Security Admission kan avvise en pod selv om tilhørende Deployment ble godtatt.</dd></div>
-        <div><dt>NetworkPolicy</dt><dd>Regler for pod-trafikk på IP- og portnivå; krever en nettverksløsning som håndhever dem.</dd><dd class="sec"><b>Sikkerhet:</b> Pod-trafikk er tillatt som standard; nettverkskontroller kan begrense den.</dd></div>
-        <div><dt>Secret</dt><dd>Kubernetes-objekt for passord og nøkler.</dd><dd class="sec"><b>Sikkerhet:</b> Base64 i manifestet er ikke kryptering. AKS har separat lagringskryptering.</dd></div>
-        <div><dt>Ingress / Gateway</dt><dd>Kan rute trafikk til apper fra interne eller offentlige endepunkter.</dd><dd class="sec"><b>Sikkerhet:</b> Kontroller hvilke tjenester som er tilgjengelige utenfra.</dd></div>
+        <div><dt>Cluster</dt><dd>Control plane plus nodes.</dd><dd class="sec"><b>Security:</b> A shared cluster does not give hard isolation between teams that do not trust each other.</dd></div>
+        <div><dt>API server</dt><dd>The entry point to the Kubernetes API, used by kubectl and deployment tools, among others.</dd><dd class="sec"><b>Security:</b> Roles control API access. Admission control can also stop changes.</dd></div>
+        <div><dt>Node</dt><dd>Usually an Azure VM that runs pods in AKS.</dd><dd class="sec"><b>Security:</b> A container breakout can hit the node and other pods on it.</dd></div>
+        <div><dt>Pod</dt><dd>The smallest runnable unit: one or more containers.</dd><dd class="sec"><b>Security:</b> securityContext and the image's default user affect the privileges. Root and privileged are different things.</dd></div>
+        <div><dt>Namespace</dt><dd>A logical division, often one per team or app.</dd><dd class="sec"><b>Security:</b> A boundary for access and rules, but not hard isolation.</dd></div>
+        <div><dt>RBAC</dt><dd>Rules for who can do what: Role, ClusterRole and bindings. Can be integrated with Entra ID in AKS.</dd><dd class="sec"><b>Security:</b> Limit permissions to what the identity needs.</dd></div>
+        <div><dt>ServiceAccount</dt><dd>The identity a pod has towards the Kubernetes API.</dd><dd class="sec"><b>Security:</b> A valid Kubernetes API token gives access as that ServiceAccount. Turn off automatic mounting when API access is not needed.</dd></div>
+        <div><dt>Workload identity</dt><dd>An app in a pod can exchange a ServiceAccount token for an access token from Entra ID.</dd><dd class="sec"><b>Security:</b> Replaces stored sign-in secrets for supported services. Still limit the Azure permissions.</dd></div>
+        <div><dt>Admission control</dt><dd>Checks changes and some connections after authentication and authorisation. Reading objects bypasses it.</dd><dd class="sec"><b>Security:</b> Pod Security Admission can reject a pod even if the owning Deployment was accepted.</dd></div>
+        <div><dt>NetworkPolicy</dt><dd>Rules for pod traffic at IP and port level; needs a network solution that enforces them.</dd><dd class="sec"><b>Security:</b> Pod traffic is allowed by default; network controls can restrict it.</dd></div>
+        <div><dt>Secret</dt><dd>A Kubernetes object for passwords and keys.</dd><dd class="sec"><b>Security:</b> Base64 in the manifest is not encryption. AKS has separate storage encryption.</dd></div>
+        <div><dt>Ingress / Gateway</dt><dd>Can route traffic to apps from internal or public endpoints.</dd><dd class="sec"><b>Security:</b> Check which services are reachable from outside.</dd></div>
       </dl>
     </section>
   </div>
 
-  <!-- 2 METODE -->
-  <div class="panel" role="tabpanel" id="p-metode" aria-labelledby="t-metode" hidden>
+  <!-- 2 METHOD -->
+  <div class="panel" role="tabpanel" id="p-method" aria-labelledby="t-method" hidden>
     <section>
-      <h2>Seks steg</h2>
+      <h2>Six steps</h2>
       <ol class="steps">
-        <li><div><h3>Avgrens og forstå modellen</h3><p>Hvor mange clustere og miljøer? AKS Automatic eller Standard? Automatic har flere forhåndskonfigurerte kontroller. Sjekk faktisk oppsett i begge moduser. Lag en enkel oversikt over hva plattformteamet eier og hva appteamene eier.</p><p class="out"><b>Resultat:</b> omfang og ansvarsfordeling.</p></div></li>
-        <li><div><h3>Skaff lesetilgang</h3><p>Avtal Azure Reader, tilgang til sikkerhetsfunn og logger, samt nødvendig lesetilgang i Kubernetes. Med Entra ID gir Cluster User eller tilsvarende rettighet tilgang til å hente kubeconfig. Uten Entra-integrasjon gir Cluster User samme tilgang som Cluster Admin. Se <a href="https://learn.microsoft.com/en-us/azure/aks/control-kubeconfig-access" target="_blank" rel="noopener">Microsofts rolleoversikt</a>.</p><p class="note">«Azure Kubernetes Service RBAC Reader» gir ikke lesetilgang til roller, bindinger eller Secrets. Avtal hjelp med RBAC-sjekken.</p><p class="out"><b>Resultat:</b> avklart lesetilgang og dokumenterte tilgangsbegrensninger.</p></div></li>
-        <li><div><h3>Intervju plattformteamet</h3><p>Bruk spørsmålene under. Be om arkitekturskisse og infrastrukturkoden (Terraform eller Bicep). Den viser hvordan det er ment å være. Sammenlign skissen med risikokartet under fanen Arkitektur.</p><p class="out"><b>Resultat:</b> ønsket design, og hvor du skal lete etter avvik.</p></div></li>
-        <li><div><h3>Sjekk konfigurasjonen</h3><p>Gå gjennom topp 10: Azure-laget (portal eller az), Kubernetes-laget (kubectl), og pipeline og register. Ta minst ett appteams namespace i detalj.</p><p class="out"><b>Resultat:</b> funn med bevis.</p></div></li>
-        <li><div><h3>La verktøyene jobbe</h3><p>Defender for Cloud-anbefalinger, Azure Policy compliance, og gjerne Kubescape. Verktøy kan finne feilkonfigurasjon og tilgangsrisiko. Suppler med manuell vurdering av modell og rutiner. <span class="tag">[inference]</span></p><p class="out"><b>Resultat:</b> bred dekning og kontroll av egne funn.</p></div></li>
-        <li><div><h3>Vurder og prioriter</h3><p>Gå gjennom de tre attack paths under Topp 10. Ranger funn etter konsekvens og hvor lett de kan utnyttes. Gi hvert funn en eier (plattform eller appteam) og et konkret tiltak.</p><p class="out"><b>Resultat:</b> prioritert rapport.</p></div></li>
+        <li><div><h3>Define the scope and understand the model</h3><p>How many clusters and environments? AKS Automatic or Standard? Automatic has more pre-configured controls. Check the actual setup in both modes. Make a simple overview of what the platform team owns and what the app teams own.</p><p class="out"><b>Result:</b> scope and split of responsibility.</p></div></li>
+        <li><div><h3>Get read access</h3><p>Agree on Azure Reader, access to security findings and logs, and the read access you need in Kubernetes. With Entra ID, Cluster User or an equivalent permission allows fetching the kubeconfig. Without Entra integration, Cluster User gives the same access as Cluster Admin. See <a href="https://learn.microsoft.com/en-us/azure/aks/control-kubeconfig-access" target="_blank" rel="noopener">Microsoft's role overview</a>.</p><p class="note">“Azure Kubernetes Service RBAC Reader” does not give read access to roles, bindings or Secrets. Agree on help with the RBAC check.</p><p class="out"><b>Result:</b> clear read access and documented access limits.</p></div></li>
+        <li><div><h3>Interview the platform team</h3><p>Use the questions below. Ask for an architecture sketch and the infrastructure code (Terraform or Bicep). It shows how things are meant to be. Compare the sketch with the risk map under the Architecture tab.</p><p class="out"><b>Result:</b> the intended design, and where to look for deviations.</p></div></li>
+        <li><div><h3>Check the configuration</h3><p>Go through the top 10: the Azure layer (portal or az), the Kubernetes layer (kubectl), and pipeline and registry. Take at least one app team's namespace in detail.</p><p class="out"><b>Result:</b> findings with evidence.</p></div></li>
+        <li><div><h3>Let the tools work</h3><p>Defender for Cloud recommendations, Azure Policy compliance, and preferably Kubescape. Tools can find misconfiguration and access risk. Add a manual review of the model and routines. <span class="tag">[inference]</span></p><p class="out"><b>Result:</b> broad coverage and a check of your own findings.</p></div></li>
+        <li><div><h3>Assess and prioritise</h3><p>Go through the three attack paths under Top 10. Rank findings by impact and how easily they can be exploited. Give each finding an owner (platform or app team) and a concrete action.</p><p class="out"><b>Result:</b> prioritised report.</p></div></li>
       </ol>
     </section>
 
     <section>
-      <div class="qhead"><h2>Spørsmål til plattformteamet</h2><span class="count" id="qCount">0 av 10 avklart</span></div>
-      <p class="sub">Kryss av etter hvert. Svarene lagres lokalt hvis nettleseren tillater det.</p>
+      <div class="qhead"><h2>Questions for the platform team</h2><span class="count" id="qCount">0 of 10 settled</span></div>
+      <p class="sub">Tick them off as you go. The answers are saved locally if the browser allows it.</p>
       <ul class="qlist" id="qlist">
-        <li><label><input type="checkbox" id="q1"><span>Bruker dere AKS Automatic eller Standard, og hvor mange clustere har dere per miljø?</span></label></li>
-        <li><label><input type="checkbox" id="q2"><span>Deler appteamene cluster? Ligger prod og test i samme cluster?</span></label></li>
-        <li><label><input type="checkbox" id="q3"><span>Hvordan får team og personer tilgang, og hvem har cluster-admin i dag?</span></label></li>
-        <li><label><input type="checkbox" id="q4"><span>Er lokale kontoer slått av, og krever dere MFA for administrasjon?</span></label></li>
-        <li><label><input type="checkbox" id="q5"><span>Hvordan deployer appteamene: pipeline, GitOps eller kubectl direkte? Med hvilken identitet?</span></label></li>
-        <li><label><input type="checkbox" id="q6"><span>Hvilke regler håndheves for workloads (Pod Security, Azure Policy), og i hvilken modus? Hvem gir unntak?</span></label></li>
-        <li><label><input type="checkbox" id="q7"><span>Er API-serveren privat eller IP-begrenset? Hvordan styres trafikk inn, mellom pods og ut?</span></label></li>
-        <li><label><input type="checkbox" id="q8"><span>Hvor ligger secrets, og hvordan får apper tilgang til Azure-ressurser?</span></label></li>
-        <li><label><input type="checkbox" id="q9"><span>Hvordan og hvor ofte oppgraderes cluster, noder og tredjepartskomponenter?</span></label></li>
-        <li><label><input type="checkbox" id="q10"><span>Hvor går audit-logger og Defender-varsler, og hvem reagerer på dem?</span></label></li>
+        <li><label><input type="checkbox" id="q1"><span>Do you use AKS Automatic or Standard, and how many clusters do you have per environment?</span></label></li>
+        <li><label><input type="checkbox" id="q2"><span>Do the app teams share a cluster? Are prod and test in the same cluster?</span></label></li>
+        <li><label><input type="checkbox" id="q3"><span>How do teams and people get access, and who has cluster-admin today?</span></label></li>
+        <li><label><input type="checkbox" id="q4"><span>Are local accounts turned off, and do you require MFA for administration?</span></label></li>
+        <li><label><input type="checkbox" id="q5"><span>How do the app teams deploy: pipeline, GitOps or kubectl directly? With which identity?</span></label></li>
+        <li><label><input type="checkbox" id="q6"><span>Which rules are enforced for workloads (Pod Security, Azure Policy), and in which mode? Who grants exceptions?</span></label></li>
+        <li><label><input type="checkbox" id="q7"><span>Is the API server private or IP-restricted? How is traffic controlled inbound, between pods and outbound?</span></label></li>
+        <li><label><input type="checkbox" id="q8"><span>Where do secrets live, and how do apps get access to Azure resources?</span></label></li>
+        <li><label><input type="checkbox" id="q9"><span>How and how often are the cluster, nodes and third-party components upgraded?</span></label></li>
+        <li><label><input type="checkbox" id="q10"><span>Where do audit logs and Defender alerts go, and who responds to them?</span></label></li>
       </ul>
     </section>
 
     <section>
-      <h2>Kommandoer med lesetilgang</h2>
-      <p class="sub">Bytt ut <code>&lt;rg&gt;</code> og <code>&lt;cluster&gt;</code>. Sjekk abonnementet i Azure CLI. <code>kubectl</code> bruker aktiv kontekst, som kan peke på et annet cluster. RBAC-sjekken krever lesetilgang til roller og bindinger i hele clusteret.</p>
-      <div class="cmd"><pre><code><span class="c"># Versjon og tilgjengelige oppgraderinger</span>
+      <h2>Commands with read access</h2>
+      <p class="sub">Replace <code>&lt;rg&gt;</code> and <code>&lt;cluster&gt;</code>. Check the subscription in Azure CLI. <code>kubectl</code> uses the active context, which may point to a different cluster. The RBAC check needs read access to roles and bindings across the whole cluster.</p>
+      <div class="cmd"><pre><code><span class="c"># Version and available upgrades</span>
 az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;
 
-<span class="c"># AKS-ressursens konfigurasjon. Se etter disableLocalAccounts,
+<span class="c"># Configuration of the AKS resource. Look for disableLocalAccounts,
 # aadProfile, apiServerAccessProfile, networkProfile, securityProfile</span>
 az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; -o json
 
-<span class="c"># Konfigurerte IP-områder for offentlig API-tilgang</span>
+<span class="c"># Configured IP ranges for public API access</span>
 az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; --query apiServerAccessProfile.authorizedIpRanges
 
-<span class="c"># Eksplisitt enforce-label per namespace</span>
+<span class="c"># Explicit enforce label per namespace</span>
 kubectl get ns -L pod-security.kubernetes.io/enforce
 
-<span class="c"># Network policies i alle namespaces</span>
+<span class="c"># Network policies in all namespaces</span>
 kubectl get networkpolicies -A
 
-<span class="c"># Services og Ingress (sjekk intern eller offentlig eksponering)</span>
+<span class="c"># Services and Ingress (check internal or public exposure)</span>
 kubectl get svc -A
 kubectl get ingress -A
 
-<span class="c"># Kubernetes RBAC: hvem har tilgang, og hvilke regler gjelder?</span>
+<span class="c"># Kubernetes RBAC: who has access, and which rules apply?</span>
 kubectl get clusterrolebindings,rolebindings -A -o wide
-kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" class="copy">Kopier</button></div>
+kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" class="copy">Copy</button></div>
     </section>
   </div>
 
-  <!-- 3 TOPP 10 -->
-  <div class="panel" role="tabpanel" id="p-topp10" aria-labelledby="t-topp10" hidden>
+  <!-- 3 TOP 10 -->
+  <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
     <section>
-      <h2>Ti prioriterte Kubernetes-risikoer</h2>
-      <p class="sub">Punktene følger OWASPs prioriterte liste fra 2025. Sjekkene er tilpasset AKS. Status lagres lokalt hvis nettleseren tillater det.</p>
+      <h2>Ten prioritised Kubernetes risks</h2>
+      <p class="sub">The items follow OWASP's prioritised list from 2025. The checks are adapted to AKS. Status is saved locally if the browser allows it.</p>
     </section>
 
-    <aside class="callout" id="aktuelt">
-      <h3>Aktuelt per 1. november 2026</h3>
+    <aside class="callout" id="current">
+      <h3>Current as of 1 November 2026</h3>
       <ul>
-        <li><b>Versjoner:</b> Sjekk <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">støttefristen</a> og om LTS er aktivert på clusteret. Begrenset «platform support» etter vanlig støtte gir ikke sikkerhetsfikser for Kubernetes.</li>
-        <li><b>Ingress NGINX:</b> Prosjektets vedlikehold sluttet i mars 2026. Microsoft støtter kritiske sikkerhetsfikser for NGINX i application routing add-on ut november 2026. Planlegg migrering.</li>
-        <li><b>Azure Linux 2.0:</b> Sikkerhetsstøtten sluttet 30. november 2025. <a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Microsoft fjerner node-images fra 31. oktober 2026</a>. Dette hindrer skalering av berørte nodepooler.</li>
-        <li><b>Pod-managed identity:</b> Utfasingen ble varslet i 2022. Støtten for AKS-add-on varte ut september 2025. Migrer til Workload ID.</li>
+        <li><b>Versions:</b> Check the <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">support deadline</a> and whether LTS is enabled on the cluster. Limited “platform support” after regular support does not give security fixes for Kubernetes.</li>
+        <li><b>Ingress NGINX:</b> The project's maintenance ended in March 2026. Microsoft supports critical security fixes for NGINX in the application routing add-on until the end of November 2026. Plan a migration.</li>
+        <li><b>Azure Linux 2.0:</b> Security support ended on 30 November 2025. <a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Microsoft removes node images from 31 October 2026</a>. This prevents scaling of affected node pools.</li>
+        <li><b>Pod-managed identity:</b> The deprecation was announced in 2022. Support for the AKS add-on ran out in September 2025. Migrate to Workload ID.</li>
       </ul>
     </aside>
 
     <div class="tally" aria-live="polite">
       <div class="tally-row" id="tally">
         <span><i class="dot" style="background:var(--ok)"></i>OK <b id="n-ok">0</b></span>
-        <span><i class="dot" style="background:var(--part)"></i>Delvis <b id="n-part">0</b></span>
-        <span><i class="dot" style="background:var(--miss)"></i>Mangler <b id="n-miss">0</b></span>
-        <span><i class="dot" style="background:var(--unk)"></i>Ukjent / ikke vurdert <b id="n-none">11</b></span>
+        <span><i class="dot" style="background:var(--part)"></i>Partial <b id="n-part">0</b></span>
+        <span><i class="dot" style="background:var(--miss)"></i>Missing <b id="n-miss">0</b></span>
+        <span><i class="dot" style="background:var(--unk)"></i>Unknown / not assessed <b id="n-none">11</b></span>
       </div>
       <div class="bar" aria-hidden="true"><span id="b-ok" style="background:var(--ok);width:0"></span><span id="b-part" style="background:var(--part);width:0"></span><span id="b-miss" style="background:var(--miss);width:0"></span><span id="b-unk" style="background:var(--unk);width:0"></span></div>
       <div class="tools">
-        <button type="button" class="btn" id="copySummary">Kopier status som tekst</button>
-        <button type="button" class="btn" id="resetBtn">Nullstill</button>
-        <span id="resetConfirm" hidden><button type="button" class="btn danger" id="resetYes">Ja, nullstill risikostatus</button> <button type="button" class="btn" id="resetNo">Avbryt</button></span>
+        <button type="button" class="btn" id="copySummary">Copy status as text</button>
+        <button type="button" class="btn" id="resetBtn">Reset</button>
+        <span id="resetConfirm" hidden><button type="button" class="btn danger" id="resetYes">Yes, reset risk status</button> <button type="button" class="btn" id="resetNo">Cancel</button></span>
         <span class="msg" id="copyMsg" aria-live="polite"></span>
       </div>
-      <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status som tekst"></textarea>
+      <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status as text"></textarea>
     </div>
 
     <section>
-      <h3>Filtrer etter attack path</h3>
+      <h3>Filter by attack path</h3>
       <div class="chips" role="group" aria-label="Attack path">
-        <button type="button" class="chip" data-path="alle" aria-pressed="true">Alle</button>
-        <button type="button" class="chip" data-path="tilgang" aria-pressed="false">Stolen credentials</button>
-        <button type="button" class="chip" data-path="app" aria-pressed="false">Compromised workload</button>
-        <button type="button" class="chip" data-path="leveranse" aria-pressed="false">Supply chain</button>
+        <button type="button" class="chip" data-path="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-path="credentials" aria-pressed="false">Stolen credentials</button>
+        <button type="button" class="chip" data-path="workload" aria-pressed="false">Compromised workload</button>
+        <button type="button" class="chip" data-path="supply" aria-pressed="false">Supply chain</button>
       </div>
-      <p class="path-desc" id="pathDesc">Viser alle punktene. Koblingen mellom attack path og punkt er min vurdering. <span class="tag">[inference]</span></p>
+      <p class="path-desc" id="pathDesc">Showing all items. The link between attack path and item is my own assessment. <span class="tag">[inference]</span></p>
     </section>
 
     <div class="risks" id="risks">
 
-      <article class="risk" data-id="K01" data-title="Usikker workload-konfigurasjon" data-paths="app leveranse">
-        <div class="risk-head"><span class="rid">K01</span><div><h3>Usikker workload-konfigurasjon</h3><p class="en">Insecure Workload Configurations</p></div></div>
-        <p>Containere som kjører som root eller privilegert, eller som får tilgang til nodens filsystem (hostPath) eller nettverk (hostNetwork). Slike innstillinger kan øke skadeomfanget ved kompromittering. Root alene betyr ikke tilgang til verten.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K01" data-title="Insecure workload configuration" data-paths="workload supply">
+        <div class="risk-head"><span class="rid">K01</span><div><h3>Insecure workload configuration</h3><p class="en">Insecure Workload Configurations</p></div></div>
+        <p>Containers that run as root or privileged, or that get access to the node's file system (hostPath) or network (hostNetwork). Such settings can increase the damage if a container is compromised. Root alone does not mean access to the host.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Hvilket nivå håndheves? Kommandoen viser eksplisitte namespace-etiketter for Pod Security Admission. Baseline tillater root på Linux.
-            <div class="cmd"><pre><code>kubectl get ns -L pod-security.kubernetes.io/enforce</code></pre><button type="button" class="copy">Kopier</button></div></li>
-          <li>Sjekk også Azure Policy-tildelinger, håndheving og unntak.</li>
-          <li>Hva sier Defender for Cloud om privilegerte containere og root?</li>
+          <li>Which level is enforced? The command shows explicit namespace labels for Pod Security Admission. Baseline allows root on Linux.
+            <div class="cmd"><pre><code>kubectl get ns -L pod-security.kubernetes.io/enforce</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Also check Azure Policy assignments, enforcement and exceptions.</li>
+          <li>What does Defender for Cloud say about privileged containers and root?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Manglende håndheving, policy som bare logger, brede unntak. Manglende namespace-label alene beviser ikke manglende vern.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>No enforcement, policy that only logs, broad exceptions. A missing namespace label alone does not prove missing protection.</p>
         <div class="paths"><span>Compromised workload</span><span>Supply chain</span></div>
         <div class="seg" data-id="K01"></div>
       </article>
 
-      <article class="risk" data-id="K02" data-title="For brede tilganger" data-paths="tilgang app">
-        <div class="risk-head"><span class="rid">K02</span><div><h3>For brede tilganger</h3><p class="en">Overly Permissive Authorization Configurations</p></div></div>
-        <p>Brede roller øker skadeomfanget. Rett til å opprette pods kan også gi tilgang til Secrets og ServiceAccount-rettigheter i samme namespace. Se <a href="https://kubernetes.io/docs/concepts/security/rbac-good-practices/#workload-creation" target="_blank" rel="noopener">Kubernetes RBAC-veiledning</a>.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K02" data-title="Overly broad permissions" data-paths="credentials workload">
+        <div class="risk-head"><span class="rid">K02</span><div><h3>Overly broad permissions</h3><p class="en">Overly Permissive Authorization Configurations</p></div></div>
+        <p>Broad roles increase the damage. The right to create pods can also give access to Secrets and ServiceAccount permissions in the same namespace. See the <a href="https://kubernetes.io/docs/concepts/security/rbac-good-practices/#workload-creation" target="_blank" rel="noopener">Kubernetes RBAC guidance</a>.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Er Azure- og Kubernetes-roller begrenset til nødvendige rettigheter og namespaces?</li>
-          <li>Hvem har brede rettigheter? Koble hver binding til reglene i rollen den viser til.
+          <li>Are Azure and Kubernetes roles limited to the necessary permissions and namespaces?</li>
+          <li>Who has broad permissions? Link each binding to the rules in the role it refers to.
             <div class="cmd"><pre><code>kubectl get clusterrolebindings,rolebindings -A -o wide
-kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" class="copy">Kopier</button></div></li>
-          <li>Sjekk Azure-rollene separat. Hvem kan hente admin-kubeconfig eller bruke <a href="https://learn.microsoft.com/en-us/azure/aks/access-private-cluster" target="_blank" rel="noopener">AKS Run Command</a>? Sistnevnte kan gi tilgang til et privat cluster via Azure-API-et.</li>
-          <li>Har deploy-pipelinen bare rettighetene den trenger? <a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">Microsoft fraråder cluster-admin for pipelines</a>.</li>
+kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Check the Azure roles separately. Who can fetch the admin kubeconfig or use <a href="https://learn.microsoft.com/en-us/azure/aks/access-private-cluster" target="_blank" rel="noopener">AKS Run Command</a>? The latter can give access to a private cluster through the Azure API.</li>
+          <li>Does the deploy pipeline have only the permissions it needs? <a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">Microsoft advises against cluster-admin for pipelines</a>.</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Utviklergruppe med cluster-admin «midlertidig», pipeline med cluster-admin, default service account med ekstra roller.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>A developer group with “temporary” cluster-admin, a pipeline with cluster-admin, a default service account with extra roles.</p>
         <div class="paths"><span>Stolen credentials</span><span>Compromised workload</span></div>
         <div class="seg" data-id="K02"></div>
       </article>
 
-      <article class="risk" data-id="K03" data-title="Svak håndtering av secrets" data-paths="tilgang app leveranse">
-        <div class="risk-head"><span class="rid">K03</span><div><h3>Svak håndtering av secrets</h3><p class="en">Secrets Management Failures</p></div></div>
-        <p>Secrets kan lekke fra kode, images og pods. Base64 i manifestet er ikke kryptering. AKS har lagringskryptering; KMS gir et ekstra lag.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K03" data-title="Weak secrets management" data-paths="credentials workload supply">
+        <div class="risk-head"><span class="rid">K03</span><div><h3>Weak secrets management</h3><p class="en">Secrets Management Failures</p></div></div>
+        <p>Secrets can leak from code, images and pods. Base64 in the manifest is not encryption. AKS has storage encryption; KMS adds an extra layer.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Hentes secrets fra et kontrollert hemmelighetslager, for eksempel Key Vault via SDK eller Secrets Store CSI Driver?</li>
-          <li>Er KMS-kryptering av secrets i etcd slått på der kravene tilsier det?</li>
-          <li>Hvem kan lese Secrets med get, list eller watch? Hvem kan montere dem i en pod?</li>
-          <li>Er lagrede nøkler erstattet med workload identity der det går?</li>
+          <li>Are secrets fetched from a controlled secret store, for example Key Vault through the SDK or the Secrets Store CSI Driver?</li>
+          <li>Is KMS encryption of secrets in etcd turned on where the requirements call for it?</li>
+          <li>Who can read Secrets with get, list or watch? Who can mount them in a pod?</li>
+          <li>Are stored keys replaced with workload identity where possible?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Lesbare hemmeligheter i Git, eller langlivede påloggingsnøkler der Workload ID kan brukes.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Readable secrets in Git, or long-lived sign-in keys where Workload ID could be used.</p>
         <div class="paths"><span>Stolen credentials</span><span>Compromised workload</span><span>Supply chain</span></div>
         <div class="seg" data-id="K03"></div>
       </article>
 
-      <article class="risk" data-id="K04" data-title="Mangler policy enforcement i clusteret" data-paths="app leveranse">
-        <div class="risk-head"><span class="rid">K04</span><div><h3>Mangler policy enforcement i clusteret</h3><p class="en">Lack Of Cluster Level Policy Enforcement</p></div></div>
-        <p>Sikkerhetspolicyer mangler eller håndheves ikke. Audit og Warn avviser ikke regelbrudd.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K04" data-title="No policy enforcement in the cluster" data-paths="workload supply">
+        <div class="risk-head"><span class="rid">K04</span><div><h3>No policy enforcement in the cluster</h3><p class="en">Lack Of Cluster Level Policy Enforcement</p></div></div>
+        <p>Security policies are missing or not enforced. Audit and Warn do not reject rule violations.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Håndheves nødvendige regler, for eksempel med Azure Policy Deny eller Pod Security Admission enforce?</li>
-          <li>Tillates bare images fra godkjente registre, for eksempel egen Azure Container Registry?</li>
-          <li>Er deployment safeguards i <a href="https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards" target="_blank" rel="noopener">Enforce-modus</a>, og hvilke namespaces er unntatt?</li>
-          <li>Hvem kan gi unntak, og er unntakene dokumentert og tidsbegrenset?</li>
+          <li>Are the necessary rules enforced, for example with Azure Policy Deny or Pod Security Admission enforce?</li>
+          <li>Are only images from approved registries allowed, for example your own Azure Container Registry?</li>
+          <li>Are deployment safeguards in <a href="https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards" target="_blank" rel="noopener">Enforce mode</a>, and which namespaces are exempt?</li>
+          <li>Who can grant exceptions, and are the exceptions documented and time-limited?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Alt i Audit-modus, hele namespaces unntatt.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Everything in Audit mode, whole namespaces exempt.</p>
         <div class="paths"><span>Compromised workload</span><span>Supply chain</span></div>
         <div class="seg" data-id="K04"></div>
       </article>
 
-      <article class="risk" data-id="K05" data-title="Manglende network segmentation" data-paths="app">
-        <div class="risk-head"><span class="rid">K05</span><div><h3>Manglende network segmentation</h3><p class="en">Missing Network Segmentation Controls</p></div></div>
-        <p>NetworkPolicy isolerer pods separat for inngående og utgående trafikk. Begge retninger er åpne som utgangspunkt. Kontroller faktisk trafikk mellom team og ut av clusteret, inkludert Azure-nettverket.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K05" data-title="Missing network segmentation" data-paths="workload">
+        <div class="risk-head"><span class="rid">K05</span><div><h3>Missing network segmentation</h3><p class="en">Missing Network Segmentation Controls</p></div></div>
+        <p>NetworkPolicy isolates pods separately for inbound and outbound traffic. Both directions are open by default. Check the actual traffic between teams and out of the cluster, including the Azure network.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Dekker default-deny både ingress og egress for alle relevante pods? Sjekk også tillatelser i andre policyer.
-            <div class="cmd"><pre><code>kubectl get networkpolicies -A</code></pre><button type="button" class="copy">Kopier</button></div></li>
-          <li>Sjekk at nettverksløsningen håndhever policyene, og test faktisk trafikk. Ved Cilium: se også Cilium-policyene.</li>
-          <li>Begrenses utgående trafikk til nødvendige mål? NAT alene filtrerer ikke mål.</li>
-          <li>Er interne tjenester bare tilgjengelige fra tiltenkte nettverk og workloads?</li>
+          <li>Does default-deny cover both ingress and egress for all relevant pods? Also check the allow rules in other policies.
+            <div class="cmd"><pre><code>kubectl get networkpolicies -A</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Check that the network solution enforces the policies, and test actual traffic. With Cilium: also look at the Cilium policies.</li>
+          <li>Is outbound traffic limited to the necessary destinations? NAT alone does not filter destinations.</li>
+          <li>Are internal services reachable only from the intended networks and workloads?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Manglende trafikkbegrensning mellom team eller til internett.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>No traffic restriction between teams or to the internet.</p>
         <div class="paths"><span>Compromised workload</span></div>
         <div class="seg" data-id="K05"></div>
       </article>
 
-      <article class="risk" data-id="K06" data-title="Eksponerte Kubernetes-komponenter" data-paths="tilgang">
-        <div class="risk-head"><span class="rid">K06</span><div><h3>Eksponerte Kubernetes-komponenter</h3><p class="en">Overly Exposed Kubernetes Components</p></div></div>
-        <p>En offentlig API-server uten IP-begrensning kan nås fra internett. Stjålne, gyldige credentials kan gi tilgang.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K06" data-title="Exposed Kubernetes components" data-paths="credentials">
+        <div class="risk-head"><span class="rid">K06</span><div><h3>Exposed Kubernetes components</h3><p class="en">Overly Exposed Kubernetes Components</p></div></div>
+        <p>A public API server without IP restriction can be reached from the internet. Stolen, valid credentials can give access.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Er offentlig API-tilgang slått av? VNet integration alene gjør ikke API-serveren privat.</li>
-          <li>Hvis offentlig tilgang er på: er API-serveren begrenset til kjente IP-adresser? En tom liste betyr at AKS ikke filtrerer på autoriserte IP-områder.
-            <div class="cmd"><pre><code>az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; --query apiServerAccessProfile.authorizedIpRanges</code></pre><button type="button" class="copy">Kopier</button></div></li>
-          <li>Sjekk Services og Ingress. Er eksponeringen intern eller offentlig, og tilsiktet? Ved Gateway API: sjekk også Gateways og rutene deres.
+          <li>Is public API access turned off? VNet integration alone does not make the API server private.</li>
+          <li>If public access is on: is the API server limited to known IP addresses? An empty list means AKS does not filter on authorised IP ranges.
+            <div class="cmd"><pre><code>az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt; --query apiServerAccessProfile.authorizedIpRanges</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Check Services and Ingress. Is the exposure internal or public, and intended? With Gateway API: also check the Gateways and their routes.
             <div class="cmd"><pre><code>kubectl get svc -A
-kubectl get ingress -A</code></pre><button type="button" class="copy">Kopier</button></div></li>
+kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</button></div></li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Offentlig API-server uten IP-begrensning, admin-verktøy eksponert mot internett.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Public API server without IP restriction, admin tools exposed to the internet.</p>
         <div class="paths"><span>Stolen credentials</span></div>
         <div class="seg" data-id="K06"></div>
       </article>
 
-      <article class="risk" data-id="K07" data-title="Feilkonfigurerte og sårbare cluster-komponenter" data-paths="app">
-        <div class="risk-head"><span class="rid">K07</span><div><h3>Feilkonfigurerte og sårbare cluster-komponenter</h3><p class="en">Misconfigured And Vulnerable Cluster Components</p></div></div>
-        <p>Utdatert Kubernetes-versjon, upatchede noder og glemte tredjepartskomponenter som ingress controllers og operators. Utenfor sikkerhetsstøtte kan dere ikke regne med nye sikkerhetsfikser.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K07" data-title="Misconfigured and vulnerable cluster components" data-paths="workload">
+        <div class="risk-head"><span class="rid">K07</span><div><h3>Misconfigured and vulnerable cluster components</h3><p class="en">Misconfigured And Vulnerable Cluster Components</p></div></div>
+        <p>An outdated Kubernetes version, unpatched nodes and forgotten third-party components such as ingress controllers and operators. Outside security support you cannot count on new security fixes.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Sammenlign versjonen med Microsofts støtteoversikt. Kommandoen viser tilgjengelige oppgraderinger, ikke støttefristen.
-            <div class="cmd"><pre><code>az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;</code></pre><button type="button" class="copy">Kopier</button></div></li>
-          <li>Hvilken cluster- og node OS upgrade channel er valgt, og hvordan sikres rettidige oppdateringer?</li>
-          <li>Hvilket OS kjører node pools? Azure Linux 2.0 får ikke lenger sikkerhetsoppdateringer.</li>
-          <li>Finnes en liste over add-ons og tredjepartskomponenter, med eier og oppdateringsrutine?</li>
+          <li>Compare the version with Microsoft's support overview. The command shows available upgrades, not the support deadline.
+            <div class="cmd"><pre><code>az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;</code></pre><button type="button" class="copy">Copy</button></div></li>
+          <li>Which cluster and node OS upgrade channel is selected, and how are timely updates ensured?</li>
+          <li>Which OS do the node pools run? Azure Linux 2.0 no longer gets security updates.</li>
+          <li>Is there a list of add-ons and third-party components, with an owner and an update routine?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Auto-upgrade av uten manuell rutine, ingress-nginx installert med Helm og glemt.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Auto-upgrade off with no manual routine, ingress-nginx installed with Helm and forgotten.</p>
         <div class="paths"><span>Compromised workload</span></div>
         <div class="seg" data-id="K07"></div>
       </article>
 
-      <article class="risk" data-id="K08" data-title="Fra cluster til Azure" data-paths="app">
-        <div class="risk-head"><span class="rid">K08</span><div><h3>Fra cluster til Azure</h3><p class="en">Cluster To Cloud Lateral Movement</p></div></div>
-        <p>En angriper i en pod kan misbruke tilgjengelige Azure-identiteter. Sjekk hvilke ressurser hver identitet har tilgang til.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K08" data-title="From cluster to Azure" data-paths="workload">
+        <div class="risk-head"><span class="rid">K08</span><div><h3>From cluster to Azure</h3><p class="en">Cluster To Cloud Lateral Movement</p></div></div>
+        <p>An attacker in a pod can misuse available Azure identities. Check which resources each identity can access.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Brukes Microsoft Entra Workload ID? Støtten for pod-managed identity er avsluttet.</li>
-          <li>Hva har kubelet-identiteten og hver workload-identitet tilgang til, også gjennom arvede rettigheter?</li>
-          <li>Test pod-tilgang til IMDS (169.254.169.254). <a href="https://learn.microsoft.com/en-us/azure/aks/imds-restriction" target="_blank" rel="noopener">AKS IMDS restriction</a> (preview) dekker bare pods uten hostNetwork. Cilium-policyene i Azure CNI dekker heller ikke hostNetwork-pods.</li>
-          <li>Ligger det statiske service principal-secrets i clusteret?</li>
+          <li>Is Microsoft Entra Workload ID in use? Support for pod-managed identity has ended.</li>
+          <li>What can the kubelet identity and each workload identity access, including through inherited permissions?</li>
+          <li>Test pod access to IMDS (169.254.169.254). <a href="https://learn.microsoft.com/en-us/azure/aks/imds-restriction" target="_blank" rel="noopener">AKS IMDS restriction</a> (preview) only covers pods without hostNetwork. The Cilium policies in Azure CNI do not cover hostNetwork pods either.</li>
+          <li>Are there static service principal secrets in the cluster?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Workload identity med Contributor på hele abonnementet.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>A workload identity with Contributor on the whole subscription.</p>
         <div class="paths"><span>Compromised workload</span></div>
         <div class="seg" data-id="K08"></div>
       </article>
 
-      <article class="risk" data-id="K09" data-title="Svak autentisering" data-paths="tilgang">
-        <div class="risk-head"><span class="rid">K09</span><div><h3>Svak autentisering</h3><p class="en">Broken Authentication Mechanisms</p></div></div>
-        <p>Delte admin-kubeconfig-filer, lokale kontoer slått på, langlivede tokens eller manglende MFA. Statiske admin-credentials går utenom Entra ID, og dermed utenom MFA og Conditional Access.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K09" data-title="Weak authentication" data-paths="credentials">
+        <div class="risk-head"><span class="rid">K09</span><div><h3>Weak authentication</h3><p class="en">Broken Authentication Mechanisms</p></div></div>
+        <p>Shared admin kubeconfig files, local accounts turned on, long-lived tokens or missing MFA. Static admin credentials bypass Entra ID, and so also MFA and Conditional Access.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Er Entra ID-integrasjon på, og er lokale kontoer av? Se etter <code>disableLocalAccounts: true</code> i <code>az aks show</code>. Tidligere utstedte lokale sertifikater må tilbakekalles ved <a href="https://learn.microsoft.com/en-us/azure/aks/local-accounts" target="_blank" rel="noopener">sertifikatrotasjon</a>.</li>
-          <li>Krever Conditional Access MFA for de som administrerer clusterne?</li>
-          <li>Bruker pipelinen workload identity federation i stedet for lagrede secrets?</li>
-          <li>Med Entra-integrasjon: bruk «Cluster User» for å hente kubeconfig, og tildel API-rettigheter separat. Unngå admin-kubeconfig.</li>
+          <li>Is Entra ID integration on, and are local accounts off? Look for <code>disableLocalAccounts: true</code> in <code>az aks show</code>. Previously issued local certificates must be revoked during <a href="https://learn.microsoft.com/en-us/azure/aks/local-accounts" target="_blank" rel="noopener">certificate rotation</a>.</li>
+          <li>Does Conditional Access require MFA for those who administer the clusters?</li>
+          <li>Does the pipeline use workload identity federation instead of stored secrets?</li>
+          <li>With Entra integration: use “Cluster User” to fetch the kubeconfig, and assign API permissions separately. Avoid the admin kubeconfig.</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Lokale kontoer på, admin-kubeconfig delt i et team eller lagret i en pipeline.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Local accounts on, admin kubeconfig shared in a team or stored in a pipeline.</p>
         <div class="paths"><span>Stolen credentials</span></div>
         <div class="seg" data-id="K09"></div>
       </article>
 
-      <article class="risk" data-id="K10" data-title="Utilstrekkelig logging og overvåking" data-paths="tilgang app leveranse">
-        <div class="risk-head"><span class="rid">K10</span><div><h3>Utilstrekkelig logging og overvåking</h3><p class="en">Inadequate Logging And Monitoring</p></div></div>
-        <p>Uten tilgjengelige audit-logger blir API-kall vanskeligere å etterforske. Varsler trenger en eier.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="K10" data-title="Insufficient logging and monitoring" data-paths="credentials workload supply">
+        <div class="risk-head"><span class="rid">K10</span><div><h3>Insufficient logging and monitoring</h3><p class="en">Inadequate Logging And Monitoring</p></div></div>
+        <p>Without available audit logs, API calls are harder to investigate. Alerts need an owner.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Samle relevante audit- og guard-logger. <code>kube-audit-admin</code> utelater get/list. For slike API-kall mot Secrets kan <code>kube-audit</code> vise hvem som ba om tilgang. Kontroller dekningen mot <a href="https://learn.microsoft.com/en-us/azure/aks/monitor-aks#aks-audit-policy" target="_blank" rel="noopener">AKS-auditpolicyen</a>.</li>
-          <li>Dekker Defender eller tilsvarende verktøy de aktuelle nodene og workloadene? Test et dokumentert varsel.</li>
-          <li>Hvem mottar varslene, og hvordan følger de dem opp?</li>
-          <li>Hvor lenge lagres loggene, og hvem kan slette dem?</li>
+          <li>Collect the relevant audit and guard logs. <code>kube-audit-admin</code> leaves out get/list. For such API calls against Secrets, <code>kube-audit</code> can show who asked for access. Check the coverage against the <a href="https://learn.microsoft.com/en-us/azure/aks/monitor-aks#aks-audit-policy" target="_blank" rel="noopener">AKS audit policy</a>.</li>
+          <li>Do Defender or equivalent tools cover the relevant nodes and workloads? Test a documented alert.</li>
+          <li>Who receives the alerts, and how do they follow them up?</li>
+          <li>How long are the logs kept, and who can delete them?</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Diagnostikk ikke satt opp, Defender på, men ingen leser varslene.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Diagnostics not set up, Defender on but nobody reads the alerts.</p>
         <div class="paths"><span>Stolen credentials</span><span>Compromised workload</span><span>Supply chain</span></div>
         <div class="seg" data-id="K10"></div>
       </article>
 
-      <article class="risk" data-id="SC" data-title="Supply chain: images og pipeline" data-paths="leveranse">
-        <div class="risk-head"><span class="rid">Ekstra</span><div><h3>Supply chain: images og pipeline</h3><p class="en">Supply Chain Vulnerabilities (K02 i 2022-utgaven)</p></div></div>
-        <p>Images fra ukjente kilder, sårbare biblioteker, eller en pipeline mange kan endre. Punktet var K02 i 2022-lista og har ikke egen plass i 2025-utgaven, men Microsofts AKS-anbefalinger har et eget avsnitt om det.</p>
-        <div><span class="lbl">Sjekk i AKS</span></div>
+      <article class="risk" data-id="SC" data-title="Supply chain: images and pipeline" data-paths="supply">
+        <div class="risk-head"><span class="rid">Extra</span><div><h3>Supply chain: images and pipeline</h3><p class="en">Supply Chain Vulnerabilities (K02 in the 2022 edition)</p></div></div>
+        <p>Images from unknown sources, vulnerable libraries, or a pipeline that many people can change. The item was K02 in the 2022 list and has no place of its own in the 2025 edition, but Microsoft's AKS recommendations have a separate section on it.</p>
+        <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Skannes images i CI? Sjekk hvilke images <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure" target="_blank" rel="noopener">Defender skanner på nytt</a> i registeret. Inaktive images kan falle utenfor.</li>
-          <li>Tillates bare images fra godkjente registre?</li>
-          <li>Signeres og verifiseres images?</li>
-          <li>På støttede Linux-noder: fjerner Image Cleaner ubrukte, sårbare images? Windows-nodepooler og AKS virtual nodes støttes ikke.</li>
+          <li>Are images scanned in CI? Check which images <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure" target="_blank" rel="noopener">Defender rescans</a> in the registry. Inactive images may fall outside.</li>
+          <li>Are only images from approved registries allowed?</li>
+          <li>Are images signed and verified?</li>
+          <li>On supported Linux nodes: does Image Cleaner remove unused, vulnerable images? Windows node pools and AKS virtual nodes are not supported.</li>
         </ul>
-        <p class="finding"><span class="lbl">Mulige funn</span>Images uten verifisert opphav, eller manglende skanning etter deployment.</p>
+        <p class="finding"><span class="lbl">Possible findings</span>Images with no verified origin, or no scanning after deployment.</p>
         <div class="paths"><span>Supply chain</span></div>
         <div class="seg" data-id="SC"></div>
       </article>
     </div>
   </div>
 
-  <!-- 4 ARKITEKTUR -->
-  <div class="panel" role="tabpanel" id="p-arkitektur" aria-labelledby="t-arkitektur" hidden>
+  <!-- 4 ARCHITECTURE -->
+  <div class="panel" role="tabpanel" id="p-architecture" aria-labelledby="t-architecture" hidden>
     <section class="wide">
-      <h2>Risikokart over arkitekturen</h2>
-      <p class="sub">En typisk AKS-plattform med flere appteam, fra kode til drift. Hver markør viser hvor en risiko oppstår eller må kontrolleres. Fargen følger statusen du setter under Topp 10.</p>
-      <div class="rchips" id="dgChips" role="group" aria-label="Vis risiko i diagrammet"></div>
+      <h2>Risk map of the architecture</h2>
+      <p class="sub">A typical AKS platform with several app teams, from code to operations. Each marker shows where a risk arises or must be checked. The colour follows the status you set under Top 10.</p>
+      <div class="rchips" id="dgChips" role="group" aria-label="Show risk in the diagram"></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
     </section>
 
@@ -634,178 +635,178 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Kopier</bu
         <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
       </div>
       <figcaption id="dgCap">
-        <span class="cap">Klienten sender Entra-tokenet til API-serveren. Ved skriving kan API-serveren kalle webhooks før den lagrer objektet i etcd. Azure Policy bruker blant annet Gatekeeper-pods. Overvåking gjelder alle lag. Trykk på en markør eller boks for detaljer.</span>
+        <span class="cap">The client sends the Entra token to the API server. On writes, the API server can call webhooks before it stores the object in etcd. Azure Policy uses Gatekeeper pods, among other things. Monitoring covers all layers. Tap a marker or box for details.</span>
         <span class="legend">
-          <span><i class="lg-mk">K01</i>Ikke vurdert</span>
+          <span><i class="lg-mk">K01</i>Not assessed</span>
           <span><i class="lg-mk st-ok">K01</i>OK</span>
-          <span><i class="lg-mk st-part">K01</i>Delvis</span>
-          <span><i class="lg-mk st-miss">K01</i>Mangler</span>
-          <span><i class="lg-mk st-unk">K01</i>Ukjent</span>
-          <span><i class="lg-ms"></i>Microsoft drifter</span>
-          <span><i class="lg-ew"></i>Øst-vest-trafikk mellom namespaces</span>
-          <span>SC = supply chain (ekstra punkt)</span>
+          <span><i class="lg-mk st-part">K01</i>Partial</span>
+          <span><i class="lg-mk st-miss">K01</i>Missing</span>
+          <span><i class="lg-mk st-unk">K01</i>Unknown</span>
+          <span><i class="lg-ms"></i>Run by Microsoft</span>
+          <span><i class="lg-ew"></i>East-west traffic between namespaces</span>
+          <span>SC = supply chain (extra item)</span>
         </span>
       </figcaption>
     </figure>
-    <p class="note hint">Diagrammet er bredt. Dra sideveis i det, eller bruk tabellen under.</p>
+    <p class="note hint">The diagram is wide. Drag it sideways, or use the table below.</p>
 
     <section class="wide">
-      <h2>Risiko per del av verdikjeden</h2>
-      <p class="sub">Samme plassering som i diagrammet. Trykk på en risiko for å vise den i diagrammet.</p>
+      <h2>Risk per part of the value chain</h2>
+      <p class="sub">Same placement as in the diagram. Tap a risk to show it in the diagram.</p>
       <div class="mx-wrap">
         <table class="mx">
-          <thead><tr><th scope="col">Risiko</th><th scope="col">1 · Kode og bygg</th><th scope="col">2 · Tilgang og styring</th><th scope="col">3 · Kjøring</th><th scope="col">4 · Azure og internett</th><th scope="col">5 · Overvåking</th></tr></thead>
+          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Code and build</th><th scope="col">2 · Access and control</th><th scope="col">3 · Runtime</th><th scope="col">4 · Azure and internet</th><th scope="col">5 · Monitoring</th></tr></thead>
           <tbody id="dgMatrix"></tbody>
         </table>
       </div>
     </section>
 
     <section>
-      <h3>Før du bruker kartet</h3>
-      <p class="sub">Dette er en typisk referansearkitektur, ikke plattformteamets faktiske oppsett. Vanlige avvik er GitOps, der en agent i clusteret henter fra git i stedet for at pipelinen deployer, Application Gateway for Containers med dataplan utenfor clusteret, og egne clustere per miljø. Be om deres arkitekturskisse og tegn risikoene inn der de hører hjemme hos dem.</p>
-      <p class="sub">Plasseringen av risikoene og eierskapet per sone er min vurdering ut fra OWASP og Microsoft. <span class="tag">[inference]</span></p>
+      <h3>Before you use the map</h3>
+      <p class="sub">This is a typical reference architecture, not the platform team's actual setup. Common deviations are GitOps, where an agent in the cluster pulls from git instead of the pipeline deploying, Application Gateway for Containers with the data plane outside the cluster, and separate clusters per environment. Ask for their architecture sketch and draw the risks in where they belong in their setup.</p>
+      <p class="sub">The placement of the risks and the ownership per zone are my own assessment based on OWASP and Microsoft. <span class="tag">[inference]</span></p>
     </section>
   </div>
 
-  <!-- 5 RELEVANS -->
-  <div class="panel" role="tabpanel" id="p-relevans" aria-labelledby="t-relevans" hidden>
+  <!-- 5 RELEVANCE -->
+  <div class="panel" role="tabpanel" id="p-relevance" aria-labelledby="t-relevance" hidden>
     <section>
-      <h2>Hva er relevant, og hva er det ikke?</h2>
-      <p class="sub">Microsoft drifter control plane. Kunden styrer egne workloads, tilganger og data. Ansvaret for noder og nettverk avhenger av AKS-modus.</p>
+      <h2>What is relevant, and what is not?</h2>
+      <p class="sub">Microsoft runs the control plane. The customer controls their own workloads, access and data. Responsibility for nodes and network depends on the AKS mode.</p>
       <div class="cols">
         <div class="col yes">
-          <h3>Bruk tiden her</h3>
+          <h3>Spend your time here</h3>
           <ul>
-            <li><b>Identitet og tilgang:</b> Entra ID, RBAC, lokale kontoer, pipeline-identitet.</li>
-            <li><b>Eksponering:</b> API-server, ingress og load balancers.</li>
-            <li><b>Nettverk:</b> mellom pods og ut av clusteret (egress).</li>
-            <li><b>Regler for workloads:</b> Pod Security og Azure Policy, og om de faktisk håndheves.</li>
-            <li><b>Secrets</b> og appenes Azure-identiteter.</li>
-            <li><b>Livssyklus:</b> versjoner, upgrade channels, add-ons og tredjepartskomponenter.</li>
-            <li><b>Oppdagelse:</b> logging, Defender og hvem som reagerer.</li>
-            <li><b>Images og pipeline.</b></li>
-            <li><b>Skille mellom appteam:</b> sjekk tilgang og nettverk mellom namespaces. Vurder separate clustere for gjensidig ubetrodde team.</li>
+            <li><b>Identity and access:</b> Entra ID, RBAC, local accounts, pipeline identity.</li>
+            <li><b>Exposure:</b> API server, ingress and load balancers.</li>
+            <li><b>Network:</b> between pods and out of the cluster (egress).</li>
+            <li><b>Rules for workloads:</b> Pod Security and Azure Policy, and whether they are actually enforced.</li>
+            <li><b>Secrets</b> and the apps' Azure identities.</li>
+            <li><b>Lifecycle:</b> versions, upgrade channels, add-ons and third-party components.</li>
+            <li><b>Detection:</b> logging, Defender and who responds.</li>
+            <li><b>Images and pipeline.</b></li>
+            <li><b>Separation between app teams:</b> check access and network between namespaces. Consider separate clusters for teams that do not trust each other.</li>
           </ul>
         </div>
         <div class="col no">
-          <h3>Mindre relevant nå</h3>
+          <h3>Less relevant for now</h3>
           <ul>
-            <li><b>Herding og patching av control plane</b> (API-server, etcd, scheduler): Microsoft drifter det.</li>
-            <li><b>CIS-sjekker av control plane-noder og -filer:</b> ikke synlige for kunden i AKS. <span class="tag">[inference]</span></li>
-            <li><b>Fysisk sikkerhet og hypervisor:</b> Microsoft.</li>
-            <li><b>FIPS node pools:</b> vurder når kravene tilsier validerte kryptografiske moduler.</li>
-            <li><b>Pod Sandboxing:</b> pods med Kata-runtime får egen kjerne. For <a href="https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview#limitations" target="_blank" rel="noopener">Confidential Containers (preview)</a> oppgir Microsoft kun Azure Linux 2.0, som er utfaset i AKS.</li>
-            <li><b>Service mesh og mTLS:</b> vurder hvis dette brukes som sikkerhetskontroll. <span class="tag">[inference]</span></li>
-            <li><b>Windows node pools:</b> bare hvis de finnes.</li>
+            <li><b>Hardening and patching the control plane</b> (API server, etcd, scheduler): Microsoft runs it.</li>
+            <li><b>CIS checks of control plane nodes and files:</b> not visible to the customer in AKS. <span class="tag">[inference]</span></li>
+            <li><b>Physical security and hypervisor:</b> Microsoft.</li>
+            <li><b>FIPS node pools:</b> consider when the requirements call for validated cryptographic modules.</li>
+            <li><b>Pod Sandboxing:</b> pods with the Kata runtime get their own kernel. For <a href="https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview#limitations" target="_blank" rel="noopener">Confidential Containers (preview)</a> Microsoft lists only Azure Linux 2.0, which is retired in AKS.</li>
+            <li><b>Service mesh and mTLS:</b> consider if this is used as a security control. <span class="tag">[inference]</span></li>
+            <li><b>Windows node pools:</b> only if they exist.</li>
           </ul>
         </div>
       </div>
-      <p class="note">AKS Automatic har Azure RBAC og Workload ID forhåndskonfigurert. Deployment safeguards og Pod Security-baseline håndheves som standard. For Workload ID, sjekk fødereringen, pod-etiketten og appens tilgang til målressursen.</p>
+      <p class="note">AKS Automatic has Azure RBAC and Workload ID pre-configured. Deployment safeguards and the Pod Security baseline are enforced by default. For Workload ID, check the federation, the pod label and the app's access to the target resource.</p>
     </section>
   </div>
 
   <!-- 6 RUNTIME -->
   <div class="panel" role="tabpanel" id="p-runtime" aria-labelledby="t-runtime" hidden>
     <section>
-      <h2>Runtime detection, kort fortalt</h2>
-      <p class="sub">Runtime detection kan oppdage mistenkelig aktivitet i kjørende workloads. Dekningen avhenger av sensorer, logger og regler. Det supplerer bildeskanning og admission control.</p>
+      <h2>Runtime detection in brief</h2>
+      <p class="sub">Runtime detection can spot suspicious activity in running workloads. Coverage depends on sensors, logs and rules. It complements image scanning and admission control.</p>
     </section>
 
     <section>
-      <h2>Seks steg for å innføre det</h2>
+      <h2>Six steps to introduce it</h2>
       <ol class="steps">
-        <li><div><h3>Start med trusselscenarioene</h3><p>Velg scenarioer som shell i container, privilegerte pods, Secret-lesing og tilgang til IMDS. Avklar hvilke hendelser og varsler verktøyet faktisk støtter.</p><p class="out"><b>Resultat:</b> 5-10 scenarioer med observerbare signaler.</p></div></li>
-        <li><div><h3>Kartlegg baseline per workload</h3><p>Kartlegg normale prosesser, utgående mål og filstier. Bruk dette til å vurdere varsler. Start med de mest eksponerte appene.</p><p class="out"><b>Resultat:</b> normal atferd per workload.</p></div></li>
-        <li><div><h3>Velg datakilder</h3><p>Kombiner relevante nodesensorer og Kubernetes audit-logger. Sjekk hvilke scenarioer verktøyet støtter, og test dekningen.</p><p class="out"><b>Resultat:</b> dekningskart: hvilket scenario fanges av hvilken kilde.</p></div></li>
-        <li><div><h3>Kjør i monitor-modus først</h3><p>Start med varsling og juster reglene. Vurder blokkering bare hvis verktøyet støtter det og konsekvensene er testet.</p><p class="out"><b>Resultat:</b> regelsett tunet mot egne workloads.</p></div></li>
-        <li><div><h3>Simuler angrep i et testmiljø</h3><p>Bruk verktøyets dokumenterte simuleringer, for eksempel <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool" target="_blank" rel="noopener">Defenders testsimuleringer</a>. Mål forventet varsel og forsinkelse. Et shell eller en filendring utløser ikke nødvendigvis et varsel.</p><p class="out"><b>Resultat:</b> testresultat per scenario, med tid til varsel.</p></div></li>
-        <li><div><h3>Definer driftsmodell før innføring</h3><p>Hvem triagerer varslene, i hvilket SIEM, hvor lenge logger beholdes, og hva er responsen: isolere pod, ta bilde av node, varsle appteamet. Mål falske positiver per uke og tid fra hendelse til varsel.</p><p class="out"><b>Resultat:</b> eier, responsrutine og nøkkeltall.</p></div></li>
+        <li><div><h3>Start with the threat scenarios</h3><p>Pick scenarios such as a shell in a container, privileged pods, Secret reads and access to IMDS. Find out which events and alerts the tool actually supports.</p><p class="out"><b>Result:</b> 5-10 scenarios with observable signals.</p></div></li>
+        <li><div><h3>Map a baseline per workload</h3><p>Map normal processes, outbound destinations and file paths. Use this to judge alerts. Start with the most exposed apps.</p><p class="out"><b>Result:</b> normal behaviour per workload.</p></div></li>
+        <li><div><h3>Choose data sources</h3><p>Combine relevant node sensors and Kubernetes audit logs. Check which scenarios the tool supports, and test the coverage.</p><p class="out"><b>Result:</b> coverage map: which scenario is caught by which source.</p></div></li>
+        <li><div><h3>Run in monitor mode first</h3><p>Start with alerting and tune the rules. Consider blocking only if the tool supports it and the consequences are tested.</p><p class="out"><b>Result:</b> rule set tuned to your own workloads.</p></div></li>
+        <li><div><h3>Simulate attacks in a test environment</h3><p>Use the tool's documented simulations, for example <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool" target="_blank" rel="noopener">Defender's test simulations</a>. Measure the expected alert and the delay. A shell or a file change does not necessarily trigger an alert.</p><p class="out"><b>Result:</b> test result per scenario, with time to alert.</p></div></li>
+        <li><div><h3>Define the operating model before rollout</h3><p>Who triages the alerts, in which SIEM, how long logs are kept, and what the response is: isolate the pod, take an image of the node, notify the app team. Measure false positives per week and time from event to alert.</p><p class="out"><b>Result:</b> owner, response routine and key figures.</p></div></li>
       </ol>
     </section>
 
     <section>
-      <h2>Hva kan oppdages?</h2>
-      <p class="sub">Dette er testscenarioer, ikke en garanti for dekning i Defender. Sjekk verktøyets støtte per OS og installasjon, og test forventede varsler.</p>
+      <h2>What can be detected?</h2>
+      <p class="sub">These are test scenarios, not a guarantee of coverage in Defender. Check the tool's support per OS and installation, and test the expected alerts.</p>
       <div class="cols">
         <div class="col yes">
-          <h3>Signaler å teste</h3>
+          <h3>Signals to test</h3>
           <ul>
-            <li><b>Kall til pods/exec</b> i audit-loggen, eller en shellprosess observert i containeren.</li>
-            <li><b>Binær som ikke fantes i imaget</b> og kjøres.</li>
-            <li><b>Endring av kritiske filer</b>, nye setuid-binærer.</li>
-            <li><b>Nye rolebindings</b> eller <code>get</code> på secrets i API-et.</li>
-            <li><b>Kontakt med kjente ondsinnede mål</b>, hvis threat intel er oppdatert.</li>
-            <li><b>Privilegerte pods, hostPath og hostNetwork</b>, som også kan sjekkes statisk.</li>
+            <li><b>Calls to pods/exec</b> in the audit log, or a shell process observed in the container.</li>
+            <li><b>A binary that was not in the image</b> and gets run.</li>
+            <li><b>Changes to critical files</b>, new setuid binaries.</li>
+            <li><b>New rolebindings</b> or <code>get</code> on secrets in the API.</li>
+            <li><b>Contact with known malicious destinations</b>, if threat intel is up to date.</li>
+            <li><b>Privileged pods, hostPath and hostNetwork</b>, which can also be checked statically.</li>
           </ul>
         </div>
         <div class="col no">
-          <h3>Falske positiver eller krever kontekst</h3>
+          <h3>False positives or need context</h3>
           <ul>
-            <li><b>Shell under legitim feilsøking</b> (kubectl debug, driftsarbeid).</li>
-            <li><b>Oppstartskript, cron-jobber, health checks</b> og package managers ved normal drift.</li>
-            <li><b>Kall mot IMDS</b> fra apper som bruker managed identity. <span class="tag">[inference]</span></li>
-            <li><b>Sidecars, init containers og DaemonSets</b> som ser ut som uventet prosess eller nettverk på noden.</li>
-            <li><b>Lasttest og service discovery</b> som ligner portscan.</li>
-            <li><b>Høy CPU eller krypto-bruk</b> i legitime apper.</li>
+            <li><b>A shell during legitimate troubleshooting</b> (kubectl debug, operations work).</li>
+            <li><b>Startup scripts, cron jobs, health checks</b> and package managers in normal operation.</li>
+            <li><b>Calls to IMDS</b> from apps that use managed identity. <span class="tag">[inference]</span></li>
+            <li><b>Sidecars, init containers and DaemonSets</b> that look like unexpected processes or network activity on the node.</li>
+            <li><b>Load tests and service discovery</b> that resemble a port scan.</li>
+            <li><b>High CPU or crypto use</b> in legitimate apps.</li>
           </ul>
         </div>
       </div>
-      <p class="note">Et varsel må vurderes mot hendelsen og konteksten før dere konkluderer.</p>
+      <p class="note">An alert must be assessed against the event and its context before you draw conclusions.</p>
     </section>
 
     <section>
-      <h2>Sjekk det statiske først</h2>
-      <p class="sub">Kommandoen sjekker eksisterende pod-spesifikasjoner. Den krever <code>jq</code> og tilgang til å liste pods i alle namespaces. Den er ikke kjørt mot et cluster her. <span class="tag">[unverified]</span></p>
-      <div class="cmd"><pre><code><span class="c"># Pods med hostNetwork, hostPID, privilegert container eller hostPath</span>
-kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or any((.spec.containers[]?, .spec.initContainers[]?, .spec.ephemeralContainers[]?); .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Kopier</button></div>
-      <p class="note">For Defender, se <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction" target="_blank" rel="noopener">Introduction to Microsoft Defender for Containers</a> før dere velger verktøy.</p>
+      <h2>Check the static part first</h2>
+      <p class="sub">The command checks existing pod specifications. It needs <code>jq</code> and permission to list pods in all namespaces. It has not been run against a cluster here. <span class="tag">[unverified]</span></p>
+      <div class="cmd"><pre><code><span class="c"># Pods with hostNetwork, hostPID, a privileged container or hostPath</span>
+kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or any((.spec.containers[]?, .spec.initContainers[]?, .spec.ephemeralContainers[]?); .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Copy</button></div>
+      <p class="note">For Defender, see <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction" target="_blank" rel="noopener">Introduction to Microsoft Defender for Containers</a> before you choose a tool.</p>
     </section>
   </div>
 
-  <!-- KILDER -->
-  <div class="panel" role="tabpanel" id="p-kilder" aria-labelledby="t-kilder" hidden>
+  <!-- SOURCES -->
+  <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
     <section>
-      <h2>Kilder</h2>
-      <p class="sub">Kontrollert mot primærkilder 1. november 2026. Anbefalinger og eksempler er ikke funn fra et undersøkt cluster.</p>
+      <h2>Sources</h2>
+      <p class="sub">Checked against primary sources on 1 November 2026. Recommendations and examples are not findings from an examined cluster.</p>
       <ol class="sources">
-        <li><a href="https://kubernetes-top10.owasp.org/" target="_blank" rel="noopener">OWASP Kubernetes Top Ten</a><span>2025- og 2022-lista, med beskrivelser av K01-K10.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/secure-aks" target="_blank" rel="noopener">Secure your Azure Kubernetes Service (AKS) deployment</a><span>Microsofts sikkerhetsanbefalinger for AKS.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">Security concepts for applications and clusters in AKS</a><span>Microsoft Learn. Ansvar for control plane, AKS Automatic, multi-tenancy, secrets, Azure Linux 2.0.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">Supported Kubernetes versions in AKS</a><span>Microsoft Learn. Støttepolicy, kalender og LTS.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-cluster-authorization" target="_blank" rel="noopener">Cluster authorization concepts</a> og <a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-reader" target="_blank" rel="noopener">AKS RBAC Reader</a><span>Autorisasjon og leserettigheter.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges" target="_blank" rel="noopener">API server authorized IP ranges</a><span>Microsoft Learn. Kommandoen for å lese IP-begrensningen.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/local-accounts" target="_blank" rel="noopener">Manage local accounts</a><span>Microsoft Learn. Feltet disableLocalAccounts.</span></li>
-        <li><a href="https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/" target="_blank" rel="noopener">Ingress NGINX Retirement: What You Need to Know</a><span>Kubernetes-bloggen, 11.11.2025.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-network-ingress" target="_blank" rel="noopener">Ingress in AKS</a> og <a href="https://blog.aks.azure.com/2025/11/13/ingress-nginx-update" target="_blank" rel="noopener">AKS-bloggen om Ingress-NGINX</a><span>Kritiske sikkerhetsfikser for NGINX i application routing ut november 2026.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/use-azure-ad-pod-identity" target="_blank" rel="noopener">Use Microsoft Entra pod-managed identities in AKS</a><span>Microsoft Learn. Avvikling og støtte til september 2025.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/api-server-vnet-integration" target="_blank" rel="noopener">API Server VNet Integration</a><span>Offentlig tilgang vurderes separat.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/azure-cni-powered-by-cilium" target="_blank" rel="noopener">Azure CNI Powered by Cilium</a><span>Policyer og begrensninger for hostNetwork.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/monitor-aks" target="_blank" rel="noopener">Monitor AKS</a><span>Valg av audit-logger og kostnader.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/kms-data-encryption-concepts" target="_blank" rel="noopener">Data encryption at rest</a><span>Lagringskryptering og KMS.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/use-pod-sandboxing" target="_blank" rel="noopener">Pod sandboxing</a><span>Støtte og begrensninger.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/nat-gateway/secure-nat-gateway" target="_blank" rel="noopener">Secure Azure NAT Gateway</a><span>NAT og separat trafikkfiltrering.</span></li>
-        <li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/" target="_blank" rel="noopener">Configure Service Accounts for Pods</a><span>Token og automatisk montering.</span></li>
-        <li><a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/" target="_blank" rel="noopener">Pod Security Standards</a> og <a href="https://kubernetes.io/docs/concepts/security/pod-security-admission/" target="_blank" rel="noopener">Pod Security Admission</a><span>Sikkerhetsnivåer og håndheving.</span></li>
-        <li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank" rel="noopener">Network Policies</a><span>Standardatferd og håndheving.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview" target="_blank" rel="noopener">Microsoft Entra Workload ID</a><span>Føderert autentisering for workloads.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/csi-secrets-store-driver" target="_blank" rel="noopener">Key Vault-provider for Secrets Store CSI Driver</a><span>Montering av secrets.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster" target="_blank" rel="noopener">Automatically upgrade an AKS cluster</a><span>Oppgraderingskanaler.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/aks/image-cleaner" target="_blank" rel="noopener">Image Cleaner</a><span>Opprydding og støttede node-typer.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest" target="_blank" rel="noopener">Azure CLI: az aks</a><span>Referanse for show og get-upgrades.</span></li>
-        <li><a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/" target="_blank" rel="noopener">Admission Control</a><span>Omfang og unntak for lesing.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/governance/policy/concepts/policy-for-kubernetes" target="_blank" rel="noopener">Azure Policy for Kubernetes</a><span>Gatekeeper-komponenter og håndheving.</span></li>
-        <li><a href="https://kubernetes.io/docs/concepts/security/rbac-good-practices/" target="_blank" rel="noopener">RBAC Good Practices</a><span>Tilgang via pod-oppretting og ServiceAccounts.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/support-matrix-defender-for-containers" target="_blank" rel="noopener">Defender for Containers: støttematrise</a><span>Dekning per OS, funksjon og installasjon.</span></li>
-        <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers" target="_blank" rel="noopener">Defender for Containers: varsler</a><span>Deteksjoner og dokumenterte testsimuleringer.</span></li>
-        <li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/" target="_blank" rel="noopener">kubectl get</a><span>Referanse for lesekommandoene.</span></li>
+        <li><a href="https://kubernetes-top10.owasp.org/" target="_blank" rel="noopener">OWASP Kubernetes Top Ten</a><span>The 2025 and 2022 lists, with descriptions of K01-K10.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/secure-aks" target="_blank" rel="noopener">Secure your Azure Kubernetes Service (AKS) deployment</a><span>Microsoft's security recommendations for AKS.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">Security concepts for applications and clusters in AKS</a><span>Microsoft Learn. Control plane responsibility, AKS Automatic, multi-tenancy, secrets, Azure Linux 2.0.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">Supported Kubernetes versions in AKS</a><span>Microsoft Learn. Support policy, calendar and LTS.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-cluster-authorization" target="_blank" rel="noopener">Cluster authorization concepts</a> and <a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-reader" target="_blank" rel="noopener">AKS RBAC Reader</a><span>Authorisation and read permissions.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges" target="_blank" rel="noopener">API server authorized IP ranges</a><span>Microsoft Learn. The command for reading the IP restriction.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/local-accounts" target="_blank" rel="noopener">Manage local accounts</a><span>Microsoft Learn. The disableLocalAccounts field.</span></li>
+        <li><a href="https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/" target="_blank" rel="noopener">Ingress NGINX Retirement: What You Need to Know</a><span>The Kubernetes blog, 11 Nov 2025.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-network-ingress" target="_blank" rel="noopener">Ingress in AKS</a> and <a href="https://blog.aks.azure.com/2025/11/13/ingress-nginx-update" target="_blank" rel="noopener">the AKS blog on Ingress-NGINX</a><span>Critical security fixes for NGINX in application routing until the end of November 2026.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/use-azure-ad-pod-identity" target="_blank" rel="noopener">Use Microsoft Entra pod-managed identities in AKS</a><span>Microsoft Learn. Deprecation and support until September 2025.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/api-server-vnet-integration" target="_blank" rel="noopener">API Server VNet Integration</a><span>Public access is assessed separately.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/azure-cni-powered-by-cilium" target="_blank" rel="noopener">Azure CNI Powered by Cilium</a><span>Policies and limitations for hostNetwork.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/monitor-aks" target="_blank" rel="noopener">Monitor AKS</a><span>Choice of audit logs and costs.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/kms-data-encryption-concepts" target="_blank" rel="noopener">Data encryption at rest</a><span>Storage encryption and KMS.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/use-pod-sandboxing" target="_blank" rel="noopener">Pod sandboxing</a><span>Support and limitations.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/nat-gateway/secure-nat-gateway" target="_blank" rel="noopener">Secure Azure NAT Gateway</a><span>NAT and separate traffic filtering.</span></li>
+        <li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/" target="_blank" rel="noopener">Configure Service Accounts for Pods</a><span>Token and automatic mounting.</span></li>
+        <li><a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/" target="_blank" rel="noopener">Pod Security Standards</a> and <a href="https://kubernetes.io/docs/concepts/security/pod-security-admission/" target="_blank" rel="noopener">Pod Security Admission</a><span>Security levels and enforcement.</span></li>
+        <li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" target="_blank" rel="noopener">Network Policies</a><span>Default behaviour and enforcement.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview" target="_blank" rel="noopener">Microsoft Entra Workload ID</a><span>Federated authentication for workloads.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/csi-secrets-store-driver" target="_blank" rel="noopener">Key Vault provider for Secrets Store CSI Driver</a><span>Mounting secrets.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster" target="_blank" rel="noopener">Automatically upgrade an AKS cluster</a><span>Upgrade channels.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/image-cleaner" target="_blank" rel="noopener">Image Cleaner</a><span>Clean-up and supported node types.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest" target="_blank" rel="noopener">Azure CLI: az aks</a><span>Reference for show and get-upgrades.</span></li>
+        <li><a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/" target="_blank" rel="noopener">Admission Control</a><span>Scope and the exception for reads.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/governance/policy/concepts/policy-for-kubernetes" target="_blank" rel="noopener">Azure Policy for Kubernetes</a><span>Gatekeeper components and enforcement.</span></li>
+        <li><a href="https://kubernetes.io/docs/concepts/security/rbac-good-practices/" target="_blank" rel="noopener">RBAC Good Practices</a><span>Access through pod creation and ServiceAccounts.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/support-matrix-defender-for-containers" target="_blank" rel="noopener">Defender for Containers: support matrix</a><span>Coverage per OS, feature and installation.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers" target="_blank" rel="noopener">Defender for Containers: alerts</a><span>Detections and documented test simulations.</span></li>
+        <li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/" target="_blank" rel="noopener">kubectl get</a><span>Reference for the read commands.</span></li>
       </ol>
     </section>
   </div>
 
   <footer>
-    <p>Eksemplene og prioriteringene er veiledning. Ingen cluster er undersøkt.</p>
-    <p>Kommandoene er sjekket mot dokumentasjonen. Podfilteret er testet på eksempeldata.</p>
-    <p>Datoer og versjoner endrer seg. Sjekk «Aktuelt»-boksen mot kildene før du bruker den i en rapport.</p>
+    <p>The examples and priorities are guidance. No cluster has been examined.</p>
+    <p>The commands have been checked against the documentation. The pod filter has been tested on sample data.</p>
+    <p>Dates and versions change. Check the “Current” box against the sources before you use it in a report.</p>
   </footer>
 </div>
 
@@ -819,11 +820,11 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   function $(s, r){ return (r || document).querySelector(s); }
   function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
 
-  /* Faner */
+  /* Tabs */
   var tabs = $$('[role="tab"]');
   var ids = tabs.map(function(t){ return t.getAttribute('data-tab'); });
   function show(id, focus){
-    if (ids.indexOf(id) < 0) id = 'grunnlag';
+    if (ids.indexOf(id) < 0) id = 'basics';
     tabs.forEach(function(t){
       var on = t.getAttribute('data-tab') === id;
       t.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -850,19 +851,19 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   var start = (location.hash || '').replace('#', '');
   var prevTab = store.get('aks-tab', null);
   var archSeen = store.get('aks-arch-seen', false);
-  /* Den som har brukt siden før, ser den nye fanen én gang */
-  show(ids.indexOf(start) >= 0 ? start : (prevTab && !archSeen ? 'arkitektur' : (prevTab || 'grunnlag')));
+  /* Returning visitors see the new tab once */
+  show(ids.indexOf(start) >= 0 ? start : (prevTab && !archSeen ? 'architecture' : (prevTab || 'basics')));
   store.set('aks-arch-seen', true);
 
-  /* Ansvarsstabel */
+  /* Responsibility stack */
   var layers = [
-    { t: 'Pipeline og container registry', d: 'Ofte eier plattformteamet container registry og pipeline-malene, mens appteamene bygger egne images.', s: 'Ser etter: images uten verifisert opphav, ingen skanning, pipeline med cluster-admin eller lagrede secrets.' },
-    { t: 'Workloads', d: 'Appteamene skriver YAML eller Helm-charts, velger images og bestemmer hvordan appen bruker secrets, innenfor plattformens regler.', s: 'Ser etter: root og privilegerte containere, secrets i YAML, manglende network policies for egen app.' },
-    { t: 'Namespaces og tilganger', d: 'Plattformteamet lager namespaces, tilganger og regler. Appteamene jobber innenfor dem.', s: 'Ser etter: appteam med rettigheter i hele clusteret, prod og test i samme namespace, svake skiller mellom team.' },
-    { t: 'Plattformtjenester i clusteret', d: 'Felles komponenter plattformteamet følger opp: ingress eller gateway, Azure Policy, logging, Secrets Store CSI Driver, GitOps-agent.', s: 'Ser etter: utdaterte komponenter som ingress-nginx, policyer bare i audit-modus, manglende eier.' },
-    { t: 'Noder', d: 'Microsoft leverer støttede node-images. I Standard velger kunden oppgraderingsoppsett; Automatic håndterer mer av driften.', s: 'Ser etter: node OS upgrade channel av, Azure Linux 2.0, SSH-tilgang som ikke trengs.' },
-    { t: 'Cluster-konfigurasjon', d: 'Sjekk identitet, API-tilgang, nettverk, oppgraderinger og tillegg. Hvilke valg plattformteamet styrer, avhenger av AKS-modus.', s: 'Ser etter: unødvendig API-eksponering, lokale kontoer og mangler i oppdatering, deteksjon eller policyhåndheving.' },
-    { t: 'Control plane', d: 'Microsoft drifter, herder og patcher API-server, etcd og scheduler. Hvert cluster har sitt eget control plane.', s: 'Vurder kundestyrt konfigurasjon, versjon, tilgang, policy og logging. Microsoft drifter infrastrukturen.' }
+    { t: 'Pipeline and container registry', d: 'The platform team often owns the container registry and the pipeline templates, while the app teams build their own images.', s: 'Look for: images with no verified origin, no scanning, pipelines with cluster-admin or stored secrets.' },
+    { t: 'Workloads', d: 'The app teams write YAML or Helm charts, choose images and decide how the app uses secrets, within the platform\'s rules.', s: 'Look for: root and privileged containers, secrets in YAML, missing network policies for their own app.' },
+    { t: 'Namespaces and access', d: 'The platform team creates namespaces, access and rules. The app teams work within them.', s: 'Look for: app teams with rights across the whole cluster, prod and test in the same namespace, weak separation between teams.' },
+    { t: 'Platform services in the cluster', d: 'Shared components the platform team looks after: ingress or gateway, Azure Policy, logging, Secrets Store CSI Driver, GitOps agent.', s: 'Look for: outdated components such as ingress-nginx, policies in audit mode only, no owner.' },
+    { t: 'Nodes', d: 'Microsoft supplies supported node images. In Standard the customer chooses the upgrade setup; Automatic handles more of the operations.', s: 'Look for: node OS upgrade channel off, Azure Linux 2.0, SSH access that is not needed.' },
+    { t: 'Cluster configuration', d: 'Check identity, API access, network, upgrades and add-ons. Which choices the platform team controls depends on the AKS mode.', s: 'Look for: unnecessary API exposure, local accounts, and gaps in updates, detection or policy enforcement.' },
+    { t: 'Control plane', d: 'Microsoft operates, hardens and patches the API server, etcd and scheduler. Each cluster has its own control plane.', s: 'Assess the customer-controlled parts: configuration, version, access, policy and logging. Microsoft runs the infrastructure.' }
   ];
   var layerBtns = $$('.layer');
   var detail = $('#layerDetail');
@@ -877,12 +878,12 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   }
   layerBtns.forEach(function(b){ b.addEventListener('click', function(){ pick(Number(b.getAttribute('data-layer'))); }); });
 
-  /* Spørsmål */
+  /* Questions */
   var qs = $$('#qlist input');
   var qState = store.get('aks-q', {});
   function qCount(){
     var n = qs.filter(function(q){ return q.checked; }).length;
-    $('#qCount').textContent = n + ' av ' + qs.length + ' avklart';
+    $('#qCount').textContent = n + ' of ' + qs.length + ' settled';
   }
   qs.forEach(function(q){
     q.checked = !!qState[q.id];
@@ -890,7 +891,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   });
   qCount();
 
-  /* Kopier */
+  /* Copy */
   function selectNode(node){
     try { var r = document.createRange(); r.selectNodeContents(node); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch(e){}
   }
@@ -903,19 +904,19 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     btn.addEventListener('click', function(){
       var code = btn.parentNode.querySelector('code');
       copyText(code.textContent, function(){
-        btn.textContent = 'Kopiert';
-        setTimeout(function(){ btn.textContent = 'Kopier'; }, 1600);
+        btn.textContent = 'Copied';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 1600);
       }, function(){
         selectNode(code);
-        btn.textContent = 'Merket, kopier selv';
-        setTimeout(function(){ btn.textContent = 'Kopier'; }, 2400);
+        btn.textContent = 'Selected, copy it yourself';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 2400);
       });
     });
   });
 
   /* Status */
-  var OPTS = [['ok','OK'],['part','Delvis'],['miss','Mangler'],['unk','Ukjent']];
-  var LABEL = { ok:'OK', part:'Delvis', miss:'Mangler', unk:'Ukjent' };
+  var OPTS = [['ok','OK'],['part','Partial'],['miss','Missing'],['unk','Unknown']];
+  var LABEL = { ok:'OK', part:'Partial', miss:'Missing', unk:'Unknown' };
   var status = store.get('aks-status', {});
   var segs = $$('.seg');
   segs.forEach(function(seg){
@@ -950,25 +951,25 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
 
   function summary(){
     var d = new Date();
-    var lines = ['AKS-sikkerhetsvurdering, status ' + d.toLocaleDateString('nb-NO'), ''];
+    var lines = ['AKS security assessment, status ' + d.toLocaleDateString('en-GB'), ''];
     segs.forEach(function(s){
       var id = s.getAttribute('data-id');
       var art = s.closest('.risk');
       var name = art ? art.getAttribute('data-title') : id;
-      lines.push((id === 'SC' ? 'Ekstra' : id) + ' ' + name + ': ' + (LABEL[status[id]] || 'Ikke vurdert'));
+      lines.push((id === 'SC' ? 'Extra' : id) + ' ' + name + ': ' + (LABEL[status[id]] || 'Not assessed'));
     });
     var n = qs.filter(function(q){ return q.checked; }).length;
-    lines.push('', 'Spørsmål til plattformteamet: ' + n + ' av ' + qs.length + ' avklart');
+    lines.push('', 'Questions for the platform team: ' + n + ' of ' + qs.length + ' settled');
     return lines.join('\n');
   }
   var out = $('#summaryOut'), msg = $('#copyMsg');
   $('#copySummary').addEventListener('click', function(){
     var text = summary();
     copyText(text, function(){
-      out.hidden = true; msg.textContent = 'Kopiert til utklippstavlen.';
+      out.hidden = true; msg.textContent = 'Copied to the clipboard.';
     }, function(){
       out.value = text; out.hidden = false; out.focus(); out.select();
-      msg.textContent = 'Teksten er merket. Kopier den selv.';
+      msg.textContent = 'The text is selected. Copy it yourself.';
     });
   });
   $('#resetBtn').addEventListener('click', function(){ $('#resetConfirm').hidden = false; $('#resetBtn').hidden = true; });
@@ -978,15 +979,15 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     $$('.seg input').forEach(function(i){ i.checked = false; });
     tally();
     $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false;
-    msg.textContent = 'Statusen er nullstilt.';
+    msg.textContent = 'The status has been reset.';
   });
 
   /* Filter */
   var DESC = {
-    alle: 'Viser alle punktene. Koblingen mellom attack path og punkt er min vurdering.',
-    tilgang: 'Stolen credentials: En angriper kan misbruke stjålne påloggingsdata hvis API-serveren er tilgjengelig og identiteten har tilgang.',
-    app: 'Compromised workload: en angriper utnytter en feil i en app og får kjøre kode i en pod. Spørsmålet er hvor langt de kommer derfra.',
-    leveranse: 'Supply chain: Et manipulert image eller en kompromittert pipeline kan føre skadelig kode inn i clusteret.'
+    all: 'Showing all items. The link between attack path and item is my own assessment.',
+    credentials: 'Stolen credentials: An attacker can misuse stolen sign-in data if the API server is reachable and the identity has access.',
+    workload: 'Compromised workload: an attacker exploits a flaw in an app and gets to run code in a pod. The question is how far they get from there.',
+    supply: 'Supply chain: A tampered image or a compromised pipeline can bring malicious code into the cluster.'
   };
   var chips = $$('.chip');
   var desc = $('#pathDesc');
@@ -995,7 +996,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       var p = ch.getAttribute('data-path');
       chips.forEach(function(c){ c.setAttribute('aria-pressed', c === ch ? 'true' : 'false'); });
       $$('.risk').forEach(function(r){
-        r.hidden = !(p === 'alle' || (' ' + r.getAttribute('data-paths') + ' ').indexOf(' ' + p + ' ') >= 0);
+        r.hidden = !(p === 'all' || (' ' + r.getAttribute('data-paths') + ' ').indexOf(' ' + p + ' ') >= 0);
       });
       desc.textContent = DESC[p] + ' ';
       var tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = '[inference]';
@@ -1003,7 +1004,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     });
   });
 
-  /* Risikokart */
+  /* Risk map */
   var NS = 'http://www.w3.org/2000/svg';
   var dgReady = false;
   var dgSvg = document.getElementById('dg');
@@ -1013,36 +1014,36 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   var ST = ['st-none','st-ok','st-part','st-miss','st-unk'];
 
   var ZONES = [
-    { x:20,   y:64,  w:230,  h:508, n:'1', t:'Kode og bygg',          o:'APPTEAM OG PLATTFORM' },
-    { x:280,  y:64,  w:280,  h:508, n:'2', t:'Tilgang og styring',    o:'PLATTFORM' },
-    { x:590,  y:64,  w:420,  h:508, n:'3', t:'Kjøring i clusteret',   o:'PLATTFORM OG APPTEAM' },
-    { x:1040, y:64,  w:180,  h:508, n:'4', t:'Azure og internett',    o:'DELT' },
-    { x:20,   y:604, w:1200, h:136, n:'5', t:'Overvåking og respons', o:'PLATTFORM OG SOC', cw:280, note:'Samler logger og varsler fra alle lag' }
+    { x:20,   y:64,  w:230,  h:508, n:'1', t:'Code and build',          o:'APP TEAM AND PLATFORM' },
+    { x:280,  y:64,  w:280,  h:508, n:'2', t:'Access and control',      o:'PLATFORM' },
+    { x:590,  y:64,  w:420,  h:508, n:'3', t:'Running in the cluster',  o:'PLATFORM AND APP TEAM' },
+    { x:1040, y:64,  w:180,  h:508, n:'4', t:'Azure and internet',      o:'SHARED' },
+    { x:20,   y:604, w:1200, h:136, n:'5', t:'Monitoring and response', o:'PLATFORM AND SOC', cw:280, note:'Collects logs and alerts from all layers' }
   ];
-  /* st = steg i verdikjeden (1 til 5) */
+  /* st = step in the value chain (1 to 5) */
   var COMP = {
-    dev:   { x:36,   y:116, w:198, h:52,  st:1, t:'Utviklere',          s:'Appteam skriver kode og YAML' },
-    git:   { x:36,   y:194, w:198, h:76,  st:1, t:'Git-repo',           s:'Kode, YAML, Helm values' },
-    ci:    { x:36,   y:290, w:198, h:76,  st:1, t:'CI/CD-pipeline',     s:'Bygger, skanner, deployer' },
+    dev:   { x:36,   y:116, w:198, h:52,  st:1, t:'Developers',         s:'App team writes code and YAML' },
+    git:   { x:36,   y:194, w:198, h:76,  st:1, t:'Git repo',           s:'Code, YAML, Helm values' },
+    ci:    { x:36,   y:290, w:198, h:76,  st:1, t:'CI/CD pipeline',     s:'Builds, scans, deploys' },
     acr:   { x:36,   y:400, w:198, h:76,  st:1, t:'Container registry', s:'Azure Container Registry' },
-    entra: { x:296,  y:116, w:116, h:80,  st:2, t:'Entra ID',           s:'Pålogging, MFA' },
-    arm:   { x:428,  y:116, w:116, h:80,  st:2, t:'Azure (ARM)',        s:'AKS-ressursen' },
-    api:   { x:300,  y:276, w:240, h:76,  st:2, t:'API server',         s:'Kall til Kubernetes-API-et' },
-    adm:   { x:300,  y:372, w:240, h:76,  st:2, t:'Admission control',  s:'Pod Security, webhook-kall' },
-    etcd:  { x:300,  y:468, w:240, h:72,  st:2, t:'etcd',               s:'Cluster-tilstand og Secrets' },
+    entra: { x:296,  y:116, w:116, h:80,  st:2, t:'Entra ID',           s:'Sign-in, MFA' },
+    arm:   { x:428,  y:116, w:116, h:80,  st:2, t:'Azure (ARM)',        s:'The AKS resource' },
+    api:   { x:300,  y:276, w:240, h:76,  st:2, t:'API server',         s:'Calls to the Kubernetes API' },
+    adm:   { x:300,  y:372, w:240, h:76,  st:2, t:'Admission control',  s:'Pod Security, webhook calls' },
+    etcd:  { x:300,  y:468, w:240, h:72,  st:2, t:'etcd',               s:'Cluster state and Secrets' },
     nsA:   { x:606,  y:116, w:188, h:96,  st:3, t:'Namespace: team A',  s:'Pods, ServiceAccounts', s2:'Secrets, NetworkPolicy', short:'Namespace' },
-    nsB:   { x:606,  y:252, w:188, h:76,  st:3, t:'Namespace: team B',  s:'Samme oppsett per team' },
-    ing:   { x:828,  y:116, w:166, h:84,  st:3, t:'Ingress / Gateway',  s:'Trafikk inn' },
-    egress:{ x:828,  y:252, w:166, h:84,  st:3, t:'Egress-kontroll',    s:'Filtrering av utgående trafikk' },
-    plat:  { x:606,  y:360, w:388, h:76,  st:3, t:'Plattformkomponenter', s:'Azure Policy, operators, CSI, logging, Defender' },
-    nodes: { x:606,  y:460, w:388, h:76,  st:3, t:'Node pools',         s:'VM-baserte noder med kubelet og node-OS' },
-    ew:    { link:true, mx:683, my:223,  st:3, t:'Øst-vest-trafikk mellom namespaces', short:'Øst-vest-trafikk' },
-    inet:  { x:1056, y:116, w:148, h:220, st:4, t:'Internett',          s:'Brukere inn', s2:'Eksterne API-er ut' },
-    kv:    { x:1056, y:360, w:148, h:76,  st:4, t:'Key Vault',          s:'Secrets og nøkler' },
-    data:  { x:1056, y:460, w:148, h:76,  st:4, t:'Data-tjenester',     s:'SQL, Storage o.l.' },
-    logs:  { x:36,   y:646, w:378, h:76,  st:5, t:'Log Analytics',      s:'Audit- og autentiseringslogger' },
-    def:   { x:430,  y:646, w:378, h:76,  st:5, t:'Defender for Containers', s:'Skanning og runtime-varsler' },
-    soc:   { x:824,  y:646, w:378, h:76,  st:5, t:'SOC / SIEM',         s:'Hvem reagerer på varslene?' }
+    nsB:   { x:606,  y:252, w:188, h:76,  st:3, t:'Namespace: team B',  s:'Same setup per team' },
+    ing:   { x:828,  y:116, w:166, h:84,  st:3, t:'Ingress / Gateway',  s:'Inbound traffic' },
+    egress:{ x:828,  y:252, w:166, h:84,  st:3, t:'Egress control',     s:'Filtering of outbound traffic' },
+    plat:  { x:606,  y:360, w:388, h:76,  st:3, t:'Platform components', s:'Azure Policy, operators, CSI, logging, Defender' },
+    nodes: { x:606,  y:460, w:388, h:76,  st:3, t:'Node pools',         s:'VM-based nodes with kubelet and node OS' },
+    ew:    { link:true, mx:683, my:223,  st:3, t:'East-west traffic between namespaces', short:'East-west traffic' },
+    inet:  { x:1056, y:116, w:148, h:220, st:4, t:'Internet',           s:'Users in', s2:'External APIs out' },
+    kv:    { x:1056, y:360, w:148, h:76,  st:4, t:'Key Vault',          s:'Secrets and keys' },
+    data:  { x:1056, y:460, w:148, h:76,  st:4, t:'Data services',      s:'SQL, Storage and so on' },
+    logs:  { x:36,   y:646, w:378, h:76,  st:5, t:'Log Analytics',      s:'Audit and authentication logs' },
+    def:   { x:430,  y:646, w:378, h:76,  st:5, t:'Defender for Containers', s:'Scanning and runtime alerts' },
+    soc:   { x:824,  y:646, w:378, h:76,  st:5, t:'SOC / SIEM',         s:'Who responds to the alerts?' }
   };
   var ARROWS = [
     { d:'M135 168 V194', l:'commit', x:142, y:185 },
@@ -1050,56 +1051,56 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     { d:'M135 366 V400', l:'push image', x:142, y:387 },
     { d:'M234 142 H296', l:'login', x:265, y:136, a:'middle' },
     { d:'M234 326 H300', l:'deploy', x:267, y:320, a:'middle' },
-    { d:'M224 168 V180 H252 V292 H300', l:'API-kall', x:258, y:238 },
-    { d:'M486 196 V276', l:'konfig', x:492, y:236 },
-    { d:'M420 352 V372', l:'valider', x:428, y:366 },
-    { d:'M420 448 V468', l:'lagre', x:428, y:462 },
-    { d:'M540 330 H572 V498 H606', l:'API-server og kubelet', x:584, y:414, rot:true, both:true },
-    { d:'M1056 150 H994', l:'HTTPS inn', x:1025, y:144, a:'middle' },
-    { d:'M828 150 H794', l:'ruter', x:811, y:144, a:'middle' },
-    { d:'M700 212 V252', l:'øst-vest', x:722, y:236, dash:true, both:true },
-    { d:'M794 294 H828', l:'ut', x:811, y:288, a:'middle' },
+    { d:'M224 168 V180 H252 V292 H300', l:'API calls', x:258, y:238 },
+    { d:'M486 196 V276', l:'config', x:492, y:236 },
+    { d:'M420 352 V372', l:'validate', x:428, y:366 },
+    { d:'M420 448 V468', l:'store', x:428, y:462 },
+    { d:'M540 330 H572 V498 H606', l:'API server and kubelet', x:584, y:414, rot:true, both:true },
+    { d:'M1056 150 H994', l:'HTTPS in', x:1025, y:144, a:'middle' },
+    { d:'M828 150 H794', l:'routes', x:811, y:144, a:'middle' },
+    { d:'M700 212 V252', l:'east-west', x:722, y:236, dash:true, both:true },
+    { d:'M794 294 H828', l:'out', x:811, y:288, a:'middle' },
     { d:'M994 294 H1056', l:'egress', x:1025, y:288, a:'middle' },
     { d:'M994 398 H1056', l:'secrets', x:1025, y:392, a:'middle' },
-    { d:'M994 498 H1056', l:'tilgang', x:1025, y:492, a:'middle' },
+    { d:'M994 498 H1056', l:'access', x:1025, y:492, a:'middle' },
     { d:'M800 536 V588 H135 V476', l:'image pull', x:470, y:583, a:'middle' }
   ];
-  /* [risiko, komponent, hvorfor den ligger her] */
+  /* [risk, component, why it sits here] */
   var PLACE = [
-    ['K01','git','Manifest og Helm-charts angir ønsket oppsett. Admission kan endre det. Sjekk securityContext, hostPath og hostNetwork i den faktiske podden.'],
-    ['K01','nsA','Usikre innstillinger tar effekt når podden kjører.'],
-    ['K01','nodes','Et containerutbrudd kan ramme noden og andre pods på den.'],
-    ['K02','arm','Azure-roller på AKS-ressursen styrer hvem som kan endre oppsettet og hente kubeconfig.'],
-    ['K02','api','Sjekk hvilken autorisasjon clusteret bruker for Entra-identiteter. Kubernetes RBAC styrer rettighetene til ServiceAccounts.'],
-    ['K02','ci','Gi deploy-identiteten bare nødvendige rettigheter. Microsoft fraråder cluster-admin for pipelines.'],
-    ['K02','nsA','ServiceAccounts med roller som kan lese secrets eller opprette pods.'],
-    ['K03','git','Secrets i kode, YAML eller Helm values.'],
-    ['K03','ci','Lagrede credentials i pipeline-variabler.'],
-    ['K03','etcd','Secrets lagres her med plattformens lagringskryptering. Vurder KMS ved behov.'],
-    ['K03','nsA','Vurder hvem som kan lese Secrets direkte eller gjennom pods, miljøvariabler og logger.'],
-    ['K03','kv','Key Vault kan levere secrets via SDK eller Secrets Store CSI Driver.'],
-    ['K04','adm','Admission control kan avvise endringer og enkelte tilkoblinger. Lesing av objekter går utenom.'],
-    ['K04','plat','Azure Policy bruker Gatekeeper-pods i clusteret. Kontroller policyer, håndheving og unntak.'],
-    ['K04','arm','Azure Policy-tildelinger, effekt, for eksempel Deny eller Audit, og unntak styres i Azure.'],
-    ['K05','ew','Trafikk mellom namespaces er tillatt som standard; sjekk hvilke nettverkskontroller som begrenser den.'],
-    ['K05','egress','Begrens utgående trafikk til nødvendige mål. NAT alene filtrerer ikke mål.'],
-    ['K06','api','Offentlig endepunkt som standard. Bør være privat eller begrenset til kjente IP-adresser.'],
-    ['K06','ing','Hvilke Services og ruter er eksponert mot internett, og skal de være det?'],
-    ['K07','ing','Ingress NGINX får ingen sikkerhetsfikser fra prosjektet etter mars 2026. Microsoft støtter kritiske sikkerhetsfikser for NGINX i application routing ut november 2026.'],
-    ['K07','plat','Add-ons, operators og tredjepartskomponenter trenger eier og oppdateringsrutine.'],
-    ['K07','nodes','Kubernetes-versjon, node-OS og upgrade channel. Azure Linux 2.0 får ikke lenger patcher.'],
-    ['K08','nsA','Workload identity knytter en ServiceAccount til en Entra-identitet. Sjekk identitetens tilganger på målressursene.'],
-    ['K08','nodes','Hvis IMDS er tilgjengelig, kan en pod forsøke å hente token for en managed identity på noden.'],
-    ['K08','data','Målet: Azure-ressurser som nås med en identitet hentet fra clusteret.'],
-    ['K09','entra','MFA og Conditional Access for menneskelige administratorer; egne kontroller for maskinidentiteter.'],
-    ['K09','api','Lokale kontoer og admin-kubeconfig går utenom Entra ID.'],
-    ['K09','ci','Pipelinen bør bruke workload identity federation, ikke lagrede credentials.'],
-    ['K10','logs','Send relevante control plane-logger til valgt loggmål, for eksempel Log Analytics, med diagnostic settings.'],
-    ['K10','def','Defender kan varsle om mistenkelige API-kall og aktivitet i kjørende workloads.'],
-    ['K10','soc','Varsler trenger en avtalt eier og responsrutine.'],
-    ['SC','git','Avhengigheter og base-images velges her.'],
-    ['SC','ci','Skanning i CI. En pipeline mange kan endre, er selv et mål.'],
-    ['SC','acr','Sjekk hvilke images som skannes, og når de sist ble skannet.']
+    ['K01','git','Manifests and Helm charts define the desired setup. Admission can change it. Check securityContext, hostPath and hostNetwork in the actual pod.'],
+    ['K01','nsA','Insecure settings take effect when the pod runs.'],
+    ['K01','nodes','A container breakout can hit the node and other pods on it.'],
+    ['K02','arm','Azure roles on the AKS resource control who can change the setup and fetch the kubeconfig.'],
+    ['K02','api','Check which authorisation the cluster uses for Entra identities. Kubernetes RBAC controls the permissions of ServiceAccounts.'],
+    ['K02','ci','Give the deploy identity only the permissions it needs. Microsoft advises against cluster-admin for pipelines.'],
+    ['K02','nsA','ServiceAccounts with roles that can read secrets or create pods.'],
+    ['K03','git','Secrets in code, YAML or Helm values.'],
+    ['K03','ci','Stored credentials in pipeline variables.'],
+    ['K03','etcd','Secrets are stored here with the platform\'s storage encryption. Consider KMS where needed.'],
+    ['K03','nsA','Consider who can read Secrets directly or through pods, environment variables and logs.'],
+    ['K03','kv','Key Vault can deliver secrets through the SDK or the Secrets Store CSI Driver.'],
+    ['K04','adm','Admission control can reject changes and some connections. Reading objects bypasses it.'],
+    ['K04','plat','Azure Policy uses Gatekeeper pods in the cluster. Check policies, enforcement and exceptions.'],
+    ['K04','arm','Azure Policy assignments, the effect (for example Deny or Audit) and exceptions are managed in Azure.'],
+    ['K05','ew','Traffic between namespaces is allowed by default; check which network controls restrict it.'],
+    ['K05','egress','Limit outbound traffic to the necessary destinations. NAT alone does not filter destinations.'],
+    ['K06','api','Public endpoint by default. It should be private or limited to known IP addresses.'],
+    ['K06','ing','Which Services and routes are exposed to the internet, and should they be?'],
+    ['K07','ing','Ingress NGINX gets no security fixes from the project after March 2026. Microsoft supports critical security fixes for NGINX in application routing until the end of November 2026.'],
+    ['K07','plat','Add-ons, operators and third-party components need an owner and an update routine.'],
+    ['K07','nodes','Kubernetes version, node OS and upgrade channel. Azure Linux 2.0 no longer gets patches.'],
+    ['K08','nsA','Workload identity ties a ServiceAccount to an Entra identity. Check the identity\'s access to the target resources.'],
+    ['K08','nodes','If IMDS is reachable, a pod can try to fetch a token for a managed identity on the node.'],
+    ['K08','data','The target: Azure resources reached with an identity obtained from the cluster.'],
+    ['K09','entra','MFA and Conditional Access for human administrators; separate controls for machine identities.'],
+    ['K09','api','Local accounts and the admin kubeconfig bypass Entra ID.'],
+    ['K09','ci','The pipeline should use workload identity federation, not stored credentials.'],
+    ['K10','logs','Send the relevant control plane logs to the chosen log destination, for example Log Analytics, with diagnostic settings.'],
+    ['K10','def','Defender can alert on suspicious API calls and activity in running workloads.'],
+    ['K10','soc','Alerts need an agreed owner and a response routine.'],
+    ['SC','git','Dependencies and base images are chosen here.'],
+    ['SC','ci','Scanning in CI. A pipeline that many people can change is itself a target.'],
+    ['SC','acr','Check which images are scanned, and when they were last scanned.']
   ];
 
   var boxEls = {}, mkEls = [], selRisk = null, selComp = null, lastAnchor = null;
@@ -1127,7 +1128,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   function placesOf(r){ return PLACE.filter(function(p){ return p[0] === r; }); }
   function placesAt(id){ return PLACE.filter(function(p){ return p[1] === id; }); }
   function stOf(r){ return status[r] || 'none'; }
-  function stText(r){ return LABEL[status[r]] || 'Ikke vurdert'; }
+  function stText(r){ return LABEL[status[r]] || 'Not assessed'; }
   function setSt(e, r){ ST.forEach(function(s){ e.classList.remove(s); }); e.classList.add('st-' + stOf(r)); }
   function markerEl(r, id){
     for (var i = 0; i < mkEls.length; i++) if (mkEls[i].getAttribute('data-r') === r && mkEls[i].getAttribute('data-c') === id) return mkEls[i];
@@ -1151,7 +1152,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       if (z.note) svgText(dgSvg, z.x + z.w - 16, cy + 16, 'note-t', z.note, 'end');
     });
     svgEl('rect', { x:290, y:248, width:260, height:314, rx:8, 'class':'zn-ms' }, dgSvg);
-    svgText(dgSvg, 420, 556, 'ms-t', 'CONTROL PLANE · MICROSOFT DRIFTER', 'middle');
+    svgText(dgSvg, 420, 556, 'ms-t', 'CONTROL PLANE · RUN BY MICROSOFT', 'middle');
 
     ARROWS.forEach(function(a){
       var p = svgEl('path', { d:a.d, 'class':'ln' + (a.dash ? ' dash' : ''), 'marker-end':'url(#dgArrow)' }, dgSvg);
@@ -1167,7 +1168,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       if (c.s) svgText(g, c.x + 10, c.y + 39, 's', c.s);
       if (c.s2) svgText(g, c.x + 10, c.y + 53, 's', c.s2);
       var n = placesAt(id).length;
-      g.setAttribute('aria-label', c.t + ': ' + n + (n === 1 ? ' risiko' : ' risikoer'));
+      g.setAttribute('aria-label', c.t + ': ' + n + (n === 1 ? ' risk' : ' risks'));
       boxEls[id] = g;
     });
 
@@ -1204,19 +1205,19 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     if (!el) return;
     if (selRisk){
       var ps = placesOf(selRisk);
-      el.textContent = selRisk + ' ' + riskTitle(selRisk) + ' ligger i ' + ps.length + (ps.length === 1 ? ' del' : ' deler') + ' av arkitekturen: ' +
+      el.textContent = selRisk + ' ' + riskTitle(selRisk) + ' appears in ' + ps.length + (ps.length === 1 ? ' part' : ' parts') + ' of the architecture: ' +
         ps.map(function(p){ return COMP[p[1]].t; }).join(', ') + '. Status: ' + stText(selRisk) + '.';
     } else if (selComp){
       var pc = placesAt(selComp);
-      el.textContent = COMP[selComp].t + ': ' + (pc.length ? pc.map(function(p){ return p[0]; }).join(', ') : 'ingen markører i dette eksemplet') + '.';
+      el.textContent = COMP[selComp].t + ': ' + (pc.length ? pc.map(function(p){ return p[0]; }).join(', ') : 'no markers in this example') + '.';
     } else {
       var counts = Object.keys(boxEls).map(function(id){ return [id, placesAt(id).length]; })
         .filter(function(c){ return c[1] > 0; })
         .sort(function(a, b){ return b[1] - a[1]; });
       var cut = counts.length ? counts[Math.min(4, counts.length - 1)][1] : 0;
       var top = counts.filter(function(c){ return c[1] >= cut; });
-      el.textContent = 'Flest markører i eksemplet: ' + top.map(function(c){ return COMP[c[0]].t + ' (' + c[1] + ')'; }).join(', ') +
-        '. Velg en risiko over, eller trykk på en markør eller boks i diagrammet.';
+      el.textContent = 'Most markers in the example: ' + top.map(function(c){ return COMP[c[0]].t + ' (' + c[1] + ')'; }).join(', ') +
+        '. Pick a risk above, or tap a marker or box in the diagram.';
     }
   }
 
@@ -1231,7 +1232,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     });
     $$('.rchip').forEach(function(ch){
       var r = ch.getAttribute('data-r');
-      ch.setAttribute('aria-pressed', (r === 'alle' ? !selRisk : r === selRisk) ? 'true' : 'false');
+      ch.setAttribute('aria-pressed', (r === 'all' ? !selRisk : r === selRisk) ? 'true' : 'false');
     });
     $$('#dgMatrix tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-r') === selRisk); });
     writeSummary();
@@ -1242,7 +1243,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     if (r) h.appendChild(idTag(r));
     var s = htmlEl('strong', null, title); s.id = 'dgPopTitle';
     h.appendChild(s);
-    var x = htmlEl('button', 'pop-x', 'Lukk'); x.type = 'button';
+    var x = htmlEl('button', 'pop-x', 'Close'); x.type = 'button';
     x.addEventListener('click', function(){ closePop(true); });
     h.appendChild(x);
     return h;
@@ -1251,7 +1252,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   function showPop(anchor){
     lastAnchor = anchor;
     pop.hidden = false;
-    var VBY = 52; /* viewBox starter på y = 52 */
+    var VBY = 52; /* the viewBox starts at y = 52 */
     var box = dgSvg.getBoundingClientRect(), s = box.width / 1240, bb = anchor.getBBox();
     var pw = pop.offsetWidth, ph = pop.offsetHeight;
     var left = Math.max(8, Math.min(bb.x * s, box.width - pw - 8));
@@ -1283,7 +1284,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     var others = placesOf(r).filter(function(p){ return p[1] !== id; });
     if (others.length){
       var p2 = htmlEl('p');
-      p2.appendChild(document.createTextNode('Også i: '));
+      p2.appendChild(document.createTextNode('Also in: '));
       others.forEach(function(o, i){
         if (i) p2.appendChild(document.createTextNode(', '));
         var b = htmlEl('button', 'linkbtn', COMP[o[1]].t); b.type = 'button';
@@ -1293,7 +1294,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       pop.appendChild(p2);
     }
     pop.appendChild(htmlEl('p', 'pop-st', 'Status: ' + stText(r)));
-    var go = htmlEl('button', 'btn', 'Åpne sjekklisten for ' + r); go.type = 'button';
+    var go = htmlEl('button', 'btn', 'Open the checklist for ' + r); go.type = 'button';
     go.addEventListener('click', function(){ openChecklist(r); });
     pop.appendChild(go);
     mkEls.forEach(function(m){ m.classList.toggle('cur', m === anchor); });
@@ -1305,7 +1306,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     pop.innerHTML = '';
     pop.appendChild(popHead(COMP[id].t));
     var ps = placesAt(id);
-    if (!ps.length) pop.appendChild(htmlEl('p', null, 'Ingen markører er plassert her i dette eksemplet.'));
+    if (!ps.length) pop.appendChild(htmlEl('p', null, 'No markers are placed here in this example.'));
     else {
       var ul = htmlEl('ul');
       ps.forEach(function(p){
@@ -1324,10 +1325,10 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
 
   function openChecklist(r){
     closePop(false);
-    show('topp10');
+    show('top10');
     var card = document.querySelector('.risk[data-id="' + r + '"]');
     if (!card) return;
-    if (card.hidden){ var all = document.querySelector('.chip[data-path="alle"]'); if (all) all.click(); }
+    if (card.hidden){ var all = document.querySelector('.chip[data-path="all"]'); if (all) all.click(); }
     card.scrollIntoView({ block: 'start' });
     card.classList.add('flash');
     setTimeout(function(){ card.classList.remove('flash'); }, 1800);
@@ -1354,11 +1355,11 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePop(true); });
 
     var chipBox = document.getElementById('dgChips');
-    ['alle'].concat(RISKS).forEach(function(r){
+    ['all'].concat(RISKS).forEach(function(r){
       var b = htmlEl('button', 'rchip'); b.type = 'button';
       b.setAttribute('data-r', r);
-      b.setAttribute('aria-pressed', r === 'alle' ? 'true' : 'false');
-      if (r === 'alle') b.textContent = 'Alle';
+      b.setAttribute('aria-pressed', r === 'all' ? 'true' : 'false');
+      if (r === 'all') b.textContent = 'All';
       else {
         var d = htmlEl('span', 'dotst'); d.setAttribute('data-st-r', r);
         b.appendChild(d);
@@ -1368,7 +1369,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       }
       b.addEventListener('click', function(){
         closePop(false); selComp = null;
-        selRisk = (r === 'alle' || selRisk === r) ? null : r;
+        selRisk = (r === 'all' || selRisk === r) ? null : r;
         applySel();
       });
       chipBox.appendChild(b);
@@ -1400,7 +1401,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       }
       tb.appendChild(tr);
     });
-    // display:block i smal visning fjerner tabellsemantikken i noen nettlesere, så rollene settes eksplisitt
+    // display:block at narrow widths removes the table semantics in some browsers, so the roles are set explicitly
     var ROLE = { TABLE:'table', THEAD:'rowgroup', TBODY:'rowgroup', TR:'row', TD:'cell' };
     document.querySelectorAll('.mx, .mx thead, .mx tbody, .mx tr, .mx th, .mx td').forEach(function(e){
       e.setAttribute('role', e.tagName === 'TH' ? (e.scope === 'row' ? 'rowheader' : 'columnheader') : ROLE[e.tagName]);
