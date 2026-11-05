@@ -288,3 +288,17 @@ Method: downloaded each page, stripped markup, searched for the claim's wording.
 - 2.4 Intune note: see the entry above, including the correction.
 - Markdown and HTML match for every sentence in these sections. Differences found were table and list formatting only.
 - Not tested: no Intune tenant, no device, no Group Policy template import.
+
+### 2.4 automatic publishing to step 4 (2026-11-05)
+
+Method: downloaded each page, stripped markup, searched for the claim's wording. Not a browser test. Nothing was deployed or run, so no automatic path was tested end to end.
+
+- Agent 365 Tools Gateway page (learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway, shown date 2026-10-23): "This feature is in preview." An AI Gateway or APIM instance connects to the admin center after one-time Global Administrator consent. "Discovery starts automatically after consent is granted and typically completes within a few minutes." "New MCP servers registered in the connected gateway are discovered automatically during subsequent refreshes." "Only MCP servers registered in the connected gateway are discovered." "Apply governance policies to block or allow each server." Verdict: verified. Not found: whether a new server starts allowed or blocked, and any pipeline route for the allow or block step. Labelled unverified.
+- API Management MCP overview (learn.microsoft.com/en-us/azure/api-management/mcp-server-overview, date 2026-09-11): "You can also create and manage MCP servers in Azure API Management by using the REST API, ARM templates, Bicep, the Azure CLI, and Terraform." Verdict: verified. The expose-existing-MCP-server page (2026-04-28) describes proxying an MCP server hosted outside API Management. It was read but not cited on the page.
+- API Center sync page (learn.microsoft.com/en-us/azure/api-center/synchronize-api-management-apis, date 2026-01-20): linking an API Management instance "enables continuous synchronization", and "MCP servers and A2A agent APIs in API Management are included in the APIs added to the inventory." Verdict: verified.
+- API Center MCP page (register-discover-mcp-server, 2026-05-29 in the page metadata): a tip says MCP servers in API Center "can now be integrated with Microsoft Foundry's tool catalogs". Whether that enforces an allowlist was not read. Verdict: the integration is verified, enforcement is unverified.
+- Azure Policy programmatic page (learn.microsoft.com/en-us/azure/governance/policy/how-to/programmatically-create, date 2025-03-04): policies can be created and assigned with Azure CLI, Azure PowerShell and REST (ARMClient). Verdict: verified for Azure Policy in general. That it works for the two preview Foundry tool policies is not checked. The pipeline that writes the endpoint list is a recommendation, not tested.
+- Not tested: no API Management instance, no Agent 365 gateway connection, no Azure Policy assignment, no pipeline.
+- Not researched: feeding Intune from Git.
+- Markdown and HTML match for the new section. Four sources were added to both source tables (82 in total).
+

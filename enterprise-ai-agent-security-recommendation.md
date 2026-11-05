@@ -283,17 +283,17 @@ We did not test it. Test it from the consultant path before you rely on it. **[r
 
 ## 2.4 Governing which MCP servers are allowed
 
-One approved list, several kinds of enforcement. This is a proposed workflow **[recommendation]**. Approval, deployment and enforcement are separate steps. Gateway blocks apply to traffic using that gateway; revoke backend access and restrict alternate paths where required.
+One approved list, several kinds of enforcement. After the merge, publishing to every product is automatic, never by hand. This is a proposed workflow **[recommendation]**. Approval, deployment and enforcement are separate steps. Gateway blocks apply to traffic using that gateway; revoke backend access and restrict alternate paths where required.
 
 ```mermaid
 flowchart TD
     REQ[Team asks for an MCP server in GitHub<br/>pull request with owner, purpose,<br/>data touched, risk tier] --> SEC{Security review<br/>checklist}
     SEC -->|Rejected| END1[Closed with reason]
     SEC -->|Approved| LIST[Merged into the approved list in Git]
-    LIST --> A[VS Code and GitHub Copilot<br/>managed-settings.json]
-    LIST --> B[Agent 365 registry<br/>approve and grant Entra consent]
-    LIST --> C[Foundry<br/>tool configuration and API Management]
-    LIST --> D[Azure API Center<br/>catalog entry]
+    LIST -->|published automatically| A[VS Code and GitHub Copilot<br/>managed-settings.json]
+    LIST --> B[Agent 365 registry<br/>found via API Management]
+    LIST --> C[Foundry<br/>Azure Policy from the pipeline]
+    LIST --> D[Azure API Center<br/>synced, discovery only]
     A --> USE[Allowed in use]
     B --> USE
     C --> USE
@@ -310,14 +310,16 @@ flowchart TD
 | Local `stdio` servers on a laptop | GitHub `serverCommand` allowlist (exact command and arguments) and VS Code policies | Works where the clients obey the file. Wildcards are not supported. **[verified; coverage per client to pilot]** |
 | Catalog only | Azure API Center | VS Code and GitHub Copilot can use it for discovery. Do not assume this blocks direct connections. **[verified for discovery; recommendation for enforcement]** |
 
-**How the list reaches each product (step 4) [recommendation]:** only the GitHub path is automatic in the sources we read. The other three need a step that your team builds or does by hand.
+**How the list reaches step 4, automatically [recommendation]:** Requirement: nobody copies the list by hand. After review, the merged pull request is the only human step. Automatic delivery is possible for all four products. Only the GitHub path is built in. The others need a pipeline you build, and some parts are preview. Nothing here was tested.
 
-| Product | How the list arrives | What must be in place |
+| Product | Automatic path | Gaps and limits |
 |---|---|---|
-| VS Code and GitHub Copilot | Automatic. Merge `copilot/managed-settings.json` in the `.github-private` repo. Licensed users get it within about an hour. **[verified]** | Copilot seats from your enterprise. A supported client, signed in with the enterprise account. For limits that must always hold, also deliver by MDM or file. **[verified]** |
-| Agent 365 registry | By hand. An administrator approves the request, then grants Entra consent. **[verified]** The pages we read describe no sync from Git. **[inference]** A script or flow would be your own build. **[recommendation]** | AI Administrator or Global Administrator. A publicly accessible endpoint. Developers need Agent 365 CLI 1.1.165-preview or later. The bring-your-own MCP part is preview. **[verified]** |
-| Foundry | Your own build. A pipeline writes the approved endpoints from Git into the Azure Policy assignment. **[recommendation]** No source describes this as a built-in feature. Not tested. | The two preview tool policies assigned at the right scope, with Deny. Existing agents and runtime calls need separate handling (see 2.6). **[verified]** |
-| Azure API Center | Your own build. Register each approved server as a catalog entry. **[recommendation]** | Discovery only. It does not block direct connections. **[verified]** |
+| VS Code and GitHub Copilot | Built in. Merging `copilot/managed-settings.json` in the `.github-private` repo publishes it. Licensed users get it within about an hour. **[verified]** | Copilot seats from your enterprise. A supported client, signed in with the enterprise account. For limits that must always hold, also deliver by MDM or file. **[verified]** |
+| Agent 365 registry | The pipeline registers each approved server in Azure API Management. REST API, ARM, Bicep, Azure CLI and Terraform all work for that. **[verified]** The Agent 365 Tools Gateway (preview) finds servers in a connected API Management instance within minutes, and finds new ones later. **[verified]** | One-time Global Administrator consent. Servers outside the gateway are not found. An administrator still applies allow or block per server. No source shows that done by pipeline, or says if a new server starts allowed or blocked. **[unverified]** Test that first. The bring-your-own request flow stays manual, so avoid it here. **[recommendation]** |
+| Foundry | The pipeline writes the approved endpoints from Git into the Azure Policy assignment. Azure Policy can be set from the Azure CLI, PowerShell or REST API. **[verified]** Doing it for the two preview tool policies is your own build. **[recommendation]** Not tested. | The two preview tool policies assigned at the right scope, with Deny. Existing agents and runtime calls need separate handling (see 2.6). **[verified]** |
+| Azure API Center | No extra step. Link the API Management instance and API Center keeps its inventory in sync, MCP servers included. **[verified]** | Discovery only. It does not block direct connections. **[verified]** API Center can also feed Foundry tool catalogs. Whether that enforces an allowlist was not checked. **[unverified]** |
+
+**Suggested design.** One pipeline job runs on merge. It registers each approved server in API Management and updates the Foundry policy assignment. Removing a server from the Git list must remove it from both. **[recommendation]** Not tested.
 
 **If VS Code is managed by Intune [recommendation]:** Intune adds a second way to reach VS Code. It does not reach the other three products. Nothing here was tested in a real tenant.
 
@@ -327,7 +329,7 @@ flowchart TD
 - **Keep one source of truth.** If Intune sets the GitHub MDM key `allowedMcpServers`, the effective list is the intersection with the Git list. A server must be permitted by every source, so a server missing from either list is blocked. **[verified]** Keep the Git list as the master. **[recommendation]**
 - **One place per control.** If a Copilot managed setting and a VS Code device policy cover the same control, the Copilot setting wins. The two are not merged. **[verified]** The pages we read do not pair each device policy with its Copilot key, so check each pair in Policy Diagnostics. **[inference]**
 - **Check it.** Run **Developer: Policy Diagnostics** to see the effective value and its source. Windows device policy applies at the next VS Code start, and some policies also need a Windows restart. **[verified]**
-- **What it does not cover.** Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. A pipeline would be your own build. **[inference]**
+- **What it does not cover.** Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. Making it automatic would be your own build and was not researched. **[unverified]**
 
 **Agent 365 BYO MCP registry facts [verified 2026-11-05]:**
 - Path: Microsoft 365 admin center, **Agents, Tools**. Requests appear under **Requests (preview)**. Registry is under Agents, Tools, Registry.
@@ -538,6 +540,10 @@ All rows are **[recommendation]**.
 | SharePoint Advanced Management prerequisites | https://learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites | 2026-08-18 |
 | DLP for Microsoft 365 Copilot and Cowork | https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about | 2026-10-27 |
 | Azure API Center MCP servers | https://learn.microsoft.com/en-us/azure/api-center/register-discover-mcp-server | 2026-06-02 |
+| Agent 365 Tools Gateway (admin) | https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway | 2026-10-23 |
+| API Management MCP server overview | https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview | 2026-09-11 |
+| Synchronize APIs from API Management to API Center | https://learn.microsoft.com/en-us/azure/api-center/synchronize-api-management-apis | 2026-01-20 |
+| Programmatically create and assign Azure Policy | https://learn.microsoft.com/en-us/azure/governance/policy/how-to/programmatically-create | 2025-03-04 |
 | VS Code AI settings for enterprises | https://code.visualstudio.com/docs/enterprise/manage-ai-settings | 2026-11-04 |
 | VS Code enterprise policies | https://code.visualstudio.com/docs/enterprise/policies | 2026-11-04 |
 | GitHub enterprise MCP allowlist | https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist | no date on page |

@@ -765,17 +765,17 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 
   <section class="sec" id="s24" aria-labelledby="h24">
     <header class="sh"><span class="num">2.4</span><h2 id="h24">Governing which MCP servers are allowed</h2>
-    <p class="goal"><b>Goal</b>One approved list in Git. Approval, deployment and enforcement are separate steps. <span class="tg r">recommendation</span></p></header>
+    <p class="goal"><b>Goal</b>One approved list in Git. After the merge, publishing to every product is automatic, never by hand. Approval, deployment and enforcement are separate steps. <span class="tg r">recommendation</span></p></header>
 
     <figure>
       <div class="fig-scroll mid">
 <svg class="fg" viewBox="0 0 1000 470" role="img" aria-labelledby="t24 d24">
 <title id="t24">MCP server approval flow</title>
-<desc id="d24">A team asks for an MCP server in a GitHub pull request. Security review either closes it with a reason or merges it into the approved list in Git. The list is published to four places: VS Code and GitHub Copilot, the Agent 365 registry, Foundry, and Azure API Center. Approved use is monitored. An incident or failed review blocks gateway and client access and revokes backend permissions.</desc>
+<desc id="d24">A team asks for an MCP server in a GitHub pull request. Security review either closes it with a reason or merges it into the approved list in Git. After the merge, a pipeline publishes the list automatically to four places: VS Code and GitHub Copilot, the Agent 365 registry, Foundry, and Azure API Center. Approved use is monitored. An incident or failed review blocks gateway and client access and revokes backend permissions.</desc>
 <text class="zl" x="10" y="16">1. ASK</text>
 <text class="zl" x="225" y="16">2. REVIEW</text>
 <text class="zl" x="420" y="16">3. LIST</text>
-<text class="zl" x="620" y="16">4. PUBLISH TO EACH PRODUCT</text>
+<text class="zl" x="620" y="16">4. PUBLISHED AUTOMATICALLY</text>
 <text class="zl" x="858" y="16">5. USE</text>
 
 <rect class="box" x="10" y="150" width="180" height="84"/>
@@ -804,11 +804,11 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 <rect class="box" x="620" y="22" width="210" height="60"/>
 <text class="t" x="725" y="46">VS Code and GitHub Copilot</text><text class="s" x="725" y="66">managed-settings.json</text>
 <rect class="box" x="620" y="104" width="210" height="68"/>
-<text class="t" x="725" y="128">Agent 365 registry</text><text class="s" x="725" y="146">approve, Entra consent</text><text class="s" x="725" y="161">BYO MCP part is preview</text>
+<text class="t" x="725" y="128">Agent 365 registry</text><text class="s" x="725" y="146">found via API Management</text><text class="s" x="725" y="161">Tools Gateway is preview</text>
 <rect class="box pv" x="620" y="194" width="210" height="60"/>
-<text class="t" x="725" y="218">Foundry</text><text class="s" x="725" y="238">tool policy and API Management</text>
+<text class="t" x="725" y="218">Foundry</text><text class="s" x="725" y="238">Azure Policy from the pipeline</text>
 <rect class="box cat" x="620" y="280" width="210" height="60"/>
-<text class="t" x="725" y="304">Azure API Center</text><text class="s" x="725" y="324">catalog entry, discovery only</text>
+<text class="t" x="725" y="304">Azure API Center</text><text class="s" x="725" y="324">synced, discovery only</text>
 
 <path class="ln" d="M830 52H846V190"/>
 <path class="ln" d="M830 138H846"/>
@@ -833,35 +833,36 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
       <figcaption><b>Why the last step matters.</b>A gateway block applies only to traffic that uses that gateway. Revoke backend access and restrict alternate paths where you need a hard stop. The catalog entry is for discovery and does not stop direct connections.</figcaption>
     </figure>
 
-    <h3 style="font-size:1.05rem;margin-top:8px">How the list reaches step 4 <span class="tg r">recommendation</span></h3>
-    <p class="muted" style="font-size:0.92rem;max-width:46rem">Only the GitHub path is automatic in the sources we read. The other three need a step that your team builds or does by hand.</p>
+    <h3 style="font-size:1.05rem;margin-top:8px">How the list reaches step 4, automatically <span class="tg r">recommendation</span></h3>
+    <p class="muted" style="font-size:0.92rem;max-width:46rem"><strong>Requirement:</strong> nobody copies the list by hand. After review, the merged pull request is the only human step. Automatic delivery is possible for all four products. Only the GitHub path is built in. The others need a pipeline you build, and some parts are preview. Nothing here was tested.</p>
     <div class="tbl-wrap"><table class="tbl">
 <thead>
-<tr><th>Product</th><th>How the list arrives</th><th>What must be in place</th></tr>
+<tr><th>Product</th><th>Automatic path</th><th>Gaps and limits</th></tr>
 </thead>
 <tbody>
 <tr>
 <td>VS Code and GitHub Copilot</td>
-<td>Automatic. Merge <code>copilot/managed-settings.json</code> in the <code>.github-private</code> repo. Licensed users get it within about an hour. <span class="tg v">verified</span></td>
+<td>Built in. Merging <code>copilot/managed-settings.json</code> in the <code>.github-private</code> repo publishes it. Licensed users get it within about an hour. <span class="tg v">verified</span></td>
 <td>Copilot seats from your enterprise. A supported client, signed in with the enterprise account. For limits that must always hold, also deliver by MDM or file. <span class="tg v">verified</span></td>
 </tr>
 <tr>
 <td>Agent 365 registry</td>
-<td>By hand. An administrator approves the request, then grants Entra consent. <span class="tg v">verified</span> The pages we read describe no sync from Git. <span class="tg i">inference</span> A script or flow would be your own build. <span class="tg r">recommendation</span></td>
-<td>AI Administrator or Global Administrator. A publicly accessible endpoint. Developers need Agent 365 CLI 1.1.165-preview or later. The bring-your-own MCP part is preview. <span class="tg v">verified</span></td>
+<td>The pipeline registers each approved server in Azure API Management. REST API, ARM, Bicep, Azure CLI and Terraform all work for that. <span class="tg v">verified</span> The Agent 365 Tools Gateway (preview) finds servers in a connected API Management instance within minutes, and finds new ones later. <span class="tg v">verified</span></td>
+<td>One-time Global Administrator consent. Servers outside the gateway are not found. An administrator still applies allow or block per server. No source shows that done by pipeline, or says if a new server starts allowed or blocked. <span class="tg u">unverified</span> Test that first. The bring-your-own request flow stays manual, so avoid it here. <span class="tg r">recommendation</span></td>
 </tr>
 <tr>
 <td>Foundry</td>
-<td>Your own build. A pipeline writes the approved endpoints from Git into the Azure Policy assignment. <span class="tg r">recommendation</span> No source describes this as a built-in feature. Not tested.</td>
+<td>The pipeline writes the approved endpoints from Git into the Azure Policy assignment. Azure Policy can be set from the Azure CLI, PowerShell or REST API. <span class="tg v">verified</span> Doing it for the two preview tool policies is your own build. <span class="tg r">recommendation</span> Not tested.</td>
 <td>The two preview tool policies assigned at the right scope, with Deny. Existing agents and runtime calls need separate handling (see 2.6). <span class="tg v">verified</span></td>
 </tr>
 <tr>
 <td>Azure API Center</td>
-<td>Your own build. Register each approved server as a catalog entry. <span class="tg r">recommendation</span></td>
-<td>Discovery only. It does not block direct connections. <span class="tg v">verified</span></td>
+<td>No extra step. Link the API Management instance and API Center keeps its inventory in sync, MCP servers included. <span class="tg v">verified</span></td>
+<td>Discovery only. It does not block direct connections. <span class="tg v">verified</span> API Center can also feed Foundry tool catalogs. Whether that enforces an allowlist was not checked. <span class="tg u">unverified</span></td>
 </tr>
 </tbody>
 </table></div>
+    <p class="muted" style="font-size:0.92rem;max-width:46rem"><strong>Suggested design.</strong> One pipeline job runs on merge. It registers each approved server in API Management and updates the Foundry policy assignment. Removing a server from the Git list must remove it from both. <span class="tg r">recommendation</span> Not tested.</p>
 
     <h3 style="font-size:1.05rem;margin-top:8px">If VS Code is managed by Intune <span class="tg r">recommendation</span></h3>
     <p class="muted" style="font-size:0.92rem;max-width:46rem">Intune adds a second way to reach VS Code. It does not reach the other three products. Nothing here was tested in a real tenant.</p>
@@ -872,7 +873,7 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
       <li><span><strong>Keep one source of truth.</strong> If Intune sets the GitHub MDM key <code>allowedMcpServers</code>, the effective list is the intersection with the Git list. A server must be permitted by every source, so a server missing from either list is blocked. <span class="tg v">verified</span> Keep the Git list as the master. <span class="tg r">recommendation</span></span></li>
       <li><span><strong>One place per control.</strong> If a Copilot managed setting and a VS Code device policy cover the same control, the Copilot setting wins. The two are not merged. <span class="tg v">verified</span> The pages we read do not pair each device policy with its Copilot key, so check each pair in Policy Diagnostics. <span class="tg i">inference</span></span></li>
       <li><span><strong>Check it.</strong> Run <strong>Developer: Policy Diagnostics</strong> to see the effective value and its source. Windows device policy applies at the next VS Code start, and some policies also need a Windows restart. <span class="tg v">verified</span></span></li>
-      <li><span><strong>What it does not cover.</strong> Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. A pipeline would be your own build. <span class="tg i">inference</span></span></li>
+      <li><span><strong>What it does not cover.</strong> Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. Making it automatic would be your own build and was not researched. <span class="tg u">unverified</span></span></li>
     </ul>
 
     <h3 style="font-size:1.05rem;margin-top:8px">Risk tiers<span class="tg r">recommendation</span></h3>
@@ -1279,8 +1280,8 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
   <!-- ============ SOURCES ============ -->
   <section class="sec" id="sources" aria-labelledby="hs" style="margin-top:56px">
     <header class="sh"><span class="num">Src</span><h2 id="hs">Sources, read 5 Nov 2026</h2>
-    <p class="goal">78 pages. The date is the one displayed on the page, where there is one.</p></header>
-    <details class="deep"><summary>Show all sources<span>78 links</span></summary><div class="body">
+    <p class="goal">82 pages. The date is the one displayed on the page, where there is one.</p></header>
+    <details class="deep"><summary>Show all sources<span>82 links</span></summary><div class="body">
       <div class="tbl-wrap"><table class="tbl src">
         <thead><tr><th>Topic</th><th>Link</th><th>Displayed date</th></tr></thead>
         <tbody>
@@ -1338,6 +1339,10 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 <tr><td>SharePoint Advanced Management prerequisites</td><td class="u"><a href="https://learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites">learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites</a></td><td class="d">2026-08-18</td></tr>
 <tr><td>DLP for Microsoft 365 Copilot and Cowork</td><td class="u"><a href="https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about">learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about</a></td><td class="d">2026-10-27</td></tr>
 <tr><td>Azure API Center MCP servers</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/api-center/register-discover-mcp-server">learn.microsoft.com/en-us/azure/api-center/register-discover-mcp-server</a></td><td class="d">2026-06-02</td></tr>
+<tr><td>Agent 365 Tools Gateway (admin)</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway">learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway</a></td><td class="d">2026-10-23</td></tr>
+<tr><td>API Management MCP server overview</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview">learn.microsoft.com/en-us/azure/api-management/mcp-server-overview</a></td><td class="d">2026-09-11</td></tr>
+<tr><td>Synchronize APIs from API Management to API Center</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/api-center/synchronize-api-management-apis">learn.microsoft.com/en-us/azure/api-center/synchronize-api-management-apis</a></td><td class="d">2026-01-20</td></tr>
+<tr><td>Programmatically create and assign Azure Policy</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/governance/policy/how-to/programmatically-create">learn.microsoft.com/en-us/azure/governance/policy/how-to/programmatically-create</a></td><td class="d">2025-03-04</td></tr>
 <tr><td>VS Code AI settings for enterprises</td><td class="u"><a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">code.visualstudio.com/docs/enterprise/manage-ai-settings</a></td><td class="d">2026-11-04</td></tr>
 <tr><td>VS Code enterprise policies</td><td class="u"><a href="https://code.visualstudio.com/docs/enterprise/policies">code.visualstudio.com/docs/enterprise/policies</a></td><td class="d">2026-11-04</td></tr>
 <tr><td>GitHub enterprise MCP allowlist</td><td class="u"><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist">docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist</a></td><td class="d">no date on page</td></tr>

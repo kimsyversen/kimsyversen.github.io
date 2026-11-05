@@ -18,7 +18,7 @@ Goal: show the content of [enterprise-ai-agent-security-recommendation.md](enter
 4. Target-state diagram.
 5. Part 2 sections 2.2 to 2.9, each with a short "at a glance" view and collapsible detail.
 6. Part 3 admin effort, Part 4 rollout (gantt), Part 5 known gaps.
-7. Sources table (78 rows).
+7. Sources table (82 rows).
 
 ## Diagrams
 
