@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Index · Kim Syversen</title>
+<meta name="description" content="Security guides, risk maps and reference designs, each on a single page, with the working notes behind them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* A printed contents page: paper, ink and hairline rules. Same fonts and colours as threatmodelling.html.
+   Red has one meaning here: it marks the risk in each small drawing, and the row under the pointer. */
+:root{
+  color-scheme:light;
+  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F; --red:#B5321C;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB; --red:#F07A60;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 56px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2,h3,p,dl,dd{margin:0}
+h1,h2,h3{font-family:var(--display);text-wrap:balance}
+
+/* masthead */
+.mast{border-top:6px solid var(--rule);padding-top:10px}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px 56px;align-items:end;padding:34px 0 40px}
+h1{font-size:clamp(6rem,16vw,14rem);font-weight:800;font-stretch:112%;line-height:0.76;letter-spacing:-0.05em;margin-left:-0.05em}
+.lead{font-size:clamp(1.15rem,2vw,1.42rem);line-height:1.38;max-width:34rem}
+.spec{display:grid;grid-template-columns:auto 1fr;margin-top:18px;font-size:0.9rem;border-top:1px solid var(--line)}
+.spec dt,.spec dd{padding:6px 0;border-bottom:1px solid var(--line)}
+.spec dt{padding-right:22px;font-weight:600}
+.spec dd{color:var(--muted)}
+
+/* section heading */
+.bar{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px 24px;border-top:1px solid var(--rule);padding:10px 0 12px}
+.bar h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
+.bar p{font-size:0.84rem;color:var(--muted)}
+
+/* contents */
+.toc{list-style:none;margin:0;padding:0;border-bottom:2px solid var(--rule)}
+.row{position:relative;display:grid;grid-template-columns:5.4rem minmax(0,1fr) minmax(0,1fr) 168px;column-gap:32px;padding:24px 0 26px;border-top:1px solid var(--line)}
+.n{font:800 3.8rem/0.8 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.row h3{font-size:clamp(1.55rem,2.7vw,2.15rem);font-weight:750;line-height:1.04;letter-spacing:-0.018em}
+.row h3 a{text-decoration:none}
+.row h3 a::after{content:"";position:absolute;inset:0}
+.row:hover h3 a{color:var(--red)}
+.kind{margin-top:10px;font-size:0.84rem;color:var(--muted)}
+.file{font:400 0.76rem/1.45 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.chk{margin-top:8px;font-size:0.88rem;color:var(--muted)}
+.notes{position:relative;z-index:1;width:fit-content;margin-top:8px;font-size:0.84rem}
+.notes a + a{margin-left:12px}
+
+/* small drawings: one line weight, ink only, red for the risk */
+.fig{display:block;justify-self:end;width:168px;height:112px;fill:none;stroke:var(--ink);stroke-width:1.25}
+.fig .r{stroke:var(--red)}
+.fig .dot{fill:var(--red);stroke:none}
+.fig .star{fill:var(--ink);stroke:none}
+
+/* work log */
+.logwrap{margin-top:52px}
+.log{width:100%;border-collapse:collapse;font-size:0.92rem;border-bottom:2px solid var(--rule)}
+.log th,.log td{text-align:left;vertical-align:top;padding:8px 24px 8px 0;border-top:1px solid var(--line)}
+.log td:last-child{padding-right:0}
+.log thead th{font:600 0.68rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);padding-top:0;border-top:0;border-bottom:1px solid var(--rule)}
+.log td:first-child{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+.log td:nth-child(2){white-space:nowrap;font-weight:600}
+
+/* footer */
+footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+
+@media (max-width:1040px){
+  .row{grid-template-columns:4.4rem minmax(0,1fr) 132px;column-gap:24px}
+  .row .t,.row .d{grid-column:2}
+  .row .d{margin-top:12px}
+  .fig{grid-column:3;grid-row:1 / span 2;width:132px;height:88px}
+}
+@media (max-width:800px){
+  .head{grid-template-columns:1fr;padding:30px 0 32px}
+  h1{font-size:clamp(6rem,28vw,13rem)}
+}
+@media (max-width:640px){
+  .row{grid-template-columns:2.7rem minmax(0,1fr) 72px;column-gap:12px;padding:20px 0 22px}
+  .row .d{grid-column:2 / -1}
+  .n{font-size:2.5rem;line-height:0.86}
+  .fig{grid-row:1;width:72px;height:48px;stroke-width:2.5}
+  .log thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .log,.log tbody,.log tr,.log td{display:block}
+  .log tr{display:grid;grid-template-columns:auto 1fr;column-gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+  .log tbody tr:first-child{border-top:1px solid var(--rule)}
+  .log td{padding:0;border:0}
+  .log td:nth-child(2){white-space:normal;grid-row:1;grid-column:2;text-align:right}
+  .log td:last-child{grid-column:1 / -1;margin-top:2px}
+}
+@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="mast">
+    <div class="meta"><span>Kim Syversen · Pages and working notes</span><span>Last updated 5 Nov 2026</span></div>
+    <div class="head">
+      <h1>Index</h1>
+      <div>
+        <p class="lead">Security guides, risk maps and reference designs. Each one is a single page, and the notes behind it sit next to it in the repo.</p>
+        <dl class="spec">
+          <dt>Plan</dt><dd>What the work set out to do</dd>
+          <dt>Decisions</dt><dd>What was chosen, and why</dd>
+          <dt>Fact check</dt><dd>Each claim against its source</dd>
+        </dl>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="pages">
+      <div class="bar"><h2 id="pages">Pages</h2><p>Newest first. A page keeps its number for good.</p></div>
+      <ol class="toc" role="list">
+
+        <li class="row">
+          <span class="n" aria-hidden="true">6</span>
+          <div class="t">
+            <h3><a href="github/github-two-enterprise-interactive.html">GitHub two-enterprise reference</a></h3>
+            <p class="kind">Reference design · Updated 4 Nov 2026</p>
+            <p class="file">github/github-two-enterprise-interactive.html</p>
+          </div>
+          <div class="d">
+            <p>Classified, internal and public work on GitHub: two enterprises, three policy layers and shared operations. Click any box to see what it does and how to check it.</p>
+            <p class="chk">Checked against GitHub documentation. Names are illustrative.</p>
+            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/github/design-notes.md">Design notes</a><a href="github/github-two-enterprise-reference.drawio">draw.io, three pages</a><a href="github/github-two-enterprise-reference-compact.drawio">draw.io, one page</a></p>
+          </div>
+          <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
+            <rect x="1" y="1" width="62" height="110"/><path d="M1 23h62M1 45h62M1 67h62M1 89h62"/>
+            <rect x="105" y="1" width="62" height="110"/><path d="M105 23h62M105 45h62M105 67h62M105 89h62"/>
+            <path class="r" d="M63 45h41M98 40l6 5-6 5"/><path d="M105 67H64M70 62l-6 5 6 5"/>
+          </svg>
+        </li>
+
+        <li class="row">
+          <span class="n" aria-hidden="true">5</span>
+          <div class="t">
+            <h3><a href="threatmodelling.html">Threat modeling</a></h3>
+            <p class="kind">Method · Updated 3 Nov 2026</p>
+            <p class="file">threatmodelling.html</p>
+          </div>
+          <div class="d">
+            <p>Four questions, one drawing and a short list of fixes, shown on a made-up claims portal.</p>
+            <p class="chk">Fact-checked against primary sources in three passes.</p>
+            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/threatmodelling.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/threatmodelling.decisions.md">Decisions</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/threatmodelling.factcheck.md">Fact check</a></p>
+          </div>
+          <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
+            <rect x="1" y="38" width="44" height="36"/>
+            <circle cx="104" cy="56" r="21"/>
+            <path d="M141 38h26M141 74h26"/>
+            <path d="M45 56h36M76 51l6 5-6 5M125 56h15M134 51l6 5-6 5"/>
+            <path class="r" stroke-dasharray="4 3" d="M62 1v110"/>
+          </svg>
+        </li>
+
+        <li class="row">
+          <span class="n" aria-hidden="true">4</span>
+          <div class="t">
+            <h3><a href="MCP-Risk-Map.html">MCP Risk Map</a></h3>
+            <p class="kind">Risk map · Updated 2 Nov 2026</p>
+            <p class="file">MCP-Risk-Map.html</p>
+          </div>
+          <div class="d">
+            <p>Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start.</p>
+            <p class="chk">Every factual claim compared with its source. Nothing tested on a real system.</p>
+            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/MCP-Risk-Map.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/MCP-Risk-Map.decisions.md">Decisions</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/MCP-Risk-Map.factcheck.md">Fact check</a></p>
+          </div>
+          <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
+            <rect x="1" y="38" width="52" height="36"/>
+            <path d="M53 56L111 14M53 56H111M53 56L111 98"/>
+            <rect x="111" y="1" width="56" height="26"/>
+            <rect class="r" x="111" y="43" width="56" height="26"/>
+            <rect x="111" y="85" width="56" height="26"/>
+          </svg>
+        </li>
+
+        <li class="row">
+          <span class="n" aria-hidden="true">3</span>
+          <div class="t">
+            <h3><a href="Developer-WS.html">Developer Workstation Risk Map</a></h3>
+            <p class="kind">Risk map · Updated 1 Nov 2026</p>
+            <p class="file">Developer-WS.html</p>
+          </div>
+          <div class="d">
+            <p>Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, and what to check for each.</p>
+            <p class="chk">965 statements in the ledger, with 35 fixed and 18 cut.</p>
+            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/Developer-WS.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/Developer-WS.decisions.md">Decisions</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/Developer-WS.factcheck.md">Fact check</a></p>
+          </div>
+          <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
+            <rect x="1" y="1" width="166" height="110"/>
+            <path d="M1 19h166M56 19v92M112 19v92M56 65h56"/>
+            <circle class="dot" cx="16" cy="38" r="3"/><circle class="dot" cx="38" cy="58" r="3"/><circle class="dot" cx="20" cy="90" r="3"/>
+            <circle class="dot" cx="72" cy="36" r="3"/><circle class="dot" cx="94" cy="50" r="3"/><circle class="dot" cx="78" cy="88" r="3"/>
+            <circle class="dot" cx="130" cy="34" r="3"/><circle class="dot" cx="150" cy="52" r="3"/><circle class="dot" cx="126" cy="74" r="3"/><circle class="dot" cx="148" cy="96" r="3"/>
+          </svg>
+        </li>
+
+        <li class="row">
+          <span class="n" aria-hidden="true">2</span>
+          <div class="t">
+            <h3><a href="AKS-sikkerhetsvurdering.html">AKS security assessment</a></h3>
+            <p class="kind">Beginner's guide · Updated 3 Nov 2026</p>
+            <p class="file">AKS-sikkerhetsvurdering.html</p>
+          </div>
+          <div class="d">
+            <p>What to understand and how to go about it when a platform team runs Kubernetes in Azure for several application teams, with ten prioritised risks.</p>
+            <p class="chk">Commands checked against the documentation. No cluster was examined.</p>
+            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/AKS-sikkerhetsvurdering.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/AKS-sikkerhetsvurdering.decisions.md">Decisions</a></p>
+          </div>
+          <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
+            <rect x="1" y="1" width="166" height="30"/><path d="M1 8.5h166M1 16h166M1 23.5h166"/>
+            <path class="r" stroke-dasharray="4 3" d="M1 42h166"/>
+            <rect x="1" y="53" width="50" height="58"/><rect x="59" y="53" width="50" height="58"/><rect x="117" y="53" width="50" height="58"/>
+            <path d="M9 61h13v13H9zM30 61h13v13H30zM9 82h13v13H9zM67 61h13v13H67zM88 82h13v13H88zM125 61h13v13h-13zM146 61h13v13h-13zM146 82h13v13h-13z"/>
+          </svg>
+        </li>
+
+        <li class="row">
+          <span class="n" aria-hidden="true">1</span>
+          <div class="t">
+            <h3><a href="Kstech.html">Kstech</a></h3>
+            <p class="kind">Landing page · Updated 28 Dec 2025</p>
+            <p class="file">Kstech.html</p>
+          </div>
+          <div class="d">
+            <p>The old front page of this site: a landing page for a digital media studio, stars included.</p>
+            <p class="chk">Not fact-checked. Kept as it was.</p>
+          </div>
+          <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
+            <ellipse cx="84" cy="56" rx="78" ry="24" transform="rotate(-14 84 56)"/>
+            <circle cx="84" cy="56" r="11"/>
+            <circle class="star" cx="14" cy="16" r="1.4"/><circle class="star" cx="48" cy="9" r="1"/><circle class="star" cx="120" cy="14" r="1.4"/><circle class="star" cx="154" cy="96" r="1.4"/>
+            <circle class="star" cx="26" cy="100" r="1"/><circle class="star" cx="70" cy="102" r="1.4"/><circle class="star" cx="108" cy="92" r="1"/><circle class="star" cx="150" cy="10" r="1"/>
+          </svg>
+        </li>
+
+      </ol>
+    </section>
+
+    <section class="logwrap" aria-labelledby="log">
+      <div class="bar"><h2 id="log">Work log</h2><p>What changed, newest first.</p></div>
+      <table class="log">
+        <thead><tr><th scope="col">Date</th><th scope="col">Page</th><th scope="col">What was done</th></tr></thead>
+        <tbody>
+          <tr><td>5 Nov 2026</td><td>Index</td><td>This contents page replaced the old front page, which moved to Kstech.html. Upkeep rules added in AGENTS.md.</td></tr>
+          <tr><td>4 Nov 2026</td><td>GitHub reference</td><td>Two-enterprise design checked against GitHub documentation. Clickable page and two draw.io versions.</td></tr>
+          <tr><td>3 Nov 2026</td><td>Threat modeling</td><td>Built, redrawn as one printed sheet, then fact-checked in three passes.</td></tr>
+          <tr><td>3 Nov 2026</td><td>AKS assessment</td><td>Translated from Norwegian to English.</td></tr>
+          <tr><td>3 Nov 2026</td><td>All pages</td><td>Made with AI note added to the footers.</td></tr>
+          <tr><td>2 Nov 2026</td><td>MCP Risk Map</td><td>Built from the workstation map. Four draft claims removed because no source backed them.</td></tr>
+          <tr><td>2 Nov 2026</td><td>Workstation map</td><td>Page renamed to Developer-WS.html, and its notes renamed to match.</td></tr>
+          <tr><td>1 Nov 2026</td><td>Workstation map</td><td>Added after nine fact-check passes. No text block is over 60 words.</td></tr>
+          <tr><td>1 Nov 2026</td><td>AKS assessment</td><td>Guidance corrected over several rounds, security links updated and layout fixed.</td></tr>
+          <tr><td>13 Oct 2026</td><td>AKS assessment</td><td>First version uploaded, in Norwegian.</td></tr>
+          <tr><td>28 Dec 2025</td><td>Kstech</td><td>Landing page became the front page of the site.</td></tr>
+          <tr><td>28 Jul 2020</td><td>Site</td><td>Started as a single Markdown page on a Jekyll theme.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Source and full history on <a href="https://github.com/kimsyversen/kimsyversen.github.io">GitHub</a>. Upkeep rules for this repo are in <a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/AGENTS.md">AGENTS.md</a>.</p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+  </footer>
+
+</div>
+</body>
+</html>
