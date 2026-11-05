@@ -30,7 +30,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-
 a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
 a:hover{color:var(--red)}
 a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
-h1,h2,h3,p,dl,dd{margin:0}
+h1,h2,h3,p{margin:0}
 h1,h2,h3{font-family:var(--display);text-wrap:balance}
 
 /* masthead */
@@ -39,10 +39,6 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance}
 .head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px 56px;align-items:end;padding:34px 0 40px}
 h1{font-size:clamp(6rem,16vw,14rem);font-weight:800;font-stretch:112%;line-height:0.76;letter-spacing:-0.05em;margin-left:-0.05em}
 .lead{font-size:clamp(1.15rem,2vw,1.42rem);line-height:1.38;max-width:34rem}
-.spec{display:grid;grid-template-columns:auto 1fr;margin-top:18px;font-size:0.9rem;border-top:1px solid var(--line)}
-.spec dt,.spec dd{padding:6px 0;border-bottom:1px solid var(--line)}
-.spec dt{padding-right:22px;font-weight:600}
-.spec dd{color:var(--muted)}
 
 /* section heading */
 .bar{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px 24px;border-top:1px solid var(--rule);padding:10px 0 12px}
@@ -60,8 +56,8 @@ h1{font-size:clamp(6rem,16vw,14rem);font-weight:800;font-stretch:112%;line-heigh
 .kind{margin-top:10px;font-size:0.84rem;color:var(--muted)}
 .file{font:400 0.76rem/1.45 var(--mono);color:var(--muted);overflow-wrap:anywhere}
 .chk{margin-top:8px;font-size:0.88rem;color:var(--muted)}
-.notes{position:relative;z-index:1;width:fit-content;margin-top:8px;font-size:0.84rem}
-.notes a + a{margin-left:12px}
+.links{position:relative;z-index:1;width:fit-content;margin-top:8px;font-size:0.84rem}
+.links a + a{margin-left:12px}
 
 /* small drawings: one line weight, ink only, red for the risk */
 .fig{display:block;justify-self:end;width:168px;height:112px;fill:none;stroke:var(--ink);stroke-width:1.25}
@@ -96,23 +92,16 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
 <div class="page">
 
   <header class="mast">
-    <div class="meta"><span>Kim Syversen · Pages and working notes</span><span>Last updated 5 Nov 2026</span></div>
+    <div class="meta"><span>Kim Syversen</span><span>Last updated 5 Nov 2026</span></div>
     <div class="head">
       <h1>Index</h1>
-      <div>
-        <p class="lead">Security guides, risk maps and reference designs. Each one is a single page, and the notes behind it sit next to it in the repo.</p>
-        <dl class="spec">
-          <dt>Plan</dt><dd>What the work set out to do</dd>
-          <dt>Decisions</dt><dd>What was chosen, and why</dd>
-          <dt>Fact check</dt><dd>Each claim against its source</dd>
-        </dl>
-      </div>
+      <p class="lead">Security guides, risk maps and reference designs, each on a single page.</p>
     </div>
   </header>
 
   <main>
     <section aria-labelledby="pages">
-      <div class="bar"><h2 id="pages">Pages</h2><p>Newest first. A page keeps its number for good.</p></div>
+      <div class="bar"><h2 id="pages">Pages</h2><p>Newest first.</p></div>
       <ol class="toc" role="list">
 
         <li class="row">
@@ -125,7 +114,7 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           <div class="d">
             <p>Classified, internal and public work on GitHub: two enterprises, three policy layers and shared operations. Click any box to see what it does and how to check it.</p>
             <p class="chk">Checked against GitHub documentation. Names are illustrative.</p>
-            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/github/design-notes.md">Design notes</a><a href="github/github-two-enterprise-reference.drawio">draw.io, three pages</a><a href="github/github-two-enterprise-reference-compact.drawio">draw.io, one page</a></p>
+            <p class="links"><a href="github/github-two-enterprise-reference.drawio">draw.io, three pages</a><a href="github/github-two-enterprise-reference-compact.drawio">draw.io, one page</a></p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="1" width="62" height="110"/><path d="M1 23h62M1 45h62M1 67h62M1 89h62"/>
@@ -144,7 +133,6 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           <div class="d">
             <p>Four questions, one drawing and a short list of fixes, shown on a made-up claims portal.</p>
             <p class="chk">Fact-checked against primary sources in three passes.</p>
-            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/threatmodelling.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/threatmodelling.decisions.md">Decisions</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/threatmodelling.factcheck.md">Fact check</a></p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="38" width="44" height="36"/>
@@ -165,7 +153,6 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           <div class="d">
             <p>Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start.</p>
             <p class="chk">Every factual claim compared with its source. Nothing tested on a real system.</p>
-            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/MCP-Risk-Map.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/MCP-Risk-Map.decisions.md">Decisions</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/MCP-Risk-Map.factcheck.md">Fact check</a></p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="38" width="52" height="36"/>
@@ -185,8 +172,7 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           </div>
           <div class="d">
             <p>Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, and what to check for each.</p>
-            <p class="chk">965 statements in the ledger, with 35 fixed and 18 cut.</p>
-            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/Developer-WS.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/Developer-WS.decisions.md">Decisions</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/Developer-WS.factcheck.md">Fact check</a></p>
+            <p class="chk">965 statements checked one by one, with 35 fixed and 18 cut.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="1" width="166" height="110"/>
@@ -207,7 +193,6 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           <div class="d">
             <p>What to understand and how to go about it when a platform team runs Kubernetes in Azure for several application teams, with ten prioritised risks.</p>
             <p class="chk">Commands checked against the documentation. No cluster was examined.</p>
-            <p class="notes"><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/AKS-sikkerhetsvurdering.plan.md">Plan</a><a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/AKS-sikkerhetsvurdering.decisions.md">Decisions</a></p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="1" width="166" height="30"/><path d="M1 8.5h166M1 16h166M1 23.5h166"/>
@@ -222,7 +207,7 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
   </main>
 
   <footer>
-    <p>Source and full history on <a href="https://github.com/kimsyversen/kimsyversen.github.io">GitHub</a>. Upkeep rules for this repo are in <a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/AGENTS.md">AGENTS.md</a>.</p>
+    <p>Source on <a href="https://github.com/kimsyversen/kimsyversen.github.io">GitHub</a>.</p>
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
   </footer>
 

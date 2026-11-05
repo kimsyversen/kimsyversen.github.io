@@ -10,7 +10,6 @@ Five rules for anyone changing this repo, person or agent. The site is hand-writ
 - Removed page: delete its row. The other rows keep their numbers.
 - Content change: update the row's Updated date. Style fixes and footer notes do not count.
 - Any edit to the index: update its Last updated date at the top.
-- Notes: link them by their GitHub address, because Pages shows a `.md` file as raw text.
 
 Find pages missing from the index:
 
@@ -28,6 +27,7 @@ grep -o 'href="[^"#:]*\.\(html\|drawio\)"' index.html | cut -d'"' -f2 | while re
 
 - Name notes after the page: `<Page>.plan.md`, `<Page>.decisions.md`, `<Page>.factcheck.md`. If a page is renamed, rename its notes too.
 - Start each note with a "Belongs to" line that links the page.
+- Plans, decisions and fact checks are for whoever works on the site, not for readers. Do not link or name them on a page.
 - Add to decisions as you go, with the reason. When a decision is replaced, mark the old one "(Superseded.)" and leave it in place. The history is the point.
 
 ## 3. Every claim has a source and a date
