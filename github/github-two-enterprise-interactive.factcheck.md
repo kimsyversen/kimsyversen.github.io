@@ -54,7 +54,7 @@ Verdicts: **Requirement** is a proposed control defined by this design, not an e
 - **AGENT**: [Copilot cloud policies](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-agents/manage-copilot-in-the-cloud).
 - **FIREWALL**: [Copilot firewall exclusions](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall).
 - **THIRD**: [Third-party agent enablement](https://docs.github.com/copilot/managing-github-copilot-in-your-organization/managing-policies-and-features-for-copilot-in-your-organization).
-- **ROLE**: [Security manager includes source read](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).
+- **ROLE**: [Security manager role](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).
 - **DEPENDENCY**: [Dependency review](https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/dependency-review).
 - **DEPENDABOT**: [Supported Dependabot ecosystems](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/supply-chain-security/supported-ecosystems-and-repositories).
 - **ATTEST**: [Artifact attestations](https://docs.github.com/en/enterprise-cloud@latest/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations).
@@ -201,7 +201,7 @@ Checked 5 November 2026. Retained after review. Basis: Design definition on this
 Checked 5 November 2026. Corrected or qualified. Basis: EMU, TEAMS, DEPROVISION.
 
 - **Title, Label / proposed control:** SAML + SCIM to EMU
-- **Summary, Label / proposed control:** Enterprise SCIM. IdP groups sync to enterprise teams. Managed users cannot contribute outside the enterprise.
+- **Summary, Label / proposed control:** Enterprise SCIM. IdP groups drive enterprise teams. Keep managed users inside the enterprise. (Reworded 5 Nov 2026 to a requirement; the product facts are sourced in the description.)
 - **Description, Supported/requirement:** Enterprise Managed Users: the IdP owns the account.
 - **Description, Supported/requirement:** Enterprise SCIM provisions accounts and suspends them when deprovisioned; it does not delete the accounts.
 - **Description, Supported/requirement:** IdP groups can sync to enterprise teams.
@@ -224,7 +224,7 @@ Checked 5 November 2026. Corrected or qualified. Basis: SAML, SCIM.
 Checked 5 November 2026. Corrected or qualified. Basis: SCIM, SWITCH.
 
 - **Title, Label / proposed control:** Corporate IdP
-- **Summary, Label / proposed control:** Separate integration per organization in B. Owns provisioned membership; reconcile team grants separately.
+- **Summary, Label / proposed control:** Separate integration per organization in B. The IdP owns provisioned membership; reconcile team grants separately.
 - **Description, Supported/requirement:** Use a separate SAML and SCIM integration for each B organization, with credentials separate from A.
 - **Description, Supported/requirement:** Organization SCIM manages membership, not team grants.
 - **Description, Supported/requirement:** Configure supported team synchronization or separate automation and reconcile it.
@@ -235,7 +235,7 @@ Checked 5 November 2026. Corrected or qualified. Basis: SCIM, SWITCH.
 Checked 5 November 2026. Corrected or qualified. Basis: SAML, SCIM, SWITCH.
 
 - **Title, Label / proposed control:** SAML + SCIM per org
-- **Summary, Label / proposed control:** SAML enforced and SCIM configured in every org. Enterprise SAML does not support org SCIM. Accounts stay user-owned.
+- **Summary, Label / proposed control:** SAML enforced and SCIM configured in every org. Use per-org SAML, not enterprise SAML. Keep personal accounts. (Reworded 5 Nov 2026 to a requirement; the product facts are sourced in the description.)
 - **Description, Supported/requirement:** People retain personal GitHub accounts linked to SAML identities.
 - **Description, Supported/requirement:** Enforce SAML and configure SCIM separately in each organization.
 - **Description, Supported/requirement:** SCIM manages organization membership, not personal-account ownership or team grants.
@@ -526,11 +526,11 @@ Checked 5 November 2026. Corrected or qualified. Basis: ARCHIVE.
 - **Description, Supported/requirement:** This design puts unclassified experiments in B, not A.
 - **Proposed check, Requirement (not run):** List sandbox-lab repos with no activity for 90 days. They should be archived.
 
-### B.p12: Per-org SAML keeps org SCIM
+### B.p12: Keep per-org SAML and org SCIM
 
 Checked 5 November 2026. Corrected or qualified. Basis: SAML, SCIM, SWITCH.
 
-- **Title, Label / proposed control:** Per-org SAML keeps org SCIM
+- **Title, Label / proposed control:** Keep per-org SAML and org SCIM
 - **Description, Supported/requirement:** Enterprise-level SAML would remove organization SCIM, and GitHub has no SCIM for a personal-account enterprise.
 - **Description, Supported/requirement:** So B keeps SAML and SCIM per organization.
 - **Description, Supported/requirement:** This is a design choice.
@@ -894,7 +894,7 @@ Checked 5 November 2026. Retained after review. Basis: STREAM.
 Checked 5 November 2026. Retained after review. Basis: IP.
 
 - **Title, Label / proposed control:** Domain B SIEM and SOC
-- **Summary, Label / proposed control:** Public activity has visibility gaps.
+- **Summary, Label / proposed control:** Do not claim full visibility of public activity. (Reworded 5 Nov 2026 to a requirement; the visibility limit is sourced in the description.)
 - **Description, Supported/requirement:** A SIEM and SOC for domain B.
 - **Description, Supported/requirement:** Activity in public resources and personal-account activity outside organization resources are only partly visible.
 - **Description, Supported/requirement:** Do not claim full observation.
@@ -1174,17 +1174,17 @@ Checked 5 November 2026. Retained after review. Basis: Design definition on this
 
 ## Design-choice explanations
 
-- **1, design requirement with documented capabilities above:** B uses personal accounts with SAML and SCIM per organization to retain membership provisioning. Enterprise SAML does not support organization SCIM.
+- **1, design requirement with documented capabilities above:** B uses personal accounts with SAML and SCIM per organization to retain membership provisioning. Enterprise SAML does not support organization SCIM. Evidence row DEV.1; verdict: documented.
 - **2, design requirement with documented capabilities above:** A has no sandbox. Unclassified experiments run in the private sandbox-lab organization in B. This is a design choice.
-- **3, design requirement with documented capabilities above:** Private visibility supports explicit grants. Internal visibility grants broad enterprise-member read access, subject to guest-collaborator exceptions, and organization SAML does not require authentication for internal repositories.
-- **4, design requirement with documented capabilities above:** Private CI requires assessed private-network runners and separate credentials. Supported Linux/Windows hosted larger runners with Azure private networking are an alternative to self-hosted runners. Public fork PRs use separate hosted workers.
+- **3, design requirement with documented capabilities above:** Private visibility supports explicit grants. Internal visibility grants broad enterprise-member read access, subject to guest-collaborator exceptions. Organization SAML does not require authentication for internal repositories. Evidence rows DEV.3 (three quotes) in the evidence table; verdict: documented.
+- **4, design requirement with documented capabilities above:** Private CI requires assessed private-network runners and separate credentials. Azure private networking for hosted runners is available only for larger Ubuntu and Windows runners. Where assessed, use them as an alternative to self-hosted runners. Evidence row DEV.4 covers the first sentence; the second is a design requirement. Public fork PRs use separate hosted workers.
 ## Flow summaries
 
-- **build, design requirement with documented capabilities above:** Code reaches a protected target. A and B use separate runners, identities and targets.
-- **untrusted, design requirement with documented capabilities above:** Public fork pull requests run without deployment grants: no secrets and no route to internal or sensitive systems.
+- **build, design requirement with documented capabilities above:** Code reaches a protected target. A and B must use separate runners, identities and targets.
+- **untrusted, design requirement with documented capabilities above:** Public fork pull requests must run without deployment grants: no secrets and no route to internal or sensitive systems.
 - **export, design requirement with documented capabilities above:** A to B only through the approved transfer service, after the release authority decides.
 - **intake, design requirement with documented capabilities above:** B to A only after verification, quarantine, scanning and pinning.
-- **respond, design requirement with documented capabilities above:** Detect, contain, rotate, recover, learn. Logs stay in each domain. The common SOC sees only minimized metadata.
+- **respond, design requirement with documented capabilities above:** Detect, contain, rotate, recover, learn. Logs must stay in each domain. The common SOC may see only minimized metadata.
 
 ## Validation
 
@@ -1194,4 +1194,13 @@ Checked 5 November 2026. Retained after review. Basis: Design definition on this
 - No browser runtime exceptions or error-level console/log entries. All rendered popover paragraphs are within 60 words. Source links appear beside relevant claims.
 - Static checks: all 106 original node IDs preserved; every title, summary, description sentence and proposed check appears in this ledger. Local index links resolve, the AI note matches the reference page, and edited files contain no em or en dashes.
 - No build step exists for this hand-written HTML site. JavaScript parsing and browser execution passed. Final diff checked for scope, whitespace, accidental changes and secrets.
+- Per-claim evidence, 5 November 2026: the verifier passed (62 sourced, 12 inference, 256 design requirement or label sentences; 90 quotes against 33 pages) and a deliberately broken quote made it fail. Paced click test: 106 boxes and 414 Part of and Related links, 0 failures. Real mouse clicks, saved `#n=` and `#f=` links, and one text-fragment highlight in Chrome were checked. Contrast and page width were read from computed styles at 332 px in light and dark. Not tested: Firefox and Safari. Details are in the decisions note.
 - Nothing was tested on a real GitHub tenant. The earlier draw.io versions were not rechecked.
+
+## Per-claim evidence (5 November 2026)
+
+- Each sourced fact in a popup description, and in the four design-choice notes (DEV.1 to DEV.4), has a row in `github-two-enterprise-interactive.evidence.tsv` with the sentence start, a source from that box's list and a verbatim quote. The page shows the quote and a link that opens the source at the passage. Inference sentences carry an "[inference]" label on the page.
+- Mechanical check: `node github/verify-evidence.mjs` fetched each source and found every quote word for word. Result on 5 November 2026: 62 sourced facts, 12 inferences, 256 design requirement or label sentences; 90 quotes checked against 33 pages; OK. A deliberately corrupted quote and a stale inline copy both made the script fail.
+- Rewordings made so the sentence no longer goes beyond its source: standard GitHub Enterprise Cloud on github.com (was "multi-tenant SaaS"); Ubuntu/Windows runners; SCIM deprovisioning suspends the account and does not delete it; the PAT sentence no longer claims revocation of existing tokens or SSH keys; four "Proposed check" texts reduced to test steps; the push-protection limit is now a sourced description sentence.
+- Not verified: that Chrome, Firefox and Safari highlight the passage from the text-fragment link. The quote is shown beside the link regardless.
+- Summary lines, chips and check texts are design requirements or test steps. Where they repeat a documented fact, the sourced version is in the description of the same box.

@@ -1,0 +1,611 @@
+verdict	where	text
+L	g0 title	Gate 0: approve the hosting service before loading classified content
+R	g0 summary	A decision for the security authority, not a product setting. If no option is accredited, do not proceed.
+R	g0 proposed check	An approval record exists for the service, the region, support access and every connected data processor.
+L	g1 title	1  Enterprise Cloud on github.com
+L	g2 title	2  Cloud with data residency (GHE.com)
+L	g3 title	3  Self-hosted or accredited platform
+L	c.bound title	Logical boundary
+R	c.bound proposed check	List every admin and app that can see both enterprises. The list should be empty or justified.
+L	c.ident title	Keep identities apart
+R	c.ident summary	Dedicated IdP integration for A; separate SAML and SCIM integration for each B organization. No shared admin or service accounts across domains.
+R	c.ident proposed check	A sensitive workstation cannot upload through an unapproved GitHub account or app.
+L	c.xfer title	Approved transfer service
+R	c.xfer proposed check	Show that an approved transfer works end to end, or show that the path is blocked.
+L	c.xfer step	Release authority decides
+L	c.xfer step	Inspect history, secrets, IaC topology
+L	c.xfer step	Signed manifest, hash logged
+L	c.xfer step	Intake: verify, quarantine, scan, pin
+L	c.soc title	Common SOC view
+R	c.soc summary	Approved, minimized metadata only.
+R	c.soc proposed check	Sample the shared feed and confirm it holds no repo names, paths or user identities from A.
+L	A.people title	Cleared people
+R	A.people summary	Need-to-know groups. Managed workstation, signed commits, controlled egress.
+R	A.people proposed check	Try to reach GitHub from an unmanaged device and from a managed one with a personal account.
+L	A.idp title	Corporate IdP
+R	A.idp summary	Dedicated app for A. Phishing-resistant MFA, privileged access through PAM.
+R	A.idp proposed check	Run an IdP outage drill and use the emergency recovery access. Review that use independently.
+L	A.scim title	SAML + SCIM to EMU
+R	A.scim summary	Enterprise SCIM. IdP groups drive enterprise teams. Keep managed users inside the enterprise.
+R	A.scim proposed check	Trigger SCIM deprovisioning through the configured IdP integration and verify suspension and access loss. Also test a suspension done only in the IdP. Check privileged and exceptional paths separately.
+L	B.people title	Workforce and partners
+R	B.people summary	Assigned by IdP group. Separate device zone from A. No corporate SSO for public contributions.
+R	B.people proposed check	Confirm a partner has access only to the repos approved for them, with an expiry date.
+R	B.idp summary	Separate integration per organization in B. The IdP owns provisioned membership; reconcile team grants separately.
+R	B.idp proposed check	Compare the admin lists of A and B. They share no accounts.
+L	B.scim title	SAML + SCIM per org
+R	B.scim summary	SAML enforced and SCIM configured in every org. Use per-org SAML, not enterprise SAML. Keep personal accounts.
+R	B.scim proposed check	Remove a person and check every org, outside-collaborator grants, deploy keys, app installs, webhooks and cloud identities.
+L	A.p1 title	Private repos only, no forks
+R	A.p1 proposed check	Create a repo in each org, then try to make it public or fork it.
+L	A.p2 title	Limit repo create, delete, transfer
+R	A.p2 proposed check	Try each action as a normal member.
+L	A.p3 title	Enterprise rulesets, signed commits
+R	A.p3 proposed check	Negative tests: push to main, force push, and bypass by an actor who is not on the list.
+L	A.p4 title	Security configs on all repos
+R	A.p4 proposed check	Create a new repo and confirm the baseline appears with no manual steps.
+L	A.p5 title	Approved Actions, read-only token
+R	A.p5 proposed check	Try a workflow with an unapproved action. Expected: it fails. Record the result.
+L	A.p6 title	Classic PATs blocked
+R	A.p6 proposed check	Create a classic PAT, then try to read a private organization repo with it. Expected: access is refused. Check SSH keys separately and record results.
+L	A.p7 title	Audit stream with source IP
+R	A.p7 proposed check	Trigger a test event and find it, with the source IP, in the archive.
+L	A.p8 title	IP allow list, proxy only
+R	A.p8 proposed check	Try to push from outside the proxy, and over SSH.
+L	A.p9 title	Custom properties on every repo
+R	A.p9 proposed check	List repos with a missing property. The list should be empty.
+L	A.p10 title	Enterprise teams from IdP groups
+R	A.p10 proposed check	Move a person between IdP groups and confirm team access follows.
+L	A.p11 title	Orgs by class, no sandbox
+R	A.p11 proposed check	Confirm no organization in A holds unclassified experiments.
+L	A.p12 title	Threat model per system
+R	A.p12 proposed check	Pick a system and ask for its threat model and its last review date.
+L	A.p13 title	Agents and AI, off until approved
+R	A.p13 proposed check	Open an agent pull request that edits a workflow file. Expected: it will need a code-owner review. Record the result.
+L	A.p14 title	Scoped roles, review security-manager access
+R	A.p14 proposed check	List users with Admin on any repo. Each one should have a recorded reason.
+L	A.p15 title	Dependency and provenance controls
+R	A.p15 proposed check	Add a dependency with a known advisory in a PR. The check should block it.
+L	A.p16 title	Shared workflow platform
+R	A.p16 proposed check	Change a shared workflow without a code-owner review. Expected: it is blocked. Record the result. Check that a consumer repo pins a version.
+L	B.p1 title	2FA, owner-added orgs
+R	B.p1 proposed check	Try to add an org to the enterprise as a normal member and record the result. Monitor for orgs outside the enterprise.
+L	B.p2 title	Public repos only in publishing org
+R	B.p2 proposed check	Set a repo to public in internal-engineering. Expected: it is blocked. Record the result.
+L	B.p3 title	Enterprise rulesets baseline
+R	B.p3 proposed check	Negative tests as in A: push to main, force push, bypass.
+R	B.p4 proposed check	Create a repo in each org and confirm the baseline appears.
+R	B.p5 proposed check	Check that a workflow from a fork cannot read any secret.
+L	B.p6 title	PAT lifetimes bounded
+R	B.p6 proposed check	Test organization access using member tokens whose configured lifetime exceeds the limit, including a newly created token. Check administrator exemptions separately.
+R	B.p7 proposed check	Trigger a test event and find it in the archive.
+L	B.p8 title	Reconcile SAML + SCIM in every org
+R	B.p8 proposed check	Add a test org without SAML. The job should flag it.
+L	B.p10 title	Orgs by class, open source apart
+R	B.p10 proposed check	Confirm no public repo lives outside public-open-source.
+L	B.p11 title	Sandbox org, private only
+R	B.p11 proposed check	List sandbox-lab repos with no activity for 90 days. They should be archived.
+L	B.p12 title	Keep per-org SAML and org SCIM
+R	B.p12 proposed check	Confirm every org shows SAML enforced and SCIM active.
+L	B.p13 title	Agents and AI, reviewed models only
+R	B.p16 proposed check	Change a shared workflow without a code-owner review. Expected: it is blocked. Record the result.
+L	A.o1 title	critical-system-a
+R	A.o1 proposed check	Test a non-owner member with no team, direct or organization-wide role grant. They must not read private repositories.
+L	A.o1 chip	Teams from IdP, base none
+L	A.o1 chip	Own runner group, apps approved
+L	A.o1.src title	source (private)
+R	A.o1.src summary	2+ approvals, CODEOWNERS, signed commits, push protection.
+R	A.o1.src proposed check	Open a PR that changes a CODEOWNERS path with one approval. Expected: it will not merge. Record the result.
+L	A.o1.iac title	infrastructure as code
+R	A.o1.iac summary	IaC policy checks, protected environments, plan review.
+R	A.o1.iac proposed check	Search the repo history for state files and plan output. There should be none.
+L	A.o2 title	critical-system-b
+R	A.o2 proposed check	Check that no team or app has access to both system organizations without a recorded reason.
+L	A.o2 chip	Own owners and security leads
+L	A.o2 chip	Own runner group
+R	A.o2.src summary	Same baseline, system-specific CODEOWNERS.
+R	A.o2.src proposed check	As for the first system.
+R	A.o2.iac summary	Same checks, separate state and environments.
+R	A.o2.iac proposed check	Try to point this repo's pipeline at the other system's state. Expected: it is refused. Record the result.
+L	A.o3 title	platform-security
+R	A.o3 proposed check	Review human and automation grants separately, including security-manager roles, app permissions, reusable workflows and runner administration.
+L	A.o3 chip	Shared tooling, policy as code
+L	A.o3 chip	No blanket read to systems
+L	A.o3.pol title	policy-as-code
+R	A.o3.pol summary	Changes reviewed by security, two approvals.
+R	A.o3.pol proposed check	Change a live setting by hand. The drift check should flag it.
+L	A.o3.tool title	shared-tooling
+R	A.o3.tool summary	Pinned, signed and reviewed before builds use it.
+R	A.o3.tool proposed check	Check that builds reference tools by commit, not by tag.
+L	B.o1 title	internal-engineering
+L	B.o1 chip	Team grants, base access none
+L	B.o1 chip	Internal runner group
+L	B.o1.app title	internal-app
+R	B.o1.app summary	PR review, CODEOWNERS, secret protection, pinned action refs.
+R	B.o1.app proposed check	Push a safe test fixture matching a supported push-protection pattern. Expect a block when coverage and bypass settings apply. Record the result.
+L	B.o1.tools title	internal-tools
+R	B.o1.tools summary	Private only. GitHub internal visibility not used.
+R	B.o1.tools proposed check	Confirm no repo in B uses the internal visibility value.
+L	B.o2 title	public-open-source
+R	B.o2 proposed check	List repos with public visibility. All of them belong to this org.
+L	B.o2 chip	Only place public repos live
+L	B.o2 chip	Named release approvers
+L	B.o2.proj title	public-project
+R	B.o2.proj summary	Release review. History and artifacts checked before publishing.
+R	B.o2.proj proposed check	Run a secret and metadata scan over the full history before the first public release.
+L	B.o2.pr title	untrusted pull requests
+R	B.o2.pr summary	Treated as hostile. No secrets, no internal runners.
+R	B.o2.pr proposed check	Open a fork PR that tries to print a secret. Expected: it will get none. Record the result.
+L	B.o3 title	sandbox-lab
+R	B.o3 proposed check	Search the org for secrets and internal data. There should be none.
+L	B.o3 chip	Private only, no public repos
+L	B.o3 chip	SAML enforced, SCIM configured
+L	B.o3.exp title	experiments
+R	B.o3.exp summary	No secrets or internal data. Archived when unused.
+R	B.o3.exp proposed check	List repos with no activity for 90 days. They should be archived.
+L	B.o3.part title	Partners recertified
+R	B.o3.part summary	Own review cycle, scoped publisher roles.
+R	B.o3.part proposed check	List partner grants without an expiry date. There should be none.
+L	A.e1 title	Ephemeral runners
+R	A.e1 summary	Per-system pool, egress allow list.
+R	A.e1 proposed check	Run a job that tries to reach a host outside the allow list.
+L	A.e2 title	Vault and OIDC
+R	A.e2 summary	Short-lived tokens, rejects B.
+R	A.e2 proposed check	Use an identity from B to deploy to A. It must fail.
+L	A.e3 title	Private registry
+R	A.e3 summary	Signed artifacts, SBOM, mirror.
+R	A.e3 proposed check	Try to build with a dependency that is not on the mirror.
+L	B.e1 title	Internal CI pool
+R	B.e1 summary	Own runners, own credentials.
+R	B.e1 proposed check	Check that internal runners are not reachable from public pull requests.
+L	B.e2 title	Public CI, isolated
+R	B.e2 summary	Hosted runners, no secrets.
+R	B.e2 proposed check	Open a fork PR and confirm it cannot read secrets or reach internal hosts.
+R	B.e3 summary	B targets only, rejects A.
+R	B.e3 proposed check	Use an identity from A to deploy to B. It must fail.
+L	A.v1 title	Audit and security events
+R	A.v1 summary	Git, alerts, IdP, proxy, EDR.
+R	A.v1 proposed check	Trigger a test alert and follow it to the archive.
+L	A.v2 title	Collector and archive
+R	A.v2 summary	Immutable store, lag monitoring.
+R	A.v2 proposed check	Stop the collector. Someone should be alerted.
+L	A.v3 title	Sensitive SIEM and SOC
+R	A.v3 summary	Cleared analysts only.
+R	A.v3 proposed check	Check that analyst access is limited to cleared staff.
+R	B.v1 summary	Git, alerts, IdP, proxy, CI.
+L	B.v3 title	Domain B SIEM and SOC
+R	B.v3 summary	Do not claim full visibility of public activity.
+R	B.v3 proposed check	Document which activities in B the SIEM cannot see.
+L	L.a title	A · Sensitive
+R	L.a proposed check	Try to deploy by skipping a step. Each step should block.
+L	L.a lane step	Approved PR
+L	L.a lane step	Isolated CI
+L	L.a lane step	Checks
+L	L.a lane step	Signed artifact
+L	L.a lane step	Env approval
+L	L.a lane step	Protected target
+L	L.brel title	B · Release
+R	L.brel proposed check	Try to publish a release without the approval.
+L	L.brel lane step	Reviewed commit
+L	L.brel lane step	Trusted build
+L	L.brel lane step	Signed release
+L	L.brel lane step	Release approval
+L	L.brel lane step	B target
+L	L.bpr title	B · Untrusted PR
+R	L.bpr proposed check	Use a fork PR to try reading a deployment secret and reaching controlled internal test endpoints. Expected: both fail. Record the results.
+R	L.bpr lane note	No secrets. No route to internal or sensitive systems.
+L	L.bpr lane step	Public PR
+L	L.bpr lane step	Status only
+L	L.exp title	Export A → B
+R	L.exp proposed check	Request an export without the authority's decision. Expected: it is blocked. Record the result.
+L	L.exp lane step	Release request
+L	L.exp lane step	Release authority
+L	L.exp lane step	Inspect
+L	L.exp lane step	Minimize and sign
+L	L.exp lane step	Stage
+L	L.exp lane step	Publish in B
+L	L.imp title	Intake B → A
+R	L.imp proposed check	Import a package with a known bad hash. Expected: it will be stopped in quarantine. Record the result.
+L	L.imp lane step	Upstream source
+L	L.imp lane step	Verify origin
+L	L.imp lane step	Quarantine
+L	L.imp lane step	Scan and pin
+L	L.imp lane step	Admit to mirror
+L	L.imp lane step	Use in A
+L	L.ir title	Incident response
+R	L.ir proposed check	Run a tabletop exercise on a leaked token and on an IdP outage.
+L	L.ir lane step	Detect
+L	L.ir lane step	Contain
+L	L.ir lane step	Rotate, preserve
+L	L.ir lane step	Recover
+L	L.ir lane step	Learn
+L	ops.1 title	Inventory: owner, class, retention
+L	ops.2 title	Policy as code, drift checks
+L	ops.3 title	Back up Git, LFS, issues, packages
+L	ops.4 title	Tested restore, RPO and RTO
+L	ops.5 title	Reconcile groups, keys, apps
+L	ops.6 title	Patch and attest runners
+L	ops.7 title	Protect IaC state and plans
+L	ops.8 title	Test collector, stream, IdP outage
+L	ops.9 title	Access reviews, pen tests, evidence
+L	ops.10 title	Review org model, archive stale orgs
+L	ops.11 title	Training and security champions
+L	ops.12 title	Threat model upkeep per system
+L	ops.13 title	Continuity mirror, rehearsed
+L	ops.14 title	Metrics and developer feedback
+L	ops.15 title	Onboarding, knowledge base, champions
+L	acc.1 title	Security authority: classification, hosting, export
+L	acc.2 title	Enterprise owners: baseline, audit delivery
+L	acc.3 title	Org owners: teams, apps, runners
+L	acc.4 title	Repo owners: review, remediation, deploys
+L	acc.5 title	SOC: detection, response, evidence
+L	acc.6 title	Governance: exceptions, vendor review, exercises
+L	acc.7 title	System security leads: threat model
+L	acc.8 title	Champions: training, coding standard
+L	acc.9 title	Compliance: audits, access reviews
+R	flow banner build	Code reaches a protected target. A and B must use separate runners, identities and targets.
+R	flow banner untrusted	Public fork pull requests must run without deployment grants: no secrets and no route to internal or sensitive systems.
+R	flow banner export	A to B only through the approved transfer service, after the release authority decides.
+R	flow banner intake	B to A only after verification, quarantine, scanning and pinning.
+R	flow banner respond	Detect, contain, rotate, recover, learn. Logs must stay in each domain. The common SOC may see only minimized metadata.
+N	script	user-check
+L	script	Control planned in GitHub
+L	script	External control or process
+N	script	stamp
+N	script	cloud
+L	script	1 Enterprise Cloud on github.com
+N	script	globe
+L	script	2 Cloud with data residency (GHE.com)
+N	script	server
+L	script	3 Self-hosted or accredited platform
+N	script	c.bound
+N	script	layers
+N	script	c.ident
+N	script	alert
+N	script	c.xfer
+N	script	swap
+N	script	c.soc
+N	script	eye
+N	script	A.people
+N	script	A.idp
+N	script	key
+N	script	A.scim
+N	script	refresh
+N	script	B.people
+N	script	users
+N	script	B.idp
+N	script	B.scim
+N	script	lock
+N	script	sliders
+N	script	branch
+N	script	shield
+N	script	play
+N	script	network
+N	script	tag
+N	script	building
+N	script	clipboard
+N	script	cpu
+N	script	box
+N	script	repo
+N	script	A.o1.src
+N	script	A.o1.iac
+N	script	A.o2.src
+N	script	A.o2.iac
+N	script	ban
+N	script	A.o3.pol
+N	script	A.o3.tool
+N	script	B.o1.app
+N	script	B.o1.tools
+N	script	B.o2.proj
+N	script	B.o2.pr
+N	script	B.o3.exp
+N	script	B.o3.part
+N	script	archive
+N	script	search
+N	script	pa
+N	script	check
+N	script	L.brel
+N	script	pb
+N	script	L.bpr
+N	script	pb few
+N	script	L.exp
+N	script	px
+N	script	filter
+N	script	L.imp
+N	script	pg
+N	script	database
+N	script	L.ir
+N	script	bell
+N	script	ps
+N	script	ops.1
+N	script	ops.2
+N	script	ops.3
+N	script	ops.4
+N	script	ops.5
+N	script	ops.6
+N	script	ops.7
+N	script	ops.8
+N	script	activity
+N	script	ops.9
+N	script	ops.10
+N	script	ops.11
+N	script	ops.12
+N	script	ops.13
+N	script	ops.14
+N	script	ops.15
+N	script	acc.1
+N	script	acc.2
+N	script	acc.3
+N	script	acc.4
+N	script	acc.5
+N	script	acc.6
+N	script	calendar
+N	script	acc.7
+N	script	acc.8
+N	script	acc.9
+L	script	Build and deploy
+L	script	Untrusted PR
+L	script	Export A to B
+L	script	Intake B to A
+L	script	Respond
+N	script	flow id missing
+N	script	rel id missing
+N	script	<button type="button" class="nd
+N	script	card
+N	script	" data-id="
+N	script	" aria-label="
+N	script	chip
+N	script	<section class="tower
+N	script	tw-a pa
+N	script	tw-b pb
+N	script	" aria-label="Enterprise
+L	script	ENTERPRISE A · SENSITIVE
+L	script	ENTERPRISE B · INTERNAL AND PUBLIC
+R	script	Enterprise Managed Users. Source code and IaC for classified critical systems.
+R	script	Personal accounts linked by SAML and SCIM per org. Internal work and public releases.
+L	script	IDENTITY
+L	script	accounts and groups
+L	script	E · ENTERPRISE POLICY
+L	script	configure and verify baseline coverage
+L	script	O · ORGANIZATIONS R · REPOSITORIES
+N	script	<button type="button" class="nd orgh" data-id="
+L	script	Repositories
+N	script	card repo
+L	script	workflows run
+L	script	EXECUTION
+L	script	audit and security telemetry
+L	script	EVIDENCE
+N	script	<button type="button" class="nd lane
+N	script	<button type="button" class="nd gmain" data-id="g0" aria-label="
+R	script	GATE 0 · Approve the hosting service before loading classified content
+N	script	<button type="button" class="nd opt" data-id="
+R	script	baseline: two enterprises on github.com; alternatives require redesign
+R	script	Logical boundary. Baseline: two domains on github.com. No air gap.
+N	script	<span class="xs" data-step="
+R	script	External process, outside GitHub. Remove if transfers are prohibited.
+R	script	BUILD AND DEPLOY Each domain has its own runners, identity and target.
+R	script	EXCHANGE AND RESPOND Transfer is an external process. Remove it if prohibited.
+R	script	PLATFORM OPERATIONS Per domain.
+R	script	ACCOUNTABILITY Every control has a named owner.
+L	script	GHE.com feature differences
+L	script	Data storage and exceptions
+L	script	Managed account restrictions
+L	script	Repository management policies
+L	script	Organization SCIM
+L	script	Switching SAML scope
+L	script	SCIM suspension and IdP triggers
+L	script	Enterprise teams
+L	script	Enterprise Managed Users concept
+L	script	SAML scope
+L	script	Security manager role
+L	script	Runner groups
+L	script	Reusable workflows
+L	script	Available rules
+L	script	CODEOWNERS
+L	script	Push protection limits
+L	script	Deployment environments
+L	script	OIDC issuer, audience and subject
+L	script	Enterprise rulesets
+L	script	npm trusted publishing
+L	script	PyPI trusted publishing
+L	script	Safe fork PR workflow context
+L	script	Hosted runner OS privileges
+L	script	Secure workflow use
+L	script	Organization archiving
+L	script	Azure private networking
+L	script	Audit coverage and retention
+L	script	Audit streaming
+L	script	Source IP limitations
+L	script	Webhook verification and delivery IDs
+L	script	Artifact attestations
+L	script	Custom properties
+L	script	Repository policies (preview)
+L	script	Copilot cloud policies
+L	script	Ruleset layering
+L	script	Security configurations
+L	script	Advanced Security products
+L	script	Delegated secret bypass
+L	script	Security campaigns
+L	script	Enterprise Actions policies
+L	script	PAT policies
+L	script	IP allow list exclusions
+L	script	Corporate proxy restrictions
+L	script	Entra Conditional Access limits
+L	script	Copilot firewall exclusions
+L	script	Third-party agent enablement
+L	script	Dependency review
+L	script	Supported Dependabot ecosystems
+L	script	Enterprise security policies
+L	script	Adding organizations
+N	script	#stage
+N	script	#fit
+N	script	#scroller
+N	script	#pop
+N	script	#sum
+N	script	#bar
+N	script	.nd[data-id]
+N	script	data-id
+N	script	svg
+N	script	class
+N	script	ov
+N	script	aria-hidden
+N	script	true
+N	script	defs
+N	script	mA
+N	script	mk-a
+N	script	mG
+N	script	mk-g
+N	script	mC
+N	script	mk-c
+N	script	marker
+N	script	auto
+N	script	path
+N	script	.tw-a
+N	script	.tw-b
+N	script	[data-step="0"]
+N	script	[data-step="3"]
+N	script	ar
+N	script	marker-end
+N	script	url(#
+N	script	text
+N	script	alab
+N	script	currentColor
+N	script	ex
+N	script	var(--a)
+N	script	im
+N	script	var(--g)
+N	script	var(--c)
+N	script	export
+N	script	intake
+N	script	respond
+N	script	so
+N	script	fl
+N	script	dim
+N	script	on
+N	script	scale(
+L	script	Control
+N	script	tag:G
+L	script	G · Planned in GitHub
+N	script	tag:X
+L	script	X · External control or process
+N	script	tag:G+X
+L	script	G+X · Both
+L	script	Policy layer
+N	script	sc:E
+L	script	Enterprise
+N	script	sc:O
+L	script	Organization
+N	script	sc:R
+L	script	Repository
+L	script	Domain
+N	script	dom:A
+L	script	Enterprise A
+N	script	dom:B
+L	script	Enterprise B
+N	script	dom:S
+L	script	Shared
+L	script	Flow
+N	script	fl:build
+N	script	fl:untrusted
+N	script	fl:export
+N	script	fl:intake
+N	script	fl:respond
+L	script	Review
+N	script	dev:1
+L	script	Design choices
+L	script	controls planned in GitHub (G)
+L	script	external controls and processes (X)
+L	script	controls planned in both (G+X)
+L	script	enterprise policies
+L	script	organizations
+L	script	repositories
+L	script	shared parts
+L	script	selected design choices
+N	script	all
+N	script	sc
+N	script	dom
+N	script	dev
+N	script	div
+N	script	grp
+N	script	button
+N	script	fchip
+N	script	data-f
+L	script	All
+N	script	role
+N	script	group
+N	script	aria-label
+N	script	span
+N	script	glabel
+N	script	click
+N	script	.fchip
+L	script	. Press Escape or click an empty area to clear.
+L	script	Design choices. 1:
+L	script	Open a highlighted box to see the sources for these.
+L	script	Click a box for what it does and how to check it. Filter to follow a flow, a policy layer or a type of control.
+N	script	sel
+N	script	aria-pressed
+N	script	lbl
+N	script	pop-h
+N	script	strong
+N	script	popTitle
+N	script	pop-x
+L	script	Close
+N	script	pop-m
+L	script	Enterprise policy
+N	script	em
+N	script	inf
+L	script	Inference
+N	script	ev-n
+L	script	Show evidence
+N	script	nearest
+N	script	hl
+N	script	DEV.
+L	script	Design choice
+L	script	of 4.
+N	script	ev
+L	script	Evidence (quotes checked 5 Nov 2026)
+N	script	ol
+N	script	li
+N	script	ev-q
+N	script	_blank
+N	script	noopener
+L	script	Opens the source page at this passage in a new tab
+N	script	ev-note
+L	script	Numbers link to the evidence. Sentences without a number are design requirements or labels.
+L	script	No sentence here needs a source: each is a design requirement, a label or marked as inference.
+N	script	ul
+N	script	1.1rem
+L	script	Primary sources (5 Nov 2026)
+L	script	Proposed check (not run)
+L	script	Part of
+N	script	links
+N	script	lk
+L	script	Related
+N	script	keydown
+N	script	Escape
+N	script	#legend
+L	script	Planned in GitHub
+L	script	Both
+L	script	E, O, R = enterprise, organization and repository policy layers
+N	script	resize
+L	page text	GitHub two-enterprise reference
+L	page text	Reference architecture · GitHub Enterprise Cloud
+L	page text	GitHub for classified, internal and public work
+R	page text	Two enterprises, three policy layers and shared operations on one page. Click any box to see what it does and how to check it. Use the filters to follow a flow or a type of control.
+L	page text	Facts checked
+L	page text	5 Nov 2026
+L	page text	Basis
+L	page text	GitHub, npm and PyPI documentation
+L	page text	Names
+L	page text	illustrative
+R	page text	Proposed controls, not deployed guarantees. G marks a control planned in GitHub; X marks an external process. The tags are design labels, not statements about what a product does. Hosting alternatives apply to A; B stays on github.com for public work.
+L	page text	The diagram is wide. Drag it sideways, or pinch to zoom.
+R	page text	Reference design. Organization and system names are illustrative. Shared standards never mean shared access to source code or detailed logs. These are target controls, not a claim that one policy switch implements each box. Nothing was tested on a real GitHub tenant.
+L	page text	Earlier editable drawings (not rechecked in this review):
+L	page text	three-page draw.io
+L	page text	and
+L	page text	one-page draw.io
+L	page text	Made with AI
+L	page text	This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.
+L	page text	Filters
+L	page text	Two-enterprise GitHub reference architecture
