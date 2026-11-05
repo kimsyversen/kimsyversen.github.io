@@ -58,3 +58,9 @@ Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 - **Native navigation, no script.** Browse pages, Skip to pages and Back to top use normal anchors. There is no search or filtering for a collection of five pages. No animation, state storage or new dependency is needed.
 - **The earlier content stays.** Page summaries, check notes, destinations, stable IDs and individual update dates are unchanged. The shared AI disclosure remains verbatim. The owner's name, source link, working notes and work log stay off the page.
 - **Verification.** Light and dark palettes were inspected at desktop and 375px widths. The dark check used an untracked temporary copy activating the production dark CSS, then removed it. Intermediate and smaller widths, keyboard focus, footnote navigation, local links, text contrast and paragraph lengths were also checked. See `index.factcheck.md` for scope and limits.
+
+
+5 Nov 2026, entry 06
+
+- Add "Enterprise AI agent security" as entry 06, category Recommendation, updated 5 Nov 2026. The count reads 06 pages. Existing entries keep their numbers and ids.
+- The drawing shows five stacked layers with a red dashed line down the side for the feedback and kill path.
