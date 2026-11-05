@@ -1,6 +1,7 @@
+Belongs to [index.html](index.html). Other notes for the same page: [decisions](index.decisions.md).
+
 # Plan: site index (index.html), 5 Nov 2026
 
-Belongs to [index.html](index.html). Other notes for the same page: [decisions](index.decisions.md).
 
 Goal: move the old Kstech landing page off `index.html`, give the site root a good-looking index of every page and the work done in this repo, and add an AGENTS.md with the five most useful upkeep rules.
 
@@ -25,3 +26,13 @@ Goal: give the index a look of its own, since it matched `threatmodelling.html`.
 12. Replace the fonts and colours. Keep the five small drawings. Done.
 13. Update `AGENTS.md`, since it says to copy the look of `threatmodelling.html` and speaks of rows. Done.
 14. Render check: light, dark, 375px wide, no console errors, no em or en dashes, every link resolves. Done.
+
+
+## Second redesign, 5 Nov 2026
+Goal: make the design beautiful and functional while keeping existing URLs and the site's upkeep rules.
+
+15. Replace the oversized sentence and footnote grid with a distinct editorial introduction and one continuous numbered list. Done.
+16. Retain every page, permanent number, illustration, summary, check note and download. Keep the shared AI disclosure verbatim. Done.
+17. Add native browse, skip and return anchors, visible row focus, semantic dates and responsive metadata. Done.
+18. Inspect desktop and mobile layouts in light and dark palettes, verify links and keyboard navigation, and check text contrast and paragraph length. Done. The dark palette was activated in a temporary preview copy without changing system settings.
+19. Record the design decisions and index-specific fact check. Done. This is a static page with no build step and no added JavaScript.

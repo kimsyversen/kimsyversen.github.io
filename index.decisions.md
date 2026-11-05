@@ -1,6 +1,7 @@
+Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
+
 # Decisions: site index (index.html)
 
-Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 
 5 Nov 2026
 
@@ -37,10 +38,23 @@ Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 5 Nov 2026, redesign at the owner's request
 
 - **The index has its own look.** The owner said it looked the same as the threat modeling page. `AGENTS.md` now says content pages copy that look and the index does not. The bans on template looks still apply to every page.
-- **One sentence with footnotes.** The list of pages is the headline, so the design comes from the content and not from decoration. The details sit in footnotes, under the numbers the pages already had.
+- (Superseded.) **One sentence with footnotes.** The list of pages is the headline, so the design comes from the content and not from decoration. The details sit in footnotes, under the numbers the pages already had.
 - **A technical drawing sheet was considered and not built.** Its frame and ruled grid sit close to the grid look this site avoids.
-- **Titles appear twice, in the sentence and the footnote.** That is the cost of this design: a new page needs two edits. `AGENTS.md` says so.
-- **One blue ink on warm paper, set only in EB Garamond.** No other page uses these. Dark mode swaps ink and paper. Red still marks risk in the drawings and nothing else.
-- **File names no longer show.** Readers do not need them, since the links go there. "Newest first" moved into the sentence. The "Pages" heading stays for screen readers but is hidden.
-- **Footnote marks jump at once.** With smooth scrolling on, a link to `#n3` stayed near the top in the preview pane. Without it, the jump landed correctly. The target footnote's title is filled so a reader sees where they landed.
-- **Hover on the big links thickens the underline.** The filled block used elsewhere cut into the line above at this type size.
+- (Superseded.) **Titles appear twice, in the sentence and the footnote.** That is the cost of this design: a new page needs two edits. `AGENTS.md` says so.
+- (Superseded.) **One blue ink on warm paper, set only in EB Garamond.** No other page uses these. Dark mode swaps ink and paper. Red still marks risk in the drawings and nothing else.
+- (Superseded.) **File names no longer show.** Readers do not need them, since the links go there. "Newest first" moved into the sentence. The "Pages" heading stays for screen readers but is hidden.
+- (Superseded.) **Footnote marks jump at once.** With smooth scrolling on, a link to `#n3` stayed near the top in the preview pane. Without it, the jump landed correctly. The target footnote's title is filled so a reader sees where they landed.
+- (Superseded.) **Hover on the big links thickens the underline.** The filled block used elsewhere cut into the line above at this type size.
+
+
+5 Nov 2026, second redesign at the owner's request
+
+- **An editorial index with one row per page.** The oversized opening sentence and two-column footnotes made the collection difficult to scan. A separate title, short introduction and continuous ruled list give each page a clear place.
+- **Warm ivory and charcoal, with blue for navigation.** The earlier all-blue page competed with its links. Dark mode uses charcoal paper and pale blue links. Red retains its existing meaning in the drawings: risk.
+- **Serif titles and sans-serif details.** EB Garamond keeps the index distinct from the content pages. Public Sans makes descriptions, check notes and dates easier to read at smaller sizes. Both have system fallbacks.
+- **The sentence and permanent numbers remain.** Shorter topic links lead directly to the same pages. Their superscript numbers still jump to `n5` through `n1`. Each topic and number wraps as one unit. Explicit list values keep the semantic order consistent with the numbers.
+- **A visible Pages heading and aligned metadata.** Readers can scan titles, types and update dates. The count and newest-first label explain the order without requiring readers to parse the introduction. Mobile moves metadata above each title and retains the drawings.
+- **Whole-row links with separate download links.** A title's link covers its row, with an arrow showing the action. The two draw.io links stay above that hit area. Hover underlines the title; keyboard focus outlines the row. A footnote target gets a quiet background and underlined title.
+- **Native navigation, no script.** Browse pages, Skip to pages and Back to top use normal anchors. There is no search or filtering for a collection of five pages. No animation, state storage or new dependency is needed.
+- **The earlier content stays.** Page summaries, check notes, destinations, stable IDs and individual update dates are unchanged. The shared AI disclosure remains verbatim. The owner's name, source link, working notes and work log stay off the page.
+- **Verification.** Light and dark palettes were inspected at desktop and 375px widths. The dark check used an untracked temporary copy activating the production dark CSS, then removed it. Intermediate and smaller widths, keyboard focus, footnote navigation, local links, text contrast and paragraph lengths were also checked. See `index.factcheck.md` for scope and limits.

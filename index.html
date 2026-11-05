@@ -5,100 +5,167 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Index · Kim Syversen</title>
 <meta name="description" content="Security guides, risk maps and reference designs, each on a single page.">
-<meta name="theme-color" content="#F8ECE4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1A1690" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F6F3EC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191B1E" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Public+Sans:wght@400;500;600&amp;display=swap">
 <style>
-/* A page from a book, printed in one ink: one sentence, its footnotes and a colophon.
-   Blue is the ink. Red has one meaning: it marks the risk in each small drawing. */
+/* An editorial contents page: paper, ink, open space and numbered entries.
+   Blue marks navigation. Red marks risk in the drawings. */
 :root{
   color-scheme:light;
-  --paper:#F8ECE4; --ink:#2016C4; --muted:#4A44AE; --red:#D8341A;
+  --paper:#F6F3EC; --ink:#252A2D; --muted:#656A6B; --line:#D4D4CC;
+  --blue:#263FC4; --red:#B5321C; --wash:#EFEEE6;
   --serif:"EB Garamond",Garamond,"Times New Roman",Times,serif;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
-@media (prefers-color-scheme: dark){
+@media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --paper:#1A1690; --ink:#F8ECE4; --muted:#D2CEF6; --red:#FFA68C;
+    --paper:#191B1E; --ink:#F0EDE5; --muted:#AAAEAD; --line:#3D4143;
+    --blue:#A0B1FF; --red:#F0927B; --wash:#22262A;
   }
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 1.2rem/1.34 var(--serif);font-variant-numeric:oldstyle-nums;-webkit-font-smoothing:antialiased}
-::selection{background:var(--ink);color:var(--paper)}
-.page{max-width:1240px;margin:0 auto;padding:clamp(28px,5vw,64px) max(20px,env(safe-area-inset-right,0px)) 64px max(20px,env(safe-area-inset-left,0px))}
+html{scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1rem/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+::selection{background:var(--blue);color:var(--paper)}
+.page{max-width:1240px;margin:0 auto;padding:36px max(24px,env(safe-area-inset-right,0px)) 36px max(24px,env(safe-area-inset-left,0px))}
 h1,h2,h3,p{margin:0;font-size:inherit;font-weight:inherit}
-a{color:inherit;text-decoration-thickness:1px;text-underline-offset:0.14em}
-a:hover{background:var(--ink);color:var(--paper);text-decoration:none;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-a:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:0.2em}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible{outline:2px solid var(--blue);outline-offset:5px}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.skip{position:absolute;z-index:3;top:12px;left:24px;transform:translateY(-200%);padding:10px 16px;background:var(--paper);border:1px solid var(--blue)}
+.skip:focus{transform:none}
+.eyebrow{font:500 0.68rem/1.5 var(--sans);letter-spacing:0.12em;text-transform:uppercase}
 
-/* the sentence */
-.sentence{font-size:clamp(2.4rem,6.2vw,5.6rem);line-height:1.06;letter-spacing:-0.012em;text-wrap:pretty}
-.sentence h1,.sentence p{display:inline}
-.sentence h1{font-weight:700}
-.sentence h1::after{content:"."}
-.sentence p a:not(.mark){font-style:italic;text-decoration-thickness:0.03em}
-.sentence p a:not(.mark):hover{background:none;color:inherit;text-decoration:underline;text-decoration-thickness:0.09em}
-sup{font-size:0.46em;line-height:0;vertical-align:0.74em;letter-spacing:0}
-.mark{padding:0.2em 0.16em;text-decoration:none}
+/* A short introduction, with direct links and permanent footnote anchors. */
+.mast-line{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid var(--ink);padding-top:16px}
+.jump{display:inline-flex;align-items:center;gap:18px;min-height:44px;font-size:0.78rem;text-decoration:none;white-space:nowrap}
+.jump span{font-size:1.2rem}
+.jump:hover{text-decoration:underline}
+.intro{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:center;padding:42px 0 64px}
+h1{font:400 clamp(6.5rem,12.5vw,10rem)/0.85 var(--serif);letter-spacing:-0.055em;margin-left:-0.04em}
+h1 span{color:var(--blue)}
+.sentence{max-width:39rem}
+.lead{font:400 clamp(1.65rem,2.7vw,2.1rem)/1.2 var(--serif);text-wrap:pretty}
+.contents{margin-top:20px;color:var(--muted);font:400 1.08rem/1.65 var(--serif)}
+.contents a:not(.mark){font-style:italic}
+.reference{display:inline-block}
+sup{font-size:0.65em;line-height:0;vertical-align:0.5em}
+.mark{display:inline-block;min-width:24px;padding:12px 5px;text-align:center;text-decoration:none}
+.mark:hover{background:var(--wash);text-decoration:underline}
 
-/* the footnotes, under the short rule that opens them in a book */
-.notes{margin-top:clamp(48px,8vw,104px)}
-.notes::before{content:"";display:block;width:min(240px,33%);border-top:1px solid var(--ink);margin-bottom:30px}
-.list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 64px}
-.note{position:relative;display:grid;grid-template-columns:2.6rem minmax(0,1fr) 126px;column-gap:16px;align-items:start;scroll-margin-top:24px}
-.n{font-size:2.5rem;line-height:0.9}
-.note h3{font-size:1.7rem;line-height:1.08;font-style:italic;font-weight:500;text-wrap:balance}
-.note h3 a{text-decoration:none}
+/* One continuous list, with a clear reading order at every screen size. */
+.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:15px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line)}
+.section-head h2{scroll-margin-top:24px}
+.section-head p{font-size:0.74rem;color:var(--muted)}
+.list{list-style:none;margin:0;padding:0}
+.note{position:relative;display:grid;grid-template-columns:40px 124px minmax(0,1fr) 150px 24px;grid-template-areas:"number figure copy meta arrow";gap:26px;align-items:start;padding:32px 0 36px;border-bottom:1px solid var(--line);scroll-margin-top:24px}
+.n{grid-area:number;color:var(--blue);font:400 1.65rem/1 var(--serif);font-variant-numeric:lining-nums;padding-top:5px}
+.note-copy{grid-area:copy;min-width:0}
+.note h3{font:400 clamp(1.7rem,2.5vw,2.1rem)/1.1 var(--serif);letter-spacing:-0.015em;text-wrap:pretty}
+.note h3 a{color:var(--ink);text-decoration:none}
 .note h3 a::after{content:"";position:absolute;inset:0}
-.note:hover h3 a,.note:target h3 a{background:var(--ink);color:var(--paper);-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.kind,.chk{color:var(--muted);font-size:1.04rem}
-.kind{margin:4px 0 8px}
-.chk{margin-top:6px;font-style:italic}
-.links{position:relative;z-index:1;width:fit-content;margin-top:6px;font-size:1.04rem}
-.links a + a{margin-left:14px}
-
-/* small drawings: one line weight, ink only, red for the risk */
-.fig{display:block;width:126px;height:84px;fill:none;stroke:var(--ink);stroke-width:1.4}
+.note h3 a:focus-visible{outline:none}
+.note:has(h3 a:focus-visible){outline:2px solid var(--blue);outline-offset:6px}
+.note:hover h3 a,.note:target h3 a{color:var(--blue);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.12em}
+.note:target{background:var(--wash)}
+.description{margin-top:12px;font-size:0.9rem;line-height:1.6;max-width:37rem}
+.chk{margin-top:10px;color:var(--muted);font-size:0.76rem;line-height:1.6;max-width:36rem}
+.kind{grid-area:meta;display:grid;gap:14px;padding-top:6px;font-size:0.72rem;line-height:1.5}
+.category{font-weight:500}
+.updated{color:var(--muted)}
+.updated time{display:block;font-variant-numeric:tabular-nums}
+.go{grid-area:arrow;color:var(--blue);font:400 1.5rem/1 var(--sans);padding-top:4px}
+.links{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:0 20px;width:fit-content;margin-top:8px;font-size:0.72rem}
+.links a{display:inline-flex;align-items:center;min-height:44px}
+.fig{grid-area:figure;display:block;width:112px;height:78px;margin-top:5px;fill:none;stroke:var(--ink);stroke-width:1.4}
 .fig .r{stroke:var(--red)}
 .fig .dot{fill:var(--red);stroke:none}
 
-/* the colophon */
-footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px);text-align:center;color:var(--muted);font-size:1.04rem;text-wrap:balance}
-.ai-note{max-width:32rem}
-.ai-note b{display:block;font-weight:500;color:var(--ink)}
+/* The date and disclosure stay quiet but readable. */
+footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color:var(--muted);font-size:0.72rem;line-height:1.7}
+.footer-meta{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.back{display:inline-flex;gap:16px;align-items:center;min-height:44px;text-decoration:none}
+.back:hover{text-decoration:underline}
+.ai-note{max-width:30rem;justify-self:end}
+.ai-note b{display:block;margin-bottom:5px;font-weight:500;color:var(--ink)}
 
-@media (max-width:1040px){
-  .list{grid-template-columns:minmax(0,1fr);gap:38px}
+@media (max-width:960px){
+  .intro{gap:40px;grid-template-columns:minmax(0,4fr) minmax(0,6fr)}
+  .note{grid-template-columns:28px 90px minmax(0,1fr) 116px 20px;gap:20px}
+  .fig{width:84px;height:64px}
+  .kind{font-size:0.68rem}
 }
-@media (max-width:560px){
-  .note{grid-template-columns:2.2rem minmax(0,1fr);column-gap:10px}
-  .n{font-size:2.2rem}
-  .fig{grid-column:2;margin-top:12px}
+@media (max-width:700px){
+  .page{padding-top:20px}
+  .mast-line > .eyebrow{font-size:0.62rem}
+  .jump{gap:10px}
+  .intro{grid-template-columns:1fr;gap:28px;padding:30px 0 38px}
+  h1{font-size:6.5rem}
+  .sentence{max-width:32rem}
+  .contents{margin-top:12px}
+  .note{grid-template-columns:28px minmax(0,1fr) 64px 20px;grid-template-areas:"number meta figure arrow" ". copy copy copy";gap:14px 12px;padding:24px 0 28px}
+  .n{font-size:1.5rem;padding-top:0}
+  .kind{display:flex;flex-wrap:wrap;gap:4px 16px;padding-top:1px}
+  .updated time{display:inline}
+  .fig{width:64px;height:44px;margin:0}
+  .go{font-size:1.2rem;padding-top:0}
+  .note h3{font-size:1.85rem}
+  .description{font-size:0.88rem}
+  .chk{font-size:0.75rem}
+  footer{grid-template-columns:1fr;gap:24px;margin-top:32px}
+  .footer-meta{gap:0}
+  .ai-note{justify-self:start;max-width:28rem}
+}
+@media (forced-colors:active){
+  .note:target{outline:2px solid Highlight;outline-offset:6px}
+  .note h3 a:focus-visible{outline:2px solid LinkText;outline-offset:5px}
+}
+@media print{
+  :root{--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--blue:#000;--red:#9A2413}
+  .page{padding:0}
+  .skip,.jump,.back,.go{display:none}
+  .note{break-inside:avoid}
+  .intro{padding:28px 0}
+  footer{margin-top:24px}
 }
 </style>
 </head>
 <body>
-<div class="page">
+<a class="skip" href="#pages">Skip to pages</a>
+<div class="page" id="top">
 
-  <header class="sentence">
-    <h1>Index</h1>
-    <p>Security guides, risk maps and reference designs, each on a single page, newest first: <a href="github/github-two-enterprise-interactive.html">GitHub two-enterprise reference</a>,<sup><a class="mark" href="#n5" aria-label="Note 5">5</a></sup> <a href="threatmodelling.html">Threat modeling</a>,<sup><a class="mark" href="#n4" aria-label="Note 4">4</a></sup> <a href="MCP-Risk-Map.html">MCP Risk Map</a>,<sup><a class="mark" href="#n3" aria-label="Note 3">3</a></sup> <a href="Developer-WS.html">Developer Workstation Risk Map</a><sup><a class="mark" href="#n2" aria-label="Note 2">2</a></sup> and <a href="AKS-sikkerhetsvurdering.html">AKS security assessment</a>.<sup><a class="mark" href="#n1" aria-label="Note 1">1</a></sup></p>
+  <header>
+    <div class="mast-line">
+      <p class="eyebrow">Guides, maps &amp; references</p>
+      <a class="jump" href="#pages">Browse pages <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="intro">
+      <h1>Index<span>.</span></h1>
+      <div class="sentence">
+        <p class="lead">Security guides, risk maps and reference designs, each on a single page.</p>
+        <p class="contents">Explore <span class="reference"><a href="github/github-two-enterprise-interactive.html">GitHub enterprises</a>,<sup><a class="mark" href="#n5" aria-label="Note 5">5</a></sup></span> <span class="reference"><a href="threatmodelling.html">threat modeling</a>,<sup><a class="mark" href="#n4" aria-label="Note 4">4</a></sup></span> <span class="reference"><a href="MCP-Risk-Map.html">MCP</a>,<sup><a class="mark" href="#n3" aria-label="Note 3">3</a></sup></span> <span class="reference"><a href="Developer-WS.html">developer workstations</a><sup><a class="mark" href="#n2" aria-label="Note 2">2</a></sup></span> and <span class="reference"><a href="AKS-sikkerhetsvurdering.html">AKS</a>.<sup><a class="mark" href="#n1" aria-label="Note 1">1</a></sup></span></p>
+      </div>
+    </div>
   </header>
 
   <main>
     <section class="notes" aria-labelledby="pages">
-      <h2 id="pages" class="vh">Pages</h2>
-      <ol class="list" role="list">
+      <div class="section-head">
+        <h2 id="pages" class="eyebrow" tabindex="-1">Pages <span class="vh">in newest-first order</span></h2>
+        <p>05 pages · Newest first</p>
+      </div>
+      <ol class="list" role="list" reversed>
 
-        <li class="note" id="n5">
-          <span class="n">5</span>
-          <div>
+        <li class="note" id="n5" value="5">
+          <span class="n" aria-hidden="true">05</span>
+          <div class="note-copy">
             <h3><a href="github/github-two-enterprise-interactive.html">GitHub two-enterprise reference</a></h3>
-            <p class="kind">Reference design · Updated 4 Nov 2026</p>
-            <p>Classified, internal and public work on GitHub: two enterprises, three policy layers and shared operations. Click any box to see what it does and how to check it.</p>
+            <p class="description">Classified, internal and public work on GitHub: two enterprises, three policy layers and shared operations. Click any box to see what it does and how to check it.</p>
             <p class="chk">Checked against GitHub documentation. Names are illustrative.</p>
             <p class="links"><a href="github/github-two-enterprise-reference.drawio">draw.io, three pages</a><a href="github/github-two-enterprise-reference-compact.drawio">draw.io, one page</a></p>
           </div>
@@ -107,14 +174,15 @@ footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px
             <rect x="105" y="1" width="62" height="110"/><path d="M105 23h62M105 45h62M105 67h62M105 89h62"/>
             <path class="r" d="M63 45h41M98 40l6 5-6 5"/><path d="M105 67H64M70 62l-6 5 6 5"/>
           </svg>
+          <p class="kind"><span class="category">Reference design</span><span class="updated">Updated <time datetime="2026-11-04">4 Nov 2026</time></span></p>
+          <span class="go" aria-hidden="true">↗</span>
         </li>
 
-        <li class="note" id="n4">
-          <span class="n">4</span>
-          <div>
+        <li class="note" id="n4" value="4">
+          <span class="n" aria-hidden="true">04</span>
+          <div class="note-copy">
             <h3><a href="threatmodelling.html">Threat modeling</a></h3>
-            <p class="kind">Method · Updated 3 Nov 2026</p>
-            <p>Four questions, one drawing and a short list of fixes, shown on a made-up claims portal.</p>
+            <p class="description">Four questions, one drawing and a short list of fixes, shown on a made-up claims portal.</p>
             <p class="chk">Fact-checked against primary sources in three passes.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
@@ -124,14 +192,15 @@ footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px
             <path d="M45 56h36M76 51l6 5-6 5M125 56h15M134 51l6 5-6 5"/>
             <path class="r" stroke-dasharray="4 3" d="M62 1v110"/>
           </svg>
+          <p class="kind"><span class="category">Method</span><span class="updated">Updated <time datetime="2026-11-03">3 Nov 2026</time></span></p>
+          <span class="go" aria-hidden="true">↗</span>
         </li>
 
-        <li class="note" id="n3">
-          <span class="n">3</span>
-          <div>
+        <li class="note" id="n3" value="3">
+          <span class="n" aria-hidden="true">03</span>
+          <div class="note-copy">
             <h3><a href="MCP-Risk-Map.html">MCP Risk Map</a></h3>
-            <p class="kind">Risk map · Updated 2 Nov 2026</p>
-            <p>Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start.</p>
+            <p class="description">Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start.</p>
             <p class="chk">Every factual claim compared with its source. Nothing tested on a real system.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
@@ -141,14 +210,15 @@ footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px
             <rect class="r" x="111" y="43" width="56" height="26"/>
             <rect x="111" y="85" width="56" height="26"/>
           </svg>
+          <p class="kind"><span class="category">Risk map</span><span class="updated">Updated <time datetime="2026-11-02">2 Nov 2026</time></span></p>
+          <span class="go" aria-hidden="true">↗</span>
         </li>
 
-        <li class="note" id="n2">
-          <span class="n">2</span>
-          <div>
+        <li class="note" id="n2" value="2">
+          <span class="n" aria-hidden="true">02</span>
+          <div class="note-copy">
             <h3><a href="Developer-WS.html">Developer Workstation Risk Map</a></h3>
-            <p class="kind">Risk map · Updated 1 Nov 2026</p>
-            <p>Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, and what to check for each.</p>
+            <p class="description">Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, and what to check for each.</p>
             <p class="chk">965 statements checked one by one, with 35 fixed and 18 cut.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
@@ -158,14 +228,15 @@ footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px
             <circle class="dot" cx="72" cy="36" r="3"/><circle class="dot" cx="94" cy="50" r="3"/><circle class="dot" cx="78" cy="88" r="3"/>
             <circle class="dot" cx="130" cy="34" r="3"/><circle class="dot" cx="150" cy="52" r="3"/><circle class="dot" cx="126" cy="74" r="3"/><circle class="dot" cx="148" cy="96" r="3"/>
           </svg>
+          <p class="kind"><span class="category">Risk map</span><span class="updated">Updated <time datetime="2026-11-01">1 Nov 2026</time></span></p>
+          <span class="go" aria-hidden="true">↗</span>
         </li>
 
-        <li class="note" id="n1">
-          <span class="n">1</span>
-          <div>
+        <li class="note" id="n1" value="1">
+          <span class="n" aria-hidden="true">01</span>
+          <div class="note-copy">
             <h3><a href="AKS-sikkerhetsvurdering.html">AKS security assessment</a></h3>
-            <p class="kind">Beginner's guide · Updated 3 Nov 2026</p>
-            <p>What to understand and how to go about it when a platform team runs Kubernetes in Azure for several application teams, with ten prioritised risks.</p>
+            <p class="description">What to understand and how to go about it when a platform team runs Kubernetes in Azure for several application teams, with ten prioritised risks.</p>
             <p class="chk">Commands checked against the documentation. No cluster was examined.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
@@ -174,6 +245,8 @@ footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px
             <rect x="1" y="53" width="50" height="58"/><rect x="59" y="53" width="50" height="58"/><rect x="117" y="53" width="50" height="58"/>
             <path d="M9 61h13v13H9zM30 61h13v13H30zM9 82h13v13H9zM67 61h13v13H67zM88 82h13v13H88zM125 61h13v13h-13zM146 61h13v13h-13zM146 82h13v13h-13z"/>
           </svg>
+          <p class="kind"><span class="category">Beginner's guide</span><span class="updated">Updated <time datetime="2026-11-03">3 Nov 2026</time></span></p>
+          <span class="go" aria-hidden="true">↗</span>
         </li>
 
       </ol>
@@ -181,7 +254,10 @@ footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px
   </main>
 
   <footer>
-    <p>Last updated 5 Nov 2026</p>
+    <div class="footer-meta">
+      <p>Last updated <time datetime="2026-11-05">5 Nov 2026</time></p>
+      <a class="back" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+    </div>
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
   </footer>
 
