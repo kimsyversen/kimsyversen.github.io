@@ -9,7 +9,7 @@ Five rules for anyone changing this repo, person or agent. The site is hand-writ
 - New page: add a row at the top of Pages with the next number. A page keeps its number for good.
 - Removed page: delete its row. The other rows keep their numbers.
 - Content change: update the row's Updated date. Style fixes and footer notes do not count.
-- Any edit to the index: update its Last updated date at the top.
+- Any edit to the index: update its Last updated date at the bottom.
 
 Find pages missing from the index:
 

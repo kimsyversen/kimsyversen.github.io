@@ -31,3 +31,5 @@ Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 - **`MCP-Risk-Map.html` no longer names its fact check file.** Its date is unchanged, since this is not a content change.
 - **The GitHub page keeps its link to `design-notes.md`.** That is where the page lists its sources, so cutting the link would hide them.
 - **`github/` committed at the owner's request.** It was held back because promoting publishes it and it discusses classified work. All names in it are illustrative, a scan found no tokens or email addresses, and row 5 and its draw.io links need these files to work.
+- **"Source on GitHub" removed from the footer.** The owner does not want it on the page.
+- **Name removed and Last updated moved to the footer.** The owner asked for both. The line at the top held only those two things, so it went too, and `AGENTS.md` now says the date is at the bottom. The name stays in the browser tab title, which is not on the page.

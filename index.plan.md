@@ -16,3 +16,4 @@ Goal: move the old Kstech landing page off `index.html`, give the site root a go
 7. Remove the work log. Done.
 8. Remove `Kstech.html` and its row, and move the numbers down by one. Done.
 9. Stop showing plans, decisions and fact checks to readers: links, legend, footer link and the MCP page's mention. Done.
+10. Remove "Source on GitHub" and the name, and move Last updated to the footer. Done.
