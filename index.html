@@ -51,8 +51,6 @@ h1{font:400 clamp(6.5rem,12.5vw,10rem)/0.85 var(--serif);letter-spacing:-0.055em
 h1 span{color:var(--blue)}
 .sentence{max-width:39rem}
 .lead{font:400 clamp(1.65rem,2.7vw,2.1rem)/1.2 var(--serif);text-wrap:pretty}
-.contents{margin-top:20px;color:var(--muted);font:400 1.08rem/1.65 var(--serif)}
-.contents a:not(.mark){font-style:italic}
 .reference{display:inline-block}
 sup{font-size:0.65em;line-height:0;vertical-align:0.5em}
 .mark{display:inline-block;min-width:24px;padding:12px 5px;text-align:center;text-decoration:none}
@@ -74,14 +72,11 @@ sup{font-size:0.65em;line-height:0;vertical-align:0.5em}
 .note:hover h3 a,.note:target h3 a{color:var(--blue);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.12em}
 .note:target{background:var(--wash)}
 .description{margin-top:12px;font-size:0.9rem;line-height:1.6;max-width:37rem}
-.chk{margin-top:10px;color:var(--muted);font-size:0.76rem;line-height:1.6;max-width:36rem}
 .kind{grid-area:meta;display:grid;gap:14px;padding-top:6px;font-size:0.72rem;line-height:1.5}
 .category{font-weight:500}
 .updated{color:var(--muted)}
 .updated time{display:block;font-variant-numeric:tabular-nums}
 .go{grid-area:arrow;color:var(--blue);font:400 1.5rem/1 var(--sans);padding-top:4px}
-.links{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:0 20px;width:fit-content;margin-top:8px;font-size:0.72rem}
-.links a{display:inline-flex;align-items:center;min-height:44px}
 .fig{grid-area:figure;display:block;width:112px;height:78px;margin-top:5px;fill:none;stroke:var(--ink);stroke-width:1.4}
 .fig .r{stroke:var(--red)}
 .fig .dot{fill:var(--red);stroke:none}
@@ -107,7 +102,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
   .intro{grid-template-columns:1fr;gap:28px;padding:30px 0 38px}
   h1{font-size:6.5rem}
   .sentence{max-width:32rem}
-  .contents{margin-top:12px}
   .note{grid-template-columns:28px minmax(0,1fr) 64px 20px;grid-template-areas:"number meta figure arrow" ". copy copy copy";gap:14px 12px;padding:24px 0 28px}
   .n{font-size:1.5rem;padding-top:0}
   .kind{display:flex;flex-wrap:wrap;gap:4px 16px;padding-top:1px}
@@ -116,7 +110,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
   .go{font-size:1.2rem;padding-top:0}
   .note h3{font-size:1.85rem}
   .description{font-size:0.88rem}
-  .chk{font-size:0.75rem}
   footer{grid-template-columns:1fr;gap:24px;margin-top:32px}
   .footer-meta{gap:0}
   .ai-note{justify-self:start;max-width:28rem}
@@ -148,7 +141,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
       <h1>Index<span>.</span></h1>
       <div class="sentence">
         <p class="lead">Security guides, risk maps and reference designs, each on a single page.</p>
-        <p class="contents">Explore <span class="reference"><a href="github/github-two-enterprise-interactive.html">GitHub enterprises</a>,<sup><a class="mark" href="#n5" aria-label="Note 5">5</a></sup></span> <span class="reference"><a href="threatmodelling.html">threat modeling</a>,<sup><a class="mark" href="#n4" aria-label="Note 4">4</a></sup></span> <span class="reference"><a href="MCP-Risk-Map.html">MCP</a>,<sup><a class="mark" href="#n3" aria-label="Note 3">3</a></sup></span> <span class="reference"><a href="Developer-WS.html">developer workstations</a><sup><a class="mark" href="#n2" aria-label="Note 2">2</a></sup></span> and <span class="reference"><a href="AKS-sikkerhetsvurdering.html">AKS</a>.<sup><a class="mark" href="#n1" aria-label="Note 1">1</a></sup></span></p>
       </div>
     </div>
   </header>
@@ -166,8 +158,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
           <div class="note-copy">
             <h3><a href="github/github-two-enterprise-interactive.html">GitHub two-enterprise reference</a></h3>
             <p class="description">Classified, internal and public work on GitHub: two enterprises, three policy layers and shared operations. Click any box to see what it does and how to check it.</p>
-            <p class="chk">Checked against GitHub documentation. Names are illustrative.</p>
-            <p class="links"><a href="github/github-two-enterprise-reference.drawio">draw.io, three pages</a><a href="github/github-two-enterprise-reference-compact.drawio">draw.io, one page</a></p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="1" width="62" height="110"/><path d="M1 23h62M1 45h62M1 67h62M1 89h62"/>
@@ -183,7 +173,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
           <div class="note-copy">
             <h3><a href="threatmodelling.html">Threat modeling</a></h3>
             <p class="description">Four questions, one drawing and a short list of fixes, shown on a made-up claims portal.</p>
-            <p class="chk">Fact-checked against primary sources in three passes.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="38" width="44" height="36"/>
@@ -201,7 +190,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
           <div class="note-copy">
             <h3><a href="MCP-Risk-Map.html">MCP Risk Map</a></h3>
             <p class="description">Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start.</p>
-            <p class="chk">Every factual claim compared with its source. Nothing tested on a real system.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="38" width="52" height="36"/>
@@ -219,7 +207,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
           <div class="note-copy">
             <h3><a href="Developer-WS.html">Developer Workstation Risk Map</a></h3>
             <p class="description">Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, and what to check for each.</p>
-            <p class="chk">965 statements checked one by one, with 35 fixed and 18 cut.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="1" width="166" height="110"/>
@@ -237,7 +224,6 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
           <div class="note-copy">
             <h3><a href="AKS-sikkerhetsvurdering.html">AKS security assessment</a></h3>
             <p class="description">What to understand and how to go about it when a platform team runs Kubernetes in Azure for several application teams, with ten prioritised risks.</p>
-            <p class="chk">Commands checked against the documentation. No cluster was examined.</p>
           </div>
           <svg class="fig" viewBox="0 0 168 112" aria-hidden="true">
             <rect x="1" y="1" width="166" height="30"/><path d="M1 8.5h166M1 16h166M1 23.5h166"/>
