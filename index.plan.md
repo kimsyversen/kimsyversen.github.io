@@ -11,3 +11,8 @@ Goal: move the old Kstech landing page off `index.html`, give the site root a go
 4. Page outline: masthead, contents list (one numbered row per page, newest first, with what it is, how it was checked, links to notes and a small drawing), work log, footer with the Made with AI note. Done.
 5. Write AGENTS.md from what the notes and pages already show. Done.
 6. Render check: light, dark, 375px wide, no console errors, no em or en dashes, every link resolves. Done 5 Nov.
+
+## Changes later the same day
+7. Remove the work log. Done.
+8. Remove `Kstech.html` and its row, and move the numbers down by one. Done.
+9. Stop showing plans, decisions and fact checks to readers: links, legend, footer link and the MCP page's mention. Done.
