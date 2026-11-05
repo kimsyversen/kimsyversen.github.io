@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GitHub two-enterprise reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* One page, one diagram. The diagram is a fixed 1568px stage that is scaled to fit the width. Text inside it is real HTML so it wraps. */
+:root{
+  color-scheme:light;
+  --bg:#EEF1F5; --surface:#FFFFFF; --ink:#142033; --muted:#566377; --line:#D3DAE4;
+  --accent:#34496B; --accent-soft:#E1E8F2; --on-m:#FFFFFF;
+  --a:#B02040; --a-dark:#7E1230; --a-tint:#FBF2F4; --a-mid:#E7C3CC;
+  --b:#1F6FD6; --b-dark:#144A93; --b-tint:#F0F6FE; --b-mid:#BFD5F3;
+  --x:#A8700F; --x-dark:#6E4608; --x-tint:#FDF7E8; --x-mid:#E9D29B;
+  --c:#6A4DBA; --c-dark:#46308A; --c-tint:#F5F2FC; --c-mid:#D3C9EE;
+  --g:#2C7549; --g-dark:#1B4D2F; --g-tint:#EEF7F1; --g-mid:#BEDCC9;
+  --s:#34496B; --s-dark:#1D2B44; --s-tint:#F2F5FA; --s-mid:#CBD5E4;
+  --fig:#FFFFFF; --card:#FFFFFF; --shadow:0 1px 2px rgba(20,32,51,.07),0 8px 22px rgba(20,32,51,.08);
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1218; --surface:#151C25; --ink:#E4EAF2; --muted:#9AA8BA; --line:#27313E; --accent:#8FB0E0; --accent-soft:#1D2B3F; --on-m:#0D1218;
+    --a:#EE6A85; --a-dark:#F6A3B4; --a-tint:#2A1820; --a-mid:#5B2B38;
+    --b:#5B9BF0; --b-dark:#9BC1F7; --b-tint:#14233A; --b-mid:#27456F;
+    --x:#E3A63D; --x-dark:#F0C77E; --x-tint:#2D2415; --x-mid:#5E4A22;
+    --c:#A48CEB; --c-dark:#C7B7F5; --c-tint:#21192F; --c-mid:#44366C;
+    --g:#63BE88; --g-dark:#9AD8B4; --g-tint:#14261C; --g-mid:#2A5A3D;
+    --s:#8FA6CC; --s-dark:#BCCBE3; --s-tint:#18212D; --s-mid:#2E3D52;
+    --fig:#101821; --card:#1A2430; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1218; --surface:#151C25; --ink:#E4EAF2; --muted:#9AA8BA; --line:#27313E; --accent:#8FB0E0; --accent-soft:#1D2B3F; --on-m:#0D1218;
+  --a:#EE6A85; --a-dark:#F6A3B4; --a-tint:#2A1820; --a-mid:#5B2B38;
+  --b:#5B9BF0; --b-dark:#9BC1F7; --b-tint:#14233A; --b-mid:#27456F;
+  --x:#E3A63D; --x-dark:#F0C77E; --x-tint:#2D2415; --x-mid:#5E4A22;
+  --c:#A48CEB; --c-dark:#C7B7F5; --c-tint:#21192F; --c-mid:#44366C;
+  --g:#63BE88; --g-dark:#9AD8B4; --g-tint:#14261C; --g-mid:#2A5A3D;
+  --s:#8FA6CC; --s-dark:#BCCBE3; --s-tint:#18212D; --s-mid:#2E3D52;
+  --fig:#101821; --card:#1A2430; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body)}
+.wrap{max-width:1640px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3,p{margin:0}
+h1{font:800 clamp(2rem,5.4vw,3.1rem)/1.02 var(--display);font-stretch:118%;letter-spacing:-.01em;text-wrap:balance}
+a{color:var(--accent)}
+button{font:inherit}
+.eyebrow{font:500 .78rem/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.top{display:grid;gap:12px;padding-bottom:18px;max-width:60rem}
+.lead{font-size:1.06rem;max-width:62ch}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font:.8rem/1.5 var(--mono);color:var(--muted)}
+.meta b{font-weight:500;color:var(--ink)}
+
+/* filter bar */
+.bar{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;padding:10px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+@media (min-width:900px){.bar{position:sticky;top:0;z-index:20}}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.glabel{font:500 .68rem/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.fchip{display:inline-flex;align-items:center;gap:6px;font:600 .8rem/1 var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer}
+.fchip:hover{border-color:var(--accent)}
+.fchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.fchip:focus-visible,.nd:focus-visible,.pop button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sum{font-size:.92rem;color:var(--muted);min-height:2.9em;padding:10px 0 12px;max-width:110ch}
+.sum b{color:var(--ink);font-weight:600}
+
+/* figure */
+.fig{margin:0;display:grid;gap:10px}
+.dg-scroll{position:relative;overflow-x:auto;overflow-y:hidden;background:var(--fig);border:1px solid var(--line);border-radius:16px}
+.fit{position:relative;margin:0 auto}
+.stage{position:absolute;left:0;top:0;width:1568px;padding:24px;transform-origin:0 0;color:var(--ink);font:12px/1.4 var(--body);user-select:none;-webkit-user-select:none}
+.ov{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;color:var(--muted);align-items:center}
+.legend>span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:.9rem;height:.9rem;border-radius:3px}
+.hint{display:none;font-size:.85rem;color:var(--muted)}
+@media (max-width:1100px){.hint{display:block}}
+
+/* palettes */
+.pa{--m:var(--a);--d:var(--a-dark);--t:var(--a-tint);--k:var(--a-mid)}
+.pb{--m:var(--b);--d:var(--b-dark);--t:var(--b-tint);--k:var(--b-mid)}
+.px{--m:var(--x);--d:var(--x-dark);--t:var(--x-tint);--k:var(--x-mid)}
+.pc{--m:var(--c);--d:var(--c-dark);--t:var(--c-tint);--k:var(--c-mid)}
+.pg{--m:var(--g);--d:var(--g-dark);--t:var(--g-tint);--k:var(--g-mid)}
+.ps{--m:var(--s);--d:var(--s-dark);--t:var(--s-tint);--k:var(--s-mid)}
+
+/* tags */
+.tgs{display:inline-flex;gap:3px;align-items:center}
+.tg{font:600 10px/1.5 var(--mono);font-style:normal;padding:0 5px;border-radius:4px;white-space:nowrap}
+.tg-g{background:var(--s);color:var(--on-m);border:1px solid var(--s)}
+.tg-x{background:var(--x-tint);color:var(--x-dark);border:1px solid var(--x)}
+.pill{font:600 10px/1.5 var(--mono);padding:0 5px;border-radius:4px;color:var(--on-m);background:var(--m,var(--accent))}
+.pill.r{background:var(--d)}
+
+/* nodes */
+.nd{position:relative;appearance:none;text-align:left;cursor:pointer;color:var(--ink);background:var(--card);border:1px solid var(--k,var(--line));border-radius:10px;padding:8px 10px;transition:opacity .15s ease,box-shadow .15s ease,border-color .15s ease,transform .15s ease}
+.nd:hover{border-color:var(--m,var(--accent));box-shadow:var(--shadow);transform:translateY(-1px)}
+.ic svg,.i{width:20px;height:20px;fill:none;stroke:var(--m,var(--accent));stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
+.t{font:700 12.5px/1.25 var(--display);font-stretch:104%}
+.card{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:3px 8px;align-items:center;width:100%}
+.card .s{grid-column:1/-1;font-size:11px;line-height:1.4;color:var(--muted)}
+.chip{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;width:100%}
+.chip .ic svg{width:16px;height:16px}
+.chip .t{font:600 11.5px/1.3 var(--body)}
+.dim .nd:not(.on){opacity:.18}
+.dim .nd:not(.on):hover{transform:none}
+.nd.on{box-shadow:0 0 0 2px var(--m,var(--accent)),var(--shadow)}
+.nd.sel{box-shadow:0 0 0 3px var(--ink),var(--shadow)}
+
+/* gate */
+.gate{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;background:var(--x-tint);border:1.5px solid var(--x);border-radius:14px;padding:10px 12px;--m:var(--x);--d:var(--x-dark);--t:var(--x-tint);--k:var(--x-mid)}
+.gmain{display:grid;grid-template-columns:34px minmax(0,1fr);gap:2px 12px;align-items:center;border:0;background:transparent;padding:4px 8px}
+.gmain .ic svg{width:30px;height:30px}
+.gmain .t{font-size:14px;color:var(--x-dark)}
+.gmain .s{grid-column:2;font-size:12px;color:var(--ink)}
+.opts{display:flex;gap:10px}
+.opt{display:grid;grid-template-columns:20px 1fr;gap:8px;align-items:center;width:250px;padding:10px 12px}
+.opt .t{font-size:12px}
+.conn{display:flex;justify-content:center;align-items:center;gap:8px;height:34px;font:600 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--x-dark)}
+.conn svg{width:14px;height:14px;fill:none;stroke:var(--x);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* the two towers share one set of rows (subgrid), so layers line up across the page */
+.grid{position:relative;display:grid;grid-template-columns:640px 240px 640px;grid-template-rows:auto auto 30px auto 30px auto 30px auto 30px auto}
+.chan-line{grid-column:2;grid-row:1/-1;justify-self:center;border-left:2px dashed var(--line);z-index:0}
+.tower{grid-row:1/-1;display:grid;grid-template-rows:subgrid;border:2px solid var(--m);border-radius:20px;background:var(--t);box-shadow:var(--shadow);padding-bottom:10px;z-index:1}
+.tw-a{grid-column:1}
+.tw-b{grid-column:3}
+.th{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;margin:8px 8px 10px;padding:8px 12px;border-radius:13px;background:var(--m);color:var(--on-m)}
+.th .i{width:34px;height:34px;stroke:var(--on-m)}
+.th h2{font:800 16px/1.15 var(--display);font-stretch:112%;letter-spacing:.01em}
+.th p{font-size:11.5px;opacity:.9;margin-top:2px}
+.layer{display:grid;grid-template-columns:26px minmax(0,1fr);margin:0 10px;border:1px solid var(--k);border-radius:12px;background:var(--card);overflow:hidden}
+.rail{background:var(--m);color:var(--on-m);display:flex;align-items:center;justify-content:center}
+.rail span{writing-mode:vertical-rl;transform:rotate(180deg);font:600 9.5px/1 var(--mono);letter-spacing:.08em;white-space:nowrap}
+.lbody{padding:10px;min-width:0}
+.gap{display:flex;align-items:center;justify-content:center;gap:7px;font:600 11px var(--body);color:var(--d)}
+.gap svg{width:13px;height:13px;fill:none;stroke:var(--m);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.row3>.nd{align-self:stretch}
+.row3>.nd:not(:last-child)::after{content:"";position:absolute;right:-13px;top:50%;margin-top:-5px;border-left:7px solid var(--m);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.pol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.orgs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.org{display:grid;gap:7px;align-content:start;background:var(--t);border:1.5px solid var(--m);border-radius:12px;padding:8px}
+.orgh{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:6px 8px;align-items:center;width:100%;border-color:var(--m)}
+.orgh .mi{grid-column:1/-1;display:grid;grid-template-columns:16px minmax(0,1fr);gap:6px;align-items:center;font-size:11px;line-height:1.3;color:var(--muted)}
+.orgh .mi svg{width:15px;height:15px;fill:none;stroke:var(--m);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cap{font:600 9.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--d);padding:2px 2px 0}
+.repo{width:100%}
+
+/* centre channel */
+.cc{grid-column:2;position:relative;z-index:2;align-self:start;display:block}
+.bound{margin:10px 14px 0;padding:8px 10px;background:var(--card);border:1.5px dashed var(--s-mid);border-radius:10px;font-size:11px;text-align:center;line-height:1.4;--m:var(--s);--k:var(--s-mid);width:calc(100% - 28px)}
+.ident{display:grid;margin:0 14px;width:calc(100% - 28px);--m:var(--x);--d:var(--x-dark);--k:var(--x-mid);background:var(--x-tint);align-self:stretch}
+.xfer{margin:0 34px;width:calc(100% - 68px);padding:12px 10px;background:var(--x-tint);border:2px solid var(--x);border-radius:16px;box-shadow:var(--shadow);--m:var(--x);--d:var(--x-dark);--k:var(--x-mid);display:grid;gap:7px}
+.xh{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:center}
+.xh .ic svg{width:30px;height:30px}
+.xs{display:grid;grid-template-columns:16px minmax(0,1fr);gap:6px;align-items:center;background:var(--card);border:1px solid var(--x-mid);border-radius:8px;padding:5px 7px;font-size:10.5px;line-height:1.3}
+.xs svg{width:15px;height:15px;fill:none;stroke:var(--x);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.xn{font-size:10.5px;font-style:italic;color:var(--muted);line-height:1.4}
+.soc{margin:0 34px;width:calc(100% - 68px);padding:10px;background:var(--c-tint);border:2px solid var(--c);border-radius:14px;box-shadow:var(--shadow);--m:var(--c);--d:var(--c-dark);--k:var(--c-mid);display:grid;grid-template-columns:26px minmax(0,1fr);gap:3px 8px;align-items:center}
+.soc .s{grid-column:1/-1;font-size:11px;color:var(--muted)}
+
+/* operations bands */
+.ops{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:30px}
+.col{display:grid;gap:8px;align-content:start}
+.sec{display:flex;align-items:baseline;gap:10px;margin:2px 0 4px}
+.sec::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--s);align-self:center}
+.sec h3{font:700 13.5px/1 var(--display);font-stretch:108%;letter-spacing:.02em}
+.sec span{font-size:11.5px;color:var(--muted)}
+.lane{display:grid;grid-template-columns:112px minmax(0,1fr);gap:10px;align-items:center;width:100%;padding:7px 10px;background:var(--t);border-radius:12px}
+.lh{display:grid;grid-template-columns:20px minmax(0,1fr);gap:7px;align-items:center}
+.lh .t{font-size:11.5px;color:var(--d)}
+.steps{display:flex;gap:14px;align-items:stretch;min-width:0}
+.st{position:relative;flex:1 1 0;min-width:0;display:grid;grid-template-columns:16px minmax(0,1fr);gap:5px;align-items:center;background:var(--card);border:1px solid var(--k);border-radius:8px;padding:6px;font:600 11px/1.25 var(--body)}
+.st svg{width:15px;height:15px;fill:none;stroke:var(--m);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.st+.st::before{content:"";position:absolute;left:-10px;top:50%;margin-top:-4px;border-left:6px solid var(--m);border-top:4px solid transparent;border-bottom:4px solid transparent}
+.lane.few .st{flex:0 0 118px}
+.lnote{flex:1;align-self:center;font-size:11px;font-style:italic;color:var(--muted);line-height:1.35;min-width:0}
+.panel{display:grid;gap:7px;padding:8px;border:1px solid var(--s-mid);border-radius:12px;background:var(--s-tint)}
+.panel.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.panel.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.foot{margin-top:20px;font-size:11.5px;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+
+/* flow arrows */
+.ar{fill:none;stroke-width:2.6;stroke-linecap:round;transition:opacity .15s ease}
+.ar.ex{stroke:var(--a)} .ar.im{stroke:var(--g);stroke-dasharray:7 5} .ar.so{stroke:var(--c);stroke-width:2.2;stroke-dasharray:5 4}
+.ov.dim .ar:not(.on){opacity:.12}
+.ar.on{stroke-dasharray:8 5;animation:flow .9s linear infinite}
+.alab{font:700 9.5px var(--body);text-anchor:middle}
+.mk-a{fill:var(--a)} .mk-g{fill:var(--g)} .mk-c{fill:var(--c)}
+@keyframes flow{to{stroke-dashoffset:-26}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.ar.on{animation:none}}
+
+/* popover */
+.pop{position:absolute;z-index:30;width:352px;max-width:calc(100vw - 32px);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 34px rgba(0,0,0,.28);padding:13px 15px;display:grid;gap:9px;font-size:.88rem;line-height:1.5}
+.pop:focus{outline:none}
+.pop[hidden]{display:none}
+.pop-h{display:flex;gap:8px;align-items:flex-start}
+.pop-h strong{font:700 1rem/1.3 var(--display);flex:1;min-width:0}
+.pop-x{flex:none;font:500 .72rem/1 var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:4px;padding:5px 7px;cursor:pointer}
+.pop-m{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.dom{font:600 10px/1.5 var(--mono);padding:0 6px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.dom.a{color:var(--a);border-color:var(--a)} .dom.b{color:var(--b);border-color:var(--b)}
+.lbl{font:500 .68rem/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block}
+.pop ol{margin:0;padding-left:1.15rem;display:grid;gap:3px}
+.dev{background:var(--x-tint);border:1px solid var(--x);border-radius:8px;padding:8px 10px;color:var(--ink)}
+.dev b{color:var(--x-dark)}
+.links{display:flex;flex-wrap:wrap;gap:4px 10px}
+.lk{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:left}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Reference architecture · GitHub Enterprise Cloud</p>
+    <h1>GitHub for classified, internal and public work</h1>
+    <p class="lead">Two enterprises, three policy layers and shared operations on one page. Click any box to see what it does and how to check it. Use the filters to follow a flow or a type of control.</p>
+    <div class="meta">
+      <span><b>Design</b> 4 Nov 2026</span>
+      <span><b>Checked against</b> GitHub Well-Architected</span>
+      <span><b>Names</b> illustrative</span>
+    </div>
+  </header>
+
+  <nav class="bar" id="bar" aria-label="Filters"></nav>
+  <p class="sum" id="sum" aria-live="polite"></p>
+
+  <figure class="fig">
+    <div class="dg-scroll" id="scroller">
+      <div class="fit" id="fit"><div class="stage" id="stage" role="group" aria-label="Two-enterprise GitHub reference architecture"></div></div>
+      <div class="pop" id="pop" role="dialog" aria-labelledby="popTitle" tabindex="-1" hidden></div>
+    </div>
+    <figcaption class="legend" id="legend"></figcaption>
+    <p class="hint">The diagram is wide. Drag it sideways, or pinch to zoom.</p>
+  </figure>
+
+  <p class="foot">Reference design. Organization and system names are illustrative. Shared standards never mean shared access to source code or detailed logs. These are target controls, not a claim that one policy switch implements each box. Sources and decisions: <a href="design-notes.md">design-notes.md</a>. Editable versions: <a href="github-two-enterprise-reference.drawio">three-page draw.io</a> and <a href="github-two-enterprise-reference-compact.drawio">one-page draw.io</a>.</p>
+  <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var STAGE_W = 1568, MIN_SCALE = 0.62;
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  /* ---------- icons (24px, stroke only) ---------- */
+  var ICONS = {
+    shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+    lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l3 3"/>',
+    'user-check':'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6M16 11l2 2 4-4"/>',
+    users:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.5 2 4.5 5"/>',
+    refresh:'<path d="M20 11a8 8 0 0 0-14-4M4 5v4h4M4 13a8 8 0 0 0 14 4M20 19v-4h-4"/>',
+    sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+    branch:'<circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="8" r="2"/><path d="M6 7v10M18 10v1a4 4 0 0 1-4 4H8"/>',
+    play:'<path d="M7 5v14l12-7z"/>',
+    eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    network:'<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5H5v5M12 11.5h7v5"/>',
+    tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/>',
+    building:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 8h2M13 8h2M9 12h2M13 12h2M10 21v-4h4v4"/>',
+    clipboard:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+    cpu:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/>',
+    server:'<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',
+    box:'<path d="M12 3l8 4v10l-8 4-8-4V7zM4 7l8 4 8-4M12 11v10"/>',
+    archive:'<rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11h14V8M10 12h4"/>',
+    search:'<circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/>',
+    repo:'<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/>',
+    ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+    database:'<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+    activity:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+    calendar:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',
+    stamp:'<path d="M5 20h14M8 16h8l-1-5a3 3 0 1 0-6 0z"/>',
+    swap:'<path d="M7 7h13l-3-3M17 17H4l3 3"/>',
+    check:'<path d="M4 12l5 5L20 6"/>',
+    cloud:'<path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/>',
+    alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+    filter:'<path d="M3 4h18l-7 9v6l-4 2v-8z"/>',
+    bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/>',
+    layers:'<path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/>'
+  };
+  function ic(n){ return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[n] || '') + '</svg>'; }
+  function icw(n){ return '<span class="ic">' + ic(n) + '</span>'; }
+  function tagsHTML(tg){
+    if (!tg) return '<span></span>';
+    var h = '<span class="tgs">';
+    if (tg.indexOf('G') >= 0) h += '<i class="tg tg-g" title="GitHub control">G</i>';
+    if (tg.indexOf('X') >= 0) h += '<i class="tg tg-x" title="External control or process">X</i>';
+    return h + '</span>';
+  }
+
+  /* ---------- content ---------- */
+  var D = {}, ORDER = [];
+  // N(id, domain, scope, icon, title, tag, sub, description, check, extra)
+  function N(id, dom, sc, icn, t, tg, s, d, v, x){
+    var o = { id:id, dom:dom, sc:sc, ic:icn, t:t, tg:tg, s:s || '', d:d || '', v:v || '', fl:[], rel:[], dev:0, steps:null };
+    if (x) for (var k in x) o[k] = x[k];
+    D[id] = o; ORDER.push(id); return id;
+  }
+
+  /* gate 0 */
+  N('g0','S','','stamp','Gate 0: approve the hosting service before loading classified content','X','A decision for the security authority, not a product setting. If no option is accredited, do not proceed.',
+    'Nothing classified is loaded until the specific service, hosting region, administrator and support access, identity platform, runners, scanners, logs and backups are approved. A residency choice is not an accreditation decision.',
+    'An approval record exists for the service, the region, support access and every connected data processor.');
+  N('g1','S','','cloud','1  Enterprise Cloud on github.com','X','','Multi-tenant SaaS with the widest feature set. Needs explicit approval before it holds classified content.');
+  N('g2','S','','globe','2  Cloud with data residency (GHE.com)','X','','Pins data to a region. That helps with jurisdiction, but it is still a hosting decision for the security authority, not an accreditation by itself.');
+  N('g3','S','','server','3  Self-hosted or accredited platform','X','','The fallback when no cloud option is accepted. It needs its own identity and operations design.');
+
+  /* centre channel */
+  N('c.bound','S','','layers','Logical boundary','X','',
+    'Two governance domains inside one SaaS service. This is not an air gap. Privileged administrators and broadly scoped integrations can cross it, so roles and app credentials are kept apart. Some compartments may need extra hosting separation after a threat assessment.',
+    'List every admin and app that can see both enterprises. The list should be empty or justified.');
+  N('c.ident','S','','alert','Keep identities apart','X','One IdP application per domain. No shared admin accounts or service accounts.',
+    'People who work in both enterprises use two GitHub identities and separate work environments. A separate browser profile alone does not stop copying. Use managed workstations or isolated sessions, distinct credential stores and controlled egress.',
+    'A sensitive workstation cannot upload through an unapproved GitHub account or app.');
+  N('c.xfer','S','','swap','Approved transfer service','X','',
+    'An external process, not a native GitHub boundary. Export: the release authority decides that content may leave A, history, secrets and IaC topology are inspected, and a signed manifest with a hash is logged. Intake: origin is verified, content is quarantined, scanned and pinned before it enters A. Never mirror sensitive repos into B automatically. Remove the whole path if transfers are prohibited.',
+    'Show that an approved transfer works end to end, or show that the path is blocked.',
+    { steps:['Release authority decides','Inspect history, secrets, IaC topology','Signed manifest, hash logged','Intake: verify, quarantine, scan, pin'] });
+  N('c.soc','S','','eye','Common SOC view','X','Approved, minimized metadata only.',
+    'A common SOC can share procedures and approved summaries. Detailed logs stay in each domain because repository names, paths and identities can reveal critical-system details. Even sanitised sharing needs classification approval.',
+    'Sample the shared feed and confirm it holds no repo names, paths or user identities from A.');
+
+  /* identity */
+  N('A.people','A','','user-check','Cleared people','X','Need-to-know groups. Managed workstation or isolated dev container, signed commits, proxy only.',
+    'Only authorised personnel are assigned to the IdP application. Access follows need-to-know groups. Work happens on managed workstations or isolated dev containers that run as non-root. Commits are signed, and GitHub traffic goes through the corporate proxy. Developer tools, AI assistants and extensions are limited to an approved list.',
+    'Try to reach GitHub from an unmanaged device and from a managed one with a personal account.');
+  N('A.idp','A','','key','Corporate IdP','X','Dedicated app for A. Phishing-resistant MFA, privileged access through PAM.',
+    'A dedicated IdP application for A owns the account lifecycle. Phishing-resistant MFA, privileged access through PAM, a short list of named enterprise owners and protected emergency recovery access. This design chooses SAML.',
+    'Run an IdP outage drill and use the emergency recovery access. Review that use independently.');
+  N('A.scim','A','','refresh','SAML + SCIM to EMU','G','Enterprise SCIM. IdP groups sync to enterprise teams. Managed users cannot contribute outside the enterprise.',
+    'Enterprise Managed Users: the IdP owns the account. Enterprise SCIM provisions and removes accounts, and IdP groups sync to enterprise teams. Managed users cannot create public repos, and cannot collaborate outside the enterprise.',
+    'Suspend a user in the IdP and confirm access ends everywhere, including privileged and exceptional paths.');
+  N('B.people','B','','users','Workforce and partners','X','Assigned by IdP group. Separate device zone from A. Public contributors are not in the IdP.',
+    'Employees and partners are assigned by IdP group. They use a separate device zone from A. Public contributors can act only in public resources and have no corporate SSO.',
+    'Confirm a partner has access only to the repos approved for them, with an expiry date.');
+  N('B.idp','B','','key','Corporate IdP','X','Separate app for B. Owns membership and groups.',
+    'A separate IdP application for B owns membership and groups. No shared admin accounts or service accounts with A.',
+    'Compare the admin lists of A and B. They share no accounts.');
+  N('B.scim','B','','refresh','SAML + SCIM per org','G','Enforced in every org. Enterprise SAML would drop org SCIM. Accounts stay user-owned.',
+    'People keep their personal GitHub accounts, linked to corporate SAML identities. SAML and SCIM are enforced in every organization. SCIM manages organization membership only, and the personal account stays user-owned. Enterprise-level SAML would remove organization SCIM, and GitHub has no SCIM for a personal-account enterprise.',
+    'Remove a person and check every org, outside-collaborator grants, deploy keys, app installs, webhooks and cloud identities.',
+    { dev:1 });
+
+  /* enterprise policy: A */
+  var POL_A = [
+    ['A.p1','lock','Private repos only, no forks','G','Organization repos are private only. User-owned repos and private forking are turned off, and visibility changes are restricted.','Create a repo in each org, then try to make it public or fork it.',{dev:3}],
+    ['A.p2','sliders','Limit repo create, delete, transfer','G','Only named roles can create, delete or transfer repositories, so source cannot move into another path without review.','Try each action as a normal member.'],
+    ['A.p3','branch','Enterprise rulesets, signed commits','G','Branch and tag protection is set once as an enterprise ruleset that targets all repos in the selected orgs, or a dynamic list of repos by custom property (orgs can be chosen by name or property): two approvals including a code owner, stale approvals dismissed, approval of the latest push, signed commits, and a tightly bounded bypass list. Two approvals is an organisational target, not a GitHub default. New or changed rules run in Evaluate mode first, and are enforced after the insights show no surprise blocks. Bypass requests are recorded and reviewed.','Negative tests: push to main, force push, and bypass by an actor who is not on the list.'],
+    ['A.p4','shield','Security configs on all repos','G','A security configuration is attached to every repo and set as the default for new ones. It needs GitHub Code Security and Secret Protection licences, or approved equivalents. Push-protection bypass is limited to named roles or teams. Alerts carry a severity deadline, and security campaigns clear backlogs.','Create a new repo and confirm the baseline appears with no manual steps.'],
+    ['A.p5','play','Approved Actions, read-only token','G','Only approved actions and reusable workflows. The policy that requires actions to be pinned to a full-length commit SHA is on. The default job token is set to the restricted setting (read access to contents and packages), and a job asks for each extra permission by name. GitHub Actions approving pull requests stays off, which is the default for new organizations.','Try a workflow with an unapproved action. Expected: it fails. Record the result.'],
+    ['A.p6','key','Classic PATs blocked','G','Classic personal access tokens are blocked from accessing the organizations. Fine-grained tokens have a bounded lifetime and an approved scope. Narrow GitHub Apps are preferred for integrations. Review OAuth apps, apps and webhook destinations.','Create a classic token. Expected: it is refused. Record the result.'],
+    ['A.p7','eye','Audit stream with source IP','G','Audit and Git events stream to A\'s own archive. API request events and source IP disclosure are on. Neither covers every operation, so correlate with proxy and endpoint evidence. GitHub keeps Git events for only 7 days, so the stream must run from day one.','Trigger a test event and find it, with the source IP, in the archive.'],
+    ['A.p8','network','IP allow list, proxy only','G+X','Access only through a mandatory corporate proxy plus network allow lists. Block Git over SSH and unsupported upload paths. An IP allow list controls inbound access, not all data leaving, and has documented exclusions. For EMU with Entra ID and OIDC, GitHub can use the IdP\'s Conditional Access policy instead of its own IP allow list. Choose one per the accreditation.','Try to push from outside the proxy, and over SSH.'],
+    ['A.p9','tag','Custom properties on every repo','G','Every repo carries properties such as system, class and owner. Rulesets can target repos by custom property, so those baselines follow the data, not the repo name.','List repos with a missing property. The list should be empty.'],
+    ['A.p10','users','Enterprise teams from IdP groups','G+X','Enterprise teams are filled from IdP groups, so membership is decided in one place. Organizations grant access to these teams.','Move a person between IdP groups and confirm team access follows.'],
+    ['A.p11','building','Orgs by class, no sandbox','X','Organizations follow classification and need-to-know, not the management chart. A has no sandbox organization: experiments run in B with no classified data. This is a deliberate deviation from the framework.','Confirm no organization in A holds unclassified experiments.',{dev:2}],
+    ['A.p12','clipboard','Threat model per system','X','Each critical system has a threat model that decides which controls are required. It is kept up to date as the system changes.','Pick a system and ask for its threat model and its last review date.'],
+    ['A.p13','cpu','Agents and AI, off until approved','G','Copilot and other agents stay off until the security authority approves them for a system. Third-party agents must be enabled before anyone can use them, so they stay off until approved. Only reviewed models are allowed, and only reviewed MCP servers. Agent pull requests pass the same rulesets, scans and reviews as human ones, and agent instruction and MCP files need code-owner review. Agent runs use ephemeral runners behind a firewall allow list, and on EMU enterprises audit events can carry the agent session id (public preview). Spending limits apply. Most Copilot features need GitHub Enterprise Cloud, and only some exist on Enterprise Server, so a self-hosted platform (gate option 3) has far fewer agent controls.','Open an agent pull request that edits a workflow file. Expected: it will need a code-owner review. Record the result.'],
+    ['A.p14','user-check','Roles: security manager, no default Admin','G','Enterprise and organization roles are delegated on purpose. A security manager role and custom roles replace broad Admin. Every organization has at least two owners. Default repository permission is never Admin, and enterprise ownership is kept to a short named list.','List users with Admin on any repo. Each one should have a recorded reason.'],
+    ['A.p15','box','Dependency and provenance controls','G+X','Dependency review is a required check. Lockfiles are mandatory, and install-time lifecycle scripts are off in builds. Builds produce signed artifacts with provenance, and deploys verify them. Dependabot keeps actions and packages current.','Add a dependency with a known advisory in a PR. The check should block it.'],
+    ['A.p16','repo','Shared workflow platform','G+X','Approved workflows and actions live in one dedicated organization in A, owned by a platform team. They are versioned (major tags, changelog, migration notes), protected by code owners and required reviews, and pinned by consumers. Teams consume them with no copy-paste. A and B never share workflows, because the enterprises stay apart. Each has its own copy.','Change a shared workflow without a code-owner review. Expected: it is blocked. Record the result. Check that a consumer repo pins a version.']
+  ];
+  var POL_B = [
+    ['B.p1','user-check','2FA, owner-added orgs','G','Two-factor is required for every organization in the enterprise. Enterprise owners add organizations to the enterprise: they create a new one, invite an existing one, or transfer one. Watch for organizations that appear outside the enterprise.','Try to add an org to the enterprise as a normal member and record the result. Monitor for orgs outside the enterprise.'],
+    ['B.p2','globe','Public repos only in publishing org','G','Public visibility is allowed only in public-open-source. In every other organization, repository creation is limited to private repositories and visibility changes are restricted, so a private repo cannot be made public by mistake. The enterprise policy sets which of these the organizations may choose.','Set a repo to public in internal-engineering. Expected: it is blocked. Record the result.'],
+    ['B.p3','branch','Enterprise rulesets baseline','G','Branch and tag rules are set once as an enterprise ruleset that targets all repos in the selected orgs, or a dynamic list of repos by custom property (orgs can be chosen by name or property), and no bypass by default. If an emergency bypass is unavoidable, use a short named list and review every use. The Learn Governance page says rulesets should not allow bypass, so this is a deliberate narrow exception. Rulesets at different levels are aggregated, and where they overlap the most restrictive version of a rule applies. New or changed rules run in Evaluate mode first, then are enforced.','Negative tests as in A: push to main, force push, bypass.'],
+    ['B.p4','shield','Security configs on all repos','G','A security configuration is attached to every repo and set as the default for new ones. Private repos need the paid security features. Public repos get the free ones.','Create a repo in each org and confirm the baseline appears.'],
+    ['B.p5','play','Approved Actions, read-only token','G','Only approved actions. The policy that requires actions to be pinned to a full-length commit SHA is on. The default job token is set to the restricted setting (read access to contents and packages), and a job asks for each extra permission by name. GitHub Actions approving pull requests stays off, which is the default for new organizations. Avoid privileged patterns such as pull_request_target that run contributor code.','Check that a workflow from a fork cannot read any secret.'],
+    ['B.p6','key','PAT lifetimes bounded','G','Fine-grained tokens have a maximum lifetime and an approved scope. Classic tokens fall under the same enterprise maximum lifetime policy.','List tokens older than the limit. There should be none.'],
+    ['B.p7','eye','Audit stream with source IP','G','Audit and Git events stream to B\'s own archive. Activity by a personal account outside organization resources is not fully visible, and public activity has source-IP gaps. Correlate with endpoint and network evidence. GitHub keeps Git events for only 7 days, so the stream must run from day one.','Trigger a test event and find it in the archive.'],
+    ['B.p8','refresh','Reconcile SAML + SCIM in every org','X','A scheduled job compares IdP groups with the members and linked identities of every organization. It reports drift, and any org without SAML enforced.','Add a test org without SAML. The job should flag it.'],
+    ['B.p9','tag','Custom properties on every repo','G','Every repo carries properties such as system, class and owner. Rulesets can target repos by custom property.','List repos with a missing property. The list should be empty.'],
+    ['B.p10','building','Orgs by class, open source apart','X','Organizations follow classification and need-to-know. Open source work has its own organization with its own owners and release approvers.','Confirm no public repo lives outside public-open-source.'],
+    ['B.p11','box','Sandbox org, private only','G+X','sandbox-lab is the place for experiments. It is private only, holds no secrets or internal data, and is archived when unused. The Learn Governance page lists a sandbox organization as one option, so B gets one. A does not.','List sandbox-lab repos with no activity for 90 days. They should be archived.',{dev:2}],
+    ['B.p12','refresh','Per-org SAML keeps org SCIM','X','Enterprise-level SAML would remove organization SCIM, and GitHub has no SCIM for a personal-account enterprise. So B keeps SAML and SCIM per organization. This is a deliberate deviation from the framework default.','Confirm every org shows SAML enforced and SCIM active.',{dev:1}],
+    ['B.p13','cpu','Agents and AI, reviewed models only','G','Copilot and agents are allowed per organization, starting with a pilot. Third-party agents must be enabled before anyone can use them. Only reviewed models and MCP servers are allowed. Agent pull requests pass the same rulesets and reviews as human ones, and agent instruction and MCP files need code-owner review. Spending limits apply.','Open an agent pull request that edits a workflow file. Expected: it will need a code-owner review. Record the result.'],
+    ['B.p14','user-check','Roles: security manager, no default Admin','G','A security manager role and custom roles replace broad Admin. Every organization has at least two owners, and default repository permission is never Admin. App managers are named.','List users with Admin on any repo. Each one should have a recorded reason.'],
+    ['B.p15','box','Dependency and provenance controls','G','Dependency review is a required check. Lockfiles are mandatory and install-time lifecycle scripts are off in builds. Public releases publish through trusted publishing where the registry supports it (npm and PyPI do, npm from GitHub-hosted runners only), with provenance. Dependabot keeps actions and packages current.','Add a dependency with a known advisory in a PR. The check should block it.'],
+    ['B.p16','repo','Shared workflow platform','G+X','Approved workflows and actions live in one dedicated organization in B, owned by a platform team, with versions, changelog, code owners and required reviews. Public CI reuses only the unprivileged ones. B has its own copy and never reads A.','Change a shared workflow without a code-owner review. Expected: it is blocked. Record the result.']
+  ];
+  POL_A.forEach(function(p){ N(p[0],'A','E',p[1],p[2],p[3],'',p[4],p[5],p[6]); });
+  POL_B.forEach(function(p){ N(p[0],'B','E',p[1],p[2],p[3],'',p[4],p[5],p[6]); });
+
+  /* organizations and repositories */
+  var ORGS = { A:[
+    { id:'A.o1', name:'critical-system-a', chips:[['users','Teams from IdP, base none'],['cpu','Own runner group, apps approved']],
+      d:'One organization per critical system. Teams come from IdP groups and base access is none, so people only see what they are granted. It has its own runner group, and only approved GitHub Apps are installed.',
+      v:'Open the org as a user with no team. They should see nothing.',
+      repos:[['A.o1.src','repo','source (private)','G+X','2+ approvals, CODEOWNERS, signed commits, push protection.','Source repos hold the code. Two approvals and CODEOWNERS review, signed commits, push protection, a SECURITY.md and the secure coding standard apply. CODEOWNERS enforces nothing by itself: the ruleset must require the review.','Open a PR that changes a CODEOWNERS path with one approval. Expected: it will not merge. Record the result.'],
+             ['A.o1.iac','server','infrastructure as code','G+X','IaC policy checks, protected environments, plan review.','IaC repos run policy checks and plan review before a protected environment approves a deploy. State and plans that contain secrets never live in Git. State is encrypted in the approved backend with locking.','Search the repo history for state files and plan output. There should be none.']] },
+    { id:'A.o2', name:'critical-system-b', chips:[['user-check','Own owners and security leads'],['cpu','Own runner group']],
+      d:'A second critical system with its own owners, security leads and runner group. Its credentials and teams are not shared with critical-system-a.',
+      v:'Check that no team or app has access to both system organizations without a recorded reason.',
+      repos:[['A.o2.src','repo','source (private)','G+X','Same baseline, system-specific CODEOWNERS.','Same baseline as the other system, with CODEOWNERS that name this system\'s reviewers.','As for the first system.'],
+             ['A.o2.iac','server','infrastructure as code','G+X','Same checks, separate state and environments.','Same checks, but separate state and separate protected environments, so a mistake in one system cannot touch the other.','Try to point this repo\'s pipeline at the other system\'s state. Expected: it is refused. Record the result.']] },
+    { id:'A.o3', name:'platform-security', chips:[['shield','Shared tooling, policy as code'],['ban','No blanket read to systems']],
+      d:'Holds shared tooling and the policy-as-code that configures the baseline. It has no blanket read access to the system organizations, so the platform team is not a path to the source.',
+      v:'Confirm platform-security members cannot read the system repos.',
+      repos:[['A.o3.pol','branch','policy-as-code','G','Changes reviewed by security, two approvals.','Settings and rules as code. Changes need two approvals including security, and the result is compared with live settings to catch drift.','Change a live setting by hand. The drift check should flag it.'],
+             ['A.o3.tool','box','shared-tooling','G+X','Pinned, signed and reviewed before builds use it.','Shared actions and tools used by builds are pinned to commits, signed and reviewed before any system uses them. Imports from outside enter here through the intake path.','Check that builds reference tools by commit, not by tag.']] }
+  ], B:[
+    { id:'B.o1', name:'internal-engineering', chips:[['lock','Team grants, base access none'],['cpu','Internal runner group']],
+      d:'Internal work. Repos are private with explicit team grants and base access none. It has an internal runner group.',
+      v:'Open the org as a user with no team. They should see nothing.',
+      repos:[['B.o1.app','repo','internal-app','G+X','PR review, CODEOWNERS, secret protection, pinned action refs.','Internal application code. PR review, CODEOWNERS, secret protection and pinned action references apply.','Open a PR with a hard-coded test secret. Push protection should stop it.'],
+             ['B.o1.tools','repo','internal-tools','G','Private only. GitHub internal visibility not used.','Internal repos use private visibility with explicit team grants. The GitHub visibility named internal gives every enterprise member read access, and with organization-level SAML, members are not required to authenticate through SAML to reach internal repositories. This is a deliberate deviation.','Confirm no repo in B uses the internal visibility value.',{dev:3}]] },
+    { id:'B.o2', name:'public-open-source', chips:[['globe','Only place public repos live'],['user-check','Named release approvers']],
+      d:'The only place public repos live. Release approvers are named. Public contributors have no corporate SSO, and public resources are public.',
+      v:'List repos with public visibility. All of them belong to this org.',
+      repos:[['B.o2.proj','tag','public-project','X','Release review. History and artifacts checked before publishing.','Before a release the history, artifacts, metadata and logs are checked for anything internal. Anything that came from A arrives only through the approved transfer service. Where the registry supports it (npm and PyPI do), packages publish through trusted publishing with OIDC, not long-lived tokens. npm trusted publishing needs GitHub-hosted runners and adds provenance automatically.','Run a secret and metadata scan over the full history before the first public release.'],
+             ['B.o2.pr','ban','untrusted pull requests','X','Treated as hostile. No secrets, no internal runners.','Pull requests from outside run on unprivileged hosted runners. No secrets, no route to internal runners, registries or targets.','Open a fork PR that tries to print a secret. Expected: it will get none. Record the result.']] },
+    { id:'B.o3', name:'sandbox-lab', chips:[['lock','Private only, no public repos'],['refresh','SAML + SCIM enforced']],
+      d:'The place for experiments, one of the options on the Learn Governance page. Private only, no public repos, SAML and SCIM enforced like every other org. It holds no secrets or internal data.',
+      v:'Search the org for secrets and internal data. There should be none.',
+      repos:[['B.o3.exp','box','experiments','G+X','No secrets or internal data. Archived when unused.','Throwaway work. No secrets and no internal data. Archived when unused, so it does not collect stale access.','List repos with no activity for 90 days. They should be archived.',{dev:2}],
+             ['B.o3.part','users','Partners recertified','X','Own review cycle, scoped publisher roles.','Partners are recertified on their own review cycle, with scoped roles and an expiry.','List partner grants without an expiry date. There should be none.']] }
+  ]};
+  ['A','B'].forEach(function(k){
+    ORGS[k].forEach(function(o){
+      N(o.id,k,'O','building',o.name,'G+X','',o.d,o.v,{ chips:o.chips });
+      o.repos.forEach(function(r){ N(r[0],k,'R',r[1],r[2],r[3],r[4],r[5],r[6],r[7]); });
+    });
+  });
+
+  /* execution and evidence */
+  N('A.e1','A','','cpu','Ephemeral runners','G+X','Per-system pool, egress allow list.','Isolated, disposable runners, one pool per system or trust level. Runner groups are limited to named repos and workflows, repo-level runner creation is restricted, images are patched, no disks or caches survive, and network egress is restricted. Where a job must reach a private network, use self-hosted ephemeral runners, or GitHub-hosted larger runners with Azure private networking. The accreditation decides which.','Run a job that tries to reach a host outside the allow list.',
+    { dev:4 });
+  N('A.e2','A','','key','Vault and OIDC','X','Short-lived tokens, rejects B.','Short-lived OIDC identity, scoped to the enterprise, the repository and the approved environment. On github.com the default token issuer is the same for A and B. Turn on the per-enterprise issuer and match the enterprise claim, and every A target rejects identities from B.','Use an identity from B to deploy to A. It must fail.');
+  N('A.e3','A','','box','Private registry','X','Signed artifacts, SBOM, mirror.','Signed artifacts with an SBOM, and a mirror of approved dependencies. Builds in A pull from the mirror, not from the open internet. Provenance attestations are verified before a deploy, and the attestation bundle is kept with the artifact.','Try to build with a dependency that is not on the mirror.');
+  N('B.e1','B','','cpu','Internal CI pool','G+X','Own runners, own credentials.','Self-hosted runners for internal work, with their own credentials, separate from A and from public CI.','Check that internal runners are not reachable from public pull requests.',
+    { dev:4 });
+  N('B.e2','B','','ban','Public CI, unprivileged','G+X','Hosted runners, no secrets.','Public pull requests run on separate unprivileged workers, normally GitHub-hosted runners. They have no deployment secrets and no route into internal networks.','Open a fork PR and confirm it cannot read secrets or reach internal hosts.');
+  N('B.e3','B','','key','Vault and OIDC','X','B targets only, rejects A.','Short-lived OIDC identity for B targets only. B targets reject identities from A.','Use an identity from A to deploy to B. It must fail.');
+  N('A.v1','A','','eye','Audit and security events','G','Git, alerts, IdP, proxy, EDR.','Audit and Git events, security alerts through supported APIs or webhooks, IdP and privileged-access logs, proxy, endpoint and runner telemetry. Webhook receivers validate signatures and handle replays and duplicates.','Trigger a test alert and follow it to the archive.');
+  N('A.v2','A','','archive','Collector and archive','X','Immutable store, lag monitoring.','Events go to an immutable archive in the sensitive zone. Ingestion lag and stream health are monitored, expected sources are reconciled, and events are deduplicated. Do not rely on GitHub\'s short native Git-event retention.','Stop the collector. Someone should be alerted.');
+  N('A.v3','A','','search','Sensitive SIEM and SOC','X','Cleared analysts only.','Detailed sensitive logs stay in the sensitive zone, with cleared analysts only.','Check that analyst access is limited to cleared staff.');
+  N('B.v1','B','','eye','Audit and security events','G','Git, alerts, IdP, proxy, CI.','Audit and Git events, security alerts, IdP and proxy logs, CI and registry telemetry.','Trigger a test alert and follow it to the archive.');
+  N('B.v2','B','','archive','Collector and archive','X','Immutable store, lag monitoring.','Events go to B\'s own immutable archive. Lag and stream health are monitored, and expected sources are reconciled.','Stop the collector. Someone should be alerted.');
+  N('B.v3','B','','search','Domain B SIEM and SOC','X','Public activity has visibility gaps.','A SIEM and SOC for domain B. Activity in public resources and personal-account activity outside organization resources are only partly visible. Do not claim full observation.','Document which activities in B the SIEM cannot see.');
+
+  /* lanes */
+  N('L.a','A','','lock','A · Sensitive','X','','Code reaches a classified target only through an approved PR, an isolated ephemeral runner, required checks, a signed artifact, an approval on a protected environment and a short-lived OIDC identity. Targets reject identities from B.','Try to deploy by skipping a step. Each step should block.',
+    { lane:{ cls:'pa', icon:'lock', steps:[['branch','Approved PR'],['cpu','Isolated CI'],['search','Checks'],['stamp','Signed artifact'],['check','Env approval'],['server','Protected target']] } });
+  N('L.brel','B','','tag','B · Release','X','','Public and internal releases come from a reviewed commit, a trusted build, checks, a signed release and a release approval, then deploy to B targets only.','Try to publish a release without the approval.',
+    { lane:{ cls:'pb', icon:'tag', steps:[['branch','Reviewed commit'],['cpu','Trusted build'],['search','Checks'],['stamp','Signed release'],['check','Release approval'],['server','B target']] } });
+  N('L.bpr','B','','ban','B · Untrusted PR','X','','Pull requests from outside are treated as hostile. They run unprivileged and only report a status back. No secrets and no route to internal or sensitive systems.','Open a fork PR with a workflow that tries to reach the network. Expected: it will be limited. Record the result.',
+    { lane:{ cls:'pb few', icon:'ban', note:'No secrets. No route to internal or sensitive systems.', steps:[['ban','Public PR'],['cpu','Unprivileged CI'],['eye','Status only']] } });
+  N('L.exp','S','','swap','Export A → B','X','','Content leaves A only after a release request and a decision by the release authority. It is inspected, minimised and signed, staged, and published in B. Scanning alone cannot declassify information.','Request an export without the authority\'s decision. Expected: it is blocked. Record the result.',
+    { lane:{ cls:'px', icon:'swap', steps:[['stamp','Release request'],['user-check','Release authority'],['search','Inspect'],['filter','Minimize and sign'],['archive','Stage'],['tag','Publish in B']] } });
+  N('L.imp','S','','swap','Intake B → A','X','','Outside content enters A through a mirror. Origin is verified, content is quarantined and scanned for malware and licence issues, versions are pinned, then it is admitted to the approved mirror and used in A.','Import a package with a known bad hash. Expected: it will be stopped in quarantine. Record the result.',
+    { lane:{ cls:'pg', icon:'swap', steps:[['globe','Upstream source'],['check','Verify origin'],['ban','Quarantine'],['search','Scan and pin'],['database','Admit to mirror'],['branch','Use in A']] } });
+  N('L.ir','S','','bell','Incident response','X','','Detect, contain, rotate credentials and preserve evidence, recover, then learn. Exercises cover the cases where the IdP, the collector or GitHub itself is the problem.','Run a tabletop exercise on a leaked token and on an IdP outage.',
+    { lane:{ cls:'ps', icon:'bell', steps:[['bell','Detect'],['ban','Contain'],['key','Rotate, preserve'],['refresh','Recover'],['clipboard','Learn']] } });
+
+  /* operations and accountability */
+  var OPS = [
+    ['ops.1','database','Inventory: owner, class, retention','Every repo has an owner, a class and a retention rule, kept in custom properties and checked for gaps.'],
+    ['ops.2','branch','Policy as code, drift checks','Enterprise and organization settings live in code. A scheduled job reports any setting that has drifted.'],
+    ['ops.3','archive','Back up Git, LFS, issues, packages','Backups cover Git history, LFS, issues, packages and settings. Check what the tool really restores.'],
+    ['ops.4','refresh','Tested restore, RPO and RTO','Restores are tested, with recovery point and recovery time targets agreed with each system owner.'],
+    ['ops.5','users','Reconcile groups, keys, apps','Review IdP groups, deploy keys, app installations, webhooks and outside collaborators on a schedule.'],
+    ['ops.6','cpu','Patch and attest runners','Runner images are patched on a schedule, and their state is attested.'],
+    ['ops.7','lock','Protect IaC state and plans','State and plans are encrypted, locked, and reachable only by the pipeline that needs them.'],
+    ['ops.8','activity','Test collector, stream, IdP outage','Regularly break the log collector, the audit stream and the IdP, and check that people notice and recover.'],
+    ['ops.9','search','Access reviews, pen tests, evidence','Access is recertified on a schedule. Pen tests and compliance audits produce evidence that is kept.'],
+    ['ops.10','building','Review org model, archive stale orgs','Organizations are reviewed against classification and need-to-know. Stale organizations are archived.'],
+    ['ops.11','users','Training and security champions','Developers get secure coding training. Champions inside teams carry the secure coding standard.'],
+    ['ops.12','clipboard','Threat model upkeep per system','Threat models are reviewed whenever a system changes, and after incidents.'],
+    ['ops.13','refresh','Continuity mirror, rehearsed','For critical systems, a current copy of the deployable revisions sits in a separate failure domain, with its own credentials and build path. Deployment logic lives in scripts, not only in workflow files, and a separate identity can deploy without GitHub Actions. Drills run with the primary blocked, and recovery after an erroneous force push is tested too. Break-glass credentials are short-lived.'],
+    ['ops.14','activity','Metrics and developer feedback','Track CI duration, queue time and flake rate, plus alert age and time to fix. Developers have a channel to report friction and ask for exceptions, and the answers feed back into the baseline.'],
+    ['ops.15','users','Onboarding, knowledge base, champions','New engineers get a short path: tools, review rules, how to report a finding. One knowledge repository holds the standards and how-tos. Discussions are on for questions, so answers stay next to the code. A champion in each team keeps the practice alive. A and B keep separate copies, and the A copy never lists classified detail in B.']
+  ];
+  var ACC = [
+    ['acc.1','stamp','Security authority: classification, hosting, export','Decides classification, approves the hosting service, and owns export decisions.'],
+    ['acc.2','building','Enterprise owners: baseline, audit delivery','Own the enterprise baseline and make sure audit data is delivered. A short list of named people, with delegates holding custom roles such as security manager or AI manager.'],
+    ['acc.3','sliders','Org owners: teams, apps, runners','Own organization teams, installed apps and runner groups.'],
+    ['acc.4','repo','Repo owners: review, remediation, deploys','Own code review, remediation of findings and deployments for their repo.'],
+    ['acc.5','eye','SOC: detection, response, evidence','Own detection and response, and keep the evidence.'],
+    ['acc.6','calendar','Governance: exceptions, vendor review, exercises','Grant exceptions with an expiry, review vendors and apps, and run exercises.'],
+    ['acc.7','clipboard','System security leads: threat model','Own the threat model of their system and keep it current.'],
+    ['acc.8','users','Champions: training, coding standard','Run training and maintain the secure coding standard.'],
+    ['acc.9','search','Compliance: audits, access reviews','Run compliance audits and access reviews and keep the results.']
+  ];
+  OPS.forEach(function(o){ N(o[0],'S','','' + o[1],o[2],'','',o[3]); });
+  ACC.forEach(function(o){ N(o[0],'S','',o[1],o[2],'','',o[3]); });
+
+  /* flows, deviations and relations */
+  var FLOWS = {
+    build:['L.a','L.brel','A.e1','A.e2','A.e3','B.e1','B.e3','A.o1.src','A.o1.iac','B.o1.app','A.p3','A.p5','B.p3','B.p5'],
+    untrusted:['L.bpr','B.e2','B.o2','B.o2.pr','B.p5'],
+    export:['c.xfer','L.exp','c.bound','A.o1.src','B.o2','B.o2.proj'],
+    intake:['c.xfer','L.imp','c.bound','A.e3','A.o3','A.o3.tool'],
+    respond:['L.ir','A.v1','A.v2','A.v3','B.v1','B.v2','B.v3','c.soc','ops.8','acc.5']
+  };
+  var FLOWNAME = { build:'Build and deploy', untrusted:'Untrusted PR', export:'Export A to B', intake:'Intake B to A', respond:'Respond' };
+  var FLOWTEXT = {
+    build:'Code reaches a protected target. A and B use separate runners, identities and targets.',
+    untrusted:'Public pull requests run unprivileged: no secrets and no route to internal or sensitive systems.',
+    export:'A to B only through the approved transfer service, after the release authority decides.',
+    intake:'B to A only after verification, quarantine, scanning and pinning.',
+    respond:'Detect, contain, rotate, recover, learn. Logs stay in each domain. The common SOC sees only minimized metadata.'
+  };
+  var DEV = {
+    1:'Per-org SAML and SCIM in Enterprise B, not enterprise-level SAML. The framework recommends enterprise SAML for most enterprises. B uses personal accounts. The Governance guidance names organization SCIM as the option outside EMU, and the GitHub documentation says enterprise-level SAML does not support it.',
+    2:'No sandbox organization in Enterprise A. The framework suggests a sandbox. A holds classified source and IaC, so experiments run in B, which has the private sandbox-lab.',
+    3:'Private visibility instead of the GitHub internal visibility. Internal means every enterprise member can read, and organization SAML does not protect it the same way.',
+    4:'Self-hosted or private-network runners for internal and classified CI, where the Productivity checklist says to use GitHub-hosted runners. Internal CI must reach private networks and keep its own credentials. The framework allows GitHub-hosted larger runners with Azure private networking as the alternative, and A names it as a choice for the accreditation to make.'
+  };
+  Object.keys(FLOWS).forEach(function(f){ FLOWS[f].forEach(function(id){ if (D[id]) D[id].fl.push(f); else console.warn('flow id missing', id); }); });
+  [
+    ['A.idp','A.scim','A.p10','A.o1','A.people'],['B.idp','B.scim','B.p8','B.p12','B.o1','B.people'],
+    ['A.p3','A.o1.src','A.o2.src','A.o3.pol'],['A.p4','A.o1.src','A.o1.iac'],['A.p5','A.e1','A.e2'],['A.p7','A.v1','A.v2','A.v3'],
+    ['A.p8','A.people','A.idp'],['A.p9','A.p3','A.p4','ops.1'],['A.p11','B.p11','B.o3','B.o3.exp'],['A.p12','A.o1.src','A.o1.iac','ops.12','acc.7'],
+    ['A.p1','A.p2','A.o1'],['A.p6','A.p5','A.e2'],
+    ['B.p3','B.o1.app','B.o2.proj'],['B.p2','B.o2','B.o2.proj'],['B.p5','B.e2','B.o2.pr'],['B.p7','B.v1','B.v2','B.v3'],['B.p11','B.o3','B.o3.exp'],
+    ['B.p9','B.p10','ops.1'],['B.p4','B.o1.app'],['B.p6','B.e3'],['B.o1.tools','B.p3'],
+    ['c.xfer','c.bound','L.exp','L.imp'],['c.soc','A.v3','B.v3','L.ir','acc.5'],['c.ident','A.idp','B.idp','c.bound'],
+    ['A.e1','A.e2','L.a'],['A.e3','A.o3.tool','L.imp'],['B.e1','B.e3','L.brel'],['B.e2','B.o2.pr','L.bpr'],['A.o1.iac','L.a','ops.7'],
+    ['g0','g1','g2','g3','acc.1'],['ops.3','ops.4'],['ops.2','ops.1','A.o3.pol'],['ops.11','ops.12','acc.8','acc.7'],['ops.9','acc.9'],
+    ['ops.8','A.v2','B.v2'],['ops.10','A.p11','B.p10'],['ops.5','A.scim','B.scim'],['ops.6','A.e1','B.e1'],
+    ['A.p13','A.e1','A.o1.src','A.v1'],['B.p13','B.o1.app','B.v1'],['A.p14','acc.2','acc.3'],['B.p14','acc.2','acc.3'],
+    ['A.p15','A.e3','A.o3.tool'],['B.p15','B.o2.proj'],['ops.13','ops.3','ops.4','A.e1'],['ops.14','acc.6','ops.11'],['ops.15','ops.11','acc.8'],['A.p16','A.p5','A.e1'],['B.p16','B.p5','B.e2']
+  ].forEach(function(g){
+    g.forEach(function(a){
+      if (!D[a]) { console.warn('rel id missing', a); return; }
+      g.forEach(function(b){ if (a !== b && D[b] && D[a].rel.indexOf(b) < 0) D[a].rel.push(b); });
+    });
+  });
+
+  /* ---------- markup ---------- */
+  function card(id, cls, extra){
+    var n = D[id];
+    return '<button type="button" class="nd ' + (cls || 'card') + '" data-id="' + id + '" aria-label="' + esc(n.t) + '">' +
+      icw(n.ic) + '<b class="t">' + esc(n.t) + '</b>' + (extra || tagsHTML(n.tg)) + (cls === 'chip' ? '' : (n.s ? '<span class="s">' + esc(n.s) + '</span>' : '')) + '</button>';
+  }
+  function gapHTML(label){
+    return '<div class="gap"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v11M3 8l4 4 4-4"/></svg>' + esc(label) + '</div>';
+  }
+  function layer(label, body){
+    return '<div class="layer"><div class="rail"><span>' + label + '</span></div><div class="lbody">' + body + '</div></div>';
+  }
+  function tower(k){
+    var A = k === 'A';
+    var ident = A ? ['A.people','A.idp','A.scim'] : ['B.people','B.idp','B.scim'];
+    var pol = (A ? POL_A : POL_B).map(function(p){ return p[0]; });
+    var exe = A ? ['A.e1','A.e2','A.e3'] : ['B.e1','B.e2','B.e3'];
+    var evi = A ? ['A.v1','A.v2','A.v3'] : ['B.v1','B.v2','B.v3'];
+    var h = '<section class="tower ' + (A ? 'tw-a pa' : 'tw-b pb') + '" aria-label="Enterprise ' + k + '">';
+    h += '<header class="th">' + ic(A ? 'lock' : 'globe') + '<div><h2>' +
+      (A ? 'ENTERPRISE A · SENSITIVE' : 'ENTERPRISE B · INTERNAL AND PUBLIC') + '</h2><p>' +
+      (A ? 'Enterprise Managed Users. Source code and IaC for classified critical systems.' : 'Personal accounts linked by SAML and SCIM per org. Internal work and public releases.') + '</p></div></header>';
+    h += layer('IDENTITY', '<div class="row3">' + ident.map(function(i){ return card(i); }).join('') + '</div>');
+    h += gapHTML('accounts and groups');
+    h += layer('E · ENTERPRISE POLICY', '<div class="pol">' + pol.map(function(i){ return card(i, 'chip'); }).join('') + '</div>');
+    h += gapHTML('baseline applies to every repo');
+    h += layer('O · ORGANIZATIONS    R · REPOSITORIES', '<div class="orgs">' + ORGS[k].map(function(o){
+      var n = D[o.id];
+      return '<div class="org"><button type="button" class="nd orgh" data-id="' + o.id + '" aria-label="' + esc(n.t) + '">' + icw('building') +
+        '<b class="t">' + esc(n.t) + '</b><span class="pill">O</span>' +
+        n.chips.map(function(c){ return '<span class="mi">' + ic(c[0]) + '<span>' + esc(c[1]) + '</span></span>'; }).join('') + '</button>' +
+        '<span class="cap">Repositories</span>' +
+        o.repos.map(function(r){ return card(r[0], 'card repo', '<span class="pill r">R</span>'); }).join('') + '</div>';
+    }).join('') + '</div>');
+    h += gapHTML('workflows run');
+    h += layer('EXECUTION', '<div class="row3">' + exe.map(function(i){ return card(i); }).join('') + '</div>');
+    h += gapHTML('audit and security telemetry');
+    h += layer('EVIDENCE', '<div class="row3">' + evi.map(function(i){ return card(i); }).join('') + '</div>');
+    return h + '</section>';
+  }
+  function lane(id){
+    var n = D[id], L = n.lane;
+    return '<button type="button" class="nd lane ' + L.cls + '" data-id="' + id + '" aria-label="' + esc(n.t) + '">' +
+      '<span class="lh">' + ic(L.icon) + '<b class="t">' + esc(n.t) + '</b></span>' +
+      '<span class="steps">' + L.steps.map(function(s){ return '<span class="st">' + ic(s[0]) + '<span>' + esc(s[1]) + '</span></span>'; }).join('') +
+      (L.note ? '<span class="lnote">' + esc(L.note) + '</span>' : '') + '</span></button>';
+  }
+  function build(){
+    var h = '';
+    h += '<div class="gate">' +
+      '<button type="button" class="nd gmain" data-id="g0" aria-label="' + esc(D.g0.t) + '">' + icw('stamp') +
+        '<b class="t">GATE 0 · Approve the hosting service before loading classified content</b><span class="s">' + esc(D.g0.s) + '</span></button>' +
+      '<div class="opts">' + ['g1','g2','g3'].map(function(i){
+        return '<button type="button" class="nd opt" data-id="' + i + '" aria-label="' + esc(D[i].t) + '">' + icw(D[i].ic) + '<b class="t">' + esc(D[i].t) + '</b></button>';
+      }).join('') + '</div></div>';
+    h += '<div class="conn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v11M3 8l4 4 4-4"/></svg>approved service, then two separate enterprises</div>';
+    h += '<div class="grid">';
+    h += '<div class="chan-line" aria-hidden="true"></div>';
+    h += tower('A');
+    h += tower('B');
+    // centre channel items, each in its own row
+    h += '<button type="button" class="nd cc bound" data-id="c.bound" style="grid-row:1" aria-label="Logical boundary"><b>Logical boundary.</b> Two governance domains in one SaaS service. Not an air gap.</button>';
+    h += '<button type="button" class="nd cc ident card" data-id="c.ident" style="grid-row:2" aria-label="Keep identities apart">' + icw('alert') + '<b class="t">Keep identities apart</b><span></span><span class="s">' + esc(D['c.ident'].s) + '</span></button>';
+    h += '<button type="button" class="nd cc xfer" data-id="c.xfer" style="grid-row:6;align-self:center" aria-label="Approved transfer service">' +
+      '<span class="xh">' + icw('swap') + '<b class="t">Approved transfer service</b></span>' +
+      D['c.xfer'].steps.map(function(s, i){ return '<span class="xs" data-step="' + i + '">' + ic('check') + '<span>' + esc(s) + '</span></span>'; }).join('') +
+      '<span class="xn">External process, not a native GitHub boundary. Remove if transfers are prohibited.</span></button>';
+    h += '<button type="button" class="nd cc soc" data-id="c.soc" style="grid-row:10;align-self:center" aria-label="Common SOC view">' + icw('eye') + '<b class="t">Common SOC view</b><span class="s">' + esc(D['c.soc'].s) + '</span></button>';
+    h += '</div>';
+
+    h += '<div class="ops">';
+    h += '<div class="col"><div class="sec"><h3>BUILD AND DEPLOY</h3><span>Each domain has its own runners, identity and target.</span></div>' +
+      lane('L.a') + lane('L.brel') + lane('L.bpr') + '</div>';
+    h += '<div class="col"><div class="sec"><h3>EXCHANGE AND RESPOND</h3><span>Transfer is an external process. Remove it if prohibited.</span></div>' +
+      lane('L.exp') + lane('L.imp') + lane('L.ir') + '</div>';
+    h += '<div class="col"><div class="sec"><h3>PLATFORM OPERATIONS</h3><span>Per domain.</span></div><div class="panel c4 ps">' +
+      OPS.map(function(o){ return card(o[0], 'chip'); }).join('') + '</div></div>';
+    h += '<div class="col"><div class="sec"><h3>ACCOUNTABILITY</h3><span>Every control has a named owner.</span></div><div class="panel c3 ps">' +
+      ACC.map(function(o){ return card(o[0], 'chip'); }).join('') + '</div></div>';
+    h += '</div>';
+    return h;
+  }
+
+  /* ---------- state ---------- */
+  var stage = $('#stage'), fit = $('#fit'), scroller = $('#scroller'), pop = $('#pop'), sumEl = $('#sum'), bar = $('#bar');
+  stage.innerHTML = build();
+  var nodeEls = {};
+  $$('.nd[data-id]', stage).forEach(function(e){ nodeEls[e.getAttribute('data-id')] = e; });
+  var filter = null, selId = null, scale = 1, lastAnchor = null;
+  var TOTAL = ORDER.length;
+
+  /* ---------- arrows ---------- */
+  var NS = 'http://www.w3.org/2000/svg', ov = null;
+  function rel(el){
+    var x = 0, y = 0, e = el;
+    while (e && e !== stage){ x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+    return { x:x, y:y, w:el.offsetWidth, h:el.offsetHeight };
+  }
+  function mk(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  var arEls = {};
+  function drawArrows(){
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    ov = mk('svg', { 'class':'ov', width:stage.offsetWidth, height:stage.offsetHeight, 'aria-hidden':'true' });
+    var defs = mk('defs', {}, ov);
+    [['mA','mk-a'],['mG','mk-g'],['mC','mk-c']].forEach(function(m){
+      var mm = mk('marker', { id:m[0], viewBox:'0 0 10 10', refX:'8', refY:'5', markerWidth:'4', markerHeight:'4', orient:'auto' }, defs);
+      mk('path', { d:'M0 0L10 5L0 10z', 'class':m[1] }, mm);
+    });
+    var A = rel($('.tw-a', stage)), B = rel($('.tw-b', stage));
+    var X = rel(nodeEls['c.xfer']), S = rel(nodeEls['c.soc']);
+    var ax = A.x + A.w, bx = B.x, xl = X.x, xr = X.x + X.w;
+    var s0 = rel($('[data-step="0"]', stage)), s3 = rel($('[data-step="3"]', stage));
+    var ye = s0.y + s0.h / 2, yi = s3.y + s3.h / 2, ys = S.y + S.h / 2, sl = S.x, sr = S.x + S.w;
+    function line(key, cls, mark, x1, x2, y, lab, lx){
+      var p = mk('path', { d:'M' + x1 + ' ' + y + 'L' + x2 + ' ' + y, 'class':'ar ' + cls, 'marker-end':'url(#' + mark + ')' }, ov);
+      (arEls[key] = arEls[key] || []).push(p);
+      if (lab){ var t = mk('text', { x:lx, y:y - 7, 'class':'alab', fill:'currentColor' }, ov); t.style.fill = cls === 'ex' ? 'var(--a)' : cls === 'im' ? 'var(--g)' : 'var(--c)'; t.textContent = lab; }
+    }
+    arEls = {};
+    line('export','ex','mA', ax, xl - 1, ye, 'A→B', (ax + xl) / 2);
+    line('export','ex','mA', xr + 1, bx, ye, 'A→B', (xr + bx) / 2);
+    line('intake','im','mG', bx, xr + 1, yi, 'B→A', (xr + bx) / 2);
+    line('intake','im','mG', xl - 1, ax, yi, 'B→A', (ax + xl) / 2);
+    line('respond','so','mC', ax, sl - 1, ys);
+    line('respond','so','mC', bx, sr + 1, ys);
+    stage.appendChild(ov);
+    paintArrows();
+  }
+  function paintArrows(){
+    if (!ov) return;
+    var any = !!filter || !!selId, flows = null;
+    if (selId) flows = D[selId].fl;
+    else if (filter && filter[0] === 'fl') flows = [filter[1]];
+    ov.classList.toggle('dim', any);
+    Object.keys(arEls).forEach(function(k){
+      var on = any && !!flows && flows.indexOf(k) >= 0;
+      arEls[k].forEach(function(p){ p.classList.toggle('on', on); });
+    });
+  }
+
+  /* ---------- scaling ---------- */
+  function layout(){
+    var w = scroller.clientWidth;
+    scale = Math.max(MIN_SCALE, Math.min(1, w / STAGE_W));
+    stage.style.transform = 'scale(' + scale + ')';
+    fit.style.width = Math.round(STAGE_W * scale) + 'px';
+    fit.style.height = Math.round(stage.offsetHeight * scale) + 'px';
+    drawArrows();
+    if (!pop.hidden && lastAnchor) placePop(lastAnchor);
+  }
+
+  /* ---------- filters ---------- */
+  var GROUPS = [
+    ['Control', [['tag:G','G · GitHub control','G'],['tag:X','X · External control or process','X'],['tag:G+X','G+X · Both','G+X']]],
+    ['Policy layer', [['sc:E','Enterprise'],['sc:O','Organization'],['sc:R','Repository']]],
+    ['Domain', [['dom:A','Enterprise A'],['dom:B','Enterprise B'],['dom:S','Shared']]],
+    ['Flow', [['fl:build','Build and deploy'],['fl:untrusted','Untrusted PR'],['fl:export','Export A to B'],['fl:intake','Intake B to A'],['fl:respond','Respond']]],
+    ['Review', [['dev:1','Well-Architected deviations']]]
+  ];
+  var LABELS = { 'tag:G':'GitHub controls (G)', 'tag:X':'external controls and processes (X)', 'tag:G+X':'controls that need both (G+X)',
+    'sc:E':'enterprise policies', 'sc:O':'organizations', 'sc:R':'repositories', 'dom:A':'Enterprise A', 'dom:B':'Enterprise B', 'dom:S':'shared parts',
+    'dev:1':'deliberate deviations from GitHub Well-Architected' };
+  function key(f){ return f ? f[0] + ':' + f[1] : 'all'; }
+  function match(n, f){
+    if (!f) return true;
+    switch (f[0]){
+      case 'tag': return n.tg === f[1];
+      case 'sc': return n.sc === f[1];
+      case 'dom': return n.dom === f[1];
+      case 'fl': return n.fl.indexOf(f[1]) >= 0;
+      case 'dev': return !!n.dev;
+    }
+    return false;
+  }
+  function buildBar(){
+    var all = document.createElement('div'); all.className = 'grp';
+    var b0 = document.createElement('button'); b0.type = 'button'; b0.className = 'fchip'; b0.setAttribute('data-f', 'all'); b0.textContent = 'All'; all.appendChild(b0);
+    bar.appendChild(all);
+    GROUPS.forEach(function(g){
+      var d = document.createElement('div'); d.className = 'grp'; d.setAttribute('role', 'group'); d.setAttribute('aria-label', g[0]);
+      var l = document.createElement('span'); l.className = 'glabel'; l.textContent = g[0]; d.appendChild(l);
+      g[1].forEach(function(it){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'fchip'; b.setAttribute('data-f', it[0]);
+        if (it[2]) b.innerHTML = tagsHTML(it[2]) + '<span>' + esc(it[1].replace(/^[A-Z+]+ · /, '')) + '</span>';
+        else b.textContent = it[1];
+        d.appendChild(b);
+      });
+      bar.appendChild(d);
+    });
+    bar.addEventListener('click', function(e){
+      var b = e.target.closest ? e.target.closest('.fchip') : null;
+      if (!b) return;
+      var f = b.getAttribute('data-f');
+      closePop(false);
+      selId = null;
+      var next = f === 'all' ? null : f.split(':');
+      filter = (next && filter && key(filter) === f) ? null : next;
+      apply();
+    });
+  }
+
+  function summary(){
+    var h = '';
+    if (selId){
+      var n = D[selId];
+      h = '<b>' + esc(n.t) + '</b>. ' + (n.rel.length ? n.rel.length + ' related ' + (n.rel.length === 1 ? 'element is' : 'elements are') + ' highlighted. ' : '') + 'Press Escape or click an empty area to clear.';
+    } else if (filter){
+      var count = 0; ORDER.forEach(function(id){ if (match(D[id], filter)) count++; });
+      var k = key(filter);
+      if (filter[0] === 'fl') h = '<b>' + esc(FLOWNAME[filter[1]]) + '.</b> ' + esc(FLOWTEXT[filter[1]]) + ' ' + count + ' elements take part.';
+      else if (filter[0] === 'dev') h = '<b>' + count + ' elements show a deliberate deviation.</b> 1: ' + esc(DEV[1]) + ' 2: ' + esc(DEV[2]) + ' 3: ' + esc(DEV[3]) + ' 4: ' + esc(DEV[4]);
+      else h = '<b>' + count + ' of ' + TOTAL + ' elements</b> are ' + esc(LABELS[k] || k) + '.';
+    } else {
+      h = TOTAL + ' elements. Click a box for what it does and how to check it. Filter to follow a flow, a policy layer or a type of control.';
+    }
+    sumEl.innerHTML = h;
+  }
+
+  function apply(){
+    var any = !!filter || !!selId;
+    stage.classList.toggle('dim', any);
+    var relSet = {};
+    if (selId) D[selId].rel.forEach(function(r){ relSet[r] = true; });
+    ORDER.forEach(function(id){
+      var el = nodeEls[id];
+      if (!el) return;
+      var on = selId ? (id === selId || !!relSet[id]) : match(D[id], filter);
+      el.classList.toggle('on', any && on);
+      el.classList.toggle('sel', id === selId);
+    });
+    $$('.fchip', bar).forEach(function(b){
+      var f = b.getAttribute('data-f');
+      b.setAttribute('aria-pressed', f === 'all' ? String(!filter) : String(!!filter && key(filter) === f));
+    });
+    paintArrows();
+    summary();
+    try {
+      var hash = selId ? '#n=' + encodeURIComponent(selId) : (filter ? '#f=' + encodeURIComponent(key(filter)) : '');
+      history.replaceState(null, '', location.pathname + location.search + hash);
+    } catch (e) {}
+  }
+
+  /* ---------- popover ---------- */
+  function h(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function block(label, text){ var p = h('p'); p.appendChild(h('span', 'lbl', label)); p.appendChild(document.createTextNode(text)); return p; }
+  function openPop(id, anchor){
+    var n = D[id];
+    selId = id; filter = null; apply();
+    pop.innerHTML = '';
+    var head = h('div', 'pop-h');
+    var title = h('strong', null, n.t); title.id = 'popTitle';
+    head.appendChild(title);
+    var x = h('button', 'pop-x', 'Close'); x.type = 'button';
+    x.addEventListener('click', function(){ clearSel(true); });
+    head.appendChild(x);
+    pop.appendChild(head);
+
+    var meta = h('div', 'pop-m');
+    if (n.tg){ var tg = h('span'); tg.innerHTML = tagsHTML(n.tg); meta.appendChild(tg); }
+    var dm = n.dom === 'A' ? ['Enterprise A', 'a'] : n.dom === 'B' ? ['Enterprise B', 'b'] : ['Shared', ''];
+    meta.appendChild(h('span', 'dom ' + dm[1], dm[0]));
+    var sc = { E:'Enterprise policy', O:'Organization', R:'Repository' }[n.sc];
+    if (sc) meta.appendChild(h('span', 'dom', sc));
+    pop.appendChild(meta);
+
+    pop.appendChild(h('p', null, n.d));
+    if (n.steps){
+      var ol = h('ol'); n.steps.forEach(function(s){ ol.appendChild(h('li', null, s)); });
+      pop.appendChild(ol);
+    }
+    if (n.lane){
+      var ol2 = h('ol'); n.lane.steps.forEach(function(s){ ol2.appendChild(h('li', null, s[1])); });
+      pop.appendChild(ol2);
+    }
+    if (n.chips){
+      var ul = h('ul'); ul.style.margin = '0'; ul.style.paddingLeft = '1.1rem';
+      n.chips.forEach(function(c){ ul.appendChild(h('li', null, c[1])); });
+      pop.appendChild(ul);
+    }
+    if (n.v) pop.appendChild(block('Check', n.v));
+    if (n.dev){
+      var dv = h('p', 'dev'); dv.appendChild(h('b', null, 'Deliberate deviation ' + n.dev + ' of 4. ')); dv.appendChild(document.createTextNode(DEV[n.dev]));
+      pop.appendChild(dv);
+    }
+    if (n.fl.length){
+      var fp = h('p'); fp.appendChild(h('span', 'lbl', 'Part of'));
+      var fl = h('span', 'links');
+      n.fl.forEach(function(f){
+        var b = h('button', 'lk', FLOWNAME[f]); b.type = 'button';
+        b.addEventListener('click', function(){ closePop(false); selId = null; filter = ['fl', f]; apply(); });
+        fl.appendChild(b);
+      });
+      fp.appendChild(fl); pop.appendChild(fp);
+    }
+    if (n.rel.length){
+      var rp = h('p'); rp.appendChild(h('span', 'lbl', 'Related'));
+      var rl = h('span', 'links');
+      n.rel.slice(0, 8).forEach(function(r){
+        var b = h('button', 'lk', D[r].t + (D[r].dom && D[r].dom !== 'S' && /^(Corporate IdP|Audit|Collector|Vault|Source|infrastructure|Ephemeral)/.test(D[r].t) ? ' (' + D[r].dom + ')' : '')); b.type = 'button';
+        b.addEventListener('click', function(){ openPop(r, nodeEls[r]); });
+        rl.appendChild(b);
+      });
+      rp.appendChild(rl); pop.appendChild(rp);
+    }
+    pop.hidden = false;
+    lastAnchor = anchor;
+    placePop(anchor);
+    try { pop.focus({ preventScroll:true }); } catch (e) { pop.focus(); }
+    try { pop.scrollIntoView({ block:'nearest', inline:'nearest' }); } catch (e) {}
+  }
+  function placePop(anchor){
+    if (!anchor) return;
+    var sr = scroller.getBoundingClientRect(), ar = anchor.getBoundingClientRect();
+    var pw = pop.offsetWidth, ph = pop.offsetHeight;
+    var left = ar.left - sr.left + scroller.scrollLeft;
+    left = Math.max(8, Math.min(left, scroller.scrollWidth - pw - 8));
+    var top = ar.bottom - sr.top + 8;
+    var maxH = fit.offsetHeight;
+    if (top + ph > maxH - 4) top = ar.top - sr.top - ph - 8;
+    top = Math.max(4, Math.min(top, maxH - ph - 4));
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
+  function closePop(restore){
+    if (pop.hidden) return;
+    pop.hidden = true;
+    if (restore && lastAnchor){ try { lastAnchor.focus({ preventScroll:true }); } catch (e) {} }
+  }
+  function clearSel(restore){ closePop(restore); selId = null; apply(); }
+
+  /* ---------- events ---------- */
+  stage.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.nd[data-id]') : null;
+    if (b){ openPop(b.getAttribute('data-id'), b); return; }
+    if (selId) clearSel(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ if (selId || !pop.hidden) clearSel(true); else if (filter){ filter = null; apply(); } }
+  });
+  document.addEventListener('click', function(e){
+    if (pop.hidden) return;
+    if (pop.contains(e.target) || (stage.contains(e.target))) return;
+    if (bar.contains(e.target)) return;
+    clearSel(false);
+  });
+
+  /* legend */
+  $('#legend').innerHTML =
+    '<span>' + tagsHTML('G') + ' GitHub control</span><span>' + tagsHTML('X') + ' External control or process</span><span>' + tagsHTML('G+X') + ' Both</span>' +
+    '<span><i class="sw" style="background:var(--a)"></i>Enterprise A</span><span><i class="sw" style="background:var(--b)"></i>Enterprise B</span>' +
+    '<span><i class="sw" style="background:var(--x)"></i>Transfer and approval</span><span><i class="sw" style="background:var(--c)"></i>Common SOC</span>' +
+    '<span>E, O, R = enterprise, organization and repository policy layers</span>';
+
+  /* start */
+  var hash = '';
+  try { hash = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (e) {}
+  buildBar();
+  layout();
+  apply();
+  if (/^n=/.test(hash) && D[hash.slice(2)] && nodeEls[hash.slice(2)]) openPop(hash.slice(2), nodeEls[hash.slice(2)]);
+  else if (/^f=/.test(hash)){ var fv = hash.slice(2); if (fv !== 'all' && fv.indexOf(':') > 0){ filter = fv.split(':'); apply(); } }
+  if (window.ResizeObserver){
+    var raf = 0, lastW = 0, lastH = 0;
+    var ro = new ResizeObserver(function(){
+      var w = scroller.clientWidth, hh = stage.offsetHeight;
+      if (w === lastW && hh === lastH) return;
+      lastW = w; lastH = hh;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(layout);
+    });
+    ro.observe(scroller); ro.observe(stage);
+  } else window.addEventListener('resize', layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+})();
+</script>
+</body>
+</html>

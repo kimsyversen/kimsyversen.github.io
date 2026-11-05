@@ -1,0 +1,651 @@
+file	class	string	basis
+3-page	D	GitHub for classified, internal and public work	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	D	Reference architecture with two enterprises: separate identity, policy, execution and evidence for each domain.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	T	PAGE 1 OF 3	Label, name, step or legend; makes no claim about GitHub
+3-page	T	LEGEND	Label, name, step or legend; makes no claim about GitHub
+3-page	T	G	Label, name, step or legend; makes no claim about GitHub
+3-page	D	GitHub control	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	T	X	Label, name, step or legend; makes no claim about GitHub
+3-page	D	External control or process	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	G+X	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Needs both to be effective	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Control or data flow	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Minimized telemetry	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Export (release authority)	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Intake (quarantine first)	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	GATE 0 · APPROVE THE SERVICE BEFORE LOADING CLASSIFIED CONTENT	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Hosting for Enterprise A is a decision for your security authority. It is not a product setting: EMU and private repositories do not accredit a service. Approve the region, support access, administrators, runners, scanners, logs and backups first. If the answer is no, use option 3.	Design or operating rule, not a GitHub statement
+3-page	G*	Enterprise Cloud on github.com	"N1: EMU exists on GitHub.com (abilities page opens ""On GitHub.com, managed user accounts...""). Approval of this service is a design step."
+3-page	G*	Multi-tenant SaaS with EMU. Needs approval for this specific service.	"N1: EMU exists on GitHub.com (abilities page opens ""On GitHub.com, managed user accounts...""). Approval of this service is a design step."
+3-page	G*	Cloud with data residency (GHE.com)	"GHE.com=EMU: Section 7, ""Drawio text"" paragraph: GHE.com uses Enterprise Managed Users. Residency vs accreditation is design."
+3-page	G*	Regional hosting, EMU only. Residency is not the same as accreditation.	"GHE.com=EMU: Section 7, ""Drawio text"" paragraph: GHE.com uses Enterprise Managed Users. Residency vs accreditation is design."
+3-page	D	Self-hosted or accredited platform	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	GitHub Enterprise Server or another assessed platform. Identity and operations designed separately.	Design or operating rule, not a GitHub statement
+3-page	T	ENTERPRISE A · SENSITIVE	Label, name, step or legend; makes no claim about GitHub
+3-page	G	Enterprise Managed Users (EMU). Source code and IaC for classified critical systems.	N1: Managed user accounts, owned by the enterprise.
+3-page	T	ENTERPRISE B · INTERNAL AND PUBLIC	Title, legend or layer label; no claim
+3-page	G	Personal accounts linked by SAML and SCIM per organization. Internal work and public releases.	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+3-page	D	Logical boundary. Two governance domains inside one SaaS service. Not an air gap.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	1	Label, name, step or legend; makes no claim about GitHub
+3-page	T	PEOPLE AND DEVICES	Label, name, step or legend; makes no claim about GitHub
+3-page	T	Cleared personnel	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Need-to-know groups. Separate roles for administrators and developers.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Managed workstation	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Hardened device or VDI with EDR. All traffic goes through the corporate proxy.	External control (device, proxy, EDR), not a GitHub statement
+3-page	D	Phishing-resistant MFA	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Passkeys or hardware keys. Privileged access only through PAM.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Workforce and partners	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Staff and approved partners, assigned by IdP group.	DS: Design rule or external process, no GitHub statement.
+3-page	D	External contributors	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Public pull requests only. No corporate SSO, no internal access.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Separate device zone	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Not the workstation used for A. Two GitHub identities, two credential stores.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	T	2	Label, name, step or legend; makes no claim about GitHub
+3-page	T	IDENTITY	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Corporate IdP	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Dedicated application for A. Owns the whole account lifecycle.	Design or operating rule, not a GitHub statement
+3-page	G	SAML SSO + enterprise SCIM	A.p10+B.p12: Enterprise SCIM is documented under EMU; enterprise teams sync from IdP groups.
+3-page	G	Sign-in and provisioning for the whole enterprise. IdP groups drive teams.	A.p10+B.p12: Enterprise SCIM is documented under EMU; enterprise teams sync from IdP groups.
+3-page	G	Managed user accounts	N1: Managed user accounts, owned by the enterprise.
+3-page	G	Owned by the enterprise. No public repos, no contributing outside it.	"N1+A.p10: ""can contribute only to private and internal repositories within their enterprise""; ""cannot interact with repositories outside of the enterprise"". Enterprise teams sync from IdP groups (A.p10)."
+3-page	D	Separate application from A. Owns membership and groups.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	SAML SSO + SCIM per org	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+3-page	G	Enforced in each org. Enterprise SAML would remove org SCIM.	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+3-page	D	Personal accounts	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Linked to the SAML identity. The user keeps ownership of the account.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Keep identities apart	Label, name, step or legend; makes no claim about GitHub
+3-page	D	One IdP application per domain, no shared admin accounts. Decide if A needs its own IdP tenant.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	3	Label, name, step or legend; makes no claim about GitHub
+3-page	T	ENTERPRISE POLICIES	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	Private repos only	A.p1: Forking, visibility, personal-repo and creation policies exist at enterprise level. Choosing private only is design.
+3-page	G*	No public or internal visibility, no personal repos. Fork, transfer and delete limited.	A.p1: Forking, visibility, personal-repo and creation policies exist at enterprise level. Choosing private only is design.
+3-page	G*	Enterprise rulesets	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G*	Branch and tag protection on every repo. No bypass by default.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G*	Security configuration	"N4+A.p4: Security configuration default applies to new repos; applying to existing repos is a separate step (""apply it to repositories""). Verifying coverage is design."
+3-page	G*	Secret scanning, push protection and code scanning on current and new repos.	"N4+A.p4: Security configuration default applies to new repos; applying to existing repos is a separate step (""apply it to repositories""). Verifying coverage is design."
+3-page	T	Actions and tokens	Label, name, step or legend; makes no claim about GitHub
+3-page	G	Approved actions only. Read-only GITHUB_TOKEN. Classic PATs blocked.	A.p5+A.p6: Allowed-actions policy, default read-only token, classic tokens restricted from organizations.
+3-page	T	Network access	Label, name, step or legend; makes no claim about GitHub
+3-page	G	IP allow list and proxy only. Alternative: OIDC with Conditional Access.	A.p8: IP allow list, proxy header (not SSH), Conditional Access with OIDC EMU on Entra ID.
+3-page	G	Audit streaming	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	G	Audit and Git events, API requests and source IPs to the sensitive archive.	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	G*	Custom properties	A.p9: Custom properties target rulesets; repositories can be searched and filtered by property. Which properties to use is design.
+3-page	G*	Classification, owner and system on every repo. Rulesets and searches use them.	A.p9: Custom properties target rulesets; repositories can be searched and filtered by property. Which properties to use is design.
+3-page	G	Enterprise teams	"N6: Enterprise teams: sync with IdP group (EMU), added to orgs where admins grant access, ""Receive bypass access on rulesets""."
+3-page	G	Mapped to IdP groups. Rulesets and grants use the same groups.	"N6: Enterprise teams: sync with IdP group (EMU), added to orgs where admins grant access, ""Receive bypass access on rulesets""."
+3-page	D	Organization model	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	G	Orgs follow classification, not management. No sandbox org in A.	A.p11: Learn lists a sandbox organization; omitting it in A is deviation 2.
+3-page	D	Repository lifecycle	Design or operating rule, not a GitHub statement
+3-page	G	Public repos only in the publishing org. Visibility changes and transfers limited.	B.p2: Enterprise creation policy and org-level limit to private or internal.
+3-page	G*	Baseline branch and tag protection. No bypass by default.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G*	Same scanning baseline on every current and new repo.	"N4+A.p4: Security configuration default applies to new repos; applying to existing repos is a separate step (""apply it to repositories""). Verifying coverage is design."
+3-page	G	Approved actions, read-only GITHUB_TOKEN, PAT lifetime limits.	B.p5+B.p6: Same, plus maximum token lifetime.
+3-page	T	Account hygiene	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	Require 2FA, owners add orgs, check SAML and SCIM in every org.	B.p1: 2FA for all orgs; enterprise owners add orgs. Reconciling SAML/SCIM is design.
+3-page	G	Audit and Git events and source IPs to the domain B archive.	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	G*	Classification, owner and visibility intent on every repo.	A.p9: Custom properties target rulesets; repositories can be searched and filtered by property. Which properties to use is design.
+3-page	D	Orgs by classification. Open source in its own org, internal work apart.	Design rule or process; not a statement about GitHub behaviour
+3-page	G*	Sandbox org	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+3-page	G*	Private only, no secrets, reviewed and archived on a schedule.	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+3-page	T	4	Label, name, step or legend; makes no claim about GitHub
+3-page	T	ORGANIZATIONS	Label, name, step or legend; makes no claim about GitHub
+3-page	T	critical-system-a	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	One compartment. Teams come from IdP groups.	A.p10: Teams from IdP groups (quoted). "One compartment" is a design term.
+3-page	T	critical-system-b	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	Own owners, own runner group and own security managers.	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+3-page	T	platform-security	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Shared tooling and policy as code. No blanket read access to systems.	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Base permission none	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Minimal owners	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	Apps and PATs approved	A.p6+N8: PAT approval policy; GitHub Apps can be installed on selected repositories only.
+3-page	T	Runner group per system	Label, name, step or legend; makes no claim about GitHub
+3-page	T	internal-engineering	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Private repos with team grants. GitHub 'internal' visibility not used.	DS: Private repos with grants: deviation 3, design.
+3-page	T	public-open-source	Label, name, step or legend; makes no claim about GitHub
+3-page	G	The only place public repos may exist. Release approvers are named.	B.p2: Enterprise creation policy and org-level limit to private or internal.
+3-page	G*	sandbox-lab	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+3-page	G*	Private only, no secrets, no public repos. Archived when unused.	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+3-page	G	SAML + SCIM enforced	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+3-page	G*	Runner groups split	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+3-page	T	5	Label, name, step or legend; makes no claim about GitHub
+3-page	T	REPOSITORIES	Label, name, step or legend; makes no claim about GitHub
+3-page	T	Source code (private)	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	CODEOWNERS review, 2+ approvals, signed commits. Threat model kept per system.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	T	Infrastructure as code	Label, name, step or legend; makes no claim about GitHub
+3-page	D	IaC policy checks and protected deployment environments.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Issues, packages, artifacts	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Handled at the same classification as the source.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Rulesets + CODEOWNERS	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G	Push protection	A.p4: Push protection and delegated bypass by named users, teams or roles.
+3-page	G	Dependency + code scan	A.p15: Dependency review action; Code Security purchased (A.p4). Tests, SAST and IaC policy tools are external.
+3-page	G	Environment approvals	T3 environments: Required reviewers and Prevent self-review. Protected refs and OIDC scoping: see EV OIDC.
+3-page	T	Internal repos (private)	Label, name, step or legend; makes no claim about GitHub
+3-page	D	PR review, security checks, team grants. SECURITY.md in every repo.	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Public repos	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Protected release tags. History, logs and artifacts checked before publishing.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Untrusted pull requests	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	Treated as hostile. No secrets, no internal runners.	"L App Sec: Same page; ""no secrets, no internal runners"" is design."
+3-page	G	Secret protection	A.p4: Push protection and delegated bypass by named users, teams or roles.
+3-page	G	Pinned action refs	"A.p5: Policy ""Require actions to be pinned to a full-length commit SHA"". Reusable workflows can still use tags."
+3-page	D	Release approvals	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	6	Label, name, step or legend; makes no claim about GitHub
+3-page	T	EXECUTION	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	Ephemeral runners	L Governing agents: Ephemeral runners come from the Governing agents page; per-system pool is design.
+3-page	D	Isolated pool per system, destroyed after each job, egress allow list.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Vault and OIDC identity	EV OIDC+N5: OIDC token carries repository and environment; enterprise claim exists. Vault, trust to one target and separate signing are design.
+3-page	D	Short-lived tokens bound to repo and environment. Rejects B.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Private registry and mirror	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Validated imports only. Signed artifacts, SBOM and provenance.	A.p15: Artifact attestations establish build provenance. Signing, SBOM, mirror and registry are external or design.
+3-page	D	Internal CI pool	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Own runners and own credentials. No route into A.	DS: Design rule or external process, no GitHub statement.
+3-page	T	Public CI, unprivileged	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	GitHub-hosted. No secrets, no path into internal networks.	L App Sec: GitHub-hosted runners exist; no secrets is design.
+3-page	D	Bound to B repos and environments. Rejects A.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	7	Label, name, step or legend; makes no claim about GitHub
+3-page	T	EVIDENCE AND RESPONSE	Label, name, step or legend; makes no claim about GitHub
+3-page	G	Audit and security events	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	G	Audit log, Git events, alerts, webhooks, plus IdP, proxy and EDR logs.	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	T	Collector and archive	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Dedicated collector, immutable storage, lag and gap monitoring.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Sensitive SIEM and SOC	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Detailed evidence stays in zone A. Cleared analysts only.	Design rule or process; not a statement about GitHub behaviour
+3-page	G	Audit log, Git events, alerts, webhooks, plus IdP, proxy and CI logs.	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	D	Domain B SIEM and SOC	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	Public and personal-account activity has visibility gaps.	B.p7: IP page: no IP for authentication, personal-account resources or public repos owned by an organization.
+3-page	D	sign in with SSO + MFA	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	accounts and groups	Label, name, step or legend; makes no claim about GitHub
+3-page	T	guardrails enforced	Label, name, step or legend; makes no claim about GitHub
+3-page	T	team grants	Label, name, step or legend; makes no claim about GitHub
+3-page	T	workflows run	Label, name, step or legend; makes no claim about GitHub
+3-page	G	audit and security telemetry	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	D	Approved transfer service	Design or operating rule, not a GitHub statement
+3-page	D	Inspect history, secrets, IaC topology and metadata. Sign the manifest, log the hash. Domain-local agents with staging storage. Not a native GitHub security boundary. If transfers are prohibited, remove it.	Design or operating rule, not a GitHub statement
+3-page	T	A→B	Label, name, step or legend; makes no claim about GitHub
+3-page	T	B→A	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Common SOC view	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Approved, minimized metadata only. Detail stays in each domain.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	COMMON GOVERNANCE · standards are shared, tools and credentials are separate in each domain	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Policy ownership	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Inventory and drift checks	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Access recertification	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Vulnerability SLAs and pen tests	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Backup and restore tests	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	SOC playbooks and exercises	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Release authority	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Threat model per system	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Training and security champions	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Compliance audits and access reviews	Design or operating rule, not a GitHub statement
+3-page	D	Shared standards never mean shared access to source code or detailed logs.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Reference design, 4 November 2026. Organization and system names are illustrative. Sources and decisions: design-notes.md. Page 1 of 3.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	T	Policy layers: enforce centrally, specialize locally	Title, legend or layer label; no claim
+3-page	T	Who sets which control, and where it is enforced. Target controls, not a claim that one switch implements each line.	Title, legend or layer label; no claim
+3-page	T	PAGE 2 OF 3	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Enterprise sets the floor	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	G*	Baselines target all repos in scope.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G	Rulesets combine	"N2: ""if multiple rulesets target the same branch... the rules are aggregated""; ""the most restrictive version of the rule applies""."
+3-page	G	When rulesets overlap, the most restrictive version of a rule applies.	"N2: ""if multiple rulesets target the same branch... the rules are aggregated""; ""the most restrictive version of the rule applies""."
+3-page	D	Design rule: lower layers tighten, never relax	DS: Design rule or external process, no GitHub statement.
+3-page	D	Design rule: a lower layer never weakens a higher one.	DS: Design rule or external process, no GitHub statement.
+3-page	D	Bypass lists stay short	DS: Design rule or external process, no GitHub statement.
+3-page	D	Emergency only: a short named list, every use reviewed.	DS: Design rule or external process, no GitHub statement.
+3-page	D	Test the effective result	Design rule or label; not a GitHub statement
+3-page	D	Defaults and licences are not proof.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	EMU, private only	A.p1: Title.
+3-page	G	Personal accounts, SAML + SCIM per org	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+3-page	T	E	Label, name, step or legend; makes no claim about GitHub
+3-page	T	ENTERPRISE	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Owner Enterprise owners and security architecture	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	D	Scope Sets identity, repository lifecycle, baselines and audit.	Design or operating rule, not a GitHub statement
+3-page	T	O	Label, name, step or legend; makes no claim about GitHub
+3-page	T	ORGANIZATION	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Owner Organization owners and platform security	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	D	Scope Specializes access, apps, tokens and runners per compartment.	Design or operating rule, not a GitHub statement
+3-page	T	R	Label, name, step or legend; makes no claim about GitHub
+3-page	T	REPOSITORY	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Owner Repository owners and system security	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Scope Adds review, checks and deployment control for each system.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	inherits	Design rule or label; not a GitHub statement
+3-page	D	ENTERPRISE · Enterprise owners and security architecture	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	G*	EMU with SAML + SCIM. Private repos only, base permission none.	A.p1+N6: Private only (A.p1). Organization base permissions exist; setting it to none is design.
+3-page	G	Limit repo creation, deletion, transfer and personal repos.	A.p2: Repo create, delete and transfer policy exists.
+3-page	G	Block private forks. Baseline applies to new repos.	A.p1+A.p4: Forking policy; default security configuration applies to new repos.
+3-page	G*	Enterprise rulesets with signed commits. New rules run in Evaluate mode first.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G*	Enforced code and secret security configurations.	"N4+A.p4: Security configuration default applies to new repos; applying to existing repos is a separate step (""apply it to repositories""). Verifying coverage is design."
+3-page	G*	Approved Actions and a versioned shared workflow org. Read-only token.	A.p5+A.p16: Allowed actions and read-only default token; reusable workflows referenced by tag or SHA. A shared workflow org is design.
+3-page	G	Token policies: classic PATs blocked, fine-grained limited.	A.p6: PAT policies (classic restricted, fine-grained approval, maximum lifetime), OAuth app restrictions.
+3-page	G	Audit stream, API request events, source IP disclosure.	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	G	IP allow list, proxy only, AI controls. Or OIDC + Conditional Access.	A.p8: IP allow list, proxy header (not SSH), Conditional Access with OIDC EMU on Entra ID.
+3-page	D	Few owners, PAM, two-person admin change process.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Custom properties: classification, owner, system on every repo.	A.p9: Custom properties target rulesets; repositories can be searched and filtered by property. Which properties to use is design.
+3-page	G	Enterprise teams mapped to IdP groups. Rulesets use them.	"N6: Enterprise teams: sync with IdP group (EMU), added to orgs where admins grant access, ""Receive bypass access on rulesets""."
+3-page	G*	Third-party agents off until approved. Reviewed models and MCP only. Spending limits.	A.p13: Third-party agents must be enabled; budgets; model policies. Reviewed models and MCP are design.
+3-page	G	Security manager role, delegated custom roles, no default Admin.	A.p14: Security manager role and custom repository roles exist.
+3-page	G	Require 2FA. Owners add orgs. Limit repo lifecycle.	B.p1+B.p2: 2FA requirement and add-org by owners (B.p1); repository lifecycle policies (B.p2).
+3-page	G	Public repos only in the publishing org, by repo policy.	B.p2: Enterprise creation policy and org-level limit to private or internal.
+3-page	G	Protect private repo visibility changes and transfers.	A.p2+B.p2: Visibility change and transfer policies exist.
+3-page	G	Baseline rulesets, Evaluate mode first. Security configurations.	A.p3+A.p4: Rulesets with Evaluate; security configurations.
+3-page	G	Classic PATs limited. Fine-grained token lifetimes bounded.	A.p6: PAT policies (classic restricted, fine-grained approval, maximum lifetime), OAuth app restrictions.
+3-page	G*	Mandate org SAML + SCIM and reconcile every org.	B.p12+B.p1: Per-org SAML and SCIM is the documented non-EMU path; the reconcile job is design.
+3-page	D	Govern AI, app approvals and the exception register.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Cover personal-account gaps with endpoint and proxy logs.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Custom properties: classification, owner, visibility intent.	A.p9: Custom properties target rulesets; repositories can be searched and filtered by property. Which properties to use is design.
+3-page	D	Orgs by classification. Open source in its own org.	Design rule or process; not a statement about GitHub behaviour
+3-page	G	AI agents allowed per org, pilot first. Reviewed models and MCP.	B.p13: Same as A.p13.
+3-page	D	ORGANIZATION · Organization owners and platform security	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	D	Team grants from IdP groups. No blanket read access.	Design rule or process; not a statement about GitHub behaviour
+3-page	G	Separate owners and security managers per compartment.	A.p14: Security manager role and custom repository roles exist.
+3-page	G	Tighten rulesets. Approve GitHub Apps per selected repo.	A.p6+N8: Apps installed on selected repositories; PAT approval policy.
+3-page	G	Approve fine-grained PAT access. Restrict OAuth apps.	A.p6: PAT policies (classic restricted, fine-grained approval, maximum lifetime), OAuth app restrictions.
+3-page	G*	Runner groups limited to named repos and workflows.	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+3-page	G*	Repo admins cannot add uncontrolled runners.	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+3-page	G	Approved reusable workflows. Secrets scoped to minimum.	A.p5+N8: Reusable workflows allowed; org secrets can be limited to selected repositories.
+3-page	G*	Set security configurations as the default for new repos, verify coverage.	"N4+A.p4: Security configuration default applies to new repos; applying to existing repos is a separate step (""apply it to repositories""). Verifying coverage is design."
+3-page	D	Access recertification and an exception register.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Review notification and email data-loss rules.	Design or operating rule, not a GitHub statement
+3-page	D	Orgs follow classification and need-to-know, not hierarchy.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	No sandbox org in A. Experiments run in B, no classified data.	A.p11: Learn lists a sandbox organization; omitting it in A is deviation 2.
+3-page	G	Agents use ephemeral runners with a firewall. Session id in audit.	A.p13: Cloud agent: ephemeral environment, firewall, agent_session_id in audit.
+3-page	D	CI time, queue, flake rate, alert age. Developer feedback channel.	Design rule or process; not a statement about GitHub behaviour
+3-page	G*	Enforce SAML + SCIM in every organization.	B.p12+B.p1: Per-org SAML and SCIM is the documented non-EMU path; the reconcile job is design.
+3-page	D	Internal work uses private repos with explicit team grants.	DS: Design rule or external process, no GitHub statement.
+3-page	D	Scoped publisher roles. Review outside collaborators.	DS: Design rule or external process, no GitHub statement.
+3-page	G	Tighten rulesets. Approve apps and PATs per repo.	A.p6+N8: Apps installed on selected repositories; PAT approval policy.
+3-page	G*	Separate internal runner groups. Limit runner creation.	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+3-page	D	Isolate public untrusted CI from internal runners and secrets.	DS: Design rule or external process, no GitHub statement.
+3-page	D	Offboard from every org. Revoke exceptional access paths.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Review public releases and the disclosure process.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Inventory repos, apps, webhooks, keys and owners.	Design or operating rule, not a GitHub statement
+3-page	D	Recertify partners on their own cycle.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Sandbox org: private only, no secrets, archived on a schedule.	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+3-page	G	Keep per-org SAML + SCIM. Enterprise SAML removes org SCIM.	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+3-page	D	REPOSITORY · Repository owners and system security	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Required PRs: 2+ approvals incl. CODEOWNERS, stale reset.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G*	Require approval of the latest push. Protect branches, tags.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G	Block force push and deletion. No bypass by default.	"A.p3+N7: Rule ""Block force pushes"" and ""Restrict deletions"" exist."
+3-page	G	Required tests, SAST, dependency review, IaC policy checks.	A.p15: Dependency review action; Code Security purchased (A.p4). Tests, SAST and IaC policy tools are external.
+3-page	G	Secret scanning and push protection. Reviewed bypass.	A.p4: Push protection and delegated bypass by named users, teams or roles.
+3-page	G*	Explicit review of CODEOWNERS, workflow and IaC changes.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G	Environment approvals, protected refs, no self-review.	T3 environments: Required reviewers and Prevent self-review. Protected refs and OIDC scoping: see EV OIDC.
+3-page	G*	OIDC trust scoped to repo and environment. Review IaC plan.	EV OIDC+N5: OIDC token carries repository and environment; enterprise claim exists. Vault, trust to one target and separate signing are design.
+3-page	G*	Encrypted state outside Git. Signed artifacts, SBOM.	A.p15: Artifact attestations establish build provenance. Signing, SBOM, mirror and registry are external or design.
+3-page	D	Classify issues, PRs, logs and artifacts with the source.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Threat model per system, reviewed on every design change.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	SECURITY.md, secure coding standard, vulnerability SLAs.	Design rule or process; not a statement about GitHub behaviour
+3-page	G*	Dependency review required. Lockfiles, install scripts off, provenance verified.	A.p15/B.p15: Dependency review; PyPI and npm trusted publishing (npm: GitHub-hosted runners). Lockfiles and provenance checks are design.
+3-page	D	Agent instruction and MCP files need code-owner review. Agent PRs pass the same gates.	DS: Design rule, no GitHub statement.
+3-page	G*	Required PR and CODEOWNERS reviews. Protected branches, tags.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	G	Required build and security checks. Scan code and dependencies.	A.p15: Dependency review action; Code Security purchased (A.p4). Tests, SAST and IaC policy tools are external.
+3-page	D	Secret push protection with an approved exception path.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Check full Git history and artifacts before public release.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	G	Immutable action refs. Minimal job token permissions.	"A.p5: Policy ""Require actions to be pinned to a full-length commit SHA"". Reusable workflows can still use tags."
+3-page	G	No privileged execution of untrusted PR code.	L App Sec: Learn Application Security: avoid pull_request_target for untrusted code.
+3-page	D	Protected release environments. No self-approval.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	OIDC trust to B targets only. Separate signing authority.	EV OIDC+N5: OIDC token carries repository and environment; enterprise claim exists. Vault, trust to one target and separate signing are design.
+3-page	G*	Signed releases with SBOM and provenance.	A.p15: Artifact attestations establish build provenance. Signing, SBOM, mirror and registry are external or design.
+3-page	D	SECURITY.md and a support process.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Threat model for public-facing releases.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Security champions, onboarding, knowledge base, Discussions.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Dependency review required. Trusted publishing with OIDC and provenance.	A.p15/B.p15: Dependency review; PyPI and npm trusted publishing (npm: GitHub-hosted runners). Lockfiles and provenance checks are design.
+3-page	D	IMPLEMENTATION GATE	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Prove it with negative tests before any sensitive system is onboarded.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Offboarding	Design rule or label; not a GitHub statement
+3-page	D	IdP suspension and SCIM removal end to end	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Bypass	A.p3: A bypass list exists on rulesets; keeping it short is design.
+3-page	G*	Rulesets, code owners and bypass lists under attack	A.p3: A bypass list exists on rulesets; keeping it short is design.
+3-page	D	Coverage	Design rule or label; not a GitHub statement
+3-page	D	A new repo gets the baseline, nothing extra	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Cross-domain	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	B identity cannot deploy to A	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Reference design, 4 November 2026. Organization and system names are illustrative. Sources and decisions: design-notes.md. Page 2 of 3.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	T	Operations: build, monitor, respond, exchange	Title, legend or layer label; no claim
+3-page	D	Both domains run the same standards with separate credentials, stores and execution planes.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	PAGE 3 OF 3	Label, name, step or legend; makes no claim about GitHub
+3-page	T	Build and deploy	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Each domain has its own runners, its own identity and its own target.	Design or operating rule, not a GitHub statement
+3-page	T	A · Sensitive	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Approved code, isolated build, protected target.	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Approved PR	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	CODEOWNERS and 2+ approvals on a protected branch.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	D	Isolated CI	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G*	Ephemeral runner from a per-system pool. Egress allow list.	L Governing agents: Ephemeral runners come from the Governing agents page; per-system pool is design.
+3-page	T	Checks	Label, name, step or legend; makes no claim about GitHub
+3-page	G	SAST, dependency review, IaC policy checks.	A.p15: Dependency review action; Code Security purchased (A.p4). Tests, SAST and IaC policy tools are external.
+3-page	T	Signed artifact	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	SBOM and provenance. Private registry.	A.p15: Artifact attestations establish build provenance. Signing, SBOM, mirror and registry are external or design.
+3-page	G	Environment approval	T3 environments: Required reviewers and Prevent self-review. Protected refs and OIDC scoping: see EV OIDC.
+3-page	G	Protected ref, no self-review.	T3 environments: Required reviewers and Prevent self-review. Protected refs and OIDC scoping: see EV OIDC.
+3-page	T	Protected target	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	OIDC to the A vault or cloud only.	EV OIDC+N5: OIDC token carries repository and environment; enterprise claim exists. Vault, trust to one target and separate signing are design.
+3-page	T	B · Untrusted	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Public pull requests are treated as hostile.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Untrusted public PR	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Contributor-controlled code. No corporate SSO.	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Unprivileged CI	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	GitHub-hosted runner. No secrets, no deployment role.	L App Sec: GitHub-hosted runners exist; no secrets is design.
+3-page	T	Result for reviewers	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Status only. No route to internal or sensitive systems.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	B · Release	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Reviewed commits only, then a signed release.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Reviewed commit	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	PR review and CODEOWNERS on a protected branch.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+3-page	T	Trusted build	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Internal CI pool with its own credentials.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	Code, dependency and secret scanning.	B.p4: Some Advanced Security features free for public repos.
+3-page	D	Signed release	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	SBOM, provenance, immutable action refs.	"A.p5: Policy ""Require actions to be pinned to a full-length commit SHA"". Reusable workflows can still use tags."
+3-page	D	Release approval	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	Protected environment, no self-approval.	T3 environments: Required reviewers and Prevent self-review. Protected refs and OIDC scoping: see EV OIDC.
+3-page	T	B target	Label, name, step or legend; makes no claim about GitHub
+3-page	G*	OIDC to the B vault or cloud only. Rejects A.	EV OIDC+N5: OIDC token carries repository and environment; enterprise claim exists. Vault, trust to one target and separate signing are design.
+3-page	T	Monitoring and detection	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Each domain keeps its own evidence. Only approved, minimized metadata reaches the common SOC.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	A · SENSITIVE	Label, name, step or legend; makes no claim about GitHub
+3-page	G	Audit and Git events	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+3-page	G	Alerts and webhooks	T2 webhooks: Webhooks exist; signature validation documented.
+3-page	D	IdP and PAM logs	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Proxy and DLP	External control (device, proxy, EDR), not a GitHub statement
+3-page	D	Runner and EDR	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Vault, cloud, registry	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Collector	Label, name, step or legend; makes no claim about GitHub
+3-page	G	Dedicated per domain. Verifies webhook signatures, drops duplicates.	T2 webhooks+N8: Validate signature; X-GitHub-Delivery for replay.
+3-page	D	Immutable archive	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Retention set by investigation need, not by GitHub's defaults.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	D	Correlates GitHub, identity, endpoint and network evidence.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+3-page	T	B · INTERNAL AND PUBLIC	Label, name, step or legend; makes no claim about GitHub
+3-page	D	IdP logs	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	CI runner and EDR	External control (device, proxy, EDR), not a GitHub statement
+3-page	D	Public release activity	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Common SOC view Sanitized aggregate only	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	New privileged grants and visibility changes	N3: Audit events exist: org.add_member, repo.access, repo.transfer, integration.create, personal_access_token.access_granted, repository_ruleset.create/update/destroy.
+3-page	G	App or token creation, ruleset changes	N3: Audit events exist: org.add_member, repo.access, repo.transfer, integration.create, personal_access_token.access_granted, repository_ruleset.create/update/destroy.
+3-page	D	Unusual cloning and downloads, secret alerts	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	CI tampering, log-stream failure	Design or operating rule, not a GitHub statement
+3-page	D	Even sanitized alert sharing needs classification approval. Detail stays with the domain SOC.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Watch stream lag and missing sources	Design or operating rule, not a GitHub statement
+3-page	D	Reconcile expected sources, drop duplicates	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	G	Keep copies outside GitHub's short Git-event retention	"B.p7: ""The audit log retains Git events for seven days."""
+3-page	D	Test a collector failure on purpose	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Incident response	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Run in the owning domain. Evidence is preserved before anything is wiped.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Detect	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Domain SOC raises an alert from audit, security or endpoint evidence.	DS: Design rule or external process, no GitHub statement.
+3-page	D	Contain	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Suspend access, revoke tokens and apps, quarantine runners.	Design or operating rule, not a GitHub statement
+3-page	D	Rotate and preserve	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Rotate exposed secrets. Keep logs, runners and artifacts as evidence.	Design or operating rule, not a GitHub statement
+3-page	T	Recover	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Validate recovery and the IdP path before access is restored.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Learn	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Exercise it again. Update playbooks. Expire exceptions.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Controlled transfer between domains	Design or operating rule, not a GitHub statement
+3-page	D	Not a native GitHub boundary. Remove this section if transfers are prohibited.	Design or operating rule, not a GitHub statement
+3-page	D	Export A → B	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Needs the release authority. Never an automatic mirror.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Release request	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Owner asks to publish a specific package.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Decides the content may leave its classification domain.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Inspect	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	History, secrets, IaC topology, metadata, packages, logs.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Minimize and sign	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Approved package only. Sign the manifest, log the hash.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Stage	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Domain-local agent drops it in B's release staging.	Design or operating rule, not a GitHub statement
+3-page	T	Publish in B	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Publisher holds B credentials only.	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Intake B → A	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Quarantine before use. No shared service account.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Upstream source	Design or operating rule, not a GitHub statement
+3-page	D	Open source or B content someone wants in A.	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Verify origin	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Check signatures and the provenance of the source.	DS: Design rule or external process, no GitHub statement.
+3-page	D	Quarantine	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Malware and licence review in an isolated zone.	Design rule or process; not a statement about GitHub behaviour
+3-page	T	Scan and pin	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Vulnerability scan. Pin dependency versions.	DS: Design rule or external process, no GitHub statement.
+3-page	T	Admit	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Approved mirror inside A. Nothing pulls from outside.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	T	Use in A	Label, name, step or legend; makes no claim about GitHub
+3-page	D	Builds consume only the mirror.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Platform operations and accountability	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Duplicate the operations per domain. Assign every control to a named owner.	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	PLATFORM OPERATIONS · per domain	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Inventory: owner, classification, retention	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Policy as code, scheduled effective-state checks	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Back up Git, LFS, issues, settings, packages	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Encrypted immutable copies, tested RPO and RTO	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Reconcile groups, collaborators, deploy keys, apps	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Patch runners, attest images, rotate keys	Design or operating rule, not a GitHub statement
+3-page	D	Protect IaC state and plans	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Rehearse IdP outage recovery	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Access reviews, pen tests, compliance evidence	Design rule or process; not a statement about GitHub behaviour
+3-page	D	Review the org model. Archive stale orgs and sandboxes	Design or operating rule, not a GitHub statement
+3-page	D	Rehearse a continuity mirror with the primary blocked	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Track CI metrics. Keep a developer feedback channel	Design rule or process; not a statement about GitHub behaviour
+3-page	T	ACCOUNTABILITY · who answers for what	Title, legend or layer label; no claim
+3-page	D	Security authority: classification, hosting, export	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Enterprise owners: baseline, owner access, audit delivery	Design or operating rule, not a GitHub statement
+3-page	D	Org owners: team and app scope, runners	Design or operating rule, not a GitHub statement
+3-page	D	Repo owners: reviews, remediation, deploy approval	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	SOC: detections, response, evidence retention	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Governance: exceptions, vendor review, exercises	Design rule or process; not a statement about GitHub behaviour
+3-page	D	System security leads: threat model, security docs	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Champions: training, secure coding standard	Design rule, process or layout label; not a statement about GitHub behaviour
+3-page	D	Compliance: audits, access reviews, evidence	Design or operating rule, not a GitHub statement
+3-page	D	Platform: custom properties, org model	Design or operating rule, not a GitHub statement
+3-page	D	AI manager: agent models, MCP, spending limits	Design or operating rule, not a GitHub statement
+3-page	D	Security manager: alerts, campaigns, bypass requests	Design or operating rule, not a GitHub statement
+3-page	D	Reference design, 4 November 2026. Organization and system names are illustrative. Sources and decisions: design-notes.md. Page 3 of 3.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+1-page	D	GitHub for classified, internal and public work	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+1-page	D	Compact view: two enterprises, three policy layers, shared operations, on one page.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+1-page	T	ONE-PAGE VERSION	Label, name, step or legend; makes no claim about GitHub
+1-page	T	LEGEND	Label, name, step or legend; makes no claim about GitHub
+1-page	T	G	Label, name, step or legend; makes no claim about GitHub
+1-page	D	GitHub control	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above
+1-page	T	X	Label, name, step or legend; makes no claim about GitHub
+1-page	D	External control or process	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	G+X	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Needs both to be effective	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Control or data flow	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Minimized telemetry	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Export (release authority)	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Intake (quarantine first)	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	GATE 0 · Approve the hosting service before loading classified content	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	A decision for the security authority, not a product setting. If no option is accredited, do not proceed.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G*	1 Enterprise Cloud on github.com	"N1: EMU exists on GitHub.com (abilities page opens ""On GitHub.com, managed user accounts...""). Approval of this service is a design step."
+1-page	G*	2 Cloud with data residency (GHE.com)	"GHE.com=EMU: Section 7, ""Drawio text"" paragraph: GHE.com uses Enterprise Managed Users. Residency vs accreditation is design."
+1-page	D	3 Self-hosted or accredited platform	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	ENTERPRISE A · SENSITIVE	Label, name, step or legend; makes no claim about GitHub
+1-page	G	EMU. Source code and IaC for classified critical systems.	N1: Managed user accounts, owned by the enterprise.
+1-page	T	IDENTITY	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Cleared people	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Need-to-know groups. Managed workstation, traffic through the corporate proxy.	External control (device, proxy, EDR), not a GitHub statement
+1-page	D	Corporate IdP	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Dedicated app for A. Phishing-resistant MFA, privileged access through PAM.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G	SAML + SCIM to EMU	A.p10+B.p12: Enterprise SCIM is documented under EMU; enterprise teams sync from IdP groups.
+1-page	G	Enterprise SCIM. IdP groups sync to enterprise teams. Managed users cannot contribute outside the enterprise.	"N1+A.p10: ""can contribute only to private and internal repositories within their enterprise""; ""cannot interact with repositories outside of the enterprise"". Enterprise teams sync from IdP groups (A.p10)."
+1-page	T	E · ENTERPRISE POLICY	Label, name, step or legend; makes no claim about GitHub
+1-page	G*	Private repos only, no forks	A.p1: Forking, visibility, personal-repo and creation policies exist at enterprise level. Choosing private only is design.
+1-page	G	Limit repo create, delete, transfer	A.p2: Repo create, delete and transfer policy exists.
+1-page	G*	Rulesets, signed commits, Evaluate first	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+1-page	G*	Security configs on all repos	"N4+A.p4: Security configuration default applies to new repos; applying to existing repos is a separate step (""apply it to repositories""). Verifying coverage is design."
+1-page	G*	Approved shared workflows, read-only token	A.p5+A.p16: Allowed actions and read-only default token; reusable workflows referenced by tag or SHA. A shared workflow org is design.
+1-page	G	Classic PATs blocked	A.p6: PAT policies (classic restricted, fine-grained approval, maximum lifetime), OAuth app restrictions.
+1-page	G	Audit stream with source IP	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+1-page	G	IP allow list, proxy only	A.p8: IP allow list, proxy header (not SSH), Conditional Access with OIDC EMU on Entra ID.
+1-page	G*	Custom properties on every repo	A.p9: Custom properties target rulesets; repositories can be searched and filtered by property. Which properties to use is design.
+1-page	G	Enterprise teams from IdP groups	"N6: Enterprise teams: sync with IdP group (EMU), added to orgs where admins grant access, ""Receive bypass access on rulesets""."
+1-page	D	Orgs by class, no sandbox	Design rule or process; not a statement about GitHub behaviour
+1-page	D	Threat model per system	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G*	AI agents off until approved	A.p13: Third-party agents must be enabled; budgets; model policies. Reviewed models and MCP are design.
+1-page	G	Security manager role, no default Admin	A.p14: Security manager role and custom repository roles exist.
+1-page	G*	Dependency review, verified provenance	A.p15/B.p15: Dependency review; PyPI and npm trusted publishing (npm: GitHub-hosted runners). Lockfiles and provenance checks are design.
+1-page	T	O · ORGANIZATIONS R · REPOSITORIES	Title, legend or layer label; no claim
+1-page	T	critical-system-a	Label, name, step or legend; makes no claim about GitHub
+1-page	T	O	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Teams from IdP, base none	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G	Own runner group, apps approved	RG+A.p6: Runner groups; app approval.
+1-page	T	REPOSITORIES	Label, name, step or legend; makes no claim about GitHub
+1-page	T	source (private)	Label, name, step or legend; makes no claim about GitHub
+1-page	T	R	Label, name, step or legend; makes no claim about GitHub
+1-page	G*	2+ approvals, CODEOWNERS, signed commits, push protection.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+1-page	T	infrastructure as code	Label, name, step or legend; makes no claim about GitHub
+1-page	D	IaC policy checks, protected environments, plan review.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	critical-system-b	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Own owners and security leads	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G*	Own runner group	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+1-page	G*	Same baseline, system-specific CODEOWNERS.	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+1-page	D	Same checks, separate state and environments.	Design rule or process; not a statement about GitHub behaviour
+1-page	T	platform-security	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Shared tooling, policy as code	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	No blanket read to systems	Design rule or process; not a statement about GitHub behaviour
+1-page	T	policy-as-code	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Changes reviewed by security, two approvals.	Design rule or process; not a statement about GitHub behaviour
+1-page	T	shared-tooling	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Pinned, signed and reviewed before builds use it.	DS: Design rule or external process, no GitHub statement.
+1-page	T	EXECUTION	Label, name, step or legend; makes no claim about GitHub
+1-page	G*	Ephemeral runners	L Governing agents: Ephemeral runners come from the Governing agents page; per-system pool is design.
+1-page	D	Per-system pool, egress allow list.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G*	Vault and OIDC	EV OIDC+N5: OIDC token carries repository and environment; enterprise claim exists. Vault, trust to one target and separate signing are design.
+1-page	D	Short-lived tokens, rejects B.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Private registry	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G*	Signed artifacts, SBOM, mirror.	A.p15: Artifact attestations establish build provenance. Signing, SBOM, mirror and registry are external or design.
+1-page	T	EVIDENCE	Label, name, step or legend; makes no claim about GitHub
+1-page	G	Audit and security events	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+1-page	D	Git, alerts, IdP, proxy, EDR.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Collector and archive	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Immutable store, lag monitoring.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Sensitive SIEM and SOC	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Cleared analysts only.	Design rule or process; not a statement about GitHub behaviour
+1-page	T	accounts and groups	Label, name, step or legend; makes no claim about GitHub
+1-page	T	baseline applies to every repo	Title, legend or layer label; no claim
+1-page	T	workflows run	Label, name, step or legend; makes no claim about GitHub
+1-page	G	audit and security telemetry	A.p7: Audit and Git event streaming, API request events, source IP. Archive and SIEM are external.
+1-page	T	ENTERPRISE B · INTERNAL AND PUBLIC	Title, legend or layer label; no claim
+1-page	G	Personal accounts linked by SAML and SCIM per org. Internal work and public releases.	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+1-page	T	Workforce and partners	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Assigned by IdP group. Separate device zone from A. Public contributors are not in the IdP.	DS: Design rule or external process, no GitHub statement.
+1-page	D	Separate app for B. Owns membership and groups.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G	SAML + SCIM per org	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+1-page	G	Enforced in every org. Enterprise SAML would drop org SCIM. Accounts stay user-owned.	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+1-page	G*	2FA, owner-added orgs	B.p1: 2FA for all orgs; enterprise owners add orgs. Reconciling SAML/SCIM is design.
+1-page	G	Public repos only in publishing org	B.p2: Enterprise creation policy and org-level limit to private or internal.
+1-page	G*	Rulesets baseline, Evaluate first	"A.p3: Rulesets: stale approval dismissal, latest-push approval, signed commits, code-owner review, Evaluate status, targeting. 2+ approvals and ""no bypass by default"" are design (Learn Governance row)."
+1-page	G	PAT lifetimes bounded	A.p6: PAT policies (classic restricted, fine-grained approval, maximum lifetime), OAuth app restrictions.
+1-page	G*	Reconcile SAML + SCIM in every org	B.p12+B.p1: Per-org SAML and SCIM is the documented non-EMU path; the reconcile job is design.
+1-page	D	Orgs by class, open source apart	Design rule or process; not a statement about GitHub behaviour
+1-page	G*	Sandbox org, private only	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+1-page	G	Per-org SAML keeps org SCIM	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+1-page	G	AI agents per org, pilot first	B.p13: Same as A.p13.
+1-page	G*	Dependency review, trusted publishing	A.p15/B.p15: Dependency review; PyPI and npm trusted publishing (npm: GitHub-hosted runners). Lockfiles and provenance checks are design.
+1-page	T	internal-engineering	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Team grants, base access none	Design rule or process; not a statement about GitHub behaviour
+1-page	G*	Internal runner group	"RG: Runner groups are limited to repositories and workflows; enterprise setting disables repository-level runner creation (Section 7 ""Also checked and true""). Splitting by system or domain is design."
+1-page	T	internal-app	Label, name, step or legend; makes no claim about GitHub
+1-page	G	PR review, CODEOWNERS, secret protection, pinned action refs.	"A.p5: Policy ""Require actions to be pinned to a full-length commit SHA"". Reusable workflows can still use tags."
+1-page	T	internal-tools	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Private only. GitHub internal visibility not used.	DS: Design rule or external process, no GitHub statement.
+1-page	T	public-open-source	Label, name, step or legend; makes no claim about GitHub
+1-page	G	Only place public repos live	B.p2: Enterprise creation policy and org-level limit to private or internal.
+1-page	D	Named release approvers	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	public-project	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Release review. History and artifacts checked before publishing.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	untrusted pull requests	Label, name, step or legend; makes no claim about GitHub
+1-page	G*	Treated as hostile. No secrets, no internal runners.	"L App Sec: Same page; ""no secrets, no internal runners"" is design."
+1-page	G*	sandbox-lab	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+1-page	G*	Private only, no public repos	B.p11: Learn lists a sandbox organization. Private-only and archive schedule are design.
+1-page	G	SAML + SCIM enforced	B.p12: Organization SCIM with personal accounts; not supported with enterprise SAML.
+1-page	T	experiments	Label, name, step or legend; makes no claim about GitHub
+1-page	D	No secrets or internal data. Archived when unused.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Partners recertified	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Own review cycle, scoped publisher roles.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Internal CI pool	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Own runners, own credentials.	DS: Design rule or external process, no GitHub statement.
+1-page	T	Public CI, unprivileged	Label, name, step or legend; makes no claim about GitHub
+1-page	G*	Hosted runners, no secrets.	L App Sec: GitHub-hosted runners exist; no secrets is design.
+1-page	D	B targets only, rejects A.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Git, alerts, IdP, proxy, CI.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Domain B SIEM and SOC	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	G	Public activity has visibility gaps.	B.p7: IP page: no IP for authentication, personal-account resources or public repos owned by an organization.
+1-page	D	Logical boundary. Two governance domains in one SaaS service. Not an air gap.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Keep identities apart	Label, name, step or legend; makes no claim about GitHub
+1-page	D	One IdP application per domain. No shared admin accounts or service accounts.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Approved transfer service	Design or operating rule, not a GitHub statement
+1-page	D	Release authority decides	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Inspect history, secrets, IaC topology	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Signed manifest, hash logged	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Intake: verify, quarantine, scan, pin	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	External process, not a native GitHub boundary. Remove if transfers are prohibited.	DS: Design rule or external process, no GitHub statement.
+1-page	T	A→B	Label, name, step or legend; makes no claim about GitHub
+1-page	T	B→A	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Common SOC view	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Approved, minimized metadata only.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	BUILD AND DEPLOY	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Each domain has its own runners, identity and target.	Design or operating rule, not a GitHub statement
+1-page	T	EXCHANGE AND RESPOND	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Transfer is an external process. Remove it if prohibited.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	A · Sensitive	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Approved PR	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Isolated CI	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Checks	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Signed artifact	Label, name, step or legend; makes no claim about GitHub
+1-page	G	Env approval	T3 environments: Required reviewers and Prevent self-review. Protected refs and OIDC scoping: see EV OIDC.
+1-page	T	Protected target	Label, name, step or legend; makes no claim about GitHub
+1-page	D	B · Release	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Reviewed commit	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Trusted build	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Signed release	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Release approval	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	B target	Label, name, step or legend; makes no claim about GitHub
+1-page	T	B · Untrusted PR	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Public PR	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Unprivileged CI	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Status only	Label, name, step or legend; makes no claim about GitHub
+1-page	D	No secrets. No route to internal or sensitive systems.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Export A → B	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Release request	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Release authority	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Inspect	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Minimize and sign	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Stage	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Publish in B	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Intake B → A	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Upstream source	Design or operating rule, not a GitHub statement
+1-page	T	Verify origin	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Quarantine	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Scan and pin	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Admit to mirror	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Use in A	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Incident response	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Detect	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Contain	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Rotate, preserve	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	Recover	Label, name, step or legend; makes no claim about GitHub
+1-page	T	Learn	Label, name, step or legend; makes no claim about GitHub
+1-page	T	PLATFORM OPERATIONS	Label, name, step or legend; makes no claim about GitHub
+1-page	D	Per domain.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	T	ACCOUNTABILITY	Title, legend or layer label; no claim
+1-page	D	Every control has a named owner.	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Inventory: owner, class, retention	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Policy as code, drift checks	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Back up Git, LFS, issues, packages	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Tested restore, RPO and RTO	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Reconcile groups, keys, apps	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Patch and attest runners	Design or operating rule, not a GitHub statement
+1-page	D	Protect IaC state and plans	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Test collector, stream, IdP outage	Design or operating rule, not a GitHub statement
+1-page	D	Access reviews, pen tests, evidence	Design rule or process; not a statement about GitHub behaviour
+1-page	D	Review org model, archive stale orgs	Design or operating rule, not a GitHub statement
+1-page	D	Onboarding, knowledge base, champions	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Threat model upkeep per system	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Rehearsed continuity mirror	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	CI metrics and developer feedback	Design rule or process; not a statement about GitHub behaviour
+1-page	D	Security authority: classification, hosting, export	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Enterprise owners: baseline, audit delivery	Design or operating rule, not a GitHub statement
+1-page	D	Org owners: teams, apps, runners	Design or operating rule, not a GitHub statement
+1-page	D	Repo owners: review, remediation, deploys	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	SOC: detection, response, evidence	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Governance: exceptions, vendor review, exercises	Design rule or process; not a statement about GitHub behaviour
+1-page	D	System security leads: threat model	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Champions: training, coding standard	Design rule, process or layout label; not a statement about GitHub behaviour
+1-page	D	Compliance: audits, access reviews	Design or operating rule, not a GitHub statement
+1-page	D	Reference design, 4 November 2026. Organization and system names are illustrative. Shared standards never mean shared access to source code or detailed logs. Sources and decisions: design-notes.md.	Layout, scope or ownership statement; names an enterprise, organization or tool, makes no feature claim beyond rows above

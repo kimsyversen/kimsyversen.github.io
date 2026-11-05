@@ -30,3 +30,4 @@ Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 - **The one-line check note stays on each row.** It links to nothing, and it is where a reader sees limits such as "Nothing tested on a real system". The workstation line no longer says "ledger", which readers would not know.
 - **`MCP-Risk-Map.html` no longer names its fact check file.** Its date is unchanged, since this is not a content change.
 - **The GitHub page keeps its link to `design-notes.md`.** That is where the page lists its sources, so cutting the link would hide them.
+- **`github/` committed at the owner's request.** It was held back because promoting publishes it and it discusses classified work. All names in it are illustrative, a scan found no tokens or email addresses, and row 5 and its draw.io links need these files to work.
