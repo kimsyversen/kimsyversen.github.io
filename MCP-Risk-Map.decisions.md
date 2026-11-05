@@ -1,6 +1,6 @@
-# Decisions: MCP risk map (MCP-Risk-Map.html), 2 Nov 2026
-
 Belongs to [MCP-Risk-Map.html](MCP-Risk-Map.html). Other notes for the same page: [plan](MCP-Risk-Map.plan.md), [fact check](MCP-Risk-Map.factcheck.md).
+
+# Decisions: MCP risk map (MCP-Risk-Map.html), 2 Nov 2026
 
 Working notes.
 
@@ -8,8 +8,8 @@ Working notes.
 - Dropped the "More risks" tables, the attack-path filter, the persona review tab and the incident-response section. They add detail and are not MCP-specific.
 - Kept the diagram, popovers, status tracker, "Where to start" table, evidence and sources, so the page works like Developer-WS.html.
 - Removed the "sandbox if enabled" box from the diagram. Claude Code runs local MCP servers outside its sandbox while VS Code can sandbox stdio servers, so one box would be wrong for one of them. The spec only says clients should sandbox servers; M03 says that.
-- Only one MCP-specific attack is cited (Mitiga, May 2026). Anthropic called it out of scope and by design; Mitiga disagrees. Both positions are on the page. Other risks are described as OWASP categories or spec warnings with no incident cited.
-- Did not state the values of the VS Code chat.mcp.access setting. Docs and source disagree (see Developer-WS.html). Only the policy names are used.
+- (Superseded by the 5 November review.) Only one MCP-specific attack is cited (Mitiga, May 2026). Anthropic called it out of scope and by design; Mitiga disagrees. Both positions are on the page. Other risks are described as OWASP categories or spec warnings with no incident cited.
+- (Superseded by the 5 November review.) Did not state the values of the VS Code chat.mcp.access setting. Docs and source disagree (see Developer-WS.html). Only the policy names are used.
 - Plugin4Shell excluded: Cloud Security Alliance does not name MCP as the affected component.
 - Friction estimates and the risk order are my judgement and are tagged [inference].
 - Storage keys are mcp-tab and mcp-status. Both pages share one origin, so the old dev-* keys would mix state.
@@ -21,3 +21,15 @@ Working notes.
 - **Plain label and one sentence at the end of the footer**, under a hairline rule, in the page's own muted and ink colours. Chose this over a pill or badge to keep it quiet and avoid the template look. Colours use the page tokens, so dark mode follows.
 - **Wording:** "This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human." Same text on all five pages.
 - **Layout:** label and text in two columns on desktop, stacked under 560 px.
+
+## 5 November 2026, statement review
+
+- Checked static prose, glossary, every VS Code row, and JavaScript-generated popovers, first controls, evidence and sources. Rechecked original claims rather than accepting the old ledger's OK verdicts.
+- Qualified process privileges, host/client terminology, token semantics and data flows. MCP does not require every result to enter a model context or leave a laptop.
+- Added Claude Code managed-file, allowlist and SDK exceptions. An empty managed server map does not disable all MCP surfaces. A URL-only allowlist blocks unmatched stdio servers within its scope, so it is not inherently an allowlist bypass.
+- Retained Mitiga as attributed research. Removed the unsupported separate refresh-token capture claim. Kept its reported vendor response as a second-hand account. Added the persistence removal needed for remediation.
+- Restricted OAuth HTTP exceptions to development loopback and SSRF advice to its documented discovery/deployment scope. Added redirect validation.
+- Distinguished editor MCP sandboxing from the Copilot harness sandbox and included Windows support only for the latter. Retained the verified Claude/Codex harness restriction and added policy gaps for independently discovered Copilot servers.
+- Exact command matching is configuration matching, not proof of safe executable or dependency contents. Structured Codex matching still excludes cwd and environment variables.
+- Removed unused filter descriptions that referred to ten risks; the page has eight.
+- Preserved public paths, tab and component ids, localStorage keys and the shared Made with AI note. Updated the index date in the same change.
