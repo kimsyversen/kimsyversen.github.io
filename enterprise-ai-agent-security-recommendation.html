@@ -1,0 +1,1372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Enterprise AI agent security</title>
+<meta name="description" content="How to use and build AI agents safely on the Microsoft stack: five rules, one target design, an MCP approval flow, a rollout plan and a list of what has not been tested.">
+<meta name="theme-color" content="#F3F0E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15140F" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* A printed worksheet: paper, ink, hairline rules. Red has one meaning on this page: caution
+   (preview, not verified, not tested). Same fonts and look as the threat modeling page. */
+:root{
+  color-scheme:light;
+  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F;
+  --red:#B5321C; --red-soft:#F0DCD3; --hatch:rgba(181,50,28,.13); --hover:rgba(23,21,15,.04);
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB;
+    --red:#F07A60; --red-soft:#3B211A; --hatch:rgba(240,122,96,.12); --hover:rgba(236,231,219,.05);
+  }
+}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+html{scroll-padding-top:56px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
+h3{font-size:1rem;font-weight:700;line-height:1.25}
+p{margin:0}
+code{font-family:var(--mono);font-size:0.86em;overflow-wrap:anywhere}
+.muted{color:var(--muted)}
+.lbl{font:600 0.7rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* tags: how sure the page is */
+.tg{display:inline;font:500 0.7rem/1.5 var(--mono);padding:0 5px;border:1px solid var(--ink);margin:0 1px;white-space:normal;color:var(--ink)}
+.tg.r{border-color:var(--muted);color:var(--muted);background:var(--hover)}
+.tg.i{border-style:dashed;border-color:var(--muted);color:var(--muted)}
+.tg.u,.tg.pv{border-color:var(--red);color:var(--red)}
+.legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--rule);margin:0;padding:0;list-style:none}
+.legend li{padding:12px 18px;border-left:1px solid var(--line);display:grid;gap:6px;align-content:start;font-size:0.88rem;color:var(--muted)}
+.legend li:first-child{padding-left:0;border-left:0}
+.legend li .tg{justify-self:start}
+@media (max-width:800px){
+  .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .legend li:nth-child(odd){border-left:0;padding-left:0}
+  .legend li:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:420px){
+  .legend{grid-template-columns:1fr}
+  .legend li{border-left:0;padding-left:0;border-top:1px solid var(--line)}
+  .legend li:first-child{border-top:0}
+}
+
+/* masthead */
+.mast{border-top:6px solid var(--rule);padding-top:10px}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
+h1{font-size:clamp(2.9rem,10vw,7.6rem);font-weight:800;font-stretch:112%;line-height:0.88;letter-spacing:-0.035em;margin:30px 0 0;margin-left:-0.04em}
+.intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px 56px;align-items:start;padding:26px 0 30px}
+.lead{font-size:clamp(1.1rem,1.9vw,1.36rem);line-height:1.42;max-width:36rem}
+.spec{margin:0;display:grid;grid-template-columns:auto 1fr;font-size:0.9rem;border-top:1px solid var(--line)}
+.spec dt,.spec dd{padding:7px 0;border-bottom:1px solid var(--line)}
+.spec dt{padding-right:18px}
+.spec dd{margin:0}
+.spec dd.w{color:var(--red)}
+@media (max-width:800px){.intro{grid-template-columns:1fr}}
+
+/* contents bar */
+.toc{position:sticky;top:0;z-index:5;background:var(--bg);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:34px}
+.toc ul{list-style:none;margin:0;padding:0;display:flex;gap:4px 22px;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
+.toc a{display:block;padding:11px 0;font-size:0.84rem;text-decoration:none;color:var(--muted)}
+.toc a:hover,.toc a.on{color:var(--ink);text-decoration:underline;text-decoration-color:var(--rule)}
+.toc .btn{margin-left:auto}
+.btn{font:600 0.74rem/1 var(--body);letter-spacing:0.05em;text-transform:uppercase;border:1px solid var(--ink);background:none;color:var(--ink);padding:7px 10px;margin:5px 0;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+
+/* parts and sections */
+.part{margin-top:56px;border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:6px;grid-template-columns:minmax(0,1fr)}
+.part h2{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:800;font-stretch:108%;letter-spacing:-0.025em;line-height:1}
+.part .lbl b{color:var(--ink);font-weight:600}
+.blk{margin-top:44px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.blk > h3{font-size:1.3rem;font-weight:750;font-family:var(--display);letter-spacing:-0.01em;padding-top:12px;border-top:1px solid var(--rule)}
+.body{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.blk > .sub{color:var(--muted);font-size:0.93rem;max-width:46rem}
+.sec{margin-top:52px;border-top:1px solid var(--rule);padding-top:14px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.sh{display:grid;grid-template-columns:4.4rem minmax(0,1fr);gap:4px 14px;align-items:baseline}
+.sh .num{font:800 2.6rem/0.9 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.sh h2{grid-column:2}
+.goal{grid-column:2;font-size:0.95rem;color:var(--muted);max-width:44rem}
+.goal b{color:var(--ink);font-weight:600;margin-right:6px}
+@media (max-width:520px){.sh{grid-template-columns:3.2rem minmax(0,1fr)}.sh .num{font-size:2rem}}
+
+.glance{margin:0;padding:0;list-style:none;display:grid;border-top:1px solid var(--line)}
+.glance li{padding:9px 0;border-bottom:1px solid var(--line);font-size:0.95rem;display:grid;grid-template-columns:1.2rem minmax(0,1fr);gap:8px}
+.glance li::before{content:"";width:7px;height:7px;margin-top:0.55em;background:var(--ink)}
+@media (min-width:1000px){.glance.two{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px}}
+
+details.deep{border:1px solid var(--line)}
+details.deep > summary{cursor:pointer;list-style:none;padding:11px 14px;font-weight:600;font-size:0.92rem;display:flex;gap:12px}
+details.deep > summary::-webkit-details-marker{display:none}
+details.deep > summary::after{content:"+";font:500 1.2rem/1 var(--mono);margin-left:auto}
+details.deep[open] > summary::after{content:"\2212"}
+details.deep[open] > summary{border-bottom:1px solid var(--line)}
+details.deep > summary span{font-weight:400;color:var(--muted);margin-left:8px}
+details.deep > .body{padding:16px 14px 18px;display:grid;gap:12px;font-size:0.93rem;grid-template-columns:minmax(0,1fr)}
+.body > p{max-width:56rem}
+.body ul,.body ol{margin:0;padding-left:1.25rem;display:grid;gap:5px}
+.body ul ul,.body ol ul,.body ul ol,.body ol ol{margin-top:5px}
+.body li::marker{color:var(--muted)}
+.body li > p{margin:0}
+.pp{display:block}
+.pp + .pp{margin-top:5px}
+.body pre{margin:0;padding:12px 14px;overflow-x:auto;border:1px solid var(--line);background:var(--hover);font:0.8rem/1.5 var(--mono)}
+.body pre code{font-size:1em}
+.body strong{font-weight:600}
+
+/* tables */
+.tbl-wrap{overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;min-width:640px;font-size:0.88rem;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:10px 10px;border-top:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{padding-left:4px}
+.tbl thead th{font:600 0.68rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-top:8px;padding-bottom:8px;border-top:0;border-bottom:1px solid var(--rule)}
+.tbl tbody tr:first-child > *{border-top:0}
+.tbl td:first-child{font-weight:600}
+.tbl td p + p{margin-top:5px}
+.tbl.map{min-width:820px}
+.tbl.map td:first-child{width:19%}
+.src{min-width:760px}
+.src td.u{font:0.76rem/1.45 var(--mono);overflow-wrap:anywhere}
+.src td.d{font-size:0.8rem;color:var(--muted);white-space:nowrap}
+.src td:first-child{font-weight:400;width:26%}
+
+/* figures */
+figure{margin:0;display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.fig-scroll{overflow-x:auto}
+.fig-scroll svg{display:block;width:100%;height:auto;min-width:820px}
+.fig-scroll.mid svg{min-width:760px}
+figcaption{font-size:0.86rem;color:var(--muted);max-width:50rem}
+figcaption b{color:var(--ink);font-weight:600;margin-right:6px}
+.fg text{font-family:var(--body)}
+.fg .zone{fill:none;stroke:var(--line);stroke-width:1.2}
+.fg .zl{fill:var(--muted);font:600 10.5px var(--body);letter-spacing:0.12em}
+.fg .box{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.fg .box.pv{stroke:var(--red);stroke-dasharray:6 4}
+.fg .box.cat{stroke:var(--muted);stroke-dasharray:2 4}
+.fg .bar{fill:var(--hover);stroke:var(--ink);stroke-width:1.5}
+.fg .t{fill:var(--ink);font:700 13.5px var(--display);text-anchor:middle}
+.fg .s{fill:var(--muted);font-size:11.5px;font-style:italic;text-anchor:middle}
+.fg .t.l,.fg .s.l{text-anchor:start}
+.fg .ln{fill:none;stroke:var(--ink);stroke-width:1.3}
+.fg .ln.pv{stroke:var(--red);stroke-dasharray:5 4}
+.fg .al{fill:var(--muted);font:italic 11.5px var(--body)}
+.fg .al.r{fill:var(--red)}
+.key{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:0.84rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.key li{display:flex;align-items:center;gap:8px}
+.key svg{width:30px;height:14px;flex:none;overflow:visible}
+.key .k{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.key .k.pv{stroke:var(--red);stroke-dasharray:5 3}
+.key .k.cat{stroke:var(--muted);stroke-dasharray:2 3}
+
+/* five answers */
+.ans{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.ans li{display:grid;grid-template-columns:4rem minmax(0,1fr);gap:4px 18px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.ans .n{font:800 3rem/0.85 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.ans h3{font-size:1.25rem;font-weight:750;letter-spacing:-0.01em}
+.ans p{grid-column:2;color:var(--muted);font-size:0.95rem;max-width:46rem}
+.ans h3 + p{margin-top:-2px}
+@media (max-width:520px){.ans li{grid-template-columns:2.6rem minmax(0,1fr);gap:4px 12px}.ans .n{font-size:2.2rem}}
+
+/* layers */
+.layers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--rule);padding:0;margin:0;list-style:none}
+.layer{padding:18px 18px 20px;border-left:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.layer:first-child{border-left:0;padding-left:0}
+.layer:last-child{padding-right:0}
+.layer .n{font:800 3.2rem/0.85 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.layer h3{font-size:1.1rem;margin-top:4px}
+.layer ul{margin:0;padding-left:1rem;display:grid;gap:5px;font-size:0.88rem;color:var(--muted)}
+.layer li::marker{color:var(--muted)}
+.loop{grid-column:2/6;margin:0 10%;position:relative;height:20px;border:1.5px solid var(--ink);border-top:0}
+.loop::before{content:"";position:absolute;left:-6px;top:-9px;border:5px solid transparent;border-top:0;border-bottom:9px solid var(--ink)}
+.loop::after{content:"";position:absolute;right:-1.5px;top:-6px;height:6px;border-right:1.5px solid var(--ink)}
+.loop span{position:absolute;left:50%;bottom:-0.72em;transform:translateX(-50%);background:var(--bg);padding:0 12px;font-size:0.88rem;font-style:italic;white-space:nowrap}
+.layerbox{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));row-gap:6px}
+.layerbox .layers{display:contents}
+.fbm{display:none}
+@media (max-width:1000px){
+  .layerbox{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .layer:nth-child(odd){border-left:0;padding-left:0}
+  .layer:nth-child(even){padding-right:0}
+  .layer:nth-child(n+3){border-top:1px solid var(--line)}
+  .layer:last-child{grid-column:1/-1;border-left:0;padding-left:0}
+  .loop{display:none}
+  .fbm{display:block;grid-column:1/-1;border-top:1px solid var(--line);padding-top:10px;font-style:italic;font-size:0.9rem}
+}
+@media (max-width:520px){
+  .layerbox{grid-template-columns:1fr}
+  .layer{border-left:0;padding-left:0;padding-right:0;border-top:1px solid var(--line)}
+  .layer:first-child{border-top:0}
+}
+
+/* four surprises */
+.stack{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px;border-top:1px solid var(--rule)}
+.stack li{padding:14px 0 16px;border-bottom:1px solid var(--line);display:grid;gap:6px;align-content:start}
+.stack h3{font-size:1.05rem}
+.stack p{font-size:0.92rem;color:var(--muted)}
+.stack p b{color:var(--ink);font-weight:600}
+@media (max-width:800px){.stack{grid-template-columns:1fr}}
+
+/* tiers */
+.tiers{list-style:none;margin:0;padding:0;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.tiers li{display:grid;grid-template-columns:3.2rem minmax(0,1.2fr) minmax(0,1.6fr) minmax(0,1.3fr);gap:6px 18px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline;font-size:0.92rem}
+.tiers li:first-child{border-top:0}
+.tiers .n{font:800 2rem/1 var(--display)}
+.tiers .what{font-weight:600}
+.tiers .ex{color:var(--muted)}
+.tiers .ap{display:grid;grid-template-columns:repeat(4,14px);gap:4px;align-items:center}
+.tiers .ap i{width:14px;height:14px;border:1.5px solid var(--ink);display:block}
+.tiers .ap i.f{background:var(--ink)}
+.tiers .apt{display:grid;gap:4px}
+@media (max-width:700px){
+  .tiers li{grid-template-columns:2.4rem minmax(0,1fr);}
+  .tiers .what,.tiers .ex,.tiers .apt{grid-column:2}
+  .tiers .n{grid-row:1/span 3}
+}
+.chk{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px 8px}
+.chk li{border:1px solid var(--ink);padding:3px 9px;font-size:0.86rem}
+
+/* release stepper */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--rule)}
+.flow li{padding:14px 12px 4px;border-left:1px solid var(--line);display:grid;gap:4px;align-content:start;position:relative}
+.flow li:first-child{border-left:0;padding-left:0}
+.flow .n{font:800 2.2rem/0.9 var(--display);font-stretch:112%}
+.flow h3{font-size:0.98rem}
+.flow p{font-size:0.84rem;color:var(--muted)}
+.flow li.gate h3::after{content:" \25C7";font-weight:400}
+.returns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 36px;font-size:0.9rem;border-top:1px solid var(--line);padding-top:12px}
+.returns p{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.returns b{font:600 0.7rem/1.4 var(--mono)}
+@media (max-width:1000px){
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow li:nth-child(odd){border-left:0;padding-left:0}
+  .flow li:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:520px){
+  .flow{grid-template-columns:1fr}
+  .flow li{border-left:0;padding-left:0;padding-right:0;grid-template-columns:2.6rem 1fr;column-gap:12px}
+  .flow li:nth-child(n+2){border-top:1px solid var(--line)}
+  .flow .n{grid-row:1/span 2;font-size:2rem}
+  .returns{grid-template-columns:1fr;gap:8px}
+}
+
+/* timeline */
+.gantt{border-top:2px solid var(--rule);border-bottom:2px solid var(--rule);font-size:0.84rem}
+.gr{display:grid;grid-template-columns:7.6rem minmax(0,1fr);align-items:center;border-top:1px solid var(--line)}
+.gr:first-child{border-top:0}
+.gr .rl{font-weight:600;padding:9px 8px 9px 0}
+.gr.hd .rl{font:600 0.66rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+.wk{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));font:600 0.66rem/1.4 var(--mono);color:var(--muted);text-align:center}
+.wk i{font-style:normal;border-left:1px solid var(--line);padding:6px 0}
+.trk{position:relative;height:34px;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),var(--line) calc(10% - 1px) 10%)}
+.trk .bar{position:absolute;top:11px;height:12px;background:var(--ink)}
+.trk .bar.r{background:repeating-linear-gradient(135deg,var(--ink) 0 3px,transparent 3px 6px);border:1px solid var(--ink)}
+@media (max-width:520px){.gr{grid-template-columns:5.6rem minmax(0,1fr)}.gantt{font-size:0.78rem}}
+
+/* watchlist */
+.watch{min-width:640px}
+.watch td:nth-child(2){white-space:nowrap}
+
+footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;font-size:0.85rem;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+@media print{
+  .toc{position:static}.btn{display:none}
+  details.deep > summary::after{content:""}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--ink)"/></marker>
+  <marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--red)"/></marker>
+</defs></svg>
+
+<div class="page" id="top">
+
+  <header class="mast">
+    <div class="meta"><span>Security recommendation · Microsoft stack</span><span>Facts checked 5 Nov 2026</span></div>
+    <h1>Safe AI agents</h1>
+    <div class="intro">
+      <p class="lead">How to use and build AI agents and MCP servers safely in a Microsoft E7 tenant that has Foundry, Copilot Studio, Microsoft 365 Copilot, GitHub Copilot and GitHub, with managed devices and outside consultants on their own laptops.</p>
+      <dl class="spec">
+        <dt class="lbl">Rules</dt><dd>Five, in Part 1</dd>
+        <dt class="lbl">Design</dt><dd>One target picture, in 2.1</dd>
+        <dt class="lbl">Checked</dt><dd>Against vendor docs, 5 Nov 2026</dd>
+        <dt class="lbl">Tested</dt><dd class="w">Nothing, in any real tenant</dd>
+      </dl>
+    </div>
+    <ul class="legend" aria-label="How to read the tags">
+      <li><span class="tg v">verified</span><span>Read on the vendor page on 5 Nov 2026.</span></li>
+      <li><span class="tg r">recommendation</span><span>Our design choice. Not a vendor claim.</span></li>
+      <li><span class="tg i">inference</span><span>Reasonable conclusion. The vendor does not say it.</span></li>
+      <li><span class="tg u">unverified</span><span>Not established by the sources reviewed. Do not assume it in production.</span></li>
+    </ul>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <ul>
+      <li><a href="#summary">Summary</a></li>
+      <li><a href="#s21">Target state</a></li>
+      <li><a href="#s22">Identity</a></li>
+      <li><a href="#s23">GitHub and VS Code</a></li>
+      <li><a href="#s24">MCP approval</a></li>
+      <li><a href="#s25">Copilot Studio</a></li>
+      <li><a href="#s26">Foundry</a></li>
+      <li><a href="#s27">M365 Copilot</a></li>
+      <li><a href="#s28">Release</a></li>
+      <li><a href="#s29">Monitoring</a></li>
+      <li><a href="#part3">Admin load</a></li>
+      <li><a href="#part4">Rollout</a></li>
+      <li><a href="#part5">Gaps</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li class="btn-li" style="margin-left:auto"><button class="btn" type="button" id="toggle" aria-pressed="false">Expand all detail</button></li>
+    </ul>
+  </nav>
+
+  <main>
+
+  <!-- ============ PART 1 ============ -->
+  <section id="summary" aria-labelledby="p1">
+    <div class="part">
+      <p class="lbl"><b>Part 1</b> · Read this first</p>
+      <h2 id="p1">The answer in one minute</h2>
+    </div>
+
+    <div class="blk">
+      <ol class="ans">
+        <li><span class="n">1</span><h3>One rule set, enforced in each product's own control panel</h3><p>Do not assume that Agent 365 inventory or registration enforces every runtime or connection path.</p></li>
+        <li><span class="n">2</span><h3>Default deny for MCP servers</h3><p>Require approved servers on supported paths. Account for built-in server exemptions, custom agent profiles and clients without allowlist support (see 2.3).</p></li>
+        <li><span class="n">3</span><h3>Keep source code and sensitive data on managed devices</h3><p>Consultants on unmanaged laptops work inside a managed cloud desktop (Dev Box, Windows 365 or Azure Virtual Desktop).</p></li>
+        <li><span class="n">4</span><h3>Agents get their own identity and the smallest possible access</h3><p>Read-only by default. A human approves high-impact changes. Explicitly bounded low-impact actions may use a rules service.</p></li>
+        <li><span class="n">5</span><h3>Run it as policy as code</h3><p>The approved lists live in Git. Require an approved pull request and successful deployment of the resulting policies. This can reduce repetitive admin work.</p></li>
+      </ol>
+      <p class="muted">All five points are <span class="tg r">recommendation</span>. The vendor facts that support them are tagged below.</p>
+    </div>
+
+    <div class="blk" id="layers">
+      <h3>The big picture: five layers</h3>
+      <p class="sub">Each layer answers one question. What you learn in the last layer feeds back into what is allowed in the second.</p>
+      <div class="layerbox">
+        <ol class="layers">
+          <li class="layer"><span class="n">1</span><h3>Who and where</h3><ul><li>Entra ID: MFA, Conditional Access, access reviews</li><li>Managed devices, and a managed cloud dev desktop for consultants</li></ul></li>
+          <li class="layer"><span class="n">2</span><h3>What can be used</h3><ul><li>Approved MCP list, default deny</li><li>Approved connectors, models and tools</li></ul></li>
+          <li class="layer"><span class="n">3</span><h3>What data it can reach</h3><ul><li>Purview labels and DLP</li><li>Permissions fixed at the source: SharePoint, repos, APIs</li></ul></li>
+          <li class="layer"><span class="n">4</span><h3>What is released</h3><ul><li>Pull request review and security scans</li><li>Agent tests: prompt injection, data leak, tool misuse</li><li>Separate dev, test and prod</li></ul></li>
+          <li class="layer"><span class="n">5</span><h3>Watching</h3><ul><li>Audit logs and agent inventory</li><li>Defender, Sentinel, Purview, Agent 365</li></ul></li>
+        </ol>
+        <div class="loop"><span>findings feed back into layer 2</span></div>
+        <p class="fbm">↺ Findings from layer 5 feed back into layer 2.</p>
+      </div>
+    </div>
+
+    <div class="blk" id="map">
+      <h3>Where the MCP list is enforced, and where it is not</h3>
+      <p class="sub">One approved list, several kinds of enforcement. This is the table to show when someone asks if "default deny" is on everywhere. It is not: each row has a hole.</p>
+      <div class="tbl-wrap"><table class="tbl map">
+        <thead><tr><th>Where the server runs</th><th>What enforces the list</th><th>How strong</th><th>What it does not cover</th></tr></thead>
+        <tbody>
+          <tr><td>VS Code and GitHub Copilot</td><td><code>managed-settings.json</code> allow and deny rules</td><td>Generally available for supported clients and keys <span class="tg v">verified</span></td><td>Built-in servers are always allowed. Repository custom agent profiles are exempt. Copilot in the cloud on GitHub Actions is not supported. <span class="tg v">verified</span></td></tr>
+          <tr><td>Copilot Studio, VS Code, Claude Code, Copilot CLI (remote servers)</td><td>Agent 365 registry: approve, grant consent, block a whole server</td><td><span class="tg pv">preview</span> for registered gateway traffic <span class="tg v">verified</span></td><td>Only traffic that goes through the gateway. Foundry and Microsoft 365 declarative agents are not supported clients. <span class="tg v">verified</span></td></tr>
+          <tr><td>Copilot Studio tools</td><td>Power Platform data policies. Blocking a connector also blocks tools in connected MCP servers that rely on it.</td><td>Strong for connector-based servers <span class="tg v">verified</span></td><td>Other paths need approved connections, limited maker privileges and tests. <span class="tg r">recommendation</span></td></tr>
+          <tr><td>Foundry agents</td><td>Azure Policy for tools (<span class="tg pv">preview</span>), RBAC, API Management for remote tools</td><td>Deny rejects noncompliant create or update requests <span class="tg v">verified</span> <span class="tg u">tenant behavior to test</span></td><td>Existing configurations and runtime calls need separate handling (see 2.6). <span class="tg v">verified</span></td></tr>
+          <tr><td>Local <code>stdio</code> servers on a laptop</td><td>GitHub <code>serverCommand</code> allowlist and VS Code policies</td><td>Works where the clients obey the file <span class="tg v">verified</span> <span class="tg u">coverage per client to pilot</span></td><td>Exact command and arguments only. No wildcards. The gateway is not described as covering local servers. <span class="tg i">inference</span></td></tr>
+          <tr><td>Catalog only</td><td>Azure API Center</td><td>Discovery in VS Code and GitHub Copilot <span class="tg v">verified</span></td><td>Do not assume it blocks direct connections. <span class="tg r">recommendation</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="blk" id="surprises">
+      <h3>Four things that will surprise people</h3>
+      <ul class="stack">
+        <li><h3>1. Agent 365 BYO MCP governance is in preview</h3><p><b>So:</b> use it as the emergency brake and approval record. Do not make it your only control. <span class="tg v">verified</span></p></li>
+        <li><h3>2. Foundry is not a supported preview client</h3><p>BYO MCP preview supports only Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI. Foundry and Microsoft 365 declarative agents are not supported. <b>So:</b> Foundry needs its own controls. <span class="tg v">verified</span></p></li>
+        <li><h3>3. The gateway is described for remote servers</h3><p>Local servers (run on the laptop with <code>stdio</code>) are not described as covered. <b>So:</b> control local servers with the GitHub command allowlist. <span class="tg i">inference for the gateway</span> <span class="tg v">verified for GitHub</span></p></li>
+        <li><h3>4. GitHub allow and deny keys skip custom agent profiles</h3><p>They do not apply to MCP servers defined in repository custom agent profiles. <b>So:</b> GitHub's advice is to keep the domains needed to start them blocked in the organization or repository custom firewall for Copilot in the cloud. <span class="tg v">verified</span></p></li>
+      </ul>
+    </div>
+
+    <div class="blk" id="tools">
+      <h3>Which tool does which job</h3>
+      <div class="body"><div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Job</th>
+<th>Main tool</th>
+<th>One-line reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Who can sign in, from what device</td>
+<td>Entra Conditional Access, Intune</td>
+<td>Already in E7.</td>
+</tr>
+<tr>
+<td>Consultant access</td>
+<td>Entra B2B guests, access packages with expiry and reviews</td>
+<td>Configured expiry removes access granted through the package. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Safe workplace for unmanaged consultants</td>
+<td>Dev Box, Windows 365 or Azure Virtual Desktop</td>
+<td>Keep working copies there and restrict transfer paths. <span class="tg r">recommendation</span></td>
+</tr>
+<tr>
+<td>Allowed MCP servers in VS Code and GitHub Copilot</td>
+<td>GitHub <code>managed-settings.json</code> allowlist</td>
+<td>GitHub's recommended method, generally available. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Approve and emergency-block remote MCP servers</td>
+<td>Agent 365 MCP registry (Microsoft 365 admin center, Agents, Tools)</td>
+<td>Blocks registered server invocations through the gateway. BYO MCP is preview. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Catalog of internal MCP servers</td>
+<td>Azure API Center</td>
+<td>Catalog and discovery; do not rely on registration to prevent direct connections. <span class="tg r">recommendation</span></td>
+</tr>
+<tr>
+<td>Copilot Studio guardrails</td>
+<td>Power Platform managed environments, environment groups, data policies</td>
+<td>Blocks connectors, channels, unauthenticated agents. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Foundry guardrails</td>
+<td>Entra RBAC, agent identity, network isolation, Azure Policy for models and tools, API Management</td>
+<td>Feed the Git-approved endpoints to the preview tool policy and use Deny to reject noncompliant tool configurations. This governs configuration requests; it is not a runtime gateway. <span class="tg r">recommendation</span></td>
+</tr>
+<tr>
+<td>Data protection</td>
+<td>Purview sensitivity labels, DLP for Copilot, SharePoint Advanced Management</td>
+<td>Limits what Copilot can use. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Agent inventory and monitoring</td>
+<td>Agent 365, Defender, Sentinel</td>
+<td>Shows who runs what. <span class="tg v">verified, see platform list in 2.9</span></td>
+</tr>
+</tbody>
+</table></div></div>
+    </div>
+
+    <div class="blk" id="e7">
+      <h3>What E7 gives you, and what it does not</h3>
+      <div class="body"><p>Microsoft's licensing page says: E7 includes everything in E5 and adds Microsoft Copilot, the Microsoft Entra Suite and Microsoft Agent 365 in a single license. <span class="tg v">verified, checked 2026-11-05</span></p>
+<p>Agent 365 became generally available on 1 May 2026 for the Commercial segment. It is licensed per user. Microsoft says it "works best when using Microsoft E5 as a pre-requisite". It is also sold stand-alone.</p>
+<p>For GCC, Microsoft announced purchasing from 1 October 2026 for Agent 365 and Microsoft 365 G7, with additional options from 1 November. Features arrive in phases as GCC authorization milestones are met. <span class="tg v">verified</span> This announcement does not establish availability in GCC High or DoD.</p>
+<p>Agent running costs are <strong>not</strong> fully in the license. Copilot Studio usage is metered in Copilot Credits. <span class="tg v">verified</span></p>
+<p>Qualifying agent usage by Microsoft 365 Copilot licensed users, under their authenticated identity, incurs no additional Copilot Credits charge in the documented channels. Fair-use limits apply. Autonomous runs and computer-using agents are excluded. Agent flows qualify only with the "When an agent calls the flow" trigger. <span class="tg v">verified, billing rates checked 2026-11-05</span></p>
+<p>Foundry model deployments can be billed per token (Global Standard is "Pay-per-token"). Hosted agents in Foundry Agent Service are billed on CPU and memory used across active sessions. <span class="tg v">verified, checked 2026-11-05</span> Foundry's agent overview lists other possible charges, such as Application Insights and voice features. <span class="tg v">verified</span></p>
+<p>Microsoft's Azure pricing page for Foundry Agent Service says there is no extra charge for creating or running Foundry-native agents built with prompts and workflows. You pay for model tokens, and separately for tools and knowledge connections. Hosted agents are billed on container compute per hour. <span class="tg v">verified, page read 2026-11-05, undated</span></p>
+<p>Microsoft announced E7 general availability on 1 May 2026 and Agent 365 standalone at $15 per user per month. On 2026-11-05, the US E7 page lists $99 with Teams and $90.45 without Teams, per user per month, paid yearly with an annual commitment. Contract prices may differ. <span class="tg v">verified</span></p></div>
+    </div>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <div class="part" id="part2">
+    <p class="lbl"><b>Part 2</b> · For the people who build and run it</p>
+    <h2>How to build it</h2>
+  </div>
+
+  <section class="sec" id="s21" aria-labelledby="h21" style="margin-top:28px;border-top:0">
+    <header class="sh"><span class="num">2.1</span><h2 id="h21">Technical target state</h2>
+    <p class="goal"><b>Status</b>A proposed design, not evidence that the controls are deployed. <span class="tg r">recommendation</span></p></header>
+    <figure>
+      <div class="fig-scroll">
+<svg class="fg" viewBox="0 0 1000 720" role="img" aria-labelledby="t21 d21">
+<title id="t21">Proposed target state</title>
+<desc id="d21">Six layers from top to bottom. People and devices sign in through Microsoft Entra ID. Development tools and agent platforms sit below it. They reach MCP tool access, then data. Audit and monitoring collects from every layer.</desc>
+
+<text class="zl" x="10" y="16">PEOPLE AND DEVICES</text>
+<rect class="box" x="10" y="26" width="310" height="62"/>
+<text class="t" x="165" y="52">Staff</text><text class="s" x="165" y="72">managed device</text>
+<rect class="box" x="345" y="26" width="310" height="62"/>
+<text class="t" x="500" y="52">Consultants</text><text class="s" x="500" y="72">unmanaged laptop</text>
+<rect class="box" x="680" y="26" width="310" height="62"/>
+<text class="t" x="835" y="52">Managed cloud dev desktop</text><text class="s" x="835" y="72">Dev Box, Windows 365 or Azure Virtual Desktop</text>
+<path class="ln" d="M655 57H678" marker-end="url(#arr)"/>
+
+<path class="ln" d="M165 88V130" marker-end="url(#arr)"/>
+<path class="ln" d="M500 88V130" marker-end="url(#arr)"/>
+<path class="ln" d="M835 88V130" marker-end="url(#arr)"/>
+<text class="al" x="508" y="114">B2B guest, MFA, expiry</text>
+<rect class="bar" x="10" y="130" width="980" height="52"/>
+<text class="t" x="500" y="154">Microsoft Entra ID</text>
+<text class="s" x="500" y="172">MFA, Conditional Access, B2B guests, access reviews, agent identities</text>
+
+<path class="ln" d="M250 182V230" marker-end="url(#arr)"/>
+<path class="ln" d="M755 182V230" marker-end="url(#arr)"/>
+
+<text class="zl" x="10" y="222">DEVELOPMENT</text>
+<rect class="zone" x="10" y="230" width="480" height="100"/>
+<rect class="box" x="20" y="244" width="146" height="72"/>
+<text class="t" x="93" y="270">VS Code + Copilot</text><text class="s" x="93" y="290">managed-settings.json</text>
+<rect class="box" x="177" y="244" width="146" height="72"/>
+<text class="t" x="250" y="270">GitHub Enterprise</text><text class="s" x="250" y="290">policies, PR review, scans</text>
+<rect class="box" x="334" y="244" width="146" height="72"/>
+<text class="t" x="407" y="270">CI/CD</text><text class="s" x="407" y="290">checks, release approval</text>
+<path class="ln" d="M166 280H175" marker-end="url(#arr)"/>
+<path class="ln" d="M323 280H332" marker-end="url(#arr)"/>
+
+<text class="zl" x="520" y="222">AGENT PLATFORMS</text>
+<rect class="zone" x="520" y="230" width="470" height="100"/>
+<rect class="box" x="530" y="244" width="140" height="72"/>
+<text class="t" x="600" y="270">Copilot Studio</text><text class="s" x="600" y="290">managed envs, policies</text>
+<rect class="box" x="680" y="244" width="140" height="72"/>
+<text class="t" x="750" y="270">Foundry</text><text class="s" x="750" y="290">dev, test, prod</text>
+<rect class="box" x="830" y="244" width="150" height="72"/>
+<text class="t" x="905" y="270">Microsoft 365 Copilot</text><text class="s" x="905" y="290">permissions at source</text>
+<path class="ln" d="M480 280H518" marker-end="url(#arr)"/>
+<text class="al" x="484" y="268">release</text>
+
+<path class="ln" d="M250 330V380" marker-end="url(#arr)"/>
+<path class="ln" d="M755 330V380" marker-end="url(#arr)"/>
+
+<text class="zl" x="10" y="372">TOOL ACCESS</text>
+<rect class="zone" x="10" y="380" width="980" height="110"/>
+<rect class="box pv" x="20" y="394" width="225" height="72"/>
+<text class="t" x="132" y="420">Agent 365 MCP registry</text><text class="s" x="132" y="440">approve and block, preview</text>
+<rect class="box pv" x="257" y="394" width="225" height="72"/>
+<text class="t" x="369" y="420">Azure API Management</text><text class="s" x="369" y="440">Foundry tool gateway, preview</text>
+<rect class="box cat" x="494" y="394" width="225" height="72"/>
+<text class="t" x="606" y="420">Azure API Center</text><text class="s" x="606" y="440">catalog and discovery only</text>
+<rect class="box" x="731" y="394" width="250" height="72"/>
+<text class="t" x="856" y="420">Approved remote MCP servers</text><text class="s" x="856" y="440">backend authorization</text>
+<path class="ln" d="M132 466V480H856V468" marker-end="url(#arr)"/>
+<path class="ln" d="M369 466V480"/>
+
+<path class="ln" d="M856 490V530" marker-end="url(#arr)"/>
+<text class="zl" x="10" y="522">DATA</text>
+<rect class="zone" x="10" y="530" width="980" height="90"/>
+<rect class="box pv" x="20" y="544" width="470" height="62"/>
+<text class="t" x="255" y="570">Purview labels and DLP</text><text class="s" x="255" y="590">protect supported integrations only</text>
+<rect class="box" x="510" y="544" width="470" height="62"/>
+<text class="t" x="745" y="570">SharePoint, repos, APIs</text><text class="s" x="745" y="590">permissions enforced at the source</text>
+
+<text class="zl" x="10" y="644">WATCHING (EVERY LAYER FEEDS THIS)</text>
+<rect class="bar" x="10" y="654" width="980" height="52"/>
+<text class="t" x="500" y="678">Audit and monitoring</text>
+<text class="s" x="500" y="696">Entra, GitHub, Purview, Defender, Sentinel, Agent 365 inventory</text>
+</svg>
+      </div>
+      <ul class="key" aria-label="Key">
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k" x="1" y="1" width="28" height="12"/></svg>Documented control or proposed design</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k pv" x="1" y="1" width="28" height="12"/></svg>Preview, or partial coverage</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k cat" x="1" y="1" width="28" height="12"/></svg>Catalog only, does not block</li>
+      </ul>
+      <figcaption><b>Read it top to bottom.</b>Arrows show the main path only. Each platform also reaches SharePoint, repos and APIs directly. Purview coverage depends on the product and integration. A catalog entry or a gateway block does not establish control over direct connections, so verify each permitted path and block the bypass paths.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec" id="s22" aria-labelledby="h22">
+    <header class="sh"><span class="num">2.2</span><h2 id="h22">Identity and devices</h2>
+    <p class="goal"><b>Goal</b>The right person, on the right device, for a limited time.</p></header>
+    <ul class="glance two">
+      <li><span>Require MFA for human users through Conditional Access. Test the emergency access exclusions. <span class="tg r">recommendation</span></span></li>
+      <li><span>Consultants are B2B guests. Package expiry removes the access the package granted, and access reviews can remove access when nobody responds. <span class="tg v">verified</span></span></li>
+      <li><span>Unmanaged consultants work in a managed cloud dev desktop. Dev Box has clipboard redirection on by default, so set the policy explicitly. <span class="tg r">recommendation</span> <span class="tg v">verified default</span></span></li>
+      <li><span>Agents get their own identity under Conditional Access. Start in report-only mode, as Microsoft says to. <span class="tg v">verified</span></span></li>
+    </ul>
+    <details class="deep"><summary>Full detail, steps and limits<span>2.2</span></summary><div class="body">
+      <p>The effort column gives planning estimates <span class="tg r">recommendation</span>, not a guarantee of unattended operation. Monitor policies and review exceptions after setup.</p>
+      <p>The effort column gives planning estimates <span class="tg r">recommendation</span>, not a guarantee of unattended operation. Monitor policies and review exceptions after setup.</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Step</th>
+<th>How</th>
+<th>Admin effort after setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Require MFA for human users</td>
+<td>Conditional Access, with tested emergency access exclusions <span class="tg r">recommendation</span></td>
+<td>Monitor sign-ins and maintain recovery access</td>
+</tr>
+<tr>
+<td>Phishing-resistant MFA for admins</td>
+<td>Built-in authentication strength "Phishing-resistant MFA" (Windows Hello for Business or platform credential, FIDO2, multifactor certificate-based authentication). Needs Entra ID P1. <span class="tg v">verified; using it for admins is a recommendation</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>Consultants as B2B guests</td>
+<td>Configure package expiry. Unextended assignments lose package-granted access. By default, guests invited through entitlement management are blocked after their last assignment ends and removed 30 days later. Existing guests need separate lifecycle configuration. License requirements depend on the features used; P2 covers basic capabilities, while Governance or Entra Suite covers advanced capabilities. <span class="tg v">verified</span></td>
+<td>Approver clicks once</td>
+</tr>
+<tr>
+<td>Review access</td>
+<td>Access reviews on the package. Review quarterly <span class="tg r">recommendation</span>. Set "if reviewers don't respond" to "Remove access". The option exists. <span class="tg v">verified</span> To apply denials without admin work, tick "Auto apply results to resource". Nonresponse can then remove the access under review. <span class="tg v">verified, checked 2026-11-05</span></td>
+<td>Owner answers a short list</td>
+</tr>
+<tr>
+<td>Guest MFA from the consultant's own company</td>
+<td>Conditional Access can require MFA for guests. Cross-tenant trust can accept the home tenant's MFA claims. Without trust, B2B collaboration guests are challenged in your tenant. <span class="tg v">verified</span></td>
+<td>Set once</td>
+</tr>
+<tr>
+<td>Guest limits to know</td>
+<td>Strength policies apply only to guests who sign in with Entra ID. For email one-time passcode, SAML or WS-Fed, Google federation or personal Microsoft account guests, Microsoft says to use the MFA grant control. External authentication methods are incompatible with authentication strength. <span class="tg v">verified, 2026-03-24</span> "Require approved client app" and "Require app protection policy" are not supported for guests. <span class="tg v">verified</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>Managed devices must be compliant</td>
+<td>Intune compliance plus Conditional Access grant control</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Unmanaged consultants</td>
+<td>Cloud dev desktop (Dev Box, Windows 365 or Azure Virtual Desktop). <span class="tg r">recommendation</span></td>
+<td>One image to maintain</td>
+</tr>
+<tr>
+<td>Restrict desktop redirection</td>
+<td>Intune Settings catalog: "Do not allow Clipboard redirection", "Do not allow drive redirection", "Do not allow client printer redirection". Newly provisioned and reprovisioned Windows 365 Cloud PCs have clipboard redirection off by default. Dev Box has it on, in both directions. <span class="tg v">verified</span> Set the policy explicitly for Dev Box.</td>
+<td>One policy</td>
+</tr>
+<tr>
+<td>Unmanaged access to SharePoint and OneDrive without a dev desktop</td>
+<td>"Allow limited, web-only access" in SharePoint admin center. Browser only, no download, print or sync, and no Office desktop apps. Built on Conditional Access. Microsoft's Zero Trust page says it needs Entra ID P1 or P2. <span class="tg v">verified</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>Unmanaged access to other apps</td>
+<td>Defender for Cloud Apps session policies can block downloads, print and copy to clipboard. <span class="tg v">verified</span> Session controls apply only to browser sessions. Microsoft says to block native clients with an access policy, using the Client app filter "Mobile and desktop". <span class="tg v">verified</span></td>
+<td>Policy per app, plus a block rule for native apps</td>
+</tr>
+<tr>
+<td>Agent identities</td>
+<td>Conditional Access for agents. Three patterns: on-behalf-of, application-only, agent-user. <strong>Start in report-only mode.</strong> Microsoft says to do so. Needs E7, or Agent 365 plus Entra ID P1 or M365 E3. <span class="tg v">verified</span></td>
+<td>Review report monthly</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Redirection controls reduce transfer paths. Do not treat them as proof that data cannot leave an unmanaged viewing device. <span class="tg i">inference</span></li>
+</ul>
+<p>The following identity limits are <span class="tg v">verified</span>:</p>
+<ul>
+<li>Conditional Access does not apply to API-key access. Remove API keys where you can.</li>
+<li>The Users assignment does not apply to agent user accounts. Use the separate Agents target.</li>
+<li>The "Agent risk" and "Agent execution environments" conditions are labeled <strong>preview</strong>. Check the availability of each condition before rollout. <span class="tg r">recommendation</span></li>
+<li>Guests: using Entra ID Governance features for guests needs a tenant linked to an Azure subscription with the "Microsoft Entra ID Governance for guests" add-on. Microsoft says this was enforced from January 2026.<ul>
+<li>Guests are billed only when they use features exclusive to Entra ID Governance.</li>
+<li>Entra P2 features, including basic access reviews and entitlement management, are not billed. The subscription link is not required for them.</li>
+<li>At least one admin needs an Entra ID Governance or Entra Suite license.</li>
+<li><span class="tg v">verified, guest licensing checked 2026-11-05</span></li>
+</ul>
+</li>
+</ul>
+    </div></details>
+  </section>
+
+  <section class="sec" id="s23" aria-labelledby="h23">
+    <header class="sh"><span class="num">2.3</span><h2 id="h23">VS Code, GitHub and GitHub Copilot</h2>
+    <p class="goal"><b>Goal</b>Developers can use AI help, only with approved tools, only with company accounts.</p></header>
+    <ul class="glance two">
+      <li><span>Company accounts only, through managed user accounts, subscription-based network routing and enterprise access restrictions. Not tested. <span class="tg v">verified</span> <span class="tg u">test from a consultant path</span></span></li>
+      <li><span>One policy repo: <code>.github-private</code>, file <code>copilot/managed-settings.json</code>. It reaches licensed users on supported clients within about an hour. <span class="tg v">verified</span></span></li>
+      <li><span>Allow by <code>serverUrl</code> or <code>serverCommand</code>. Deny wins over allow. A malformed policy fails closed, so only built-in servers stay allowed. <span class="tg v">verified</span></span></li>
+      <li><span>Exempt or unsupported: built-in servers, repository custom agent profiles, and Copilot in the cloud on GitHub Actions. Plan another control for each. <span class="tg v">verified</span></span></li>
+      <li><span>Unmanaged consultant laptops: do not assume device policy delivery. Use a managed cloud desktop with tested network and transfer controls. <span class="tg r">recommendation</span></span></li>
+      <li><span>First start without a cached policy is not established for clients other than Copilot CLI. Deliver mandatory restrictions locally and test with the network off. <span class="tg u">unverified</span></span></li>
+    </ul>
+    <details class="deep"><summary>Full detail, setup steps, decision order and client table<span>2.3</span></summary><div class="body">
+      <ol>
+<li><strong>Company accounts only.</strong> Use the documented account and network controls below. Their effectiveness depends on the account, client and enforced network path:<ul>
+<li>Managed user accounts (Enterprise Managed Users) cannot sign up for Copilot Pro or Free. They need a Copilot Business or Enterprise seat. <span class="tg v">verified</span></li>
+<li><span class="pp"><strong>Subscription-based network routing</strong> (GitHub.com only): allow your plan's endpoint on the firewall and block the personal-plan endpoint. It covers inline suggestions and chat in VS Code, Visual Studio and JetBrains, Copilot Chat on GitHub, GitHub Mobile and the CLI. It is not supported on GHE.com. Members need minimum client versions. <span class="tg v">verified</span> We did not test it.</span><span class="pp">Test it from a consultant path before you rely on it. <span class="tg r">recommendation</span></span></li>
+<li>For Enterprise Managed Users, "Enterprise access restrictions" can reject non-enterprise accounts on supported endpoints through an inspecting proxy that injects the enterprise header. The enterprise owner must enable it. SSH and other unsupported paths need separate restrictions. <span class="tg v">verified</span></li>
+</ul>
+</li>
+<li><strong>Create one policy repo.</strong> GitHub documents storing the file in a <code>.github-private</code> repository owned by a designated organization. The path is <code>copilot/managed-settings.json</code>. GitHub recommends internal visibility and limiting edits to administrators and AI managers. <span class="tg v">verified</span><ul>
+<li>Settings reach all users who get a Copilot license from your enterprise, on a supported client, within about an hour.</li>
+<li>Two other ways exist. MDM sets each key as a string value (Windows registry <code>HKLM\SOFTWARE\Policies\GitHubCopilot</code>, or the macOS <code>com.github.copilot</code> domain). Clients check hourly. Linux has no MDM path. <span class="tg v">verified</span></li>
+<li>The file-based way copies <code>managed-settings.json</code> to a fixed folder per operating system, and the client reads it at startup. <span class="tg v">verified</span></li>
+<li>Copilot CLI on macOS and Linux requires the local policy file to be a regular root-owned file, not a symbolic link, with no group or world write permission. <span class="tg v">verified</span></li>
+<li>For ordinary keys, precedence is MDM, server-managed, file-based, then user settings. MCP allowlists intersect and denylists combine across sources, rather than simply replacing lower-priority values. <span class="tg v">verified</span></li>
+</ul>
+</li>
+<li><strong>Allow by URL or command.</strong> Each entry must contain exactly one of <code>serverName</code>, <code>serverUrl</code> or <code>serverCommand</code>. <span class="tg v">verified</span><ul>
+<li><code>serverName</code> matches the user-assigned label exactly and case-sensitively. No wildcards. Users choose labels, so use URL or command matching to enforce server identity. <span class="tg v">verified</span></li>
+<li><code>serverUrl</code> accepts <code>*</code> wildcards. It applies to remote servers only.</li>
+<li><code>serverCommand</code> is a list. It must match the command and every argument, in order. It applies to local servers only.</li>
+</ul>
+</li>
+<li><strong>How GitHub decides [verified]:</strong><ol>
+<li>Built-in default servers, such as the built-in GitHub MCP server, are always allowed and cannot be blocked by deny rules.</li>
+<li>A match in <code>deniedMcpServers</code> blocks the server. Deny wins over allow.</li>
+<li>If <code>allowedMcpServers</code> exists, anything not matched is blocked. If the key is omitted, all servers are allowed unless denied. An empty list blocks everything except built-in servers.</li>
+<li>A URL or command with an unresolved <code>${VARIABLE}</code> is blocked.</li>
+<li>With several sources, a server must match an allow entry at every layer that defines one (intersection of allowlists). A deny rule from any source blocks it (union of denylists).</li>
+</ol>
+</li>
+<li><strong>Malformed MCP policy fails closed.</strong> A malformed allowlist or denylist is treated as an empty allowlist. Everything except built-in default servers is blocked. <span class="tg v">verified</span><ul>
+<li>If a client cannot determine a policy layer because of a retrieval error, it keeps the previously enforced policy. That can become stricter but not looser. <span class="tg v">verified</span></li>
+<li>In Copilot CLI, if the request fails and no cached response exists, the server-managed policy is unavailable for that session. For limits that must always hold, GitHub advises MDM or file-based delivery. <span class="tg v">verified</span></li>
+<li>The setting <code>forceRemoteSettingsRefresh: true</code> requires a fresh download at startup in Copilot CLI, VS Code and the Copilot app. In the CLI and the app it skips the one-hour cache and blocks fallback to an older policy. In VS Code, Copilot features stay blocked until the download succeeds. Users need a network connection at start. <span class="tg v">verified</span></li>
+<li>To apply it from the first startup, deliver this key by MDM or file, not server-managed. Policy helper scripts cannot set it. <span class="tg v">verified</span></li>
+<li>For the GitHub MCP registry policy in VS Code (1.145 and later): if no policy is cached and the first fetch fails, the registry policy alone does not restrict MCP access. The ChatMCP device policy covers that case (VS Code page, checked 2026-11-05). <span class="tg v">verified</span></li>
+<li>First-start behavior without a cached server-managed policy and with this key off is not established here for other clients. <span class="tg u">unverified</span> Deliver mandatory restrictions locally and test startup with the network unavailable. <span class="tg r">recommendation</span></li>
+</ul>
+</li>
+<li>
+<p><strong>Add VS Code device policies</strong> on managed devices (Group Policy, Intune, macOS profiles; Linux uses <code>/etc/vscode/policy.json</code> from VS Code 1.106). <span class="tg v">verified</span> Policies named on the VS Code page:</p>
+<ul>
+<li><code>ChatAllowedMcpServers</code>, <code>ChatDeniedMcpServers</code>, <code>ChatAllowManagedMcpServersOnly</code></li>
+<li><code>ChatMCP</code> (setting <code>chat.mcp.access</code>, "Controls access to installed Model Context Protocol servers")</li>
+<li><code>ChatAgentMode</code> (setting <code>chat.agent.enabled</code>)</li>
+<li><code>ChatCopilotConnectors</code>, <code>AllowedExtensions</code></li>
+</ul>
+<p>If a Copilot managed setting and a device policy cover the same control, the Copilot setting wins. The values are not merged. <span class="tg v">verified</span> Configure each control in one place. <span class="tg r">recommendation</span>
+7. <strong>Check the result</strong> with <strong>Developer: Policy Diagnostics</strong>. It shows the effective value and its source. <span class="tg v">verified</span></p><p>Windows device policy applies at the next VS Code start; some policies also require restarting Windows. <span class="tg v">verified</span>
+8. <strong>Switch off what you do not need:</strong> agent mode, unapproved extensions, connectors. <span class="tg r">recommendation</span></p>
+</li>
+</ol>
+<p>Illustrative file using GitHub's documented matcher shape. The URL is a placeholder; the package commands are real examples, not approved deployments. <span class="tg v">verified shape; entries are examples</span></p>
+<p>For deployment, review and pin local packages and protect their installation paths. Exact command matching does not establish the integrity or safety of the executable it starts. <span class="tg r">recommendation</span></p>
+<pre><code class="language-json">{
+  &quot;allowedMcpServers&quot;: [
+    { &quot;serverUrl&quot;: &quot;https://mcp.example.corp/docs/*&quot; },
+    { &quot;serverCommand&quot;: [&quot;npx&quot;, &quot;@playwright/mcp@latest&quot;] }
+  ],
+  &quot;deniedMcpServers&quot;: [
+    { &quot;serverCommand&quot;: [&quot;npx&quot;, &quot;-y&quot;, &quot;@modelcontextprotocol/server-filesystem&quot;, &quot;/&quot;] }
+  ]
+}
+</code></pre>
+<p>An allowlist blocks unmatched servers within its supported scope, apart from built-in exemptions. Use deny rules to revoke individual matches, including matches under a broader allow entry. <span class="tg r">recommendation</span></p>
+<p><strong>Which clients obey the file.</strong> GitHub's client table has these columns: Copilot CLI, VS Code, the GitHub Copilot app, Copilot in the cloud (sandbox), Copilot in the cloud (GitHub Actions), JetBrains IDEs. </p>
+<p>For both MCP keys, the table marks every column as supported except Copilot in the cloud (GitHub Actions). <span class="tg v">verified: table cells read in the page on 2026-11-05</span></p>
+<p><strong>Approval workflow [recommendation]:</strong> require pull request review, a recorded reason and protected default-branch updates. Git alone does not require review. Merging the file also does not prove that every client has received the policy.</p>
+<p><strong>Registry policy.</strong> GitHub also has a custom MCP registry policy (Allow all, or Registry only). It works with Azure API Center, using the base URL without <code>/v0.1/servers</code>. GitHub marks it <strong>public preview, "not prioritized for development"</strong>, and "not the recommended method". <span class="tg v">verified</span></p>
+<p>Matching uses name or ID only, and users can bypass it by editing config files. GitHub advises setting it to Allow all when you use the allowlist. Do not use it as the main control. <span class="tg v">verified</span></p>
+<p><strong>Unmanaged consultant laptops.</strong> Do not assume device policy delivery to an unenrolled consultant laptop. <span class="tg r">recommendation</span> Server-managed settings follow the signed-in account and apply only to users who get a Copilot license from your enterprise. <span class="tg v">verified</span></p>
+<p>A supported client receives server-managed settings for the consultant's enterprise-licensed signed-in account. Switching to a separately licensed personal account does not carry those account-based settings over. A personal Copilot plan can be blocked on your network by the firewall control above.</p>
+<p>We did not test it. Test it from the consultant path before you rely on it. <span class="tg r">recommendation</span> Use a managed cloud desktop with tested network and transfer controls. <span class="tg r">recommendation</span></p>
+    </div></details>
+  </section>
+
+  <section class="sec" id="s24" aria-labelledby="h24">
+    <header class="sh"><span class="num">2.4</span><h2 id="h24">Governing which MCP servers are allowed</h2>
+    <p class="goal"><b>Goal</b>One approved list in Git. Approval, deployment and enforcement are separate steps. <span class="tg r">recommendation</span></p></header>
+
+    <figure>
+      <div class="fig-scroll mid">
+<svg class="fg" viewBox="0 0 1000 470" role="img" aria-labelledby="t24 d24">
+<title id="t24">MCP server approval flow</title>
+<desc id="d24">A team asks for an MCP server in a pull request. Security review either closes it with a reason or merges it into the approved list in Git. The list is published to four places: VS Code and GitHub Copilot, the Agent 365 registry, Foundry, and Azure API Center. Approved use is monitored. An incident or failed review blocks gateway and client access and revokes backend permissions.</desc>
+<text class="zl" x="10" y="16">1. ASK</text>
+<text class="zl" x="225" y="16">2. REVIEW</text>
+<text class="zl" x="420" y="16">3. LIST</text>
+<text class="zl" x="620" y="16">4. PUBLISH TO EACH PRODUCT</text>
+<text class="zl" x="858" y="16">5. USE</text>
+
+<rect class="box" x="10" y="150" width="180" height="84"/>
+<text class="t" x="100" y="176">Team asks</text>
+<text class="s" x="100" y="196">pull request with owner,</text><text class="s" x="100" y="212">purpose, data, risk tier</text>
+<path class="ln" d="M190 192H223" marker-end="url(#arr)"/>
+
+<rect class="box" x="225" y="150" width="140" height="84"/>
+<text class="t" x="295" y="186">Security review</text><text class="s" x="295" y="206">checklist</text>
+<path class="ln" d="M365 192H418" marker-end="url(#arr)"/>
+<text class="al" x="371" y="182">approved</text>
+<path class="ln" d="M295 234V292" marker-end="url(#arr)"/>
+<text class="al" x="303" y="268">rejected</text>
+<rect class="box" x="225" y="294" width="140" height="50"/>
+<text class="t" x="295" y="323">Closed with reason</text>
+
+<rect class="box" x="420" y="150" width="160" height="84"/>
+<text class="t" x="500" y="176">Approved list</text><text class="s" x="500" y="196">merged into Git,</text><text class="s" x="500" y="212">reviewed pull request</text>
+<path class="ln" d="M580 192H600"/>
+<path class="ln" d="M600 52V310"/>
+<path class="ln" d="M600 52H618" marker-end="url(#arr)"/>
+<path class="ln" d="M600 138H618" marker-end="url(#arr)"/>
+<path class="ln" d="M600 224H618" marker-end="url(#arr)"/>
+<path class="ln" d="M600 310H618" marker-end="url(#arr)"/>
+
+<rect class="box" x="620" y="22" width="210" height="60"/>
+<text class="t" x="725" y="46">VS Code and GitHub Copilot</text><text class="s" x="725" y="66">managed-settings.json</text>
+<rect class="box pv" x="620" y="108" width="210" height="60"/>
+<text class="t" x="725" y="132">Agent 365 registry</text><text class="s" x="725" y="152">approve, Entra consent, preview</text>
+<rect class="box pv" x="620" y="194" width="210" height="60"/>
+<text class="t" x="725" y="218">Foundry</text><text class="s" x="725" y="238">tool policy and API Management</text>
+<rect class="box cat" x="620" y="280" width="210" height="60"/>
+<text class="t" x="725" y="304">Azure API Center</text><text class="s" x="725" y="324">catalog entry, discovery only</text>
+
+<path class="ln" d="M830 52H846V190"/>
+<path class="ln" d="M830 138H846"/>
+<path class="ln" d="M830 224H846V190"/>
+<path class="ln" d="M846 190H860" marker-end="url(#arr)"/>
+<rect class="box" x="860" y="150" width="130" height="84"/>
+<text class="t" x="925" y="186">Allowed</text><text class="s" x="925" y="206">in use</text>
+<path class="ln" d="M925 234V272" marker-end="url(#arr)"/>
+<rect class="box" x="860" y="274" width="130" height="66"/>
+<text class="t" x="925" y="300">Monitor</text><text class="s" x="925" y="320">Defender and logs</text>
+<path class="ln pv" d="M925 340V402H832" marker-end="url(#arrr)"/>
+<text class="al r" x="720" y="388">incident or review fails</text>
+<rect class="box pv" x="620" y="372" width="210" height="62"/>
+<text class="t" x="725" y="396">Kill</text><text class="s" x="725" y="416">block gateway and client access,</text><text class="s" x="725" y="430">revoke backend permissions</text>
+</svg>
+      </div>
+      <figcaption><b>Why the last step matters.</b>A gateway block applies only to traffic that uses that gateway. Revoke backend access and restrict alternate paths where you need a hard stop. The catalog entry is for discovery and does not stop direct connections.</figcaption>
+    </figure>
+
+    <h3 style="font-size:1.05rem;margin-top:8px">Risk tiers <span class="tg r">recommendation</span></h3>
+    <p class="muted" style="font-size:0.92rem;max-width:46rem">Apply the highest applicable tier. Publicly reachable endpoints operated by your organization are different from third-party operated servers. The squares show how much human approval each tier needs.</p>
+    <ol class="tiers">
+      <li><span class="n">1</span><span class="what">Read-only, internal, no sensitive data</span><span class="ex">Internal docs search</span><span class="apt"><span class="ap" aria-hidden="true"><i class="f"></i><i></i><i></i><i></i></span><span>Auto-approve if the checklist passes</span></span></li>
+      <li><span class="n">2</span><span class="what">Read-only, sensitive data</span><span class="ex">HR or finance reads</span><span class="apt"><span class="ap" aria-hidden="true"><i class="f"></i><i class="f"></i><i></i><i></i></span><span>Security and data owner</span></span></li>
+      <li><span class="n">3</span><span class="what">Can change data or call out</span><span class="ex">Create tickets, send mail, deploy</span><span class="apt"><span class="ap" aria-hidden="true"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span>Security, data owner, and a human approval step at run time</span></span></li>
+      <li><span class="n">4</span><span class="what">Third-party operated or untrusted code</span><span class="ex">Community MCP servers</span><span class="apt"><span class="ap" aria-hidden="true"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span>Default no. Exception process only</span></span></li>
+    </ol>
+    <h3 style="font-size:1.05rem;margin-top:8px">Server checklist <span class="tg r">recommendation</span></h3>
+    <p class="muted" style="font-size:0.92rem">Copy this into the pull request template. Every item needs an answer.</p>
+    <ul class="chk">
+      <li>Named owner</li><li>Purpose</li><li>Publisher and source</li><li>Authentication type</li><li>Data it can read</li><li>Actions it can take</li><li>Logging available</li><li>How to disable it</li><li>Review date</li>
+    </ul>
+
+    <details class="deep"><summary>Full detail, enforcement table and Agent 365 registry facts<span>2.4</span></summary><div class="body">
+      <p>One approved list, several kinds of enforcement. This is a proposed workflow <span class="tg r">recommendation</span>. Approval, deployment and enforcement are separate steps. Gateway blocks apply to traffic using that gateway; revoke backend access and restrict alternate paths where required.</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Where the MCP server runs</th>
+<th>What enforces the list</th>
+<th>Strength</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code and GitHub Copilot</td>
+<td><code>managed-settings.json</code> allow and deny rules</td>
+<td>Generally available for supported clients and keys, with built-in exemptions. Not for repository custom agent profiles, and the client table shows no support in Copilot in the cloud (GitHub Actions). <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Copilot Studio, VS Code, Claude Code, GitHub Copilot CLI (remote servers)</td>
+<td>Agent 365 registry: approve, grant consent, block a whole server</td>
+<td><strong>Preview</strong>, for registered gateway traffic <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Copilot Studio tools</td>
+<td>Power Platform data policies. Microsoft says blocking Power Platform connectors also blocks tools in connected MCP servers that rely on those connectors.</td>
+<td>Strong for connector-based servers <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Foundry agents</td>
+<td>Azure Policy for tools (preview), agent tool settings, RBAC, API Management for remote tools</td>
+<td>The approved-endpoint policy can enforce the shared list on tool configuration requests. Existing configurations and runtime calls need separate handling. See 2.6. <span class="tg v">verified; tenant behavior to test</span></td>
+</tr>
+<tr>
+<td>Local <code>stdio</code> servers on a laptop</td>
+<td>GitHub <code>serverCommand</code> allowlist (exact command and arguments) and VS Code policies</td>
+<td>Works where the clients obey the file. Wildcards are not supported. <span class="tg v">verified; coverage per client to pilot</span></td>
+</tr>
+<tr>
+<td>Catalog only</td>
+<td>Azure API Center</td>
+<td>VS Code and GitHub Copilot can use it for discovery. Do not assume this blocks direct connections. <span class="tg v">verified for discovery; recommendation for enforcement</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Agent 365 BYO MCP registry facts [verified 2026-11-05]:</strong></p>
+<ul>
+<li>Path: Microsoft 365 admin center, <strong>Agents, Tools</strong>. Requests appear under <strong>Requests (preview)</strong>. Registry is under Agents, Tools, Registry.</li>
+<li>Roles: AI Administrator or Global Administrator.</li>
+<li>Flow: approve the request, then grant Entra consent. Gateway use requires that approval and consent flow.</li>
+<li>Block or unblock a whole server. Blocking also disables its tools and dependent plugins.</li>
+<li>Tool-level on/off is rolling out for supported server types. For bring-your-own servers it is "planned for a future release".</li>
+<li>The server needs a <strong>publicly accessible endpoint</strong>. Developers need Agent 365 CLI 1.1.165-preview or later and the Agent 365 service principal in your tenant.</li>
+<li>Allowed authentication: NoAuth, API key (header or query), external OAuth, Entra OAuth. Prefer Entra OAuth and avoid NoAuth. <span class="tg r">recommendation</span></li>
+<li>New versions of a registered server cannot be republished during preview.</li>
+<li>Gateway calls can be found in Defender advanced hunting: <code>CloudAppEvents | where ActionType in ("ExecuteToolByGateway")</code>. The bring-your-own MCP page gives this sample query.</li>
+</ul>
+    </div></details>
+  </section>
+
+  <section class="sec" id="s25" aria-labelledby="h25">
+    <header class="sh"><span class="num">2.5</span><h2 id="h25">Copilot Studio</h2>
+    <p class="goal"><b>Goal</b>Makers build in separate environments, under rules they cannot loosen.</p></header>
+    <ul class="glance two">
+      <li><span>Separate environments for development, test and production, with a gated release to production. <span class="tg r">recommendation</span></span></li>
+      <li><span>Tenant data policies can allow or block channels, knowledge sources, connectors, unauthenticated use and generative AI publishing. <span class="tg v">verified</span></span></li>
+      <li><span>Block the connector "Chat without Microsoft Entra ID authentication in Copilot Studio". Then makers cannot publish agents without authentication. <span class="tg v">verified</span></span></li>
+      <li><span>Environment groups apply one rule set to every member environment, with no per-environment exceptions. <span class="tg v">verified</span></span></li>
+      <li><span>MCP: connector blocking covers connector-based tools. For other paths, test direct and gateway calls. Nothing was tested in a tenant. <span class="tg r">recommendation</span></span></li>
+    </ul>
+    <details class="deep"><summary>Full detail<span>2.5</span></summary><div class="body">
+      <ul>
+<li><strong>Separate environments</strong> for development, test and production, with a gated release to production. <span class="tg r">recommendation; Microsoft's zoned governance page uses zones</span></li>
+<li><strong>Tenant data policies</strong> can allow or block: unauthenticated usage, individual channels, knowledge sources, individual connectors, Azure Bot Service skills, and Application Insights integration. Tenant policy can also allow or block publishing of agents that use generative AI. <span class="tg v">verified, checked 2026-11-05</span></li>
+<li><strong>Require authentication:</strong> block the connector "Chat without Microsoft Entra ID authentication in Copilot Studio". Then makers cannot publish agents without authentication. <span class="tg v">verified</span></li>
+<li><strong>Maker credentials:</strong> tools support end-user or maker-provided credentials; user authentication is the default. <span class="tg v">verified</span> Require end-user credentials for shared agents that must preserve each user's access limits. Review credential configuration before release; the cited data-policy page does not establish a universal switch that bans maker credentials. <span class="tg r">recommendation</span></li>
+<li><strong>Environment groups</strong> hold only managed environments. A published rule is enforced in every member environment and becomes read-only there. There are no per-environment exceptions. <span class="tg v">verified</span><ul>
+<li>Rules include: accessing conversation transcripts, generative AI settings, external models, knowledge sources, sharing agents with Editor or Viewer permission, and Skills in Copilot Studio. <span class="tg v">verified</span></li>
+<li>One group rule set covers many environments, which keeps admin work low. <span class="tg i">inference</span></li>
+</ul>
+</li>
+<li><strong>MCP:</strong> connector blocking covers MCP tools that rely on those connectors (see 2.4). <span class="tg v">verified</span> For other paths, require approved connections, restrict maker privileges and test both direct and gateway calls. Agent 365 registration alone does not prove default-deny enforcement. Nothing was tested in a tenant. <span class="tg r">recommendation</span></li>
+<li>Advanced connector policies in the Power Platform admin center are for the stricter zones. <span class="tg v">verified</span></li>
+</ul>
+    </div></details>
+  </section>
+
+  <section class="sec" id="s26" aria-labelledby="h26">
+    <header class="sh"><span class="num">2.6</span><h2 id="h26">Microsoft Foundry</h2>
+    <p class="goal"><b>Goal</b>Separate projects, narrow roles, approved models and tools, no keys.</p></header>
+    <ul class="glance two">
+      <li><span>Separate projects for dev, test and production. Microsoft treats this as guidance, not a setting. <span class="tg v">verified as guidance</span></span></li>
+      <li><span>Entra RBAC and agent identity. Name an owner and sponsor for every agent. <span class="tg v">verified</span> <span class="tg r">recommendation</span></span></li>
+      <li><span>Network isolation: private endpoint inbound, supported VNet injection or managed networking outbound. <span class="tg v">verified</span></span></li>
+      <li><span>Approved models by Azure Policy are generally available. Approved tools by Azure Policy are <span class="tg pv">preview</span>. <span class="tg v">verified</span></span></li>
+      <li><span>Deny rejects noncompliant create or update requests. It does not remove tools from existing agents or block calls at runtime. <span class="tg v">verified</span> <span class="tg u">runtime not tested</span></span></li>
+      <li><span>The Foundry AI gateway is <span class="tg pv">preview</span> and covers only new MCP tools created in the portal that do not use managed OAuth. Verify routing for each tool. <span class="tg v">verified</span></span></li>
+    </ul>
+    <details class="deep"><summary>Full detail<span>2.6</span></summary><div class="body">
+      <p>All points below were read on Microsoft Learn on 2026-11-05 unless tagged otherwise.</p>
+<ul>
+<li><strong>Separate projects</strong> for dev, test and production. Microsoft's planning page treats this as guidance, with a prod policy that "defaults to isolation". <span class="tg v">verified as guidance, not a setting</span></li>
+<li><strong>Entra RBAC.</strong> Roles include Foundry Agent Consumer, Foundry User, Foundry Project Manager, Foundry Account Owner and Foundry Owner. Microsoft says to prefer Entra ID and RBAC and use API keys only where role granularity is not needed. A key grants access to its resource without RBAC role restrictions. <span class="tg v">verified</span></li>
+<li><strong>Agent identity.</strong> The current model provisions a unique blueprint and default-instance identity; legacy agents can retain a shared project identity. On-behalf-of agent identity is <strong>preview</strong>. <span class="tg v">verified</span> Name an owner and sponsor for every agent. <span class="tg r">recommendation</span></li>
+<li><strong>Network isolation.</strong> Inbound: disable public access and use a private endpoint. Outbound: use supported VNet injection or managed networking. Managed modes allow internet outbound, allow only approved outbound, or disable managed isolation. Once enabled, managed isolation cannot be disabled; approved-only cannot revert to internet outbound. The CLI group is preview. <span class="tg v">verified</span></li>
+<li><strong>Approved models by policy.</strong> Built-in Azure Policy definitions "Foundry model deployments should only use approved models" and "...should meet eligibility requirements" are generally available. <span class="tg v">verified</span></li>
+<li><strong>Approved tools by policy.</strong> Two <strong>preview</strong> built-in definitions: "Microsoft Foundry agents and toolboxes should only use approved tools" and "...should not use denied tools". They cover tool types, MCP endpoints and MCP connectors. Effects: Audit, Deny, Disabled. <span class="tg v">verified, policy index checked 2026-11-05</span></li>
+<li><strong>Feed the approved MCP endpoints from Git into Azure Policy.</strong> For endpoint-level default deny, keep <code>mcp</code> out of <code>approvedToolTypes</code>; the policy treats any approved tool type as allowed independently of its endpoint. Its Deny effect rejects noncompliant create or update requests. <span class="tg v">verified, policy definition checked 2026-11-05</span></li>
+<li><span class="pp"><strong>Handle existing agents and runtime separately.</strong> Azure Policy compliance can identify existing noncompliant configurations, but Deny does not itself remove their tools or establish that invocation is blocked. Remove or update affected tools, then test existing and new agents.</span><span class="pp">For runtime enforcement, mediate calls through a supported gateway or revoke backend access and close direct paths. <span class="tg r">recommendation; runtime behavior not tested</span></span></li>
+<li><strong>Secrets:</strong> use managed identity and Key Vault, and never put keys in code. <span class="tg r">recommendation</span></li>
+<li><strong>Turn off keys.</strong> Assign the built-in policy "Azure AI Services resources should have key access disabled (disable local authentication)" at subscription or resource group level, or set <code>disableLocalAuth</code> to true in the template. The change can take up to several hours to apply. Verify key-based requests fail before treating authentication as disabled. <span class="tg v">verified, checked 2026-11-05</span></li>
+<li><strong>Remote tools through API Management.</strong> The Foundry AI gateway is <strong>preview</strong>. It routes only new MCP tools created in the Foundry portal that do not use managed OAuth. It does not support SharePoint, code-first MCP tools, managed OAuth tools or OpenAPI tools. It does not log tool traces.<ul>
+<li>Routing is applied only when the tool is created, so existing tools are not covered.</li>
+<li>The documented workflow applies API Management policies in the Azure portal; the Foundry portal does not expose this step.</li>
+<li><strong>Verify routing for each tool.</strong> <span class="tg v">verified, checked 2026-11-05</span></li>
+</ul>
+</li>
+<li>Protect traces and logs as sensitive data. They can contain prompts and customer content. <span class="tg r">recommendation</span></li>
+</ul>
+    </div></details>
+  </section>
+
+  <section class="sec" id="s27" aria-labelledby="h27">
+    <header class="sh"><span class="num">2.7</span><h2 id="h27">Microsoft 365 Copilot and your data</h2>
+    <p class="goal"><b>Goal</b>Copilot can only reach what is safe for it to reach.</p></header>
+    <ul class="glance two">
+      <li><span>Copilot works within existing permissions. Treat oversharing as one risk next to prompt injection and tool misuse. <span class="tg v">verified</span> <span class="tg r">recommendation</span></span></li>
+      <li><span>Find and fix oversharing with SharePoint Advanced Management and Data Security Posture Management. <span class="tg v">verified</span></span></li>
+      <li><span>Apply sensitivity labels and DLP for Copilot. Sensitive-prompt blocking is <span class="tg pv">preview</span>. DLP cannot scan files uploaded directly into prompts. <span class="tg v">verified</span></span></li>
+      <li><span>Verify auditing is on. Do not assume the audit event holds the full prompt or response. <span class="tg v">verified for documented fields</span></span></li>
+    </ul>
+    <details class="deep"><summary>Full detail<span>2.7</span></summary><div class="body">
+      <p>Copilot works within existing permissions. Microsoft says it "only accesses data that users are authorized to access". <span class="tg v">verified</span> Treat oversharing as one risk alongside prompt injection and tool misuse; existing user permissions do not establish that an agent's actions are safe. <span class="tg r">recommendation</span></p>
+<ol>
+<li><strong>Find and fix oversharing.</strong> SharePoint Advanced Management is included when at least one user has a Copilot license (true in E7). Some features, such as restricted site creation, need the SharePoint Advanced Management Plan 1 add-on. <span class="tg v">verified</span> Restricted Content Discovery limits organization-wide discovery; it leaves permissions and direct access intact. <span class="tg v">verified</span></li>
+<li><span class="pp"><strong>Use Data Security Posture Management (DSPM).</strong> It offers default and custom data risk assessments to find and fix oversharing. <span class="tg v">verified, checked 2026-11-05</span> The default assessment runs weekly for the top 100 SharePoint sites by usage, and for the top 100 Fabric workspaces once Fabric is set up. <span class="tg v">verified</span></span><span class="pp">The cited 2025-12-15 licensing page describes <strong>classic DSPM</strong>, while the assessment page describes current DSPM. Do not use the classic page alone to establish current assessment entitlement. Check the current Purview service description and applicable feature licensing before rollout. <span class="tg r">recommendation</span></span></li>
+<li><strong>Apply sensitivity labels</strong> and use DLP for Copilot. DLP can block external web search for prompts containing configured sensitive information types and exclude files or emails with selected labels from processing. Sensitive-prompt blocking is <strong>preview</strong>, with tenant rollout to verify. DLP cannot scan files uploaded directly into prompts. Label-based exclusions may still leave items in citations. <span class="tg v">verified</span></li>
+<li><strong>Verify auditing is enabled.</strong> Copilot audit records identify interactions, message IDs and accessed resources. Do not assume the audit event contains full prompt or response text. <span class="tg v">verified for documented fields; recommendation for investigation planning</span></li>
+</ol>
+    </div></details>
+  </section>
+
+  <section class="sec" id="s28" aria-labelledby="h28">
+    <header class="sh"><span class="num">2.8</span><h2 id="h28">Safe release path for agents</h2>
+    <p class="goal"><b>Goal</b>Nothing reaches production without review, tests and an owner. <span class="tg r">recommendation</span></p></header>
+    <ol class="flow">
+      <li><span class="n">1</span><h3>Build</h3><p>In an approved dev environment</p></li>
+      <li><span class="n">2</span><h3>Review</h3><p>Pull request review and security scans</p></li>
+      <li><span class="n">3</span><h3>Test the agent</h3><p>Prompt injection, data leak, tool misuse</p></li>
+      <li class="gate"><span class="n">4</span><h3>Approve</h3><p>Owner and security</p></li>
+      <li><span class="n">5</span><h3>Isolated test</h3><p>Separate from production</p></li>
+      <li><span class="n">6</span><h3>Promote</h3><p>Through CI/CD to production</p></li>
+      <li><span class="n">7</span><h3>Monitor</h3><p>Identity, tool calls, traces</p></li>
+    </ol>
+    <div class="returns">
+      <p><b>REJECTED</b><span>Back to step 1, Build.</span></p>
+      <p><b>FINDING OR INCIDENT</b><span>Disable the agent, revoke access, roll back.</span></p>
+    </div>
+    <h3 style="font-size:1.05rem;margin-top:8px">Rules for agents that act <span class="tg r">recommendation</span></h3>
+    <ul class="glance two">
+      <li><span>The agent never holds direct high-impact write access.</span></li>
+      <li><span>It makes a request. A human approves high-impact changes. A rules service may approve explicitly bounded, low-impact actions. A separate, narrowly scoped identity executes it.</span></li>
+      <li><span>Permissions are checked at the data source and the API, never only in the prompt.</span></li>
+      <li><span>No secrets in prompts, source code or traces.</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="s29" aria-labelledby="h29">
+    <header class="sh"><span class="num">2.9</span><h2 id="h29">Monitoring and inventory</h2>
+    <p class="goal"><b>Goal</b>Know who runs what, and see it when something changes.</p></header>
+    <ul class="glance two">
+      <li><span>Entra sign-in logs show who signs in and from where.</span></li>
+      <li><span>GitHub audit log streams to several targets. Sentinel has two GitHub connectors, and the page that lists them says Sentinel data connectors are in preview. <span class="tg v">verified</span></span></li>
+      <li><span>Agent 365 shows inventory and activity for named platforms. Connected-platform observability is a Frontier preview. <span class="tg v">verified</span></span></li>
+      <li><span>MCP calls through the gateway show in Defender advanced hunting.<span class="tg v">verified</span></span></li>
+      <li><span>Alert on blocked MCP attempts, new agents, new connectors and agents used by a guest. <span class="tg r">recommendation</span></span></li>
+    </ul>
+    <details class="deep"><summary>Full detail, sources per need<span>2.9</span></summary><div class="body">
+      <div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Need</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Who is signing in, from where</td>
+<td>Entra sign-in logs</td>
+</tr>
+<tr>
+<td>Code and Copilot policy events</td>
+<td>GitHub audit log. GitHub can stream it to Amazon S3, Azure Blob Storage, Azure Event Hubs, Datadog, Google Cloud Storage, Splunk and Microsoft Purview. Purview streaming is public preview, limited to Copilot agent session events, and available for Enterprise Managed Users or GitHub Enterprise Cloud with data residency. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>GitHub audit log in Sentinel, connector 1</td>
+<td>Uses the Codeless Connector Framework. Needs an Enterprise admin and a classic personal access token with <code>read:audit_log</code>. Works only with GitHub Enterprise Cloud (table <code>GitHubAuditLogsV2_CL</code>). <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>GitHub audit log in Sentinel, connector 2</td>
+<td>Reads from Azure Blob Storage on an Azure Data Lake Storage Gen2 account (table <code>GitHubAuditLogsV3_CL</code>). Needs Entra admin consent. Not supported in Azure Government. Microsoft recommends it over connector 1 above about 10,000 events per 15 minutes. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Sentinel connector status</td>
+<td>Source: Microsoft's connector reference introduction and GitHub entries, checked 2026-11-05. The page says Sentinel data connectors are currently in preview, with no per-connector marking for these two. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Agent inventory and activity</td>
+<td>Agent 365 and the Microsoft 365 admin center. Named platforms: Copilot Studio, SharePoint, Agent Builder, AI Foundry, Agents Toolkit. Connected platforms use manual synchronization: Amazon Bedrock, Google Vertex AI, Salesforce Agentforce, Databricks Genie, Claude Managed Agents, Oracle Generative AI Agents and Snowflake Cortex Agents. <span class="tg v">verified</span> Add each product's own inventory.</td>
+</tr>
+<tr>
+<td>Third-party activity coverage</td>
+<td>Connected-platform observability is a Frontier preview. Oracle and Snowflake observability are listed as coming soon; registry synchronization does not supply code-level SDK capabilities. <span class="tg v">verified, checked 2026-11-05</span></td>
+</tr>
+<tr>
+<td>MCP tool calls through the gateway</td>
+<td>Defender advanced hunting (see 2.4)</td>
+</tr>
+<tr>
+<td>Data protection and investigation</td>
+<td>Purview DLP for supported scenarios; audit metadata and separately authorized content investigation. Verify coverage per workload. <span class="tg r">recommendation</span></td>
+</tr>
+<tr>
+<td>Alerts</td>
+<td>Sentinel rules for: blocked MCP attempts, new agent created, new connector added, agent used by a guest <span class="tg r">recommendation</span></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+    </div></details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section id="part3" aria-labelledby="h3">
+    <div class="part">
+      <p class="lbl"><b>Part 3</b> · All rows are recommendations</p>
+      <h2 id="h3">Keeping admin work low</h2>
+    </div>
+    <div class="blk" style="margin-top:20px">
+      <p class="sub">The vendor features these rows rely on are tagged in Part 2.</p>
+      <div class="body"><div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Principle</th>
+<th>In practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Policy as code</td>
+<td>MCP allowlist and Copilot settings in Git. Require reviewed pull requests and confirm deployed policy versions.</td>
+</tr>
+<tr>
+<td>Groups, not people</td>
+<td>Access by Entra group tied to project. Use group-backed permissions where supported; verify provisioning, removal and direct grants.</td>
+</tr>
+<tr>
+<td>Time limits by default</td>
+<td>Consultant access, privileged roles and MCP exceptions all expire. Configure expiry and a documented renewal workflow for each system.</td>
+</tr>
+<tr>
+<td>Auto-approve the low tier</td>
+<td>Tier 1 MCP servers pass if the checklist is complete. Humans only look at tiers 2 to 4.</td>
+</tr>
+<tr>
+<td>Report-only first</td>
+<td>Run new Conditional Access rules in report-only mode, then enforce. Microsoft recommends this for agent policies.</td>
+</tr>
+<tr>
+<td>Environment groups</td>
+<td>One rule set for many Power Platform environments.</td>
+</tr>
+<tr>
+<td>One owner per agent</td>
+<td>Owner gets a quarterly "keep or retire" list. Unowned agents are disabled after 30 days.</td>
+</tr>
+<tr>
+<td>Use Microsoft defaults</td>
+<td>Prefer built-in templates, managed environments and Agent 365 views over custom tooling.</td>
+</tr>
+<tr>
+<td>One report, not ten</td>
+<td>A single monthly review pack: new agents, new MCP servers, blocked attempts, expiring access.</td>
+</tr>
+</tbody>
+</table></div>
+<hr /></div>
+    </div>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section id="part4" aria-labelledby="h4">
+    <div class="part">
+      <p class="lbl"><b>Part 4</b> · All rows are recommendations</p>
+      <h2 id="h4">Rollout plan</h2>
+    </div>
+    <div class="blk" style="margin-top:20px">
+      <div class="gantt" role="img" aria-label="Rollout over ten weeks: inventory in weeks 1 to 2, baseline in weeks 2 to 4, pilot in weeks 4 to 6, enforce in weeks 6 to 10, and a monthly check of preview items throughout.">
+        <div class="gr hd"><span class="rl">Phase</span><span class="wk"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i></span></div>
+        <div class="gr"><span class="rl">Inventory</span><span class="trk"><i class="bar" style="left:0;width:20%"></i></span></div>
+        <div class="gr"><span class="rl">Baseline</span><span class="trk"><i class="bar" style="left:10%;width:30%"></i></span></div>
+        <div class="gr"><span class="rl">Pilot</span><span class="trk"><i class="bar" style="left:30%;width:30%"></i></span></div>
+        <div class="gr"><span class="rl">Enforce</span><span class="trk"><i class="bar" style="left:50%;width:50%"></i></span></div>
+        <div class="gr"><span class="rl">Preview re-check</span><span class="trk"><i class="bar r" style="left:0;width:100%"></i></span></div>
+      </div>
+      <p class="muted" style="font-size:0.84rem">Bars follow the "When" column below. Adjacent phases share a week on purpose. The hatched row repeats every month.</p>
+      <div class="body"><div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>When</th>
+<th>Do this</th>
+<th>Done when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weeks 1 to 2</td>
+<td>Inventory: tenants, Foundry projects, Power Platform environments, VS Code AI extensions, MCP configs, external accounts. Name owners.</td>
+<td>Every item has an owner.</td>
+</tr>
+<tr>
+<td>Weeks 2 to 4</td>
+<td>Baseline: MFA, consultant access packages, report-only Conditional Access for agents, GitHub policy repo with an empty MCP allowlist (built-in servers remain exempt), Studio data policies and environment groups, separate Foundry environments, Dev Box clipboard and drive redirection set to off by policy.</td>
+<td>Policies exist and report.</td>
+</tr>
+<tr>
+<td>Weeks 4 to 6</td>
+<td>Pilot one low-risk read-only agent. Try it from a managed device and from the consultant cloud desktop. Test that an unapproved tool configuration is rejected in VS Code, Copilot Studio and Foundry. Separately test existing-agent invocation and backend revocation. Test a personal Copilot account on your network.</td>
+<td>Test results written down.</td>
+</tr>
+<tr>
+<td>Weeks 6 to 10</td>
+<td>Enforce. Add the pull request template, risk tiers and monthly review pack. Turn on Sentinel alerts.</td>
+<td>Enforcement on, no open critical gaps.</td>
+</tr>
+<tr>
+<td>Ongoing</td>
+<td>Re-check the preview items monthly (Agent 365 registry, Foundry gateway, GitHub client coverage, tool-level blocking).</td>
+<td>Gaps closed or accepted in writing.</td>
+</tr>
+</tbody>
+</table></div>
+<hr /></div>
+    </div>
+  </section>
+
+  <!-- ============ PART 5 ============ -->
+  <section id="part5" aria-labelledby="h5">
+    <div class="part">
+      <p class="lbl"><b>Part 5</b> · Read before you rely on any of it</p>
+      <h2 id="h5">Known gaps and what has not been tested</h2>
+    </div>
+    <div class="blk" style="margin-top:20px">
+      <p class="sub"><span class="tg u">Bad news first</span> Nothing here has been run in your tenant. Every place that says "test" is a step for your pilot, not a result.</p>
+      <h3 style="font-size:1.05rem">Preview watchlist</h3>
+      <p class="muted" style="font-size:0.92rem;max-width:46rem">These controls are labelled preview on the vendor pages. Scope, licensing and behavior can change, so re-check them monthly.</p>
+      <div class="tbl-wrap"><table class="tbl watch">
+        <thead><tr><th>Control</th><th>Section</th></tr></thead>
+        <tbody>
+          <tr><td>Agent 365 bring-your-own MCP governance and registry</td><td><a href="#s24">2.4</a></td></tr>
+          <tr><td>Azure Policy for approved and denied Foundry tools</td><td><a href="#s26">2.6</a></td></tr>
+          <tr><td>Foundry AI gateway through API Management</td><td><a href="#s26">2.6</a></td></tr>
+          <tr><td>Foundry managed network CLI group, and on-behalf-of agent identity</td><td><a href="#s26">2.6</a></td></tr>
+          <tr><td>Conditional Access conditions "Agent risk" and "Agent execution environments"</td><td><a href="#s22">2.2</a></td></tr>
+          <tr><td>GitHub MCP registry policy (public preview, "not prioritized for development")</td><td><a href="#s23">2.3</a></td></tr>
+          <tr><td>GitHub audit log streaming to Microsoft Purview (public preview)</td><td><a href="#s29">2.9</a></td></tr>
+          <tr><td>Sentinel GitHub connectors, on a page that says all Sentinel connectors are in preview</td><td><a href="#s29">2.9</a></td></tr>
+          <tr><td>Agent 365 connected-platform observability (Frontier preview)</td><td><a href="#s29">2.9</a></td></tr>
+          <tr><td>DLP blocking of sensitive prompts for Microsoft 365 Copilot</td><td><a href="#s27">2.7</a></td></tr>
+        </tbody>
+      </table></div>
+      <h3 style="font-size:1.05rem;margin-top:10px">The ten gaps</h3>
+      <div class="body"><ol>
+<li><strong>Nothing here has been tested in your tenant.</strong> Each place that says "test" is a step for your pilot, not a result.</li>
+<li><strong>Agent 365 BYO MCP governance is preview.</strong> Scope, licensing, behavior and supported clients can change. Confirm that your tenant has it and your client versions are supported. <span class="tg v">verified</span></li>
+<li><strong>Foundry is not a supported Agent 365 BYO MCP preview client.</strong> The shared Git-approved endpoint list can still govern Foundry tool configuration through its own Azure Policy, currently preview. Deny blocks noncompliant create or update requests; it does not remove existing tools or establish runtime blocking. <span class="tg v">verified; runtime behavior not tested</span></li>
+<li><strong>Local MCP servers:</strong> Microsoft does not describe the gateway as covering them. GitHub's command allowlist can, but needs exact commands. <span class="tg i">inference and verified</span></li>
+<li><strong>Unmanaged consultant laptops:</strong> server-managed settings follow the enterprise-licensed signed-in account. Device-delivered MDM or file policies can remain active across account switches, but their delivery and integrity must be established. <span class="tg v">verified</span> Require a managed cloud desktop and tested network and transfer restrictions. <span class="tg r">recommendation</span> How a personal account behaves on your network is for your pilot to test. <span class="tg r">recommendation</span></li>
+<li><strong>GitHub client support for the MCP keys:</strong> the cloud agent on GitHub Actions is not supported, and custom agent profiles are exempt. Plan another control for both. <span class="tg v">verified</span></li>
+<li><strong>Personal Copilot access:</strong> subscription-based routing needs firewall enforcement. Enterprise access restrictions additionally require Enterprise Managed Users, enterprise configuration and proxy header injection on supported endpoints. Validate unsupported paths separately. <span class="tg v">verified</span></li>
+<li><strong>Guest governance licensing</strong> is now confirmed on Microsoft's guest licensing page. The add-on applies to Governance-exclusive features only. Check which features your access packages use. <span class="tg v">verified</span></li>
+<li><strong>Sentinel GitHub connectors</strong> are on a page that says all Sentinel data connectors are in preview. Treat them as preview. <span class="tg v">verified</span></li>
+<li><strong>Behavior still requiring validation:</strong>
+        - First start without a cached server-managed policy and with <code>forceRemoteSettingsRefresh</code> off is not established here for clients other than Copilot CLI. VS Code separately documents its registry-policy case (see 2.3). <span class="tg u">unverified</span> Deliver mandatory restrictions locally and test failed fetches. <span class="tg r">recommendation</span></li>
+</ol>
+<hr /></div>
+    </div>
+  </section>
+
+  <!-- ============ SOURCES ============ -->
+  <section class="sec" id="sources" aria-labelledby="hs" style="margin-top:56px">
+    <header class="sh"><span class="num">Src</span><h2 id="hs">Sources, read 5 Nov 2026</h2>
+    <p class="goal">78 pages. The date is the one displayed on the page, where there is one.</p></header>
+    <details class="deep"><summary>Show all sources<span>78 links</span></summary><div class="body">
+      <div class="tbl-wrap"><table class="tbl src">
+        <thead><tr><th>Topic</th><th>Link</th><th>Displayed date</th></tr></thead>
+        <tbody>
+<tr><td>E7 vs E3 and E5</td><td class="u"><a href="https://learn.microsoft.com/en-us/copilot/plan/compare-copilot-e3-e5-e7">learn.microsoft.com/en-us/copilot/plan/compare-copilot-e3-e5-e7</a></td><td class="d">2026-11-03</td></tr>
+<tr><td>Agent 365 overview</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview">learn.microsoft.com/en-us/microsoft-agent-365/overview</a></td><td class="d">2026-08-20</td></tr>
+<tr><td>Agent 365 service description</td><td class="u"><a href="https://learn.microsoft.com/en-us/office365/servicedescriptions/microsoft-agent-365/microsoft-agent-365">learn.microsoft.com/en-us/office365/servicedescriptions/microsoft-agent-365/microsoft-agent-365</a></td><td class="d">2026-10-01</td></tr>
+<tr><td>Agent 365 bring-your-own MCP server</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server">learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server</a></td><td class="d">2026-10-23</td></tr>
+<tr><td>Manage tools for agents (admin center)</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-tools-for-agent">learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-tools-for-agent</a></td><td class="d">2026-10-23</td></tr>
+<tr><td>Agent 365 plugins, skills and MCP servers</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers">learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers</a></td><td class="d">2026-10-23</td></tr>
+<tr><td>Agent 365 tool governance</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/guidance/govern-tools">learn.microsoft.com/en-us/microsoft-agent-365/guidance/govern-tools</a></td><td class="d">2026-08-20</td></tr>
+<tr><td>Agent 365 inventory and observability</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/monitor-agents">learn.microsoft.com/en-us/microsoft-agent-365/admin/monitor-agents</a></td><td class="d">2026-10-02</td></tr>
+<tr><td>Conditional Access for agents</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/agent-id">learn.microsoft.com/en-us/entra/identity/conditional-access/agent-id</a></td><td class="d">2026-09-30</td></tr>
+<tr><td>Conditional Access for autonomous agents</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-autonomous-agents">learn.microsoft.com/en-us/entra/identity/conditional-access/policy-autonomous-agents</a></td><td class="d">2026-09-30</td></tr>
+<tr><td>B2B Conditional Access</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/external-id/authentication-conditional-access">learn.microsoft.com/en-us/entra/external-id/authentication-conditional-access</a></td><td class="d">2026-03-27</td></tr>
+<tr><td>Authentication strengths</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-strengths">learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-strengths</a></td><td class="d">2025-10-24</td></tr>
+<tr><td>Authentication strengths, external users</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-strength-external-users">learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-strength-external-users</a></td><td class="d">2025-10-24</td></tr>
+<tr><td>Guest MFA and strength policies</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-guests-mfa-strength">learn.microsoft.com/en-us/entra/identity/conditional-access/policy-guests-mfa-strength</a></td><td class="d">2026-03-24</td></tr>
+<tr><td>E7 and Agent 365 general availability post</td><td class="u"><a href="https://techcommunity.microsoft.com/blog/microsoft_365blog/microsoft-365-e7-and-agent-365-are-now-generally-available/4516295">techcommunity.microsoft.com/blog/microsoft_365blog/microsoft-365-e7-and-agent-365-are-now-generally-available/4516295</a></td><td class="d">2026-05-01</td></tr>
+<tr><td>Foundry Agent Service pricing</td><td class="u"><a href="https://azure.microsoft.com/en-us/pricing/details/foundry-agent-service/">azure.microsoft.com/en-us/pricing/details/foundry-agent-service/</a></td><td class="d">no date on page, read 2026-11-05</td></tr>
+<tr><td>E7 page on microsoft.com</td><td class="u"><a href="https://www.microsoft.com/en-us/microsoft-365/enterprise/e7">www.microsoft.com/en-us/microsoft-365/enterprise/e7</a></td><td class="d">no date on page, read 2026-11-05</td></tr>
+<tr><td>Purview service description</td><td class="u"><a href="https://learn.microsoft.com/en-us/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description">learn.microsoft.com/en-us/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description</a></td><td class="d">2026-10-29</td></tr>
+<tr><td>Entitlement management, external users</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-external-users">learn.microsoft.com/en-us/entra/id-governance/entitlement-management-external-users</a></td><td class="d">2025-09-09</td></tr>
+<tr><td>Create an access review (auto apply setting)</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/id-governance/create-access-review">learn.microsoft.com/en-us/entra/id-governance/create-access-review</a></td><td class="d">2026-03-12</td></tr>
+<tr><td>Agent 365 connected platforms</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/connected-platforms">learn.microsoft.com/en-us/microsoft-agent-365/admin/connected-platforms</a></td><td class="d">2026-10-15</td></tr>
+<tr><td>Agent 365 admin overview (supported platforms)</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-365-overview">learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-365-overview</a></td><td class="d">2026-10-23</td></tr>
+<tr><td>Access reviews for access packages</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-access-reviews-create">learn.microsoft.com/en-us/entra/id-governance/entitlement-management-access-reviews-create</a></td><td class="d">2026-10-29</td></tr>
+<tr><td>Entra what&#x27;s new (guest billing item)</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/fundamentals/whats-new">learn.microsoft.com/en-us/entra/fundamentals/whats-new</a></td><td class="d">2026-06-30</td></tr>
+<tr><td>Unmanaged devices in SharePoint</td><td class="u"><a href="https://learn.microsoft.com/en-us/sharepoint/control-access-from-unmanaged-devices">learn.microsoft.com/en-us/sharepoint/control-access-from-unmanaged-devices</a></td><td class="d">2026-01-26</td></tr>
+<tr><td>Zero Trust policies for workloads</td><td class="u"><a href="https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-identity-device-access-policies-workloads">learn.microsoft.com/en-us/security/zero-trust/zero-trust-identity-device-access-policies-workloads</a></td><td class="d">2025-04-10</td></tr>
+<tr><td>Defender for Cloud Apps session policies</td><td class="u"><a href="https://learn.microsoft.com/en-us/defender-cloud-apps/session-policy-aad">learn.microsoft.com/en-us/defender-cloud-apps/session-policy-aad</a></td><td class="d">2026-06-16</td></tr>
+<tr><td>Defender for Cloud Apps Conditional Access app control</td><td class="u"><a href="https://learn.microsoft.com/en-us/defender-cloud-apps/proxy-intro-aad">learn.microsoft.com/en-us/defender-cloud-apps/proxy-intro-aad</a></td><td class="d">2026-05-08</td></tr>
+<tr><td>Cloud PC RDP redirection</td><td class="u"><a href="https://learn.microsoft.com/en-us/windows-365/enterprise/manage-rdp-device-redirections">learn.microsoft.com/en-us/windows-365/enterprise/manage-rdp-device-redirections</a></td><td class="d">2025-08-06</td></tr>
+<tr><td>Clipboard redirection (states the Dev Box and Windows 365 defaults)</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/redirection-configure-clipboard">learn.microsoft.com/en-us/azure/virtual-desktop/redirection-configure-clipboard</a></td><td class="d">2025-06-20</td></tr>
+<tr><td>Microsoft 365 G7 and Agent 365 for GCC (Microsoft Cloud blog)</td><td class="u"><a href="https://www.microsoft.com/en-us/microsoft-cloud/blog/us-government/2026/09/15/introducing-microsoft-365-g7-intelligence-trust-for-the-mission-ahead/">www.microsoft.com/en-us/microsoft-cloud/blog/us-government/2026/09/15/introducing-microsoft-365-g7-intelligence-trust-for-the-mission-ahead/</a></td><td class="d">2026-09-15</td></tr>
+<tr><td>Classic DSPM get started (not current assessment entitlement)</td><td class="u"><a href="https://learn.microsoft.com/en-us/purview/data-security-posture-management-get-started">learn.microsoft.com/en-us/purview/data-security-posture-management-get-started</a></td><td class="d">2025-12-15</td></tr>
+<tr><td>Dev Box FAQ</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/dev-box/dev-box-faq">learn.microsoft.com/en-us/azure/dev-box/dev-box-faq</a></td><td class="d">2026-09-14</td></tr>
+<tr><td>Foundry AI gateway for MCP tools</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/governance?view=foundry">learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/governance?view=foundry</a></td><td class="d">2026-08-19</td></tr>
+<tr><td>Foundry planning</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/planning">learn.microsoft.com/en-us/azure/foundry/concepts/planning</a></td><td class="d">2026-08-21</td></tr>
+<tr><td>Azure Policy Deny effect</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deny">learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deny</a></td><td class="d">current page, checked 2026-11-05</td></tr>
+<tr><td>Azure Policy compliance states</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/governance/policy/concepts/compliance-states">learn.microsoft.com/en-us/azure/governance/policy/concepts/compliance-states</a></td><td class="d">current page, checked 2026-11-05</td></tr>
+<tr><td>Foundry agent identity</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity">learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity</a></td><td class="d">2026-10-28</td></tr>
+<tr><td>Foundry RBAC</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry">learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry</a></td><td class="d">2026-09-16</td></tr>
+<tr><td>Foundry managed virtual network</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/managed-virtual-network">learn.microsoft.com/en-us/azure/foundry/how-to/managed-virtual-network</a></td><td class="d">2026-08-18</td></tr>
+<tr><td>Foundry network isolation</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link">learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link</a></td><td class="d">2026-09-29</td></tr>
+<tr><td>Foundry model deployment policy</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/model-deployment-policy">learn.microsoft.com/en-us/azure/foundry/how-to/model-deployment-policy</a></td><td class="d">2026-08-18</td></tr>
+<tr><td>Azure Policy built-ins for Foundry Tools (models, tools, key access)</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/ai-services/policy-reference">learn.microsoft.com/en-us/azure/ai-services/policy-reference</a></td><td class="d">2026-07-13</td></tr>
+<tr><td>Disable local authentication in Foundry Tools</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/ai-services/disable-local-auth">learn.microsoft.com/en-us/azure/ai-services/disable-local-auth</a></td><td class="d">2026-06-02</td></tr>
+<tr><td>Copilot Studio zoned governance</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/sec-gov-phase2">learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/sec-gov-phase2</a></td><td class="d">2026-01-20</td></tr>
+<tr><td>Copilot Studio security and governance</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-and-governance">learn.microsoft.com/en-us/microsoft-copilot-studio/security-and-governance</a></td><td class="d">2026-10-07</td></tr>
+<tr><td>Copilot Studio data policies</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention">learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention</a></td><td class="d">2026-10-22</td></tr>
+<tr><td>Copilot Studio tool authentication</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-tools-custom-agent">learn.microsoft.com/en-us/microsoft-copilot-studio/add-tools-custom-agent</a></td><td class="d">2026-10-01</td></tr>
+<tr><td>Environment groups overview</td><td class="u"><a href="https://learn.microsoft.com/en-us/power-platform/admin/environment-groups">learn.microsoft.com/en-us/power-platform/admin/environment-groups</a></td><td class="d">2025-12-16</td></tr>
+<tr><td>Environment groups and rules</td><td class="u"><a href="https://learn.microsoft.com/en-us/power-platform/admin/environment-groups-rules">learn.microsoft.com/en-us/power-platform/admin/environment-groups-rules</a></td><td class="d">2026-10-16</td></tr>
+<tr><td>Copilot security</td><td class="u"><a href="https://learn.microsoft.com/en-us/copilot/plan/security-microsoft-copilot">learn.microsoft.com/en-us/copilot/plan/security-microsoft-copilot</a></td><td class="d">2026-11-03</td></tr>
+<tr><td>SharePoint Advanced Management prerequisites</td><td class="u"><a href="https://learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites">learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites</a></td><td class="d">2026-08-18</td></tr>
+<tr><td>DLP for Microsoft 365 Copilot and Cowork</td><td class="u"><a href="https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about">learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about</a></td><td class="d">2026-10-27</td></tr>
+<tr><td>Azure API Center MCP servers</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/api-center/register-discover-mcp-server">learn.microsoft.com/en-us/azure/api-center/register-discover-mcp-server</a></td><td class="d">2026-06-02</td></tr>
+<tr><td>VS Code AI settings for enterprises</td><td class="u"><a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">code.visualstudio.com/docs/enterprise/manage-ai-settings</a></td><td class="d">2026-11-04</td></tr>
+<tr><td>VS Code enterprise policies</td><td class="u"><a href="https://code.visualstudio.com/docs/enterprise/policies">code.visualstudio.com/docs/enterprise/policies</a></td><td class="d">2026-11-04</td></tr>
+<tr><td>GitHub enterprise MCP allowlist</td><td class="u"><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist">docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub MCP registry restriction</td><td class="u"><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/restrict-based-on-registry">docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/restrict-based-on-registry</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub MCP management concepts</td><td class="u"><a href="https://docs.github.com/en/copilot/concepts/enterprise/mcp-management">docs.github.com/en/copilot/concepts/enterprise/mcp-management</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub Copilot subscription-based network routing</td><td class="u"><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/manage-access/manage-network-access">docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/manage-access/manage-network-access</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub enterprise-managed settings reference</td><td class="u"><a href="https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings">docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub managed settings, getting started</td><td class="u"><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/get-started">docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/get-started</a></td><td class="d">no date on page</td></tr>
+<tr><td>Entra ID Governance licensing</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/id-governance/licensing-fundamentals">learn.microsoft.com/en-us/entra/id-governance/licensing-fundamentals</a></td><td class="d">2026-10-16</td></tr>
+<tr><td>Entra ID Governance licensing for guests</td><td class="u"><a href="https://learn.microsoft.com/en-us/entra/id-governance/microsoft-entra-id-governance-licensing-for-guest-users">learn.microsoft.com/en-us/entra/id-governance/microsoft-entra-id-governance-licensing-for-guest-users</a></td><td class="d">2026-09-23</td></tr>
+<tr><td>Copilot Studio billing rates</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management">learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management</a></td><td class="d">2026-10-31</td></tr>
+<tr><td>Copilot Studio licensing</td><td class="u"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/billing-licensing">learn.microsoft.com/en-us/microsoft-copilot-studio/billing-licensing</a></td><td class="d">2026-11-05</td></tr>
+<tr><td>Purview DSPM</td><td class="u"><a href="https://learn.microsoft.com/en-us/purview/data-security-posture-management-learn-about">learn.microsoft.com/en-us/purview/data-security-posture-management-learn-about</a></td><td class="d">2026-05-26</td></tr>
+<tr><td>Purview DSPM data risk assessments</td><td class="u"><a href="https://learn.microsoft.com/en-us/purview/data-security-posture-management-oversharing">learn.microsoft.com/en-us/purview/data-security-posture-management-oversharing</a></td><td class="d">2026-05-01</td></tr>
+<tr><td>Foundry hosted agents</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents</a></td><td class="d">2026-10-19</td></tr>
+<tr><td>Foundry Agent Service overview</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">learn.microsoft.com/en-us/azure/foundry/agents/overview</a></td><td class="d">2026-10-26</td></tr>
+<tr><td>Sentinel data connectors reference</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/sentinel/data-connectors-reference">learn.microsoft.com/en-us/azure/sentinel/data-connectors-reference</a></td><td class="d">2026-06-28</td></tr>
+<tr><td>Foundry architecture</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/architecture">learn.microsoft.com/en-us/azure/foundry/concepts/architecture</a></td><td class="d">2026-08-21</td></tr>
+<tr><td>GitHub managed user account limits</td><td class="u"><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts">docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub corporate proxy restriction</td><td class="u"><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/hardening-security-for-your-enterprise/restricting-access-to-githubcom-using-a-corporate-proxy">docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/hardening-security-for-your-enterprise/restricting-access-to-githubcom-using-a-corporate-proxy</a></td><td class="d">no date on page</td></tr>
+<tr><td>GitHub audit log streaming</td><td class="u"><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise">docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise</a></td><td class="d">no date on page</td></tr>
+<tr><td>Copilot audit event fields</td><td class="u"><a href="https://learn.microsoft.com/en-us/purview/audit-copilot">learn.microsoft.com/en-us/purview/audit-copilot</a></td><td class="d">checked 2026-11-05</td></tr>
+<tr><td>Restricted Content Discovery scope</td><td class="u"><a href="https://learn.microsoft.com/en-us/sharepoint/restricted-content-discovery">learn.microsoft.com/en-us/sharepoint/restricted-content-discovery</a></td><td class="d">checked 2026-11-05</td></tr>
+<tr><td>Managed settings deployment and precedence</td><td class="u"><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings">docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings</a></td><td class="d">no date on page</td></tr>
+        </tbody>
+      </table></div>
+    </div></details>
+  </section>
+
+  </main>
+
+  <footer>
+    <p>Facts were checked against Microsoft, GitHub and VS Code documentation on 5 Nov 2026. Vendor documentation shows what a product is documented to do. It does not show what is deployed in your tenant. Nothing was tested in a real tenant, on a consultant device or on an agent runtime. Recommendations describe a proposed design, not a finished deployment.</p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var all = function(){ return Array.prototype.slice.call(document.querySelectorAll('details.deep')); };
+  var btn = document.getElementById('toggle');
+  function sync(){
+    var d = all(), open = d.filter(function(x){return x.open}).length === d.length;
+    btn.textContent = open ? 'Collapse all detail' : 'Expand all detail';
+    btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function(){
+    var d = all(), open = d.filter(function(x){return x.open}).length === d.length;
+    d.forEach(function(x){ x.open = !open; });
+    sync();
+  });
+  all().forEach(function(x){ x.addEventListener('toggle', sync); });
+  window.addEventListener('beforeprint', function(){ all().forEach(function(x){ x.open = true; }); });
+  // open the section that a shared link points into
+  function openHash(){
+    var id = location.hash.slice(1); if(!id) return;
+    var el = document.getElementById(id); if(!el) return;
+    var d = el.closest('details'); if(d) d.open = true;
+  }
+  openHash(); window.addEventListener('hashchange', openHash);
+  // mark the section in view in the contents bar
+  if('IntersectionObserver' in window){
+    var links = {};
+    document.querySelectorAll('.toc a').forEach(function(a){ links[a.getAttribute('href').slice(1)] = a; });
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          Object.keys(links).forEach(function(k){ links[k].classList.remove('on'); });
+          var a = links[e.target.id]; if(a) a.classList.add('on');
+        }
+      });
+    }, {rootMargin:'-20% 0px -70% 0px'});
+    Object.keys(links).forEach(function(k){ var t = document.getElementById(k); if(t) io.observe(t); });
+  }
+})();
+</script>
+</body>
+</html>

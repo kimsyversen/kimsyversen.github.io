@@ -233,3 +233,13 @@ Each row covers the statements in the named block, including retained claims and
 - Recommendation prose lines and table cells are at most 60 words. No em or en dashes in the recommendation or new decisions note.
 - All original source URLs retained. Companion note links resolve to the recommendation.
 - `git diff --check` passed. No build step exists for this Markdown-only change. No tenant or device behavior was tested.
+
+### HTML presentation (2026-11-05)
+
+- The HTML page carries over the content of the Markdown as checked on 2026-11-05. It was not rechecked against vendor pages again when the HTML was made.
+- The HTML sources table has 78 rows, taken from the Markdown sources table.
+- Checked by comparison with the Markdown: the 2.8 release path (steps, rejection loop, disable and rollback path, four rules for agents that act).
+- Checked in the browser: layout in light mode and at 375px (no sideways scroll, no console errors). Dark mode was checked by setting the color variables by hand, not through the system setting.
+- Not tested: anything in a real tenant or on a real device. The page says so, as the Markdown does.
+- Not re-viewed after a label fix: the MCP approval-flow drawing.
+- No em or en dashes on the page. Paragraphs are 60 words or fewer.
