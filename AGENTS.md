@@ -6,9 +6,9 @@ Five rules for anyone changing this repo, person or agent. The site is hand-writ
 
 `index.html` is written by hand. Change it in the same commit as the page.
 
-- New page: add a row at the top of Pages with the next number. A page keeps its number for good.
-- Removed page: delete its row. The other rows keep their numbers.
-- Content change: update the row's Updated date. Style fixes and footer notes do not count.
+- New page: put it first in the sentence at the top, with a footnote mark, and add its footnote at the top of Pages. Both take the next number. A page keeps its number for good.
+- Removed page: delete it from the sentence and delete its footnote. The others keep their numbers.
+- Content change: update the Updated date in its footnote. Style fixes and footer notes do not count.
 - Any edit to the index: update its Last updated date at the bottom.
 
 Find pages missing from the index:
@@ -48,6 +48,6 @@ grep -o 'href="[^"#:]*\.\(html\|drawio\)"' index.html | cut -d'"' -f2 | while re
 
 - Look at the page in light mode, in dark mode and at 375px wide. No sideways scroll, no console errors.
 - Pages are in English. Every page carries the same Made with AI note, word for word. No em or en dashes.
-- Copy the look of `threatmodelling.html`: rules, thin lines, plain tables, one accent colour with a clear meaning. No colored bars on cards, rounded shadow cards or gradient banners.
+- Content pages copy the look of `threatmodelling.html`: rules, thin lines, plain tables, one accent colour with a clear meaning. The index has its own look. On every page: no colored bars on cards, rounded shadow cards or gradient banners.
 - Work on `dev`. `master` is the live site, and the owner moves work there.
 - Everything that reaches `master` is public, including notes and this file. No secrets, no customer data.

@@ -5,111 +5,99 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Index · Kim Syversen</title>
 <meta name="description" content="Security guides, risk maps and reference designs, each on a single page.">
+<meta name="theme-color" content="#F8ECE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A1690" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap">
 <style>
-/* A printed contents page: paper, ink and hairline rules. Same fonts and colours as threatmodelling.html.
-   Red has one meaning here: it marks the risk in each small drawing, and the row under the pointer. */
+/* A page from a book, printed in one ink: one sentence, its footnotes and a colophon.
+   Blue is the ink. Red has one meaning: it marks the risk in each small drawing. */
 :root{
   color-scheme:light;
-  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F; --red:#B5321C;
-  --display:"Archivo","Arial Narrow",Arial,sans-serif;
-  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --paper:#F8ECE4; --ink:#2016C4; --muted:#4A44AE; --red:#D8341A;
+  --serif:"EB Garamond",Garamond,"Times New Roman",Times,serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB; --red:#F07A60;
+    --paper:#1A1690; --ink:#F8ECE4; --muted:#D2CEF6; --red:#FFA68C;
   }
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
-.page{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 56px max(16px,env(safe-area-inset-left,0px))}
-a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
-a:hover{color:var(--red)}
-a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
-h1,h2,h3,p{margin:0}
-h1,h2,h3{font-family:var(--display);text-wrap:balance}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.2rem/1.34 var(--serif);font-variant-numeric:oldstyle-nums;-webkit-font-smoothing:antialiased}
+::selection{background:var(--ink);color:var(--paper)}
+.page{max-width:1240px;margin:0 auto;padding:clamp(28px,5vw,64px) max(20px,env(safe-area-inset-right,0px)) 64px max(20px,env(safe-area-inset-left,0px))}
+h1,h2,h3,p{margin:0;font-size:inherit;font-weight:inherit}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:0.14em}
+a:hover{background:var(--ink);color:var(--paper);text-decoration:none;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+a:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-/* masthead */
-.mast{border-top:6px solid var(--rule);padding-top:10px}
-.head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px 56px;align-items:end;padding:34px 0 40px}
-h1{font-size:clamp(6rem,16vw,14rem);font-weight:800;font-stretch:112%;line-height:0.76;letter-spacing:-0.05em;margin-left:-0.05em}
-.lead{font-size:clamp(1.15rem,2vw,1.42rem);line-height:1.38;max-width:34rem}
+/* the sentence */
+.sentence{font-size:clamp(2.4rem,6.2vw,5.6rem);line-height:1.06;letter-spacing:-0.012em;text-wrap:pretty}
+.sentence h1,.sentence p{display:inline}
+.sentence h1{font-weight:700}
+.sentence h1::after{content:"."}
+.sentence p a:not(.mark){font-style:italic;text-decoration-thickness:0.03em}
+.sentence p a:not(.mark):hover{background:none;color:inherit;text-decoration:underline;text-decoration-thickness:0.09em}
+sup{font-size:0.46em;line-height:0;vertical-align:0.74em;letter-spacing:0}
+.mark{padding:0.2em 0.16em;text-decoration:none}
 
-/* section heading */
-.bar{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px 24px;border-top:1px solid var(--rule);padding:10px 0 12px}
-.bar h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
-.bar p{font-size:0.84rem;color:var(--muted)}
-
-/* contents */
-.toc{list-style:none;margin:0;padding:0;border-bottom:2px solid var(--rule)}
-.row{position:relative;display:grid;grid-template-columns:5.4rem minmax(0,1fr) minmax(0,1fr) 168px;column-gap:32px;padding:24px 0 26px;border-top:1px solid var(--line)}
-.n{font:800 3.8rem/0.8 var(--display);font-stretch:112%;letter-spacing:-0.03em}
-.row h3{font-size:clamp(1.55rem,2.7vw,2.15rem);font-weight:750;line-height:1.04;letter-spacing:-0.018em}
-.row h3 a{text-decoration:none}
-.row h3 a::after{content:"";position:absolute;inset:0}
-.row:hover h3 a{color:var(--red)}
-.kind{margin-top:10px;font-size:0.84rem;color:var(--muted)}
-.file{font:400 0.76rem/1.45 var(--mono);color:var(--muted);overflow-wrap:anywhere}
-.chk{margin-top:8px;font-size:0.88rem;color:var(--muted)}
-.links{position:relative;z-index:1;width:fit-content;margin-top:8px;font-size:0.84rem}
-.links a + a{margin-left:12px}
+/* the footnotes, under the short rule that opens them in a book */
+.notes{margin-top:clamp(48px,8vw,104px)}
+.notes::before{content:"";display:block;width:min(240px,33%);border-top:1px solid var(--ink);margin-bottom:30px}
+.list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 64px}
+.note{position:relative;display:grid;grid-template-columns:2.6rem minmax(0,1fr) 126px;column-gap:16px;align-items:start;scroll-margin-top:24px}
+.n{font-size:2.5rem;line-height:0.9}
+.note h3{font-size:1.7rem;line-height:1.08;font-style:italic;font-weight:500;text-wrap:balance}
+.note h3 a{text-decoration:none}
+.note h3 a::after{content:"";position:absolute;inset:0}
+.note:hover h3 a,.note:target h3 a{background:var(--ink);color:var(--paper);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.kind,.chk{color:var(--muted);font-size:1.04rem}
+.kind{margin:4px 0 8px}
+.chk{margin-top:6px;font-style:italic}
+.links{position:relative;z-index:1;width:fit-content;margin-top:6px;font-size:1.04rem}
+.links a + a{margin-left:14px}
 
 /* small drawings: one line weight, ink only, red for the risk */
-.fig{display:block;justify-self:end;width:168px;height:112px;fill:none;stroke:var(--ink);stroke-width:1.25}
+.fig{display:block;width:126px;height:84px;fill:none;stroke:var(--ink);stroke-width:1.4}
 .fig .r{stroke:var(--red)}
 .fig .dot{fill:var(--red);stroke:none}
 
-/* footer */
-footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted)}
-.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5}
-.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+/* the colophon */
+footer{display:grid;justify-items:center;gap:6px;margin-top:clamp(56px,9vw,112px);text-align:center;color:var(--muted);font-size:1.04rem;text-wrap:balance}
+.ai-note{max-width:32rem}
+.ai-note b{display:block;font-weight:500;color:var(--ink)}
 
 @media (max-width:1040px){
-  .row{grid-template-columns:4.4rem minmax(0,1fr) 132px;column-gap:24px}
-  .row .t,.row .d{grid-column:2}
-  .row .d{margin-top:12px}
-  .fig{grid-column:3;grid-row:1 / span 2;width:132px;height:88px}
+  .list{grid-template-columns:minmax(0,1fr);gap:38px}
 }
-@media (max-width:800px){
-  .head{grid-template-columns:1fr;padding:30px 0 32px}
-  h1{font-size:clamp(6rem,28vw,13rem)}
+@media (max-width:560px){
+  .note{grid-template-columns:2.2rem minmax(0,1fr);column-gap:10px}
+  .n{font-size:2.2rem}
+  .fig{grid-column:2;margin-top:12px}
 }
-@media (max-width:640px){
-  .row{grid-template-columns:2.7rem minmax(0,1fr) 72px;column-gap:12px;padding:20px 0 22px}
-  .row .d{grid-column:2 / -1}
-  .n{font-size:2.5rem;line-height:0.86}
-  .fig{grid-row:1;width:72px;height:48px;stroke-width:2.5}
-}
-@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <header class="mast">
-    <div class="head">
-      <h1>Index</h1>
-      <p class="lead">Security guides, risk maps and reference designs, each on a single page.</p>
-    </div>
+  <header class="sentence">
+    <h1>Index</h1>
+    <p>Security guides, risk maps and reference designs, each on a single page, newest first: <a href="github/github-two-enterprise-interactive.html">GitHub two-enterprise reference</a>,<sup><a class="mark" href="#n5" aria-label="Note 5">5</a></sup> <a href="threatmodelling.html">Threat modeling</a>,<sup><a class="mark" href="#n4" aria-label="Note 4">4</a></sup> <a href="MCP-Risk-Map.html">MCP Risk Map</a>,<sup><a class="mark" href="#n3" aria-label="Note 3">3</a></sup> <a href="Developer-WS.html">Developer Workstation Risk Map</a><sup><a class="mark" href="#n2" aria-label="Note 2">2</a></sup> and <a href="AKS-sikkerhetsvurdering.html">AKS security assessment</a>.<sup><a class="mark" href="#n1" aria-label="Note 1">1</a></sup></p>
   </header>
 
   <main>
-    <section aria-labelledby="pages">
-      <div class="bar"><h2 id="pages">Pages</h2><p>Newest first.</p></div>
-      <ol class="toc" role="list">
+    <section class="notes" aria-labelledby="pages">
+      <h2 id="pages" class="vh">Pages</h2>
+      <ol class="list" role="list">
 
-        <li class="row">
-          <span class="n" aria-hidden="true">5</span>
-          <div class="t">
+        <li class="note" id="n5">
+          <span class="n">5</span>
+          <div>
             <h3><a href="github/github-two-enterprise-interactive.html">GitHub two-enterprise reference</a></h3>
             <p class="kind">Reference design · Updated 4 Nov 2026</p>
-            <p class="file">github/github-two-enterprise-interactive.html</p>
-          </div>
-          <div class="d">
             <p>Classified, internal and public work on GitHub: two enterprises, three policy layers and shared operations. Click any box to see what it does and how to check it.</p>
             <p class="chk">Checked against GitHub documentation. Names are illustrative.</p>
             <p class="links"><a href="github/github-two-enterprise-reference.drawio">draw.io, three pages</a><a href="github/github-two-enterprise-reference-compact.drawio">draw.io, one page</a></p>
@@ -121,14 +109,11 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           </svg>
         </li>
 
-        <li class="row">
-          <span class="n" aria-hidden="true">4</span>
-          <div class="t">
+        <li class="note" id="n4">
+          <span class="n">4</span>
+          <div>
             <h3><a href="threatmodelling.html">Threat modeling</a></h3>
             <p class="kind">Method · Updated 3 Nov 2026</p>
-            <p class="file">threatmodelling.html</p>
-          </div>
-          <div class="d">
             <p>Four questions, one drawing and a short list of fixes, shown on a made-up claims portal.</p>
             <p class="chk">Fact-checked against primary sources in three passes.</p>
           </div>
@@ -141,14 +126,11 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           </svg>
         </li>
 
-        <li class="row">
-          <span class="n" aria-hidden="true">3</span>
-          <div class="t">
+        <li class="note" id="n3">
+          <span class="n">3</span>
+          <div>
             <h3><a href="MCP-Risk-Map.html">MCP Risk Map</a></h3>
             <p class="kind">Risk map · Updated 2 Nov 2026</p>
-            <p class="file">MCP-Risk-Map.html</p>
-          </div>
-          <div class="d">
             <p>Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start.</p>
             <p class="chk">Every factual claim compared with its source. Nothing tested on a real system.</p>
           </div>
@@ -161,14 +143,11 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           </svg>
         </li>
 
-        <li class="row">
-          <span class="n" aria-hidden="true">2</span>
-          <div class="t">
+        <li class="note" id="n2">
+          <span class="n">2</span>
+          <div>
             <h3><a href="Developer-WS.html">Developer Workstation Risk Map</a></h3>
             <p class="kind">Risk map · Updated 1 Nov 2026</p>
-            <p class="file">Developer-WS.html</p>
-          </div>
-          <div class="d">
             <p>Where the ten most important risks sit when developers run VS Code, the git CLI and AI coding agents on their own machine, and what to check for each.</p>
             <p class="chk">965 statements checked one by one, with 35 fixed and 18 cut.</p>
           </div>
@@ -181,14 +160,11 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
           </svg>
         </li>
 
-        <li class="row">
-          <span class="n" aria-hidden="true">1</span>
-          <div class="t">
+        <li class="note" id="n1">
+          <span class="n">1</span>
+          <div>
             <h3><a href="AKS-sikkerhetsvurdering.html">AKS security assessment</a></h3>
             <p class="kind">Beginner's guide · Updated 3 Nov 2026</p>
-            <p class="file">AKS-sikkerhetsvurdering.html</p>
-          </div>
-          <div class="d">
             <p>What to understand and how to go about it when a platform team runs Kubernetes in Azure for several application teams, with ten prioritised risks.</p>
             <p class="chk">Commands checked against the documentation. No cluster was examined.</p>
           </div>

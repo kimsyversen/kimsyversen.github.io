@@ -17,3 +17,11 @@ Goal: move the old Kstech landing page off `index.html`, give the site root a go
 8. Remove `Kstech.html` and its row, and move the numbers down by one. Done.
 9. Stop showing plans, decisions and fact checks to readers: links, legend, footer link and the MCP page's mention. Done.
 10. Remove "Source on GitHub" and the name, and move Last updated to the footer. Done.
+
+## Redesign, 5 Nov 2026
+Goal: give the index a look of its own, since it matched `threatmodelling.html`.
+
+11. Concept: a page from a book, printed in one ink. One large sentence names every page, each with a footnote number. The footnotes carry the details. A colophon at the end holds the date and the Made with AI note. Done.
+12. Replace the fonts and colours. Keep the five small drawings. Done.
+13. Update `AGENTS.md`, since it says to copy the look of `threatmodelling.html` and speaks of rows. Done.
+14. Render check: light, dark, 375px wide, no console errors, no em or en dashes, every link resolves. Done.
