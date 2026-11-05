@@ -7,6 +7,7 @@ Five rules for anyone changing this repo, person or agent. The site is hand-writ
 `index.html` is written by hand. Change it in the same commit as the page.
 
 - New page: add a row at the top of Pages with the next number. A page keeps its number for good.
+- Removed page: delete its row. The other rows keep their numbers.
 - Content change: update the row's Updated date. Style fixes and footer notes do not count.
 - Any edit to the index: update its Last updated date at the top.
 - Notes: link them by their GitHub address, because Pages shows a `.md` file as raw text.
