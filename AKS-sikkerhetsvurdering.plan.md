@@ -1,5 +1,7 @@
 # AKS-sikkerhetsvurdering: translate to English
 
+Belongs to [AKS-sikkerhetsvurdering.html](AKS-sikkerhetsvurdering.html). Decisions: [AKS-sikkerhetsvurdering.decisions.md](AKS-sikkerhetsvurdering.decisions.md).
+
 Goal: every HTML page on the site is in English. Only this page was Norwegian (checked: no Norwegian letters in index.html, Developer-WS.html, MCP-Risk-Map.html).
 
 Steps:
