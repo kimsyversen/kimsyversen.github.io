@@ -82,3 +82,9 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - Before: only text outside descriptions had a recorded verdict. The 256 requirement or label sentences inside descriptions were classified only by the absence of an evidence row, so a reworded sentence could change silently.
 - Now: each such sentence is in `github-two-enterprise-interactive.outside.tsv` with verdict R and the place `<box> description[<n>]`. The verifier fails if one is missing or reworded since review. 855 texts: R 366, L 276, N 213.
 - Limit, unchanged: this proves a verdict is recorded for the exact wording, not that the verdict is right. The verdicts were assigned by the AI in two passes. A person has not reviewed them.
+
+## sign-off by a person is tracked, and stays empty until one signs (2026-11-05)
+
+- The verifier now prints whether a person has confirmed the reviewed list: none, current or stale. It never fails the run.
+- `--sign "Name"` stores a hash of the list in `github-two-enterprise-interactive.signoff.txt`. A later change to any verdict or wording makes it stale.
+- An agent must not run `--sign`. Status today: NONE. The AI cannot close this gap itself; the list needs a person to read it.

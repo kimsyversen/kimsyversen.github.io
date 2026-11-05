@@ -2,10 +2,12 @@
 //   node github/verify-evidence.mjs           fetch every source, check every quote, check the inline copy
 //   node github/verify-evidence.mjs --write   also rewrite the inline EVID block from the TSV
 //   node github/verify-evidence.mjs --list-r  also print every sentence treated as a design requirement or label
+//   node github/verify-evidence.mjs --sign "Name"   a person records that they read the whole reviewed list (never run by an agent)
 //   node github/verify-evidence.mjs --init-outside  write the reviewed list of outside texts (new texts get a guessed verdict: review them)
 // Rules: a "D" row needs a source from that box's source list and a quote that appears
 // in the fetched page, word for word. An "I" row marks an [inference] sentence.
 // A sentence with no row is a design requirement or label: it makes no factual claim.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import path from 'node:path';
@@ -283,6 +285,25 @@ if (args.has('--init-outside')) {
   const cnt = { R: 0, L: 0, N: 0 };
   for (const v of reviewed.values()) cnt[v] = (cnt[v] || 0) + 1;
   console.log(`outside texts: ${outsideMap.size} found, ${reviewed.size} reviewed (R ${cnt.R}, L ${cnt.L}, N ${cnt.N}), ${unreviewed} unreviewed, ${stale} stale`);
+}
+
+// ---- person sign-off ----
+// A person reads the reviewed list and runs: node github/verify-evidence.mjs --sign "Name"
+// That records a hash of the list. Any later change to a verdict or wording makes the sign-off stale.
+// This never fails the run: it only states whether a person has confirmed the current list.
+{
+  const SIGN = OUT.replace('.outside.tsv', '.signoff.txt');
+  const hash = crypto.createHash('sha256').update(fs.readFileSync(OUT)).digest('hex');
+  if (args.has('--sign')) {
+    const who = process.argv[process.argv.indexOf('--sign') + 1];
+    if (!who || who.startsWith('--')) { console.error('usage: --sign "Your name" (only after reading the whole list)'); process.exit(2); }
+    fs.writeFileSync(SIGN, `${hash}\t${who}\t${new Date().toISOString().slice(0, 10)}\n`);
+    console.log(`sign-off written for ${who}`);
+  }
+  const rec = fs.existsSync(SIGN) ? fs.readFileSync(SIGN, 'utf8').trim().split('\t') : null;
+  console.log(!rec ? 'person sign-off: NONE. All verdicts were set by the AI and no person has confirmed them.'
+    : rec[0] === hash ? `person sign-off: current (${rec[1]}, ${rec[2]})`
+    : `person sign-off: STALE (${rec[1]}, ${rec[2]}). The list changed since. Read it again and re-sign.`);
 }
 
 // ---- inline copy ----
