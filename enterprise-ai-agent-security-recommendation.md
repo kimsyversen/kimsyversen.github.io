@@ -65,7 +65,7 @@ flowchart TB
 | Approve and emergency-block remote MCP servers | Agent 365 MCP registry (Microsoft 365 admin center, Agents, Tools) | Blocks registered server invocations through the gateway. BYO MCP is preview. **[verified]** |
 | Catalog of internal MCP servers | Azure API Center | Catalog and discovery; do not rely on registration to prevent direct connections. **[recommendation]** |
 | Copilot Studio guardrails | Power Platform managed environments, environment groups, data policies | Blocks connectors, channels, unauthenticated agents. **[verified]** |
-| Foundry guardrails | Entra RBAC, agent identity, network isolation, Azure Policy for models and tools (tools in preview), API Management | Configure identity, network and policy controls for each supported deployment. Tool policy is preview. **[recommendation]** |
+| Foundry guardrails | Entra RBAC, agent identity, network isolation, Azure Policy for models and tools, API Management | Feed the Git-approved endpoints to the preview tool policy and use Deny to reject noncompliant tool configurations. This governs configuration requests; it is not a runtime gateway. **[recommendation]** |
 | Data protection | Purview sensitivity labels, DLP for Copilot, SharePoint Advanced Management | Limits what Copilot can use. **[verified]** |
 | Agent inventory and monitoring | Agent 365, Defender, Sentinel | Shows who runs what. **[verified, see platform list in 2.9]** |
 
@@ -306,7 +306,7 @@ flowchart TD
 | VS Code and GitHub Copilot | `managed-settings.json` allow and deny rules | Generally available for supported clients and keys, with built-in exemptions. Not for repository custom agent profiles, and the client table shows no support in Copilot in the cloud (GitHub Actions). **[verified]** |
 | Copilot Studio, VS Code, Claude Code, GitHub Copilot CLI (remote servers) | Agent 365 registry: approve, grant consent, block a whole server | **Preview**, for registered gateway traffic **[verified]** |
 | Copilot Studio tools | Power Platform data policies. Microsoft says blocking Power Platform connectors also blocks tools in connected MCP servers that rely on those connectors. | Strong for connector-based servers **[verified]** |
-| Foundry agents | Azure Policy for tools (preview), agent tool settings, RBAC, API Management for remote tools | Partial. See 2.6. **[verified]** |
+| Foundry agents | Azure Policy for tools (preview), agent tool settings, RBAC, API Management for remote tools | The approved-endpoint policy can enforce the shared list on tool configuration requests. Existing configurations and runtime calls need separate handling. See 2.6. **[verified; tenant behavior to test]** |
 | Local `stdio` servers on a laptop | GitHub `serverCommand` allowlist (exact command and arguments) and VS Code policies | Works where the clients obey the file. Wildcards are not supported. **[verified; coverage per client to pilot]** |
 | Catalog only | Azure API Center | VS Code and GitHub Copilot can use it for discovery. Do not assume this blocks direct connections. **[verified for discovery; recommendation for enforcement]** |
 
@@ -354,6 +354,8 @@ All points below were read on Microsoft Learn on 2026-11-05 unless tagged otherw
 - **Network isolation.** Inbound: disable public access and use a private endpoint. Outbound: use supported VNet injection or managed networking. Managed modes allow internet outbound, allow only approved outbound, or disable managed isolation. Once enabled, managed isolation cannot be disabled; approved-only cannot revert to internet outbound. The CLI group is preview. **[verified]**
 - **Approved models by policy.** Built-in Azure Policy definitions "Foundry model deployments should only use approved models" and "...should meet eligibility requirements" are generally available. **[verified]**
 - **Approved tools by policy.** Two **preview** built-in definitions: "Microsoft Foundry agents and toolboxes should only use approved tools" and "...should not use denied tools". They cover tool types, MCP endpoints and MCP connectors. Effects: Audit, Deny, Disabled. **[verified, policy index checked 2026-11-05]**
+- **Feed the approved MCP endpoints from Git into Azure Policy.** For endpoint-level default deny, keep `mcp` out of `approvedToolTypes`; the policy treats any approved tool type as allowed independently of its endpoint. Its Deny effect rejects noncompliant create or update requests. **[verified, policy definition checked 2026-11-05]**
+- **Handle existing agents and runtime separately.** Azure Policy compliance can identify existing noncompliant configurations, but Deny does not itself remove their tools or establish that invocation is blocked. Remove or update affected tools, then test existing and new agents. For runtime enforcement, mediate calls through a supported gateway or revoke backend access and close direct paths. **[recommendation; runtime behavior not tested]**
 - **Secrets:** use managed identity and Key Vault, and never put keys in code. **[recommendation]**
 - **Turn off keys.** Assign the built-in policy "Azure AI Services resources should have key access disabled (disable local authentication)" at subscription or resource group level, or set `disableLocalAuth` to true in the template. The change can take up to several hours to apply. Verify key-based requests fail before treating authentication as disabled. **[verified, checked 2026-11-05]**
 - **Remote tools through API Management.** The Foundry AI gateway is **preview**. It routes only new MCP tools created in the Foundry portal that do not use managed OAuth. It does not support SharePoint, code-first MCP tools, managed OAuth tools or OpenAPI tools. It does not log tool traces.
@@ -437,7 +439,7 @@ All rows are **[recommendation]**.
 |---|---|---|
 | Weeks 1 to 2 | Inventory: tenants, Foundry projects, Power Platform environments, VS Code AI extensions, MCP configs, external accounts. Name owners. | Every item has an owner. |
 | Weeks 2 to 4 | Baseline: MFA, consultant access packages, report-only Conditional Access for agents, GitHub policy repo with an empty MCP allowlist (built-in servers remain exempt), Studio data policies and environment groups, separate Foundry environments, Dev Box clipboard and drive redirection set to off by policy. | Policies exist and report. |
-| Weeks 4 to 6 | Pilot one low-risk read-only agent. Try it from a managed device and from the consultant cloud desktop. Prove that an unapproved MCP server is blocked in VS Code, Copilot Studio and Foundry. Test a personal Copilot account on your network. | Test results written down. |
+| Weeks 4 to 6 | Pilot one low-risk read-only agent. Try it from a managed device and from the consultant cloud desktop. Test that an unapproved tool configuration is rejected in VS Code, Copilot Studio and Foundry. Separately test existing-agent invocation and backend revocation. Test a personal Copilot account on your network. | Test results written down. |
 | Weeks 6 to 10 | Enforce. Add the pull request template, risk tiers and monthly review pack. Turn on Sentinel alerts. | Enforcement on, no open critical gaps. |
 | Ongoing | Re-check the preview items monthly (Agent 365 registry, Foundry gateway, GitHub client coverage, tool-level blocking). | Gaps closed or accepted in writing. |
 
@@ -447,7 +449,7 @@ All rows are **[recommendation]**.
 
 1. **Nothing here has been tested in your tenant.** Each place that says "test" is a step for your pilot, not a result.
 2. **Agent 365 BYO MCP governance is preview.** Scope, licensing, behavior and supported clients can change. Confirm that your tenant has it and your client versions are supported. **[verified]**
-3. **Foundry is not a supported Agent 365 BYO MCP preview client** and its own AI gateway is preview with large gaps. **[verified]**
+3. **Foundry is not a supported Agent 365 BYO MCP preview client.** The shared Git-approved endpoint list can still govern Foundry tool configuration through its own Azure Policy, currently preview. Deny blocks noncompliant create or update requests; it does not remove existing tools or establish runtime blocking. **[verified; runtime behavior not tested]**
 4. **Local MCP servers:** Microsoft does not describe the gateway as covering them. GitHub's command allowlist can, but needs exact commands. **[inference and verified]**
 5. **Unmanaged consultant laptops:** server-managed settings follow the enterprise-licensed signed-in account. Device-delivered MDM or file policies can remain active across account switches, but their delivery and integrity must be established. **[verified]** Require a managed cloud desktop and tested network and transfer restrictions. **[recommendation]** How a personal account behaves on your network is for your pilot to test. **[recommendation]**
 6. **GitHub client support for the MCP keys:** the cloud agent on GitHub Actions is not supported, and custom agent profiles are exempt. Plan another control for both. **[verified]**
@@ -498,6 +500,8 @@ All rows are **[recommendation]**.
 | Dev Box FAQ | https://learn.microsoft.com/en-us/azure/dev-box/dev-box-faq | 2026-09-14 |
 | Foundry AI gateway for MCP tools | https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/governance?view=foundry | 2026-08-19 |
 | Foundry planning | https://learn.microsoft.com/en-us/azure/foundry/concepts/planning | 2026-08-21 |
+| Azure Policy Deny effect | https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deny | current page, checked 2026-11-05 |
+| Azure Policy compliance states | https://learn.microsoft.com/en-us/azure/governance/policy/concepts/compliance-states | current page, checked 2026-11-05 |
 | Foundry agent identity | https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity | 2026-10-28 |
 | Foundry RBAC | https://learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry | 2026-09-16 |
 | Foundry managed virtual network | https://learn.microsoft.com/en-us/azure/foundry/how-to/managed-virtual-network | 2026-08-18 |
