@@ -63,3 +63,16 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - Source link status, rechecked 5 November 2026 after the click test: every https address in the page (51 unique, one of them the font stylesheet) was fetched and returned HTTP 200. The verifier fetched and matched all 90 quotes on the same day. A 200 shows the page loads, not that the passage is still there; the quote match shows that.
 - Light and dark at 375 px (live pane, A.e3): no sideways scroll (page width 375), popup inside the viewport, "None needed" line contrast 16.35 light and 14.17 dark, label 6.09 light and 7.09 dark. No console errors.
 - Not tested: Firefox and Safari; real mouse clicks on this run (the earlier real-click sample was on the previous text).
+
+## 5 November 2026: second review pass over every requirement sentence and outside text
+
+- Why: the verdicts for the 256 requirement or label sentences and the 612 outside texts were assigned by one pass of the AI. A person has not reviewed them. To catch more mistakes before that, I read all 256 sentences and all 123 R outside texts again, looking only for product facts that were labelled as requirements. I also scanned the 276 label texts. This is a second read by the same AI, not a person's review.
+- Found five sentences that stated or implied a product fact with no source, and one outside text. Each was reworded into a requirement or an aim, not sourced:
+  - B.p2: "so a private repo cannot be made public by mistake" is now "so the aim is that no private repo is made public by mistake".
+  - A.o1: "so people only see what they are granted" is now "so the aim is that private repositories are visible only to people who are granted access". Public organization metadata stays visible, so "only" overclaimed.
+  - A.v2: "GitHub's short native Git-event retention" is now "GitHub's native retention for Git events". The old wording implied a retention period without a source.
+  - DEV.3: "Private visibility supports explicit grants" is now "This design uses private visibility so that access is granted explicitly".
+  - Outside text (B scope line): "Personal accounts linked by SAML and SCIM per org" is now "Personal accounts, with SAML and SCIM set up per org". The verifier failed on the old entry until the new wording was recorded, as designed.
+- Read and left as requirements: sentences that say what this design does or requires ("Two-factor is required for every organization in the enterprise", "Lockfiles are mandatory"). They are choices, not claims about GitHub. One rationale sentence in c.soc ("repository names, paths and identities can reveal critical-system details") is general reasoning, not a product fact; a person may disagree.
+- Rechecked after the rewording: verifier OK (612 outside texts reviewed, 0 stale; 90 quotes against 33 pages) and the full paced click test again, 394 popups, 1,599 links, 15 filters, 0 failures.
+- Still open, and only a person can close it: reading `github-two-enterprise-interactive.outside.tsv` and the requirement sentences once and overruling any verdict.

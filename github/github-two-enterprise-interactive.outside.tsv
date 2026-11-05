@@ -362,7 +362,7 @@ N	script	" aria-label="Enterprise
 L	script	ENTERPRISE A · SENSITIVE
 L	script	ENTERPRISE B · INTERNAL AND PUBLIC
 R	script	Enterprise Managed Users. Source code and IaC for classified critical systems.
-R	script	Personal accounts linked by SAML and SCIM per org. Internal work and public releases.
+R	script	Personal accounts, with SAML and SCIM set up per org. Internal work and public releases.
 L	script	IDENTITY
 L	script	accounts and groups
 L	script	E · ENTERPRISE POLICY
