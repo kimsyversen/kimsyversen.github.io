@@ -182,7 +182,7 @@ The effort column gives planning estimates **[recommendation]**, not a guarantee
 | Review access | Access reviews on the package. Review quarterly **[recommendation]**. Set "if reviewers don't respond" to "Remove access". The option exists. **[verified]** To apply denials without admin work, tick "Auto apply results to resource". Nonresponse can then remove the access under review. **[verified, checked 2026-11-05]** | Owner answers a short list |
 | Guest MFA from the consultant's own company | Conditional Access can require MFA for guests. Cross-tenant trust can accept the home tenant's MFA claims. Without trust, B2B collaboration guests are challenged in your tenant. **[verified]** | Set once |
 | Guest limits to know | Strength policies apply only to guests who sign in with Entra ID. For email one-time passcode, SAML or WS-Fed, Google federation or personal Microsoft account guests, Microsoft says to use the MFA grant control. External authentication methods are incompatible with authentication strength. **[verified, 2026-03-24]** "Require approved client app" and "Require app protection policy" are not supported for guests. **[verified]** | None |
-| Managed devices must be compliant | Intune compliance plus Conditional Access grant control | None |
+| Managed devices must be compliant | Intune compliance plus Conditional Access grant control **[verified]** | None |
 | Unmanaged consultants | Cloud dev desktop (Dev Box, Windows 365 or Azure Virtual Desktop). **[recommendation]** | One image to maintain |
 | Restrict desktop redirection | Intune Settings catalog: "Do not allow Clipboard redirection", "Do not allow drive redirection", "Do not allow client printer redirection". Newly provisioned and reprovisioned Windows 365 Cloud PCs have clipboard redirection off by default. Dev Box has it on, in both directions. **[verified]** Set the policy explicitly for Dev Box. | One policy |
 | Unmanaged access to SharePoint and OneDrive without a dev desktop | "Allow limited, web-only access" in SharePoint admin center. Browser only, no download, print or sync, and no Office desktop apps. Built on Conditional Access. Microsoft's Zero Trust page says it needs Entra ID P1 or P2. **[verified]** | None |
@@ -287,7 +287,7 @@ One approved list, several kinds of enforcement. This is a proposed workflow **[
 
 ```mermaid
 flowchart TD
-    REQ[Team asks for an MCP server<br/>pull request with owner, purpose,<br/>data touched, risk tier] --> SEC{Security review<br/>checklist}
+    REQ[Team asks for an MCP server in GitHub<br/>pull request with owner, purpose,<br/>data touched, risk tier] --> SEC{Security review<br/>checklist}
     SEC -->|Rejected| END1[Closed with reason]
     SEC -->|Approved| LIST[Merged into the approved list in Git]
     LIST --> A[VS Code and GitHub Copilot<br/>managed-settings.json]
@@ -309,6 +309,25 @@ flowchart TD
 | Foundry agents | Azure Policy for tools (preview), agent tool settings, RBAC, API Management for remote tools | The approved-endpoint policy can enforce the shared list on tool configuration requests. Existing configurations and runtime calls need separate handling. See 2.6. **[verified; tenant behavior to test]** |
 | Local `stdio` servers on a laptop | GitHub `serverCommand` allowlist (exact command and arguments) and VS Code policies | Works where the clients obey the file. Wildcards are not supported. **[verified; coverage per client to pilot]** |
 | Catalog only | Azure API Center | VS Code and GitHub Copilot can use it for discovery. Do not assume this blocks direct connections. **[verified for discovery; recommendation for enforcement]** |
+
+**How the list reaches each product (step 4) [recommendation]:** only the GitHub path is automatic in the sources we read. The other three need a step that your team builds or does by hand.
+
+| Product | How the list arrives | What must be in place |
+|---|---|---|
+| VS Code and GitHub Copilot | Automatic. Merge `copilot/managed-settings.json` in the `.github-private` repo. Licensed users get it within about an hour. **[verified]** | Copilot seats from your enterprise. A supported client, signed in with the enterprise account. For limits that must always hold, also deliver by MDM or file. **[verified]** |
+| Agent 365 registry | By hand. An administrator approves the request, then grants Entra consent. **[verified]** The pages we read describe no sync from Git. **[inference]** A script or flow would be your own build. **[recommendation]** | AI Administrator or Global Administrator. A publicly accessible endpoint. Developers need Agent 365 CLI 1.1.165-preview or later. The bring-your-own MCP part is preview. **[verified]** |
+| Foundry | Your own build. A pipeline writes the approved endpoints from Git into the Azure Policy assignment. **[recommendation]** No source describes this as a built-in feature. Not tested. | The two preview tool policies assigned at the right scope, with Deny. Existing agents and runtime calls need separate handling (see 2.6). **[verified]** |
+| Azure API Center | Your own build. Register each approved server as a catalog entry. **[recommendation]** | Discovery only. It does not block direct connections. **[verified]** |
+
+**If VS Code is managed by Intune [recommendation]:** Intune adds a second way to reach VS Code. It does not reach the other three products. Nothing here was tested in a real tenant.
+
+- **What it can set.** The VS Code device policies `ChatAllowedMcpServers`, `ChatDeniedMcpServers`, `ChatAllowManagedMcpServersOnly`, `ChatMCP`, `ChatAgentMode`, `ChatCopilotConnectors` and `AllowedExtensions`. **[verified]**
+- **GitHub MDM keys.** Windows registry `HKLM\SOFTWARE\Policies\GitHubCopilot` and macOS domain `com.github.copilot`. Clients check hourly. Linux has no MDM path. **[verified]**
+- **Why use it.** GitHub advises MDM or file delivery for limits that must always hold. It does not depend on a settings download at first start. **[verified]**
+- **Keep one source of truth.** If Intune sets the GitHub MDM key `allowedMcpServers`, the effective list is the intersection with the Git list. A server must be permitted by every source, so a server missing from either list is blocked. **[verified]** Keep the Git list as the master. **[recommendation]**
+- **One place per control.** If a Copilot managed setting and a VS Code device policy cover the same control, the Copilot setting wins. The two are not merged. **[verified]** The pages we read do not pair each device policy with its Copilot key, so check each pair in Policy Diagnostics. **[inference]**
+- **Check it.** Run **Developer: Policy Diagnostics** to see the effective value and its source. Windows device policy applies at the next VS Code start, and some policies also need a Windows restart. **[verified]**
+- **What it does not cover.** Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. A pipeline would be your own build. **[inference]**
 
 **Agent 365 BYO MCP registry facts [verified 2026-11-05]:**
 - Path: Microsoft 365 admin center, **Agents, Tools**. Requests appear under **Requests (preview)**. Registry is under Agents, Tools, Registry.

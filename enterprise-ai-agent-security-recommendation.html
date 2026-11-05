@@ -539,8 +539,8 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 
 <text class="zl" x="10" y="372">TOOL ACCESS</text>
 <rect class="zone" x="10" y="380" width="980" height="110"/>
-<rect class="box pv" x="20" y="394" width="225" height="72"/>
-<text class="t" x="132" y="420">Agent 365 MCP registry</text><text class="s" x="132" y="440">approve and block, preview</text>
+<rect class="box" x="20" y="394" width="225" height="72"/>
+<text class="t" x="132" y="418">Agent 365 MCP registry</text><text class="s" x="132" y="438">approve and block</text><text class="s" x="132" y="454">BYO MCP part is preview</text>
 <rect class="box pv" x="257" y="394" width="225" height="72"/>
 <text class="t" x="369" y="420">Azure API Management</text><text class="s" x="369" y="440">Foundry tool gateway, preview</text>
 <rect class="box cat" x="494" y="394" width="225" height="72"/>
@@ -626,7 +626,7 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 </tr>
 <tr>
 <td>Managed devices must be compliant</td>
-<td>Intune compliance plus Conditional Access grant control</td>
+<td>Intune compliance plus Conditional Access grant control <span class="tg v">verified</span></td>
 <td>None</td>
 </tr>
 <tr>
@@ -771,7 +771,7 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
       <div class="fig-scroll mid">
 <svg class="fg" viewBox="0 0 1000 470" role="img" aria-labelledby="t24 d24">
 <title id="t24">MCP server approval flow</title>
-<desc id="d24">A team asks for an MCP server in a pull request. Security review either closes it with a reason or merges it into the approved list in Git. The list is published to four places: VS Code and GitHub Copilot, the Agent 365 registry, Foundry, and Azure API Center. Approved use is monitored. An incident or failed review blocks gateway and client access and revokes backend permissions.</desc>
+<desc id="d24">A team asks for an MCP server in a GitHub pull request. Security review either closes it with a reason or merges it into the approved list in Git. The list is published to four places: VS Code and GitHub Copilot, the Agent 365 registry, Foundry, and Azure API Center. Approved use is monitored. An incident or failed review blocks gateway and client access and revokes backend permissions.</desc>
 <text class="zl" x="10" y="16">1. ASK</text>
 <text class="zl" x="225" y="16">2. REVIEW</text>
 <text class="zl" x="420" y="16">3. LIST</text>
@@ -779,8 +779,8 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 <text class="zl" x="858" y="16">5. USE</text>
 
 <rect class="box" x="10" y="150" width="180" height="84"/>
-<text class="t" x="100" y="176">Team asks</text>
-<text class="s" x="100" y="196">pull request with owner,</text><text class="s" x="100" y="212">purpose, data, risk tier</text>
+<text class="t" x="100" y="172">Team asks in GitHub</text>
+<text class="s" x="100" y="192">pull request with owner,</text><text class="s" x="100" y="208">purpose, data, risk tier</text>
 <path class="ln" d="M190 192H223" marker-end="url(#arr)"/>
 
 <rect class="box" x="225" y="150" width="140" height="84"/>
@@ -803,8 +803,8 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 
 <rect class="box" x="620" y="22" width="210" height="60"/>
 <text class="t" x="725" y="46">VS Code and GitHub Copilot</text><text class="s" x="725" y="66">managed-settings.json</text>
-<rect class="box pv" x="620" y="108" width="210" height="60"/>
-<text class="t" x="725" y="132">Agent 365 registry</text><text class="s" x="725" y="152">approve, Entra consent, preview</text>
+<rect class="box" x="620" y="104" width="210" height="68"/>
+<text class="t" x="725" y="128">Agent 365 registry</text><text class="s" x="725" y="146">approve, Entra consent</text><text class="s" x="725" y="161">BYO MCP part is preview</text>
 <rect class="box pv" x="620" y="194" width="210" height="60"/>
 <text class="t" x="725" y="218">Foundry</text><text class="s" x="725" y="238">tool policy and API Management</text>
 <rect class="box cat" x="620" y="280" width="210" height="60"/>
@@ -825,10 +825,57 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 <text class="t" x="725" y="396">Kill</text><text class="s" x="725" y="416">block gateway and client access,</text><text class="s" x="725" y="430">revoke backend permissions</text>
 </svg>
       </div>
+      <ul class="key" aria-label="Key">
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k" x="1" y="1" width="28" height="12"/></svg>Documented control or proposed step</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k pv" x="1" y="1" width="28" height="12"/></svg>Preview feature, or the kill path</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k cat" x="1" y="1" width="28" height="12"/></svg>Catalog only, does not block</li>
+      </ul>
       <figcaption><b>Why the last step matters.</b>A gateway block applies only to traffic that uses that gateway. Revoke backend access and restrict alternate paths where you need a hard stop. The catalog entry is for discovery and does not stop direct connections.</figcaption>
     </figure>
 
-    <h3 style="font-size:1.05rem;margin-top:8px">Risk tiers <span class="tg r">recommendation</span></h3>
+    <h3 style="font-size:1.05rem;margin-top:8px">How the list reaches step 4 <span class="tg r">recommendation</span></h3>
+    <p class="muted" style="font-size:0.92rem;max-width:46rem">Only the GitHub path is automatic in the sources we read. The other three need a step that your team builds or does by hand.</p>
+    <div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr><th>Product</th><th>How the list arrives</th><th>What must be in place</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code and GitHub Copilot</td>
+<td>Automatic. Merge <code>copilot/managed-settings.json</code> in the <code>.github-private</code> repo. Licensed users get it within about an hour. <span class="tg v">verified</span></td>
+<td>Copilot seats from your enterprise. A supported client, signed in with the enterprise account. For limits that must always hold, also deliver by MDM or file. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Agent 365 registry</td>
+<td>By hand. An administrator approves the request, then grants Entra consent. <span class="tg v">verified</span> The pages we read describe no sync from Git. <span class="tg i">inference</span> A script or flow would be your own build. <span class="tg r">recommendation</span></td>
+<td>AI Administrator or Global Administrator. A publicly accessible endpoint. Developers need Agent 365 CLI 1.1.165-preview or later. The bring-your-own MCP part is preview. <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Foundry</td>
+<td>Your own build. A pipeline writes the approved endpoints from Git into the Azure Policy assignment. <span class="tg r">recommendation</span> No source describes this as a built-in feature. Not tested.</td>
+<td>The two preview tool policies assigned at the right scope, with Deny. Existing agents and runtime calls need separate handling (see 2.6). <span class="tg v">verified</span></td>
+</tr>
+<tr>
+<td>Azure API Center</td>
+<td>Your own build. Register each approved server as a catalog entry. <span class="tg r">recommendation</span></td>
+<td>Discovery only. It does not block direct connections. <span class="tg v">verified</span></td>
+</tr>
+</tbody>
+</table></div>
+
+    <h3 style="font-size:1.05rem;margin-top:8px">If VS Code is managed by Intune <span class="tg r">recommendation</span></h3>
+    <p class="muted" style="font-size:0.92rem;max-width:46rem">Intune adds a second way to reach VS Code. It does not reach the other three products. Nothing here was tested in a real tenant.</p>
+    <ul class="glance">
+      <li><span><strong>What it can set.</strong> The VS Code device policies <code>ChatAllowedMcpServers</code>, <code>ChatDeniedMcpServers</code>, <code>ChatAllowManagedMcpServersOnly</code>, <code>ChatMCP</code>, <code>ChatAgentMode</code>, <code>ChatCopilotConnectors</code> and <code>AllowedExtensions</code>. <span class="tg v">verified</span></span></li>
+      <li><span><strong>GitHub MDM keys.</strong> Windows registry <code>HKLM\SOFTWARE\Policies\GitHubCopilot</code> and macOS domain <code>com.github.copilot</code>. Clients check hourly. Linux has no MDM path. <span class="tg v">verified</span></span></li>
+      <li><span><strong>Why use it.</strong> GitHub advises MDM or file delivery for limits that must always hold. It does not depend on a settings download at first start. <span class="tg v">verified</span></span></li>
+      <li><span><strong>Keep one source of truth.</strong> If Intune sets the GitHub MDM key <code>allowedMcpServers</code>, the effective list is the intersection with the Git list. A server must be permitted by every source, so a server missing from either list is blocked. <span class="tg v">verified</span> Keep the Git list as the master. <span class="tg r">recommendation</span></span></li>
+      <li><span><strong>One place per control.</strong> If a Copilot managed setting and a VS Code device policy cover the same control, the Copilot setting wins. The two are not merged. <span class="tg v">verified</span> The pages we read do not pair each device policy with its Copilot key, so check each pair in Policy Diagnostics. <span class="tg i">inference</span></span></li>
+      <li><span><strong>Check it.</strong> Run <strong>Developer: Policy Diagnostics</strong> to see the effective value and its source. Windows device policy applies at the next VS Code start, and some policies also need a Windows restart. <span class="tg v">verified</span></span></li>
+      <li><span><strong>What it does not cover.</strong> Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. A pipeline would be your own build. <span class="tg i">inference</span></span></li>
+    </ul>
+
+    <h3 style="font-size:1.05rem;margin-top:8px">Risk tiers<span class="tg r">recommendation</span></h3>
     <p class="muted" style="font-size:0.92rem;max-width:46rem">Apply the highest applicable tier. Publicly reachable endpoints operated by your organization are different from third-party operated servers. The squares show how much human approval each tier needs.</p>
     <ol class="tiers">
       <li><span class="n">1</span><span class="what">Read-only, internal, no sensitive data</span><span class="ex">Internal docs search</span><span class="apt"><span class="ap" aria-hidden="true"><i class="f"></i><i></i><i></i><i></i></span><span>Auto-approve if the checklist passes</span></span></li>

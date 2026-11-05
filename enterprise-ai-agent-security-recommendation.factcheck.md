@@ -243,3 +243,48 @@ Each row covers the statements in the named block, including retained claims and
 - Not tested: anything in a real tenant or on a real device. The page says so, as the Markdown does.
 - Not re-viewed after a label fix: the MCP approval-flow drawing.
 - No em or en dashes on the page. Paragraphs are 60 words or fewer.
+
+### 2.4 propagation table (2026-11-05)
+
+- Each cell was compared with this ledger and with sections 2.3, 2.4 and 2.6. No new vendor page was read for this addition.
+- Automatic delivery is claimed only for GitHub managed settings (section 2.3, step 2: "within about an hour").
+- "The pages we read describe no sync from Git" for Agent 365 is an inference from the pages already read. It is not a search of every Agent 365 page, so it may be wrong.
+- The Git-to-Azure-Policy pipeline for Foundry is a design suggestion. Nothing was built or tested.
+- No dashes. Cells are 60 words or fewer.
+- Agent 365 preview scope (2026-11-05): the bring-your-own MCP server page says "This feature is in preview", names four supported clients during preview, and says new versions cannot be republished during preview. The plugins, skills and MCP servers page labels the Requests tab "(preview)". Agent 365 itself is generally available per the E7 and Agent 365 announcement post, which was not reread on this date.
+
+### 2.4 Intune note (2026-11-05)
+
+- Every bullet was compared with section 2.3 of this page, which holds the VS Code and GitHub Copilot facts checked on 2026-11-05. No new vendor page was read for this addition.
+- Covered: the seven VS Code device policy names, the GitHub MDM keys and hourly check, no Linux MDM path, MDM or file advised for limits that must always hold, allowlists intersecting across layers, the Copilot setting winning over a device policy, Policy Diagnostics, and the Windows restart note.
+- "No source describes an automatic Git to Intune path" is an inference from the pages already read. It is not a search of every Intune page.
+- "Keep the Git list as the master" is a recommendation.
+- Nothing was tested in a real Intune tenant.
+- No dashes. Each item is 60 words or fewer.
+
+### 2.4 Intune note, recheck against vendor pages (2026-11-05)
+
+Fetched and searched for the exact wording on the day. Method: downloaded each page, stripped markup, searched for the term. Not a browser test and nothing ran on a real device.
+
+- Confirmed on the VS Code policies page (code.visualstudio.com/docs/enterprise/policies): the seven policy names, Microsoft Intune named as an MDM option, Windows Group Policy, `/etc/vscode/policy.json` from VS Code 1.106, Developer: Policy Diagnostics, and "Some policies may require restarting Windows".
+- Confirmed on the VS Code AI settings page (code.visualstudio.com/docs/enterprise/manage-ai-settings): Intune is named, and "If both systems configure the same control, the enterprise-managed setting takes precedence. The values are not merged."
+- Confirmed on the GitHub deploy page: registry path `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\GitHubCopilot` (the note writes HKLM), macOS domain `com.github.copilot`, "Native MDM delivery is not supported" on Linux, hourly check in the MDM section, MDM or file for restrictions that must work without a server response, precedence MDM then server then file then user.
+- Confirmed on the GitHub reference page: "When multiple settings sources define allowedMcpServers, the effective allowlist is the intersection of all sources. A server must be permitted by every source to run."
+- Correction made: the first draft of the Intune note said an Intune list that differs from the Git list blocks anything not on both, with no condition. That holds only when Intune delivers the GitHub MDM key `allowedMcpServers`. For a VS Code device policy such as `ChatAllowedMcpServers`, the Copilot setting wins and the values are not merged. The note now says both, separately.
+- Not found: any page that pairs each VS Code device policy with its Copilot managed key. Labelled inference in the note.
+- Not tested: nothing was deployed through Intune.
+
+### Intune, MDM and device policy: all sections rechecked (2026-11-05)
+
+Method: downloaded each page, stripped markup, searched for the claim's wording. Then compared the Markdown with the HTML for each section below. Not a browser test, and nothing was deployed.
+
+- 2.2 "Managed devices must be compliant": the Conditional Access grant controls page lists "Require device to be marked as compliant (Microsoft Intune)". The row had no tag. It now says verified.
+- 2.2 "Restrict desktop redirection": the three Settings catalog names appear word for word on the Windows 365 RDP redirection page, and the Dev Box FAQ says Intune manages clipboard redirection. The clipboard page says Windows 365 is disabled for newly provisioned and reprovisioned Cloud PCs, and Dev Box is enabled in both directions. Confirmed.
+- 2.3 step 2: MDM keys, Linux without native MDM, hourly check in the MDM section, file-based root-owned regular file with no symlink for the CLI, and precedence MDM, server, file, user. Confirmed on the GitHub deploy page.
+- 2.3 step 2 and step 4: the allowlist intersection and denylist union appear on the reference page and on the enterprise allowlist page.
+- 2.3 step 5: malformed policy treated as an empty allowlist, retained policy on a retrieval error, forceRemoteSettingsRefresh behavior, "Policy helper scripts cannot set this key", the VS Code 1.145 registry note, and the ChatMCP device policy for the first-fetch failure. All confirmed on the reference, allowlist and VS Code AI settings pages.
+- 2.3 step 6 and 7: Intune, Group Policy and macOS profiles named on the VS Code AI settings page. Policy names, 1.106 and `/etc/vscode/policy.json`, Policy Diagnostics and the restart note confirmed on the VS Code policies page.
+- Unmanaged laptops (2.3 and Part 5): MDM or file policy "remain active when users switch accounts" confirmed on the GitHub deploy page.
+- 2.4 Intune note: see the entry above, including the correction.
+- Markdown and HTML match for every sentence in these sections. Differences found were table and list formatting only.
+- Not tested: no Intune tenant, no device, no Group Policy template import.
