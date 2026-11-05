@@ -88,3 +88,10 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - The verifier now prints whether a person has confirmed the reviewed list: none, current or stale. It never fails the run.
 - `--sign "Name"` stores a hash of the list in `github-two-enterprise-interactive.signoff.txt`. A later change to any verdict or wording makes it stale.
 - An agent must not run `--sign`. Status today: NONE. The AI cannot close this gap itself; the list needs a person to read it.
+
+## independent AI review of the R and L verdicts (2026-11-05)
+
+- On the user's choice, a separate subagent with no prior context re-judged all 642 R and L rows. It flagged 14 (two borderline); 628 were accepted.
+- All 14 were reworded so they state a requirement and no product behavior: administrator exemptions became administrator accounts, "privileged" before pull_request_target was dropped, the AI manager role example was removed, "licensed" was removed, and the native-retention, built-in-bypass and provenance claims became plain requirements. Some followed sourced sentences in the same description, so the original was defensible, but the neutral wording is safer.
+- A wording-guard hit on the B.v3 summary was fixed by rewording, not by loosening the guard.
+- Limit: this second reviewer is also an AI. The sign-off by a person is still NONE.

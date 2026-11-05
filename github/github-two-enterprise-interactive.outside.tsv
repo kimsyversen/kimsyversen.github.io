@@ -31,7 +31,7 @@ R	A.scim proposed check	Trigger SCIM deprovisioning through the configured IdP i
 L	B.people title	Workforce and partners
 R	B.people summary	Assigned by IdP group. Separate device zone from A. No corporate SSO for public contributions.
 R	B.people proposed check	Confirm a partner has access only to the repos approved for them, with an expiry date.
-R	B.idp summary	Separate integration per organization in B. The IdP owns provisioned membership; reconcile team grants separately.
+R	B.idp summary	Separate integration per organization in B. Reconcile membership and team grants separately.
 R	B.idp proposed check	Compare the admin lists of A and B. They share no accounts.
 L	B.scim title	SAML + SCIM per org
 R	B.scim summary	SAML enforced and SCIM configured in every org. Use per-org SAML, not enterprise SAML. Keep personal accounts.
@@ -77,7 +77,7 @@ R	B.p3 proposed check	Negative tests as in A: push to main, force push, bypass.
 R	B.p4 proposed check	Create a repo in each org and confirm the baseline appears.
 R	B.p5 proposed check	Check that a workflow from a fork cannot read any secret.
 L	B.p6 title	PAT lifetimes bounded
-R	B.p6 proposed check	Test organization access using member tokens whose configured lifetime exceeds the limit, including a newly created token. Check administrator exemptions separately.
+R	B.p6 proposed check	Test organization access using member tokens whose configured lifetime exceeds the limit, including a newly created token. Test administrator accounts separately.
 R	B.p7 proposed check	Trigger a test event and find it in the archive.
 L	B.p8 title	Reconcile SAML + SCIM in every org
 R	B.p8 proposed check	Add a test org without SAML. The job should flag it.
@@ -174,7 +174,7 @@ R	A.v3 summary	Cleared analysts only.
 R	A.v3 proposed check	Check that analyst access is limited to cleared staff.
 R	B.v1 summary	Git, alerts, IdP, proxy, CI.
 L	B.v3 title	Domain B SIEM and SOC
-R	B.v3 summary	Do not claim full visibility of public activity.
+R	B.v3 summary	Name the gaps in SIEM coverage of public activity.
 R	B.v3 proposed check	Document which activities in B the SIEM cannot see.
 L	L.a title	A · Sensitive
 R	L.a proposed check	Try to deploy by skipping a step. Each step should block.
@@ -296,13 +296,13 @@ R	A.p3 description[3]	Review bypass lists and uses.
 R	A.p3 description[5]	Keep existing protection active until the replacement is Active.
 R	A.p4 description[0]	A security configuration is attached to every repo and set as the default for new ones.
 R	A.p4 description[2]	Approved equivalents may replace them.
-R	A.p4 description[3]	Configure delegated push-protection bypass; review the named list and built-in owner/security-manager privileges.
+R	A.p4 description[3]	Configure delegated push-protection bypass; review who can bypass.
 R	A.p4 description[4]	Set a remediation deadline per alert severity.
 R	A.p5 description[0]	Allow approved actions and reusable workflows.
 R	A.p5 description[1]	Require action references to use full commit SHAs.
-R	A.p5 description[3]	Check their SHA pinning separately.
+R	A.p5 description[3]	Check the SHA pinning of reusable workflows separately.
 R	A.p5 description[4]	Set the default GITHUB_TOKEN to read contents and packages, grant extra permissions per job, and disable PR creation/approval.
-R	A.p5 description[5]	Never execute untrusted contributor code in privileged pull_request_target or workflow_run contexts.
+R	A.p5 description[5]	Never execute untrusted contributor code in pull_request_target or workflow_run workflows.
 R	A.p6 description[0]	Block classic PAT access to organization resources.
 R	A.p6 description[3]	Prefer narrowly scoped GitHub Apps.
 R	A.p6 description[4]	Review OAuth grants, app installations and webhook destinations separately.
@@ -345,9 +345,9 @@ R	B.p2 description[1]	In every other organization, repository creation is limite
 R	B.p3 description[0]	Apply enterprise branch and tag rulesets to all in-scope repositories or custom-property selections.
 R	B.p3 description[1]	Allow no bypass by default; document any emergency exception and review its use.
 R	B.p4 description[0]	Apply security configurations to existing repositories and set defaults for new ones.
-R	B.p4 description[1]	Enable licensed Code Security and Secret Protection features for private repositories as required by the baseline.
+R	B.p4 description[1]	Enable Code Security and Secret Protection for private repositories as the baseline requires.
 R	B.p4 description[3]	Verify coverage and entitlements per feature.
-R	B.p6 description[3]	Review administrator exemptions and test their effects.
+R	B.p6 description[3]	Review administrator accounts and test their effects.
 R	B.p7 description[0]	Audit and Git events stream to B's own archive.
 R	B.p7 description[2]	Correlate with endpoint and network evidence.
 R	B.p8 description[0]	A scheduled job compares IdP groups with the members and linked identities of every organization.
@@ -357,7 +357,7 @@ R	B.p10 description[1]	Open source work has its own organization with its own ow
 R	B.p11 description[0]	sandbox-lab is the place for experiments.
 R	B.p11 description[1]	It is private only, holds no secrets or internal data, and is archived when unused.
 R	B.p11 description[2]	This design puts unclassified experiments in B, not A.
-R	B.p12 description[1]	So B keeps SAML and SCIM per organization.
+R	B.p12 description[1]	B keeps SAML and SCIM per organization.
 R	B.p13 description[0]	Pilot approved Copilot and agent features in selected organizations.
 R	B.p13 description[2]	This design enables them at enterprise level first, then per organization.
 R	B.p13 description[3]	Require reviewed models, MCP integrations, PR protections and code-owner review of agent configuration.
@@ -399,7 +399,7 @@ R	B.o2 description[1]	Name release approvers.
 R	B.o2 description[2]	Do not require corporate SSO for public contributions; access to non-public resources requires separate approved grants.
 R	B.o2.proj description[0]	Check history, artifacts, metadata and logs before publishing.
 R	B.o2.proj description[1]	Content from A requires approved transfer.
-R	B.o2.proj description[4]	Verify provenance rather than assuming authentication supplies it.
+R	B.o2.proj description[4]	Verify provenance for each release.
 R	B.o2.pr description[0]	Pull requests from outside run on separate hosted runners without deployment grants.
 R	B.o2.pr description[1]	No secrets, no route to internal runners, registries or targets.
 R	B.o3 description[0]	The place for experiments in this design.
@@ -425,13 +425,13 @@ R	A.v1 description[0]	Audit and Git events, security alerts through supported AP
 R	A.v1 description[1]	Webhook receivers validate signatures and handle replays and duplicates.
 R	A.v2 description[0]	Events go to an immutable archive in the sensitive zone.
 R	A.v2 description[1]	Ingestion lag and stream health are monitored, expected sources are reconciled, and events are deduplicated.
-R	A.v2 description[2]	Do not rely on GitHub's native retention for Git events.
+R	A.v2 description[2]	Keep Git events in the archive, not only in GitHub.
 R	A.v3 description[0]	Detailed sensitive logs stay in the sensitive zone, with cleared analysts only.
 R	B.v1 description[0]	Audit and Git events, security alerts, IdP and proxy logs, CI and registry telemetry.
 R	B.v2 description[0]	Events go to B's own immutable archive.
 R	B.v2 description[1]	Lag and stream health are monitored, and expected sources are reconciled.
 R	B.v3 description[0]	A SIEM and SOC for domain B.
-R	B.v3 description[2]	Do not claim full observation.
+R	B.v3 description[2]	State the gaps in what the SIEM sees.
 R	L.a description[0]	Code reaches a classified target only through an approved PR, an isolated ephemeral runner, required checks, a signed artifact, an approval on a protected environment and a short-lived OIDC identity.
 R	L.a description[1]	Targets reject identities from B.
 R	L.brel description[0]	Public and internal releases come from a reviewed commit, a trusted build, checks, a signed release and a release approval, then deploy to B targets only.
@@ -476,7 +476,7 @@ R	ops.15 description[4]	A and B keep separate copies, and the A copy never lists
 R	acc.1 description[0]	Decides classification, approves the hosting service, and owns export decisions.
 R	acc.2 description[0]	Own the enterprise baseline and make sure audit data is delivered.
 R	acc.2 description[1]	Keep a short named owner list.
-R	acc.2 description[2]	Delegate through suitable enterprise roles such as AI manager.
+R	acc.2 description[2]	Delegate through suitable enterprise roles.
 R	acc.3 description[0]	Own organization teams, installed apps and runner groups.
 R	acc.4 description[0]	Own code review, remediation of findings and deployments for their repo.
 R	acc.5 description[0]	Own detection and response, and keep the evidence.
@@ -484,7 +484,7 @@ R	acc.6 description[0]	Grant exceptions with an expiry, review vendors and apps,
 R	acc.7 description[0]	Own the threat model of their system and keep it current.
 R	acc.8 description[0]	Run training and maintain the secure coding standard.
 R	acc.9 description[0]	Run compliance audits and access reviews and keep the results.
-R	DEV.1 description[0]	B uses personal accounts with SAML and SCIM per organization to retain membership provisioning.
+R	DEV.1 description[0]	B uses personal accounts with SAML and SCIM per organization.
 R	DEV.2 description[0]	A has no sandbox.
 R	DEV.2 description[1]	Unclassified experiments run in the private sandbox-lab organization in B.
 R	DEV.3 description[0]	This design uses private visibility so that access is granted explicitly.
