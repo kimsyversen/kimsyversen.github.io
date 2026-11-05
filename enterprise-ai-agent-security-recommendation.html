@@ -847,7 +847,7 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 </tr>
 <tr>
 <td>Agent 365 registry</td>
-<td>The pipeline registers each approved server in Azure API Management. REST API, ARM, Bicep, Azure CLI and Terraform all work for that. <span class="tg v">verified</span> The Agent 365 Tools Gateway (preview) finds servers in a connected API Management instance within minutes, and finds new ones later. <span class="tg v">verified</span></td>
+<td>The pipeline registers each approved server in Azure API Management. REST API, ARM, Bicep, Azure CLI and Terraform all work for that. <span class="tg v">verified</span> The Agent 365 Tools Gateway (preview) finds the servers in a connected API Management instance within a few minutes of the first connection. Servers you add afterwards are found on a later refresh. The page gives no interval. <span class="tg v">verified</span></td>
 <td>One-time Global Administrator consent. Servers outside the gateway are not found. An administrator still applies allow or block per server. No source shows that done by pipeline, or says if a new server starts allowed or blocked. <span class="tg u">unverified</span> Test that first. The bring-your-own request flow stays manual, so avoid it here. <span class="tg r">recommendation</span></td>
 </tr>
 <tr>
