@@ -633,7 +633,6 @@ button{font:inherit}
   var nodeEls = {};
   $$('.nd[data-id]', stage).forEach(function(e){ nodeEls[e.getAttribute('data-id')] = e; });
   var filter = null, selId = null, scale = 1, lastAnchor = null;
-  var TOTAL = ORDER.length;
 
   /* ---------- arrows ---------- */
   var NS = 'http://www.w3.org/2000/svg', ov = null;
@@ -754,15 +753,14 @@ button{font:inherit}
     var h = '';
     if (selId){
       var n = D[selId];
-      h = '<b>' + esc(n.t) + '</b>. ' + (n.rel.length ? n.rel.length + ' related ' + (n.rel.length === 1 ? 'element is' : 'elements are') + ' highlighted. ' : '') + 'Press Escape or click an empty area to clear.';
+      h = '<b>' + esc(n.t) + '</b>. Press Escape or click an empty area to clear.';
     } else if (filter){
-      var count = 0; ORDER.forEach(function(id){ if (match(D[id], filter)) count++; });
       var k = key(filter);
-      if (filter[0] === 'fl') h = '<b>' + esc(FLOWNAME[filter[1]]) + '.</b> ' + esc(FLOWTEXT[filter[1]]) + ' ' + count + ' elements take part.';
-      else if (filter[0] === 'dev') h = '<b>' + count + ' elements show a deliberate deviation.</b> 1: ' + esc(DEV[1]) + ' 2: ' + esc(DEV[2]) + ' 3: ' + esc(DEV[3]) + ' 4: ' + esc(DEV[4]);
-      else h = '<b>' + count + ' of ' + TOTAL + ' elements</b> are ' + esc(LABELS[k] || k) + '.';
+      if (filter[0] === 'fl') h = '<b>' + esc(FLOWNAME[filter[1]]) + '.</b> ' + esc(FLOWTEXT[filter[1]]);
+      else if (filter[0] === 'dev') h = '<b>Deliberate deviations.</b> 1: ' + esc(DEV[1]) + ' 2: ' + esc(DEV[2]) + ' 3: ' + esc(DEV[3]) + ' 4: ' + esc(DEV[4]);
+      else { var lb = String(LABELS[k] || k); h = '<b>' + esc(lb.charAt(0).toUpperCase() + lb.slice(1)) + '.</b>'; }
     } else {
-      h = TOTAL + ' elements. Click a box for what it does and how to check it. Filter to follow a flow, a policy layer or a type of control.';
+      h = 'Click a box for what it does and how to check it. Filter to follow a flow, a policy layer or a type of control.';
     }
     sumEl.innerHTML = h;
   }
