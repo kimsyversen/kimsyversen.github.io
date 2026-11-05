@@ -1,9 +1,71 @@
-# Fact check ledger
-
 **Belongs to:** [enterprise-ai-agent-security-recommendation.md](enterprise-ai-agent-security-recommendation.md)
+
+# Fact check ledger
 **Checked on:** 2026-11-05
 **Method:** each claim compared with the vendor page. Verdicts: **Correct**, **Corrected** (was wrong, now fixed), **Softened** (was too strong, now labelled), **Unverified** (no primary source read, now labelled).
 **Not tested:** nothing was run in a real tenant. All verdicts come from documentation, not behavior.
+
+
+## Current review status (2026-11-05)
+
+This statement review supersedes earlier verdicts where they conflict. Earlier passes remain below as history, including their unresolved questions. Their claims of exhaustive reading and absence of documentation are not evidence of universal product behavior.
+
+Retrieved all 73 original source URLs. Obtained article text from 71 with curl; checked the two microsoft.com pages (E7 pricing and the GCC announcement) with the web tool because curl returned access-denied content. Read relevant source sections for each claim, including the GitHub connector entries, not the entire unrelated connector catalog. Added three direct supporting sources.
+
+Checked prose, lists, table cells, JSON and diagram labels. Recommendations describe the proposed target state, not a completed deployment. Unknown first-start behavior remains explicitly unverified; the document makes no assertion about what those untested clients do.
+
+Nothing was tested on a real tenant, consultant device or agent runtime. No claim of complete operational security is made. This is a Markdown document; no HTML page or index entry was changed. Page theme and mobile checks do not apply to this edit.
+
+### Current corrections and coverage
+
+Each row covers the statements in the named block, including retained claims and corrected qualifications. The source names refer to the linked source table in the recommendation. All checks below are dated 2026-11-05.
+
+| # | Statement block | Verdict and reasoning | Primary sources |
+|---|---|---|---|
+| 102 | Summary: one control plane and default deny | Corrected. A proposed policy cannot establish enforcement on all runtimes. Include built-in exemptions, unsupported clients and custom profiles. | GitHub enterprise-managed settings reference; Agent 365 BYO MCP |
+| 103 | Summary: managed desktop, identity, approvals and Git | Qualified as recommendations. Require deployment and tested transfer controls. Human approval applies to high-impact changes; bounded low-impact actions may use rules. Git alone does not require review. | Design recommendations; GitHub managed-settings deployment |
+| 104 | Tool-to-job table | Corrected. Package expiry affects package-granted access. Cloud desktops do not prove containment. Registry block scope is gateway invocations. Foundry controls require configuration. | Entitlement management external users; Agent 365 BYO MCP; Foundry network and tool policy sources |
+| 105 | E7 contents, Agent 365 GA and licensing | Confirmed against licensing comparison, overview and GA post. Corrected displayed source dates. | E7 comparison; Agent 365 overview; GA post |
+| 106 | GCC availability | Confirmed purchase dates and phased availability. Limited GCC High/DoD wording to what this announcement establishes. | Microsoft Cloud GCC announcement |
+| 107 | Copilot Studio charges | Corrected scope: qualifying authenticated licensed usage, fair use, autonomous and computer-use exclusions, and the required agent-flow trigger. No claim that all agent use is free. | Copilot Studio billing rates and licensing |
+| 108 | Foundry charges | Confirmed token billing, hosted CPU and memory across active sessions, and separately charged tools, knowledge and ancillary services. | Foundry pricing, hosted agents, architecture and overview |
+| 109 | E7 price | Corrected: US annual-commitment prices are $99 with Teams and $90.45 without Teams, per user/month. Launch post's combined wording did not establish identical prices for both variants. | E7 product pricing page; GA post |
+| 110 | Four surprises | Confirmed BYO preview client list, remote scope and custom profile exemption. Narrowed preview label to BYO rather than all Agent 365 capabilities. | Agent 365 BYO MCP; GitHub managed-settings reference |
+| 111 | Architecture diagrams | Corrected universal Purview path. Data permissions remain at source; Purview connections depend on supported integrations. Explicitly label target state as a recommendation. Incident diagram now includes backend permission revocation. | Proposed design; Copilot DLP scope; Foundry gateway limitations |
+| 112 | MFA, strengths, compliance and guest MFA | Confirmed licensing, supported strength methods and guest limits. Specified multifactor certificate authentication. Removed implication that all certificate authentication satisfies phishing resistance. | Entra strengths; external-user strengths; guest MFA; B2B Conditional Access |
+| 113 | Guest expiry and licensing | Corrected lifecycle scope to guests invited through entitlement management; pre-existing guests need governance configuration. Basic P2 features do not universally require Governance licenses. | Entitlement management external users; Governance licensing fundamentals and guest licensing |
+| 114 | Access reviews | Confirmed nonresponder removal option and automatic application. Corrected "all access" to access under review. Quarterly cadence is a recommendation. | Access-package reviews; create-access-review |
+| 115 | Cloud desktop transfers | Confirmed Dev Box enabled clipboard default and narrowed Cloud PC default to new/reprovisioned instances. Redirection settings are transfer restrictions, not proof that no information can leave. | Cloud PC redirection; AVD clipboard redirection; Dev Box FAQ |
+| 116 | Unmanaged app access | Confirmed SharePoint limited web-only access and P1/P2 prerequisite. Confirmed Defender browser session controls and separate native-client blocking. | SharePoint unmanaged devices; Zero Trust workload policies; Defender session and app-control pages |
+| 117 | Conditional Access for agents | Confirmed three access patterns, licensing, report-only guidance, API-key exclusion, agent-user targeting and preview conditions. Availability must be checked per condition. | Conditional Access for agents and autonomous agents |
+| 118 | Guest governance billing | Confirmed Governance-exclusive active usage, Azure subscription linking, P2 exclusions, administrator licensing and January enforcement wording. | Governance guest licensing |
+| 119 | Personal GitHub Copilot accounts | Removed global absence claim. Confirmed EMU limits, subscription-based network routing and client minimums. Proxy restrictions require EMU and supported endpoints; SSH needs separate treatment. | GitHub managed user limits; subscription routing; corporate proxy restrictions |
+| 120 | GitHub policy delivery | Confirmed repository/path, licensed-account scope, refresh timing and three delivery methods. Clarified precedence exceptions and root-owned local CLI file requirements. | GitHub get-started; managed-settings deployment; settings reference |
+| 121 | MCP matching and policy decisions | Confirmed exact single matcher, URL wildcards, ordered command arguments, built-in exemption, deny precedence, allowlist intersection and denylist union. Added user-controlled label caveat. | GitHub allowlist; settings reference |
+| 122 | Malformation, retrieval errors and first startup | Narrowed malformed-policy guarantee to documented MCP policy. Confirmed retained policy and CLI no-cache case. Distinguished registry cache behavior from managed settings. Unknown client behavior remains unverified, not relabeled verified. | GitHub allowlist, deployment and settings reference; VS Code manage AI settings |
+| 123 | Forced refresh | Confirmed supported clients, cache/fallback restriction, first-start local delivery and helper-script limitation. | GitHub settings reference and deployment |
+| 124 | VS Code device policies | Confirmed named keys, Linux location/version, overlap precedence, diagnostics and Windows restart guidance. | VS Code AI settings and enterprise policies |
+| 125 | Example and client coverage | JSON uses documented matcher shape. Package commands are real examples, not fictional placeholders. Added recommendation to pin and protect packages. Confirmed client table exceptions. | GitHub settings reference and allowlist |
+| 126 | Registry policy | Confirmed preview, weaker name/ID enforcement, config bypass, API Center base URL, Allow all recommendation and development-priority warning. | GitHub registry restriction and MCP management concepts; API Center |
+| 127 | MCP approval and revocation workflow | Qualified strength claims. Confirmed registry path, admin roles, consent, block scope, tool-level rollout, endpoint/auth prerequisites, republish limitation and Defender query. Risk tiers apply highest applicable classification. | Agent 365 BYO MCP; plugins/skills/MCP; tools administration |
+| 128 | Copilot Studio policies | Confirmed environments, tenant connector/channel/auth/knowledge controls, publishing restriction, managed group rules and group immutability. Removed unsupported universal policy for banning maker credentials. | Zoned governance; Studio data policies; tool authentication; environment groups and rules |
+| 129 | Studio MCP | Confirmed connector-based MCP blocking. Removed suggestion that registry registration alone establishes default deny for every remaining connection path. | Studio data policies; Agent 365 BYO MCP |
+| 130 | Foundry projects, RBAC and identity | Confirmed guidance and roles. Qualified key access to its resource and identity creation to the current model; legacy shared identities remain possible. | Foundry planning, RBAC and agent identity |
+| 131 | Foundry network and Azure Policy | Confirmed network options, irreversible mode restrictions, CLI preview, GA model definitions and preview tool definitions/effects. Disabled mode means managed isolation is off. | Managed VNet; network isolation; model policy; Azure Policy built-in index |
+| 132 | Foundry local authentication | Removed unsupported statement that Azure OpenAI Studio requires key access. Confirmed disableLocalAuth, built-in policy, propagation delay and need to test data-plane rejection. | Disable local authentication in Foundry Tools |
+| 133 | Foundry gateway | Confirmed new eligible portal-created MCP scope, OAuth exclusions, unsupported tools, creation-time routing and absence of tool traces. Portal workflow does not prove API Management can only be administered through its UI. | Foundry gateway governance |
+| 134 | Copilot permissions and oversharing | Removed statement that oversharing is the only risk. Confirmed existing permissions and SAM eligibility/exceptions. Restricted Content Discovery limits discovery without revoking direct access. | Copilot security; SAM prerequisites; Restricted Content Discovery |
+| 135 | DSPM assessments and licensing | Confirmed weekly top-100 assessments and Fabric setup. Corrected use of classic DSPM licensing page as evidence for current assessment entitlement. Current licensing needs validation; no unsupported entitlement is asserted. | Current DSPM overview and assessments; classic DSPM get-started; Purview service description |
+| 136 | Copilot DLP | Added sensitive-prompt blocking preview and rollout limitation. Confirmed web-search restriction, labels, uploaded-file exclusion and possibility of citations to excluded items. | Copilot/Cowork DLP |
+| 137 | Copilot audit | Corrected full-content implication: documented audit fields include message IDs and resource references. Do not assume full text in an event. Added direct source. | [Copilot audit fields](https://learn.microsoft.com/en-us/purview/audit-copilot) |
+| 138 | Safe releases and acting agents | Recommendations, not vendor guarantees. Reconciled human high-impact approval and bounded rules-service actions. | Proposed security design |
+| 139 | GitHub logs and Sentinel | Confirmed destinations, connector tables, token scope, storage prerequisites, Government exclusion, volume guidance and reference-page preview statement. Added Purview streaming enterprise eligibility. | GitHub audit streaming; Sentinel connector introduction and GitHub entries |
+| 140 | Inventory and third-party activity | Confirmed platform-specific synchronization. Added manual-sync boundary, Frontier observability preview and Oracle/Snowflake activity coming soon. Registration is not full telemetry. | Agent 365 admin overview; connected platforms |
+| 141 | Low-admin processes and rollout | Recommendations requiring implementation. Removed instant group lifecycle and one-click universal renewal implications. Empty MCP allowlist explicitly retains built-in exemptions. | Proposed operating model; vendor scopes above |
+| 142 | Known gaps | Reconciled against corrected detail: BYO support versus all Agent 365, account-based versus local delivery, personal-account network controls, guest billing and unverified first-start behavior. | Sources above |
+| 143 | Source dates and evidence labels | Replaced stale or unsupported update dates with displayed dates from retrieved articles. Retired partly-read and verified-absence tags. Kept explicit unverified behavior rather than claiming a search proves absence. | Retrieved source articles; displayed Last updated fields |
+
+## Historical passes (superseded where contradicted above)
 
 ## Corrected (was wrong)
 
@@ -162,3 +224,11 @@
 | 99 | Mermaid, eleventh pass, and the E7 page | Diagrams extracted from the current file and parsed with mermaid 10.9.1 in the browser: 4 of 4 ok. The E7 page on microsoft.com loads in the browser (curl got HTTP 403, the browser did not): $99.00 per user per month, includes E5, Microsoft 365 Copilot, Agent 365 and Entra Suite. Matches the document. | Checked 2026-11-05 |
 | 100 | Re-read of 2.3 (lines 196 to 270) after the eleventh pass, and one more search for the first-start case | Every statement matches its source row in this ledger. No contradiction between 2.3 and Part 5 items 5, 7 and 10. The search (docs.github.com, github.blog, code.visualstudio.com, 2026-11-05) returned the same pages as before and no new statement on first start for clients other than the CLI. | Checked 2026-11-05 |
 | 101 | Link check of every URL in the document (74 unique) | curl with a browser user agent, 2026-11-05: 71 return HTTP 200. One is the placeholder `mcp.example.corp` in the example file, which is meant not to exist. Two microsoft.com pages return 403 to curl: the E7 page and the G7 blog post. Both load in the browser. The G7 post text matches the document: GCC purchase from 1 October 2026, more options 1 November, capabilities in phases as GCC authorization milestones are met. | Checked 2026-11-05 |
+
+### Validation for the current revision (2026-11-05)
+
+- JSON example parses; matcher objects each have one property.
+- All five code fences are balanced, including four Mermaid diagrams. Diagram syntax and meaning reviewed in source; diagrams were not rendered in this pass.
+- Recommendation prose lines and table cells are at most 60 words. No em or en dashes in the recommendation or new decisions note.
+- All original source URLs retained. Companion note links resolve to the recommendation.
+- `git diff --check` passed. No build step exists for this Markdown-only change. No tenant or device behavior was tested.
