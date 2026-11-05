@@ -248,6 +248,249 @@ R	flow banner untrusted	Public fork pull requests must run without deployment gr
 R	flow banner export	A to B only through the approved transfer service, after the release authority decides.
 R	flow banner intake	B to A only after verification, quarantine, scanning and pinning.
 R	flow banner respond	Detect, contain, rotate, recover, learn. Logs must stay in each domain. The common SOC may see only minimized metadata.
+R	g0 description[0]	Nothing classified is loaded until the specific service, hosting region, administrator and support access, identity platform, runners, scanners, logs and backups are approved.
+R	g0 description[1]	A residency choice is not an accreditation decision.
+R	g1 description[0]	Standard GitHub Enterprise Cloud on github.com.
+R	g1 description[1]	This is the baseline shown for A and B.
+R	g1 description[2]	A requires explicit hosting approval before any classified content is loaded.
+R	g2 description[0]	Alternative for A only.
+R	g2 description[3]	B stays on github.com.
+R	g2 description[4]	Reassess feature availability, endpoints and integrations; residency alone is not accreditation.
+R	g3 description[0]	Alternative for A if Cloud is unsuitable.
+R	g3 description[1]	An assessed self-hosted or accredited platform needs a separate identity, feature and operations design.
+R	g3 description[2]	The Cloud controls below do not automatically apply; B remains on github.com for public work.
+R	c.bound description[0]	The baseline has two governance domains on github.com, without an air gap.
+R	c.bound description[2]	Keep credentials and app installations separate.
+R	c.ident description[0]	People who work in both enterprises use two GitHub identities and separate work environments.
+R	c.ident description[2]	Use managed workstations or isolated sessions, distinct credential stores and controlled egress.
+R	c.xfer description[0]	Proposed external transfer process.
+R	c.xfer description[1]	Export: the release authority decides that content may leave A, history, secrets and IaC topology are inspected, and a signed manifest with a hash is logged.
+R	c.xfer description[2]	Intake: origin is verified, content is quarantined, scanned and pinned before it enters A.
+R	c.xfer description[3]	Never mirror sensitive repos into B automatically.
+R	c.xfer description[4]	Remove the whole path if transfers are prohibited.
+R	c.soc description[0]	A common SOC can share procedures and approved summaries.
+R	c.soc description[1]	Detailed logs stay in each domain because repository names, paths and identities can reveal critical-system details.
+R	c.soc description[2]	Even sanitised sharing needs classification approval.
+R	A.people description[0]	Only authorised personnel are assigned to A.
+R	A.people description[1]	Access follows need-to-know groups.
+R	A.people description[2]	Require managed workstations or assessed isolated sessions, signed commits and controlled egress.
+R	A.people description[3]	Dev containers may run non-root inside that environment; a container alone is not the domain boundary.
+R	A.people description[4]	Limit developer tools, AI assistants and extensions to an approved list.
+R	A.idp description[0]	A dedicated IdP application for A owns the account lifecycle.
+R	A.idp description[1]	Phishing-resistant MFA, privileged access through PAM, a short list of named enterprise owners and protected emergency recovery access.
+R	A.idp description[2]	This design chooses SAML.
+R	B.people description[0]	Employees and approved partners are assigned through the relevant organization IdP integrations.
+R	B.people description[1]	Require a separate device zone from A.
+R	B.people description[2]	Do not require corporate SSO for public contributions; contributors may also hold separately approved private access, so review grants rather than assuming identity categories are exclusive.
+R	B.idp description[0]	Use a separate SAML and SCIM integration for each B organization, with credentials separate from A.
+R	B.idp description[3]	Configure supported team synchronization or separate automation and reconcile it.
+R	B.scim description[1]	Enforce SAML and configure SCIM separately in each organization.
+R	A.p1 description[1]	This design uses private only.
+R	A.p1 description[2]	User-owned repos and private forking are turned off, and visibility changes are restricted.
+R	A.p2 description[0]	Restrict repository creation, deletion and transfer to approved actors.
+R	A.p2 description[2]	Review allow lists and member-privilege settings.
+R	A.p3 description[0]	Use enterprise branch and tag rulesets targeting all in-scope repositories or custom-property selections.
+R	A.p3 description[1]	For protected branches require two approvals, code-owner review, stale-review dismissal, latest-push approval and signed commits.
+R	A.p3 description[2]	Restrict force pushes and deletions.
+R	A.p3 description[3]	Review bypass lists and uses.
+R	A.p3 description[5]	Keep existing protection active until the replacement is Active.
+R	A.p4 description[0]	A security configuration is attached to every repo and set as the default for new ones.
+R	A.p4 description[2]	Approved equivalents may replace them.
+R	A.p4 description[3]	Configure delegated push-protection bypass; review the named list and built-in owner/security-manager privileges.
+R	A.p4 description[4]	Set a remediation deadline per alert severity.
+R	A.p5 description[0]	Allow approved actions and reusable workflows.
+R	A.p5 description[1]	Require action references to use full commit SHAs.
+R	A.p5 description[3]	Check their SHA pinning separately.
+R	A.p5 description[4]	Set the default GITHUB_TOKEN to read contents and packages, grant extra permissions per job, and disable PR creation/approval.
+R	A.p5 description[5]	Never execute untrusted contributor code in privileged pull_request_target or workflow_run contexts.
+R	A.p6 description[0]	Block classic PAT access to organization resources.
+R	A.p6 description[3]	Prefer narrowly scoped GitHub Apps.
+R	A.p6 description[4]	Review OAuth grants, app installations and webhook destinations separately.
+R	A.p7 description[0]	Audit and Git events stream to A's own archive.
+R	A.p7 description[1]	API request events and source IP disclosure are on.
+R	A.p7 description[3]	Correlate with proxy and endpoint evidence.
+R	A.p7 description[5]	The stream must run from day one.
+R	A.p8 description[0]	Access only through a mandatory corporate proxy plus network allow lists.
+R	A.p8 description[1]	Block Git over SSH and unsupported upload paths.
+R	A.p8 description[6]	Choose per accreditation.
+R	A.p9 description[0]	Every repo carries properties such as system, class and owner.
+R	A.p9 description[2]	Those baselines follow the data, not the repo name.
+R	A.p10 description[1]	This design decides membership in one place.
+R	A.p11 description[0]	Organizations follow classification and need-to-know, not the management chart.
+R	A.p11 description[1]	A has no sandbox organization: experiments run in B with no classified data.
+R	A.p11 description[2]	This is a design choice.
+R	A.p12 description[0]	Each critical system has a threat model that decides which controls are required.
+R	A.p12 description[1]	It is kept up to date as the system changes.
+R	A.p13 description[0]	Keep Copilot and agents disabled until approved for the system.
+R	A.p13 description[1]	If approved, scope policies, models and MCP integrations to the reviewed feature.
+R	A.p13 description[2]	Require normal PR protections and code-owner review of agent configuration.
+R	A.p13 description[3]	Assess runner or sandbox isolation and spending controls.
+R	A.p13 description[5]	Require independent network controls.
+R	A.p14 description[0]	Delegate organization duties with security manager or custom roles instead of broad Admin where suitable.
+R	A.p14 description[2]	Assign it only within an approved compartment.
+R	A.p14 description[3]	This design requires two owners per organization, no Admin base permission, named app managers and a short enterprise-owner list.
+R	A.p15 description[0]	Dependency review is a required check.
+R	A.p15 description[1]	Lockfiles are mandatory, and install-time lifecycle scripts are off in builds.
+R	A.p15 description[2]	Builds produce signed artifacts with provenance, and deploys verify them.
+R	A.p15 description[3]	Dependabot keeps actions and packages current.
+R	A.p16 description[0]	Approved workflows and actions live in one dedicated organization in A, owned by a platform team.
+R	A.p16 description[1]	They are versioned (major tags, changelog, migration notes), protected by code owners and required reviews, and pinned by consumers.
+R	A.p16 description[2]	Teams consume them with no copy-paste.
+R	A.p16 description[3]	A and B never share workflows, because the enterprises stay apart.
+R	A.p16 description[4]	Each has its own copy.
+R	B.p1 description[0]	Two-factor is required for every organization in the enterprise.
+R	B.p1 description[2]	Watch for organizations that appear outside the enterprise.
+R	B.p2 description[0]	Public visibility is allowed only in public-open-source.
+R	B.p2 description[1]	In every other organization, repository creation is limited to private repositories and visibility changes are restricted, so the aim is that no private repo is made public by mistake.
+R	B.p3 description[0]	Apply enterprise branch and tag rulesets to all in-scope repositories or custom-property selections.
+R	B.p3 description[1]	Allow no bypass by default; document any emergency exception and review its use.
+R	B.p4 description[0]	Apply security configurations to existing repositories and set defaults for new ones.
+R	B.p4 description[1]	Enable licensed Code Security and Secret Protection features for private repositories as required by the baseline.
+R	B.p4 description[3]	Verify coverage and entitlements per feature.
+R	B.p6 description[3]	Review administrator exemptions and test their effects.
+R	B.p7 description[0]	Audit and Git events stream to B's own archive.
+R	B.p7 description[2]	Correlate with endpoint and network evidence.
+R	B.p8 description[0]	A scheduled job compares IdP groups with the members and linked identities of every organization.
+R	B.p8 description[1]	It reports drift, and any org without SAML enforced.
+R	B.p10 description[0]	Organizations follow classification and need-to-know.
+R	B.p10 description[1]	Open source work has its own organization with its own owners and release approvers.
+R	B.p11 description[0]	sandbox-lab is the place for experiments.
+R	B.p11 description[1]	It is private only, holds no secrets or internal data, and is archived when unused.
+R	B.p11 description[2]	This design puts unclassified experiments in B, not A.
+R	B.p12 description[1]	So B keeps SAML and SCIM per organization.
+R	B.p13 description[0]	Pilot approved Copilot and agent features in selected organizations.
+R	B.p13 description[2]	This design enables them at enterprise level first, then per organization.
+R	B.p13 description[3]	Require reviewed models, MCP integrations, PR protections and code-owner review of agent configuration.
+R	B.p13 description[4]	Assess each execution environment and enforce spending controls.
+R	B.p15 description[0]	Require dependency review checks, lockfiles and disabled install-time lifecycle scripts where supported.
+R	B.p15 description[1]	Use OIDC trusted publishing where supported.
+R	B.p15 description[4]	Verify release provenance separately.
+R	B.p15 description[5]	Use Dependabot for supported package and action updates.
+R	B.p16 description[0]	Approved workflows and actions live in one dedicated organization in B, owned by a platform team, with versions, changelog, code owners and required reviews.
+R	B.p16 description[1]	Public CI reuses only workflows without deployment grants.
+R	B.p16 description[2]	B has its own copy and never reads A.
+R	A.o1 description[0]	One organization per critical system.
+R	A.o1 description[1]	Teams come from IdP groups and base access is none, so the aim is that private repositories are visible only to people who are granted access.
+R	A.o1 description[2]	It has its own runner group, and only approved GitHub Apps are installed.
+R	A.o1.src description[0]	Source repos hold the code.
+R	A.o1.src description[1]	Two approvals and CODEOWNERS review, signed commits, push protection, a SECURITY.md and the secure coding standard apply.
+R	A.o1.iac description[0]	IaC repos run policy checks and plan review before a protected environment approves a deploy.
+R	A.o1.iac description[1]	State and plans that contain secrets never live in Git.
+R	A.o1.iac description[2]	State is encrypted in the approved backend with locking.
+R	A.o2 description[0]	A second critical system with its own owners, security leads and runner group.
+R	A.o2 description[1]	Its credentials and teams are not shared with critical-system-a.
+R	A.o2.src description[0]	Same baseline as the other system, with CODEOWNERS that name this system's reviewers.
+R	A.o2.iac description[0]	Apply the same checks with separate state, protected environments and credentials.
+R	A.o3 description[0]	Holds shared tooling and policy automation.
+R	A.o3 description[1]	Do not grant platform-team members blanket read access to system repositories.
+R	A.o3.pol description[0]	Settings and rules as code.
+R	A.o3.pol description[1]	Changes need two approvals including security, and the result is compared with live settings to catch drift.
+R	A.o3.tool description[0]	Shared actions and tools used by builds are pinned to commits, signed and reviewed before any system uses them.
+R	A.o3.tool description[1]	Imports from outside enter here through the intake path.
+R	B.o1 description[0]	Internal work.
+R	B.o1 description[1]	Repos are private with explicit team grants and base access none.
+R	B.o1 description[2]	It has an internal runner group.
+R	B.o1.app description[0]	Internal application code.
+R	B.o1.app description[1]	PR review, CODEOWNERS, secret protection and pinned action references apply.
+R	B.o1.tools description[0]	Use private visibility with explicit grants.
+R	B.o1.tools description[3]	Private visibility is the design choice here.
+R	B.o2 description[0]	The only organization where this design permits public repositories.
+R	B.o2 description[1]	Name release approvers.
+R	B.o2 description[2]	Do not require corporate SSO for public contributions; access to non-public resources requires separate approved grants.
+R	B.o2.proj description[0]	Check history, artifacts, metadata and logs before publishing.
+R	B.o2.proj description[1]	Content from A requires approved transfer.
+R	B.o2.proj description[4]	Verify provenance rather than assuming authentication supplies it.
+R	B.o2.pr description[0]	Pull requests from outside run on separate hosted runners without deployment grants.
+R	B.o2.pr description[1]	No secrets, no route to internal runners, registries or targets.
+R	B.o3 description[0]	The place for experiments in this design.
+R	B.o3 description[1]	Private only, no public repos, SAML enforced and SCIM configured like every other org.
+R	B.o3 description[2]	It holds no secrets or internal data.
+R	B.o3.exp description[0]	Throwaway work.
+R	B.o3.exp description[1]	No secrets and no internal data.
+R	B.o3.exp description[2]	Archived when unused, and review remaining access separately.
+R	B.o3.part description[0]	Partners are recertified on their own review cycle, with scoped roles and an expiry.
+R	A.e1 description[0]	Require disposable runners per system or trust level, selected repository/workflow access, restricted repository-level runner creation, patched images, removed disks/caches and controlled egress.
+R	A.e2 description[0]	Use short-lived OIDC deployment credentials.
+R	A.e2 description[1]	On github.com, configure the enterprise-specific issuer and require the exact issuer, audience and approved repository/environment subject in target trust policies.
+R	A.e2 description[2]	Match enterprise claims where supported, or encode required constraints in the subject.
+R	A.e2 description[4]	Test rejection of B identities and unapproved A repositories.
+R	A.e3 description[0]	Signed artifacts with an SBOM, and a mirror of approved dependencies.
+R	A.e3 description[1]	Builds in A pull from the mirror, not from the open internet.
+R	A.e3 description[2]	Provenance attestations are verified before a deploy, and the attestation bundle is kept with the artifact.
+R	B.e1 description[0]	Self-hosted runners for internal work, with their own credentials, separate from A and from public CI.
+R	B.e2 description[0]	Run public fork PRs on separate GitHub-hosted workers with a read-only job token, no deployment secrets and no private-network connection.
+R	B.e3 description[0]	Short-lived OIDC identity for B targets only.
+R	B.e3 description[1]	B targets reject identities from A.
+R	A.v1 description[0]	Audit and Git events, security alerts through supported APIs or webhooks, IdP and privileged-access logs, proxy, endpoint and runner telemetry.
+R	A.v1 description[1]	Webhook receivers validate signatures and handle replays and duplicates.
+R	A.v2 description[0]	Events go to an immutable archive in the sensitive zone.
+R	A.v2 description[1]	Ingestion lag and stream health are monitored, expected sources are reconciled, and events are deduplicated.
+R	A.v2 description[2]	Do not rely on GitHub's native retention for Git events.
+R	A.v3 description[0]	Detailed sensitive logs stay in the sensitive zone, with cleared analysts only.
+R	B.v1 description[0]	Audit and Git events, security alerts, IdP and proxy logs, CI and registry telemetry.
+R	B.v2 description[0]	Events go to B's own immutable archive.
+R	B.v2 description[1]	Lag and stream health are monitored, and expected sources are reconciled.
+R	B.v3 description[0]	A SIEM and SOC for domain B.
+R	B.v3 description[2]	Do not claim full observation.
+R	L.a description[0]	Code reaches a classified target only through an approved PR, an isolated ephemeral runner, required checks, a signed artifact, an approval on a protected environment and a short-lived OIDC identity.
+R	L.a description[1]	Targets reject identities from B.
+R	L.brel description[0]	Public and internal releases come from a reviewed commit, a trusted build, checks, a signed release and a release approval, then deploy to B targets only.
+R	L.bpr description[0]	Pull requests from outside are treated as hostile.
+R	L.bpr description[1]	They run without deployment grants and only report status back.
+R	L.bpr description[2]	No secrets and no route to internal or sensitive systems.
+R	L.exp description[0]	Content leaves A only after a release request and a decision by the release authority.
+R	L.exp description[1]	It is inspected, minimised and signed, staged, and published in B.
+R	L.exp description[2]	Scanning alone cannot declassify information.
+R	L.imp description[0]	Outside content enters A through a mirror.
+R	L.imp description[1]	Origin is verified, content is quarantined and scanned for malware and licence issues, versions are pinned, then it is admitted to the approved mirror and used in A.
+R	L.ir description[0]	Detect, contain, rotate credentials and preserve evidence, recover, then learn.
+R	L.ir description[1]	Exercises cover the cases where the IdP, the collector or GitHub itself is the problem.
+R	ops.1 description[0]	Every repo has an owner, a class and a retention rule, kept in custom properties and checked for gaps.
+R	ops.2 description[0]	Enterprise and organization settings live in code.
+R	ops.2 description[1]	A scheduled job reports any setting that has drifted.
+R	ops.3 description[0]	Backups cover Git history, LFS, issues, packages and settings.
+R	ops.3 description[1]	Check what the tool really restores.
+R	ops.4 description[0]	Restores are tested, with recovery point and recovery time targets agreed with each system owner.
+R	ops.5 description[0]	Review IdP groups, deploy keys, app installations, webhooks and outside collaborators on a schedule.
+R	ops.6 description[0]	Runner images are patched on a schedule, and their state is attested.
+R	ops.7 description[0]	State and plans are encrypted, locked, and reachable only by the pipeline that needs them.
+R	ops.8 description[0]	Regularly break the log collector, the audit stream and the IdP, and check that people notice and recover.
+R	ops.9 description[0]	Access is recertified on a schedule.
+R	ops.9 description[1]	Pen tests and compliance audits produce evidence that is kept.
+R	ops.10 description[0]	Organizations are reviewed against classification and need-to-know.
+R	ops.10 description[1]	Stale organizations are archived.
+R	ops.11 description[0]	Developers get secure coding training.
+R	ops.11 description[1]	Champions inside teams carry the secure coding standard.
+R	ops.12 description[0]	Threat models are reviewed whenever a system changes, and after incidents.
+R	ops.13 description[0]	For critical systems, a copy of deployable revisions sits in a separate failure domain, with its own credentials and build path.
+R	ops.13 description[1]	Deployment logic lives in scripts, not only in workflow files, and a separate identity can deploy without GitHub Actions.
+R	ops.13 description[2]	Drills run with the primary blocked, and recovery after an erroneous force push is tested too.
+R	ops.13 description[3]	Break-glass credentials are short-lived.
+R	ops.14 description[0]	Track CI duration, queue time and flake rate, plus alert age and time to fix.
+R	ops.14 description[1]	Developers have a channel to report friction and ask for exceptions, and the answers feed back into the baseline.
+R	ops.15 description[0]	New engineers get a short path: tools, review rules, how to report a finding.
+R	ops.15 description[1]	One knowledge repository holds the standards and how-tos.
+R	ops.15 description[2]	Discussions are on for questions, so answers stay next to the code.
+R	ops.15 description[3]	A champion in each team keeps the practice alive.
+R	ops.15 description[4]	A and B keep separate copies, and the A copy never lists classified detail in B.
+R	acc.1 description[0]	Decides classification, approves the hosting service, and owns export decisions.
+R	acc.2 description[0]	Own the enterprise baseline and make sure audit data is delivered.
+R	acc.2 description[1]	Keep a short named owner list.
+R	acc.2 description[2]	Delegate through suitable enterprise roles such as AI manager.
+R	acc.3 description[0]	Own organization teams, installed apps and runner groups.
+R	acc.4 description[0]	Own code review, remediation of findings and deployments for their repo.
+R	acc.5 description[0]	Own detection and response, and keep the evidence.
+R	acc.6 description[0]	Grant exceptions with an expiry, review vendors and apps, and run exercises.
+R	acc.7 description[0]	Own the threat model of their system and keep it current.
+R	acc.8 description[0]	Run training and maintain the secure coding standard.
+R	acc.9 description[0]	Run compliance audits and access reviews and keep the results.
+R	DEV.1 description[0]	B uses personal accounts with SAML and SCIM per organization to retain membership provisioning.
+R	DEV.2 description[0]	A has no sandbox.
+R	DEV.2 description[1]	Unclassified experiments run in the private sandbox-lab organization in B.
+R	DEV.3 description[0]	This design uses private visibility so that access is granted explicitly.
+R	DEV.4 description[0]	Private CI requires assessed private-network runners and separate credentials.
+R	DEV.4 description[2]	Where assessed, use them as an alternative to self-hosted runners.
+R	DEV.4 description[3]	Public fork PRs use separate hosted workers.
 N	script	user-check
 L	script	Control planned in GitHub
 L	script	External control or process

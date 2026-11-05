@@ -235,6 +235,11 @@ for (const id of ORDER) {
   if (n.lane) { if (n.lane.note) note(n.lane.note, `${id} lane note`); (n.lane.steps || []).forEach((c) => note(c[1], `${id} lane step`)); }
 }
 for (const k of Object.keys(FLOWTEXT)) note(FLOWTEXT[k], `flow banner ${k}`);
+// description sentences with no evidence row (design requirements or labels) are reviewed too
+for (const id of ORDER) {
+  if (!D[id].d) continue;
+  sentences(id).forEach((s, i) => { if (!rows.some((r) => r.box === id && bare(s).startsWith(r.prefix))) note(s, `${id} description[${i}]`); });
+}
 const descSet = new Set(ORDER.map((i) => D[i].d).filter(Boolean));
 const scriptSrc = html.match(/<script>\n(\(function\(\)\{[\s\S]*?)<\/script>/)[1].replace(/\/\* EVID:begin \*\/[\s\S]*?\/\* EVID:end \*\//, '');
 for (const lit of literals(scriptSrc)) {

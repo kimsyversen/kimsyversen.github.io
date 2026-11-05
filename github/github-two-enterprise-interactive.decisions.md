@@ -76,3 +76,9 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - Read and left as requirements: sentences that say what this design does or requires ("Two-factor is required for every organization in the enterprise", "Lockfiles are mandatory"). They are choices, not claims about GitHub. One rationale sentence in c.soc ("repository names, paths and identities can reveal critical-system details") is general reasoning, not a product fact; a person may disagree.
 - Rechecked after the rewording: verifier OK (612 outside texts reviewed, 0 stale; 90 quotes against 33 pages) and the full paced click test again, 394 popups, 1,599 links, 15 filters, 0 failures.
 - Still open, and only a person can close it: reading `github-two-enterprise-interactive.outside.tsv` and the requirement sentences once and overruling any verdict.
+
+## requirement sentences inside descriptions are now on the reviewed list too (2026-11-05)
+
+- Before: only text outside descriptions had a recorded verdict. The 256 requirement or label sentences inside descriptions were classified only by the absence of an evidence row, so a reworded sentence could change silently.
+- Now: each such sentence is in `github-two-enterprise-interactive.outside.tsv` with verdict R and the place `<box> description[<n>]`. The verifier fails if one is missing or reworded since review. 855 texts: R 366, L 276, N 213.
+- Limit, unchanged: this proves a verdict is recorded for the exact wording, not that the verdict is right. The verdicts were assigned by the AI in two passes. A person has not reviewed them.
