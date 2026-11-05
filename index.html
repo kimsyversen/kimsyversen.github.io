@@ -69,15 +69,6 @@ h1{font-size:clamp(6rem,16vw,14rem);font-weight:800;font-stretch:112%;line-heigh
 .fig .dot{fill:var(--red);stroke:none}
 .fig .star{fill:var(--ink);stroke:none}
 
-/* work log */
-.logwrap{margin-top:52px}
-.log{width:100%;border-collapse:collapse;font-size:0.92rem;border-bottom:2px solid var(--rule)}
-.log th,.log td{text-align:left;vertical-align:top;padding:8px 24px 8px 0;border-top:1px solid var(--line)}
-.log td:last-child{padding-right:0}
-.log thead th{font:600 0.68rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);padding-top:0;border-top:0;border-bottom:1px solid var(--rule)}
-.log td:first-child{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
-.log td:nth-child(2){white-space:nowrap;font-weight:600}
-
 /* footer */
 footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted)}
 .ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5}
@@ -98,13 +89,6 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
   .row .d{grid-column:2 / -1}
   .n{font-size:2.5rem;line-height:0.86}
   .fig{grid-row:1;width:72px;height:48px;stroke-width:2.5}
-  .log thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-  .log,.log tbody,.log tr,.log td{display:block}
-  .log tr{display:grid;grid-template-columns:auto 1fr;column-gap:12px;padding:9px 0;border-top:1px solid var(--line)}
-  .log tbody tr:first-child{border-top:1px solid var(--rule)}
-  .log td{padding:0;border:0}
-  .log td:nth-child(2){white-space:normal;grid-row:1;grid-column:2;text-align:right}
-  .log td:last-child{grid-column:1 / -1;margin-top:2px}
 }
 @media (max-width:560px){.ai-note{grid-template-columns:1fr}}
 </style>
@@ -254,27 +238,6 @@ footer{margin-top:40px;display:grid;gap:10px;font-size:0.84rem;color:var(--muted
         </li>
 
       </ol>
-    </section>
-
-    <section class="logwrap" aria-labelledby="log">
-      <div class="bar"><h2 id="log">Work log</h2><p>What changed, newest first.</p></div>
-      <table class="log">
-        <thead><tr><th scope="col">Date</th><th scope="col">Page</th><th scope="col">What was done</th></tr></thead>
-        <tbody>
-          <tr><td>5 Nov 2026</td><td>Index</td><td>This contents page replaced the old front page, which moved to Kstech.html. Upkeep rules added in AGENTS.md.</td></tr>
-          <tr><td>4 Nov 2026</td><td>GitHub reference</td><td>Two-enterprise design checked against GitHub documentation. Clickable page and two draw.io versions.</td></tr>
-          <tr><td>3 Nov 2026</td><td>Threat modeling</td><td>Built, redrawn as one printed sheet, then fact-checked in three passes.</td></tr>
-          <tr><td>3 Nov 2026</td><td>AKS assessment</td><td>Translated from Norwegian to English.</td></tr>
-          <tr><td>3 Nov 2026</td><td>All pages</td><td>Made with AI note added to the footers.</td></tr>
-          <tr><td>2 Nov 2026</td><td>MCP Risk Map</td><td>Built from the workstation map. Four draft claims removed because no source backed them.</td></tr>
-          <tr><td>2 Nov 2026</td><td>Workstation map</td><td>Page renamed to Developer-WS.html, and its notes renamed to match.</td></tr>
-          <tr><td>1 Nov 2026</td><td>Workstation map</td><td>Added after nine fact-check passes. No text block is over 60 words.</td></tr>
-          <tr><td>1 Nov 2026</td><td>AKS assessment</td><td>Guidance corrected over several rounds, security links updated and layout fixed.</td></tr>
-          <tr><td>13 Oct 2026</td><td>AKS assessment</td><td>First version uploaded, in Norwegian.</td></tr>
-          <tr><td>28 Dec 2025</td><td>Kstech</td><td>Landing page became the front page of the site.</td></tr>
-          <tr><td>28 Jul 2020</td><td>Site</td><td>Started as a single Markdown page on a Jekyll theme.</td></tr>
-        </tbody>
-      </table>
     </section>
   </main>
 
