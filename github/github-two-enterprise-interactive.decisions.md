@@ -95,3 +95,8 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - All 14 were reworded so they state a requirement and no product behavior: administrator exemptions became administrator accounts, "privileged" before pull_request_target was dropped, the AI manager role example was removed, "licensed" was removed, and the native-retention, built-in-bypass and provenance claims became plain requirements. Some followed sourced sentences in the same description, so the original was defensible, but the neutral wording is safer.
 - A wording-guard hit on the B.v3 summary was fixed by rewording, not by loosening the guard.
 - Limit: this second reviewer is also an AI. The sign-off by a person is still NONE.
+
+### retest after the 14 rewordings (2026-11-05)
+
+- Full click test rerun in headless Chrome (virtual time): 394 popups, 1,599 links, 1,070 source links, 91 boxes with the "None needed" line, 15 filters, 288 filtered boxes. 0 failures.
+- Width check, light and dark, narrow window: no sideways scroll, 0 script errors. Only Chrome was tested.
