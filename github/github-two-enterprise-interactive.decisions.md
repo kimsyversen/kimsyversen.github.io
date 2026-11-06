@@ -100,3 +100,11 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 
 - Full click test rerun in headless Chrome (virtual time): 394 popups, 1,599 links, 1,070 source links, 91 boxes with the "None needed" line, 15 filters, 288 filtered boxes. 0 failures.
 - Width check, light and dark, narrow window: no sideways scroll, 0 script errors. Only Chrome was tested.
+
+## recheck of statements (2026-11-06)
+
+- Reran the verifier against live sources: 90 of 90 quotes match. Read all 62 sourced sentences against their quotes for meaning.
+- Reworded A.o1.src: CODEOWNERS review can be required by a ruleset or a branch protection rule, not only a ruleset. Reason: the CODEOWNERS page lists both. The evidence row prefix is unchanged, so the verifier needs no edit.
+- Did not move any date: the page has no "current as of" line and the index lists no per-page date.
+- Not rerun this time: the headless click test and the 375px check. This change is one sentence of text.
+- Extended the recheck to the 12 inference sentences, 256 requirement sentences and all 855 other texts. No hidden product claims found. Moved "Facts checked" on the page to 6 Nov 2026. Person sign-off stays NONE by rule.

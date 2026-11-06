@@ -806,7 +806,7 @@ N	script	DEV.
 L	script	Design choice
 L	script	of 4.
 N	script	ev
-L	script	Evidence (quotes checked 5 Nov 2026)
+L	script	Evidence (quotes checked 6 Nov 2026)
 N	script	ol
 N	script	li
 N	script	ev-q
@@ -818,7 +818,7 @@ L	script	Numbers link to the evidence. Sentences without a number are design req
 L	script	No sentence here needs a source: each is a design requirement, a label or marked as inference.
 N	script	ul
 N	script	1.1rem
-L	script	Primary sources (5 Nov 2026)
+L	script	Primary sources (6 Nov 2026)
 L	script	Primary sources
 L	script	None needed. These are design requirements, labels or marked as inference.
 L	script	Proposed check (not run)
@@ -838,7 +838,7 @@ L	page text	Reference architecture · GitHub Enterprise Cloud
 L	page text	GitHub for classified, internal and public work
 R	page text	Two enterprises, three policy layers and shared operations on one page. Click any box to see what it does and how to check it. Use the filters to follow a flow or a type of control.
 L	page text	Facts checked
-L	page text	5 Nov 2026
+L	page text	6 Nov 2026
 L	page text	Basis
 L	page text	GitHub, npm and PyPI documentation
 L	page text	Names

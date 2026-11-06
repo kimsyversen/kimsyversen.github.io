@@ -280,7 +280,7 @@ button{font:inherit}
     <h1>GitHub for classified, internal and public work</h1>
     <p class="lead">Two enterprises, three policy layers and shared operations on one page. Click any box to see what it does and how to check it. Use the filters to follow a flow or a type of control.</p>
     <div class="meta">
-      <span><b>Facts checked</b> 5 Nov 2026</span>
+      <span><b>Facts checked</b> 6 Nov 2026</span>
       <span><b>Basis</b> GitHub, npm and PyPI documentation</span>
       <span><b>Names</b> illustrative</span>
     </div>
@@ -457,7 +457,7 @@ button{font:inherit}
     { id:'A.o1', name:'critical-system-a', chips:[['users','Teams from IdP, base none'],['cpu','Own runner group, apps approved']],
       d:'One organization per critical system. Teams come from IdP groups and base access is none, so the aim is that private repositories are visible only to people who are granted access. It has its own runner group, and only approved GitHub Apps are installed.',
       v:'Test a non-owner member with no team, direct or organization-wide role grant. They must not read private repositories.',
-      repos:[['A.o1.src','repo','source (private)','G+X','2+ approvals, CODEOWNERS, signed commits, push protection.','Source repos hold the code. Two approvals and CODEOWNERS review, signed commits, push protection, a SECURITY.md and the secure coding standard apply. CODEOWNERS enforces nothing by itself: the ruleset must require the review.','Open a PR that changes a CODEOWNERS path with one approval. Expected: it will not merge. Record the result.'],
+      repos:[['A.o1.src','repo','source (private)','G+X','2+ approvals, CODEOWNERS, signed commits, push protection.','Source repos hold the code. Two approvals and CODEOWNERS review, signed commits, push protection, a SECURITY.md and the secure coding standard apply. CODEOWNERS enforces nothing by itself: a ruleset or branch protection rule must require the review.','Open a PR that changes a CODEOWNERS path with one approval. Expected: it will not merge. Record the result.'],
              ['A.o1.iac','server','infrastructure as code','G+X','IaC policy checks, protected environments, plan review.','IaC repos run policy checks and plan review before a protected environment approves a deploy. State and plans that contain secrets never live in Git. State is encrypted in the approved backend with locking.','Search the repo history for state files and plan output. There should be none.']] },
     { id:'A.o2', name:'critical-system-b', chips:[['user-check','Own owners and security leads'],['cpu','Own runner group']],
       d:'A second critical system with its own owners, security leads and runner group. Its credentials and teams are not shared with critical-system-a.',
@@ -1028,7 +1028,7 @@ button{font:inherit}
     addText(n.d, id);
     if (n.dev) addText(DEV[n.dev], 'DEV.' + n.dev, 'Design choice ' + n.dev + ' of 4. ');
     if (evList.length){
-      var evBox = h('div', 'ev'); evBox.appendChild(h('span', 'lbl', 'Evidence (quotes checked 5 Nov 2026)'));
+      var evBox = h('div', 'ev'); evBox.appendChild(h('span', 'lbl', 'Evidence (quotes checked 6 Nov 2026)'));
       var eol = h('ol');
       evList.forEach(function(ev, i){
         var li = h('li'); evEls[i] = li;
@@ -1057,7 +1057,7 @@ button{font:inherit}
       pop.appendChild(ul);
     }
     if (SOURCES[id]){
-      var sourceLine = h('p'); sourceLine.appendChild(h('span', 'lbl', 'Primary sources (5 Nov 2026)'));
+      var sourceLine = h('p'); sourceLine.appendChild(h('span', 'lbl', 'Primary sources (6 Nov 2026)'));
       SOURCES[id].forEach(function(source, i){
         if (i) sourceLine.appendChild(document.createTextNode(' · '));
         var link = h('a', null, source[0]); link.href = source[1]; sourceLine.appendChild(link);

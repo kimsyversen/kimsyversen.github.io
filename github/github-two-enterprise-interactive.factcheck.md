@@ -599,7 +599,7 @@ Checked 5 November 2026. Retained after review. Basis: AVAILABLE, OWNERS, PUSH.
 - **Summary, Label / proposed control:** 2+ approvals, CODEOWNERS, signed commits, push protection.
 - **Description, Supported/requirement:** Source repos hold the code.
 - **Description, Supported/requirement:** Two approvals and CODEOWNERS review, signed commits, push protection, a SECURITY.md and the secure coding standard apply.
-- **Description, Supported/requirement:** CODEOWNERS enforces nothing by itself: the ruleset must require the review.
+- **Description, Supported/requirement:** CODEOWNERS enforces nothing by itself: a ruleset or branch protection rule must require the review.
 - **Proposed check, Requirement (not run):** Open a PR that changes a CODEOWNERS path with one approval. Expected: it will not merge. Record the result.
 
 ### A.o1.iac: infrastructure as code
@@ -1205,3 +1205,16 @@ Checked 5 November 2026. Retained after review. Basis: Design definition on this
 - Rewordings made so the sentence no longer goes beyond its source: standard GitHub Enterprise Cloud on github.com (was "multi-tenant SaaS"); Ubuntu/Windows runners; SCIM deprovisioning suspends the account and does not delete it; the PAT sentence no longer claims revocation of existing tokens or SSH keys; four "Proposed check" texts reduced to test steps; the push-protection limit is now a sourced description sentence.
 - Not verified: that Chrome, Firefox and Safari highlight the passage from the text-fragment link. The quote is shown beside the link regardless.
 - Summary lines, chips and check texts are design requirements or test steps. Where they repeat a documented fact, the sourced version is in the description of the same box.
+
+## Recheck, 6 November 2026
+
+Scope: the 62 sourced sentences, the 12 inference sentences and the product features named in requirement sentences. Done by an AI. Nothing tested on a real GitHub tenant.
+
+- **Quotes:** `verify-evidence.mjs` fetched all 33 sources live. All 90 quotes still appear word for word. Result: OK, 0 unreviewed, 0 stale texts.
+- **Meaning check:** each of the 62 sourced sentences was read against its quote, not only matched. All 62 supported, except the one fixed below.
+- **Features named in requirement sentences, checked in the docs:** ruleset options (required approvals, dismiss stale approvals, most recent reviewable push, signed commits, restrict deletions, block force pushes, code owner review), default `GITHUB_TOKEN` read for contents and packages, "Allow GitHub Actions to create and approve pull requests" (off by default), disabling repository-level self-hosted runners, "Enable API Request Events" in audit streaming, independent PAT policy for classic and fine-grained tokens, enterprise-specific OIDC issuer (`include_enterprise_slug`). All exist as described.
+- **Corrected (A.o1.src):** "the ruleset must require the review" became "a ruleset or branch protection rule must require the review". The CODEOWNERS page documents both routes. Source: OWNERS.
+- **Inference sentences (12):** each read for soundness. All are reasoning from sourced facts and carry the [inference] label. For "does not manage team grants" (B.idp, B.scim): the organization SCIM page (SCIM) has no mention of teams today, which fits, but absence from a page is not proof. It stays labelled inference.
+- **Requirement and label sentences (256) and the 855 other visible texts (titles, summaries, chips, steps, banners, checks):** each read for hidden product claims. None found. They state what this design requires or how to test it. Product features they rely on were checked in the docs: enterprise 2FA requirement, block user-namespace repositories (managed users), private-repository forking policy, plus the list above. Two are plain engineering statements with no source: dev containers can run non-root, and repository names, paths and identities can reveal critical-system details. Both are left as design reasoning.
+- **Page date:** "Facts checked" moved from 5 to 6 November 2026 after this recheck.
+- **Not done:** the person sign-off is still NONE. It must be a person reading the reviewed list and running `--sign`; an agent must not.
