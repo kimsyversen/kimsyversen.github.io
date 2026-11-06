@@ -63,3 +63,10 @@ Request: split the document into an overview (what it says) and a technical part
 - Keep the Git publication requirement. Report discovery, configuration and invocation enforcement as separate outcomes. Maintain one matrix per client route.
 - Keep the site styling and shared IDs. Use stacked reading paths at 375 px and leave wide detail available as a reference.
 - Verify anchors, disclosures, representative mouse clicks, light and dark layouts, and the wording ledger. A reader test with people in the three roles is a separate follow-up.
+
+
+## Discussion diagrams (2026-11-06)
+
+- Open the body with the full technical target-state diagram and keep the 2.1 anchor.
+- Show the MCP approval and publication diagram in 2.4. Keep rejection, publication by destination, enforcement checks, monitoring and revocation visible.
+- Keep the short text paths below both diagrams. At narrow widths scroll the diagram within its own region.

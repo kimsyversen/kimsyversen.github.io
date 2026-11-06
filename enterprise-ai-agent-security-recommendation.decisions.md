@@ -63,11 +63,19 @@ Belongs to: [enterprise-ai-agent-security-recommendation.md](enterprise-ai-agent
 
 ## 2026-11-06, reader paths and pilot
 
-- Open with the pilot decision and three reader paths. Keep the main contents short, and put product links at the start of Part 2. The fictional case search illustrates user intent, the remote tool call, the trust boundary and the denied outbound action.
+- (Superseded in part.) Open with the pilot decision and three reader paths. Keep the main contents short, and put product links at the start of Part 2. The fictional case search illustrates user intent, the remote tool call, the trust boundary and the denied outbound action.
 - Use one route matrix for discovery, setup, calls and the pilot check. Separate Agent 365 Tools Gateway discovery from the BYO approval flow. Automatic distribution remains the goal. Deployment and invocation-time enforcement need their own checks. Keep the publication anchors and Part 6 control anchors.
 - The owner chose rule approval for explicitly bounded low-risk actions. Keep human approval for high-impact actions and actions outside a rule. Keep call authorization and the execution identity separate from approval. Preserve automated tier 1 pull request approval as an option after checklist checks.
-- The target-state overview shows work access from the managed cloud desktop. The remote call uses one managed-client route and separates token issuance, policy, the call and audit events. The broad architecture diagram stays available in a disclosure. The matrix and call steps stack on narrow screens.
+- (Superseded in part.) The target-state overview shows work access from the managed cloud desktop. The remote call uses one managed-client route and separates token issuance, policy, the call and audit events. The broad architecture diagram stays available in a disclosure. The matrix and call steps stack on narrow screens.
 - Introduce the eight controls in four phases. Use the same case search to define pass criteria, responsible roles and evidence. The operations entry goes directly to the containment and revocation procedure.
 - Product sources are kept near the route descriptions. Part 6 evidence links target the exact quote. Keep historical source dates for untouched content. The current review added E30 and E31 for tool descriptions and batch inspection coverage.
 - Tested in Chrome at 1440 and 375 px in light and dark. No page overflow or console errors. Eight mouse checks covered the role paths, revocation, publication, evidence, BYO disclosure and a link inside the architecture SVG. Expand and collapse worked at 375 px. A direct E31 hash opened the evidence. Static checks covered all 166 internal links, preserved 112 previous IDs, verified the 31 evidence fragments and checked the index and paragraph lengths.
 - The pilot and a comprehension test with people in the three roles have yet to run.
+
+
+## 2026-11-06, discussion diagrams
+
+- Move the full technical target state ahead of the summary and show it by default. The diagram is a discussion aid. Keep the existing section and figure IDs and link to it from Contents and Platform setup.
+- Restore the detailed 2.4 diagram. Git approval fans out to the four destinations. API Center has its own catalog branch. Test configuration and runtime enforcement before enabling a route, keep failed routes disabled, and show how to revoke access after an incident.
+- Keep the short reading paths below the figures. The boxes contain design requirements or labels. Route-specific capabilities and source links stay in the matrix. No product claims or source dates were added.
+- Checked both diagrams in Chrome at 1440 and 375 px in light and dark. Both are visible by default. Clicked all ten links in the diagrams and reopened the two bookmarked sections. Horizontal scrolling stays within the diagram region. No console errors. Static checks covered all 177 internal links and preserved all 127 IDs.

@@ -37,7 +37,7 @@ a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px
 a:hover{color:var(--red)}
 svg a{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:pointer}
 svg a:hover{fill:var(--red)}
-a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible,.fig-scroll:focus-visible{outline:2px solid var(--red);outline-offset:3px}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
 h3{font-size:1rem;font-weight:700;line-height:1.25}
@@ -122,7 +122,8 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 .pilot-tests{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0;padding:0;list-style:none;border-top:1px solid var(--rule)}
 .pilot-tests li{display:grid;gap:5px;padding:12px 0;border-bottom:1px solid var(--line);align-content:start}
 .pilot-tests p{font-size:0.92rem;color:var(--muted)}
-.reference-figure{margin-top:8px}
+.fig-hint{display:none;font-size:0.85rem;color:var(--muted)}
+@media (max-width:880px){.fig-hint{display:block}}
 .ev{white-space:nowrap}
 @media (max-width:800px){
   .matrix-head{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -153,6 +154,8 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 .body{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .blk > .sub{color:var(--muted);font-size:0.93rem;max-width:46rem}
 .sec{margin-top:52px;border-top:1px solid var(--rule);padding-top:14px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.target-state{margin-top:32px;border-top:0;padding-top:0}
+.target-state .part{margin-top:0}
 .sh{display:grid;grid-template-columns:4.4rem minmax(0,1fr);gap:4px 14px;align-items:baseline}
 .sh .num{font:800 2.6rem/0.9 var(--display);font-stretch:112%;letter-spacing:-0.03em}
 .sh h2{grid-column:2}
@@ -210,19 +213,21 @@ figcaption b{color:var(--ink);font-weight:600;margin-right:6px}
 .fg .zone{fill:none;stroke:var(--line);stroke-width:1.2}
 .fg .zl{fill:var(--muted);font:600 10.5px var(--body);letter-spacing:0.12em}
 .fg .box{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
-.fg .box.pv{stroke:var(--red);stroke-dasharray:6 4}
+.fg .box.pv,.fg .box.stop{stroke:var(--red);stroke-dasharray:6 4}
 .fg .box.cat{stroke:var(--muted);stroke-dasharray:2 4}
 .fg .bar{fill:var(--hover);stroke:var(--ink);stroke-width:1.5}
 .fg .t{fill:var(--ink);font:700 13.5px var(--display);text-anchor:middle}
 .fg .s{fill:var(--muted);font-size:11.5px;font-style:italic;text-anchor:middle}
 .fg .t.l,.fg .s.l{text-anchor:start}
 .fg .ln{fill:none;stroke:var(--ink);stroke-width:1.3}
+.fg .ln.stop{stroke:var(--red);stroke-dasharray:5 4}
 .fg .al{fill:var(--muted);font:italic 11.5px var(--body)}
+.fg .al.stop{fill:var(--red)}
 .key{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:0.84rem;color:var(--muted);margin:0;padding:0;list-style:none}
 .key li{display:flex;align-items:center;gap:8px}
 .key svg{width:30px;height:14px;flex:none;overflow:visible}
 .key .k{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
-.key .k.pv{stroke:var(--red);stroke-dasharray:5 3}
+.key .k.pv,.key .k.stop{stroke:var(--red);stroke-dasharray:5 3}
 .key .k.cat{stroke:var(--muted);stroke-dasharray:2 3}
 
 /* five answers */
@@ -370,7 +375,9 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 
   <nav class="toc" aria-label="Contents">
     <ul>
+      <li><a href="#s21">Target state</a></li>
       <li><a href="#summary">Summary</a></li>
+      <li><a href="#s24">MCP approval</a></li>
       <li><a href="#map">Coverage</a></li>
       <li><a href="#part2">Platform setup</a></li>
       <li><a href="#operate">Operations</a></li>
@@ -384,10 +391,109 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 
   <main id="main-content" tabindex="-1">
 
+  <section class="sec target-state" id="s21" aria-labelledby="h21">
+    <div class="part">
+      <p class="lbl">Architecture overview · 2.1</p>
+      <h2 id="h21">Technical target state</h2>
+      <p><span class="tg r">recommendation</span> Start with the people and devices at the top. Follow the proposed controls down to tools, data and audit.</p>
+    </div>
+    <figure>
+      <p class="fig-hint">Scroll the diagram sideways to follow all routes.</p>
+      <div class="fig-scroll" tabindex="0" role="region" aria-label="Target-state diagram, horizontally scrollable">
+<svg class="fg" viewBox="0 0 1000 720" role="img" aria-labelledby="t21 d21">
+<title id="t21">Proposed target state</title>
+<desc id="d21">Proposed access paths. Staff use managed devices. Consultants reach code and tools through a managed cloud desktop. Apply identity controls before development and agent platforms. Check tool and data access separately. Collect audit events at each layer.</desc>
+
+<text class="zl" x="10" y="16">PEOPLE AND DEVICES</text>
+<rect class="box" x="10" y="26" width="310" height="62"/>
+<text class="t" x="165" y="52">Staff</text><text class="s" x="165" y="72">managed device</text>
+<rect class="box" x="345" y="26" width="310" height="62"/>
+<text class="t" x="500" y="52">Consultants</text><text class="s" x="500" y="72">unmanaged laptop</text>
+<rect class="box" x="680" y="26" width="310" height="62"/>
+<text class="t" x="835" y="52">Managed cloud dev desktop</text><text class="s" x="835" y="72">Dev Box, Windows 365 or Azure Virtual Desktop</text>
+<path class="ln" d="M655 57H678" marker-end="url(#arr)"/>
+
+<path class="ln" d="M165 88V130" marker-end="url(#arr)"/>
+<path class="ln" d="M835 88V130" marker-end="url(#arr)"/>
+<text class="al" x="824" y="114" text-anchor="end">work access from managed desktop</text>
+<rect class="bar" x="10" y="130" width="980" height="52"/>
+<text class="t" x="500" y="154">Microsoft Entra ID</text>
+<text class="s" x="500" y="172">MFA, Conditional Access, B2B guests, access reviews, agent identities</text>
+
+<path class="ln" d="M250 182V230" marker-end="url(#arr)"/>
+<path class="ln" d="M755 182V230" marker-end="url(#arr)"/>
+
+<text class="zl" x="10" y="222">DEVELOPMENT</text>
+<rect class="zone" x="10" y="230" width="480" height="100"/>
+<rect class="box" x="20" y="244" width="146" height="72"/>
+<text class="t" x="93" y="270">VS Code + Copilot</text><text class="s" x="93" y="290">managed-settings.json</text>
+<rect class="box" x="177" y="244" width="146" height="72"/>
+<text class="t" x="250" y="270">GitHub Enterprise</text><text class="s" x="250" y="290">policies, PR review, scans</text>
+<rect class="box" x="334" y="244" width="146" height="72"/>
+<text class="t" x="407" y="270">CI/CD</text><text class="s" x="407" y="290">checks, release approval</text>
+<path class="ln" d="M166 280H175" marker-end="url(#arr)"/>
+<path class="ln" d="M323 280H332" marker-end="url(#arr)"/>
+
+<text class="zl" x="520" y="222">AGENT PLATFORMS</text>
+<rect class="zone" x="520" y="230" width="470" height="100"/>
+<rect class="box" x="530" y="244" width="140" height="72"/>
+<text class="t" x="600" y="270">Copilot Studio</text><text class="s" x="600" y="290">managed envs, policies</text>
+<rect class="box" x="680" y="244" width="140" height="72"/>
+<text class="t" x="750" y="270">Foundry</text><text class="s" x="750" y="290">dev, test, prod</text>
+<rect class="box" x="830" y="244" width="150" height="72"/>
+<text class="t" x="905" y="270">Microsoft 365 Copilot</text><text class="s" x="905" y="290">permissions at source</text>
+<path class="ln" d="M480 280H518" marker-end="url(#arr)"/>
+<text class="al" x="484" y="268">release</text>
+
+<path class="ln" d="M250 330V380" marker-end="url(#arr)"/>
+<path class="ln" d="M755 330V380" marker-end="url(#arr)"/>
+
+<text class="zl" x="10" y="372">TOOL ACCESS</text>
+<rect class="zone" x="10" y="380" width="980" height="110"/>
+<rect class="box" x="20" y="394" width="225" height="72"/>
+<text class="t" x="132" y="418">Agent 365 MCP registry</text><text class="s" x="132" y="438">registry approval and revocation</text><text class="s" x="132" y="454"><a href="#pub-a365">Agent 365 route</a></text>
+<rect class="box pv" x="257" y="394" width="225" height="72"/>
+<text class="t" x="369" y="420">Azure API Management</text><text class="s" x="369" y="440">Foundry tool gateway</text><text class="s" x="369" y="456"><a href="#s26">limits in 2.6</a></text>
+<rect class="box cat" x="494" y="394" width="225" height="72"/>
+<text class="t" x="606" y="420">Azure API Center</text><text class="s" x="606" y="440"><a href="#pub-apic">catalog and discovery route</a></text>
+<rect class="box" x="731" y="394" width="250" height="72"/>
+<text class="t" x="856" y="420">Approved remote MCP servers</text><text class="s" x="856" y="440">backend authorization</text>
+<path class="ln" d="M132 466V480H856V468" marker-end="url(#arr)"/>
+<path class="ln" d="M369 466V480"/>
+
+<path class="ln" d="M856 490V530" marker-end="url(#arr)"/>
+<text class="zl" x="10" y="522">DATA</text>
+<rect class="zone" x="10" y="530" width="980" height="90"/>
+<rect class="box pv" x="20" y="544" width="470" height="62"/>
+<text class="t" x="255" y="570">Purview labels and DLP</text><text class="s" x="255" y="590"><a href="#s27">data protection design in 2.7</a></text>
+<rect class="box" x="510" y="544" width="470" height="62"/>
+<text class="t" x="745" y="570">SharePoint, repos, APIs</text><text class="s" x="745" y="590">permissions enforced at the source</text>
+
+<text class="zl" x="10" y="644">AUDIT AND MONITORING</text>
+<rect class="bar" x="10" y="654" width="980" height="52"/>
+<text class="t" x="500" y="678">Audit and monitoring</text>
+<text class="s" x="500" y="696">Entra, GitHub, Purview, Defender, Sentinel, Agent 365 inventory</text>
+</svg>
+      </div>
+      <ul class="key" aria-label="Key">
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k" x="1" y="1" width="28" height="12"/></svg>Proposed design</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k pv" x="1" y="1" width="28" height="12"/></svg>Check product scope and pilot coverage</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k cat" x="1" y="1" width="28" height="12"/></svg>Catalog route</li>
+      </ul>
+      <figcaption>Proposed architecture. Review the <a href="#s24">MCP approval workflow</a> and the <a href="#map">route matrix</a>. Validate direct connections and bypass paths before production use.</figcaption>
+    </figure>
+    <ol class="path">
+      <li><h4>Enter from a managed workspace</h4><p>Staff use a managed device. Consultants sign in from their laptop to a managed cloud desktop and access code and tools from there.</p></li>
+      <li><h4>Release through a reviewed path</h4><p>Review code and policy changes, test the agent and deploy to the chosen environment.</p></li>
+      <li><h4>Check tools and data separately</h4><p>Check the caller, tool and resource at the intended enforcement points.</p></li>
+      <li><h4>Observe and respond</h4><p>Collect audit events and verify that access can be withdrawn.</p></li>
+    </ol>
+  </section>
+
   <!-- ============ PART 1 ============ -->
   <section id="summary" aria-labelledby="p1">
     <div class="part">
-      <p class="lbl"><b>Part 1</b> · Read this first</p>
+      <p class="lbl"><b>Part 1</b> · Decision summary</p>
       <h2 id="p1">The answer in one minute</h2>
     </div>
 
@@ -622,103 +728,6 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
     </nav>
   </div>
 
-  <section class="sec" id="s21" aria-labelledby="h21" style="margin-top:28px;border-top:0">
-    <header class="sh"><span class="num">2.1</span><h2 id="h21">Technical target state</h2>
-    <p class="goal"><b>Status</b>A proposed design, not evidence that the controls are deployed. <span class="tg r">recommendation</span></p></header>
-    <ol class="path">
-      <li><h4>Enter from a managed workspace</h4><p>Staff use a managed device. Consultants sign in from their laptop to a managed cloud desktop and access code and tools from there.</p></li>
-      <li><h4>Release through a reviewed path</h4><p>Review code and policy changes, test the agent and deploy to the chosen environment.</p></li>
-      <li><h4>Check tools and data separately</h4><p>Check the caller, tool and resource at the intended enforcement points.</p></li>
-      <li><h4>Observe and respond</h4><p>Collect audit events and verify that access can be withdrawn.</p></li>
-    </ol>
-    <details class="deep reference-figure"><summary>Show the target-state diagram</summary><div class="body">
-    <figure>
-      <div class="fig-scroll" tabindex="0" role="region" aria-label="Target-state diagram, horizontally scrollable">
-<svg class="fg" viewBox="0 0 1000 720" role="img" aria-labelledby="t21 d21">
-<title id="t21">Proposed target state</title>
-<desc id="d21">Proposed access paths. Staff use managed devices. Consultants reach code and tools through a managed cloud desktop. Apply identity controls before development and agent platforms. Check tool and data access separately. Collect audit events at each layer.</desc>
-
-<text class="zl" x="10" y="16">PEOPLE AND DEVICES</text>
-<rect class="box" x="10" y="26" width="310" height="62"/>
-<text class="t" x="165" y="52">Staff</text><text class="s" x="165" y="72">managed device</text>
-<rect class="box" x="345" y="26" width="310" height="62"/>
-<text class="t" x="500" y="52">Consultants</text><text class="s" x="500" y="72">unmanaged laptop</text>
-<rect class="box" x="680" y="26" width="310" height="62"/>
-<text class="t" x="835" y="52">Managed cloud dev desktop</text><text class="s" x="835" y="72">Dev Box, Windows 365 or Azure Virtual Desktop</text>
-<path class="ln" d="M655 57H678" marker-end="url(#arr)"/>
-
-<path class="ln" d="M165 88V130" marker-end="url(#arr)"/>
-<path class="ln" d="M835 88V130" marker-end="url(#arr)"/>
-<text class="al" x="668" y="114">work access from managed desktop</text>
-<rect class="bar" x="10" y="130" width="980" height="52"/>
-<text class="t" x="500" y="154">Microsoft Entra ID</text>
-<text class="s" x="500" y="172">MFA, Conditional Access, B2B guests, access reviews, agent identities</text>
-
-<path class="ln" d="M250 182V230" marker-end="url(#arr)"/>
-<path class="ln" d="M755 182V230" marker-end="url(#arr)"/>
-
-<text class="zl" x="10" y="222">DEVELOPMENT</text>
-<rect class="zone" x="10" y="230" width="480" height="100"/>
-<rect class="box" x="20" y="244" width="146" height="72"/>
-<text class="t" x="93" y="270">VS Code + Copilot</text><text class="s" x="93" y="290">managed-settings.json</text>
-<rect class="box" x="177" y="244" width="146" height="72"/>
-<text class="t" x="250" y="270">GitHub Enterprise</text><text class="s" x="250" y="290">policies, PR review, scans</text>
-<rect class="box" x="334" y="244" width="146" height="72"/>
-<text class="t" x="407" y="270">CI/CD</text><text class="s" x="407" y="290">checks, release approval</text>
-<path class="ln" d="M166 280H175" marker-end="url(#arr)"/>
-<path class="ln" d="M323 280H332" marker-end="url(#arr)"/>
-
-<text class="zl" x="520" y="222">AGENT PLATFORMS</text>
-<rect class="zone" x="520" y="230" width="470" height="100"/>
-<rect class="box" x="530" y="244" width="140" height="72"/>
-<text class="t" x="600" y="270">Copilot Studio</text><text class="s" x="600" y="290">managed envs, policies</text>
-<rect class="box" x="680" y="244" width="140" height="72"/>
-<text class="t" x="750" y="270">Foundry</text><text class="s" x="750" y="290">dev, test, prod</text>
-<rect class="box" x="830" y="244" width="150" height="72"/>
-<text class="t" x="905" y="270">Microsoft 365 Copilot</text><text class="s" x="905" y="290">permissions at source</text>
-<path class="ln" d="M480 280H518" marker-end="url(#arr)"/>
-<text class="al" x="484" y="268">release</text>
-
-<path class="ln" d="M250 330V380" marker-end="url(#arr)"/>
-<path class="ln" d="M755 330V380" marker-end="url(#arr)"/>
-
-<text class="zl" x="10" y="372">TOOL ACCESS</text>
-<rect class="zone" x="10" y="380" width="980" height="110"/>
-<rect class="box" x="20" y="394" width="225" height="72"/>
-<text class="t" x="132" y="418">Agent 365 MCP registry</text><text class="s" x="132" y="438">registry approval and revocation</text><text class="s" x="132" y="454"><a href="#pub-a365">Agent 365 route</a></text>
-<rect class="box pv" x="257" y="394" width="225" height="72"/>
-<text class="t" x="369" y="420">Azure API Management</text><text class="s" x="369" y="440">Foundry tool gateway</text><text class="s" x="369" y="456"><a href="#s26">limits in 2.6</a></text>
-<rect class="box cat" x="494" y="394" width="225" height="72"/>
-<text class="t" x="606" y="420">Azure API Center</text><text class="s" x="606" y="440"><a href="#pub-apic">catalog and discovery route</a></text>
-<rect class="box" x="731" y="394" width="250" height="72"/>
-<text class="t" x="856" y="420">Approved remote MCP servers</text><text class="s" x="856" y="440">backend authorization</text>
-<path class="ln" d="M132 466V480H856V468" marker-end="url(#arr)"/>
-<path class="ln" d="M369 466V480"/>
-
-<path class="ln" d="M856 490V530" marker-end="url(#arr)"/>
-<text class="zl" x="10" y="522">DATA</text>
-<rect class="zone" x="10" y="530" width="980" height="90"/>
-<rect class="box pv" x="20" y="544" width="470" height="62"/>
-<text class="t" x="255" y="570">Purview labels and DLP</text><text class="s" x="255" y="590"><a href="#s27">data protection design in 2.7</a></text>
-<rect class="box" x="510" y="544" width="470" height="62"/>
-<text class="t" x="745" y="570">SharePoint, repos, APIs</text><text class="s" x="745" y="590">permissions enforced at the source</text>
-
-<text class="zl" x="10" y="644">AUDIT AND MONITORING</text>
-<rect class="bar" x="10" y="654" width="980" height="52"/>
-<text class="t" x="500" y="678">Audit and monitoring</text>
-<text class="s" x="500" y="696">Entra, GitHub, Purview, Defender, Sentinel, Agent 365 inventory</text>
-</svg>
-      </div>
-      <ul class="key" aria-label="Key">
-        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k" x="1" y="1" width="28" height="12"/></svg>Proposed design</li>
-        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k pv" x="1" y="1" width="28" height="12"/></svg>Check product scope and pilot coverage</li>
-        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k cat" x="1" y="1" width="28" height="12"/></svg>Catalog route</li>
-      </ul>
-      <figcaption>Proposed architecture. Use the <a href="#map">route matrix</a> to check coverage. Validate direct connections and bypass paths before production use.</figcaption>
-    </figure>
-    </div></details>
-  </section>
-
   <section class="sec" id="s22" aria-labelledby="h22">
     <header class="sh"><span class="num">2.2</span><h2 id="h22">Identity and devices</h2>
     <p class="goal"><b>Goal</b>The right person, on the right device, for a limited time.</p></header>
@@ -925,16 +934,111 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
     <header class="sh"><span class="num">2.4</span><h2 id="h24">Governing which MCP servers are allowed</h2>
     <p class="goal"><b>Goal</b>Keep one approved list in Git and distribute it automatically. Verify each route before allowing use. <span class="tg r">recommendation</span></p></header>
 
-    <figure aria-labelledby="t24" aria-describedby="d24">
-      <figcaption id="t24"><b>Approval and publication workflow</b></figcaption>
-      <ol class="path">
-        <li><h4>Request and review</h4><p>Submit a pull request with the owner, data, tools and risk tier. Record the approval or rejection.</p></li>
-        <li><h4>Publish the approved list</h4><p>Trigger distribution on merge. Record the policy version and result for each destination.</p></li>
-        <li><h4>Check the outcome</h4><p>Record discovery, applied configuration and verified enforcement separately. Complete any required administrator step.</p></li>
-        <li><h4>Enable and monitor</h4><p>Enable only tested routes. On incident, <a href="#operate">block access and verify revocation</a>.</p></li>
-      </ol>
-      <p id="d24" class="sub">Proposed workflow. See the publication details and pilot checks for <a href="#pub-vscode">GitHub and VS Code</a>, <a href="#pub-a365">Agent 365</a>, <a href="#pub-foundry">Foundry</a> and <a href="#pub-apic">API Center</a>.</p>
+    <figure>
+      <p class="fig-hint">Scroll the diagram sideways to follow all routes.</p>
+      <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP server approval diagram, horizontally scrollable">
+<svg class="fg" viewBox="0 0 1000 452" role="group" aria-labelledby="t24 d24">
+<title id="t24">MCP server approval and enforcement</title>
+<desc id="d24">Proposed workflow from left to right. A rejected request is closed with a reason. An approved request goes into Git for automatic distribution to four destinations. The catalog is a separate discovery branch. Before enabling a route, verify enforcement and keep failed routes disabled. Monitor enabled routes and revoke access on incident.</desc>
+
+<text class="zl" x="10" y="16">1. REQUEST</text>
+<text class="zl" x="154" y="16">2. REVIEW</text>
+<text class="zl" x="298" y="16">3. APPROVE</text>
+<text class="zl" x="464" y="16">4. AUTO-PUBLISH ON MERGE</text>
+<text class="zl" x="704" y="16">5. VERIFY</text>
+<text class="zl" x="872" y="16">6. USE</text>
+
+<rect class="box" x="10" y="154" width="120" height="84"/>
+<text class="t" x="70" y="179">GitHub request</text>
+<text class="s" x="70" y="199">pull request</text>
+<text class="s" x="70" y="215">owner, data, risk tier</text>
+<path class="ln" d="M130 196H152" marker-end="url(#arr)"/>
+
+<rect class="box" x="154" y="154" width="120" height="84"/>
+<text class="t" x="214" y="189">Security review</text>
+<text class="s" x="214" y="210">server checklist</text>
+<path class="ln" d="M274 196H296" marker-end="url(#arr)"/>
+<path class="ln" d="M214 238V276" marker-end="url(#arr)"/>
+<text class="al" x="222" y="263">rejected</text>
+<rect class="box" x="154" y="278" width="120" height="62"/>
+<text class="t" x="214" y="304">Close request</text>
+<text class="s" x="214" y="322">record the reason</text>
+
+<rect class="box" x="298" y="154" width="126" height="84"/>
+<text class="t" x="361" y="179">Approved list</text>
+<text class="s" x="361" y="199">reviewed pull request</text>
+<text class="s" x="361" y="215">merged into Git</text>
+<path class="ln" d="M424 196H442M442 62V320"/>
+<path class="ln" d="M442 62H462" marker-end="url(#arr)"/>
+<path class="ln" d="M442 148H462" marker-end="url(#arr)"/>
+<path class="ln" d="M442 234H462" marker-end="url(#arr)"/>
+<path class="ln" d="M442 320H462" marker-end="url(#arr)"/>
+
+<rect class="box" x="464" y="28" width="198" height="68"/>
+<text class="t" x="563" y="49">VS Code and GitHub Copilot</text>
+<text class="s" x="563" y="67">managed-settings.json</text>
+<text class="s" x="563" y="84"><a href="#pub-vscode">Check client coverage</a></text>
+
+<rect class="box" x="464" y="114" width="198" height="68"/>
+<text class="t" x="563" y="135">Agent 365 registry</text>
+<text class="s" x="563" y="153">API Management registration</text>
+<text class="s" x="563" y="170"><a href="#pub-a365">Check server allow or block</a></text>
+
+<rect class="box" x="464" y="200" width="198" height="68"/>
+<text class="t" x="563" y="221">Foundry</text>
+<text class="s" x="563" y="239">Azure Policy assignment</text>
+<text class="s" x="563" y="256"><a href="#pub-foundry">Check configuration scope</a></text>
+
+<rect class="box cat" x="464" y="286" width="198" height="68"/>
+<text class="t" x="563" y="307">Azure API Center</text>
+<text class="s" x="563" y="325">Catalog and discovery</text>
+<text class="s" x="563" y="342"><a href="#pub-apic">Check catalog publication</a></text>
+
+<path class="ln" d="M662 62H682V234H662M662 148H682"/>
+<path class="ln" d="M682 196H702" marker-end="url(#arr)"/>
+<rect class="box" x="704" y="154" width="134" height="84"/>
+<text class="t" x="771" y="178">Verify enforcement</text>
+<text class="s" x="771" y="198">configuration and calls</text>
+<text class="s" x="771" y="218"><a href="#pilot">Run the pilot checks</a></text>
+
+<text class="al" x="844" y="186">pass</text>
+<path class="ln" d="M838 196H870" marker-end="url(#arr)"/>
+<rect class="box" x="872" y="154" width="118" height="84"/>
+<text class="t" x="931" y="190">Enable use</text>
+<text class="s" x="931" y="211">tested routes</text>
+
+<path class="ln stop" d="M771 238V276" marker-end="url(#arrr)"/>
+<text class="al stop" x="779" y="263">fail</text>
+<rect class="box stop" x="704" y="278" width="134" height="62"/>
+<text class="t" x="771" y="304">Keep disabled</text>
+<text class="s" x="771" y="322">resolve the gap</text>
+
+<path class="ln" d="M931 238V276" marker-end="url(#arr)"/>
+<rect class="box" x="872" y="278" width="118" height="62"/>
+<text class="t" x="931" y="304">Monitor</text>
+<text class="s" x="931" y="322">calls and decisions</text>
+
+<path class="ln stop" d="M931 340V368" marker-end="url(#arrr)"/>
+<text class="al stop" x="922" y="359" text-anchor="end">incident or failed review</text>
+<rect class="box stop" x="704" y="370" width="286" height="68"/>
+<text class="t" x="847" y="391"><a href="#operate">Block and revoke access</a></text>
+<text class="s" x="847" y="409">block gateway and client routes</text>
+<text class="s" x="847" y="426">revoke backend permissions and verify the stop</text>
+</svg>
+      </div>
+      <ul class="key" aria-label="Key">
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k" x="1" y="1" width="28" height="12"/></svg>Proposed workflow step</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k cat" x="1" y="1" width="28" height="12"/></svg>Catalog route</li>
+        <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k stop" x="1" y="1" width="28" height="12"/></svg>Keep disabled or revoke</li>
+      </ul>
+      <figcaption>Proposed workflow. Record delivery, configuration and enforcement separately. Check <a href="#pub-vscode">GitHub and VS Code</a>, <a href="#pub-a365">Agent 365</a>, <a href="#pub-foundry">Foundry</a> and <a href="#pub-apic">API Center</a> in the route matrix. Follow the <a href="#pilot">pilot checks</a> and <a href="#operate">revocation procedure</a>.</figcaption>
     </figure>
+    <ol class="path">
+      <li><h4>Request and review</h4><p>Submit a pull request with the owner, data, tools and risk tier. Record the approval or rejection.</p></li>
+      <li><h4>Publish the approved list</h4><p>Trigger distribution on merge. Record the policy version and result for each destination.</p></li>
+      <li><h4>Check the outcome</h4><p>Record discovery, applied configuration and verified enforcement separately. Complete any required administrator step.</p></li>
+      <li><h4>Enable and monitor</h4><p>Enable only tested routes. On incident, <a href="#operate">block access and verify revocation</a>.</p></li>
+    </ol>
 
     <h3 style="font-size:1.05rem;margin-top:8px">Risk tiers <span class="tg r">recommendation</span></h3>
     <p class="sub">Apply the highest applicable tier. Assess who operates the server separately from whether the endpoint is public. Use the action policy below for all permitted write and outbound tools.</p>

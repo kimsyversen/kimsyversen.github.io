@@ -14,6 +14,75 @@
 
 ---
 
+## 2.1 Technical target state
+
+Proposed architecture **[recommendation]**. Staff use a managed device. Consultants sign in from their laptop to a managed cloud desktop, then access code and tools from there. Verify each permitted route and block bypass paths. See 2.4 for route coverage, 2.6 for the Foundry gateway and 2.7 for Purview.
+
+```mermaid
+flowchart LR
+    subgraph People[People and devices]
+        Staff[Staff<br/>managed device]
+        Cons[Consultants<br/>unmanaged laptop]
+        CDD[Managed cloud<br/>dev desktop]
+        Cons -->|sign in for work| CDD
+    end
+    Entra[Microsoft Entra ID<br/>MFA, Conditional Access,<br/>B2B guests, access reviews]
+    Staff --> Entra
+    CDD -->|work access from managed desktop| Entra
+
+    subgraph Dev[Development]
+        VSC[VS Code + GitHub Copilot<br/>managed-settings.json]
+        GH[GitHub Enterprise<br/>policies, PR review, scanning]
+        CI[CI/CD<br/>checks and release approval]
+    end
+    CDD --> VSC
+    Staff --> VSC
+    VSC --> GH --> CI
+
+    subgraph Platforms[Agent platforms]
+        M365[Microsoft 365 Copilot]
+        CS[Copilot Studio<br/>managed environments,<br/>data policies]
+        FD[Microsoft Foundry<br/>dev, test, prod]
+    end
+    CI --> FD
+    CI --> CS
+    Entra --> M365
+    Entra --> CS
+    Entra --> FD
+
+    subgraph Tools[Tool access]
+        REG[Agent 365 MCP registry<br/>approve and block, preview]
+        CAT[Azure API Center<br/>catalog only]
+        APIM[Azure API Management<br/>gateway for Foundry tools]
+        MCPS[Approved remote MCP servers<br/>backend authorization]
+    end
+    VSC --> REG
+    CS --> REG
+    REG --> MCPS
+    FD --> APIM --> MCPS
+    CAT -. discovery .-> VSC
+
+    subgraph Data[Data]
+        PV[Purview labels and DLP]
+        SRC[SharePoint, repos, APIs<br/>permissions at source]
+    end
+    M365 --> SRC
+    CS --> SRC
+    FD --> SRC
+    PV -. supported data protection integrations .-> M365
+    PV -. supported data protection integrations .-> CS
+    PV -. configured supported integrations .-> FD
+
+    LOG[Audit and monitoring<br/>Entra, GitHub, Purview, Defender,<br/>Sentinel, Agent 365 inventory]
+    Entra --> LOG
+    GH --> LOG
+    CS --> LOG
+    FD --> LOG
+    REG --> LOG
+```
+
+---
+
 # Part 1. Summary
 
 ## The answer in one minute
@@ -110,72 +179,7 @@ Microsoft announced E7 general availability on 1 May 2026 and Agent 365 standalo
 
 # Part 2. How to build it
 
-## 2.1 Technical target state
-
-Proposed architecture **[recommendation]**. Staff use a managed device. Consultants sign in from their laptop to a managed cloud desktop, then access code and tools from there. Verify each permitted route and block bypass paths. See 2.4 for route coverage, 2.6 for the Foundry gateway and 2.7 for Purview.
-
-```mermaid
-flowchart LR
-    subgraph People[People and devices]
-        Staff[Staff<br/>managed device]
-        Cons[Consultants<br/>unmanaged laptop]
-        CDD[Managed cloud<br/>dev desktop]
-        Cons -->|sign in for work| CDD
-    end
-    Entra[Microsoft Entra ID<br/>MFA, Conditional Access,<br/>B2B guests, access reviews]
-    Staff --> Entra
-    CDD -->|work access from managed desktop| Entra
-
-    subgraph Dev[Development]
-        VSC[VS Code + GitHub Copilot<br/>managed-settings.json]
-        GH[GitHub Enterprise<br/>policies, PR review, scanning]
-        CI[CI/CD<br/>checks and release approval]
-    end
-    CDD --> VSC
-    Staff --> VSC
-    VSC --> GH --> CI
-
-    subgraph Platforms[Agent platforms]
-        M365[Microsoft 365 Copilot]
-        CS[Copilot Studio<br/>managed environments,<br/>data policies]
-        FD[Microsoft Foundry<br/>dev, test, prod]
-    end
-    CI --> FD
-    CI --> CS
-    Entra --> M365
-    Entra --> CS
-    Entra --> FD
-
-    subgraph Tools[Tool access]
-        REG[Agent 365 MCP registry<br/>approve and block, preview]
-        CAT[Azure API Center<br/>catalog only]
-        APIM[Azure API Management<br/>gateway for Foundry tools]
-        MCPS[Approved remote MCP servers<br/>backend authorization]
-    end
-    VSC --> REG
-    CS --> REG
-    REG --> MCPS
-    FD --> APIM --> MCPS
-    CAT -. discovery .-> VSC
-
-    subgraph Data[Data]
-        PV[Purview labels and DLP]
-        SRC[SharePoint, repos, APIs<br/>permissions at source]
-    end
-    M365 --> SRC
-    CS --> SRC
-    FD --> SRC
-    PV -. supported data protection integrations .-> M365
-    PV -. supported data protection integrations .-> CS
-    PV -. configured supported integrations .-> FD
-
-    LOG[Audit and monitoring<br/>Entra, GitHub, Purview, Defender,<br/>Sentinel, Agent 365 inventory]
-    Entra --> LOG
-    GH --> LOG
-    CS --> LOG
-    FD --> LOG
-    REG --> LOG
-```
+See the [technical target state](#21-technical-target-state) at the start of the document.
 
 ## 2.2 Identity and devices
 
@@ -306,10 +310,19 @@ Use Git as the source of truth and publish the approved list automatically. Reco
 
 ```mermaid
 flowchart LR
-    PR[Review and approve the pull request] --> Publish[Distribute on merge]
-    Publish --> Check[Check discovery, configuration and enforcement separately]
-    Check --> Enable[Enable tested routes]
-    Enable --> Monitor[Monitor and verify any revocation]
+    PR[GitHub pull request] --> Review{Security review}
+    Review -->|Rejected| Close[Close and record the reason]
+    Review -->|Approved| Git[Merge into the approved list]
+    Git --> VS[VS Code and GitHub Copilot]
+    Git --> A365[Agent 365 registry]
+    Git --> Foundry[Foundry Azure Policy]
+    Git --> Catalog[Azure API Center catalog and discovery]
+    VS --> Verify{Verify configuration and runtime enforcement}
+    A365 --> Verify
+    Foundry --> Verify
+    Verify -->|Fail| Stop[Keep the route disabled]
+    Verify -->|Pass| Enable[Enable and monitor the tested route]
+    Enable -->|Incident or failed review| Revoke[Block client and gateway routes, revoke backend access and verify]
 ```
 
 **Risk tiers [recommendation].** Apply the highest applicable tier. Assess who operates the server separately from whether the endpoint is public.
