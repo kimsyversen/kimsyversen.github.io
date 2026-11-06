@@ -70,3 +70,17 @@ Request: split the document into an overview (what it says) and a technical part
 - Open the body with the full technical target-state diagram and keep the 2.1 anchor.
 - Show the MCP approval and publication diagram in 2.4. Keep rejection, publication by destination, enforcement checks, monitoring and revocation visible.
 - Keep the short text paths below both diagrams. At narrow widths scroll the diagram within its own region.
+
+
+## Five points diagram (2026-11-06)
+
+- Goal: one diagram in Part 1, built on the 2.1 target state, that lets a reader see all five points of "The answer in one minute" in about a minute.
+- Layout: left column "Policy changes in Git" (repository, approved pull request, automatic publication, verify deployed policy). Right column keeps the target-state layers top to bottom: people and devices, Entra, agent platforms, agent actions, tool access, data, audit. A bus line carries the published policy from Git into each layer. Audit feeds a read-back arrow into the verify box.
+- Numbers 1 to 5 sit on the matching layers: 1 agent platforms, 2 tool access, 3 managed cloud desktop, 4 Entra identity and agent actions, 5 Git column and verify.
+- Text is labels and design requirements only. No product behaviour claims. Each text gets a verdict in the factcheck ledger and the script must pass.
+- Place: inside the Part 1 block, after the numbered list. Ids: `five-points`, `t-five`, `d-five`.
+- Done when: script passes, light, dark and 375px checked, no console errors, index dates updated.
+
+## 2026-11-06, QA of the 2.1 diagram
+
+Belongs to [the page](enterprise-ai-agent-security-recommendation.html). Compare 2.1 with the rest of the page, add what is missing at the same detail level, keep ids and links, update the ledger. Done: see decisions of the same date.

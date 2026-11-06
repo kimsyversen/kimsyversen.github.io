@@ -451,13 +451,13 @@ requirement	Check configuration scope
 label	Check product scope and pilot coverage
 requirement	Check server allow or block
 requirement	Check that the caller may use this server, tool and resource. Apply access checks independently of the model.
-requirement	Check the caller, tool and resource at the intended enforcement points.
+requirement	Check the caller, tool and resource at the intended enforcement points. Agents start read-only, and high-impact actions need human approval.
 requirement	Check the outcome
 label	Check tools and data separately
 label	checks, release approval
 label	CI/CD
 requirement	Close request
-requirement	Collect audit events and verify that access can be withdrawn.
+requirement	Collect audit events, compare deployed policy with Git and verify that access can be withdrawn.
 label	Community MCP servers
 label	configuration and calls
 label	Consultants
@@ -577,7 +577,7 @@ label	Preview re-check
 label	Preview watchlist
 label	Promote
 label	Prompt injection, data leak, tool misuse
-requirement	Proposed access paths. Staff use managed devices. Consultants reach code and tools through a managed cloud desktop. Apply identity controls before development and agent platforms. Check tool and data access separately. Collect audit events at each layer.
+requirement	Proposed access paths. Staff use managed devices. Consultants reach code and tools through a managed cloud desktop. Apply identity controls before development and agent platforms. Policy changes go through an approved pull request in Git and are published automatically. Agents start read-only, need human approval for high-impact actions and use a separate narrow identity to run approved actions. Check tool and data access separately. Collect audit events at each layer and compare deployed policy with Git.
 requirement	Proposed architecture. Review the MCP approval workflow and the route matrix. Validate direct connections and bypass paths before production use.
 label	Proposed design
 label	Proposed target state
@@ -615,7 +615,7 @@ requirement	Restrict the path and validate the token at the gateway.
 requirement	Retry from an existing agent and any permitted alternate path. Confirm denial and correlate the events before restoring access.
 label	Review
 label	Review and record
-requirement	Review code and policy changes, test the agent and deploy to the chosen environment.
+requirement	Review code and policy changes, test the agent and deploy to the chosen environment. Publish the approved list from Git on merge.
 label	Review date
 requirement	Review the endpoint, tool version, schema, data and permissions in the pull request. Security and the data owner approve tier 2 and tier 3 tools. Tier 4 also needs an exception.
 label	reviewed pull request
@@ -704,5 +704,65 @@ label	What this does not cover
 label	Which tool does which job
 label	Who and where
 label	work access from managed desktop
+label	1
+label	2
+label	3
+label	4
+label	5
+label	AGENT ACTIONS
+label	Approved pull request
+label	Automatic publication
+label	Default deny
+label	Human approval
+label	Other routes
+label	POLICY CHANGES IN GIT
+label	Policy repository in Git
+requirement	Proposed design. Policy flows from Git down into each layer. Work access flows from the managed desktop. Compare with the full target state.
+label	Read-only start
+label	Rules
+label	The five points on the target state
+label	VERIFY
+label	Verify deployed policy
+requirement	approved list, rules, settings
+requirement	blocked or restricted, then tested
+requirement	compare with Git
+requirement	each agent has its own identity
+requirement	for high-impact actions
+label	n
+label	nNumber of the point above
+requirement	native policy controls
+requirement	no write access at first
+requirement	on merge, no manual edit
+requirement	one policy, each platform's own controls
+requirement	only bounded, low-risk actions
+label	personal laptop
+requirement	publishes to each platform
+requirement	review before merge
+requirement	servers and tools, nothing else
+requirement	where the platform supports it
+label	Approved MCP servers
+label	Approved list only
+requirement	Proposed design. A policy repository in Git feeds changes through an approved pull request and automatic publication into each platform. Consultants work through a managed cloud desktop. Each agent has its own identity, starts read-only and needs human approval for high-impact actions. Tool access allows only approved MCP servers and tools. Data protection and audit sit below. The deployed policy is checked against Git.
+requirement	approval and revocation
+requirement	catalog and discovery
+label	catalog route
+label	Auto-publish
+label	Azure Policy, RBAC
+label	DLP for Copilot, DSPM
+label	Direct API and data access
+label	Local MCP (stdio)
+label	Policy repository
+label	Pull request
+label	SharePoint Advanced Management
+requirement	agent tests, checks
+requirement	alerts on blocked MCP attempts. On incident, block, revoke at source, verify the stop
+requirement	run by a separate, narrow identity
+requirement	approved before merge
+label	approved list, rules
+requirement	bounded, low-risk only
+requirement	exact command allowlist
+label	managed device, Intune compliance
+requirement	publishes the approved list
+label	release approval
 ```
 <!-- End reviewed presentation text -->

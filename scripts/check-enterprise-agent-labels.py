@@ -1,4 +1,12 @@
-"""Check the reviewed wording of non-evidence text on the agent security page."""
+"""Check the reviewed wording of non-evidence text on an agent governance page.
+
+Usage:
+  python3 -I scripts/check-enterprise-agent-labels.py [page.html]          check one page (default: the long page)
+  python3 -I scripts/check-enterprise-agent-labels.py page.html --list     print the captured texts, one per line
+
+The ledger is the page's own .factcheck.md. A pass proves a verdict was recorded for the
+exact wording, not that the verdict is right.
+"""
 
 from collections import Counter
 from html.parser import HTMLParser
@@ -7,8 +15,7 @@ import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGE = ROOT / "enterprise-ai-agent-security-recommendation.html"
-LEDGER = PAGE.with_suffix(".factcheck.md")
+DEFAULT_PAGE = "enterprise-ai-agent-security-recommendation.html"
 BEGIN = "<!-- Begin reviewed presentation text -->"
 END = "<!-- End reviewed presentation text -->"
 VOID = set("area base br col embed hr img input link meta param source track wbr".split())
@@ -92,7 +99,18 @@ def check(markup, ledger):
 
 
 if __name__ == "__main__":
-    counts, failures = check(PAGE.read_text(), LEDGER.read_text())
+    import sys
+
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    page = ROOT / (args[0] if args else DEFAULT_PAGE)
+    ledger = page.with_suffix(".factcheck.md")
+    if "--list" in sys.argv:
+        parser = PresentationText()
+        parser.feed(page.read_text())
+        for value in dict.fromkeys(parser.items):
+            print(value)
+        raise SystemExit(0)
+    counts, failures = check(page.read_text(), ledger.read_text())
     if failures:
         raise SystemExit("\n".join(failures))
-    print(f"Checked {len(counts)} distinct presentation texts.")
+    print(f"Checked {len(counts)} distinct presentation texts on {page.name}.")
