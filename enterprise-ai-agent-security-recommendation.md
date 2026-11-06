@@ -1,4 +1,4 @@
-# Safe use and development of AI and agents on the Microsoft stack
+# Governing AI agents and MCP servers on the Microsoft stack
 
 **Recommendation for:** Microsoft E7 tenant using Foundry, Copilot Studio, Microsoft 365 Copilot, GitHub Copilot, GitHub and VS Code, with managed devices and external consultants on unmanaged devices.
 **Facts checked against Microsoft, GitHub and VS Code documentation on:** 2026-11-05 (statement review, including summaries and diagrams)
@@ -18,13 +18,23 @@
 
 ## The answer in one minute
 
-1. **One rule set, enforced in each product's own control panel.** Do not assume that Agent 365 inventory or registration enforces every runtime or connection path.
-2. **Default deny for MCP servers.** Require approved servers on supported paths. Account for built-in server exemptions, custom agent profiles and clients without allowlist support (see 2.3).
-3. **Keep source code and sensitive data on managed devices.** Consultants on unmanaged laptops work inside a managed cloud desktop (Dev Box, Windows 365 or Azure Virtual Desktop).
-4. **Agents get their own identity and the smallest possible access.** Read-only by default. A human approves high-impact changes. Explicitly bounded low-impact actions may use a rules service.
-5. **Run it as policy as code.** The approved lists live in Git. Require an approved pull request and successful deployment of the resulting policies. This can reduce repetitive admin work.
+**Pilot decision [recommendation].** Start with one internal, read-only case search and non-sensitive test data. Name an owner, agree the pass criteria in Part 4 and expand only after critical tests pass for the routes you will allow.
 
-All five points are **[recommendation]**. The vendor facts that support them are tagged below.
+1. **One rule set, enforced in each product's own control panel.** Do not assume that Agent 365 inventory or registration enforces every runtime or connection path. Facts: 2.4, Part 5.
+2. **Default deny for MCP servers.** Require approved servers on supported paths. Account for built-in server exemptions, custom agent profiles and clients without allowlist support (see 2.3). Facts: 2.3, 2.4.
+3. **Keep source code and sensitive data on managed devices.** Consultants on unmanaged laptops work inside a managed cloud desktop (Dev Box, Windows 365 or Azure Virtual Desktop). Facts: 2.2.
+4. **Agents get their own identity and the smallest possible access.** Read-only by default. Apply the action policy in 2.4. A human approves high-impact actions. A rules service can approve explicitly approved low-risk actions within their defined limits.
+5. **Run it as policy as code.** The approved lists live in Git. Require an approved pull request and successful deployment of the resulting policies. This can reduce repetitive admin work. Facts: 2.8, Part 3.
+
+All five points describe the proposed design.
+
+## Case search from a consultant desktop
+
+This is a fictional pilot. The consultant uses a managed cloud desktop. The model proposes a tool call, and the agent runtime sends it using Model Context Protocol (MCP). The server and case API check access before returning the test cases.
+
+One result contains an instruction to send the cases to an external address. Treat the result as data, deny the outbound action and record the caller and decision with sensitive input masked. Follow the same example in 6.2 and the pilot checks in Part 4.
+
+# Part 1, continued. Background for the answer
 
 ## The big picture
 
@@ -102,7 +112,7 @@ Microsoft announced E7 general availability on 1 May 2026 and Agent 365 standalo
 
 ## 2.1 Technical target state
 
-This diagram is a proposed design **[recommendation]**, not evidence that the controls are deployed. Purview coverage depends on the product and integration. A catalog entry or gateway block does not establish control over direct connections. Verify each permitted path and block bypass paths.
+Proposed architecture **[recommendation]**. Staff use a managed device. Consultants sign in from their laptop to a managed cloud desktop, then access code and tools from there. Verify each permitted route and block bypass paths. See 2.4 for route coverage, 2.6 for the Foundry gateway and 2.7 for Purview.
 
 ```mermaid
 flowchart LR
@@ -110,12 +120,11 @@ flowchart LR
         Staff[Staff<br/>managed device]
         Cons[Consultants<br/>unmanaged laptop]
         CDD[Managed cloud<br/>dev desktop]
-        Cons --> CDD
+        Cons -->|sign in for work| CDD
     end
     Entra[Microsoft Entra ID<br/>MFA, Conditional Access,<br/>B2B guests, access reviews]
     Staff --> Entra
-    Cons -->|B2B guest, MFA, expiry| Entra
-    CDD --> Entra
+    CDD -->|work access from managed desktop| Entra
 
     subgraph Dev[Development]
         VSC[VS Code + GitHub Copilot<br/>managed-settings.json]
@@ -281,47 +290,7 @@ A supported client receives server-managed settings for the consultant's enterpr
 
 We did not test it. Test it from the consultant path before you rely on it. **[recommendation]** Use a managed cloud desktop with tested network and transfer controls. **[recommendation]**
 
-## 2.4 Governing which MCP servers are allowed
-
-One approved list, several kinds of enforcement. After the merge, publishing to every product is automatic, never by hand. This is a proposed workflow **[recommendation]**. Approval, deployment and enforcement are separate steps. Gateway blocks apply to traffic using that gateway; revoke backend access and restrict alternate paths where required.
-
-```mermaid
-flowchart TD
-    REQ[Team asks for an MCP server in GitHub<br/>pull request with owner, purpose,<br/>data touched, risk tier] --> SEC{Security review<br/>checklist}
-    SEC -->|Rejected| END1[Closed with reason]
-    SEC -->|Approved| LIST[Merged into the approved list in Git]
-    LIST -->|published automatically| A[VS Code and GitHub Copilot<br/>managed-settings.json]
-    LIST --> B[Agent 365 registry<br/>found via API Management]
-    LIST --> C[Foundry<br/>Azure Policy from the pipeline]
-    LIST --> D[Azure API Center<br/>synced, discovery only]
-    A --> USE[Allowed in use]
-    B --> USE
-    C --> USE
-    USE --> MON[Monitor with Defender and logs]
-    MON -->|Incident or review fails| KILL[Block gateway and client access<br/>revoke backend permissions]
-```
-
-| Where the MCP server runs | What enforces the list | Strength |
-|---|---|---|
-| VS Code and GitHub Copilot | `managed-settings.json` allow and deny rules | Generally available for supported clients and keys, with built-in exemptions. Not for repository custom agent profiles, and the client table shows no support in Copilot in the cloud (GitHub Actions). **[verified]** |
-| Copilot Studio, VS Code, Claude Code, GitHub Copilot CLI (remote servers) | Agent 365 registry: approve, grant consent, block a whole server | **Preview**, for registered gateway traffic **[verified]** |
-| Copilot Studio tools | Power Platform data policies. Microsoft says blocking Power Platform connectors also blocks tools in connected MCP servers that rely on those connectors. | Strong for connector-based servers **[verified]** |
-| Foundry agents | Azure Policy for tools (preview), agent tool settings, RBAC, API Management for remote tools | The approved-endpoint policy can enforce the shared list on tool configuration requests. Existing configurations and runtime calls need separate handling. See 2.6. **[verified; tenant behavior to test]** |
-| Local `stdio` servers on a laptop | GitHub `serverCommand` allowlist (exact command and arguments) and VS Code policies | Works where the clients obey the file. Wildcards are not supported. **[verified; coverage per client to pilot]** |
-| Catalog only | Azure API Center | VS Code and GitHub Copilot can use it for discovery. Do not assume this blocks direct connections. **[verified for discovery; recommendation for enforcement]** |
-
-**How the list reaches step 4, automatically [recommendation]:** Requirement: nobody copies the list by hand. After review, the merged pull request is the only human step. Automatic delivery is possible for all four products. Only the GitHub path is built in. The others need a pipeline you build, and some parts are preview. Nothing here was tested.
-
-| Product | Automatic path | Gaps and limits |
-|---|---|---|
-| VS Code and GitHub Copilot | Built in. Merging `copilot/managed-settings.json` in the `.github-private` repo publishes it. Licensed users get it within about an hour. **[verified]** | Copilot seats from your enterprise. A supported client, signed in with the enterprise account. For limits that must always hold, also deliver by MDM or file. **[verified]** |
-| Agent 365 registry | The pipeline registers each approved server in Azure API Management. REST API, ARM, Bicep, Azure CLI and Terraform all work for that. **[verified]** The Agent 365 Tools Gateway (preview) finds the servers in a connected API Management instance within a few minutes of the first connection. Servers you add afterwards are found on a later refresh. The page gives no interval. **[verified]** | One-time Global Administrator consent. Servers outside the gateway are not found. An administrator still applies allow or block per server. No source shows that done by pipeline, or says if a new server starts allowed or blocked. **[unverified]** Test that first. The bring-your-own request flow stays manual, so avoid it here. **[recommendation]** |
-| Foundry | The pipeline writes the approved endpoints from Git into the Azure Policy assignment. Azure Policy can be set from the Azure CLI, PowerShell or REST API. **[verified]** Doing it for the two preview tool policies is your own build. **[recommendation]** Not tested. | The two preview tool policies assigned at the right scope, with Deny. Existing agents and runtime calls need separate handling (see 2.6). **[verified]** |
-| Azure API Center | No extra step. Link the API Management instance and API Center keeps its inventory in sync, MCP servers included. **[verified]** | Discovery only. It does not block direct connections. **[verified]** API Center can also feed Foundry tool catalogs. Whether that enforces an allowlist was not checked. **[unverified]** |
-
-**Suggested design.** One pipeline job runs on merge. It registers each approved server in API Management and updates the Foundry policy assignment. Removing a server from the Git list must remove it from both. **[recommendation]** Not tested.
-
-**If VS Code is managed by Intune [recommendation]:** Intune adds a second way to reach VS Code. It does not reach the other three products. Nothing here was tested in a real tenant.
+**If VS Code is managed by Intune [recommendation]:** Intune adds a second way to reach VS Code. It does not reach the other products that the approved list is published to in 2.4 (Agent 365, Foundry and Azure API Center). Nothing here was tested in a real tenant.
 
 - **What it can set.** The VS Code device policies `ChatAllowedMcpServers`, `ChatDeniedMcpServers`, `ChatAllowManagedMcpServersOnly`, `ChatMCP`, `ChatAgentMode`, `ChatCopilotConnectors` and `AllowedExtensions`. **[verified]**
 - **GitHub MDM keys.** Windows registry `HKLM\SOFTWARE\Policies\GitHubCopilot` and macOS domain `com.github.copilot`. Clients check hourly. Linux has no MDM path. **[verified]**
@@ -329,7 +298,55 @@ flowchart TD
 - **Keep one source of truth.** If Intune sets the GitHub MDM key `allowedMcpServers`, the effective list is the intersection with the Git list. A server must be permitted by every source, so a server missing from either list is blocked. **[verified]** Keep the Git list as the master. **[recommendation]**
 - **One place per control.** If a Copilot managed setting and a VS Code device policy cover the same control, the Copilot setting wins. The two are not merged. **[verified]** The pages we read do not pair each device policy with its Copilot key, so check each pair in Policy Diagnostics. **[inference]**
 - **Check it.** Run **Developer: Policy Diagnostics** to see the effective value and its source. Windows device policy applies at the next VS Code start, and some policies also need a Windows restart. **[verified]**
-- **What it does not cover.** Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center boxes. No source describes an automatic Git to Intune path. Making it automatic would be your own build and was not researched. **[unverified]**
+- **What it does not cover.** Unmanaged consultant laptops (use a managed cloud desktop), and the Agent 365, Foundry and API Center paths in 2.4. No source describes an automatic Git to Intune path. Making it automatic would be your own build and was not researched. **[unverified]**
+
+## 2.4 Governing which MCP servers are allowed
+
+Use Git as the source of truth and publish the approved list automatically. Record the policy version and delivery result for each destination. Confirm enforcement independently. For removal, withdraw the approved configuration and revoke runtime access where needed. **[recommendation]**
+
+```mermaid
+flowchart LR
+    PR[Review and approve the pull request] --> Publish[Distribute on merge]
+    Publish --> Check[Check discovery, configuration and enforcement separately]
+    Check --> Enable[Enable tested routes]
+    Enable --> Monitor[Monitor and verify any revocation]
+```
+
+**Risk tiers [recommendation].** Apply the highest applicable tier. Assess who operates the server separately from whether the endpoint is public.
+
+| Tier | Example | Publication and action approval |
+|---|---|---|
+| 1. Read-only, internal, no sensitive data | Internal case search | Automate checklist checks. Record approval in the pull request. |
+| 2. Read-only, sensitive data | HR or finance reads | Security and the data owner approve publication. |
+| 3. Can change data or call out | Create tickets, send mail, deploy | Security and the data owner approve publication. Apply the action policy at run time. |
+| 4. Third-party operated or untrusted code | Community MCP servers | Default deny. A recorded exception must still meet the action policy. |
+
+**Action policy [recommendation].**
+
+- Before publication, review the endpoint, tool version, schema, data and permissions. Require the applicable tier approvals.
+- For each call, check that the caller may use the server, tool and resource. Apply access checks independently of the model.
+- For a write or outbound action, require an authorized request or approved trigger. Require a human for high-impact actions and actions outside an approved rule. A rules service can approve explicitly approved low-risk actions bounded by tool, permitted inputs, target and data. Deny when the required approval is absent.
+- Use a separate, narrowly scoped identity for execution. Record the approval and outcome.
+
+**Server checklist (copy into the pull request template):** named owner, purpose, publisher and source, authentication type, data it can read, actions it can take, logging available, how to disable it, review date.
+
+| Client and route | Discovery | Setup and configuration | At call time | Pilot check |
+|---|---|---|---|---|
+| VS Code and GitHub Copilot | See API Center. | Publish `managed-settings.json` for supported clients. | Check exemptions for built-ins, custom agent profiles and Copilot cloud on GitHub Actions. | Test the enterprise account, client version, delivery and personal account paths. |
+| Agent 365 Tools Gateway via API Management | Preview discovery from connected API Management. | Connect the gateway, grant tenant consent and confirm per-server allow or block. | Verify the effect on calls using this route and test direct routes separately. | Test initial state, refresh delay and allow or block behavior. |
+| Agent 365 BYO MCP | Review submitted requests. | Approve requests and grant consent. | Whole-server blocking on supported registered gateway routes **[verified, preview]**. | Check client coverage, gateway blocking and backend revocation. |
+| Copilot Studio via connectors | Inventory agent connections. | Apply Power Platform data policies. | The policy can block tools that rely on blocked connectors **[verified]**. | Test each connector and the paths outside it. |
+| Foundry agent tools | Inventory tools and endpoints. | Assign preview Azure Policy with Deny for noncompliant create or update requests **[verified]**. | Use a separate runtime or backend control for existing agents. | Test configuration denial and runtime revocation separately. |
+| Local MCP via `stdio` | Inventory local commands and arguments. | Use GitHub's command allowlist where supported. | Local calls fall outside Global Secure Access MCP logging (E12). | Test allowed and denied commands on each client. |
+| Direct API or data access | Inventory direct connections. | Restrict endpoints and scope each identity. | Check resource permissions at the source. | Retry after revocation. |
+| Azure API Center catalog | Sync the connected API Management inventory **[verified]**. | Publish catalog entries for discovery. | Set up a separate enforcement control for direct connections. | Verify denial at the intended boundary. |
+
+**Publication details.**
+
+- **VS Code and GitHub Copilot.** Merging `copilot/managed-settings.json` in `.github-private` publishes to supported enterprise-licensed clients within about an hour. **[verified]** Use MDM or file delivery for controls that must hold across account changes. See 2.3.
+- **Agent 365 Tools Gateway.** Register approved servers in API Management from the pipeline. The service documents REST API, ARM, Bicep, Azure CLI and Terraform for registration. The preview gateway discovers registered servers after tenant consent and on subsequent refreshes. Administrators can apply per-server allow or block. **[verified]** Automatic policy application and the initial server state remain unverified.
+- **Foundry.** Have the pipeline write the Git-approved endpoints into the preview tool policy assignment. Azure Policy supports CLI, PowerShell and REST assignment. **[verified]** Test the proposed pipeline and the intended Deny scope. Use a separate runtime or backend control. See 2.6.
+- **Azure API Center.** The linked API Management inventory syncs MCP entries. **[verified]** Treat the catalog as discovery. Whether a Foundry catalog integration enforces an allowlist was not checked.
 
 **Agent 365 BYO MCP registry facts [verified 2026-11-05]:**
 - Path: Microsoft 365 admin center, **Agents, Tools**. Requests appear under **Requests (preview)**. Registry is under Agents, Tools, Registry.
@@ -341,17 +358,6 @@ flowchart TD
 - Allowed authentication: NoAuth, API key (header or query), external OAuth, Entra OAuth. Prefer Entra OAuth and avoid NoAuth. **[recommendation]**
 - New versions of a registered server cannot be republished during preview.
 - Gateway calls can be found in Defender advanced hunting: `CloudAppEvents | where ActionType in ("ExecuteToolByGateway")`. The bring-your-own MCP page gives this sample query.
-
-**Risk tiers [recommendation]:** apply the highest applicable tier. Publicly reachable endpoints operated by your organization are different from third-party operated servers.
-
-| Tier | Example | Approval |
-|---|---|---|
-| 1. Read-only, internal, no sensitive data | Internal docs search | Auto-approve if the checklist passes |
-| 2. Read-only, sensitive data | HR or finance reads | Security and data owner |
-| 3. Can change data or call out | Create tickets, send mail, deploy | Security, data owner, and a human approval step at run time |
-| 4. Third-party operated or untrusted code | Community MCP servers | Default no. Exception process only |
-
-**Server checklist (copy into the pull request template):** named owner, purpose, publisher and source, authentication type, data it can read, actions it can take, logging available, how to disable it, review date.
 
 ## 2.5 Copilot Studio
 
@@ -413,11 +419,13 @@ All of this is **[recommendation]**.
 
 **Rules for agents that act:**
 - The agent never holds direct high-impact write access.
-- It makes a request. A human approves high-impact changes. A rules service may approve explicitly bounded, low-impact actions. A **separate, narrowly scoped identity** executes it.
+- Apply the action policy in 2.4 for every write or outbound request. A **separate, narrowly scoped identity** executes approved actions.
 - Permissions are checked at the data source and the API, never only in the prompt.
 - No secrets in prompts, source code or traces.
 
 ## 2.9 Monitoring and inventory
+
+**Operations runbook [recommendation].** Find the affected calls and identify the caller, route, tool and decision. Disable the agent and block the affected client or gateway route. Revoke at the source and update Git. Retry from an existing agent and alternate routes, then correlate denial events before restoring access.
 
 | Need | Source |
 |---|---|
@@ -443,7 +451,7 @@ All rows are **[recommendation]**. The vendor features they rely on are tagged i
 | Policy as code | MCP allowlist and Copilot settings in Git. Require reviewed pull requests and confirm deployed policy versions. |
 | Groups, not people | Access by Entra group tied to project. Use group-backed permissions where supported; verify provisioning, removal and direct grants. |
 | Time limits by default | Consultant access, privileged roles and MCP exceptions all expire. Configure expiry and a documented renewal workflow for each system. |
-| Auto-approve the low tier | Tier 1 MCP servers pass if the checklist is complete. Humans only look at tiers 2 to 4. |
+| Automate tier 1 checks | Tier 1 may use automated pull request approval after the checklist passes. Require named approvers for higher tiers. |
 | Report-only first | Run new Conditional Access rules in report-only mode, then enforce. Microsoft recommends this for agent policies. |
 | Environment groups | One rule set for many Power Platform environments. |
 | One owner per agent | Owner gets a quarterly "keep or retire" list. Unowned agents are disabled after 30 days. |
@@ -460,9 +468,24 @@ All rows are **[recommendation]**.
 |---|---|---|
 | Weeks 1 to 2 | Inventory: tenants, Foundry projects, Power Platform environments, VS Code AI extensions, MCP configs, external accounts. Name owners. | Every item has an owner. |
 | Weeks 2 to 4 | Baseline: MFA, consultant access packages, report-only Conditional Access for agents, GitHub policy repo with an empty MCP allowlist (built-in servers remain exempt), Studio data policies and environment groups, separate Foundry environments, Dev Box clipboard and drive redirection set to off by policy. | Policies exist and report. |
-| Weeks 4 to 6 | Pilot one low-risk read-only agent. Try it from a managed device and from the consultant cloud desktop. Test that an unapproved tool configuration is rejected in VS Code, Copilot Studio and Foundry. Separately test existing-agent invocation and backend revocation. Test a personal Copilot account on your network. | Test results written down. |
-| Weeks 6 to 10 | Enforce. Add the pull request template, risk tiers and monthly review pack. Turn on Sentinel alerts. | Enforcement on, no open critical gaps. |
+| Weeks 4 to 6 | Pilot one low-risk read-only agent. Try it from a managed device and from the consultant cloud desktop. Test that an unapproved tool configuration is rejected in VS Code, Copilot Studio and Foundry. Separately test existing-agent invocation and backend revocation. Test a personal Copilot account on your network. | All critical pilot checks pass for the routes proposed for production. |
+| Weeks 6 to 10 | Enforce. Add the pull request template, risk tiers and monthly review pack. Turn on Sentinel alerts. | The rollout owner approves the evidence, and operations verifies enforcement and the rollback path. |
 | Ongoing | Re-check the preview items monthly (Agent 365 registry, Foundry gateway, GitHub client coverage, tool-level blocking). | Gaps closed or accepted in writing. |
+
+### Read-only pilot pass criteria
+
+Assign a named owner to each role. Keep the result, client and version, identity, policy version and evidence link in the pilot record.
+
+| Check | Test owner | Pass when and evidence |
+|---|---|---|
+| Allowed read and device boundary | Identity and endpoint owners | The approved case search works from managed staff devices and the consultant desktop. Protected resources deny direct access from the unmanaged laptop and personal account. Attach client results and sign-in events. |
+| Denied setup and unauthorized call | Platform owner | Disallowed setup is rejected where a configuration control is expected. Wrong-audience tokens and unauthorized tool or resource requests fail on the remote route. Attach the setup result and call decisions separately. |
+| Untrusted results and action bounds | Agent owner and security | The embedded instruction causes no outbound transfer. In isolation, rules can only approve the expressly allowed low-risk action within its bounds. Attach the execution and decision trace. |
+| Bypass paths | Network and client owners | Direct endpoint requests and disallowed local tools are blocked on in-scope routes. Record excluded routes. Attach network and client results. |
+| Revocation and rollback | Operations and data owners | A previously working agent is denied after backend revocation. Approved read access returns after the documented rollback. Attach results and timestamps. |
+| Audit trail | Security operations | Allowed and denied calls are traceable to caller, tool, decision and correlation ID. Attach redacted events. |
+
+Go to production only after the rollout owner and security review passing evidence for all critical checks on every allowed route. Keep failed routes disabled and resolve open critical gaps.
 
 ---
 
@@ -482,7 +505,202 @@ All rows are **[recommendation]**.
 
 ---
 
-# Sources (read 2026-11-05)
+# Part 6. Technical guide for remote MCP
+
+This guide covers a proposed remote MCP route. Use Part 2 for product settings and other agent controls. **Tenant tests pending.**
+
+## 6.1 Introduce the controls in four phases
+
+1. **Inventory.** Discover the routes in use and set up enough monitoring to verify the inventory.
+2. **Review and record.** Register the proposed server and approve its tools before enabling use.
+3. **Deploy controls.** Authenticate, authorize, broker and restrict the route.
+4. **Prove and operate.** Run the pilot checks, monitor approved routes and repeat checks after changes.
+
+## 6.2 One remote MCP call from a managed client
+
+Proposed route for the case-search example. Confirm coverage before applying it to a client or runtime.
+
+```mermaid
+flowchart LR
+    ID[Entra ID] -.->|Token for the server| C[Managed client]
+    C -->|Tool call| GW[Network restriction and gateway]
+    GW --> S[MCP server and caller authorization]
+    S --> API[Case API and resource access]
+    G[Approved route and tool version in Git] -.->|Policy input| GW
+    GW -.->|Audit output| L[Correlated logs]
+    S -.->|Audit output| L
+    API -.->|Audit output| L
+```
+
+The proposed network layer uses the Global Secure Access MCP firewall (E1). Confirm client and inspection prerequisites (E10). Check local, hosted and direct routes separately in the route matrix and 6.6.
+
+## 6.3 Steps for each control
+
+Each step has a tag. The E numbers point to the exact quote in 6.7.
+
+### 1. Discover
+
+1. Turn on MCP logging in Global Secure Access. Microsoft says it helps find shadow MCP servers. **[verified, preview]** (E9, E8)
+2. On devices, install the Global Secure Access client with internet traffic forwarding and TLS inspection on. **[verified]** (E10, E11)
+3. Do not count local servers as seen. The log only captures traffic to remote servers. **[verified]** (E12)
+4. Connect API Management to the Agent 365 Tools Gateway, so servers kept there are found. See 2.4. **[verified, preview]**
+5. Compare what is found with the Git list. A server that is found and not listed is a finding to follow up. **[recommendation]**
+
+### 2. Register
+
+1. Keep one record per approved server in the Git list from 2.4. The fields are in 6.4. **[recommendation]**
+2. Publish from Git on merge. Verify delivery and check enforcement independently. See 2.4 for administrator steps and gaps. **[recommendation]**
+3. Give every record an expiry date. After it, the pipeline removes the server unless someone approves it again. **[recommendation]**
+4. Treat the Git list as the source of truth. A spreadsheet copy is a second list to keep in sync. **[recommendation]**
+
+### 3. Authenticate
+
+1. Register each MCP server as its own Entra application, so its tokens name that application as the audience. **[recommendation]**
+2. The server must check that a token was issued for it. The MCP specification requires this. **[verified]** (E22)
+3. In API Management, the `validate-azure-ad-token` policy can check the audience. **[verified]** (E21)
+4. Also check issuer and expiry. No page read for this part states these two checks. **[recommendation]**
+5. Give the server's own access to backends a managed identity or workload identity. No long-lived secrets, no shared credentials. **[verified]** (E25)
+6. Keep credentials out of source code and plain-text config files, such as an `mcp.json` file. Rotate them. **[verified]** (E26)
+7. Secrets you cannot avoid go in Key Vault. **[verified]** (E27)
+8. Do not approve servers with no authentication. Agent 365 accepts NoAuth, but 2.4 says to avoid it. **[recommendation]**
+
+### 4. Authorize
+
+1. Check three levels: may this client use this server, may this caller use this tool, may this caller touch this resource or take this action. **[recommendation]**
+2. Do not make the server a "god mode" proxy. Keep its execution identity apart from the caller's rights, and check each caller. **[verified]** (E28)
+3. Never pass a client's token on to a backend API. The specification forbids it. **[verified]** (E23)
+4. A proxy server for a third-party API needs consent per client. **[verified]** (E24)
+5. If the backend must see the user, exchange the user's token instead of using the server's own identity (on-behalf-of). No page on this was read. **[unverified]**
+6. Keep the tool list small. Expose only the tools named in the record. **[recommendation]**
+
+### 5. Broker
+
+1. Put remote MCP servers behind API Management. It can secure inbound access, from client to gateway, and outbound access, from gateway to server. **[verified]** (E18)
+2. Inbound: have it validate Microsoft Entra tokens. **[verified]** (E19)
+3. Outbound: use its credential manager to add OAuth tokens to the backend calls that tools make. **[verified]** (E20)
+4. Make the server accept calls only from the gateway, so the gateway cannot be skipped. **[recommendation]**
+5. The network settings that enforce this were not checked. **[unverified]**
+
+### 6. Restrict
+
+1. Firewall: allow or deny MCP servers by URL pattern. **[verified, preview]** (E2, E1)
+2. Per server, allow or block tools, resources and prompt templates. **[verified, preview]** (E3)
+3. Start from default deny: default action Block, plus an allow list of approved servers. Keep a block-all rule ready for an incident. **[verified, preview]** (E6, E4)
+4. The firewall needs an Entra Internet Access licence. **[verified]** (E5)
+5. Do not build the whole model on the firewall. It sees only remote traffic from devices that run the client, and it is in preview. See 6.6. **[recommendation]**
+6. Put each server in its own network segment. Reach backends over private endpoints, limit outbound traffic, and use one managed identity per server with least privilege. **[recommendation]**
+7. No Microsoft page on private endpoints, network groups or outbound limits was read for this part. **[unverified]**
+8. Run untrusted servers in an isolated environment with least privilege. The Azure MCP Server page says this about servers used beside it. **[verified]** (E29)
+9. Aim for a small blast radius: a hijacked server reaches only what its record lists. **[recommendation]**
+
+### 7. Approve
+
+1. Approve the whole tool surface: tool names, descriptions, parameter schemas, endpoint and permissions. **[recommendation]**
+2. Review tool descriptions as untrusted input. Microsoft describes how a malicious server can use descriptions to influence the agent's use of other servers. **[verified]** E30
+3. Any change to those items needs a new pull request and a new review. **[recommendation]**
+4. Use the action policy in 2.4. For a write or outbound tool, require human approval unless the action matches an explicitly approved low-risk rule. **[recommendation]**
+5. Treat the tool result as data and check each proposed follow-up action independently. In the case-search example, deny the outbound request and record the decision. **[recommendation]**
+
+### 8. Monitor
+
+1. Read the Global Secure Access MCP log. It holds the user, the tool name and input arguments, and it matches each request to its response by event ID. **[verified, preview]** (E13, E15, E16, E8)
+2. Check allow and block decisions in the Global Secure Access traffic logs. **[verified]** (E7)
+3. Send the logs to the stack in 2.9. **[recommendation]**
+4. Alert on a server URL that is not in the Git list, a changed tool list, or a call from a client that is not approved. **[recommendation]**
+5. Keep one record per tool call, as in 6.5. **[recommendation]**
+
+## 6.4 The registry record
+
+One record per server in the Git list. It extends the checklist in 2.4. A design choice, not a vendor feature. **[recommendation]**
+
+| Field | What it holds | Read by |
+|---|---|---|
+| MCP server | Name and unique ID | Pipeline |
+| Owner | Named person and team | Reviewer |
+| Business purpose | One sentence | Reviewer |
+| Endpoint | URL, and the URL pattern used in gateway and firewall rules | Firewall, gateway |
+| Hosting | Where it runs: your Azure, a vendor, a laptop | Reviewer |
+| Entra app ID | The application its tokens are issued for | Token check |
+| Managed identity | The identity it uses to reach backends | Access review |
+| Approved clients | Which clients may use it | Client allow lists |
+| Approved tools | Tool names and the reviewed version of each description and parameter schema | Tool allowlist, review |
+| Tool risk level | Tier 1 to 4 from 2.4 | Approval, gateway rules |
+| Backend systems | What it can reach | Access review |
+| Data classification | Highest label it touches | Purview |
+| Network zone | Where it sits on the network | Network rules |
+| Action approval | Human approval requirement, or the approved rule and its limits | Run-time approval |
+| Logging destination | Where its call logs go | Monitoring |
+| Last security review | Date | Reviewer |
+| Expiry | Date after which it is removed unless approved again | Pipeline |
+
+## 6.5 The log record for each tool call
+
+For every call you can answer six questions. The table shows what the preview log gives today and what you add.
+
+| Question | Global Secure Access MCP log | Gap and what to do |
+|---|---|---|
+| Who called | User principal name. **[verified, preview]** (E13) | Only for traffic the firewall sees. **[inference]** |
+| Which server | Destination URL, which the log treats as the server's identifier. **[verified, preview]** (E14) |   |
+| Which tool, with what input | Tool name and input arguments of a tools/call request. **[verified, preview]** (E15) | The page does not say whether sensitive values are masked. **[unverified]** |
+| Result | The response event, matched to the request by event ID. **[verified, preview]** (E16) |   |
+| Which backend | No field for it in the field table. **[inference]** | Take it from API Management and backend logs. **[recommendation]** |
+| Policy decision | Allow or block is in the traffic logs. The MCP log has a transaction ID to join them. **[verified, preview]** (E7, E17) | The MCP log field table has no decision field. **[inference]** |
+
+Keep this record in your own log store: time, user or agent identity, client, server URL, tool, input with sensitive values masked, backend, result, policy decision, and one correlation ID. **[recommendation]**
+
+## 6.6 What this does not cover
+
+These limits apply to everything in 6.3.
+
+- Local `stdio` servers are not logged. Use the client policies in 2.3 for those. **[verified]** (E12)
+- On devices, logging needs the client and TLS inspection. A device without the client is not covered, so consultants' own laptops are a gap. **[verified, inference]** (E10, E11)
+- The firewall, the MCP log and the Agent 365 Tools Gateway are all preview. Behavior and licences can change. **[verified, preview]** (E1, E8)
+- The Global Secure Access MCP firewall does not inspect JSON-RPC batches. **[verified]** E31. Verify that the server and backend enforce access independently. **[recommendation]**
+- The firewall is one layer. A server on an approved URL can still return harmful content, so controls 4 and 7 still apply. **[inference]**
+- Private endpoints, network groups, outbound limits and on-behalf-of: no Microsoft page on them was read for this part. **[unverified]**
+- Nothing here was tested in a real tenant. **[unverified]**
+
+## 6.7 Evidence
+
+Each quote was checked word for word against the fetched page on 2026-11-06. The check ignores only spacing and curly quotes. It proves the words are on the page, not that the claim reads them correctly.
+
+| # | Exact quote | Source |
+|---|---|---|
+| E1 | The MCP firewall is currently in preview. | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E2 | Create allow-lists or deny-lists of MCP servers based on server URL patterns. | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E3 | Selectively allow or block Tools, Resources, or Prompt templates on a per-server basis. | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E4 | Disable all MCP communication across the tenant until you review and approve trusted MCP servers. | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E5 | A valid Microsoft Entra Internet Access license. | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E6 | This example blocks all connections while allowing an approved list of MCP servers. | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E7 | To view the network-level traffic logs and confirm allow or block decisions | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E8 | MCP logging is currently in preview. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E9 | MCP Logging helps you discover shadow MCP servers in your organization | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E10 | The Global Secure Access client installed on the device with Internet Access traffic forwarding enabled and TLS inspection enabled. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E11 | TLS inspection is required because MCP data is in the encrypted payload of the traffic. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E12 | MCP Logging only captures traffic to remote MCP servers. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E13 | The user or identity whose traffic was inspected. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E14 | The URL of the remote MCP server. This value is the unique identifier for the MCP server. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E15 | For a tools/call request, this includes the tool name and input arguments. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E16 | The request and response for the same operation share the same event ID, which you can use to correlate them. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E17 | The related Global Secure Access traffic log transaction, which you can use to correlate MCP events with network-level traffic data. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E18 | You can secure either or both inbound access to the MCP server (from an MCP client to API Management) and outbound access (from API Management to the MCP server). | [API Management, secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers) |
+| E19 | MCP clients can present OAuth tokens or JWTs issued by Microsoft Entra ID by using an Authorization header and validated by API Management. | [API Management, secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers) |
+| E20 | Use API Management's credential manager to securely inject OAuth 2.0 tokens for backend API requests that MCP server tools make. | [API Management, secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers) |
+| E21 | Contains a list of acceptable audience claims that can be present on the token. | [API Management validate-azure-ad-token policy](https://learn.microsoft.com/en-us/azure/api-management/validate-azure-ad-token-policy) |
+| E22 | MCP servers MUST validate that access tokens were issued specifically for them as the intended audience | [MCP authorization (draft)](https://modelcontextprotocol.io/specification/draft/basic/authorization) |
+| E23 | Token passthrough is explicitly forbidden in the authorization specification | [MCP security best practices (draft)](https://modelcontextprotocol.io/docs/draft/tutorials/security/security_best_practices) |
+| E24 | To prevent confused deputy attacks, MCP proxy servers MUST implement per-client consent and proper security controls | [MCP security best practices (draft)](https://modelcontextprotocol.io/docs/draft/tutorials/security/security_best_practices) |
+| E25 | In agentic scenarios, use managed identities or workload identities rather than long-lived secrets or shared credentials. | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
+| E26 | Never store credentials in source code or plain-text configuration files, and rotate them on a regular schedule. | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
+| E27 | store them in Azure Key Vault and reference them from your deployment configuration. | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
+| E28 | separate the server's execution identity from the caller's authorization, and enforce per-caller permission checks rather than relying solely on the server's own credentials. | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
+| E29 | Run untrusted servers with least privilege in an isolated environment. | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
+| E30 | "A malicious server can use its tool descriptions to influence agent behavior toward other trusted servers in the same context" | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
+| E31 | "JSON-RPC batches aren’t inspected." | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+
+---
+
+# Sources (read 2026-11-05 and 2026-11-06)
 
 | Topic | Link | Displayed update date, where available |
 |---|---|---|
@@ -568,3 +786,10 @@ All rows are **[recommendation]**.
 | Copilot audit event fields | https://learn.microsoft.com/en-us/purview/audit-copilot | checked 2026-11-05 |
 | Restricted Content Discovery scope | https://learn.microsoft.com/en-us/sharepoint/restricted-content-discovery | checked 2026-11-05 |
 | Managed settings deployment and precedence | https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings | no date on page |
+| Global Secure Access MCP firewall (preview), read 2026-11-06 | https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall | 2026-08-06 |
+| Global Secure Access MCP traffic logs (preview), read 2026-11-06 | https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging | 2026-04-01 |
+| API Management, secure access to MCP servers, read 2026-11-06 | https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers | 2026-09-11 |
+| API Management validate-azure-ad-token policy, read 2026-11-06 | https://learn.microsoft.com/en-us/azure/api-management/validate-azure-ad-token-policy | 2026-08-19 |
+| Azure MCP Server security, read 2026-11-06 | https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security | 2026-07-31 |
+| MCP security best practices (draft), read 2026-11-06 | https://modelcontextprotocol.io/docs/draft/tutorials/security/security_best_practices | no date on page |
+| MCP authorization (draft), read 2026-11-06 | https://modelcontextprotocol.io/specification/draft/basic/authorization | no date on page |

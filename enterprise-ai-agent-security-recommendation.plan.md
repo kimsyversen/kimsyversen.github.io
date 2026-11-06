@@ -36,3 +36,30 @@ Goal: show the content of [enterprise-ai-agent-security-recommendation.md](enter
 ## How the HTML is made
 
 A script in the session scratchpad turned the Markdown into the page body and filled a hand-built template. The output was committed as plain HTML. After that, edit the HTML by hand. The script is not kept in the repo.
+
+## Part 6, technical guide (2026-11-06)
+
+Request: split the document into an overview (what it says) and a technical part (what you actually do). Input: ten photos of a Copilot answer about MCP security, used as a topic list only.
+
+- Parts 1 to 5 stay as the overview. Part numbers and ids do not change.
+- New Part 6 "Technical guide: what you actually do" (`#part6`, nav "Technical guide"), placed after Part 5 and before Sources.
+  - 6.1 Eight controls in order: Discover, Register, Authenticate, Authorize, Broker, Restrict, Approve, Monitor. One table, each row links to the Part 2 section that holds the product settings.
+  - 6.2 Figure: the request path. Labels and requirements only. Boxes link to the control rows.
+  - 6.3 Steps per control, each step tagged. Vendor facts point to numbered evidence.
+  - 6.4 Registry record: 17 fields, marked recommendation, with who reads each field.
+  - 6.5 Log record per tool call, with what the Global Secure Access MCP log gives today and what it does not.
+  - 6.6 Limits: what the controls do not see, and what was not checked.
+  - 6.7 Evidence: numbered claims, exact quotes, links. Quotes are checked word for word against fetched pages.
+- Header: say which parts are overview and which is technical.
+- Sources: add the new pages to the table, with the 6 Nov 2026 read date.
+- Not on the page: anything from the "EY deck" the photos mention. It is not in our sources.
+- Done when: quotes match mechanically, light, dark and 375px checked, every in-page link works, index entry updated.
+
+
+## Reader paths and pilot (2026-11-06)
+
+- Give decision makers the pilot decision, developers the remote MCP guide and operations the stop procedure.
+- Use one case-search example from summary to pilot. Keep the three kinds of approval distinct and document the chosen low-risk rule exception.
+- Keep the Git publication requirement. Report discovery, configuration and invocation enforcement as separate outcomes. Maintain one matrix per client route.
+- Keep the site styling and shared IDs. Use stacked reading paths at 375 px and leave wide detail available as a reference.
+- Verify anchors, disclosures, representative mouse clicks, light and dark layouts, and the wording ledger. A reader test with people in the three roles is a separate follow-up.
