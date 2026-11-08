@@ -1,0 +1,48 @@
+SOURCE OF TRUTH              APPLY ON MERGE
++------------------------+   +------------------------+
+| [b]GIT REPOSITORY[/b]         |-->| [b]PIPELINE WE BUILD[/b]      |
+| Change by pull request |   | Runs after merge       |
+|                        |   |                        |
++------------------------+   +------------+-----------+
+                                          |
+             +----------------------------+----------------------------+
+             |                            |                            |
+             v                            v                            v
++------------------------+   +------------------------+   +------------------------+
+| [b]COPILOT STUDIO[/b]         |   | [b]GITHUB MANAGED SETTINGS[/b]|   | [b]FOUNDRY[/b]                |
+| Policy target          |   | Policy target          |   | Policy target           |
+| Approved list          |   | Approved list          |   | Approved tools          |
++------------------------+   +------------------------+   +------------------------+
+             |                            |                            |
+MCP CLIENTS  v                            v                            v
++------------------------+   +------------------------+   +------------------------+
+| Copilot Studio         |   | VS Code                |   | Foundry agents         |
+|                        |   | GitHub Copilot         |   |                        |
++------------------------+   +------------------------+   +------------------------+
+             |                            |                            |
+             +----------------------------+----------------------------+
+             |
+             v
++------------------------+   +------------------------+   +------------------------+
+| [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY, PREVIEW[/b]    |   | [b]COMPANY MCP SERVER[/b]     |
+| URL allowlist          |   | Publish MCP endpoints  |   | Gateway only (target)  |
+| Outbound limits        |-->| Check identity         |-->|                        |
+| Sign-in required       |   | Authorize requests     |   |                        |
+|                        |   | Log every call         |   |                        |
+|                        |   | Limit request rate     |   |                        |
+|                        |   | Tool threat protection |   |                        |
++------------------------+   +------------------------+   +------------------------+
+                                          ^
+Objective B                  Objective A  |               Objective A
+Unlisted server denied                    | Connect gateway
+                             +------------------------+
+                             | [b]AGENT 365, PREVIEW[/b]     |
+                             | Admin view             |
+                             | Gateway integration      |
+                             +------------------------+
+
+
+[red]MCP clients --X--> Company MCP server[/red]
+        [red]Blocked. Only the gateway may call the server.[/red]
+
+Design requirements and supporting evidence are below
