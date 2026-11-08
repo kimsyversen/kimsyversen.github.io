@@ -18,8 +18,8 @@ from governance_evidence import CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 LONG = "enterprise-ai-agent-security-recommendation.html"
-OUT = ROOT / "enterprise-ai-agent-governance-summary.html"
-SRC = (ROOT / LONG).read_text(encoding="utf-8")
+OUT = ROOT / "wip" / "enterprise-ai-agent-governance-summary.html"
+SRC = (ROOT / "wip" / LONG).read_text(encoding="utf-8")
 
 
 def cut(start, end, last=False):
