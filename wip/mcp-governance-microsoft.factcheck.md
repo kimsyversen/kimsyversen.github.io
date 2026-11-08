@@ -23,6 +23,16 @@ Each product claim in the page has a quote in `scripts/mcp_governance_evidence.p
 
 This audit supersedes the earlier certified-only statement and the earlier description of BYO tool blocking. The API tutorial text was searched in the current fetched page and contains no MCP-specific example; the page now treats API support for MCP policy entries as something to confirm in the tenant.
 
+## Follow-up audit, 2026-11-08
+
+- Compared current source contexts in Microsoft Learn, GitHub Docs, VS Code documentation, Intune documentation, the MCP specification, and Microsoft's release communications with the page wording. Confirmed the currently cited behavior for API Management MCP exposure, tiers, authentication, policy controls and telemetry; Power Platform MCP connector scope; Foundry tool allowlists, network isolation and gateway routing; GitHub managed MCP lists and cloud-agent firewall scope; Agent 365 API Management and BYO routes; AI Gateway preview limits; Windows and Intune outbound filtering; Global Secure Access MCP inspection; and stdio transport.
+- The Microsoft Learn Agent 365 integration page currently confirms that v2 tiers support inventory and server blocking, while tool-level blocking, tool telemetry and threat protection are limited to the AI Gateway tier. It also requires a static allowed-tools list for Agent 365 tool-level controls, excludes v1 tiers, and says the integration does not automatically route agents through the gateway. These match the draft.
+- The current BYO page says individual-tool blocking is rolling out for supported Agent 365 servers, then explicitly says BYO support is planned for a future release. Expanded V44 to quote both clauses together; the draft's statement that BYO tool blocking is not yet available matches that scope.
+- Intune's cited default outbound block is a Windows Firewall setting. Qualified the policy row, control requirement, diagram and open question as Windows-specific. The Global Secure Access preview firewall remains an optional filter for remote MCP traffic.
+- Microsoft's AI Gateway overview is reachable from `/azure/api-management/ai-gateway-overview`, which redirects to `/azure/ai-gateway/overview`. Updated the V62 and V76 evidence links to use the reachable route. The article shows a last-updated date of 2026-10-28.
+- Changed “The controls table lists all preview limits” to “The controls table lists the preview limits relevant to this design.” The broader “all” claim was unsupported by the table's limited scope.
+- Static internal-link check after these edits: 113 IDs, no duplicate IDs, no missing local link targets, and all 89 evidence IDs present. The shell quote checker still cannot fetch source pages due DNS resolution failure. This pass has not yet rechecked every source quote through that checker.
+
 ## Mechanical quote check
 
 Historical run on 2026-11-08: 83 quotes, 0 problems (including the check that the built page lists every quote). A later recorded run checked 84 quotes, 0 problems: 48 back the released-only path and 36 back the preview additions. The current page has 89 quotes: 49 back the released-only path and 40 back preview additions. The latest shell rerun could not fetch sources because external DNS lookup failed. V77 and V85-V88 were compared with live Microsoft Learn text; V89 with the live MCP specification. A current static check confirms all 89 quote rows and internal links are present. A successful quote check proves words exist on the source page, not that the claim built on them is right.
@@ -129,7 +139,7 @@ label	Decision makers
 label	recommendation
 label	preview
 label	The design
-requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.
+requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.
 label	SOURCE OF TRUTH
 label	APPLY ON MERGE
 label	GIT REPOSITORY
@@ -153,7 +163,7 @@ label	COMPANY MCP SERVER
 label	URL allowlist
 requirement	Check identity
 requirement	Gateway only (target)
-requirement	Outbound limits
+requirement	Windows egress limits
 requirement	Authorize requests
 requirement	Sign-in required
 requirement	Log every call
@@ -162,7 +172,7 @@ requirement	Unlisted server denied
 label	MCP clients
 label	Company MCP server
 requirement	Blocked. Only the gateway may call the server
-requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline we build applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
+requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline we build applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
 label	AI GATEWAY, PREVIEW
 requirement	Publish MCP endpoints
 requirement	Tool threat protection
@@ -178,8 +188,8 @@ label	Known gaps and what has not been tested
 label	Bad news first
 label	Open questions
 requirement	Which comes first: developer workstations or hosted agents?
-requirement	Workstations call for client rules and outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the environment table.
-requirement	Do we accept an outbound block on managed laptops?
+requirement	Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the environment table.
+requirement	Do we accept a default outbound block on managed Windows laptops?
 requirement	Decide before rollout. The effect on other traffic is in the gaps.
 requirement	Who reviews list changes and owns the pipeline?
 requirement	Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.

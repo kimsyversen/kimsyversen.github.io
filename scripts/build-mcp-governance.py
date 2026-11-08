@@ -276,8 +276,8 @@ PARTS_ROWS = [
     part("URL allowlist", "Client controls",
          f"Managed clients may use only the approved MCP addresses. {ev('vs-allow', 'gh-url')}",
          "Yes", "Yes"),
-    part("Outbound limits", "Client controls",
-         f"Managed devices block outbound traffic that matches no rule. {ev('ifw-block')}",
+    part("Windows outbound limits", "Client controls",
+         f"Windows Firewall can block outbound connections that match no outbound rule. {ev('ifw-block')}",
          "Yes", pv("Yes. Optional extra: the Global Secure Access MCP firewall, which is preview and sees remote servers only.", "fw-preview", "fw-remote")),
     part("Sign-in required", "Client controls",
          "Clients must sign in before the gateway takes a call. Design requirement.",
@@ -326,7 +326,7 @@ PARTS = f"""
       <h3>Parts of the design</h3>
       <p class="q-note">Each row is a box or measure in the figure. Yes means it is in that design, not that it is built. New marks what only the preview design adds.</p>
       {table(["Part", "What it does", "Released", "With preview"], PARTS_ROWS)}
-      {prev(f'<p class="q-note">The preview gateway has no private endpoints, its virtual network and subnet cannot change after creation, and it has no content safety policy. {evp("pv-pe", "pv-vnet", "pv-regions", "pv-cs")} The controls table lists all preview limits.</p>')}
+      {prev(f'<p class="q-note">The preview gateway has no private endpoints, its virtual network and subnet cannot change after creation, and it has no content safety policy. {evp("pv-pe", "pv-vnet", "pv-regions", "pv-cs")} The controls table lists the preview limits relevant to this design.</p>')}
     </div>
 """
 
@@ -346,11 +346,11 @@ def ascii_fig(name):
 DESC_SAFE = ("Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. "
              "After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, "
              "GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through "
-             "client controls, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.")
+             "client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.")
 DESC_PREVIEW = ("Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. "
                 "After a reviewed merge, a pipeline we build applies the list to Power Platform policy for Copilot Studio, "
                 "GitHub managed settings and Foundry. Each target points to the clients it governs. "
-                "The clients then pass through client controls, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. "
+                "The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. "
                 "A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.")
 
 FIGURE = f"""
@@ -414,8 +414,8 @@ CONTROLS = f"""
          "Managed clients may use only the MCP addresses on the approved list, which the pipeline writes to GitHub managed settings. Users cannot add their own.",
          f"VS Code policies set an allowlist, a denylist and a managed-only mode {ev('vs-allow', 'vs-deny', 'vs-managed')}. GitHub managed settings match a remote server by URL with wildcards {ev('gh-url')} and block any server that matches no entry {ev('gh-block')}. Not covered: servers in custom agent profiles and the built-in GitHub server {ev('gh-profiles', 'gh-builtin')}. Coverage varies by environment {ev('gh-vary')}.",
          REC],
-        ["Outbound limits<span class=\"rt\">Objective B</span>",
-         "Block direct outbound calls from managed devices to MCP servers we have not approved.",
+        ["Windows outbound limits<span class=\"rt\">Objective B</span>",
+         "Block direct outbound calls from managed Windows devices to MCP servers we have not approved.",
          f"Intune can set Windows Firewall to block all outbound traffic that matches no rule {ev('ifw-block')}, a setting Microsoft says can be considered for certain highly secure environments {ev('dk-secure')}. Name-based rules have limits with proxies and some VPN tunnels {ev('dk-limits')}.",
          f"{REC}"],
         ["Local stdio servers<span class=\"rt\">Objective B</span>",
@@ -483,7 +483,7 @@ ENV = f"""
     <p class="goal"><b>Goal</b>Show where each control reaches and where it stops.&nbsp;{REC}</p></header>
     {table(["Environment", "Use", "Cannot", "Sources"], [
         ["Managed VS Code",
-         "VS Code policy: allowlist, denylist and managed-only mode. Add the outbound limits from the control table.",
+         "VS Code policy: allowlist, denylist and managed-only mode. Add Windows outbound limits where applicable.",
          "Apply to other MCP clients. These are VS Code policies.",
          ev('vs-allow', 'vs-deny', 'vs-managed')],
         ["GitHub Copilot, managed settings",
@@ -599,7 +599,7 @@ GAPS_LIST = [
     f"<strong>Drift.</strong> A change made by hand in a target is not in the repository. The pipeline must overwrite it or raise an alert. {REC}",
     f"<strong>Local stdio servers.</strong> The client starts a local server as a subprocess {ev('stdio')}. The stdio transport uses standard input and standard output {ev('stdio-io')}. Apply client and endpoint controls.",
     f"<strong>Unmanaged workstations.</strong> Client rules are not assumed to apply there. Objective A relies on the backend refusing everyone but the gateway. {REC}",
-    f"<strong>Endpoint outbound block.</strong> It stops all traffic that matches no rule, not only MCP, and rules by name have limits with proxies and some VPN tunnels. {ev('ifw-block', 'dk-limits')}",
+    f"<strong>Windows endpoint outbound block.</strong> It stops all traffic that matches no rule, not only MCP, and rules by name have limits with proxies and some VPN tunnels. {ev('ifw-block', 'dk-limits')}",
     f"<strong>Feature release status.</strong> Microsoft announced general availability of API Management MCP governance in Nov 2025 {ev('apim-ga', 'apim-ga-tiers')}. Management features vary by tier {ev('pv-apim-tier')}. Confirm the tier you use.",
 ]
 PV_GAPS_LIST = [
@@ -654,8 +654,8 @@ OPEN = """
     <header class="sh"><h2 id="h-open">Open questions</h2></header>
     <ol class="ans tight">
       <li><span class="n">1</span><h3>Do we allow preview features at all?</h3><p>Choices: never, in a sandbox only, or later. The released-only design works without preview.</p></li>
-      <li><span class="n">2</span><h3>Which comes first: developer workstations or hosted agents?</h3><p>Workstations call for client rules and outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the <a href="#env">environment table</a>.</p></li>
-      <li><span class="n">3</span><h3>Do we accept an outbound block on managed laptops?</h3><p>Decide before rollout. The effect on other traffic is in the <a href="#gaps">gaps</a>.</p></li>
+      <li><span class="n">2</span><h3>Which comes first: developer workstations or hosted agents?</h3><p>Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the <a href="#env">environment table</a>.</p></li>
+      <li><span class="n">3</span><h3>Do we accept a default outbound block on managed Windows laptops?</h3><p>Decide before rollout. The effect on other traffic is in the <a href="#gaps">gaps</a>.</p></li>
       <li><span class="n">4</span><h3>Who reviews list changes and owns the pipeline?</h3><p>Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.</p></li>
       <li class="opt-preview"><span class="n">5</span><h3>Who approves and reviews the Agent 365 consent?</h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
       <li class="opt-preview"><span class="n">6</span><h3>What ends the pilot?</h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>

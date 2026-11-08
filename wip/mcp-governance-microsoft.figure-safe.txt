@@ -26,7 +26,7 @@ MCP CLIENTS  v                            v                            v
 +------------------------+   +------------------------+   +------------------------+
 | [b]CLIENT CONTROLS[/b]        |   | [b]API MANAGEMENT[/b]         |   | [b]COMPANY MCP SERVER[/b]     |
 | URL allowlist          |   | Check identity         |   | Gateway only (target)  |
-| Outbound limits        |-->| Authorize requests     |-->|                        |
+| Windows egress limits  |-->| Authorize requests     |-->|                        |
 | Sign-in required       |   | Log every call         |   |                        |
 |                        |   | Limit request rate     |   |                        |
 +------------------------+   +------------------------+   +------------------------+

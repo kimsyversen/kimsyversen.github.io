@@ -26,7 +26,7 @@ MCP CLIENTS  v                            v                            v
 +------------------------+   +------------------------+   +------------------------+
 | [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY, PREVIEW[/b]    |   | [b]COMPANY MCP SERVER[/b]     |
 | URL allowlist          |   | Publish MCP endpoints  |   | Gateway only (target)  |
-| Outbound limits        |-->| Check identity         |-->|                        |
+| Windows egress limits  |-->| Check identity         |-->|                        |
 | Sign-in required       |   | Authorize requests     |   |                        |
 |                        |   | Log every call         |   |                        |
 |                        |   | Limit request rate     |   |                        |
