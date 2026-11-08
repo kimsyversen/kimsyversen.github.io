@@ -163,3 +163,11 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 - **Removed Objective A and Objective B wording from The design section and both figures.** User request: the repeated figure labels were confusing and the design section did not need to explain objectives. The controls table still uses A and B to group implementation details.
 - **Moved the repository and pipeline note to the top of the page**, directly below the lead, and removed it as the released-only figure caption. It now appears with both design choices.
+
+## 2026-11-08, distinct table roles
+
+- **Parts of the design is a component map.** It names the source, pipeline, targets, clients, gateway and backend, with a short indication of which path adds preview components. Product capabilities and limits belong in Controls.
+- **Controls owns implementation requirements and sourced product limits.** Each control row has a stable anchor so other sections can point to its single detailed description.
+- **Environments is a cross-reference table.** It maps each platform or runtime to its applicable control rows and does not restate product facts.
+- **Known gaps contains only unresolved scope, side effects, tier checks and untested combinations.** Product limitations already documented in Controls are referenced there only when needed.
+- **Acceptance tests own expected results and run status.** Order of work remains a sequence, so it can reference the tests without duplicating them.

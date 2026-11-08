@@ -251,82 +251,49 @@ def part(name, group, desc, rel, prv):
     return [f'{name}<span class="rt">{group}</span>', desc, rel, prv]
 
 
+def control_label(anchor, title, objective):
+    return f'<span id="ctrl-{anchor}">{title}</span><span class="rt">{objective}</span>'
+
+
+def control_link(anchor, title):
+    return f'<a href="#ctrl-{anchor}">{title}</a>'
+
+
 PARTS_ROWS = [
     part("Approved list in Git", "Source of truth",
-         "One repository holds the approved and denied MCP servers. A reviewed pull request changes it.",
+         "Reviewed record of approved and denied MCP servers.",
          "Yes", "Yes"),
     part("Sync pipeline", "Source of truth",
-         "Applies the list to each target after a merge. We build it. Nothing is built yet.",
+         "Applies the list to product-specific policy targets. Proposed work; not built yet.",
          "Yes", "Yes"),
-    part("Copilot Studio policy", "Target",
-         f"Power Platform advanced connector policies support MCP server-level blocking, not individual MCP tools. Custom and HTTP connector types aren't supported {ev('pp-block', 'pp-custom')}. Check that the company server is covered. {REC}",
+    part("Policy targets", "Targets",
+         "Power Platform for Copilot Studio, GitHub managed settings, and Foundry.",
          "Yes", "Yes"),
-    part("GitHub managed settings", "Target",
-         f"An allow and deny list by server URL for GitHub Copilot clients, hosted on GitHub. {ev('gh-url', 'gh-block', 'gh-deploy')}",
+    part("MCP clients", "Callers",
+         "Copilot Studio, VS Code, Foundry agents, and GitHub Copilot.",
          "Yes", "Yes"),
-    part("Foundry tool list", "Target",
-         f"A nonempty allowed tool list on each MCP tool. An empty list allows all. {ev('fy-allowed')}",
-         "Yes", "Yes"),
-    part("Agent 365 inventory", "Target",
-         "Admin inventory view",
-         "No", pv("Yes. New: discovers servers registered with the connected gateway.", "pv-disc")),
-    part("Agent 365 block", "Target",
-         "Admin access controls",
-         "No", pv("Yes. New: blocks a server and controls individual tools on supported tiers. Tool control needs a static allowed-tools list per server.", "pv-a365-ctrl", "pv-a365-static")),
-    part("URL allowlist", "Client controls",
-         f"Managed clients may use only the approved MCP addresses. {ev('vs-allow', 'gh-url')}",
-         "Yes", "Yes"),
-    part("Windows outbound limits", "Client controls",
-         f"Windows Firewall can block outbound connections that match no outbound rule. {ev('ifw-block')}",
-         "Yes", pv("Yes. Optional extra: the Global Secure Access MCP firewall, which is preview and sees remote servers only.", "fw-preview", "fw-remote")),
-    part("Sign-in required", "Client controls",
-         "Clients must sign in before the gateway takes a call. Design requirement.",
+    part("Client controls", "Enforcement",
+         "Managed URL policies and, on Windows, outbound firewall rules where applicable.",
          "Yes", "Yes"),
     part("Gateway product", "Gateway",
-         "The service that every approved call passes through.",
-         "API Management", pv("Azure AI Gateway is a separate preview resource type, with the limits listed under the preview controls.", "pv-notprod", "pv-res-change")),
-    part("Publish MCP endpoints", "Gateway",
-         "Offers approved servers to clients as MCP endpoints.",
-         f"Yes. It can expose REST APIs as MCP servers or pass MCP servers through {ev('pv-apim-mcp')}. The source lists tiers and shows no preview label {ev('mcp-tiers')}. Microsoft announced general availability in Nov 2025 {ev('apim-ga')}.",
-         pv("Yes. New: it can also combine tools from several servers, APIs and connectors behind one endpoint.", "pv-aig-comb")),
-    part("Check identity", "Gateway",
-         "The gateway checks who is calling.",
-         f"Yes. It checks an Entra ID token or a subscription key. {ev('in-entra', 'in-key')}",
-         pv("Yes. Entra access or a gateway API key.", "pv-aig-caller")),
-    part("Authorize requests", "Gateway",
-         "The gateway decides what the caller may do.",
-         f"Yes. Policies can require and validate JWTs. {ev('mcp-authn')}",
-         pv("Yes for callers.", "pv-aig-caller")),
-    part("Log every call", "Gateway",
-         "Every call through the gateway is recorded.",
-         f"Yes. Policies can log every request. {ev('gw-policy')}",
-         pv("Partly. The source names telemetry for tool usage.", "pv-aig-tel")),
-    part("Limit request rate", "Gateway",
-         "Caps how fast a caller can send requests.",
-         f"Yes. Policies can limit requests per time period. {ev('mcp-rate')}",
-         pv("Partly. The source names consumption limits.", "pv-aig-limits")),
-    part("Tool threat protection", "Gateway",
-         "Checks tool calls inside the gateway, in Audit or Block mode.",
-         "No",
-         pv("Yes. New: needs a delegated user token and a Defender or Purview license. One policy covers every tool of a server.", "pv-ttp-token", "pv-ttp-lic", "pv-ttp-scope")),
-    part("Gateway routing for Foundry tools", "Gateway",
-         "Sends Foundry MCP tools through an AI gateway.",
-         "No",
-         pv("Yes. New, and preview: only new tools made in the Foundry portal without managed OAuth, set at creation only.", "pv-fy-prev", "pv-fy-new")),
+         "API Management in the released-only path; the preview path adds Azure AI Gateway capabilities.",
+         "API Management", "Azure AI Gateway added"),
     part("Company MCP server, gateway only", "Backend",
-         f"Our own server, which only the gateway can reach. {ev('iso-restrict')}",
+         "Our server; only the gateway may reach it.",
          "Yes", "Yes"),
-    part("Direct call blocked", "Backend",
-         "A client that calls the server directly is refused.",
-         "Yes", "Yes"),
+    part("Agent 365 gateway integration", "Preview admin view",
+         "Admin view connected to the gateway. Product controls are detailed below.",
+         "No", "New"),
+    part("Other preview additions", "Optional controls",
+         "Tool threat protection, Foundry gateway routing, and optional remote-server filtering. Details are in Controls.",
+         "No", "New"),
 ]
 
 PARTS = f"""
     <div class="sub3" id="parts">
       <h3>Parts of the design</h3>
-      <p class="q-note">Each row is a box or measure in the figure. Yes means it is in that design, not that it is built. New marks what only the preview design adds.</p>
-      {table(["Part", "What it does", "Released", "With preview"], PARTS_ROWS)}
-      {prev(f'<p class="q-note">The preview gateway has no private endpoints, its virtual network and subnet cannot change after creation, and it has no content safety policy. {evp("pv-pe", "pv-vnet", "pv-regions", "pv-cs")} The controls table lists the preview limits relevant to this design.</p>')}
+      <p class="q-note">This is a component map. Controls below contain the implementation requirements, product limits and supporting evidence. New marks a preview addition.</p>
+      {table(["Part", "Role in the flow", "Released only", "With preview"], PARTS_ROWS)}
     </div>
 """
 
@@ -382,92 +349,92 @@ CONTROLS = f"""
     <header class="sh"><h2 id="h-controls">Controls</h2>
     <p class="goal"><b>How to read</b>Rows marked A deliver objective A. Rows marked B deliver objective B. Each documented fact cites a quote below.</p></header>
     {table(["Control", "Design requirement", "What Microsoft and GitHub document", "Label"], [
-        ["Approved inventory<span class=\"rt\">Objectives A and B</span>",
+        [control_label("inventory", "Approved inventory", "Objectives A and B"),
          "Keep one list of approved MCP servers in a repository, with address, owner, permitted tools and risk class. Change it only by reviewed pull request. Set client policy from managed settings, not user-editable files. Use device management for device policies where supported.",
          f"GitHub managed settings apply the allow and deny lists to servers in user and repository settings {ev('gh-profiles')}. Foundry and Copilot Studio get the list from our pipeline. {REC}",
          REC],
-        ["Policy sync, pipeline<span class=\"rt\">Objective B</span>",
+        [control_label("pipeline", "Policy sync, pipeline", "Objective B"),
          "On merge, a pipeline we build applies the list to each target. It reports any target it could not update. Manual edits in a target are overwritten or flagged on the next run. Nothing is built yet.",
          f"GitHub managed settings can be hosted on GitHub as a server-managed deployment {ev('gh-deploy')}. They are a file in the .github-private repository, changed by commit and push {ev('gh-file', 'gh-commit')}. The pipeline must make that commit. {REC}",
          f"{REC}"],
-        ["Policy sync, Power Platform<span class=\"rt\">Objective B</span>",
+        [control_label("power-platform", "Policy sync, Power Platform", "Objective B"),
          "Use an advanced connector policy through the Power Platform API only after confirming the company server is exposed as an MCP connector in the target environment. Expect whole-server blocking, not per-tool control.",
-         f"Microsoft documents ACP API automation for deployment pipelines {ev('pp-pipe')}. ACP supports MCP connectors for server-level blocking, but not individual MCP tools {ev('pp-block')}. Custom and HTTP connector types aren't supported {ev('pp-custom')}. The API tutorial has no MCP-specific example; verify this path in the tenant before relying on it. {REC}",
+         f"ACP supports deployment-pipeline automation {ev('pp-pipe')}, MCP server-level blocking but not per-tool blocks {ev('pp-block')}, and connector blocking also blocks dependent MCP tools {ev('studio')}. Custom and HTTP connectors aren't supported {ev('pp-custom')}. The API tutorial lacks an MCP-specific example; verify this path in your tenant {ev('pp-api')}. {REC}",
          f"{REC}"],
-        ["Policy sync, Foundry<span class=\"rt\">Objective B</span>",
-         "Write an allowed tool list on every MCP tool, never an empty list. Use project network isolation for the rest. Treat a block by server URL as not available until a source or test shows it.",
-         f"An MCP tool restricts access with a nonempty allowed tool list. An empty list allows every tool {ev('fy-allowed')}. Project networking governs network access {ev('fy-gov')}. ",
+        [control_label("foundry", "Policy sync, Foundry", "Objective B"),
+         "Write an allowed tool list on every MCP tool, never an empty list. Use project network isolation for the rest. Do not assume a server URL block; see Known gaps.",
+         f"An MCP tool restricts access with a nonempty allowed tool list. An empty list allows every tool {ev('fy-allowed')}. Project networking governs network access {ev('fy-gov')}. Tool connectivity depends on where the downstream service is hosted {ev('fy-tool')}.",
          f"{REC}"],
-        ["Gateway<span class=\"rt\">Objective A</span>",
+        [control_label("gateway", "Gateway", "Objective A"),
          "Publish each approved remote MCP endpoint through API Management. Check identity, authorize, rate-limit and log. Scope access by app or workload identity. Confirm the release status of each feature before relying on it.",
          f"For a remote Azure MCP Server, Microsoft suggests API Management as a gateway {ev('gw-consider')}: a single choke point {ev('gw-choke')}. Policies limit rates, restrict tool paths and log requests {ev('gw-policy')}. Clients go through it so the backend is not silently redirected {ev('gw-redirect')}. It can expose REST APIs as MCP servers or pass MCP servers through {ev('pv-apim-mcp')}.",
          REC],
-        ["Backend isolation<span class=\"rt\">Objective A</span>",
+        [control_label("backend", "Backend isolation", "Objective A"),
          "Switch off public access to the backend. Accept inbound calls from the gateway only, over a private path.",
          f"Restrict MCP server connectivity so the gateway is the only permitted caller, or use private networking where supported {ev('iso-restrict')}. Azure Functions offers inbound access restrictions and private endpoints {ev('fn-ar', 'fn-pe')}. The Consumption plan has no private endpoints {ev('fn-cons')}. The API Management integration does not automatically route agents through a customer-hosted gateway {ev('iso-nogw')}.",
          REC],
-        ["Identity<span class=\"rt\">Objective A</span>",
+        [control_label("identity", "Identity", "Objective A"),
          "Only the gateway holds a credential or workload identity the backend accepts. The backend still checks the token, so a bypass fails.",
          f"The gateway can check an Entra ID token {ev('in-entra')} or a subscription key {ev('in-key')} before the request goes on {ev('gw-token')}. It can sign in to the backend with its managed identity {ev('out-mi')}. Checking the token again at the backend is our choice. {REC}",
          f"{REC}"],
-        ["Client allowlist<span class=\"rt\">Objective B</span>",
+        [control_label("client", "Client allowlist", "Objective B"),
          "Managed clients may use only the MCP addresses on the approved list, which the pipeline writes to GitHub managed settings. Users cannot add their own.",
          f"VS Code policies set an allowlist, a denylist and a managed-only mode {ev('vs-allow', 'vs-deny', 'vs-managed')}. GitHub managed settings match a remote server by URL with wildcards {ev('gh-url')} and block any server that matches no entry {ev('gh-block')}. Not covered: servers in custom agent profiles and the built-in GitHub server {ev('gh-profiles', 'gh-builtin')}. Coverage varies by environment {ev('gh-vary')}.",
          REC],
-        ["Windows outbound limits<span class=\"rt\">Objective B</span>",
+        [control_label("windows", "Windows outbound limits", "Objective B"),
          "Block direct outbound calls from managed Windows devices to MCP servers we have not approved.",
-         f"Intune can set Windows Firewall to block all outbound traffic that matches no rule {ev('ifw-block')}, a setting Microsoft says can be considered for certain highly secure environments {ev('dk-secure')}. Name-based rules have limits with proxies and some VPN tunnels {ev('dk-limits')}.",
+         f"Intune can set Windows Firewall to block all outbound traffic that matches no rule {ev('ifw-block')}, a setting Microsoft says can be considered for certain highly secure environments {ev('dk-secure')}.",
          f"{REC}"],
-        ["Local stdio servers<span class=\"rt\">Objective B</span>",
+        [control_label("stdio", "Local stdio servers", "Objective B"),
          "Limit which local server commands can start, through managed client policy. Add application control, least-privilege accounts and limits on sensitive files and credentials. Treat local administrators, other MCP clients and unmanaged devices as separate bypass risks.",
          f"The client launches a local server as a subprocess {ev('stdio')}. The stdio transport communicates over standard input and standard output {ev('stdio-io')}. GitHub managed settings match the exact command and each argument {ev('gh-cmd')}.",
          REC],
-        ["Logging and checks<span class=\"rt\">Objectives A and B</span>",
+        [control_label("logging", "Logging and checks", "Objectives A and B"),
          "Collect gateway logs and endpoint or client telemetry. Look for unapproved server connections, unexpected MCP processes, failed sign-ins and unusual tool use. Review the approved list on a schedule. Run the acceptance tests.",
          f"Gateway policies can log every request {ev('gw-policy')}.",
          REC],
     ])}
     <div class="sub3 opt-preview">
       <h3>Added with preview&nbsp;{PRE}</h3>
-      <p class="q-note">Every row sits on top of the released controls above. None replaces one.</p>
+      <p class="q-note">These requirements and limits apply to preview additions. Microsoft says preview features are not meant for production use and may have restricted functionality. {evp('pv-notprod')}</p>
       {table(["Control", "Design requirement", "What Microsoft documents", "Label"], [
-        ["Agent 365 gateway integration<span class=\"rt\">Visibility, not the boundary</span>",
+        [control_label("a365", "Agent 365 gateway integration", "Visibility, not the boundary"),
          "Connect the API Management gateway so admins can see registered servers and block one. Treat the block as extra visibility. It does not replace backend isolation. This is separate from the Agent 365 BYO server route below.",
          f"Agent 365 can discover and govern servers registered with a connected gateway {evp('pv-disc')}. It can block servers and control single tools on supported tiers {evp('pv-a365-ctrl')}. Tool control needs a static list of allowed tools {evp('pv-a365-static')}. API Management v1 tiers are not supported {evp('pv-a365-v1')}, and v2 tiers lack tool-level control {evp('pv-a365-v2')}.",
          f"{PRE} {REC}"],
-        ["Agent 365 consent<span class=\"rt\">Tenant level</span>",
+        [control_label("a365-consent", "Agent 365 consent", "Tenant level"),
          "Before anyone grants it, name who approves the consent, who reviews the policy changes it allows, and how it is withdrawn.",
          f"An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent {evp('pv-a365-role')}. It lets the service read and write API-scoped policies {evp('pv-a365-rw')}.",
          f"{PRE} {REC}"],
-        ["AI Gateway resource type<span class=\"rt\">Objective A</span>",
+        [control_label("ai-resource", "AI Gateway resource type", "Objective A"),
          "Start any evaluation on the new resource type, not the older AI Gateway tier. Check each example and article against the new type before use.",
          f"From 14 Oct 2026 Microsoft is changing the AI Gateway resource type to Microsoft.ApiManagement/aigateways {evp('pv-res-change')}. Complete the migration before 15 Jan 2027 {evp('pv-res-date')}. The new runtime URL uses the domain ai.gateway.azure.com {evp('pv-domain')}, and keys go in the Authorization header with a Bearer scheme {evp('pv-bearer')}.",
          f"{PRE} {REC}"],
-        ["AI Gateway limits<span class=\"rt\">Objective A</span>",
+        [control_label("ai-limits", "AI Gateway limits", "Objective A"),
          "Check the network design first. Accept no private endpoint support, a virtual network and subnet that cannot change after creation, two regions and a different safety control, or choose another option.",
          f"Private endpoints are not supported {evp('pv-pe')}. The virtual network and subnet cannot be changed after creation {evp('pv-vnet')}. The content safety policy is not supported {evp('pv-cs')}. During public preview the regions are East US 2 and Sweden Central {evp('pv-regions')}.",
          f"{PRE} {REC}"],
-        ["Gateway publishing<span class=\"rt\">Objective A</span>",
+        [control_label("ai-publish", "Gateway publishing", "Objective A"),
          "Publish approved tools through the gateway. Give the gateway its own backend credential, scoped to what the tools need.",
          f"The gateway can combine tools from remote MCP servers, OpenAPI APIs and connectors behind gateway MCP endpoints {evp('pv-aig-comb')}. With a shared backend connection, callers use that connection's permissions {evp('pv-shared-cred')}.",
          f"{PRE} {REC}"],
-        ["Tool threat protection: who can use it<span class=\"rt\">Extra defence</span>",
+        [control_label("ttp-users", "Tool threat protection: who can use it", "Extra defence"),
          "Use it only in flows that carry a user token. Keep least privilege and human approval for destructive tools. Do not rely on it alone.",
          f"It requires a delegated Entra user token {evp('pv-ttp-token')}. App-only service-to-service calls are not supported {evp('pv-ttp-app')}. A Defender or Purview license is required {evp('pv-ttp-lic')}.",
          f"{PRE} {REC}"],
-        ["Tool threat protection: modes and scope<span class=\"rt\">Extra defence</span>",
+        [control_label("ttp-modes", "Tool threat protection: modes and scope", "Extra defence"),
          "Test Audit mode, Block mode and the failure handling before trusting either. Plan for tools that already ran.",
          f"Audit mode fails open {evp('pv-ttp-audit')}. Block mode fails closed {evp('pv-ttp-block')}. One policy applies to every tool and caller of a server, not to one tool {evp('pv-ttp-scope')}. A denial after the call cannot undo it {evp('pv-ttp-post')}.",
          f"{PRE} {REC}"],
-        ["Agent 365 BYO server route<span class=\"rt\">Separate route</span>",
+        [control_label("byo", "Agent 365 BYO server route", "Separate route"),
          "Treat this as a separate registration route, not as the API Management gateway integration. Require developer registration and admin approval. Confirm its public endpoint fits the backend isolation target. Test each listed client surface before relying on it.",
          f"BYO servers route through the Agent 365 Tooling Gateway {evp('pv-byo-route')}. Preview clients: Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI; not Foundry or declarative agents {evp('pv-byo-surf')}. An IT admin approves or rejects requests in the Microsoft 365 admin center {evp('pv-byo-approval')}. Servers need a publicly accessible endpoint {evp('pv-byo-endpoint')}. BYO tool-level blocking is planned {evp('pv-byo-tool-plan')}.",
          f"{PRE} {REC}"],
-        ["Foundry gateway routing<span class=\"rt\">Separate route</span>",
+        [control_label("foundry-routing", "Foundry gateway routing", "Separate route"),
          "Create new tools in the Foundry portal without managed OAuth. Check the endpoint, sign-in and logs. Do not assume old tools are covered.",
          f"Only new MCP tools created in the Foundry portal without managed OAuth are routed through an AI gateway {evp('pv-fy-prev')}. Routing is applied only at tool creation, and existing tools are not mediated automatically {evp('pv-fy-new')}.",
          f"{PRE} {REC}"],
-        ["Outbound filter, optional<span class=\"rt\">Objective B</span>",
+        [control_label("outbound-filter", "Outbound filter, optional", "Objective B"),
          "Add it only if the preview label is acceptable. Do not rely on it for local servers.",
          f"The Global Secure Access MCP firewall filters by URL pattern {evp('fw-urls')}. It carries the preview label {evp('fw-preview')} and inspects remote servers only {evp('fw-remote')}.",
          f"{PRE} {REC}"],
@@ -480,51 +447,34 @@ CONTROLS = f"""
 ENV = f"""
   <section class="sec" id="env" aria-labelledby="h-env">
     <header class="sh"><h2 id="h-env">Environments</h2>
-    <p class="goal"><b>Goal</b>Show where each control reaches and where it stops.&nbsp;{REC}</p></header>
-    {table(["Environment", "Use", "Cannot", "Sources"], [
+    <p class="goal"><b>Goal</b>Map each environment to the controls that apply. Product details and limits live in Controls and Known gaps.&nbsp;{REC}</p></header>
+    {table(["Environment", "Controls to apply"], [
         ["Managed VS Code",
-         "VS Code policy: allowlist, denylist and managed-only mode. Add Windows outbound limits where applicable.",
-         "Apply to other MCP clients. These are VS Code policies.",
-         ev('vs-allow', 'vs-deny', 'vs-managed')],
+         f"{control_link('client', 'Client allowlist')}; {control_link('stdio', 'Local stdio servers')}"] ,
         ["GitHub Copilot, managed settings",
-         "An allowlist by server URL in managed settings.",
-         "Cover servers in custom agent profiles or the built-in GitHub server. Coverage varies by environment.",
-         ev('gh-url', 'gh-block', 'gh-profiles', 'gh-builtin', 'gh-vary')],
+         f"{control_link('client', 'Client allowlist')}; {control_link('stdio', 'Local stdio servers')}"] ,
         ["GitHub Copilot cloud agent",
-         "Managed settings where the environment is covered.",
-         "Use the agent firewall as the MCP control. It does not apply directly to MCP server processes.",
-         ev('gh-fw', 'gh-vary')],
+         f"{control_link('client', 'Client allowlist')}; <a href=\"#gap-github-cloud-agent\">Known gaps</a>"],
         ["Foundry agents",
-         "Network isolation of the project with private endpoints, and an allowed tool list on each MCP tool, written by the pipeline.",
-         f"Tool connectivity depends on where the downstream service is hosted.",
-         ev('fy-gov', 'fy-pe', 'fy-tool', 'fy-allowed')],
+         control_link('foundry', 'Policy sync, Foundry')],
         ["Copilot Studio",
-         "A Power Platform advanced connector policy (ACP) that blocks a whole MCP server, set by the pipeline.",
-         f"Block individual MCP tools through ACP. Custom and HTTP connector types aren't yet supported by ACP. Blocking a connector also blocks the MCP tools that rely on it.",
-         ev('studio', 'pp-block', 'pp-api', 'pp-certified', 'pp-custom')],
+         control_link('power-platform', 'Policy sync, Power Platform')],
         ["Unmanaged workstation",
-         "Protect the backend on its own with the isolation and identity controls.",
-         f"Rely on client rules. We assume none apply. {REC}",
-         "Design requirement"],
+         f"{control_link('backend', 'Backend isolation')}; {control_link('identity', 'Identity')}"] ,
         ["Local stdio server",
-         "An exact-command list in GitHub managed settings, plus client and endpoint policy.",
-         "The stdio transport uses standard input and output. Apply client and endpoint controls.",
-         ev('stdio', 'stdio-io', 'gh-cmd')],
+         control_link('stdio', 'Local stdio servers')],
+        ("opt-preview",
+         ["Agent 365 with API Management",
+          f"{control_link('a365', 'Agent 365 gateway integration')}; {control_link('backend', 'Backend isolation')}"]),
         ("opt-preview",
          ["Foundry, new tools with gateway routing",
-          "Create the tool in the Foundry portal without managed OAuth, so it routes through an AI gateway. Check the endpoint and the logs.",
-          "Cover tools made before routing, or tools that use managed OAuth.",
-          evp('pv-fy-prev', 'pv-fy-new')]),
+          control_link('foundry-routing', 'Foundry gateway routing')]),
         ("opt-preview",
         ["Agent 365 BYO server route",
-         "Require developer registration and admin approval before use. Test the listed client surfaces one by one.",
-         "An IT admin approves each request. Use a publicly accessible endpoint. Foundry and Microsoft 365 declarative agents are unsupported clients. BYO tool-level blocking is planned. Version 2 has no tool-level control in the separate API Management integration.",
-         evp('pv-byo-surf', 'pv-byo-tool-plan', 'pv-a365-v2', 'pv-byo-route', 'pv-byo-approval', 'pv-byo-endpoint')]),
+         control_link('byo', 'Agent 365 BYO server route')]),
         ("opt-preview",
          ["Local stdio server, with preview",
-          "Keep the released client and endpoint controls. Consider the preview firewall only for remote MCP traffic.",
-          "The Global Secure Access MCP firewall sees remote servers only. Local servers on a device aren't visible, and JSON-RPC batches aren't inspected.",
-          evp('fw-remote')]),
+          control_link('outbound-filter', 'Outbound filter, optional')]),
     ])}
   </section>
 """
@@ -533,7 +483,7 @@ ENV = f"""
 TESTS = f"""
   <section class="sec" id="tests" aria-labelledby="h-tests">
     <header class="sh"><h2 id="h-tests">Acceptance tests</h2>
-    <p class="goal"><b>Goal</b>Each row is a target outcome. API Management alone does not guarantee them. None has been run.&nbsp;{REC}</p></header>
+    <p class="goal"><b>Goal</b>Each row is a target outcome. API Management alone does not guarantee them.&nbsp;{REC}</p></header>
     {table(["Test", "Expected result", "Objective", "Result"], [
         ["Call an approved MCP server through API Management", "Allowed", "A", "Not run"],
         ["Call the protected backend directly", "Blocked", "A", "Not run"],
@@ -591,33 +541,13 @@ ORDER = f"""
 
 # ---- gaps ----------------------------------------------------------------
 GAPS_LIST = [
-    f"<strong>Nothing is tested in our tenant.</strong> Every expected result above is a target, not a result.",
-    f"<strong>GitHub exemptions.</strong> Custom agent profiles and the built-in GitHub server are outside the allowlist, and coverage varies by environment. {ev('gh-profiles', 'gh-builtin', 'gh-vary')}",
-    f"<strong>GitHub cloud agent firewall.</strong> It does not directly control MCP server processes. Do not treat it as control of the MCP server itself. {ev('gh-fw')}",
-    f"<strong>Foundry and Copilot Studio.</strong> The sources show network isolation, a tool list per agent and blocking a whole MCP server. {ev('fy-gov', 'fy-allowed', 'pp-block')} Blocking one chosen external MCP URL in either was not found in the sources checked on {CHECKED}, so the design does not rely on it.",
-    f"<strong>Power Platform API gap.</strong> ACP supports MCP connectors for server-level blocks {ev('pp-block')}, but the programmatic tutorial has no MCP-specific example {ev('pp-api')}. Confirm that the target environment and API expose the server before automating this policy. Custom and HTTP connector types aren't supported {ev('pp-custom')}. Build and test one target at a time.",
-    f"<strong>Drift.</strong> A change made by hand in a target is not in the repository. The pipeline must overwrite it or raise an alert. {REC}",
-    f"<strong>Local stdio servers.</strong> The client starts a local server as a subprocess {ev('stdio')}. The stdio transport uses standard input and standard output {ev('stdio-io')}. Apply client and endpoint controls.",
-    f"<strong>Unmanaged workstations.</strong> Client rules are not assumed to apply there. Objective A relies on the backend refusing everyone but the gateway. {REC}",
-    f"<strong>Windows endpoint outbound block.</strong> It stops all traffic that matches no rule, not only MCP, and rules by name have limits with proxies and some VPN tunnels. {ev('ifw-block', 'dk-limits')}",
-    f"<strong>Feature release status.</strong> Microsoft announced general availability of API Management MCP governance in Nov 2025 {ev('apim-ga', 'apim-ga-tiers')}. Management features vary by tier {ev('pv-apim-tier')}. Confirm the tier you use.",
-]
-PV_GAPS_LIST = [
-    f"<strong>Preview terms.</strong> Microsoft states preview features are not meant for production use and may have restricted functionality. Use a sandbox. {evp('pv-notprod')}",
-    f"<strong>Resource migration.</strong> The AI Gateway resource type is changing and the older tier is permanently removed after the 15 Jan 2027 retirement date. {evp('pv-res-change', 'pv-res-date', 'pv-res-removed')}",
-    f"<strong>Network limits.</strong> No private endpoints; the virtual network and subnet cannot change after creation. Check network and data-location rules first. {evp('pv-pe', 'pv-vnet', 'pv-regions')}",
-    f"<strong>Agent 365 BYO coverage.</strong> The route requires a publicly accessible server endpoint {evp('pv-byo-endpoint')}. It supports four client surfaces; Foundry and Microsoft 365 declarative agents aren't supported {evp('pv-byo-surf')}. Individual-tool blocking for BYO servers is planned, not available yet {evp('pv-byo-tool-plan')}.",
-    f"<strong>Other preview routes.</strong> In the separate API Management integration, v2 tiers lack tool-level access control {evp('pv-a365-v2')}. Foundry gateway routing covers only new MCP tools created in the portal without managed OAuth {evp('pv-fy-prev')}.",
-    f"<strong>API Management integration does not force use.</strong> Agent 365 does not automatically route agents through a customer-hosted gateway. Configure agents to use the gateway endpoint, and make the backend refuse direct calls. {ev('iso-nogw')}",
-    f"<strong>Threat protection needs a user token.</strong> App-only calls are not supported, a license is needed, and a denial after the call cannot undo it. {evp('pv-ttp-token', 'pv-ttp-app', 'pv-ttp-lic', 'pv-ttp-post')}",
-    f"<strong>Keep the Agent 365 routes separate.</strong> The API Management integration discovers servers registered with the connected gateway {evp('pv-disc')}. BYO servers use a separate developer registration and admin approval flow {evp('pv-byo-route', 'pv-byo-approval')}. Do not treat either route as a pipeline sync.",
-    f"<strong>Consent scope.</strong> The Agent 365 consent lets the service write API-scoped policies. Review it before granting. {evp('pv-a365-rw')}",
-    f"<strong>Shared backend credential.</strong> With a shared backend connection, authorized callers use that connection's permissions. Scope upstream credentials narrowly. {evp('pv-shared-cred')}",
-    f"<strong>Optional outbound filter.</strong> The Global Secure Access MCP firewall carries the preview label and sees remote servers only. {evp('fw-preview', 'fw-remote')}",
-    f"<strong>New resource type untested.</strong> We have not tested Agent 365 or Foundry against the new resource type. Test it in your tenant.",
+    f"<strong>Nothing is tested in our tenant.</strong> Every expected result above is a target, not a result.{prev(' This includes Agent 365 and Foundry against the new AI Gateway resource type.')}",
+    f"<strong id=\"gap-github-cloud-agent\">GitHub cloud agent firewall.</strong> It does not directly control MCP server processes. Do not treat it as control of the MCP server itself. {ev('gh-fw')}",
+    f"<strong id=\"gap-unverified-url-block\">Server URL blocking in Foundry and Copilot Studio.</strong> We found no source in the documentation checked on {CHECKED} for blocking one chosen external MCP URL in either environment, so the design does not rely on it. {ev('fy-gov', 'fy-allowed', 'pp-block')}",
+    f"<strong id=\"gap-windows-outbound\">Windows outbound block.</strong> It can block non-MCP traffic too, and name-based rules have limits with proxies and some VPN tunnels. {ev('ifw-block', 'dk-limits')}",
+    f"<strong id=\"gap-tier-availability\">API Management tier availability.</strong> MCP features vary by tier. Confirm the target tier and release status before relying on a feature. {ev('apim-ga', 'apim-ga-tiers', 'pv-apim-tier')}",
 ]
 GAPS_OL = "\n".join(f"<li>{x}</li>" for x in GAPS_LIST)
-PV_GAPS_OL = "\n".join(f"<li>{x}</li>" for x in PV_GAPS_LIST)
 GAPS = f"""
   <section class="sec" id="gaps" aria-labelledby="h-gaps">
     <header class="sh"><h2 id="h-gaps">Known gaps and what has not been tested</h2>
@@ -625,12 +555,6 @@ GAPS = f"""
     <ol>
 {GAPS_OL}
     </ol>
-    <div class="sub3 opt-preview">
-      <h3>Added with preview&nbsp;{PRE}</h3>
-      <ol>
-{PV_GAPS_OL}
-      </ol>
-    </div>
   </section>
 """
 
