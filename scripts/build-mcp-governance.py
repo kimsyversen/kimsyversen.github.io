@@ -209,7 +209,8 @@ MAST = f"""
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 8 Nov 2026</span></div>
     <h1>MCP Governance in a Microsoft ecosystem</h1>
     <div class="intro">
-      <p class="lead">A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. A Git repository holds the approved list, a pipeline applies it, and a gateway is the only way to reach the company MCP server. Select Released only or With preview. Nothing is built or tested yet.</p>
+      <p class="lead">A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. Select Released only or With preview. Nothing is built or tested yet.</p>
+      <p class="lead">The repository list is the design's source of truth. The pipeline is our work, and none of it is built or tested. Control requirements and evidence follow below.</p>
     </div>
     <nav aria-label="Start by role">
       <ul class="routes">
@@ -345,8 +346,7 @@ def ascii_fig(name):
 DESC_SAFE = ("Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. "
              "After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, "
              "GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through "
-             "client controls, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked. "
-             "Objective A covers the gateway and backend. Objective B covers the client controls.")
+             "client controls, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.")
 DESC_PREVIEW = ("Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. "
                 "After a reviewed merge, a pipeline we build applies the list to Power Platform policy for Copilot Studio, "
                 "GitHub managed settings and Foundry. Each target points to the clients it governs. "
@@ -356,8 +356,7 @@ DESC_PREVIEW = ("Design target: the released-only design with preview additions.
 FIGURE = f"""
   <section class="sec" id="design" aria-labelledby="h-design">
     <header class="sh"><h2 id="h-design">The design</h2>
-    <p class="goal"><b>In short</b>Make the backend reachable only through the gateway (Objective A, not yet tested). Limit client servers to the approved list (Objective B). The repository list and pipeline apply Objective B; backend isolation for Objective A is separate.{prev(" With preview, the design adds an admin view and optional block. Backend isolation remains Objective A.")}&nbsp;{REC}</p>
-    <p class="goal"><b>Objectives</b>A: the backend takes calls only from the gateway. B: clients can reach only approved servers.</p>
+    <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers.{prev(" With preview, add an Agent 365 admin view and optional blocking. Test preview features only in a sandbox.")}&nbsp;{REC}</p>
     <p class="goal"><b>Designs</b>Released only is the baseline and uses no feature labelled preview. With preview adds Agent 365 and tool threat protection, for a sandbox only.</p></header>
     <figure class="opt-safe">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>
@@ -365,7 +364,6 @@ FIGURE = f"""
       <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="{DESC_SAFE}">{ascii_fig("safe")}</pre>
       </div>
-      <figcaption class="q-note">The repository list is the design's source of truth. The pipeline is our work, and none of it is built or tested. Control requirements and evidence follow below.</figcaption>
     </figure>
     <figure class="opt-preview">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>

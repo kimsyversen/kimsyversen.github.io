@@ -33,7 +33,6 @@ MCP CLIENTS  v                            v                            v
 |                        |   | Tool threat protection |   |                        |
 +------------------------+   +------------------------+   +------------------------+
                                           ^
-Objective B                  Objective A  |               Objective A
 Unlisted server denied                    | Connect gateway
                              +------------------------+
                              | [b]AGENT 365, PREVIEW[/b]     |

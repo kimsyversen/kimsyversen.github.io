@@ -157,3 +157,8 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 - **89 source quotes are listed** (49 on released-only, 40 on preview). V85-V88 were checked against live Microsoft Learn text, and V89 against the MCP transport specification. The latest shell quote fetch could not resolve external hosts. The prior 84-quote mechanical pass remains in the fact-check note.
 - **V77 now quotes the certified-connector support row** instead of the page's broad certified-only limitation wording. The same source separately documents MCP server blocking, so the exact quote shown to readers no longer suggests ACP excludes MCP connectors.
 - **The preview stdio row names only the documented filter scope.** The Global Secure Access MCP firewall sees remote MCP servers; local servers and JSON-RPC batches are outside its inspection, matching V31. Removed an unsupported statement about reaching local servers from Agent 365 or AI Gateway.
+
+## 2026-11-08, simplify The design section
+
+- **Removed Objective A and Objective B wording from The design section and both figures.** User request: the repeated figure labels were confusing and the design section did not need to explain objectives. The controls table still uses A and B to group implementation details.
+- **Moved the repository and pipeline note to the top of the page**, directly below the lead, and removed it as the released-only figure caption. It now appears with both design choices.

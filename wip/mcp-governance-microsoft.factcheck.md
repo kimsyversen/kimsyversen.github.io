@@ -17,6 +17,7 @@ Each product claim in the page has a quote in `scripts/mcp_governance_evidence.p
 - Removed the unsupported idea that the pipeline syncs a fourth server list to Agent 365. The API Management integration discovers gateway registrations; BYO servers use their separate registration flow. The page no longer describes either as a pipeline write.
 - Tightened the GitHub cloud firewall statement to its documented scope: it does not directly control MCP server processes (gh-fw). Replaced the stdio inference with the specification's transport description: a client launches a subprocess, and stdio communicates over standard input and standard output (stdio, stdio-io). Client and endpoint controls remain design requirements.
 - Clarified that the repository list and pipeline apply Objective B, while backend isolation for Objective A is separate. Described Azure AI Gateway as a separate preview resource type, not a separate product. Preview test steps now name the API Management integration they cover.
+- Removed the objective labels and objective summary from The design section and both figures. Moved the repository and pipeline status note from the released-only figure caption to the top of the page, below the lead.
 - Reworded the diagrams so their unreferenced text is architecture requirements and labels. Product capability details remain in the tables with evidence IDs.
 - V85-V88 were compared with the current Microsoft Learn text; V89 was compared with the current MCP transport specification. The full shell quote checker was attempted but could not fetch pages because this environment could not resolve external hosts. The previous 84-quote, zero-problem run predates the new quotes and V77's changed text.
 
@@ -128,7 +129,7 @@ label	Decision makers
 label	recommendation
 label	preview
 label	The design
-requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked. Objective A covers the gateway and backend. Objective B covers the client controls.
+requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.
 label	SOURCE OF TRUTH
 label	APPLY ON MERGE
 label	GIT REPOSITORY
@@ -157,8 +158,6 @@ requirement	Authorize requests
 requirement	Sign-in required
 requirement	Log every call
 requirement	Limit request rate
-requirement	Objective B
-requirement	Objective A
 requirement	Unlisted server denied
 label	MCP clients
 label	Company MCP server
@@ -194,7 +193,7 @@ requirement	Which Agent 365 route will the pilot use?
 requirement	Choose the API Management gateway integration or the separate BYO server registration route. See the controls.
 label	Fact check
 label	Parts of the design
-requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. A Git repository holds the approved list, a pipeline applies it, and a gateway is the only way to reach the company MCP server. Select Released only or With preview. Nothing is built or tested yet.
+requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. Select Released only or With preview. Nothing is built or tested yet.
 requirement	Choices: never, in a sandbox only, or later. The released-only design works without preview.
 label	Controls
 requirement	Do we allow preview features at all?
@@ -229,7 +228,7 @@ Claude in Chrome was not connected. The built-in browser can emulate `prefers-co
 
 ## Current generated page checks, 2026-11-08
 
-- The latest build has 89 evidence quotes: 49 released-only and 40 preview. It reported no paragraph-length warnings. The wording checker passed for 85 distinct presentation texts.
+- The latest build has 89 evidence quotes: 49 released-only and 40 preview. It reported no paragraph-length warnings. The wording checker passed for 83 distinct presentation texts.
 - A static check found all 89 quote rows and quote text in the page, no broken internal anchors, no broken evidence links, and no em or en dashes.
 - The current shell quote-checker run could not fetch any source because external DNS lookup failed. The source text for V77 and V85-V88 was compared with current Microsoft Learn pages; V89 was compared with the MCP specification.
 - The desktop browser refused to open the local file URL, so the current build was not viewed in light or dark mode or at 375px, and the current interactions were not retested. Earlier browser notes describe a previous build.

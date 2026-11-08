@@ -31,7 +31,6 @@ MCP CLIENTS  v                            v                            v
 |                        |   | Limit request rate     |   |                        |
 +------------------------+   +------------------------+   +------------------------+
 
-Objective B                  Objective A                  Objective A
 Unlisted server denied
 
 [red]MCP clients --X--> Company MCP server[/red]
