@@ -36,3 +36,13 @@ Goal: make the design beautiful and functional while keeping existing URLs and t
 17. Add native browse, skip and return anchors, visible row focus, semantic dates and responsive metadata. Done.
 18. Inspect desktop and mobile layouts in light and dark palettes, verify links and keyboard navigation, and check text contrast and paragraph length. Done. The dark palette was activated in a temporary preview copy without changing system settings.
 19. Record the design decisions and index-specific fact check. Done. This is a static page with no build step and no added JavaScript.
+
+## Entry 08, 6 Nov 2026
+
+20. Add `Developer-WS2.html` as entry 08 with description, drawing, category and updated date. Update the page count. Done.
+21. Run the missing-page and broken-link checks from `AGENTS.md`. Done, both print nothing.
+
+## Entry 09, 8 Nov 2026
+
+22. Add `mcp-governance-microsoft.html` as entry 09 with description, drawing, category and updated date. Update the page count to 06. Done.
+23. Check the new link and the index layout on desktop and a narrow viewport. See below.

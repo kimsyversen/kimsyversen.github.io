@@ -28,3 +28,17 @@ Checked 5 November 2026 for the index redesign. This checks the index against th
 - Body text, muted text and navigation colour pairs meet 4.5:1 contrast in both palettes. Paragraphs stay below 60 words.
 - Console errors checked in the preview. No JavaScript was added. This repository has no build step.
 - Not tested: physical mobile devices, print output, a screen reader, every browser engine or live infrastructure described by the content pages. External font delivery remains dependent on Google Fonts, with local serif and sans-serif fallbacks.
+
+## Entry 08 check, 6 Nov 2026
+
+| Text | Source | Verdict |
+|---|---|---|
+| "Intune and MCP" entry description | `Developer-WS2.html` and its own fact check | OK. Describes the page. Says every claim links to an exact quote, which that page does for its 70 quotes. |
+| Updated 6 Nov 2026 | Page content date | OK. |
+| 08 pages | Count of list items | OK. |
+
+- Both index checks from `AGENTS.md` (missing pages, broken links) print nothing.
+- Entry 08 inspected in the browser on 6 Nov 2026: desktop light, and 375px in dark mode (scroll width 375, no sideways scroll, drawing and text readable).
+- Not tested: entry 08 at 375px in light mode, a screen reader, physical devices.
+
+- Entry 09 description, checked 8 Nov 2026 against `mcp-governance-microsoft.html` and its fact check: it says "proposed" because the design is untested, and every product claim on that page does link to an exact quote (91 quotes).

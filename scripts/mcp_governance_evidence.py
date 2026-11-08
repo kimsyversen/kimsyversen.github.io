@@ -1,4 +1,4 @@
-"""Evidence quotes for wip/mcp-governance-microsoft.html.
+"""Evidence quotes for mcp-governance-microsoft.html.
 
 Shared by build-mcp-governance.py (writes the table) and
 check-evidence-quotes.py (confirms each quote appears in its source):
@@ -163,6 +163,8 @@ QUOTES = [
     ("pv-byo-endpoint", "a365-byo", "Your MCP server has a publicly accessible endpoint."),
     ("stdio-io", "mcp-tr", "communication over standard in and standard out"),
     ("gh-refresh", "gh-deploy", "Updated settings are applied automatically within about an hour."),
+    # Added in the claim check of 2026-11-08 (third pass).
+    ("pv-a365-tier", "apim-a365", "This capability is only available for MCP Servers registered in the AI Gateway tier in Azure API Management service."),
 ]
 
 # Quotes that back only the preview-enabled path. The page hides their rows on the safe path.

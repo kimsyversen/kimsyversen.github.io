@@ -39,9 +39,3 @@ Unlisted server denied                    | Connect gateway
                              | Admin view             |
                              | Gateway integration      |
                              +------------------------+
-
-
-[red]MCP clients --X--> Company MCP server[/red]
-        [red]Blocked. Only the gateway may call the server.[/red]
-
-Design requirements and supporting evidence are below

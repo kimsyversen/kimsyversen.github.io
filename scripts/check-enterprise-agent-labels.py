@@ -28,6 +28,20 @@ FACT_STYLE = re.compile(
 )
 
 
+# An ASCII figure holds boxes, arrows and words. Each run of words is one text to review.
+ASCII_SPLIT = re.compile(r"\s-+X-+>\s|[|+]|\s{2,}|(?:\s-)+\s|\sX\s")
+
+
+def ascii_texts(raw):
+    found = []
+    for line in raw.splitlines():
+        for seg in ASCII_SPLIT.split(line):
+            seg = re.sub(r"^X\s+", "", seg.strip(" -=.:<>^"))
+            if seg and seg not in {"v", "X"}:
+                found.append(seg)
+    return found
+
+
 class PresentationText(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -44,6 +58,7 @@ class PresentationText(HTMLParser):
         capture = (
             tag in {"title", "h1", "h2", "h3", "h4"}
             or in_figure and tag in {"text", "desc", "figcaption"}
+            or in_figure and tag == "pre" and "ascii" in classes
             or "tg" in classes or "lead" in classes or "rl" in classes
             or bool(classes & {"what", "ex", "apt"})
             or tag in {"a", "p"} and "routes" in context
@@ -53,7 +68,7 @@ class PresentationText(HTMLParser):
             or tag == "li" and "layer" in context and "layer" not in classes
         )
         self.stack.append((tag, classes, [] if capture else None))
-        if "gantt" in classes:
+        if "gantt" in classes or tag == "pre" and "ascii" in classes:
             self.items.append(attrs["aria-label"])
 
     def handle_data(self, data):
@@ -65,11 +80,16 @@ class PresentationText(HTMLParser):
         for i in range(len(self.stack) - 1, -1, -1):
             if self.stack[i][0] != tag:
                 continue
-            for _, _, parts in self.stack[i:]:
-                if parts is not None:
-                    value = " ".join("".join(parts).split())
-                    if value:
-                        self.items.append(value)
+            for frame in self.stack[i:]:
+                parts = frame[2]
+                if parts is None:
+                    continue
+                if frame[0] == "pre" and "ascii" in frame[1]:
+                    self.items.extend(ascii_texts("".join(parts)))
+                    continue
+                value = " ".join("".join(parts).split())
+                if value:
+                    self.items.append(value)
             del self.stack[i:]
             break
 
@@ -102,7 +122,8 @@ if __name__ == "__main__":
     import sys
 
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    page = ROOT / (args[0] if args else DEFAULT_PAGE)
+    name = args[0] if args else DEFAULT_PAGE
+    page = ROOT / name if (ROOT / name).exists() else ROOT / "wip" / name
     ledger = page.with_suffix(".factcheck.md")
     if "--list" in sys.argv:
         parser = PresentationText()

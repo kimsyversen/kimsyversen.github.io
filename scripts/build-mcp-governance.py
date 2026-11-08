@@ -1,4 +1,4 @@
-"""Build wip/mcp-governance-microsoft.html.
+"""Build mcp-governance-microsoft.html.
 
 Usage: python3 -I scripts/build-mcp-governance.py
 
@@ -22,7 +22,7 @@ from mcp_governance_evidence import CHECKED, IDS, PREVIEW_ONLY, QUOTES, SOURCES 
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "enterprise-ai-agent-governance-summary.html"
-OUT = ROOT / "wip" / "mcp-governance-microsoft.html"
+OUT = ROOT / "mcp-governance-microsoft.html"
 SRC = (ROOT / "wip" / BASE).read_text(encoding="utf-8")
 
 
@@ -209,8 +209,7 @@ MAST = f"""
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 8 Nov 2026</span></div>
     <h1>MCP Governance in a Microsoft ecosystem</h1>
     <div class="intro">
-      <p class="lead">A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. Select Released only or With preview. Nothing is built or tested yet.</p>
-      <p class="lead">The repository list is the design's source of truth. The pipeline is a design requirement, and none of it is built or tested. Control requirements and evidence follow below.</p>
+      <p class="lead">A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio.</p>
     </div>
     <nav aria-label="Start by role">
       <ul class="routes">
@@ -301,7 +300,7 @@ PARTS = f"""
 # The figures are plain text files beside the page. Edit them, then rebuild.
 # [red]...[/red] marks text that means caution, unverified or denied. [b]...[/b] marks a box title.
 def ascii_fig(name):
-    raw = (ROOT / "wip" / f"mcp-governance-microsoft.figure-{name}.txt").read_text(encoding="utf-8")
+    raw = (ROOT / f"mcp-governance-microsoft.figure-{name}.txt").read_text(encoding="utf-8")
     for tag in ("red", "b"):
         if raw.count(f"[{tag}]") != raw.count(f"[/{tag}]"):
             sys.exit(f"unbalanced [{tag}] markers in figure {name}")
@@ -327,14 +326,12 @@ FIGURE = f"""
     <p class="goal"><b>Designs</b>Released only is the target baseline. Use only confirmed released features; keep unverified automation out of production. With preview adds Agent 365 and tool threat protection, for a sandbox only.</p></header>
     <figure class="opt-safe">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>
-      <p class="q-note">Red text marks denied traffic.</p>
       <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="{DESC_SAFE}">{ascii_fig("safe")}</pre>
       </div>
     </figure>
     <figure class="opt-preview">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>
-      <p class="q-note">Red text marks denied traffic.</p>
       <div class="fig-scroll" tabindex="0" role="region" aria-label="With-preview MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="{DESC_PREVIEW}">{ascii_fig("preview")}</pre>
       </div>
@@ -400,7 +397,7 @@ CONTROLS = f"""
       {table(["Control", "Design requirement", "What Microsoft documents", "Label"], [
         [control_label("a365", "Agent 365 gateway integration", "Visibility, not the boundary"),
          "Connect the API Management gateway so admins can see registered servers and block one. Treat blocking as additional gateway enforcement. It does not replace backend isolation. This is separate from the Agent 365 BYO server route below.",
-         f"Agent 365 can discover and govern servers registered with a connected gateway {evp('pv-disc')}. It can block servers; individual-tool control requires the AI Gateway tier {evp('pv-a365-ctrl')}. Tool control needs a static list of allowed tools {evp('pv-a365-static')}. API Management v1 tiers are not supported {evp('pv-a365-v1')}, and v2 tiers lack tool-level control and tool threat protection {evp('pv-a365-v2')}.",
+         f"Agent 365 can discover and govern servers registered with a connected gateway {evp('pv-disc')}. It can block servers {evp('pv-a365-ctrl')}. Tool-level control needs the AI Gateway tier {evp('pv-a365-tier')} and a static allowed-tools list {evp('pv-a365-static')}. v1 tiers are not supported {evp('pv-a365-v1')}; v2 tiers lack tool-level control and tool threat protection {evp('pv-a365-v2')}.",
          f"{PRE} {REC}"],
         [control_label("a365-consent", "Agent 365 consent", "Tenant level"),
          "Before anyone grants it, name who approves the consent, who reviews the policy changes it allows, and how it is withdrawn.",
@@ -539,6 +536,7 @@ ORDER = f"""
 # ---- gaps ----------------------------------------------------------------
 GAPS_LIST = [
     f"<strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.{prev(' This includes Agent 365 and Foundry against the new AI Gateway resource type.')}",
+    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Client policy cannot block it. First-party Copilot servers are exempt from deny rules {ev('gh-builtin')}, so managed clients can keep using it. The design has no control for it. See the <a href=\"#open\">open questions</a>.",
     f"<strong id=\"gap-windows-outbound\">Windows outbound block.</strong> It can block non-MCP traffic too, and name-based rules have limits with proxies and some VPN tunnels. {ev('ifw-block', 'dk-limits')}",
     f"<strong id=\"gap-tier-availability\">API Management tier availability.</strong> MCP features vary by tier. Confirm the target tier and release status before relying on a feature. {ev('apim-ga', 'apim-ga-tiers', 'pv-apim-tier')}",
 ]
@@ -576,10 +574,11 @@ OPEN = """
       <li><span class="n">2</span><h3>Which comes first: developer workstations or hosted agents?</h3><p>Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the <a href="#env">environment table</a>.</p></li>
       <li><span class="n">3</span><h3>Is a default outbound block on managed Windows laptops acceptable?</h3><p>Decide before rollout. The effect on other traffic is in the <a href="#gaps">gaps</a>.</p></li>
       <li><span class="n">4</span><h3>Who reviews list changes and owns the pipeline?</h3><p>Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.</p></li>
-      <li class="opt-preview"><span class="n">5</span><h3>Who approves and reviews the Agent 365 consent?</h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
-      <li class="opt-preview"><span class="n">6</span><h3>What ends the pilot?</h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>
-      <li class="opt-preview"><span class="n">7</span><h3>Does a gateway with no private endpoints fit the network rules?</h3><p>The new resource has no private endpoints. Check the rules before building. See the <a href="#gaps">gaps</a>.</p></li>
-      <li class="opt-preview"><span class="n">8</span><h3>Which Agent 365 route will the pilot use?</h3><p>Choose the API Management gateway integration or the separate BYO server registration route. See the <a href="#controls">controls</a>.</p></li>
+      <li><span class="n">5</span><h3>Is the built-in GitHub MCP server acceptable on managed clients?</h3><p>Client policy cannot block it. Choices: accept it, or limit it outside client policy, for example through the permissions of the GitHub accounts that use it. <span class="tg i">inference</span> No source checked covers the second choice. See the <a href="#gaps">gaps</a>.</p></li>
+      <li class="opt-preview"><span class="n">6</span><h3>Who approves and reviews the Agent 365 consent?</h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
+      <li class="opt-preview"><span class="n">7</span><h3>What ends the pilot?</h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>
+      <li class="opt-preview"><span class="n">8</span><h3>Does a gateway with no private endpoints fit the network rules?</h3><p>The new resource has no private endpoints. Check the rules before building. See the <a href="#gaps">gaps</a>.</p></li>
+      <li class="opt-preview"><span class="n">9</span><h3>Which Agent 365 route will the pilot use?</h3><p>Choose the API Management gateway integration or the separate BYO server registration route. See the <a href="#controls">controls</a>.</p></li>
     </ol>
   </section>
 """

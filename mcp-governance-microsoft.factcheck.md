@@ -25,6 +25,17 @@ The release feed timed out and an encoded retry returned an error response. Repl
 
 Validation: page rebuilt with 90 quotes (50 baseline, 40 preview) and no length or anchor warnings. Quote checker: 90 quotes, 0 problems, using sources fetched in this audit. Presentation ledger: 83 distinct texts passed. Static HTML: unique IDs, all 90 evidence anchors, local links, exact Made with AI note and punctuation passed. No CSS or interaction code was changed; no fresh visual browser test or tenant execution was performed. Earlier browser results are historical.
 
+## Live verification pass, 2026-11-08 (latest, supersedes counts above)
+
+- Network worked this time. The quote checker fetched every source: 90 of 91 quotes matched word for word on the live pages (V1 to V79, V81 to V91). V80 (Microsoft Ignite blog) returns HTTP 403 to curl, the fetch tool and a fetch agent. It was read in the built-in browser: the passage "API Management brings policy-driven governance for MCP endpoints (GA)" is on the page, dated Nov 18, 2025 (matches the page date). That text was copied from the browser into the checker's cache for V80, and the checker then reported 91 quotes, 0 problems. V80 is therefore verified by browser text, not by a script fetch.
+- All 22 Microsoft Learn page dates match "Last updated on" in the live pages. The other sources show no date.
+- Context re-read for claims that go beyond a quote: Intune default outbound block (setting is "Block outbound connections", default allows), Windows-only; AI Gateway preview regions (exactly East US 2 and Sweden Central); GitHub managed settings file lives in the `.github-private` repository and refreshes within about an hour; ACP supports MCP server-level blocking, not custom or HTTP connectors, which stay on classic data policies; Foundry gateway routing covers new portal tools only; tool threat protection modes are set in Defender, not at the gateway; post-call denial cannot undo the call. All match the page.
+- One wording gap found and fixed: the page said individual-tool control needs the AI Gateway tier, but the quote cited (V37) says only "on supported tiers". Added V91, "This capability is only available for MCP Servers registered in the AI Gateway tier in Azure API Management service." and cited it. The cell was trimmed to stay under 60 words.
+- Ledger repaired: 4 new page texts given verdicts (lead line, open question 5 and its `inference` tag), 6 stale entries removed. Label check: 81 distinct texts pass.
+- Static checks: 91 evidence rows and anchors, no duplicate IDs, no dead in-page links, no en or em dashes.
+- Browser (localhost, 2026-11-08): both paths at 375px, page 375 wide, no console errors, 50 evidence rows on Released only and 91 with preview. Dark mode at 375px: page 375 wide, no console errors, no text under 4.5:1 contrast. Real mouse clicks: the Released only and With preview buttons switch the path and the URL (`?path=preview`); a quote link opened Microsoft Learn and scrolled to the quoted passage.
+- Still untested: nothing was built or run in a tenant. The acceptance tests on the page read "Not run" on purpose. They are design targets, and the page says so. They cannot pass or fail until a tenant exists.
+
 ## Method
 
 Each product claim in the page has a quote in `scripts/mcp_governance_evidence.py`. `scripts/check-evidence-quotes.py` fetches each source and confirms the quote appears word for word. The page lists every quote and links it with a text fragment.
@@ -190,9 +201,6 @@ requirement	Sign-in required
 requirement	Log every call
 requirement	Limit request rate
 requirement	Unlisted server denied
-label	MCP clients
-label	Company MCP server
-requirement	Blocked. Only the gateway may call the server
 requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
 label	AI GATEWAY, PREVIEW
 requirement	Publish MCP endpoints
@@ -220,19 +228,20 @@ requirement	What ends the pilot?
 requirement	Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the fallback.
 requirement	Does a gateway with no private endpoints fit the network rules?
 requirement	The new resource has no private endpoints. Check the rules before building. See the gaps.
+requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio.
+requirement	Is the built-in GitHub MCP server acceptable on managed clients?
+requirement	Client policy cannot block it. Choices: accept it, or limit it outside client policy, for example through the permissions of the GitHub accounts that use it. inference No source checked covers the second choice. See the gaps.
+label	inference
 requirement	Which Agent 365 route will the pilot use?
 requirement	Choose the API Management gateway integration or the separate BYO server registration route. See the controls.
 label	Fact check
 label	Parts of the design
-requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. Select Released only or With preview. Nothing is built or tested yet.
 requirement	Choices: never, in a sandbox only, or later. Require released features for production. The proposed pipeline and cross-client enforcement still need validation.
 label	Controls
 requirement	Are preview features allowed at all?
 label	Environments
 label	Fallback
 requirement	Released only is the baseline. Compare it with the preview design, then read the open questions.
-requirement	Design requirements and supporting evidence are below
-requirement	The repository list is the design's source of truth. The pipeline is a design requirement, and none of it is built or tested. Control requirements and evidence follow below.
 requirement	With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.
 ```
 <!-- End reviewed presentation text -->

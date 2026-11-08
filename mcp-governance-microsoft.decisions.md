@@ -171,3 +171,34 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 - **Environments is a cross-reference table.** It maps each platform or runtime to its applicable control rows and does not restate product facts.
 - **Known gaps contains only unresolved scope, side effects, tier checks and untested combinations.** Product limitations already documented in Controls are referenced there only when needed.
 - **Acceptance tests own expected results and run status.** Order of work remains a sequence, so it can reference the tests without duplicating them.
+
+## 2026-11-08, gaps moved into controls
+
+- **Removed two items from Known gaps:** the GitHub cloud agent firewall and the Foundry and Copilot Studio server URL block. Reason: the page's own rule says Known gaps holds only unresolved scope, side effects, tier checks and untested combinations. These were product limits, and the design never relied on either.
+- **The cloud agent firewall note now sits in the Environments row** for the GitHub Copilot cloud agent, with its V23 quote. The row points to the client allowlist as the control.
+- **The "no URL block found" note now sits in the Power Platform and Foundry control rows.** It says what the sources checked on 2026-11-08 do not show. The partial controls stay in those rows: whole-server block in Copilot Studio (V65), nonempty allowed tool list in Foundry (V69), project network isolation (V24).
+- **Known gaps now has three items:** nothing tested in our tenant, the Windows outbound block, and API Management tier availability.
+
+## 2026-11-08, neutral voice
+
+- **No "we", "our" or "your" in the page's own text.** The design is not addressed to anyone. "Nothing is tested in our tenant" became "No part of the design is tested in a tenant". "A pipeline we build" became "a pipeline". Open questions use passive or neutral forms ("Are preview features allowed at all?"). Quoted source text keeps the vendor's wording.
+
+## 2026-11-08, propagation in Parts of the design
+
+- **How a Git change reaches each target is stated in the Parts table, not a new block.** The Sync pipeline row says "on merge, writes the list to each policy target". The Policy targets row names the write method per target and links to the control row. Reason: Parts is the component map, and Controls holds the detail and limits.
+- **Per-target write methods:** GitHub managed settings by commit to the .github-private repository (V82, V83). Copilot Studio through the Power Platform API, unverified for MCP (V66). Foundry through an allowed tool list per MCP tool, with no documented write method (V69).
+- **Added to the pipeline control as a requirement:** a separate credential per target, limited to writing that target. Labelled recommendation. Trigger, failure reporting and drift detection are still unspecified.
+
+## 2026-11-08, built-in GitHub MCP server
+
+- **Added a gap and an open question.** Client policy cannot block the built-in GitHub MCP server (V21: first-party Copilot servers are exempt from deny rules), and the design has no other control for it. Reason: the page listed it only as a "not covered" note in the client allowlist row, with no decision attached.
+- **Open question 5 offers two choices:** accept it, or limit it outside client policy (for example by the permissions of the GitHub accounts that use it). The second is labelled inference. No source checked covers it. Preview questions moved from 5-8 to 6-9.
+
+## 2026-11-08, live verification pass
+
+- **Added V91 instead of softening the Agent 365 row.** The page said individual-tool control needs the AI Gateway tier; V37 only says "supported tiers". The Agent 365 integration page states the AI Gateway tier requirement directly, so a quote was added rather than weakening the statement.
+- **V80 stays, verified by browser.** The Ignite blog refuses curl and the fetch tool (HTTP 403), so the quote checker reports one fetch problem. The text and date were read in the built-in browser and recorded in the fact check.
+
+## 2026-11-08, moved out of wip
+
+Moved the page and its notes from `wip/` to the repository root and listed it in the index as entry 09 (numbers 6 to 8 were used by retired entries, so their public anchors are not reused). Reason: the owner asked for it to be published. The builder and both checkers now read and write the root path; the checkers still fall back to `wip/` for other pages. Superseded: the earlier plan to keep it in `wip/` until the owner moved it.

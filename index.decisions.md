@@ -64,3 +64,20 @@ Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 
 - Add "Enterprise AI agent security" as entry 06, category Recommendation, updated 5 Nov 2026. The count reads 06 pages. Existing entries keep their numbers and ids.
 - The drawing shows five stacked layers with a red dashed line down the side for the feedback and kill path.
+
+
+6 Nov 2026, entry 08
+
+- Add "Intune and MCP" as entry 08, category Design, updated 6 Nov 2026. The count reads 08 pages. Existing entries keep their numbers and ids.
+- The drawing shows three stepped boxes (deliver, enforce, detect) with a red dashed line along the bottom for the re-apply loop.
+
+## 8 Nov 2026, work in progress pages moved to wip/
+- Moved `enterprise-ai-agent-governance-summary`, `enterprise-ai-agent-security-recommendation` and `Developer-WS2`, with all their notes, into `wip/`. Removed their three cards from the index. The index now lists 05 pages. The other pages keep their numbers 1 to 5.
+- Reason: the user asked to move them to the work-in-progress folder and hide them from the index.
+- Old URLs at the site root no longer work. The pages still open at `wip/<name>.html` if someone has the link. Moving the folder to `master` makes them public there too.
+- Scripts under `scripts/` now read these pages from `wip/`. `Developer-WS2` links to `../Developer-WS.html`.
+
+8 Nov 2026, entry 09
+
+- Add "MCP governance in a Microsoft ecosystem" as entry 09, category Reference design, updated 8 Nov 2026. The count reads 06 pages. Entry numbers 6 to 8 belonged to pages moved to `wip/`, so they are not reused: old `#n6` to `#n8` anchors stay unused. Existing entries keep their numbers.
+- The drawing shows client, gateway and backend boxes with a red dashed line for the bypass route the design blocks.

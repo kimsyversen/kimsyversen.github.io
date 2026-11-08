@@ -407,8 +407,7 @@ p,li,td,th,dd,summary,figcaption,h4{text-wrap:wrap}
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 8 Nov 2026</span></div>
     <h1>MCP Governance in a Microsoft ecosystem</h1>
     <div class="intro">
-      <p class="lead">A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. Select Released only or With preview. Nothing is built or tested yet.</p>
-      <p class="lead">The repository list is the design's source of truth. The pipeline is a design requirement, and none of it is built or tested. Control requirements and evidence follow below.</p>
+      <p class="lead">A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio.</p>
     </div>
     <nav aria-label="Start by role">
       <ul class="routes">
@@ -446,7 +445,6 @@ p,li,td,th,dd,summary,figcaption,h4{text-wrap:wrap}
     <p class="goal"><b>Designs</b>Released only is the target baseline. Use only confirmed released features; keep unverified automation out of production. With preview adds Agent 365 and tool threat protection, for a sandbox only.</p></header>
     <figure class="opt-safe">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>
-      <p class="q-note">Red text marks denied traffic.</p>
       <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.">SOURCE OF TRUTH              APPLY ON MERGE
 +------------------------+   +------------------------+
@@ -481,17 +479,11 @@ MCP CLIENTS  v                            v                            v
 |                        |   | Limit request rate     |   |                        |
 +------------------------+   +------------------------+   +------------------------+
 
-Unlisted server denied
-
-<span class="stop">MCP clients --X--&gt; Company MCP server</span>
-        <span class="stop">Blocked. Only the gateway may call the server.</span>
-
-Design requirements and supporting evidence are below</pre>
+Unlisted server denied</pre>
       </div>
     </figure>
     <figure class="opt-preview">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>
-      <p class="q-note">Red text marks denied traffic.</p>
       <div class="fig-scroll" tabindex="0" role="region" aria-label="With-preview MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.">SOURCE OF TRUTH              APPLY ON MERGE
 +------------------------+   +------------------------+
@@ -533,13 +525,7 @@ Unlisted server denied                    | Connect gateway
                              | <span class="ttl">AGENT 365, PREVIEW</span>     |
                              | Admin view             |
                              | Gateway integration      |
-                             +------------------------+
-
-
-<span class="stop">MCP clients --X--&gt; Company MCP server</span>
-        <span class="stop">Blocked. Only the gateway may call the server.</span>
-
-Design requirements and supporting evidence are below</pre>
+                             +------------------------+</pre>
       </div>
       <figcaption class="q-note">With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.</figcaption>
     </figure>
@@ -589,7 +575,7 @@ Design requirements and supporting evidence are below</pre>
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Control</th><th>Design requirement</th><th>What Microsoft documents</th><th>Label</th></tr></thead>
 <tbody>
-<tr><td><span id="ctrl-a365">Agent 365 gateway integration</span><span class="rt">Visibility, not the boundary</span></td><td>Connect the API Management gateway so admins can see registered servers and block one. Treat blocking as additional gateway enforcement. It does not replace backend isolation. This is separate from the Agent 365 BYO server route below.</td><td>Agent 365 can discover and govern servers registered with a connected gateway <a class="ev" href="#ev-V36">V36</a>. It can block servers; individual-tool control requires the AI Gateway tier <a class="ev" href="#ev-V37">V37</a>. Tool control needs a static list of allowed tools <a class="ev" href="#ev-V38">V38</a>. API Management v1 tiers are not supported <a class="ev" href="#ev-V41">V41</a>, and v2 tiers lack tool-level control and tool threat protection <a class="ev" href="#ev-V42">V42</a>.</td><td><span class="tg pv">preview</span> <span class="tg r">recommendation</span></td></tr>
+<tr><td><span id="ctrl-a365">Agent 365 gateway integration</span><span class="rt">Visibility, not the boundary</span></td><td>Connect the API Management gateway so admins can see registered servers and block one. Treat blocking as additional gateway enforcement. It does not replace backend isolation. This is separate from the Agent 365 BYO server route below.</td><td>Agent 365 can discover and govern servers registered with a connected gateway <a class="ev" href="#ev-V36">V36</a>. It can block servers <a class="ev" href="#ev-V37">V37</a>. Tool-level control needs the AI Gateway tier <a class="ev" href="#ev-V91">V91</a> and a static allowed-tools list <a class="ev" href="#ev-V38">V38</a>. v1 tiers are not supported <a class="ev" href="#ev-V41">V41</a>; v2 tiers lack tool-level control and tool threat protection <a class="ev" href="#ev-V42">V42</a>.</td><td><span class="tg pv">preview</span> <span class="tg r">recommendation</span></td></tr>
 <tr><td><span id="ctrl-a365-consent">Agent 365 consent</span><span class="rt">Tenant level</span></td><td>Before anyone grants it, name who approves the consent, who reviews the policy changes it allows, and how it is withdrawn.</td><td>An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent <a class="ev" href="#ev-V39">V39</a>. It lets the service read and write API-scoped policies <a class="ev" href="#ev-V40">V40</a>.</td><td><span class="tg pv">preview</span> <span class="tg r">recommendation</span></td></tr>
 <tr><td><span id="ctrl-ai-resource">AI Gateway resource type</span><span class="rt">Objective A</span></td><td>Start any evaluation on the new resource type, not the older AI Gateway tier. Check each example and article against the new type before use.</td><td>From 14 Oct 2026 Microsoft is changing the AI Gateway resource type to Microsoft.ApiManagement/aigateways <a class="ev" href="#ev-V45">V45</a>. Complete the migration before 15 Jan 2027 <a class="ev" href="#ev-V46">V46</a>. The new runtime URL uses the domain ai.gateway.azure.com <a class="ev" href="#ev-V50">V50</a>, and keys go in the Authorization header with a Bearer scheme <a class="ev" href="#ev-V51">V51</a>.</td><td><span class="tg pv">preview</span> <span class="tg r">recommendation</span></td></tr>
 <tr><td><span id="ctrl-ai-limits">AI Gateway limits</span><span class="rt">Objective A</span></td><td>Check the network design first. Confirm that a public gateway frontend, fixed virtual network and subnet, supported region and alternative content safety control meet the pilot requirements.</td><td>Gateway frontend private endpoints are not supported <a class="ev" href="#ev-V47">V47</a>. The virtual network and subnet cannot be changed after creation <a class="ev" href="#ev-V48">V48</a>. The content safety policy is not supported <a class="ev" href="#ev-V49">V49</a>. During public preview the regions are East US 2 and Sweden Central <a class="ev" href="#ev-V52">V52</a>.</td><td><span class="tg pv">preview</span> <span class="tg r">recommendation</span></td></tr>
@@ -689,6 +675,7 @@ Design requirements and supporting evidence are below</pre>
     <p class="goal"><span class="tg u">Bad&nbsp;news&nbsp;first</span> Read these limits before relying on the design.</p></header>
     <ol>
 <li><strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.<span class="opt-preview"> This includes Agent 365 and Foundry against the new AI Gateway resource type.</span></li>
+<li><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Client policy cannot block it. First-party Copilot servers are exempt from deny rules <a class="ev" href="#ev-V21">V21</a>, so managed clients can keep using it. The design has no control for it. See the <a href="#open">open questions</a>.</li>
 <li><strong id="gap-windows-outbound">Windows outbound block.</strong> It can block non-MCP traffic too, and name-based rules have limits with proxies and some VPN tunnels. <a class="ev" href="#ev-V32">V32</a> <a class="ev" href="#ev-V34">V34</a></li>
 <li><strong id="gap-tier-availability">API Management tier availability.</strong> MCP features vary by tier. Confirm the target tier and release status before relying on a feature. <a class="ev" href="#ev-V64">V64</a> <a class="ev" href="#ev-V80">V80</a> <a class="ev" href="#ev-V81">V81</a></li>
     </ol>
@@ -712,10 +699,11 @@ Design requirements and supporting evidence are below</pre>
       <li><span class="n">2</span><h3>Which comes first: developer workstations or hosted agents?</h3><p>Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the <a href="#env">environment table</a>.</p></li>
       <li><span class="n">3</span><h3>Is a default outbound block on managed Windows laptops acceptable?</h3><p>Decide before rollout. The effect on other traffic is in the <a href="#gaps">gaps</a>.</p></li>
       <li><span class="n">4</span><h3>Who reviews list changes and owns the pipeline?</h3><p>Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.</p></li>
-      <li class="opt-preview"><span class="n">5</span><h3>Who approves and reviews the Agent 365 consent?</h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
-      <li class="opt-preview"><span class="n">6</span><h3>What ends the pilot?</h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>
-      <li class="opt-preview"><span class="n">7</span><h3>Does a gateway with no private endpoints fit the network rules?</h3><p>The new resource has no private endpoints. Check the rules before building. See the <a href="#gaps">gaps</a>.</p></li>
-      <li class="opt-preview"><span class="n">8</span><h3>Which Agent 365 route will the pilot use?</h3><p>Choose the API Management gateway integration or the separate BYO server registration route. See the <a href="#controls">controls</a>.</p></li>
+      <li><span class="n">5</span><h3>Is the built-in GitHub MCP server acceptable on managed clients?</h3><p>Client policy cannot block it. Choices: accept it, or limit it outside client policy, for example through the permissions of the GitHub accounts that use it. <span class="tg i">inference</span> No source checked covers the second choice. See the <a href="#gaps">gaps</a>.</p></li>
+      <li class="opt-preview"><span class="n">6</span><h3>Who approves and reviews the Agent 365 consent?</h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
+      <li class="opt-preview"><span class="n">7</span><h3>What ends the pilot?</h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>
+      <li class="opt-preview"><span class="n">8</span><h3>Does a gateway with no private endpoints fit the network rules?</h3><p>The new resource has no private endpoints. Check the rules before building. See the <a href="#gaps">gaps</a>.</p></li>
+      <li class="opt-preview"><span class="n">9</span><h3>Which Agent 365 route will the pilot use?</h3><p>Choose the API Management gateway integration or the separate BYO server registration route. See the <a href="#controls">controls</a>.</p></li>
     </ol>
   </section>
 
@@ -725,7 +713,7 @@ Design requirements and supporting evidence are below</pre>
       <h2 id="h-e">Fact check</h2>
     </div>
     <div class="blk" style="margin-top:20px">
-      <p class="sub">Product claims are supported by the source excerpts below, checked on 2026-11-08. Links request the quoted passage using browser text fragments. Page date is the date the page shows. <span class="opt-safe">50 quotes back the released-only design.</span><span class="opt-preview">90 quotes in all: 50 back the released-only design and 40 back the preview additions.</span></p>
+      <p class="sub">Product claims are supported by the source excerpts below, checked on 2026-11-08. Links request the quoted passage using browser text fragments. Page date is the date the page shows. <span class="opt-safe">50 quotes back the released-only design.</span><span class="opt-preview">91 quotes in all: 50 back the released-only design and 41 back the preview additions.</span></p>
       <div class="tbl-wrap"><table class="tbl src">
         <thead><tr><th>Id</th><th>Quote</th><th>Source</th><th>Page date</th></tr></thead>
         <tbody>
@@ -819,6 +807,7 @@ Design requirements and supporting evidence are below</pre>
 <tr id="ev-V88" class="opt-preview"><td>V88</td><td>Your MCP server has a publicly accessible endpoint.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server#:~:text=Your%20MCP%20server%20has%20a%20publicly%20accessible%20endpoint.">Microsoft Learn, Agent 365 bring-your-own MCP server</a></td><td>2026-11-05</td></tr>
 <tr id="ev-V89"><td>V89</td><td>communication over standard in and standard out</td><td><a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#:~:text=communication%20over%20standard%20in%20and%20standard%20out">Model Context Protocol specification 2025-06-18, transports</a></td><td>none shown</td></tr>
 <tr id="ev-V90"><td>V90</td><td>Updated settings are applied automatically within about an hour.</td><td><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings#:~:text=Updated%20settings%20are%20applied%20automatically%20within%20about%20an%20hour.">GitHub Docs, deploy enterprise managed settings</a></td><td>none shown</td></tr>
+<tr id="ev-V91" class="opt-preview"><td>V91</td><td>This capability is only available for MCP Servers registered in the AI Gateway tier in Azure API Management service.</td><td><a href="https://learn.microsoft.com/en-us/azure/api-management/agent-365#:~:text=This%20capability%20is%20only%20available%20for,tier%20in%20Azure%20API%20Management%20service.">Microsoft Learn, API Management with Agent 365</a></td><td>2026-10-06</td></tr>
         </tbody>
       </table></div>
     </div>
