@@ -12,6 +12,8 @@ Check sources during drafting. When substantial page changes need content review
 
 Keep only the notes a page needs, named after the page and kept beside it. Use `.plan.md` for open work, `.decisions.md` for lasting choices and reasons, and `.factcheck.md` for verification. Keep superseded decisions marked for history and working notes off reader-facing pages.
 
+For pages with multiple sections or tables, define each section's job and scope. Within that scope, make categories mutually exclusive and collectively exhaustive (MECE): give each fact one authoritative home, use cross-references for related views, and label exclusions or unknowns instead of duplicating facts or implying unsupported coverage.
+
 ## 3. Evidence
 
 - Verify factual claims against primary sources and record the date and verdict in the fact check. Cut unsupported claims or label them `[unverified]` or `[inference]`. Record gaps in testing.
