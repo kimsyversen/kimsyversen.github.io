@@ -23,3 +23,29 @@ Working notes (repo is a public GitHub Pages site).
 ## 5 November 2026 review
 
 Read all page statements, including generated diagram and evidence text. Reopened primary sources, corrected unsupported generalizations and recorded the current statement ledger. Historical completion claims above describe the earlier review, not independent proof of today's content. Product configuration and exploit reproduction remain untested; browser checks are separate.
+
+## Microsoft scope toggle (8 Nov 2026)
+
+Goal (from /goal): one risk map with a toggle that switches between a general view and a Microsoft ecosystem view. The toggle changes the risks, the diagram, the controls, the start table, the evidence and the sources.
+
+Microsoft ecosystem here means MCP as used through VS Code, Visual Studio, GitHub Copilot, Copilot Studio, Windows, Azure and Microsoft Entra. Third-party servers connected inside these clients still apply.
+
+Steps
+1. Research each Microsoft surface against its primary page and copy the exact quote. Done on 8 Nov 2026.
+2. Write these notes and the decisions. Done.
+3. Add the toggle (segmented control, `data-scope` on `html`, `mcp-scope` in localStorage, `&s=ms` or `&s=g` in the hash). Keep tab ids, risk ids (M01 to M08) and component ids.
+4. Make the data per scope: diagram labels, placements, start table, evidence, sources, risk card text, header and "In short".
+5. Keep a separate status record per scope (`mcp-status` for General, `mcp-status-ms` for Microsoft).
+6. Add the "Other Microsoft surfaces" table under the VS Code tab, each row with a quote and a source link.
+7. Show the exact quote and a text-fragment link for each Microsoft diagram placement.
+8. Write `scripts/check-mcp-risk-map.py`: fetch every Microsoft source, confirm each quote word for word, and compare the Microsoft presentation text with a reviewed list.
+9. Browser test: light, dark, 375px, both scopes, real clicks, saved hash restore.
+10. Update the fact check, the index dates and the notes.
+
+Not tested: no setting or command was run on a managed machine. Several Microsoft features are in preview and may change.
+
+## Status, 8 Nov 2026
+All ten steps done. The check script passes with 0 problems. Index dates updated. Not committed. Open: a real click on every box under every filter (a sample was clicked, the rest scripted).
+
+## Design principles pass, 8 Nov 2026
+Applied AGENTS.md rule 6 to the Microsoft start table and the checks that pointed at preview features or an extra service. See the decisions file.

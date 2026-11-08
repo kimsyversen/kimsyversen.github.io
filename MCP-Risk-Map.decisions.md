@@ -38,3 +38,45 @@ Working notes.
 - Exact command matching is configuration matching, not proof of safe executable or dependency contents. Structured Codex matching still excludes cwd and environment variables.
 - Removed unused filter descriptions that referred to ten risks; the page has eight.
 - Preserved public paths, tab and component ids, localStorage keys and the shared Made with AI note. Updated the index date in the same change.
+
+## 8 Nov 2026, Microsoft ecosystem scope toggle
+
+- **One page, one toggle.** The user wants one risk map with a General and a Microsoft ecosystem view, not two pages. A segmented control under the header sets `data-scope` on `html`. Reason: the tab ids, risk ids and shared layout stay the same, so existing links keep working.
+- **Same eight risks, different content.** The Microsoft view keeps M01 to M08 so the OWASP mapping and the status tracker line up. What changes is the text, controls, diagram labels, start table, evidence and sources. Reason: a different risk list would break comparison between the two views.
+- **Separate status per scope.** `mcp-status` stays General. `mcp-status-ms` holds the Microsoft view. Reason: a status such as "In place" for a Claude Code control says nothing about a Visual Studio control.
+- **Hash.** `#risks&s=ms` or `#risks&s=g`. A hash value wins over the stored `mcp-scope`. Old `#risks` links still open and use the stored scope. Tab ids are unchanged.
+- **The `vscode` tab id stays.** The label becomes "3 · VS Code and Microsoft" in the Microsoft view. The 13 VS Code rows remain. A new table "Other Microsoft surfaces" sits under them. Reason: renaming the id would break shared links.
+- **Diagram.** Same component ids, new labels for the Microsoft view, plus one new box `gw` (MCP gateway or firewall) in the Outbound zone. Zones and arrows are shared. Reason: the data flow is the same, the products at each point differ.
+- **Per-claim evidence for the Microsoft view.** Each Microsoft placement and each new table row carries the exact quote and a link that opens the page at that passage (text fragment). Reason: the repo rule says a diagram claim must be verifiable from the diagram itself. The check script fetches each source and confirms the quote word for word.
+- **Known gap.** The General popups still list sources per box, not per claim. Not changed in this task. Logged here so it is not forgotten.
+- **Mitiga in the Microsoft view.** The Mitiga research targets Claude Code, which is outside this scope. The Microsoft M05 text describes the same mechanism (a changed config redirecting a server) only where a Microsoft source supports it (Visual Studio re-trust on a changed URL or command, VS Code trusted-workspace behaviour). It says no demonstration against a Microsoft product was found. "Not observed."
+- **CVEs.** CVE-2026-26118 and CVE-2026-32211 are shown as vendor advisories from the CVE record, not as observed incidents. CVE-2026-32211 lists "Azure Web Apps" as the affected product with the tag exclusively-hosted-service; the page says so. Invariant Labs is labelled third-party research.
+- **Preview features are labelled preview** where the source says so (Windows ODR, Entra MCP firewall and logging, Agent 365 gateway and BYO, GitHub registry enforcement).
+- **Not claimed:** a Copilot Studio per-tool approval flow. No such statement was found in the sources read.
+- **Per-item evidence (mechanism).** Each Microsoft card item, table row, diagram placement and callout carries quote ids. `qBlock` renders them as a collapsed list with a text-fragment link. Reason: AGENTS.md rule 3, the reader checks each claim from the diagram itself.
+- **`MSDATA` is the source of truth.** It is one JSON line in the page. The builder script that produced it is not shipped. Reason: the page is hand-written with no build step. Edit the line, then run the check script.
+- **Whitespace fallback.** The check first matches a quote word for word. If that fails it matches with whitespace ignored and prints a note. Only `cs3` needs it, because the source page lists a bold label and its colon as separate elements. `sp5` was shortened to drop a trailing period for the same reason.
+- **Start table (Microsoft view) holds recommendations.** They are design requirements, so they carry no quote. Friction labels stay my judgement, tagged in the Sources tab.
+- **One placement row per (risk, component) pair.** 33 rows. Reason: a popup lists each risk once per box, with its own quotes.
+- **Callouts** pair a scope statement with its date and quote, so a preview or prerelease label is never separated from its source.
+- **CVE sources have two URLs.** `u` is the human link, `f` is the CVE JSON used by the check. Reason: the MSRC page cannot be fetched. Text fragments are skipped for CVE links.
+- **M01 check 3 is General only** (`sc-g`). It describes a Claude Code exception that has no Microsoft counterpart.
+- **Mitiga quote `mi1` added** so the sentence about the research has a source in the Microsoft view too.
+- **Fragment links avoid words with an apostrophe or quote mark.** A curly apostrophe in the source breaks a text fragment. Every fragment start and end string was checked against the fetched page text on 8 Nov 2026 (104 parts, all found after the `sp5` fix).
+- **Fact-style check is narrow.** It flags product verbs (supports, blocks, enforces, requires, prevents, provides, inspects, discovers, always, never, automatically) and "is/are available, supported, enabled..." in text with no evidence list. The first version flagged any "is" or "are" and hit process statements, so it was narrowed. The 103 texts in the reviewed list each have a verdict (label, requirement or code token). A pass proves a verdict was recorded for the exact wording, not that the verdict is right.
+
+### Test log, 8 Nov 2026
+- `python3 -I scripts/check-mcp-risk-map.py <cache>`: 69 quotes found, 103 reviewed texts, 0 problems.
+- Light, dark and 375 px, both scopes: no sideways scroll (`scrollWidth` 375 on all five tabs), no console errors.
+- Real mouse clicks: a diagram marker, an "Also in" link, the scope toggle, and in dark mode the MCP gateway box (popup shows quotes and links). Scripted pass over every marker and box in both scopes: every popup link opened the right box and kept the right hash.
+- Saved state: `#map&s=ms` and an old `#map` link both restore correctly. Status for the two scopes is stored separately.
+- Not done: a real click on every box under every filter. The scripted pass covers them, real clicks cover a sample.
+- Not tested: any setting or command on a managed machine.
+
+## 8 Nov 2026, design principles applied to the Microsoft start table
+- New rule 6 in AGENTS.md: least administration overhead, keep it simple, do not rely on preview features.
+- **Start table changed (Microsoft view).** M06 now says prefer OAuth 2.0 over API keys and keep tokens out of mcp.json, and add API Management only for remote servers you host yourself. Reason: API Management is a whole service to run. M07 now says bind local HTTP servers to 127.0.0.1, check the Origin header, and allow remote servers only from the approved list in M01. Reason: the Entra MCP firewall is in preview. M08 dropped Defender advanced hunting for Agent 365 BYO servers (preview). It keeps OpenTelemetry export and the approved list.
+- **Risk card checks changed.** M01 check 3 now says not to rely on the Agent 365 tools gateway, which is in preview. M07 check 1 asks about localhost binding and the Origin header instead of the Entra firewall. M06 check 1 applies only when servers sit behind API Management.
+- **Preview features stay on the page, labelled.** Cards, popups, the Other Microsoft surfaces table and the Preview callout still describe them, because a reader may meet them. None is in the start table. The page says so.
+- Not changed: M01 (the GitHub enterprise allowlist, not marked preview in the source page read), M02 to M05. Not checked: whether the GitHub allowlist moves to preview later. Recheck before moving "Current as of".
+- Check script: 69 quotes found, 104 reviewed texts, 0 problems.

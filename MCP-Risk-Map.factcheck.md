@@ -484,3 +484,233 @@ Source pages (code.visualstudio.com/docs): agent-customization/mcp-servers (A), 
 | V12 | Claude and Codex harnesses cannot enforce Copilot enterprise-managed settings and are disabled when they apply | D | OK |
 | V13 | MCP: Show Installed Servers; Copilot Chat OTel export covers tool execution | C, F | OK |
 | V14 | Docs example runs npx -y @playwright/mcp@latest | B | OK. "Pinning avoids silent change" is [inference] |
+
+## 8 November 2026, Microsoft ecosystem view
+
+Belongs to the Microsoft ecosystem scope of [MCP-Risk-Map.html](MCP-Risk-Map.html). Scope: MCP as used through VS Code, Visual Studio, GitHub Copilot, Copilot Studio, Windows, Azure and Microsoft Entra.
+
+Method: every source page was fetched on 8 November 2026 and each quote was checked word for word against the page text with `python3 -I scripts/check-mcp-risk-map.py <cache-dir>`. The VS Code tab rows keep their 5 November 2026 check and are shared by both views.
+
+Limits: nothing was tested on a real system. No setting or command was run on a managed machine. Preview features may change. Quote `cs3` matches only when whitespace is ignored, because the source lists a bold label and a colon as separate elements. The script is a mechanical check: a pass proves the quotes are on the pages the sources serve today and that a verdict was recorded for the exact wording. It does not prove a verdict or a claim is right.
+
+### Sources
+
+| Key | Source | URL | Note |
+|---|---|---|---|
+| odr | MCP on Windows: Windows On-device Agent Registry | https://learn.microsoft.com/en-us/windows/ai/mcp/overview | Microsoft Learn. Prerelease. Separate environment, Intune control, logging. |
+| vs | Visual Studio: use MCP servers | https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers | Microsoft Learn. Server trust (18.7 or later), tool confirmation, tool-list reset, allow list policies. |
+| ghal | GitHub: configure an enterprise MCP allowlist | https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist | GitHub Docs. managed-settings.json, allowedMcpServers, deniedMcpServers. |
+| ghreg | GitHub: configure an MCP registry | https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry | GitHub Docs. Public preview; not the recommended method. |
+| ghenf | GitHub: MCP private registry enforcement | https://docs.github.com/en/copilot/reference/enterprise-administrators/mcp-private-registry-enforcement | GitHub Docs. Name and ID matching; bypass by editing configuration files. |
+| csadd | Copilot Studio: add an existing MCP server | https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent | Microsoft Learn. Authentication options, API key in header or query, SSE. |
+| csdlp | Copilot Studio: data loss prevention | https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention | Microsoft Learn. Connector blocking and MCP tools. |
+| gsa | Entra Global Secure Access: MCP firewall | https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall | Microsoft Learn. Preview. Server URL patterns, TLS inspection. |
+| gsalog | Entra Global Secure Access: MCP logging | https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging | Microsoft Learn. Preview. Shadow MCP discovery; remote servers only. |
+| apim | Azure API Management: secure MCP servers | https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers | Microsoft Learn. Inbound and outbound access, credential manager, header forwarding. |
+| a365gw | Agent 365: tools gateway | https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway | Microsoft Learn. Preview. Block or allow a server, LiteLLM gateway. |
+| a365byo | Agent 365: bring your own MCP server | https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server | Microsoft Learn. Preview. Defender advanced hunting; supported client surfaces. |
+| azmcp | Azure MCP Server: security | https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security | Microsoft Learn. Production data, Azure identity, change control, official server. |
+| cve26118 | CVE-2026-26118 (Azure MCP Server) | https://cveawg.mitre.org/api/cve/CVE-2026-26118 | CVE record published by Microsoft. A vendor advisory, not an observed incident. |
+| cve32211 | CVE-2026-32211 (Azure MCP Server) | https://cveawg.mitre.org/api/cve/CVE-2026-32211 | CVE record published by Microsoft. A vendor advisory, not an observed incident. |
+| inv | Invariant Labs: GitHub MCP exploited | https://invariantlabs.ai/blog/mcp-github-vulnerability | Invariant Labs. Third-party research, not a Microsoft or GitHub advisory. |
+| vscm | VS Code: manage MCP servers | https://code.visualstudio.com/docs/agents/run/manage-mcp-servers | Microsoft. Workspace Trust, autostart, sandbox. |
+| vspol | Centrally manage VS Code settings with policies | https://code.visualstudio.com/docs/enterprise/policies | Microsoft. ChatAllowedMcpServers, ChatDeniedMcpServers. |
+| vstel | VS Code: enterprise telemetry | https://code.visualstudio.com/docs/enterprise/telemetry | Microsoft. OpenTelemetry export from Copilot Chat. |
+| sphttp | MCP specification: transports (Streamable HTTP) | https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http | Model Context Protocol, version 2026-07-28. Origin validation, localhost binding. |
+| spsec | MCP security best practices (2026-07-28) | https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices | Model Context Protocol. SSRF, authorization URL validation. |
+| spver | MCP versioning | https://modelcontextprotocol.io/specification/versioning | Model Context Protocol. Current protocol version. |
+| owasp | OWASP MCP Top 10 | https://owasp.org/www-project-mcp-top-10/ | OWASP. Beta (phase 3). MCP01 to MCP10. |
+| mit | Mitiga: MCP token theft in Claude Code | https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm | Mitiga. Third-party research on Claude Code, not on a Microsoft product. |
+
+### Quotes
+
+Verdict VERIFIED 8 Nov 2026 means the quote was found in the source. Each quote is shown on the page in the place named in the last column.
+
+| Id | Source | Quote | Used in | Verdict |
+|---|---|---|---|---|
+| odr2 | odr | Some information relates to prereleased product that might change substantially before it's commercially released. | M04.body[1]; M08.body[2]; row[5] Windows on-device agent registry (prerelease); place[16] M04/local; place[30] M08/policy; callout[2] | VERIFIED 8 Nov 2026 |
+| odr3 | odr | MCP servers are contained in a separate environment by default and can only access approved resources, limiting vulnerability to threats like cross-prompt injection attacks | M04.body[1]; row[5] Windows on-device agent registry (prerelease); place[16] M04/local | VERIFIED 8 Nov 2026 |
+| odr4 | odr | users and IT admins can control access to MCP servers for each agent by using Windows Settings and management tools like Microsoft Intune | row[5] Windows on-device agent registry (prerelease) | VERIFIED 8 Nov 2026 |
+| odr5 | odr | users and administrators can log and audit interactions between MCP clients and servers | M08.body[2]; row[5] Windows on-device agent registry (prerelease); place[30] M08/policy | VERIFIED 8 Nov 2026 |
+| vs1 | vs | MCP server trust is available in Visual Studio 2026 version 18.7 and later. | M03.checks[1]; row[0] Visual Studio trust and tool reset; place[9] M03/cfgin; callout[3] | VERIFIED 8 Nov 2026 |
+| vs2 | vs | Visual Studio asks you to trust an MCP server again when the server changes since the last time you used it. | M03.body[0]; M05.body[1]; row[0] Visual Studio trust and tool reset; place[9] M03/cfgin | VERIFIED 8 Nov 2026 |
+| vs3 | vs | Server configuration details, such as transport type, URL, command, or arguments. | M03.body[0]; M05.body[1]; place[9] M03/cfgin; place[17] M05/cfgf | VERIFIED 8 Nov 2026 |
+| vs6 | vs | Visual Studio resets any prior acceptances or permissions on tools (to prevent rug-pull attacks), refetches the tool list, and updates the count and UI live. | M02.body[1]; row[0] Visual Studio trust and tool reset; place[7] M02/agent | VERIFIED 8 Nov 2026 |
+| vs7 | vs | When you invoke a tool, Copilot requests confirmation to run the tool. | M03.checks[2]; row[1] Visual Studio tool confirmation; place[13] M03/agent | VERIFIED 8 Nov 2026 |
+| vs8 | vs | You can automatically confirm the specific tool for the current session, the current solution, or all future invocations. | M03.checks[2]; M04.checks[1]; row[1] Visual Studio tool confirmation; place[13] M03/agent; place[15] M04/agent | VERIFIED 8 Nov 2026 |
+| vs9 | vs | Visual Studio also checks for MCP configurations that other development environments set up. | row[2] Visual Studio configuration discovery; place[1] M01/cfgin | VERIFIED 8 Nov 2026 |
+| vs10 | vs | MCP server usage in Visual Studio respects allow list policies set by organization administrators through GitHub. | M01.checks[1]; place[3] M01/policy | VERIFIED 8 Nov 2026 |
+| vs11 | vs | Visual Studio respects whatever command you specify, so you can pin versions or pass flags as needed. | M02.checks[0]; M02.how[0]; place[8] M02/policy | VERIFIED 8 Nov 2026 |
+| gh1 | ghal | You can define an allowlist and denylist to control which MCP servers users in your enterprise can run in Copilot clients and cloud sandboxes. | M01.body[0] | VERIFIED 8 Nov 2026 |
+| gh2 | ghal | don't apply to MCP servers defined in repository custom agent profiles. | M01.body[0]; M01.checks[0]; row[3] GitHub allowlist and registry (preview); place[3] M01/policy | VERIFIED 8 Nov 2026 |
+| gh3 | ghal | Because deny rules take precedence | M01.how[0] | VERIFIED 8 Nov 2026 |
+| gh4 | ghal | You can match by name, server URL, or specific commands. | M01.how[0] | VERIFIED 8 Nov 2026 |
+| gh5 | ghal | This blocks all servers except built-in default servers. | M01.how[1] | VERIFIED 8 Nov 2026 |
+| gh6 | ghreg | This feature is in public preview and is not the recommended method for restricting access to MCP servers. | M01.body[1]; row[3] GitHub allowlist and registry (preview); place[0] M01/src; callout[2] | VERIFIED 8 Nov 2026 |
+| gh7 | ghenf | Enforcement is based only on server name/ID matching, which can be bypassed by editing configuration files. | M01.body[1]; row[3] GitHub allowlist and registry (preview) | VERIFIED 8 Nov 2026 |
+| cs1 | csadd | Copilot Studio no longer supports SSE for MCP after August 2025. | row[4] Copilot Studio authentication, SSE and DLP | VERIFIED 8 Nov 2026 |
+| cs2 | csadd | Select this option if your MCP server requires the API key to be sent as a query parameter in the URL. | M05.body[2]; M05.checks[1]; row[4] Copilot Studio authentication, SSE and DLP; place[19] M05/tok | VERIFIED 8 Nov 2026 |
+| cs3 | csadd | You have three options: None API key: Configure API key authentication OAuth 2.0: Configure OAuth 2.0 authentication | M06.checks[2]; row[4] Copilot Studio authentication, SSE and DLP; place[22] M06/saas | VERIFIED 8 Nov 2026 |
+| cs4 | csdlp | Blocking Power Platform connectors also blocks access to tools in connected MCP servers, which rely on Power Platform connectors for connectivity. | row[4] Copilot Studio authentication, SSE and DLP | VERIFIED 8 Nov 2026 |
+| gsa1 | gsa | The MCP firewall is currently in preview. | M07.body[0]; row[6] Entra MCP firewall and logging (preview); place[28] M07/gw; callout[2] | VERIFIED 8 Nov 2026 |
+| gsa2 | gsa | network-based, identity-centric security control that provides centralized visibility, policy enforcement, and runtime protection for MCP traffic between AI agents and remote MCP servers. | M07.body[0] | VERIFIED 8 Nov 2026 |
+| gsa3 | gsa | Create allow-lists or deny-lists of MCP servers based on server URL patterns. | M07.body[0]; row[6] Entra MCP firewall and logging (preview); place[28] M07/gw | VERIFIED 8 Nov 2026 |
+| gsa5 | gsa | Without TLS inspection, Global Secure Access can't parse or enforce MCP policy. | M07.body[0]; row[6] Entra MCP firewall and logging (preview); place[28] M07/gw | VERIFIED 8 Nov 2026 |
+| gl1 | gsalog | MCP logging is currently in preview. | M08.body[1]; row[6] Entra MCP firewall and logging (preview); place[32] M08/gw; callout[2] | VERIFIED 8 Nov 2026 |
+| gl2 | gsalog | MCP Logging helps you discover shadow MCP servers in your organization | M08.body[1]; row[6] Entra MCP firewall and logging (preview); place[32] M08/gw | VERIFIED 8 Nov 2026 |
+| gl3 | gsalog | MCP Logging only captures traffic to remote MCP servers. Local MCP servers running on a device are not visible because their traffic doesn't have a network footprint that Global Secure Access can inspect. | M08.body[1]; M08.checks[1]; row[6] Entra MCP firewall and logging (preview); place[32] M08/gw | VERIFIED 8 Nov 2026 |
+| ap1 | apim | You can secure either or both inbound access to the MCP server (from an MCP client to API Management) and outbound access (from API Management to the MCP server). | M06.body[0]; row[7] Azure API Management; place[23] M06/gw | VERIFIED 8 Nov 2026 |
+| ap2 | apim | Use API Management's credential manager to securely inject OAuth 2.0 tokens for backend API requests that MCP server tools make. | M06.body[1]; row[7] Azure API Management; place[20] M06/tok | VERIFIED 8 Nov 2026 |
+| ap3 | apim | Request headers are automatically forwarded (with certain exclusions) to MCP tool invocations. | M06.body[1]; M06.checks[1]; row[7] Azure API Management; place[20] M06/tok | VERIFIED 8 Nov 2026 |
+| ap4 | apim | use the validate-azure-ad-token policy to validate Microsoft Entra ID tokens | M06.body[0]; M06.checks[0]; row[7] Azure API Management; place[23] M06/gw | VERIFIED 8 Nov 2026 |
+| gw1 | a365gw | Connect Azure AI Gateway or a LiteLLM gateway to Microsoft Agent 365 to discover and govern the Model Context Protocol (MCP) servers registered with the gateway. | row[8] Agent 365 gateway and BYO (preview) | VERIFIED 8 Nov 2026 |
+| gw2 | a365gw | You can block or allow an MCP server to manage its availability. | M01.checks[2]; row[8] Agent 365 gateway and BYO (preview); place[4] M01/gw | VERIFIED 8 Nov 2026 |
+| gw3 | a365gw | Important This feature is in preview. | M01.checks[2]; row[8] Agent 365 gateway and BYO (preview); place[4] M01/gw; callout[2] | VERIFIED 8 Nov 2026 |
+| by1 | a365byo | Important This feature is in preview. | M08.body[0]; place[31] M08/tele; callout[2] | VERIFIED 8 Nov 2026 |
+| by2 | a365byo | The security team monitors activity and tool invocations through Microsoft Defender advanced hunting | M08.body[0]; row[8] Agent 365 gateway and BYO (preview); place[31] M08/tele | VERIFIED 8 Nov 2026 |
+| by3 | a365byo | Supported client surfaces during preview are Copilot Studio, Visual Studio Code, Claude Code, and GitHub Copilot CLI. | row[8] Agent 365 gateway and BYO (preview) | VERIFIED 8 Nov 2026 |
+| az1 | azmcp | Don't use a local Azure MCP Server to handle production data or production credentials. | M02.body[0]; row[9] Azure MCP Server security and CVEs; place[6] M02/local | VERIFIED 8 Nov 2026 |
+| az2 | azmcp | Because it can act with your Azure identity, review what your signed-in account can access before you connect an agent to Azure resources | M03.body[1]; place[12] M03/files | VERIFIED 8 Nov 2026 |
+| az3 | azmcp | Review and pin known-good tool schemas and descriptions, and require re-approval before updated tool metadata takes effect | M02.body[1]; M02.checks[1] | VERIFIED 8 Nov 2026 |
+| az4 | azmcp | Prefer the official Microsoft-maintained Azure MCP Server. | M02.body[0]; row[9] Azure MCP Server security and CVEs; place[8] M02/policy | VERIFIED 8 Nov 2026 |
+| c1a | cve26118 | Server-side request forgery (ssrf) in Azure MCP Server allows an authorized attacker to elevate privileges over a network. | M07.body[1]; M07.checks[1]; row[9] Azure MCP Server security and CVEs; place[27] M07/mcpr | VERIFIED 8 Nov 2026 |
+| c1b | cve26118 | "baseScore":8.8 | M07.body[1]; place[27] M07/mcpr | VERIFIED 8 Nov 2026 |
+| c2a | cve32211 | Missing authentication for critical function in Azure MCP Server allows an unauthorized attacker to disclose information over a network. | M06.body[2]; row[9] Azure MCP Server security and CVEs; place[21] M06/mcpr | VERIFIED 8 Nov 2026 |
+| c2b | cve32211 | "baseScore":9.1 | M06.body[2]; place[21] M06/mcpr | VERIFIED 8 Nov 2026 |
+| c2c | cve32211 | "product":"Azure Web Apps" | M06.body[2]; place[21] M06/mcpr | VERIFIED 8 Nov 2026 |
+| c2d | cve32211 | "tags":["exclusively-hosted-service"] | M06.body[2]; place[21] M06/mcpr | VERIFIED 8 Nov 2026 |
+| inv1 | inv | The vulnerability allows an attacker to hijack a user's agent via a malicious GitHub Issue, and coerce it into leaking data from private repositories. | M04.body[0]; M04.checks[0]; place[14] M04/content | VERIFIED 8 Nov 2026 |
+| vc1 | vscm | Restricted mode prevents these servers from starting. | M03.checks[0] | VERIFIED 8 Nov 2026 |
+| vc2 | vscm | In a trusted workspace, they can start without a separate MCP trust prompt, including after configuration changes. | M03.body[0]; M05.body[1]; M05.checks[0]; place[2] M01/agent; place[10] M03/cfgf; place[17] M05/cfgf | VERIFIED 8 Nov 2026 |
+| vc3 | vscm | newAndOutdated (default): Start servers that have never run or whose configuration has changed. | M05.body[1]; place[18] M05/agent | VERIFIED 8 Nov 2026 |
+| vc4 | vscm | On macOS and Linux, per-server sandboxing restricts file system and network access for stdio MCP servers. | M03.body[1]; place[11] M03/local | VERIFIED 8 Nov 2026 |
+| vc5 | vscm | This mechanism isn't available on Windows. | M03.body[1]; place[11] M03/local | VERIFIED 8 Nov 2026 |
+| vp1 | vspol | Servers matching any entry are blocked from being installed or run, even if they also match the allow list; deny rules always take precedence. | M01.how[2] | VERIFIED 8 Nov 2026 |
+| vt1 | vstel | Copilot Chat in VS Code can export traces, metrics, and events via OpenTelemetry (OTel) to give you real-time visibility into agent interactions, LLM calls, tool execution, and token usage. | M08.body[0]; M08.checks[0]; place[31] M08/tele | VERIFIED 8 Nov 2026 |
+| sp1 | sphttp | Servers MUST validate the Origin header on all incoming connections to prevent DNS rebinding attacks. | M07.checks[0]; place[24] M07/lhttp | VERIFIED 8 Nov 2026 |
+| sp2 | sphttp | servers SHOULD bind only to localhost (127.0.0.1) rather than all network interfaces (0.0.0.0). | M07.checks[0]; place[24] M07/lhttp | VERIFIED 8 Nov 2026 |
+| sp3 | spsec | URLs targeting http://169.254.169.254/ (AWS/GCP/Azure metadata service) can exfiltrate cloud credentials and instance information | place[25] M07/egress | VERIFIED 8 Nov 2026 |
+| sp4 | spsec | OAuth authorization URLs provided by malicious MCP servers can exploit client-side URL handling vulnerabilities, leading to Cross-Site Scripting (XSS) attacks and Remote Code Execution (RCE). | place[26] M07/agent | VERIFIED 8 Nov 2026 |
+| sp5 | spver | The current protocol version is 2026-07-28 | callout[1] | VERIFIED 8 Nov 2026 |
+| ow1 | owasp | MCP04:2025 - Software Supply Chain Attacks & Dependency Tampering | place[5] M02/pkg | VERIFIED 8 Nov 2026 |
+| ow2 | owasp | MCP03:2025 - Tool Poisoning | place[7] M02/agent | VERIFIED 8 Nov 2026 |
+| ow3 | owasp | MCP10:2025 - Context Injection & Over-Sharing | place[29] M08/agent | VERIFIED 8 Nov 2026 |
+| ow5 | owasp | We are here right now - release a "beta" version of MCP Top 10. | callout[0] | VERIFIED 8 Nov 2026 |
+| mi1 | mit | MCP Token Theft in Claude Code: A Man-in-the-Middle Attack Chain | M05.body[0]; callout[4] | VERIFIED 8 Nov 2026 |
+
+### Statements tagged as inference
+
+Statements without a quote carry an [inference] or [unverified] tag on the page. The check script fails if an untagged sentence has no quote id. No such statement is a source claim.
+
+### Reviewed presentation text (Microsoft view)
+
+Text with no evidence list holds requirements, labels and code tokens only. Each row is `verdict`, a tab, then the exact text. The script fails when a text is missing from this list, when a text here no longer appears on the page, or when fact-style wording appears. A pass proves a verdict was recorded for the exact wording, not that the verdict is right.
+
+<!-- Begin reviewed presentation text (Microsoft view) -->
+```text
+label	MCP Risk Map
+label	Risk map · MCP servers and AI agents · Microsoft ecosystem
+requirement	Where the main risks sit when developers connect AI agents to MCP servers through Microsoft products: VS Code, Visual Studio, GitHub Copilot, Copilot Studio, Windows, Azure and Microsoft Entra. Third-party servers used inside these clients still apply. The detail is kept low on purpose. Exceptions exist.
+label	Vendor sources Microsoft Learn, VS Code, GitHub Docs, MCP specification, CVE records, Invariant Labs
+label	Facts checked 8 Nov 2026 (VS Code tab: 5 Nov 2026)
+label	View
+label	General
+label	Microsoft ecosystem
+label	3 · VS Code and Microsoft
+requirement	Two Azure MCP Server CVE records (vendor advisories, not observed victims) and one third-party demonstration (Invariant Labs, GitHub MCP server) are cited. The other risks rest on OWASP categories, specification warnings or Microsoft documentation. Preview status: see Current as of.
+requirement	Servers, packages, config and content (1) reach the workstation (2), where this example places the Microsoft clients, local servers and client credentials. Traffic leaves through the egress boundary (3). The gateway or firewall box is a control point only where traffic is forced through it. Governance and monitoring (4) covers every layer.
+label	Current as of 8 November 2026
+label	Other Microsoft surfaces
+requirement	What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 8 November 2026. Nothing here was tested.
+label	Opened on 8 November 2026. The VS Code pages used only for the VS Code tab rows were opened on 5 November 2026. The Developer-WS page sits on this site.
+label	Gallery, GitHub, registries
+label	VS Code, Visual Studio, Copilot
+code token	mcp.json, .mcp.json
+label	Code, .env, Azure login
+label	SaaS and Azure APIs
+label	Device and org policy
+label	Intune, GitHub managed settings
+label	OpenTelemetry, Defender, SIEM
+label	MCP gateway or firewall
+label	APIM, Agent 365, Entra GSA
+label	MCP gateway
+requirement	Set an enterprise allowlist and denylist in GitHub managed-settings.json, and review which repository custom agent profiles exist
+label	Moderate
+requirement	Pin package versions in each server command, and review tool changes before approving them again
+label	Low
+requirement	Open unfamiliar repositories in Restricted mode and keep Workspace Trust on
+requirement	Use separate sessions for untrusted reading, without tools that can write or send
+requirement	Review changes to mcp.json and .mcp.json like code changes
+requirement	Prefer OAuth 2.0 over API keys when a server offers it, and keep tokens out of mcp.json. Add API Management only for remote servers you host yourself
+requirement	Bind local HTTP servers to 127.0.0.1 and check the Origin header. Allow remote servers only from the approved list in M01
+requirement	Export OpenTelemetry from VS Code to your existing log system, and keep a list of approved servers
+label	MCP on Windows: Windows On-device Agent Registry
+label	Microsoft Learn. Prerelease. Separate environment, Intune control, logging.
+label	Visual Studio: use MCP servers
+label	Microsoft Learn. Server trust (18.7 or later), tool confirmation, tool-list reset, allow list policies.
+label	GitHub: configure an enterprise MCP allowlist
+label	GitHub Docs. managed-settings.json, allowedMcpServers, deniedMcpServers.
+label	GitHub: configure an MCP registry
+label	GitHub Docs. Public preview; not the recommended method.
+label	GitHub: MCP private registry enforcement
+label	GitHub Docs. Name and ID matching; bypass by editing configuration files.
+label	Copilot Studio: add an existing MCP server
+label	Microsoft Learn. Authentication options, API key in header or query, SSE.
+label	Copilot Studio: data loss prevention
+label	Microsoft Learn. Connector blocking and MCP tools.
+label	Entra Global Secure Access: MCP firewall
+label	Microsoft Learn. Preview. Server URL patterns, TLS inspection.
+label	Entra Global Secure Access: MCP logging
+label	Microsoft Learn. Preview. Shadow MCP discovery; remote servers only.
+label	Azure API Management: secure MCP servers
+label	Microsoft Learn. Inbound and outbound access, credential manager, header forwarding.
+label	Agent 365: tools gateway
+label	Microsoft Learn. Preview. Block or allow a server, LiteLLM gateway.
+label	Agent 365: bring your own MCP server
+label	Microsoft Learn. Preview. Defender advanced hunting; supported client surfaces.
+label	Azure MCP Server: security
+label	Microsoft Learn. Production data, Azure identity, change control, official server.
+label	CVE-2026-26118 (Azure MCP Server)
+label	CVE record published by Microsoft. A vendor advisory, not an observed incident.
+label	CVE-2026-32211 (Azure MCP Server)
+label	Invariant Labs: GitHub MCP exploited
+label	Invariant Labs. Third-party research, not a Microsoft or GitHub advisory.
+label	VS Code: manage MCP servers
+label	Microsoft. Workspace Trust, autostart, sandbox.
+label	Centrally manage VS Code settings with policies
+label	Microsoft. ChatAllowedMcpServers, ChatDeniedMcpServers.
+label	VS Code: enterprise telemetry
+label	Microsoft. OpenTelemetry export from Copilot Chat.
+label	MCP specification: transports (Streamable HTTP)
+label	Model Context Protocol, version 2026-07-28. Origin validation, localhost binding.
+label	MCP security best practices (2026-07-28)
+label	Model Context Protocol. SSRF, authorization URL validation.
+label	MCP versioning
+label	Model Context Protocol. Current protocol version.
+label	OWASP MCP Top 10
+label	OWASP. Beta (phase 3). MCP01 to MCP10.
+label	Mitiga: MCP token theft in Claude Code
+label	Mitiga. Third-party research on Claude Code, not on a Microsoft product.
+label	Also check
+label	Check
+label	Checked against sources
+label	My judgement
+label	Still open
+label	Each Microsoft statement in this view has an exact quote and a link that opens the source at that passage. The quotes were compared with the fetched page text on 8 November 2026.
+label	Microsoft Learn: Windows on-device agent registry, Visual Studio MCP servers, Copilot Studio, Entra Global Secure Access, Azure API Management, Agent 365, Azure MCP Server security.
+label	GitHub Docs: enterprise allowlist, MCP registry and registry enforcement. VS Code docs: manage MCP servers, policies, telemetry.
+label	VS Code tab rows: checked on 5 November 2026, shared by both views.
+label	CVE records CVE-2026-26118 and CVE-2026-32211, as published by Microsoft. Invariant Labs, a third-party demonstration against the GitHub MCP server.
+label	MCP specification 2026-07-28 (Origin validation, localhost binding, SSRF, authorization URLs) and the OWASP MCP Top 10 names.
+label	The same eight risks as the general view, and the order. Which Microsoft surface sits on which part of the map.
+label	Statements tagged [inference], and the friction estimates in the start table.
+label	Which Microsoft facts are shown, and the risk each is tied to.
+requirement	Nothing was tested on a real system. No setting or command was run on a managed machine.
+requirement	Preview and prerelease status: see Current as of. It can change.
+requirement	CVE records: vendor advisories only. No observed victim incident was verified.
+requirement	Mitiga: no demonstration against a Microsoft product was found. Not observed.
+requirement	Third-party servers used inside Microsoft clients: covered by the general risks, not by Microsoft sources.
+requirement	Local servers and the Entra items: see the quoted scope under M07. Endpoint tooling was not researched.
+requirement	None of them needs a preview feature.
+```
+<!-- End reviewed presentation text (Microsoft view) -->

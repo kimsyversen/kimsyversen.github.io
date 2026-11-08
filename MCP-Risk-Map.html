@@ -263,26 +263,43 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 #more{scroll-margin-top:64px}
 .mx-btn{display:flex;gap:8px;align-items:baseline;text-align:left;font:600 0.85rem/1.35 var(--body);color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
 .mx-btn:hover .nm{text-decoration:underline;text-underline-offset:2px}
+.scope{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+html[data-scope="ms"] .sc-g{display:none!important}
+html:not([data-scope="ms"]) .sc-m{display:none!important}
+.msx{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.msx p,.msx ul{margin:0}
+.msx-i{display:grid;gap:4px}
+.qs{font-size:0.82rem}
+.qs summary{cursor:pointer;color:var(--muted)}
+.qs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qt{margin:6px 0 0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.82rem;color:var(--muted)}
+.qt q{quotes:"\201C" "\201D";font-style:italic;color:var(--ink)}
+.tbl td .qs{margin-top:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
   <header class="top">
-    <p class="eyebrow">Risk map · MCP servers and AI agents</p>
+    <p class="eyebrow sc-g">Risk map · MCP servers and AI agents</p>
+    <p class="eyebrow sc-m">Risk map · MCP servers and AI agents · Microsoft ecosystem</p>
     <h1>MCP risk map</h1>
-    <p class="lead">Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start. The detail is kept low on purpose. Exceptions exist.</p>
+    <p class="lead sc-g">Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start. The detail is kept low on purpose. Exceptions exist.</p>
+    <p class="lead sc-m">Where the main risks sit when developers connect AI agents to MCP servers through Microsoft products: VS Code, Visual Studio, GitHub Copilot, Copilot Studio, Windows, Azure and Microsoft Entra. Third-party servers used inside these clients still apply. The detail is kept low on purpose. Exceptions exist.</p>
     <div class="meta">
       <span><b>Frameworks</b> OWASP MCP Top 10 (beta)</span>
-      <span><b>Vendor sources</b> MCP specification, Claude Code, OpenAI Codex, VS Code, Mitiga</span>
-      <span><b>Facts checked</b> 5 Nov 2026</span>
+      <span class="sc-g"><b>Vendor sources</b> MCP specification, Claude Code, OpenAI Codex, VS Code, Mitiga</span>
+      <span class="sc-g"><b>Facts checked</b> 5 Nov 2026</span>
+      <span class="sc-m"><b>Vendor sources</b> Microsoft Learn, VS Code, GitHub Docs, MCP specification, CVE records, Invariant Labs</span>
+      <span class="sc-m"><b>Facts checked</b> 8 Nov 2026 (VS Code tab: 5 Nov 2026)</span>
       <span><b>Wider page</b> <a href="Developer-WS.html">Developer workstation risk map</a></span>
     </div>
+    <div class="scope" role="group" aria-label="View of the risk map"><span class="chip-lbl">View</span><button type="button" class="chip" data-scope="g" aria-pressed="true">General</button><button type="button" class="chip" data-scope="ms" aria-pressed="false">Microsoft ecosystem</button></div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Parts of the risk map">
     <button type="button" role="tab" id="t-map" data-tab="map" aria-controls="p-map" aria-selected="true">1 · Risk map</button>
     <button type="button" role="tab" id="t-risks" data-tab="risks" aria-controls="p-risks" aria-selected="false" tabindex="-1">2 · Risks</button>
-    <button type="button" role="tab" id="t-vscode" data-tab="vscode" aria-controls="p-vscode" aria-selected="false" tabindex="-1">3 · VS Code</button>
+    <button type="button" role="tab" id="t-vscode" data-tab="vscode" aria-controls="p-vscode" aria-selected="false" tabindex="-1"><span class="sc-g">3 · VS Code</span><span class="sc-m">3 · VS Code and Microsoft</span></button>
     <button type="button" role="tab" id="t-evidence" data-tab="evidence" aria-controls="p-evidence" aria-selected="false" tabindex="-1">4 · Evidence</button>
     <button type="button" role="tab" id="t-sources" data-tab="sources" aria-controls="p-sources" aria-selected="false" tabindex="-1">Sources</button>
   </nav>
@@ -302,7 +319,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       <ol class="short">
         <li><span>An MCP server can offer tools. An unrestricted local server can act with the launching account's privileges. A remote server receives the data sent to it; authentication and token storage depend on the deployment.</span></li>
         <li><span>The main questions are: which servers are allowed, what can each one reach, and who would notice if one changed? <span class="tag">[inference]</span></span></li>
-        <li><span>Only one MCP-specific research demonstration is cited here (Mitiga, May 2026). The other risks come from OWASP categories or specification warnings, and no incident is cited for them.</span></li>
+        <li class="sc-g"><span>Only one MCP-specific research demonstration is cited here (Mitiga, May 2026). The other risks come from OWASP categories or specification warnings, and no incident is cited for them.</span></li>
+        <li class="sc-m"><span>Two Azure MCP Server CVE records (vendor advisories, not observed victims) and one third-party demonstration (Invariant Labs, GitHub MCP server) are cited. The other risks rest on OWASP categories, specification warnings or Microsoft documentation. Preview status: see Current as of.</span></li>
       </ol>
     </section>
     <section>
@@ -334,7 +352,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
       </div>
       <figcaption id="dgCap">
-        <span class="cap">Servers, packages, config and content (1) reach the workstation (2), where this example places the agent, local servers and client credentials. Traffic leaves through the egress boundary (3), a control point only where traffic is forced through a proxy or gateway. Governance and monitoring (4) covers every layer.</span>
+        <span class="cap sc-g">Servers, packages, config and content (1) reach the workstation (2), where this example places the agent, local servers and client credentials. Traffic leaves through the egress boundary (3), a control point only where traffic is forced through a proxy or gateway. Governance and monitoring (4) covers every layer.</span>
+        <span class="cap sc-m">Servers, packages, config and content (1) reach the workstation (2), where this example places the Microsoft clients, local servers and client credentials. Traffic leaves through the egress boundary (3). The gateway or firewall box is a control point only where traffic is forced through it. Governance and monitoring (4) covers every layer.</span>
         <span class="cap">Arrows show selected paths, not every data flow. Select a marker or a box to see its risks.</span>
         <span class="legend">
           <span><i class="lg-mk">M01</i>Not assessed</span>
@@ -374,8 +393,10 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </section>
 
     <aside class="callout" id="current">
-      <h3>Current as of 5 November 2026</h3>
-      <ul id="currentList">
+      <h3 class="sc-g">Current as of 5 November 2026</h3>
+      <h3 class="sc-m">Current as of 8 November 2026</h3>
+      <ul id="currentListM" class="sc-m"></ul>
+      <ul id="currentList" class="sc-g">
         <li><b>OWASP MCP Top 10:</b> in beta (phase 3). IDs and names can change.</li>
         <li><b>Specification versions:</b> the Origin, localhost and security rules were checked against version 2026-07-28, the current one on 5 November 2026. They can change.</li>
         <li><b>Claude Code:</b> the <code>managedMcpServers</code> setting needs version 2.1.259 or later.</li>
@@ -385,7 +406,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
     <section>
       <h3>Where to start</h3>
-      <p class="sub">One suggested first control per risk. These are recommendations, and the friction is my estimate. <span class="tag">[inference]</span></p>
+      <p class="sub">One suggested first control per risk. These are recommendations, and the friction is my estimate. <span class="tag">[inference]</span><span class="sc-m"> None of them needs a preview feature.</span></p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
           <colgroup><col class="c-id"><col><col class="c-fr"></colgroup>
@@ -423,18 +444,19 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       <article class="risk" data-id="M01" data-title="Unapproved MCP servers">
         <div class="risk-head"><span class="rid">M01</span><div><h3>Unapproved MCP servers</h3><p class="en">OWASP MCP09 Shadow MCP Servers</p></div></div>
         <p><b>In plain words:</b> Without enforced restrictions, users can configure unapproved servers. An allowlist limits which servers can load within its documented scope.</p>
-        <p>By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it.</p>
+        <p class="sc-g">By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Is there an approved list of servers, and is it enforced?</li>
           <li>Does the list cover both remote servers and local ones?</li>
-          <li>Is a server's name used as the control? Anthropic says the name is not a security control.</li>
+          <li class="sc-g">Is a server's name used as the control? Anthropic says the name is not a security control.</li>
         </ul>
-        <details><summary>How to set it</summary>
+        <details class="sc-g"><summary>How to set it</summary>
           <p class="note"><b>Claude Code:</b> use managed <code>allowedMcpServers</code> with <code>allowManagedMcpServersOnly: true</code>. For servers subject to the allowlist, URL entries require remote URL matches, and command entries require stdio command matches. Matching deny rules take precedence.</p>
           <p class="note"><code>managed-mcp.json</code> restricts user-added servers, but an empty <code>mcpServers</code> does not disable every server: managed-settings servers, in-process SDK servers and explicitly permitted connectors or built-ins can still load. SDK servers skip these checks; some managed and built-in servers skip the allowlist. Review the vendor's exceptions for your session type.</p>
           <p class="note"><b>Codex:</b> configure server identities under <code>[mcp_servers.&lt;name&gt;]</code> in managed <code>requirements.toml</code>. <b>VS Code:</b> use <code>ChatAllowedMcpServers</code>; review the selected harness and policy coverage.</p>
         </details>
+        <div class="msx sc-m" data-ms="M01"></div>
         <p class="finding"><span class="lbl">Typical findings</span>Unrestricted server configuration, required servers missing from the allowlist, user-assigned names used as identity checks. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M01"></div>
       </article>
@@ -448,7 +470,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
           <li>Are local servers allowed by exact command rather than by name?</li>
           <li>Who wrote each approved server, and how does it update? <span class="tag">[inference]</span></li>
         </ul>
-        <details><summary>How to set it</summary><p class="note"><b>Claude Code</b> matches <code>serverCommand</code> exactly but does not compare the <code>env</code> block. Matching a command does not verify the contents of its package or executable. <span class="tag">[inference]</span></p><p class="note"><b>Codex:</b> the string form of <code>command</code> does not check <code>args</code>, <code>cwd</code> or <code>env</code>; the structured form checks the executable, argument count, order and matching rules. It still ignores <code>cwd</code>, <code>env</code> and <code>env_vars</code>.</p></details>
+        <details class="sc-g"><summary>How to set it</summary><p class="note"><b>Claude Code</b> matches <code>serverCommand</code> exactly but does not compare the <code>env</code> block. Matching a command does not verify the contents of its package or executable. <span class="tag">[inference]</span></p><p class="note"><b>Codex:</b> the string form of <code>command</code> does not check <code>args</code>, <code>cwd</code> or <code>env</code>; the structured form checks the executable, argument count, order and matching rules. It still ignores <code>cwd</code>, <code>env</code> and <code>env_vars</code>.</p></details>
+        <div class="msx sc-m" data-ms="M02"></div>
         <p class="finding"><span class="lbl">Typical findings</span>Servers installed from any package, no review of updates. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M02"></div>
       </article>
@@ -464,6 +487,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
           <li>Is stdio used where possible? The specification says server authors should use stdio, or restrict HTTP with an auth token or unix sockets.</li>
         </ul>
         
+        <div class="msx sc-m" data-ms="M03"></div>
         <p class="finding"><span class="lbl">Typical findings</span>One-click setup that hides the command, servers started with no sandbox. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M03"></div>
       </article>
@@ -479,6 +503,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
           <li>Does a person approve tool calls that change something? <span class="tag">[inference]</span></li>
         </ul>
         
+        <div class="msx sc-m" data-ms="M04"></div>
         <p class="finding"><span class="lbl">Typical findings</span>One agent holding both a reader of outside text and a server that can send or change things. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M04"></div>
       </article>
@@ -486,14 +511,15 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       <article class="risk" data-id="M05" data-title="MCP tokens stolen or redirected">
         <div class="risk-head"><span class="rid">M05</span><div><h3>MCP tokens stolen or redirected</h3><p class="en">OWASP MCP01 Token Mismanagement and Secret Exposure</p></div></div>
         <p><b>In plain words:</b> A bearer token grants access to a service. An attacker who can intercept it may be able to reuse it.</p>
-        <p>Mitiga (May 2026) showed an npm postinstall hook that edits <code>~/.claude.json</code> and points an MCP server URL at an attacker's localhost proxy. Mitiga shows interception and reuse of an OAuth bearer token with Atlassian. Its article discusses refresh-token persistence but does not separately demonstrate capture of a refresh token.</p><p>The chain requires local code execution through the npm installation. Mitiga describes a project SessionStart hook that restores the malicious endpoint; remediation must remove that persistence as well as repair the configuration and rotate credentials.</p>
-        <div><span class="lbl">Check</span></div>
-        <ul class="checks">
+        <p class="sc-g">Mitiga (May 2026) showed an npm postinstall hook that edits <code>~/.claude.json</code> and points an MCP server URL at an attacker's localhost proxy. Mitiga shows interception and reuse of an OAuth bearer token with Atlassian. Its article discusses refresh-token persistence but does not separately demonstrate capture of a refresh token.</p><p class="sc-g">The chain requires local code execution through the npm installation. Mitiga describes a project SessionStart hook that restores the malicious endpoint; remediation must remove that persistence as well as repair the configuration and rotate credentials.</p>
+        <div class="sc-g"><span class="lbl">Check</span></div>
+        <ul class="checks sc-g">
           <li>Do you watch <code>~/.claude.json</code> and project MCP files for changed server URLs? Mitiga recommends this.</li>
           <li>Is there a baseline of approved MCP endpoints, with an alert on new local proxies? Mitiga recommends this too.</li>
           <li>After a suspected case, is the config fixed as well as the tokens rotated? Mitiga says rotating tokens alone is not enough.</li>
         </ul>
         
+        <div class="msx sc-m" data-ms="M05"></div>
         <p class="finding"><span class="lbl">Typical findings</span>No watch on MCP config files, overly long-lived credentials. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M05"></div>
       </article>
@@ -509,6 +535,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
           <li>Proxy servers with a static client ID: per-client consent, exact <code>redirect_uri</code> match and single-use OAuth <code>state</code>.</li>
         </ul>
         
+        <div class="msx sc-m" data-ms="M06"></div>
         <p class="finding"><span class="lbl">Typical findings</span>Broad personal tokens in MCP config, servers that forward whatever token they receive. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M06"></div>
       </article>
@@ -524,6 +551,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
           <li>Does the client require HTTPS authorization URLs, allow HTTP only for loopback during local development, reject dangerous schemes such as <code>javascript:</code>, and avoid shell execution when opening URLs? The guidance requires these protections.</li>
         </ul>
         
+        <div class="msx sc-m" data-ms="M07"></div>
         <p class="finding"><span class="lbl">Typical findings</span>A server left running on localhost with no token, bound to all interfaces. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M07"></div>
       </article>
@@ -535,10 +563,11 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Is there a list of servers in use, who runs them and what data each receives? <span class="tag">[inference]</span></li>
-          <li>Can you see MCP use? Claude Code usage can be monitored with OpenTelemetry; <code>OTEL_LOG_TOOL_DETAILS=1</code> is the variable the docs name for tool details.</li>
+          <li class="sc-g">Can you see MCP use? Claude Code usage can be monitored with OpenTelemetry; <code>OTEL_LOG_TOOL_DETAILS=1</code> is the variable the docs name for tool details.</li>
           <li>Has someone decided what may be sent to remote servers? <span class="tag">[inference]</span></li>
         </ul>
         
+        <div class="msx sc-m" data-ms="M08"></div>
         <p class="finding"><span class="lbl">Typical findings</span>No inventory, no usage logs, remote servers receiving whole files. <span class="tag">[inference]</span></p>
         <div class="seg" data-id="M08"></div>
       </article>
@@ -586,6 +615,17 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </table>
       </div>
     </section>
+    <section class="sc-m">
+      <h3>Other Microsoft surfaces</h3>
+      <p class="sub">What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 8 November 2026. Nothing here was tested.</p>
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Other Microsoft surfaces table">
+        <table class="tbl vs">
+          <colgroup><col style="width:11rem"><col><col style="width:6rem"></colgroup>
+          <thead><tr><th scope="col">Topic</th><th scope="col">What the source says</th><th scope="col">Risk</th></tr></thead>
+          <tbody id="msRows"></tbody>
+        </table>
+      </div>
+    </section>
     <section>
       <h3>Limits</h3>
       <p class="sub">VS Code has more than one kind of agent session (local and Copilot harness), and the settings do not always reach both. The rows say where the docs name a difference. Settings and policy names come from the docs; none was run on a managed machine.</p>
@@ -605,7 +645,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
     <section>
       <h2>Sources</h2>
-      <p class="sub">All opened on 5 November 2026, except the Developer-WS page, which is on this site.</p>
+      <p class="sub sc-g">All opened on 5 November 2026, except the Developer-WS page, which is on this site.</p>
+      <p class="sub sc-m">Opened on 8 November 2026. The VS Code pages used only for the VS Code tab rows were opened on 5 November 2026. The Developer-WS page sits on this site.</p>
       <ol class="sources" id="sourceList"></ol>
     </section>
   </div>
@@ -639,6 +680,18 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     return td;
   }
 
+  /* Scope: general or Microsoft ecosystem */
+  function parseHash(){
+    var parts = (location.hash || '').replace('#', '').split('&'), o = { tab: parts[0], s: null };
+    for (var i = 1; i < parts.length; i++) if (parts[i].indexOf('s=') === 0) o.s = parts[i].slice(2);
+    return o;
+  }
+  var h0 = parseHash();
+  var scope = (h0.s === 'ms' || h0.s === 'g') ? h0.s : (store.get('mcp-scope', 'g') === 'ms' ? 'ms' : 'g');
+  var curTab = 'map';
+  function statusKey(){ return scope === 'ms' ? 'mcp-status-ms' : 'mcp-status'; }
+  function writeHash(){ try { history.replaceState(null, '', '#' + curTab + '&s=' + scope); } catch(e){} }
+
   /* Tabs */
   var tabs = $$('[role="tab"]');
   var ids = tabs.map(function(t){ return t.getAttribute('data-tab'); });
@@ -655,7 +708,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       }
     });
     ids.forEach(function(x){ var p = document.getElementById('p-' + x); if (p) p.hidden = (x !== id); });
-    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    curTab = id; writeHash();
     store.set('mcp-tab', id);
   }
   tabs.forEach(function(t, i){
@@ -668,10 +721,14 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     });
   });
   function toMore(){ show('map'); var m = document.getElementById('more'); if (m) setTimeout(function(){ m.scrollIntoView({ block: 'start' }); }, 0); }
-  var start = (location.hash || '').replace('#', '');
+  var start = h0.tab;
   if (start === 'more') toMore();
   else show(ids.indexOf(start) >= 0 ? start : store.get('mcp-tab', 'map'));
-  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (h === 'more') toMore(); else if (ids.indexOf(h) >= 0) show(h); });
+  window.addEventListener('hashchange', function(){
+    var h = parseHash();
+    if ((h.s === 'ms' || h.s === 'g') && h.s !== scope) applyScope(h.s, false);
+    if (h.tab === 'more') toMore(); else if (ids.indexOf(h.tab) >= 0) show(h.tab);
+  });
 
   /* Copy */
   function selectNode(node){
@@ -700,7 +757,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   /* Status */
   var OPTS = [['ok','OK'],['part','Partial'],['miss','Missing'],['unk','Unknown']];
   var LABEL = { ok:'OK', part:'Partial', miss:'Missing', unk:'Unknown' };
-  var status = store.get('mcp-status', {});
+  var status = store.get(statusKey(), {});
   var segs = $$('.seg');
   segs.forEach(function(seg){
     var id = seg.getAttribute('data-id');
@@ -714,7 +771,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       if (status[id] === o[0]) inp.checked = true;
       var l = document.createElement('label');
       l.htmlFor = inp.id; l.className = 'pill v-' + o[0]; l.textContent = o[1];
-      inp.addEventListener('change', function(){ status[id] = o[0]; store.set('mcp-status', status); tally(); });
+      inp.addEventListener('change', function(){ status[id] = o[0]; store.set(statusKey(), status); tally(); });
       seg.appendChild(inp); seg.appendChild(l);
     });
   });
@@ -733,7 +790,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
   function summary(){
     var d = new Date();
-    var lines = ['MCP risk map, status ' + d.toLocaleDateString('en-GB'), ''];
+    var lines = ['MCP risk map (' + (scope === 'ms' ? 'Microsoft ecosystem' : 'General') + '), status ' + d.toLocaleDateString('en-GB'), ''];
     segs.forEach(function(s){
       var id = s.getAttribute('data-id');
       var art = s.closest('.risk');
@@ -751,7 +808,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   $('#resetBtn').addEventListener('click', function(){ $('#resetConfirm').hidden = false; $('#resetBtn').hidden = true; });
   $('#resetNo').addEventListener('click', function(){ $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false; });
   $('#resetYes').addEventListener('click', function(){
-    status = {}; store.set('mcp-status', status);
+    status = {}; store.set(statusKey(), status);
     $$('.seg input').forEach(function(i){ i.checked = false; });
     tally();
     $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false;
@@ -764,6 +821,90 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   var EVIDENCE = [{"h": "Checked against sources", "i": ["OWASP MCP Top 10 names and IDs (MCP01 to MCP10), read 5 November 2026. The project is in beta (phase 3).", "MCP specification 2026-07-28 (the current version), Streamable HTTP: Origin validation, localhost binding, authentication.", "MCP security best practices (2026-07-28): confused deputy, token passthrough, SSRF, local server compromise, authorization URL validation, scope minimisation.", "Mitiga research, published 5 May 2026, updated 30 October 2026: endpoint rewriting, bearer-token interception and reuse, prerequisite local code execution, and the vendor response as reported by Mitiga.", "Claude Code managed MCP page: managed-mcp.json, allowedMcpServers and deniedMcpServers, allowManagedMcpServersOnly, URL and command matching, OpenTelemetry.", "Codex managed configuration: mcp_servers allowlist and string versus structured command matching; neither form verifies cwd or environment variables.", "VS Code docs (agent customization, manage MCP servers, MCP configuration reference, AI security, policies, telemetry): the rows on the VS Code tab."]}, {"h": "My judgement", "i": ["The choice of eight risks, their order and the OWASP mapping.", "Where each risk sits on the map.", "Statements tagged [inference] (advice questions, not facts), and the friction estimates.", "Which VS Code facts are shown, and the risk each is tied to."]}, {"h": "Still open", "i": ["The specification can change. This page was checked against version 2026-07-28, the current one on 5 November 2026.", "Only one MCP-specific research demonstration (Mitiga) is cited. For the other risks no incident was verified. That does not mean none exists.", "Mitiga reports that Anthropic told it the issue was out of scope and by design. Mitiga disagrees. This page does not take a side.", "Product policy coverage depends on the harness and configuration source. Editor controls do not necessarily cover independently discovered Copilot servers.", "No setting or command on this page was run on a managed machine.", "VS Code has local and Copilot harness sessions. Settings do not always reach both.", "Documentation was reviewed, but no exploit or managed-product behavior was reproduced. Mitiga is a research demonstration, not evidence here of an observed victim incident."]}];
   var SOURCES = [{"t": "OWASP MCP Top 10", "u": "https://owasp.org/www-project-mcp-top-10/", "n": "OWASP. Beta (phase 3). MCP01 to MCP10."}, {"t": "MCP specification: transports (Streamable HTTP)", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http#security-endpoint", "n": "Model Context Protocol, version 2026-07-28 (current). Origin validation, localhost binding, authentication."}, {"t": "MCP security best practices (2026-07-28)", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices", "n": "Model Context Protocol. Confused deputy, token passthrough, SSRF, local server compromise, authorization URL validation, scope minimisation."}, {"t": "Stealing MCP tokens in Claude Code via ~/.claude.json", "u": "https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm", "n": "Mitiga (5.5.2026, updated 30.10.2026). Attack steps, vendor response and recommendations."}, {"t": "Claude Code: managed MCP", "u": "https://code.claude.com/docs/en/managed-mcp", "n": "Anthropic. managed-mcp.json, allowlist and denylist matching, allowManagedMcpServersOnly, OpenTelemetry monitoring."}, {"t": "Codex managed configuration", "u": "https://learn.chatgpt.com/docs/enterprise/managed-configuration", "n": "OpenAI. requirements.toml mcp_servers allowlist and identity forms."}, {"t": "VS Code: Add MCP servers", "u": "https://code.visualstudio.com/docs/agent-customization/mcp-servers", "n": "Microsoft. Gallery, adding servers, trust warning."}, {"t": "VS Code: Manage MCP servers", "u": "https://code.visualstudio.com/docs/agents/run/manage-mcp-servers", "n": "Microsoft. Workspace Trust, autostart, sandbox, Settings Sync, Dev Containers."}, {"t": "VS Code: MCP configuration reference", "u": "https://code.visualstudio.com/docs/agents/reference/mcp-configuration", "n": "Microsoft. Settings, discovery sources, sandbox schema."}, {"t": "VS Code: AI security", "u": "https://code.visualstudio.com/docs/copilot/security", "n": "Microsoft. Tool approval, permission levels, secure credentials store, MCP sandboxing."}, {"t": "Centrally manage VS Code settings with policies", "u": "https://code.visualstudio.com/docs/enterprise/policies", "n": "Microsoft. ChatMCP, ChatAllowedMcpServers, ChatDeniedMcpServers, McpGalleryServiceUrl, ChatToolsAutoApprove."}, {"t": "VS Code: enterprise telemetry", "u": "https://code.visualstudio.com/docs/enterprise/telemetry", "n": "Microsoft. OpenTelemetry export from Copilot Chat."}, {"t": "Developer workstation risk map", "u": "Developer-WS.html", "n": "This site. The wider page this one was cut from; it covers MCP together with VS Code, git and agents."}, {"t": "MCP specification: stdio", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio", "n": "Subprocess launch and standard-stream transport."}, {"t": "MCP specification: tools", "u": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools", "n": "Tool capabilities, invocation and host interaction choices."}, {"t": "MCP versioning", "u": "https://modelcontextprotocol.io/specification/versioning", "n": "Current protocol revision and compatibility rules."}, {"t": "OAuth bearer token usage (RFC 6750)", "u": "https://www.rfc-editor.org/rfc/rfc6750", "n": "Bearer possession and authorized resource access."}, {"t": "VS Code: manage AI settings", "u": "https://code.visualstudio.com/docs/enterprise/manage-ai-settings", "n": "Management layers, precedence and harness coverage."}, {"t": "MCP architecture overview", "u": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture", "n": "Hosts, clients, servers and application control of model context."}, {"t": "OAuth 2.0 (RFC 6749)", "u": "https://www.rfc-editor.org/rfc/rfc6749.html#section-3.3", "n": "Access tokens, service credentials and authorization scopes."}];
   var START = [["M01", "Claude Code allowManagedMcpServersOnly with an allowlist of both URLs and commands; the Codex and VS Code allowlists, with session-specific exceptions reviewed", "Moderate"], ["M02", "Allow local servers by exact command, not by name", "Low"], ["M03", "Check that each client shows the full command and asks before running it", "Low"], ["M04", "Use separate sessions for untrusted reading, without tools that can write or send", "Moderate"], ["M05", "Alert on changes to ~/.claude.json and project MCP files", "Low"], ["M06", "Short-lived, narrowly scoped tokens per server", "Moderate"], ["M07", "Bind local HTTP servers to 127.0.0.1, check Origin and require a token", "Low"], ["M08", "A list of approved servers, and Claude Code usage export through OpenTelemetry", "Low"]];
+  var MSDATA = {"MSS": [{"k": "odr", "t": "MCP on Windows: Windows On-device Agent Registry", "u": "https://learn.microsoft.com/en-us/windows/ai/mcp/overview", "n": "Microsoft Learn. Prerelease. Separate environment, Intune control, logging."}, {"k": "vs", "t": "Visual Studio: use MCP servers", "u": "https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers", "n": "Microsoft Learn. Server trust (18.7 or later), tool confirmation, tool-list reset, allow list policies."}, {"k": "ghal", "t": "GitHub: configure an enterprise MCP allowlist", "u": "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist", "n": "GitHub Docs. managed-settings.json, allowedMcpServers, deniedMcpServers."}, {"k": "ghreg", "t": "GitHub: configure an MCP registry", "u": "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry", "n": "GitHub Docs. Public preview; not the recommended method."}, {"k": "ghenf", "t": "GitHub: MCP private registry enforcement", "u": "https://docs.github.com/en/copilot/reference/enterprise-administrators/mcp-private-registry-enforcement", "n": "GitHub Docs. Name and ID matching; bypass by editing configuration files."}, {"k": "csadd", "t": "Copilot Studio: add an existing MCP server", "u": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent", "n": "Microsoft Learn. Authentication options, API key in header or query, SSE."}, {"k": "csdlp", "t": "Copilot Studio: data loss prevention", "u": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention", "n": "Microsoft Learn. Connector blocking and MCP tools."}, {"k": "gsa", "t": "Entra Global Secure Access: MCP firewall", "u": "https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall", "n": "Microsoft Learn. Preview. Server URL patterns, TLS inspection."}, {"k": "gsalog", "t": "Entra Global Secure Access: MCP logging", "u": "https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging", "n": "Microsoft Learn. Preview. Shadow MCP discovery; remote servers only."}, {"k": "apim", "t": "Azure API Management: secure MCP servers", "u": "https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers", "n": "Microsoft Learn. Inbound and outbound access, credential manager, header forwarding."}, {"k": "a365gw", "t": "Agent 365: tools gateway", "u": "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway", "n": "Microsoft Learn. Preview. Block or allow a server, LiteLLM gateway."}, {"k": "a365byo", "t": "Agent 365: bring your own MCP server", "u": "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server", "n": "Microsoft Learn. Preview. Defender advanced hunting; supported client surfaces."}, {"k": "azmcp", "t": "Azure MCP Server: security", "u": "https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security", "n": "Microsoft Learn. Production data, Azure identity, change control, official server."}, {"k": "cve26118", "t": "CVE-2026-26118 (Azure MCP Server)", "u": "https://www.cve.org/CVERecord?id=CVE-2026-26118", "n": "CVE record published by Microsoft. A vendor advisory, not an observed incident.", "f": "https://cveawg.mitre.org/api/cve/CVE-2026-26118"}, {"k": "cve32211", "t": "CVE-2026-32211 (Azure MCP Server)", "u": "https://www.cve.org/CVERecord?id=CVE-2026-32211", "n": "CVE record published by Microsoft. A vendor advisory, not an observed incident.", "f": "https://cveawg.mitre.org/api/cve/CVE-2026-32211"}, {"k": "inv", "t": "Invariant Labs: GitHub MCP exploited", "u": "https://invariantlabs.ai/blog/mcp-github-vulnerability", "n": "Invariant Labs. Third-party research, not a Microsoft or GitHub advisory."}, {"k": "vscm", "t": "VS Code: manage MCP servers", "u": "https://code.visualstudio.com/docs/agents/run/manage-mcp-servers", "n": "Microsoft. Workspace Trust, autostart, sandbox."}, {"k": "vspol", "t": "Centrally manage VS Code settings with policies", "u": "https://code.visualstudio.com/docs/enterprise/policies", "n": "Microsoft. ChatAllowedMcpServers, ChatDeniedMcpServers."}, {"k": "vstel", "t": "VS Code: enterprise telemetry", "u": "https://code.visualstudio.com/docs/enterprise/telemetry", "n": "Microsoft. OpenTelemetry export from Copilot Chat."}, {"k": "sphttp", "t": "MCP specification: transports (Streamable HTTP)", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http", "n": "Model Context Protocol, version 2026-07-28. Origin validation, localhost binding."}, {"k": "spsec", "t": "MCP security best practices (2026-07-28)", "u": "https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices", "n": "Model Context Protocol. SSRF, authorization URL validation."}, {"k": "spver", "t": "MCP versioning", "u": "https://modelcontextprotocol.io/specification/versioning", "n": "Model Context Protocol. Current protocol version."}, {"k": "owasp", "t": "OWASP MCP Top 10", "u": "https://owasp.org/www-project-mcp-top-10/", "n": "OWASP. Beta (phase 3). MCP01 to MCP10."}, {"k": "mit", "t": "Mitiga: MCP token theft in Claude Code", "u": "https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm", "n": "Mitiga. Third-party research on Claude Code, not on a Microsoft product."}], "MSQ": {"odr2": {"s": "odr", "q": "Some information relates to prereleased product that might change substantially before it's commercially released."}, "odr3": {"s": "odr", "q": "MCP servers are contained in a separate environment by default and can only access approved resources, limiting vulnerability to threats like cross-prompt injection attacks"}, "odr4": {"s": "odr", "q": "users and IT admins can control access to MCP servers for each agent by using Windows Settings and management tools like Microsoft Intune"}, "odr5": {"s": "odr", "q": "users and administrators can log and audit interactions between MCP clients and servers"}, "vs1": {"s": "vs", "q": "MCP server trust is available in Visual Studio 2026 version 18.7 and later."}, "vs2": {"s": "vs", "q": "Visual Studio asks you to trust an MCP server again when the server changes since the last time you used it."}, "vs3": {"s": "vs", "q": "Server configuration details, such as transport type, URL, command, or arguments."}, "vs6": {"s": "vs", "q": "Visual Studio resets any prior acceptances or permissions on tools (to prevent rug-pull attacks), refetches the tool list, and updates the count and UI live."}, "vs7": {"s": "vs", "q": "When you invoke a tool, Copilot requests confirmation to run the tool."}, "vs8": {"s": "vs", "q": "You can automatically confirm the specific tool for the current session, the current solution, or all future invocations."}, "vs9": {"s": "vs", "q": "Visual Studio also checks for MCP configurations that other development environments set up."}, "vs10": {"s": "vs", "q": "MCP server usage in Visual Studio respects allow list policies set by organization administrators through GitHub."}, "vs11": {"s": "vs", "q": "Visual Studio respects whatever command you specify, so you can pin versions or pass flags as needed."}, "gh1": {"s": "ghal", "q": "You can define an allowlist and denylist to control which MCP servers users in your enterprise can run in Copilot clients and cloud sandboxes."}, "gh2": {"s": "ghal", "q": "don't apply to MCP servers defined in repository custom agent profiles.", "r": 1}, "gh3": {"s": "ghal", "q": "Because deny rules take precedence"}, "gh4": {"s": "ghal", "q": "You can match by name, server URL, or specific commands."}, "gh5": {"s": "ghal", "q": "This blocks all servers except built-in default servers."}, "gh6": {"s": "ghreg", "q": "This feature is in public preview and is not the recommended method for restricting access to MCP servers."}, "gh7": {"s": "ghenf", "q": "Enforcement is based only on server name/ID matching, which can be bypassed by editing configuration files."}, "cs1": {"s": "csadd", "q": "Copilot Studio no longer supports SSE for MCP after August 2025."}, "cs2": {"s": "csadd", "q": "Select this option if your MCP server requires the API key to be sent as a query parameter in the URL."}, "cs3": {"s": "csadd", "q": "You have three options: None API key: Configure API key authentication OAuth 2.0: Configure OAuth 2.0 authentication", "r": 1}, "cs4": {"s": "csdlp", "q": "Blocking Power Platform connectors also blocks access to tools in connected MCP servers, which rely on Power Platform connectors for connectivity."}, "gsa1": {"s": "gsa", "q": "The MCP firewall is currently in preview."}, "gsa2": {"s": "gsa", "q": "network-based, identity-centric security control that provides centralized visibility, policy enforcement, and runtime protection for MCP traffic between AI agents and remote MCP servers."}, "gsa3": {"s": "gsa", "q": "Create allow-lists or deny-lists of MCP servers based on server URL patterns."}, "gsa5": {"s": "gsa", "q": "Without TLS inspection, Global Secure Access can't parse or enforce MCP policy."}, "gl1": {"s": "gsalog", "q": "MCP logging is currently in preview."}, "gl2": {"s": "gsalog", "q": "MCP Logging helps you discover shadow MCP servers in your organization"}, "gl3": {"s": "gsalog", "q": "MCP Logging only captures traffic to remote MCP servers. Local MCP servers running on a device are not visible because their traffic doesn't have a network footprint that Global Secure Access can inspect."}, "ap1": {"s": "apim", "q": "You can secure either or both inbound access to the MCP server (from an MCP client to API Management) and outbound access (from API Management to the MCP server)."}, "ap2": {"s": "apim", "q": "Use API Management's credential manager to securely inject OAuth 2.0 tokens for backend API requests that MCP server tools make."}, "ap3": {"s": "apim", "q": "Request headers are automatically forwarded (with certain exclusions) to MCP tool invocations."}, "ap4": {"s": "apim", "q": "use the validate-azure-ad-token policy to validate Microsoft Entra ID tokens"}, "gw1": {"s": "a365gw", "q": "Connect Azure AI Gateway or a LiteLLM gateway to Microsoft Agent 365 to discover and govern the Model Context Protocol (MCP) servers registered with the gateway."}, "gw2": {"s": "a365gw", "q": "You can block or allow an MCP server to manage its availability."}, "gw3": {"s": "a365gw", "q": "Important This feature is in preview."}, "by1": {"s": "a365byo", "q": "Important This feature is in preview."}, "by2": {"s": "a365byo", "q": "The security team monitors activity and tool invocations through Microsoft Defender advanced hunting"}, "by3": {"s": "a365byo", "q": "Supported client surfaces during preview are Copilot Studio, Visual Studio Code, Claude Code, and GitHub Copilot CLI."}, "az1": {"s": "azmcp", "q": "Don't use a local Azure MCP Server to handle production data or production credentials."}, "az2": {"s": "azmcp", "q": "Because it can act with your Azure identity, review what your signed-in account can access before you connect an agent to Azure resources"}, "az3": {"s": "azmcp", "q": "Review and pin known-good tool schemas and descriptions, and require re-approval before updated tool metadata takes effect"}, "az4": {"s": "azmcp", "q": "Prefer the official Microsoft-maintained Azure MCP Server."}, "c1a": {"s": "cve26118", "q": "Server-side request forgery (ssrf) in Azure MCP Server allows an authorized attacker to elevate privileges over a network."}, "c1b": {"s": "cve26118", "q": "\"baseScore\":8.8"}, "c2a": {"s": "cve32211", "q": "Missing authentication for critical function in Azure MCP Server allows an unauthorized attacker to disclose information over a network."}, "c2b": {"s": "cve32211", "q": "\"baseScore\":9.1"}, "c2c": {"s": "cve32211", "q": "\"product\":\"Azure Web Apps\""}, "c2d": {"s": "cve32211", "q": "\"tags\":[\"exclusively-hosted-service\"]"}, "inv1": {"s": "inv", "q": "The vulnerability allows an attacker to hijack a user's agent via a malicious GitHub Issue, and coerce it into leaking data from private repositories."}, "vc1": {"s": "vscm", "q": "Restricted mode prevents these servers from starting."}, "vc2": {"s": "vscm", "q": "In a trusted workspace, they can start without a separate MCP trust prompt, including after configuration changes."}, "vc3": {"s": "vscm", "q": "newAndOutdated (default): Start servers that have never run or whose configuration has changed."}, "vc4": {"s": "vscm", "q": "On macOS and Linux, per-server sandboxing restricts file system and network access for stdio MCP servers."}, "vc5": {"s": "vscm", "q": "This mechanism isn't available on Windows."}, "vp1": {"s": "vspol", "q": "Servers matching any entry are blocked from being installed or run, even if they also match the allow list; deny rules always take precedence."}, "vt1": {"s": "vstel", "q": "Copilot Chat in VS Code can export traces, metrics, and events via OpenTelemetry (OTel) to give you real-time visibility into agent interactions, LLM calls, tool execution, and token usage."}, "sp1": {"s": "sphttp", "q": "Servers MUST validate the Origin header on all incoming connections to prevent DNS rebinding attacks."}, "sp2": {"s": "sphttp", "q": "servers SHOULD bind only to localhost (127.0.0.1) rather than all network interfaces (0.0.0.0)."}, "sp3": {"s": "spsec", "q": "URLs targeting http://169.254.169.254/ (AWS/GCP/Azure metadata service) can exfiltrate cloud credentials and instance information"}, "sp4": {"s": "spsec", "q": "OAuth authorization URLs provided by malicious MCP servers can exploit client-side URL handling vulnerabilities, leading to Cross-Site Scripting (XSS) attacks and Remote Code Execution (RCE)."}, "sp5": {"s": "spver", "q": "The current protocol version is 2026-07-28", "r": 1}, "ow1": {"s": "owasp", "q": "MCP04:2025 - Software Supply Chain Attacks & Dependency Tampering"}, "ow2": {"s": "owasp", "q": "MCP03:2025 - Tool Poisoning"}, "ow3": {"s": "owasp", "q": "MCP10:2025 - Context Injection & Over-Sharing"}, "ow5": {"s": "owasp", "q": "We are here right now - release a \"beta\" version of MCP Top 10."}, "mi1": {"s": "mit", "q": "MCP Token Theft in Claude Code: A Man-in-the-Middle Attack Chain"}}, "COMP_M": {"src": {"s": "Gallery, GitHub, registries"}, "agent": {"s": "VS Code, Visual Studio, Copilot"}, "cfgf": {"s": "mcp.json, .mcp.json"}, "files": {"s": "Code, .env, Azure login"}, "saas": {"t": "SaaS and Azure APIs"}, "policy": {"t": "Device and org policy", "s": "Intune, GitHub managed settings"}, "tele": {"s": "OpenTelemetry, Defender, SIEM"}, "gw": {"x": 1000, "y": 404, "w": 204, "h": 80, "st": 3, "t": "MCP gateway or firewall", "s": "APIM, Agent 365, Entra GSA", "short": "MCP gateway"}}, "PLACE_M": [["M01", "src", "GitHub's registry feature is in public preview, and GitHub says it is not the recommended way to restrict servers.", ["gh6"]], ["M01", "cfgin", "Visual Studio also checks for MCP configurations that other development environments set up.", ["vs9"]], ["M01", "agent", "In VS Code, servers in .vscode/mcp.json and .mcp.json can start in a trusted workspace without a separate MCP trust prompt.", ["vc2"]], ["M01", "policy", "A GitHub enterprise allowlist and denylist does not cover repository custom agent profiles. Visual Studio respects allow list policies set through GitHub.", ["gh2", "vs10"]], ["M01", "gw", "The Agent 365 tools gateway can block or allow an MCP server (preview).", ["gw2", "gw3"]], ["M02", "pkg", "OWASP lists software supply chain attacks and dependency tampering as MCP04.", ["ow1"]], ["M02", "local", "Microsoft says not to use a local Azure MCP Server for production data or production credentials.", ["az1"]], ["M02", "agent", "OWASP lists tool poisoning as MCP03. Visual Studio resets earlier tool acceptances when a server's tool list changes, to prevent rug-pull attacks.", ["ow2", "vs6"]], ["M02", "policy", "Visual Studio runs the command you specify, so you can pin versions. The Azure page says to prefer the official Microsoft-maintained Azure MCP Server.", ["vs11", "az4"]], ["M03", "cfgin", "Visual Studio asks you to trust a server again when its URL, command or arguments change. Server trust needs Visual Studio 18.7 or later.", ["vs2", "vs3", "vs1"]], ["M03", "cfgf", "In VS Code, a trusted workspace can start servers from .vscode/mcp.json and .mcp.json without a separate prompt, also after configuration changes.", ["vc2"]], ["M03", "local", "VS Code can sandbox stdio servers on macOS and Linux. The docs say this is not available on Windows.", ["vc4", "vc5"]], ["M03", "files", "Microsoft says the Azure MCP Server can act with your Azure identity, and asks you to review what your signed-in account can access.", ["az2"]], ["M03", "agent", "Visual Studio asks for confirmation before Copilot runs a tool. You can auto-confirm a tool for the session, the solution or all future calls.", ["vs7", "vs8"]], ["M04", "content", "Invariant Labs (third party) reports that a malicious GitHub issue can hijack an agent that uses the GitHub MCP server and leak private repository data.", ["inv1"]], ["M04", "agent", "Auto-confirm in Visual Studio removes the prompt for that tool. [inference]", ["vs8"]], ["M04", "local", "Windows runs MCP servers in a separate environment by default, which the docs tie to limiting prompt injection (prerelease).", ["odr3", "odr2"]], ["M05", "cfgf", "Visual Studio asks for trust again when a server's URL or command changes. In a trusted VS Code workspace, changed configuration can start without a separate prompt.", ["vs3", "vc2"]], ["M05", "agent", "VS Code autostart defaults to newAndOutdated: it starts servers that have never run or whose configuration has changed.", ["vc3"]], ["M05", "tok", "Copilot Studio can send an API key as a query parameter in the URL. A key in a URL can leak through logs and history. [inference]", ["cs2"]], ["M06", "tok", "API Management can inject OAuth 2.0 tokens for backend requests. Headers are forwarded with certain exclusions, so check which ones reach the backend. [inference]", ["ap2", "ap3"]], ["M06", "mcpr", "CVE-2026-32211: missing authentication in Azure MCP Server (CVSS 9.1). The record lists Azure Web Apps and the tag exclusively-hosted-service. A vendor advisory, not an observed incident.", ["c2a", "c2b", "c2c", "c2d"]], ["M06", "saas", "Copilot Studio offers three authentication options for an MCP server: none, API key and OAuth 2.0.", ["cs3"]], ["M06", "gw", "API Management can secure inbound and outbound access. Inbound can use Microsoft Entra ID tokens through the validate-azure-ad-token policy.", ["ap1", "ap4"]], ["M07", "lhttp", "The MCP specification says servers must validate the Origin header, and should bind to localhost (127.0.0.1) when running locally.", ["sp1", "sp2"]], ["M07", "egress", "The MCP specification names URLs that target 169.254.169.254, the cloud metadata address, as a way to exfiltrate cloud credentials.", ["sp3"]], ["M07", "agent", "The MCP specification warns that authorization URLs from malicious servers can lead to cross-site scripting and remote code execution in the client.", ["sp4"]], ["M07", "mcpr", "CVE-2026-26118: server-side request forgery in Azure MCP Server (CVSS 8.8). A vendor advisory, not an observed incident.", ["c1a", "c1b"]], ["M07", "gw", "The Entra MCP firewall (preview) can allow or block remote MCP servers by URL pattern. It needs TLS inspection to enforce MCP policy.", ["gsa1", "gsa3", "gsa5"]], ["M08", "agent", "OWASP lists context injection and over-sharing as MCP10.", ["ow3"]], ["M08", "policy", "The Windows on-device agent registry (prerelease) says users and administrators can log and audit client and server interactions.", ["odr5", "odr2"]], ["M08", "tele", "VS Code can export traces, metrics and events through OpenTelemetry, covering tool execution. Defender advanced hunting shows activity for Agent 365 BYO servers (preview).", ["vt1", "by2", "by1"]], ["M08", "gw", "Entra MCP logging (preview) can help discover shadow MCP servers. It captures remote traffic only.", ["gl1", "gl2", "gl3"]]], "START_M": [["M01", "Set an enterprise allowlist and denylist in GitHub managed-settings.json, and review which repository custom agent profiles exist", "Moderate"], ["M02", "Pin package versions in each server command, and review tool changes before approving them again", "Low"], ["M03", "Open unfamiliar repositories in Restricted mode and keep Workspace Trust on", "Low"], ["M04", "Use separate sessions for untrusted reading, without tools that can write or send", "Moderate"], ["M05", "Review changes to mcp.json and .mcp.json like code changes", "Low"], ["M06", "Prefer OAuth 2.0 over API keys when a server offers it, and keep tokens out of mcp.json. Add API Management only for remote servers you host yourself", "Low"], ["M07", "Bind local HTTP servers to 127.0.0.1 and check the Origin header. Allow remote servers only from the approved list in M01", "Low"], ["M08", "Export OpenTelemetry from VS Code to your existing log system, and keep a list of approved servers", "Low"]], "EVIDENCE_M": [{"h": "Checked against sources", "i": ["Each Microsoft statement in this view has an exact quote and a link that opens the source at that passage. The quotes were compared with the fetched page text on 8 November 2026.", "Microsoft Learn: Windows on-device agent registry, Visual Studio MCP servers, Copilot Studio, Entra Global Secure Access, Azure API Management, Agent 365, Azure MCP Server security.", "GitHub Docs: enterprise allowlist, MCP registry and registry enforcement. VS Code docs: manage MCP servers, policies, telemetry.", "VS Code tab rows: checked on 5 November 2026, shared by both views.", "CVE records CVE-2026-26118 and CVE-2026-32211, as published by Microsoft. Invariant Labs, a third-party demonstration against the GitHub MCP server.", "MCP specification 2026-07-28 (Origin validation, localhost binding, SSRF, authorization URLs) and the OWASP MCP Top 10 names."]}, {"h": "My judgement", "i": ["The same eight risks as the general view, and the order. Which Microsoft surface sits on which part of the map.", "Statements tagged [inference], and the friction estimates in the start table.", "Which Microsoft facts are shown, and the risk each is tied to."]}, {"h": "Still open", "i": ["Nothing was tested on a real system. No setting or command was run on a managed machine.", "Preview and prerelease status: see Current as of. It can change.", "CVE records: vendor advisories only. No observed victim incident was verified.", "Mitiga: no demonstration against a Microsoft product was found. Not observed.", "Third-party servers used inside Microsoft clients: covered by the general risks, not by Microsoft sources.", "Local servers and the Entra items: see the quoted scope under M07. Endpoint tooling was not researched."]}], "MSCARD": {"M01": {"body": [{"t": "GitHub lets an enterprise define an allowlist and a denylist of MCP servers for Copilot clients. The lists do not apply to servers defined in repository custom agent profiles.", "q": ["gh1", "gh2"]}, {"t": "GitHub's registry enforcement is in public preview, and GitHub says it is not the recommended method. It matches on server name or ID, which can be bypassed by editing configuration files.", "q": ["gh6", "gh7"]}], "cl": "Also check", "checks": [{"t": "Is there an enterprise allowlist or denylist, and do repository custom agent profiles add servers outside it?", "q": ["gh2"]}, {"t": "Does Visual Studio follow the same list? Its docs say it respects allow list policies set through GitHub.", "q": ["vs10"]}, {"t": "Do not rely on a gateway for this. The Agent 365 tools gateway can block or allow a server, but it is in preview.", "q": ["gw2", "gw3"]}], "how": [{"t": "GitHub: define allowedMcpServers and deniedMcpServers in the enterprise's managed-settings.json. You can match by name, server URL or specific commands. Deny rules take precedence.", "q": ["gh3", "gh4"]}, {"t": "A malformed list is treated as an empty allowlist, which blocks all servers except built-in default servers.", "q": ["gh5"]}, {"t": "VS Code: use the policies ChatAllowedMcpServers and ChatDeniedMcpServers. A deny rule wins over an allow rule.", "q": ["vp1"]}]}, "M02": {"body": [{"t": "The Azure MCP Server security page says to prefer the official Microsoft-maintained Azure MCP Server, and not to use a local one with production data or production credentials.", "q": ["az4", "az1"]}, {"t": "A tool definition can change after approval. Visual Studio resets earlier tool acceptances when a server reports that its tool list changed. The Azure page asks for review, pinning and re-approval of tool definitions.", "q": ["vs6", "az3"]}], "cl": "Also check", "checks": [{"t": "Is each server package pinned to a version in its command? Visual Studio runs the command you specify.", "q": ["vs11"]}, {"t": "Are tool changes reviewed before a server is approved again?", "q": ["az3"]}], "how": [{"t": "Visual Studio respects whatever command you specify, so you can pin versions or pass flags as needed. Matching a command does not verify the contents of its package. [inference]", "q": ["vs11"]}]}, "M03": {"body": [{"t": "Visual Studio asks you to trust a server again when its URL, command or arguments change. VS Code works differently: servers in .vscode/mcp.json and .mcp.json can start in a trusted workspace without a separate prompt, also after configuration changes.", "q": ["vs2", "vs3", "vc2"]}, {"t": "On macOS and Linux, VS Code can sandbox stdio servers; the docs say this is not available on Windows. Microsoft says the Azure MCP Server can act with your Azure identity.", "q": ["vc4", "vc5", "az2"]}], "cl": "Also check", "checks": [{"t": "In VS Code, are unfamiliar repositories opened in Restricted mode, which prevents these servers from starting?", "q": ["vc1"]}, {"t": "In Visual Studio, is server trust in use? It needs version 18.7 or later.", "q": ["vs1"]}, {"t": "Does a person confirm tool calls, and who may turn on auto-confirm for a session, a solution or all future calls?", "q": ["vs7", "vs8"]}], "how": []}, "M04": {"body": [{"t": "Invariant Labs (third party, not a Microsoft advisory) reports that a malicious GitHub issue can hijack an agent that uses the GitHub MCP server and make it leak data from private repositories.", "q": ["inv1"]}, {"t": "Windows says its on-device agent registry (prerelease) keeps MCP servers in a separate environment by default, with access to approved resources only.", "q": ["odr3", "odr2"]}], "cl": "Also check", "checks": [{"t": "Does an agent that reads GitHub issues also hold a token for private repositories? [inference]", "q": ["inv1"]}, {"t": "Is auto-confirm in Visual Studio allowed for tools that write or send? [inference]", "q": ["vs8"]}], "how": []}, "M05": {"body": [{"t": "The Mitiga research targets Claude Code, so it is outside this view. No demonstration against a Microsoft product was found. Not observed.", "q": ["mi1"]}, {"t": "Visual Studio asks you to trust a server again when its URL, command or arguments change. In a trusted VS Code workspace, a changed configuration can start without a separate prompt, and autostart defaults to newAndOutdated.", "q": ["vs2", "vs3", "vc2", "vc3"]}, {"t": "In Copilot Studio an MCP server can use an API key, and the key can be sent as a query parameter in the URL. A key in a URL can leak through logs and history. [inference]", "q": ["cs2"]}], "cl": "Check", "checks": [{"t": "Are changes to mcp.json and .mcp.json reviewed like code changes? [inference]", "q": ["vc2"]}, {"t": "Where the server allows it, does Copilot Studio use OAuth 2.0 instead of an API key in the query string? [inference]", "q": ["cs2"]}, {"t": "Is there a baseline of approved MCP endpoints, with an alert when a URL changes? [inference]", "q": []}], "how": []}, "M06": {"body": [{"t": "Azure API Management can secure inbound access (client to API Management) and outbound access (API Management to the MCP server). Inbound can use Microsoft Entra ID tokens validated by the validate-azure-ad-token policy.", "q": ["ap1", "ap4"]}, {"t": "Its credential manager can inject OAuth 2.0 tokens for backend requests. Request headers are forwarded to tool calls with certain exclusions, so check which headers reach the backend. [inference]", "q": ["ap2", "ap3"]}, {"t": "CVE-2026-32211 is a missing-authentication flaw in Azure MCP Server (CVSS 9.1). The record lists Azure Web Apps with the tag exclusively-hosted-service. It is a vendor advisory, not an observed incident.", "q": ["c2a", "c2b", "c2c", "c2d"]}], "cl": "Also check", "checks": [{"t": "If remote servers sit behind API Management, does inbound access validate Microsoft Entra ID tokens, not only a subscription key? [inference]", "q": ["ap4"]}, {"t": "Which request headers reach the backend tool calls? [inference]", "q": ["ap3"]}, {"t": "In Copilot Studio, which of the three authentication options does each server use?", "q": ["cs3"]}], "how": []}, "M07": {"body": [{"t": "Entra Global Secure Access has an MCP firewall in preview. It inspects MCP traffic to remote servers and can allow or block by server URL pattern. It needs TLS inspection to enforce MCP policy.", "q": ["gsa1", "gsa2", "gsa3", "gsa5"]}, {"t": "CVE-2026-26118 is a server-side request forgery flaw in Azure MCP Server (CVSS 8.8). It is a vendor advisory, not an observed incident.", "q": ["c1a", "c1b"]}], "cl": "Also check", "checks": [{"t": "Are local HTTP servers bound to 127.0.0.1, and do they validate the Origin header?", "q": ["sp1", "sp2"]}, {"t": "Is the Azure MCP Server updated in line with the vendor advisory for CVE-2026-26118?", "q": ["c1a"]}], "how": []}, "M08": {"body": [{"t": "VS Code can export traces, metrics and events through OpenTelemetry, covering tool execution. Defender advanced hunting shows activity for servers registered through Agent 365 BYO (preview).", "q": ["vt1", "by2", "by1"]}, {"t": "Entra MCP logging (preview) can help discover shadow MCP servers, but it captures remote traffic only. Local servers are not visible to it.", "q": ["gl1", "gl2", "gl3"]}, {"t": "Windows says users and administrators can log and audit client and server interactions in its on-device agent registry (prerelease).", "q": ["odr5", "odr2"]}], "cl": "Also check", "checks": [{"t": "Is OpenTelemetry export on in VS Code, and does it reach your SIEM?", "q": ["vt1"]}, {"t": "Are local servers, which Entra logging cannot see, covered by endpoint tooling? [inference]", "q": ["gl3"]}], "how": []}}, "MSROWS": [{"t": "Visual Studio trust and tool reset", "d": "Visual Studio asks you to trust a server again when its configuration or capabilities change, and resets earlier tool acceptances when the tool list changes. Server trust needs version 18.7 or later.", "r": "M02, M05", "q": ["vs1", "vs2", "vs6"]}, {"t": "Visual Studio tool confirmation", "d": "Copilot asks for confirmation before it runs a tool. A tool can be auto-confirmed for the session, the solution or all future calls.", "r": "M03, M04", "q": ["vs7", "vs8"]}, {"t": "Visual Studio configuration discovery", "d": "Visual Studio also reads MCP configurations that other development environments set up.", "r": "M01", "q": ["vs9"]}, {"t": "GitHub allowlist and registry (preview)", "d": "The enterprise allowlist and denylist do not cover repository custom agent profiles. Registry enforcement is in public preview, matches on server name or ID, and can be bypassed by editing configuration files.", "r": "M01", "q": ["gh2", "gh6", "gh7"]}, {"t": "Copilot Studio authentication, SSE and DLP", "d": "Servers can use none, an API key or OAuth 2.0. An API key can be sent in the URL query. SSE is no longer supported for MCP after August 2025. Blocking Power Platform connectors also blocks tools in connected MCP servers.", "r": "M05, M06", "q": ["cs3", "cs2", "cs1", "cs4"]}, {"t": "Windows on-device agent registry (prerelease)", "d": "Servers run in a separate environment by default. Users and IT admins can control access per agent with Windows Settings and tools such as Intune, and interactions can be logged.", "r": "M04, M08", "q": ["odr2", "odr3", "odr4", "odr5"]}, {"t": "Entra MCP firewall and logging (preview)", "d": "The firewall can allow or block remote MCP servers by URL pattern and needs TLS inspection. Logging can help discover shadow servers, but it sees remote traffic only.", "r": "M07, M08", "q": ["gsa1", "gsa3", "gsa5", "gl1", "gl2", "gl3"]}, {"t": "Azure API Management", "d": "Inbound and outbound access to an MCP server can be secured. Inbound can use Microsoft Entra ID tokens. The credential manager can inject OAuth 2.0 tokens for backend requests. Headers are forwarded with certain exclusions.", "r": "M06", "q": ["ap1", "ap4", "ap2", "ap3"]}, {"t": "Agent 365 gateway and BYO (preview)", "d": "A gateway can be connected to discover and govern MCP servers, and a server can be blocked or allowed. BYO servers can be monitored through Defender advanced hunting.", "r": "M01, M08", "q": ["gw1", "gw2", "gw3", "by2", "by3"]}, {"t": "Azure MCP Server security and CVEs", "d": "Microsoft says to prefer the official Azure MCP Server and not to use a local one with production data or credentials. Two CVE records name Azure MCP Server: a server-side request forgery flaw and a missing-authentication flaw. Both are vendor advisories, not observed incidents.", "r": "M02, M06, M07", "q": ["az1", "az4", "c1a", "c2a"]}], "CALLOUT_M": [{"b": "OWASP MCP Top 10:", "t": "in beta (phase 3). IDs and names can change.", "q": ["ow5"]}, {"b": "Specification versions:", "t": "the Origin, localhost and security rules were checked against version 2026-07-28, the current one on 8 November 2026. They can change.", "q": ["sp5"]}, {"b": "Preview:", "t": "Microsoft or GitHub describe these as preview or prerelease: the Windows on-device agent registry, the Entra MCP firewall and logging, the Agent 365 tools gateway and BYO servers, and GitHub registry enforcement. They can change.", "q": ["odr2", "gsa1", "gl1", "gw3", "by1", "gh6"]}, {"b": "Visual Studio:", "t": "MCP server trust needs version 18.7 or later.", "q": ["vs1"]}, {"b": "Mitiga:", "t": "the research targets Claude Code, which is outside this view. No demonstration against a Microsoft product was found. Not observed.", "q": ["mi1"]}]};
+  var MSS = MSDATA.MSS, MSQ = MSDATA.MSQ, MSROWS = MSDATA.MSROWS, MSCARD = MSDATA.MSCARD, CALLOUT_M = MSDATA.CALLOUT_M;
+  var MSSBY = {}; MSS.forEach(function(s){ MSSBY[s.k] = s; });
+  function enc(s){ return encodeURIComponent(s).replace(/-/g, '%2D'); }
+  function quoteUrl(id){
+    var q = MSQ[id], s = MSSBY[q.s];
+    if (s.f) return s.u;
+    var w = q.q.replace(/\s+/g, ' ').trim().split(' '), runs = [], cur = [];
+    w.forEach(function(x){
+      if (/['"]/.test(x)){ if (cur.length) runs.push(cur); cur = []; } else cur.push(x);
+    });
+    if (cur.length) runs.push(cur);
+    if (!runs.length) return s.u;
+    var n = q.r ? 3 : 5, first = runs[0], last = runs[runs.length - 1], frag;
+    if (first === last){
+      var t = first.join(' ');
+      frag = (first.length < 2 * n + 2 || (t.length <= 80 && !q.r)) ? enc(t) : enc(first.slice(0, n).join(' ')) + ',' + enc(first.slice(-n).join(' '));
+    } else frag = enc(first.slice(0, n).join(' ')) + ',' + enc(last.slice(-n).join(' '));
+    return s.u + '#:~:text=' + frag;
+  }
+  function quoteList(ids){
+    var ul = htmlEl('ul', 'qt');
+    ids.forEach(function(id){
+      var q = MSQ[id]; if (!q) return;
+      var li = htmlEl('li');
+      li.appendChild(htmlEl('q', null, q.q));
+      li.appendChild(document.createTextNode(' '));
+      var a = htmlEl('a', null, MSSBY[q.s].t); a.href = quoteUrl(id); a.target = '_blank'; a.rel = 'noopener';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  function qBlock(ids){
+    if (!ids || !ids.length) return null;
+    var dt = htmlEl('details', 'qs'); dt.appendChild(htmlEl('summary', null, ids.length > 1 ? 'Quotes and sources' : 'Quote and source'));
+    dt.appendChild(quoteList(ids));
+    return dt;
+  }
+  function withQuotes(node, ids){
+    var w = htmlEl('div', 'msx-i'); w.appendChild(node);
+    var qb = qBlock(ids); if (qb) w.appendChild(qb);
+    return w;
+  }
+  function renderMsx(){
+    $$('.msx').forEach(function(box){
+      var c = MSCARD[box.getAttribute('data-ms')]; if (!c) return;
+      var l0 = htmlEl('div'); l0.appendChild(htmlEl('span', 'lbl', 'Microsoft ecosystem')); box.appendChild(l0);
+      c.body.forEach(function(b){ box.appendChild(withQuotes(htmlEl('p', null, b.t), b.q)); });
+      if (c.checks && c.checks.length){
+        var l1 = htmlEl('div'); l1.appendChild(htmlEl('span', 'lbl', c.cl || 'Check')); box.appendChild(l1);
+        var ul = htmlEl('ul', 'checks');
+        c.checks.forEach(function(k){ var li = htmlEl('li'); li.appendChild(withQuotes(document.createTextNode(k.t), k.q)); ul.appendChild(li); });
+        box.appendChild(ul);
+      }
+      if (c.how && c.how.length){
+        var dt = htmlEl('details'); dt.appendChild(htmlEl('summary', null, 'How to set it'));
+        c.how.forEach(function(k){ dt.appendChild(withQuotes(htmlEl('p', 'note', k.t), k.q)); });
+        box.appendChild(dt);
+      }
+    });
+  }
+  function renderCallout(){
+    var ul = $('#currentListM');
+    CALLOUT_M.forEach(function(c){
+      var li = htmlEl('li');
+      li.appendChild(htmlEl('b', null, c.b));
+      li.appendChild(document.createTextNode(' ' + c.t));
+      var qb = qBlock(c.q); if (qb) li.appendChild(qb);
+      ul.appendChild(li);
+    });
+  }
+  function renderOther(){
+    var tb = $('#msRows');
+    MSROWS.forEach(function(r){
+      var tr = htmlEl('tr');
+      var th = htmlEl('th', null, r.t); th.scope = 'row'; tr.appendChild(th);
+      var td = htmlEl('td'); td.appendChild(document.createTextNode(r.d));
+      var qb = qBlock(r.q); if (qb) td.appendChild(qb);
+      tr.appendChild(td);
+      tr.appendChild(htmlEl('td', null, r.r));
+      tb.appendChild(tr);
+    });
+  }
 
   var pw = $('#personas');
   PERSONAS.forEach(function(p){
@@ -775,23 +916,35 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     d.appendChild(ul);
     pw.appendChild(d);
   });
-  var ev = $('#evidence');
-  EVIDENCE.forEach(function(c){
-    var d = htmlEl('div', 'col');
-    d.appendChild(htmlEl('h3', null, c.h));
-    var ul = htmlEl('ul');
-    c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
-    d.appendChild(ul);
-    ev.appendChild(d);
-  });
-  var sl = $('#sourceList');
-  SOURCES.forEach(function(s){
-    var li = htmlEl('li');
-    var a = htmlEl('a', null, s.t); a.href = s.u; a.target = '_blank'; a.rel = 'noopener';
-    li.appendChild(a);
-    li.appendChild(htmlEl('span', null, s.n));
-    sl.appendChild(li);
-  });
+  function renderEvidence(){
+    var ev = $('#evidence'); ev.innerHTML = '';
+    (scope === 'ms' ? MSDATA.EVIDENCE_M : EVIDENCE).forEach(function(c){
+      var d = htmlEl('div', 'col');
+      d.appendChild(htmlEl('h3', null, c.h));
+      var ul = htmlEl('ul');
+      c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
+      d.appendChild(ul);
+      ev.appendChild(d);
+    });
+  }
+  function sourcesNow(){
+    if (scope !== 'ms') return SOURCES;
+    var list = MSS.map(function(s){ return { t: s.t, u: s.u, n: s.n }; }), seen = {};
+    list.forEach(function(x){ seen[x.u] = 1; });
+    SOURCES.forEach(function(s){ if (s.u.indexOf('https://code.visualstudio.com/') === 0 && !seen[s.u]) list.push(s); });
+    SOURCES.forEach(function(s){ if (s.u === 'Developer-WS.html') list.push(s); });
+    return list;
+  }
+  function renderSources(){
+    var sl = $('#sourceList'); sl.innerHTML = '';
+    sourcesNow().forEach(function(s){
+      var li = htmlEl('li');
+      var a = htmlEl('a', null, s.t); a.href = s.u; a.target = '_blank'; a.rel = 'noopener';
+      li.appendChild(a);
+      li.appendChild(htmlEl('span', null, s.n));
+      sl.appendChild(li);
+    });
+  }
 
   /* Risk map */
   var NS = 'http://www.w3.org/2000/svg';
@@ -808,6 +961,12 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   var ARROWS = [{"d": "M240 160 H296", "l": "add", "x": 268, "y": 154, "a": "middle"}, {"d": "M240 248 H296", "l": "output", "x": 268, "y": 242, "a": "middle"}, {"d": "M240 340 H296", "l": "install", "x": 268, "y": 334, "a": "middle"}, {"d": "M240 440 H296", "l": "config", "x": 268, "y": 434, "a": "middle"}, {"d": "M366 264 V300", "l": "tool calls", "x": 372, "y": 286}, {"d": "M520 300 V264", "l": "results", "x": 526, "y": 286}, {"d": "M760 264 V300"}, {"d": "M366 400 V380", "l": "starts", "x": 372, "y": 394}, {"d": "M540 380 V400", "l": "reads", "x": 546, "y": 394}, {"d": "M650 380 V400"}, {"d": "M830 380 V400", "l": "tokens", "x": 836, "y": 394}, {"d": "M904 150 H944"}, {"d": "M962 150 H1000"}, {"d": "M1000 182 H962"}, {"d": "M944 182 H904"}, {"d": "M904 232 H944"}, {"d": "M962 232 H1000"}, {"d": "M1000 260 H962"}, {"d": "M944 260 H904"}, {"d": "M904 340 H944"}, {"d": "M962 340 H1000"}, {"d": "M1102 284 V300"}];
 
   var PLACE = [["M01", "src", "Servers come from many places. Anthropic says it does not security-audit or manage any MCP server."], ["M01", "cfgin", "A project can carry a file such as .mcp.json that names servers to start."], ["M01", "agent", "By default in Claude Code anyone can connect any MCP server, so each developer decides what the agent can reach."], ["M01", "policy", "Claude Code, Codex and VS Code each have an MCP allowlist. In Claude Code, deny rules win within their scope; in-process SDK servers bypass these checks. A user-assigned name does not identify the underlying server."], ["M02", "pkg", "A server installed from a package runs that package's code. OWASP lists dependency tampering as MCP04."], ["M02", "local", "Without isolation, local server code can run with the MCP client's privileges. The specification names arbitrary code execution, no visibility and data exfiltration for a compromised one."], ["M02", "agent", "OWASP lists Tool Poisoning as MCP03. The model reads tool descriptions, so a changed description can change what the agent does. [inference]"], ["M02", "policy", "Allow local servers by exact command. Claude Code does not compare the env block; the Codex string form does not check args, cwd or env."], ["M03", "cfgin", "A client with one-click local setup must get consent before running a command, and show the exact command in full (specification 2026-07-28)."], ["M03", "cfgf", "A malicious startup command in the client config is one of the compromise paths the specification names."], ["M03", "local", "Without isolation, a local server can act with the MCP client's privileges. The specification names arbitrary code execution, no visibility and data exfiltration."], ["M03", "files", "Data exfiltration is one of the consequences the specification names for a compromised local server."], ["M03", "agent", "The specification says clients should run local servers sandboxed with minimal default privileges."], ["M04", "content", "Pages, tickets and files that a tool reads can carry hidden instructions. OWASP lists this as MCP06."], ["M05", "pkg", "In Mitiga's research an npm postinstall hook edited ~/.claude.json. It needs code execution through the install."], ["M05", "cfgf", "Mitiga reports that the hook rewrote an MCP server URL to an attacker's localhost proxy, pre-set trust-dialog flags and added a project SessionStart hook."], ["M05", "lhttp", "Mitiga demonstrates interception and reuse of an Atlassian OAuth bearer token; separate refresh-token capture is not demonstrated in the article."], ["M05", "tok", "Mitiga says rotating tokens alone is not enough."], ["M05", "edr", "Mitiga recommends baselining approved MCP endpoints, watching ~/.claude.json and project MCP files, and alerting on new local proxies."], ["M06", "tok", "A stolen token with broad scope has a larger blast radius. The specification recommends progressive, least-privilege scopes."], ["M06", "mcpr", "An MCP server must not accept tokens that were not issued for it. The authorization specification forbids token passthrough."], ["M06", "saas", "A proxy server with a static client ID can be abused (confused deputy). Protections include per-client consent, exact redirect_uri match, single-use state."], ["M07", "lhttp", "Servers must validate the Origin header to stop DNS rebinding, should bind to 127.0.0.1 rather than 0.0.0.0, and should authenticate (specification 2026-07-28)."], ["M07", "egress", "A malicious server can supply URLs that point at internal addresses such as 169.254.169.254. For production OAuth discovery, restrict private destinations and redirects. Server-side client operators should consider an egress proxy; development loopback needs explicit exceptions."], ["M07", "agent", "Clients must require HTTPS authorization URLs, allowing HTTP only for development loopback, reject dangerous schemes, and avoid shell execution when opening URLs (security guidance, 2026-07-28)."], ["M08", "agent", "OWASP lists Context Injection and Over-Sharing as MCP10: more context goes to a server than it needs."], ["M08", "policy", "An inventory and usage logs help establish which servers are used. [inference] OWASP MCP08 concerns missing audit and telemetry."], ["M08", "tele", "Claude Code usage can be monitored with OpenTelemetry; OTEL_LOG_TOOL_DETAILS=1 is the variable the docs name for tool details."]];
+  var COMP_G = COMP, PLACE_G = PLACE, PLACE_MS = MSDATA.PLACE_M;
+  var COMP_MS = JSON.parse(JSON.stringify(COMP_G));
+  Object.keys(MSDATA.COMP_M).forEach(function(id){
+    var o = MSDATA.COMP_M[id]; COMP_MS[id] = COMP_MS[id] || {};
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) COMP_MS[id][k] = o[k];
+  });
 
   var boxEls = {}, mkEls = [], selRisk = null, selComp = null, lastAnchor = null;
   var MOREBY = {}; MORE.forEach(function(m){ MOREBY[m.id] = m; });
@@ -1009,6 +1168,10 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     p1.appendChild(htmlEl('b', null, COMP[id].t + ': '));
     p1.appendChild(document.createTextNode(why ? why[2] : ''));
     pop.appendChild(p1);
+    if (why && why[3] && why[3].length){
+      var ql = htmlEl('p'); ql.appendChild(htmlEl('span', 'lbl', why[3].length > 1 ? 'Quotes and sources' : 'Quote and source'));
+      pop.appendChild(ql); pop.appendChild(quoteList(why[3]));
+    }
     var others = placesOf(r).filter(function(p){ return p[1] !== id; });
     if (others.length){
       var p2 = htmlEl('p');
@@ -1050,6 +1213,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         b.addEventListener('click', function(){ openRisk(p[0], id, markerEl(p[0], id)); });
         li.appendChild(b);
         li.appendChild(document.createTextNode(': ' + p[2]));
+        if (p[3] && p[3].length) li.appendChild(quoteList(p[3]));
         ul.appendChild(li);
       });
       pop.appendChild(ul);
@@ -1102,9 +1266,10 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     box.appendChild(b);
   }
 
-  if (dgSvg && pop){
-    buildDiagram();
-
+  var uiBound = false;
+  function bindDiagramOnce(){
+    if (uiBound || !dgSvg || !pop) return;
+    uiBound = true;
     dgSvg.addEventListener('click', function(e){
       var m = e.target.closest ? e.target.closest('.mk') : null;
       if (m){ openRisk(m.getAttribute('data-r'), m.getAttribute('data-c'), m); return; }
@@ -1121,49 +1286,76 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       }
     });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePop(true); });
-
-    var chipBox = document.getElementById('dgChips');
-    ['all'].concat(RISKS).forEach(function(r){ makeChip(r, chipBox); });
-    var chipBoxX = document.getElementById('dgChipsX');
-    XIDS.forEach(function(r){ makeChip(r, chipBoxX); });
-
-    /* One row builder, so Risk by zone and More risks share the same structure */
-    function zoneRow(r){
-      var tr = htmlEl('tr'); tr.setAttribute('data-r', r);
-      var th = htmlEl('th'); th.scope = 'row';
-      var b = htmlEl('button', 'mx-btn'); b.type = 'button';
-      b.appendChild(idTag(r));
-      b.appendChild(htmlEl('span', 'nm', riskTitle(r)));
-      b.addEventListener('click', function(){ selectRisk(r, false); toFigure(); });
-      th.appendChild(b); tr.appendChild(th);
-      for (var s = 1; s <= 4; s++){
-        var names = [];
-        placesOf(r).forEach(function(p){
-          var c = COMP[p[1]];
-          if (c.st === s){ var nm = c.short || c.t; if (names.indexOf(nm) < 0) names.push(nm); }
-        });
-        tr.appendChild(listCell(names));
-      }
-      return tr;
-    }
-    var tb = document.getElementById('dgMatrix');
-    RISKS.forEach(function(r){ tb.appendChild(zoneRow(r)); });
   }
-  var sr = $('#startRows');
-  START.forEach(function(r){
-    var tr = htmlEl('tr');
+
+  /* One row builder for Risk by zone */
+  function zoneRow(r){
+    var tr = htmlEl('tr'); tr.setAttribute('data-r', r);
     var th = htmlEl('th'); th.scope = 'row';
     var b = htmlEl('button', 'mx-btn'); b.type = 'button';
-    b.appendChild(idTag(r[0]));
-    b.addEventListener('click', function(){ openChecklist(r[0]); });
+    b.appendChild(idTag(r));
+    b.appendChild(htmlEl('span', 'nm', riskTitle(r)));
+    b.addEventListener('click', function(){ selectRisk(r, false); toFigure(); });
     th.appendChild(b); tr.appendChild(th);
-    tr.appendChild(htmlEl('td', null, r[1]));
-    tr.appendChild(htmlEl('td', null, r[2]));
-    sr.appendChild(tr);
+    for (var s = 1; s <= 4; s++){
+      var names = [];
+      placesOf(r).forEach(function(p){
+        var c = COMP[p[1]];
+        if (c.st === s){ var nm = c.short || c.t; if (names.indexOf(nm) < 0) names.push(nm); }
+      });
+      tr.appendChild(listCell(names));
+    }
+    return tr;
+  }
+  function rebuildMap(){
+    if (!dgSvg || !pop) return;
+    while (dgSvg.firstChild) dgSvg.removeChild(dgSvg.firstChild);
+    boxEls = {}; mkEls = []; dgReady = false;
+    buildDiagram();
+    var chipBox = document.getElementById('dgChips'); chipBox.innerHTML = '';
+    ['all'].concat(RISKS).forEach(function(r){ makeChip(r, chipBox); });
+    var tb = document.getElementById('dgMatrix'); tb.innerHTML = '';
+    RISKS.forEach(function(r){ tb.appendChild(zoneRow(r)); });
+  }
+  function renderStart(){
+    var sr = $('#startRows'); sr.innerHTML = '';
+    (scope === 'ms' ? MSDATA.START_M : START).forEach(function(r){
+      var tr = htmlEl('tr');
+      var th = htmlEl('th'); th.scope = 'row';
+      var b = htmlEl('button', 'mx-btn'); b.type = 'button';
+      b.appendChild(idTag(r[0]));
+      b.addEventListener('click', function(){ openChecklist(r[0]); });
+      th.appendChild(b); tr.appendChild(th);
+      tr.appendChild(htmlEl('td', null, r[1]));
+      tr.appendChild(htmlEl('td', null, r[2]));
+      sr.appendChild(tr);
+    });
+  }
+  function syncRadios(){
+    $$('.seg input').forEach(function(i){ i.checked = (status[i.name.slice(3)] === i.value); });
+  }
+  function applyScope(s, persist){
+    scope = (s === 'ms') ? 'ms' : 'g';
+    var root = document.documentElement;
+    if (scope === 'ms') root.setAttribute('data-scope', 'ms'); else root.removeAttribute('data-scope');
+    if (persist) store.set('mcp-scope', scope);
+    document.title = scope === 'ms' ? 'MCP Risk Map, Microsoft ecosystem' : 'MCP Risk Map';
+    $$('.scope button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-scope') === scope ? 'true' : 'false'); });
+    status = store.get(statusKey(), {});
+    syncRadios();
+    COMP = scope === 'ms' ? COMP_MS : COMP_G;
+    PLACE = scope === 'ms' ? PLACE_MS : PLACE_G;
+    closePop(false); selRisk = null; selComp = null; lastAnchor = null;
+    rebuildMap(); renderStart(); renderEvidence(); renderSources();
+    $('#resetConfirm').hidden = true; $('#resetBtn').hidden = false; out.hidden = true; msg.textContent = '';
+    tally(); applySel(); writeHash();
+  }
+  $$('.scope button').forEach(function(b){
+    b.addEventListener('click', function(){ applyScope(b.getAttribute('data-scope'), true); });
   });
 
-  tally();
-  applySel();
+  renderMsx(); renderCallout(); renderOther(); bindDiagramOnce();
+  applyScope(scope, false);
 })();
 </script>
 </body></html>
