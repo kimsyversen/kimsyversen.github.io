@@ -46,6 +46,7 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 - **Both design figures are ASCII in text files** (`mcp-governance-microsoft.figure-safe.txt`, `.figure-preview.txt`), put in a `<pre class="ascii">` by the builder. User request: faster to update and work with. Reason: no coordinates to move, and a change shows up clearly in a diff. The old SVG drawing code is removed. Rule added to `AGENTS.md`.
 - **Red is `[red]...[/red]` in the text file.** Same meaning as before: denied, unverified or not tested.
+- Edit the text files and rebuild with `python3 -I scripts/build-mcp-governance.py`. Aim for lines near 84 characters so the figure can scroll within its frame on a phone. When the flow changes, update the figure's `aria-label` in the builder.
 - **Each target now points to the clients it governs.** The old figure put targets above unrelated layers. Power Platform box is named Copilot Studio, with "Power Platform policy" beneath.
 - **Agent 365 has a line from the pipeline but none to the clients.** The quote lists Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI. That does not match our client boxes one to one, so no line is drawn. Unverified.
 - **The label checker reads ASCII figures.** Each run of words in a `pre.ascii` is one text with a verdict. Box and arrow characters are skipped. The check proves a verdict was recorded for the exact wording, not that it is right.

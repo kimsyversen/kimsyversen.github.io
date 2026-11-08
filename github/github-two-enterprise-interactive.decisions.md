@@ -2,6 +2,11 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 
 # Decisions
 
+## Diagram checks
+
+- After changes to diagram navigation, test each filter, open every highlighted box, and follow every source, Part of, and Related link. Confirm that sources load and that internal links leave the expected filter, popup, and URL hash. Use real clicks for a sample.
+- Open shared `#f=` and `#n=` links directly to check that they restore the expected filter or box. Record the checks and any gaps here or in the fact check.
+
 ## 5 November 2026
 
 - Keep the two-enterprise github.com baseline and clarify that the other hosting choices apply to A only. B uses personal accounts and public repositories, incompatible with GHE.com.

@@ -16,6 +16,11 @@ Working notes.
 - Made the page easier for people new to MCP security: added a "How MCP works" box, a glossary, a plain-words line per risk, and moved vendor setting names into a collapsed "How to set it". Why: the user asked whether the page suits learners, and the original assumed prior knowledge.
 - Added a separate "VS Code" tab and left the general risks as they were. Why: the user wanted VS Code as the base case, then chose to keep the general content and add a section. Each row names the risk it touches. The table stacks into cards under 680px so it does not scroll sideways.
 
+## Diagram checks
+
+- After changes to diagram navigation, test each filter, open every highlighted box or marker, and follow every popup link. Check that each control opens the expected popup or checklist and each source link loads. Use real clicks for a sample.
+- Open shared links such as `#risks` directly and check that they restore the selected tab. Record the checks and any gaps here or in the fact check.
+
 ## 3 Nov 2026, "Made with AI" note
 
 - **Plain label and one sentence at the end of the footer**, under a hairline rule, in the page's own muted and ink colours. Chose this over a pill or badge to keep it quiet and avoid the template look. Colours use the page tokens, so dark mode follows.
