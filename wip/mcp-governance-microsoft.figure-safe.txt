@@ -1,6 +1,6 @@
 SOURCE OF TRUTH              APPLY ON MERGE
 +------------------------+   +------------------------+
-| [b]GIT REPOSITORY[/b]         |-->| [b]PIPELINE WE BUILD[/b]      |
+| [b]GIT REPOSITORY[/b]         |-->| [b]PIPELINE[/b]               |
 | Change by pull request |   | Runs after merge       |
 |                        |   |                        |
 +------------------------+   +------------+-----------+

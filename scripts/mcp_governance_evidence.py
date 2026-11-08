@@ -62,8 +62,8 @@ SOURCES = {
                "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol", "2026-10-28"),
     "apim-genai": ("Microsoft Learn, API Management AI gateway capabilities",
                    "https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities", "2026-05-29"),
-    "azupd-mcp": ("Azure Updates 527626, Microsoft release communications feed",
-                  "https://www.microsoft.com/releasecommunications/api/v2/azure?%24filter=id%20eq%20'527626'", "2025-11-18"),
+    "azupd-mcp": ("Microsoft Apps on Azure Blog, Ignite 2025",
+                  "https://techcommunity.microsoft.com/blog/appsonazureblog/azure-app-platform-at-ignite-2025-new-innovations-for-all-your-apps-and-agents/4470759", "2025-11-18"),
     "apim-mcp": ("Microsoft Learn, about MCP servers in API Management",
                  "https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview", "2026-09-11"),
 }
@@ -152,8 +152,8 @@ QUOTES = [
     ("pp-certified", "pp-acp", "First-party and certified third-party connectors."),
     ("pp-custom", "pp-acp", "Custom connectors and HTTP connectors aren't yet supported."),
     ("pv-shared-cred", "aig-con", "With a shared backend connection, authorized callers use the permissions of that connection."),
-    ("apim-ga", "azupd-mcp", "Model Context Protocol (MCP) governance in Azure API Management (APIM) is now generally available."),
-    ("apim-ga-tiers", "azupd-mcp", "Available across Azure API Management classic and v2 tiers, including the Developer tier and the Self-hosted Gateway."),
+    ("apim-ga", "azupd-mcp", "API Management brings policy-driven governance for MCP endpoints (GA)"),
+    ("apim-ga-tiers", "apim-mcp", "You can also use the API Management self-hosted gateway to manage MCP servers in your own infrastructure."),
     ("gh-file", "gh-deploy", "In the repository, create or update copilot/managed-settings.json"),
     ("gh-commit", "gh-deploy", "Commit and push your changes to the default branch."),
     ("pv-res-removed", "aig-res", "Resources of type Microsoft.ApiManagement/service with the AIGateway SKU are permanently removed."),
@@ -162,6 +162,7 @@ QUOTES = [
     ("pv-byo-approval", "a365-byo", "An IT admin reviews the request in the Microsoft 365 admin center and approves or rejects it."),
     ("pv-byo-endpoint", "a365-byo", "Your MCP server has a publicly accessible endpoint."),
     ("stdio-io", "mcp-tr", "communication over standard in and standard out"),
+    ("gh-refresh", "gh-deploy", "Updated settings are applied automatically within about an hour."),
 ]
 
 # Quotes that back only the preview-enabled path. The page hides their rows on the safe path.

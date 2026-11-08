@@ -4,6 +4,27 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 Documentation checked: 2026-11-08.
 
+## Completed statement audit, 2026-11-08
+
+This audit supersedes conflicting conclusions and check counts in the historical entries below. All reader-facing prose, table cells, labels, diagram requirements, acceptance targets and evidence excerpts were reviewed. Product statements were compared with primary-source context; architecture choices remain explicit requirements, and operational results remain untested.
+
+| Scope | Verdict and correction |
+| --- | --- |
+| Design, figures and objectives | Requirements, not deployed guarantees. Defined A and B in Controls. Qualified the released-only baseline and kept unverified automation out of production. |
+| Inventory and pipeline | Proposed implementation. GitHub documents file deployment and roughly hourly propagation (new V90). Acceptance targets now wait for refresh. Power Platform MCP-specific API automation and the Foundry pipeline remain untested. |
+| Power Platform | Verified whole MCP server blocking and absence of individual-tool blocking. ACP excludes custom and HTTP connectors; use classic data policies for those. The API tutorial has no MCP-specific example. Manual configuration is the fallback pending verification. |
+| Foundry | Verified nonempty allowed_tools behavior; an empty list permits all tools. Removed the unsupported claim that no configuration method is documented. Scoped networking evidence to toolboxes and required separate egress controls. A per-connection tool list is not an enterprise server URL policy. |
+| API Management, backend and identity | Verified exposure, JWT/key checks, managed identity, tier limits and Functions networking. Distinguished classic Consumption from Flex Consumption. Backend audience and caller validation are requirements, not an automatic bypass guarantee. |
+| Client, cloud and local controls | Verified VS Code policies, GitHub matching and exemptions, Windows outbound limits and stdio subprocess transport. Qualified the cloud firewall statement to direct process filtering. Removed the misleading local-stdio mapping to the remote-only preview filter. |
+| Agent 365 and AI Gateway | Verified separate gateway integration and BYO routes, consent scope, supported surfaces, static tool requirement, tier limitations, migration date, regions and networking limitations. Server blocking is runtime enforcement, not merely visibility. Frontend private endpoint limits do not mean private backends are impossible. |
+| Threat protection and Foundry routing | Verified user-token requirement, licensing, fail-open/closed modes, server scope and post-call limitations. Tests now require an actual evaluation denial instead of assuming every risky input is detected. Defender mode selection is an implementation requirement based on the same policy article. Verified Foundry creation-time routing limits. |
+| Order, fallback and open questions | Recommendations and decisions, not product guarantees. No tenant deployment or acceptance test was performed. |
+| Sources and dates | All 90 excerpts matched live primary sources fetched during this audit. All 22 Microsoft Learn dates matched the source footer. Other documentation dates remain unspecified; Microsoft's Ignite blog is dated 2025-11-18. |
+
+The release feed timed out and an encoded retry returned an error response. Replaced V80 with Microsoft's Ignite announcement and V81 with current API Management documentation, retaining their evidence anchors. Existing draft edits were preserved. The page remains in wip and has no published index entry, so no index change is needed.
+
+Validation: page rebuilt with 90 quotes (50 baseline, 40 preview) and no length or anchor warnings. Quote checker: 90 quotes, 0 problems, using sources fetched in this audit. Presentation ledger: 83 distinct texts passed. Static HTML: unique IDs, all 90 evidence anchors, local links, exact Made with AI note and punctuation passed. No CSS or interaction code was changed; no fresh visual browser test or tenant execution was performed. Earlier browser results are historical.
+
 ## Method
 
 Each product claim in the page has a quote in `scripts/mcp_governance_evidence.py`. `scripts/check-evidence-quotes.py` fetches each source and confirms the quote appears word for word. The page lists every quote and links it with a text fragment.
@@ -139,11 +160,11 @@ label	Decision makers
 label	recommendation
 label	preview
 label	The design
-requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline we build applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.
+requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.
 label	SOURCE OF TRUTH
 label	APPLY ON MERGE
 label	GIT REPOSITORY
-label	PIPELINE WE BUILD
+label	PIPELINE
 label	Change by pull request
 label	Runs after merge
 label	COPILOT STUDIO
@@ -172,7 +193,7 @@ requirement	Unlisted server denied
 label	MCP clients
 label	Company MCP server
 requirement	Blocked. Only the gateway may call the server
-requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline we build applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
+requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
 label	AI GATEWAY, PREVIEW
 requirement	Publish MCP endpoints
 requirement	Tool threat protection
@@ -189,7 +210,7 @@ label	Bad news first
 label	Open questions
 requirement	Which comes first: developer workstations or hosted agents?
 requirement	Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the environment table.
-requirement	Do we accept a default outbound block on managed Windows laptops?
+requirement	Is a default outbound block on managed Windows laptops acceptable?
 requirement	Decide before rollout. The effect on other traffic is in the gaps.
 requirement	Who reviews list changes and owns the pipeline?
 requirement	Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.
@@ -197,21 +218,21 @@ requirement	Who approves and reviews the Agent 365 consent?
 requirement	The consent lets the service write API policies. Name an approver and a reviewer. See the controls.
 requirement	What ends the pilot?
 requirement	Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the fallback.
-requirement	Does a gateway with no private endpoints fit our network rules?
+requirement	Does a gateway with no private endpoints fit the network rules?
 requirement	The new resource has no private endpoints. Check the rules before building. See the gaps.
 requirement	Which Agent 365 route will the pilot use?
 requirement	Choose the API Management gateway integration or the separate BYO server registration route. See the controls.
 label	Fact check
 label	Parts of the design
 requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio. Select Released only or With preview. Nothing is built or tested yet.
-requirement	Choices: never, in a sandbox only, or later. The released-only design works without preview.
+requirement	Choices: never, in a sandbox only, or later. Require released features for production. The proposed pipeline and cross-client enforcement still need validation.
 label	Controls
-requirement	Do we allow preview features at all?
+requirement	Are preview features allowed at all?
 label	Environments
 label	Fallback
 requirement	Released only is the baseline. Compare it with the preview design, then read the open questions.
 requirement	Design requirements and supporting evidence are below
-requirement	The repository list is the design's source of truth. The pipeline is our work, and none of it is built or tested. Control requirements and evidence follow below.
+requirement	The repository list is the design's source of truth. The pipeline is a design requirement, and none of it is built or tested. Control requirements and evidence follow below.
 requirement	With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.
 ```
 <!-- End reviewed presentation text -->
