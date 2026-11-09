@@ -57,3 +57,4 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - Follow-up pass 2026-11-08: lead, Objectives and Designs lines, wording (path, Evidence), fact check column widths, headings, new open question 1, phone sticky switch. Done and checked.
 - Claim check 2026-11-08 (second pass): every claim re-read against its source context, 8 quotes added (84 total), wording trimmed where it overstated a source. See the fact check.
 - Live verification 2026-11-08 (third pass): 90 of 91 quotes matched live, V80 read in a browser, 22 of 22 dates matched, V91 added, ledger repaired. See the fact check.
+- Built-in GitHub server check 2026-11-09: gap and open question 5 reworded, 5 quotes added (96 total). Still open: test the MCP servers in Copilot policy and Registry only against the built-in server in a pilot enterprise.

@@ -24,6 +24,10 @@ SOURCES = {
                  "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist", None),
     "gh-ref": ("GitHub Docs, enterprise managed settings reference",
                "https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings", None),
+    "gh-mgmt": ("GitHub Docs, MCP server usage in your company",
+                "https://docs.github.com/en/copilot/concepts/enterprise/mcp-management", None),
+    "gh-reg": ("GitHub Docs, restrict MCP access based on a registry",
+               "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/restrict-based-on-registry", None),
     "gh-fw": ("GitHub Docs, customize the Copilot cloud agent firewall",
               "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-firewall", None),
     "fy-tb": ("Microsoft Learn, network isolation for a Foundry toolbox",
@@ -165,6 +169,12 @@ QUOTES = [
     ("gh-refresh", "gh-deploy", "Updated settings are applied automatically within about an hour."),
     # Added in the claim check of 2026-11-08 (third pass).
     ("pv-a365-tier", "apim-a365", "This capability is only available for MCP Servers registered in the AI Gateway tier in Azure API Management service."),
+    # Added 2026-11-09, for the built-in GitHub MCP server gap.
+    ("gh-builtin-order", "gh-allow", "Always allow built-in default servers, such as the built-in GitHub MCP server."),
+    ("gh-policy-off", "gh-mgmt", "The MCP servers in Copilot policy defines whether MCP servers can run at all across Copilot clients."),
+    ("gh-reg-only", "gh-reg", "Only servers from the registry may run, so users can't use Copilot connectors."),
+    ("gh-reg-preview", "gh-mgmt", "Public preview, not prioritized for development"),
+    ("gh-reg-bypass", "gh-mgmt", "Users can bypass the restriction by editing configuration files."),
 ]
 
 # Quotes that back only the preview-enabled path. The page hides their rows on the safe path.

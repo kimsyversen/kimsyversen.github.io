@@ -25,6 +25,16 @@ The release feed timed out and an encoded retry returned an error response. Repl
 
 Validation: page rebuilt with 90 quotes (50 baseline, 40 preview) and no length or anchor warnings. Quote checker: 90 quotes, 0 problems, using sources fetched in this audit. Presentation ledger: 83 distinct texts passed. Static HTML: unique IDs, all 90 evidence anchors, local links, exact Made with AI note and punctuation passed. No CSS or interaction code was changed; no fresh visual browser test or tenant execution was performed. Earlier browser results are historical.
 
+## Built-in GitHub MCP server, check of 2026-11-09 (latest)
+
+A pasted answer said three things could block the built-in GitHub MCP server. I fetched the cited pages on 2026-11-09 and compared each claim.
+
+- "Registry only blocks the built-in server if it is left off the list": not supported. The GitHub page says "Only servers from the registry may run, so users can't use Copilot connectors" and never mentions the built-in server. The same docs call the registry method a "Public preview, not prioritized for development" and say users can bypass it by editing configuration files. Verdict: not shown, low weight.
+- "The MCP servers in Copilot policy turns off all MCP": supported as written ("defines whether MCP servers can run at all across Copilot clients"). The docs do not say whether it also turns off the built-in server. It also stops every approved server, so it is not a targeted control. Verdict: possible, untested.
+- "A VS Code `deniedMcpServers` entry with `serverUrl: github-mcp-server` blocks it": not supported. The VS Code page shows `deniedMcpServers` with full URLs, and `github-mcp-server` is not a URL. The GitHub reference says first-party servers "are exempt from deny rules and cannot be blocked", and the allowlist page says built-in default servers are always allowed first. Verdict: contradicted by the sources, not tried in a client.
+- Page change: the gap and open question 5 now say the allow and deny lists cannot block it (V21 and the new V92), name the two untested switches, and no longer say "client policy cannot block it" in general. Five quotes added (V92 to V96); the checker reports 96 quotes, 0 problems on live pages.
+- Not tested: no client was tried with any of these settings.
+
 ## Live verification pass, 2026-11-08 (latest, supersedes counts above)
 
 - Network worked this time. The quote checker fetched every source: 90 of 91 quotes matched word for word on the live pages (V1 to V79, V81 to V91). V80 (Microsoft Ignite blog) returns HTTP 403 to curl, the fetch tool and a fetch agent. It was read in the built-in browser: the passage "API Management brings policy-driven governance for MCP endpoints (GA)" is on the page, dated Nov 18, 2025 (matches the page date). That text was copied from the browser into the checker's cache for V80, and the checker then reported 91 quotes, 0 problems. V80 is therefore verified by browser text, not by a script fetch.
@@ -230,7 +240,7 @@ requirement	Does a gateway with no private endpoints fit the network rules?
 requirement	The new resource has no private endpoints. Check the rules before building. See the gaps.
 requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio.
 requirement	Is the built-in GitHub MCP server acceptable on managed clients?
-requirement	Client policy cannot block it. Choices: accept it, or limit it outside client policy, for example through the permissions of the GitHub accounts that use it. inference No source checked covers the second choice. See the gaps.
+requirement	The allow and deny lists cannot block it. Choices: accept it, turn off the MCP servers in Copilot policy (stops all servers), or limit it through GitHub account permissions. inference No source checked says whether that policy or Registry only covers the built-in server. Test both in a pilot.
 label	inference
 requirement	Which Agent 365 route will the pilot use?
 requirement	Choose the API Management gateway integration or the separate BYO server registration route. See the controls.

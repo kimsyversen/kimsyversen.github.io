@@ -202,3 +202,7 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 ## 2026-11-08, moved out of wip
 
 Moved the page and its notes from `wip/` to the repository root and listed it in the index as entry 09 (numbers 6 to 8 were used by retired entries, so their public anchors are not reused). Reason: the owner asked for it to be published. The builder and both checkers now read and write the root path; the checkers still fall back to `wip/` for other pages. Superseded: the earlier plan to keep it in `wip/` until the owner moved it.
+
+## 2026-11-09, built-in GitHub MCP server wording
+
+- Narrowed "Client policy cannot block it" to "Allow and deny lists cannot block it", because the evidence only covers those lists. Named the MCP servers in Copilot policy and Registry only as untested switches instead of claiming they work. Did not add the pasted VS Code deny entry: the sources contradict it. Open question 5 now asks for a pilot test of both.
