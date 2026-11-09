@@ -312,7 +312,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
 
   <nav class="tabs" role="tablist" aria-label="Parts of the risk map">
     <button type="button" role="tab" id="t-map" data-tab="map" aria-controls="p-map" aria-selected="true">General risk map</button>
-    <button type="button" role="tab" id="t-risks" data-tab="risks" aria-controls="p-risks" aria-selected="false" tabindex="-1">2 · Risks</button>
+    <button type="button" role="tab" id="t-risks" data-tab="risks" aria-controls="p-risks" aria-selected="false" tabindex="-1" hidden>Risks</button>
     <button type="button" role="tab" id="t-vscode" data-tab="vscode" aria-controls="p-vscode" aria-selected="false" tabindex="-1">Risks with VSCode and MCP</button>
   </nav>
 
@@ -354,7 +354,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </section>
   </div>
 
-  <!-- 2 RISKS -->
+  <!-- Risk details, opened from map markers or deep links -->
   <div class="panel" role="tabpanel" id="p-risks" aria-labelledby="t-risks" hidden>
     <section id="the-eight-risks">
       <h2><a class="sec-link" href="#the-eight-risks">The fourteen risks</a></h2>
@@ -362,7 +362,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </section>
 
       <p class="sub">Scope: the 10 OWASP entries and 34 numbered CoSAI threats cited here. These source lists overlap. This map classifies individual control failures once using the boundaries below. An attack can contain several different failures. Coverage of these lists does not establish coverage of every possible MCP risk. Interpretation by AI. <span class="tag">[inference]</span></p>
-      <p class="sub">Section roles: the cards define risk boundaries and checks; the map and zone table index their locations; Where to start selects a first action; the product tab records implementation details; Sources lists references. Evidence, sources and verdicts are recorded in MCP-Risk-Map.factcheck.md. Repeated risk IDs are cross-references, not additional risks.</p>
+      <p class="sub">Section roles: the map and zone table show risk locations; map markers open risk details and checks; the hidden Risks tab remains available to deep links; the product tab records implementation details. Evidence, sources and verdicts are recorded in MCP-Risk-Map.factcheck.md. Repeated risk IDs are cross-references, not additional risks.</p>
       <section id="classification-boundaries">
         <h3 id="classification-boundaries-heading"><a class="sec-link" href="#classification-boundaries-heading">Classification boundaries</a></h3>
         <p>Classify the failed control, not every consequence. Use the most specific boundary below. Split a chain into separate findings only when distinct controls failed. A finding outside these definitions remains unclassified pending review. These boundaries and tie-breaks are interpretation by AI. <span class="tag">[inference]</span></p>
@@ -785,10 +785,11 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
   function writeHash(){ try { history.replaceState(null, '', '#' + curTab + '&s=' + scope + '&f=' + fw); } catch(e){} }
 
   /* Tabs */
-  var tabs = $$('[role="tab"]');
+  var tabs = $$('[role="tab"]:not([hidden])');
   var ids = tabs.map(function(t){ return t.getAttribute('data-tab'); });
+  var panelIds = ['map', 'risks', 'vscode'];
   function show(id, focus){
-    if (ids.indexOf(id) < 0) id = 'map';
+    if (ids.indexOf(id) < 0 && id !== 'risks') id = 'map';
     tabs.forEach(function(t){
       var on = t.getAttribute('data-tab') === id;
       t.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -799,7 +800,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         if (t.offsetLeft < bar.scrollLeft || t.offsetLeft + t.offsetWidth > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = Math.max(0, t.offsetLeft - 12);
       }
     });
-    ids.forEach(function(x){ var p = document.getElementById('p-' + x); if (p) p.hidden = (x !== id); });
+    panelIds.forEach(function(x){ var p = document.getElementById('p-' + x); if (p) p.hidden = (x !== id); });
     curTab = id; writeHash();
     store.set('mcp-tab', id);
   }
@@ -820,7 +821,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     var el = document.getElementById(id); if (!el) return false;
     var p = el.closest('[id^="p-"]');
     var tab = p ? p.id.slice(2) : null;
-    if (tab && ids.indexOf(tab) >= 0 && p.hidden) show(tab);
+    if (tab && panelIds.indexOf(tab) >= 0 && p.hidden) show(tab);
     var c = el.closest('.risk');
     if (c && c.hidden) applyFw('all', true);
     try { history.replaceState(null, '', '#' + id + '&s=' + scope + '&f=' + fw); } catch(e){}
@@ -829,8 +830,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
   }
   var start = h0.tab;
   if (start === 'more') toMore();
-  else show(ids.indexOf(start) >= 0 ? start : store.get('mcp-tab', 'map'));
-  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
+  else show(panelIds.indexOf(start) >= 0 ? start : (ids.indexOf(start) >= 0 ? start : store.get('mcp-tab', 'map')));
+  if (start && start !== 'more' && ids.indexOf(start) < 0 && start !== 'risks') openSection(start);
   window.addEventListener('hashchange', function(){
     var h = parseHash();
     if ((h.s === 'ms' || h.s === 'g') && h.s !== scope) applyScope(h.s, false);

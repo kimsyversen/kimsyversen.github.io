@@ -33,7 +33,7 @@ Primary source URLs and exact quotations remain in the page and source register 
 
 ## Evidence moved from the reader-facing tab
 
-The separate Evidence and Sources tabs have been removed at the owner's request. This file is the authoritative home for evidence, source register, statement inventory, verdicts and review limits. The former `#evidence-status` and `#sources-2` fragments are retained as aliases into Risks.
+The separate Evidence and Sources tabs have been removed, and the Risks tab is hidden from navigation at the owner's request. Risk details remain available from map markers and direct links. This file is the authoritative home for evidence, source register, statement inventory, verdicts and review limits. The former `#evidence-status` and `#sources-2` fragments are retained as aliases into Risks.
 
 ## Validation and limits
 

@@ -99,3 +99,8 @@ Completed: explicit classification scope and boundaries; full source refresh; co
 ## Evidence tab removal, 9 November 2026
 
 Removed the reader-facing Evidence and Sources tabs and summary data at the owner's request. `MCP-Risk-Map.factcheck.md` is authoritative for evidence, source register, verdicts and review limits. Old fragments route into Risks. Renamed the map tab to `General risk map` and the product tab to `Risks with VSCode and MCP`, preserving their IDs.
+
+
+## Risks tab hidden, 9 November 2026
+
+Hid the Risks tab in navigation at the owner's request. Kept its panel available for map marker checklists and deep links, preserved the tab and risk IDs, and made tab keyboard navigation skip hidden tabs.
