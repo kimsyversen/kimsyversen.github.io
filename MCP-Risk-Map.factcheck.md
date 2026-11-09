@@ -31,6 +31,10 @@ MECE applies to individual control failures within the 10 OWASP and 34 CoSAI ent
 
 Primary source URLs and exact quotations remain in the page and source register below. All 135 quotations were compared with freshly retrieved source text, including the CoSAI PDF page numbers. The checker also validates the exact 10/34 ID sets, distinct OWASP homes, static card labels, quote namespaces and 120 reviewed presentation texts. A passing check is evidence consistency, not proof of product enforcement.
 
+## Evidence moved from the reader-facing tab
+
+The separate Evidence and Sources tabs have been removed at the owner's request. This file is the authoritative home for evidence, source register, statement inventory, verdicts and review limits. The former `#evidence-status` and `#sources-2` fragments are retained as aliases into Risks.
+
 ## Validation and limits
 
 - Browser: 1440px and 375px, light and dark, both scopes, all five tabs; no sideways page overflow or console errors.
@@ -465,26 +469,26 @@ Source keys below apply to the relevant named sections, not to unrelated stateme
 
 ## Primary sources
 
-- **ARCH**: [MCP architecture](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture), opened 5 November 2026.
-- **TOOLS**: [MCP tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools), opened 5 November 2026.
-- **STDIO**: [MCP stdio](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio), opened 5 November 2026.
-- **HTTP**: [MCP Streamable HTTP, Security & Endpoint](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http#security-endpoint), opened 5 November 2026.
-- **SEC**: [MCP Security Best Practices, relevant named subsection](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices), opened 5 November 2026.
-- **VER**: [MCP versioning](https://modelcontextprotocol.io/specification/versioning), opened 5 November 2026.
-- **OWASP**: [OWASP MCP Top 10, phase 3 and entries MCP01 to MCP10](https://owasp.org/www-project-mcp-top-10/), opened 5 November 2026.
-- **CC**: [Claude Code managed MCP, matching / exceptions / monitoring](https://code.claude.com/docs/en/managed-mcp), opened 5 November 2026.
-- **CODEX**: [OpenAI managed configuration, Enforce command rules from requirements](https://learn.chatgpt.com/docs/enterprise/managed-configuration), opened 5 November 2026.
-- **MITIGA**: [Mitiga research, five-step chain / disclosure / FAQ](https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm), opened 5 November 2026.
-- **VADD**: [VS Code add MCP servers](https://code.visualstudio.com/docs/agent-customization/mcp-servers), opened 5 November 2026.
-- **VMAN**: [VS Code manage MCP servers](https://code.visualstudio.com/docs/agents/run/manage-mcp-servers), opened 5 November 2026.
-- **VCONF**: [VS Code MCP configuration reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration), opened 5 November 2026.
-- **VSEC**: [VS Code AI security, approvals / sandboxing / policy gaps](https://code.visualstudio.com/docs/agents/run/security), opened 5 November 2026.
-- **VPOL**: [VS Code device policy reference](https://code.visualstudio.com/docs/enterprise/policies), opened 5 November 2026.
-- **VMGMT**: [VS Code manage AI settings, harness availability and coverage](https://code.visualstudio.com/docs/enterprise/manage-ai-settings), opened 5 November 2026.
-- **VOTEL**: [VS Code enterprise telemetry, OpenTelemetry support](https://code.visualstudio.com/docs/enterprise/telemetry), opened 5 November 2026.
-- **OAUTH**: [RFC 6749, sections 1.4, 3.3, 4.4](https://www.rfc-editor.org/rfc/rfc6749.html), opened 5 November 2026.
-- **BEARER**: [RFC 6750, bearer token usage](https://www.rfc-editor.org/rfc/rfc6750), opened 5 November 2026.
-- **SELF**: [Page source and review scope](MCP-Risk-Map.html), opened 5 November 2026.
+- **ARCH**: [MCP architecture](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture), opened 9 November 2026.
+- **TOOLS**: [MCP tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools), opened 9 November 2026.
+- **STDIO**: [MCP stdio](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio), opened 9 November 2026.
+- **HTTP**: [MCP Streamable HTTP, Security & Endpoint](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http#security-endpoint), opened 9 November 2026.
+- **SEC**: [MCP Security Best Practices, relevant named subsection](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices), opened 9 November 2026.
+- **VER**: [MCP versioning](https://modelcontextprotocol.io/specification/versioning), opened 9 November 2026.
+- **OWASP**: [OWASP MCP Top 10, phase 3 and entries MCP01 to MCP10](https://owasp.org/www-project-mcp-top-10/), opened 9 November 2026.
+- **CC**: [Claude Code managed MCP, matching / exceptions / monitoring](https://code.claude.com/docs/en/managed-mcp), opened 9 November 2026.
+- **CODEX**: [OpenAI managed configuration, Enforce command rules from requirements](https://learn.chatgpt.com/docs/enterprise/managed-configuration), opened 9 November 2026.
+- **MITIGA**: [Mitiga research, five-step chain / disclosure / FAQ](https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm), opened 9 November 2026.
+- **VADD**: [VS Code add MCP servers](https://code.visualstudio.com/docs/agent-customization/mcp-servers), opened 9 November 2026.
+- **VMAN**: [VS Code manage MCP servers](https://code.visualstudio.com/docs/agents/run/manage-mcp-servers), opened 9 November 2026.
+- **VCONF**: [VS Code MCP configuration reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration), opened 9 November 2026.
+- **VSEC**: [VS Code AI security, approvals / sandboxing / policy gaps](https://code.visualstudio.com/docs/agents/run/security), opened 9 November 2026.
+- **VPOL**: [VS Code device policy reference](https://code.visualstudio.com/docs/enterprise/policies), opened 9 November 2026.
+- **VMGMT**: [VS Code manage AI settings, harness availability and coverage](https://code.visualstudio.com/docs/enterprise/manage-ai-settings), opened 9 November 2026.
+- **VOTEL**: [VS Code enterprise telemetry, OpenTelemetry support](https://code.visualstudio.com/docs/enterprise/telemetry), opened 9 November 2026.
+- **OAUTH**: [RFC 6749, sections 1.4, 3.3, 4.4](https://www.rfc-editor.org/rfc/rfc6749.html), opened 9 November 2026.
+- **BEARER**: [RFC 6750, bearer token usage](https://www.rfc-editor.org/rfc/rfc6750), opened 9 November 2026.
+- **SELF**: [Page source and review scope](MCP-Risk-Map.html), opened 9 November 2026.
 
 ## Complete statement inventory
 
@@ -1055,12 +1059,10 @@ label	Facts checked 9 Nov 2026
 label	View
 label	General
 label	Microsoft ecosystem
-label	3 · VS Code and Microsoft
 label	Current as of 9 November 2026
 requirement	None of them needs a preview feature.
 label	Other Microsoft surfaces
 label	What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 9 November 2026. Nothing here was tested.
-label	All external sources opened on 9 November 2026. The Developer-WS page sits on this site.
 label	Gallery, GitHub, registries
 label	VS Code, Visual Studio, Copilot
 code token	mcp.json, .mcp.json
@@ -1138,24 +1140,6 @@ label	Codex managed configuration
 label	VS Code: MCP configuration reference
 label	Also check
 label	Check
-label	Checked against sources
-label	Interpretation by AI
-label	Still open
-label	Microsoft claims and diagram claims have linked quotations. Quotes were compared with source text on 9 November 2026; the fact-check notes record the full statement review.
-label	Microsoft Learn: Windows on-device agent registry, Visual Studio MCP servers, Copilot Studio, Entra Global Secure Access, Azure API Management, Agent 365, Azure MCP Server security.
-label	GitHub Docs: enterprise allowlist, MCP registry and registry enforcement. VS Code docs: manage MCP servers, policies, telemetry.
-label	VS Code tab rows: checked on 9 November 2026, shared by both views.
-label	CVE records CVE-2026-26118 and CVE-2026-32211, as published by Microsoft. Invariant Labs, a third-party demonstration against the GitHub MCP server.
-label	MCP specification 2026-07-28 (Origin validation, localhost binding, SSRF, authorization URLs) and the OWASP MCP Top 10 names.
-label	The same risks as the general view, and the order. Which Microsoft surface sits on which part of the map.
-label	Statements tagged [inference], and the friction estimates in the start table.
-label	Which Microsoft facts are shown, and the risk each is tied to.
-requirement	Nothing was tested on a real system. No setting or command was run on a managed machine.
-requirement	Preview and prerelease status: see Current as of. It can change.
-requirement	CVE records: vendor advisories only. No observed victim incident was verified.
-label	Mitiga: the cited article demonstrates Claude Code, not the same chain in a Microsoft product.
-requirement	Third-party servers used inside Microsoft clients: covered by the general risks, not by Microsoft sources.
-requirement	Local servers and the Entra items: see the quoted scope under M07. Endpoint tooling was not researched.
 label	CoSAI
 label	Risk list
 label	Not assessed
@@ -1164,8 +1148,6 @@ label	CoSAI: Model Context Protocol (MCP) Security
 label	Coalition for Secure AI, Workstream 4. Marked Draft. Threat names, numbers and quoted sentences.
 label	MCP specification: tools
 label	Model Context Protocol, version 2026-07-28. Human in the loop and rate limiting.
-label	CoSAI MCP security paper (draft): threat names and numbers for the risk list buttons, and the sentences behind the CoSAI lines.
-label	M10 to M12 have no product-specific assessment here; general framework guidance is shown separately.
 label	All
 ```
 <!-- End reviewed presentation text (Microsoft view) -->

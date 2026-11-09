@@ -178,9 +178,6 @@ def presentation_texts(markup, data):
     for c in data["MSCARD"].values():
         if c.get("cl"):
             items.append(c["cl"])
-    items.extend(data["EVIDENCE_M"][i]["h"] for i in range(len(data["EVIDENCE_M"])))
-    for col in data["EVIDENCE_M"]:
-        items.extend(col["i"])
     return [i for i in items if i], body
 
 
