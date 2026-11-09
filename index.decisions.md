@@ -81,3 +81,13 @@ Belongs to [index.html](index.html). Plan: [index.plan.md](index.plan.md).
 
 - Add "MCP governance in a Microsoft ecosystem" as entry 09, category Reference design, updated 8 Nov 2026. The count reads 06 pages. Entry numbers 6 to 8 belonged to pages moved to `wip/`, so they are not reused: old `#n6` to `#n8` anchors stay unused. Existing entries keep their numbers.
 - The drawing shows client, gateway and backend boxes with a red dashed line for the bypass route the design blocks.
+
+9 Nov 2026, at the owner's request
+
+- **Every section is linkable.** Each section and each h2 and h3 has an id, and each h2 and h3 is a link to it. The link sits around the heading text, so the heading's text does not change and the checks that read it still pass. The `#` shows on hover or focus, and always faintly on touch screens.
+- **One script adds the ids and links, `scripts/section_anchors.py`.** It never changes an id that exists, because old ids are public anchors. The three builders call it, so a rebuild keeps the links. `--check` fails if a section is missing one.
+- **Tab ids are reserved.** On the three tabbed pages the address `#basics` means a tab. A section id equal to a tab id would switch tabs instead of scrolling, so new ids skip those names.
+- **A link to a section inside a hidden tab opens that tab first.** The tab script on AKS, Developer-WS and MCP-Risk-Map now does this, at load and on address change.
+- **Headings that are links to another page are left alone.** The index entries already have ids on their rows (n1 to n9).
+- **Index dates not moved.** Ids and links add no content, so no entry date or footer date changed.
+

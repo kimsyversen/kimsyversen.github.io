@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.parse import quote as urlquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from section_anchors import add_anchors  # noqa: E402
 from mcp_governance_evidence import CHECKED, IDS, PREVIEW_ONLY, QUOTES, SOURCES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -639,7 +640,7 @@ for ch in (chr(0x2014), chr(0x2013)):
     if ch in BODY:
         sys.exit("em or en dash found in output")
 
-OUT.write_text(BODY, encoding="utf-8")
+OUT.write_text(add_anchors(BODY), encoding="utf-8")
 print(f"wrote {OUT.name}, {len(BODY.splitlines())} lines; {len(QUOTES)} quotes, {SAFE_COUNT} on the released-only path")
 
 for m in re.finditer(r"<(p|dd|td|li)\b[^>]*>(.*?)</\1>", BODY, re.S):

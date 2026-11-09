@@ -14,6 +14,7 @@ from pathlib import Path
 from urllib.parse import quote as urlquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from section_anchors import add_anchors  # noqa: E402
 from governance_evidence import CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +39,7 @@ STYLE = cut("<style>", "</style>")
 i = SRC.index('role="region" aria-label="MCP server approval diagram')
 FIG24 = SRC[SRC.rindex("<figure>", 0, i):SRC.index("</figure>", i) + len("</figure>")]
 PATH24 = cut('<ol class="path">\n      <li><h4>Request and review</h4>', "</ol>")
-TIERS = cut('<h3 style="font-size:1.05rem;margin-top:8px">Risk tiers', "<li>Review date</li>\n    </ul>")
+TIERS = cut('<h3 style="font-size:1.05rem;margin-top:8px" id="risk-tiers-recommendation">', "<li>Review date</li>\n    </ul>")
 FIVE = cut('<figure id="five-points">', "</figure>")
 ANS = cut('<ol class="ans">', "</ol>").replace('<ol class="ans">', '<ol class="ans tight">')
 RUNBOOK = cut('<ol class="path">\n      <li><h4>Find the affected calls</h4>', "Test revocation in the pilot</a></p>")
@@ -598,7 +599,7 @@ for ch in (chr(0x2014), chr(0x2013)):
     if ch in BODY:
         sys.exit("em or en dash found in output")
 
-OUT.write_text(BODY, encoding="utf-8")
+OUT.write_text(add_anchors(BODY), encoding="utf-8")
 print(f"wrote {OUT.name}, {len(BODY.splitlines())} lines")
 print("links sent to the long page:", ", ".join(sorted(moved)) or "none")
 

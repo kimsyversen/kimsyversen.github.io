@@ -16,6 +16,7 @@ from pathlib import Path
 from urllib.parse import quote as urlquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from section_anchors import add_anchors  # noqa: E402
 from developer_ws2_evidence import BLOCK_FRAGS, CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -349,7 +350,7 @@ def main():
     unused = [k for k, _, _ in QUOTES if k not in USED]
     if unused:
         sys.exit(f"quotes never cited: {unused}")
-    PAGE.write_text(HEAD + body + FOOT, encoding="utf-8")
+    PAGE.write_text(add_anchors(HEAD + body + FOOT), encoding="utf-8")
     block = BEGIN + "\n| verdict | text |\n|---|---|\n" + "\n".join(
         f"| {v} | {t} |" for t, v in TEXTS.items()) + "\n" + END
     if LEDGER.exists() and BEGIN in LEDGER.read_text(encoding="utf-8"):

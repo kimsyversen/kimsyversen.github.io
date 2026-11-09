@@ -24,10 +24,13 @@ For pages with multiple sections or tables, define each section's job and scope.
 
 Preserve public URLs, link anchors, and saved settings. Use page-specific keys for new browser storage. If asked to rename a public file, check incoming links and move its notes with it.
 
+Make every section linkable. Each `<section>` and each `<article>` that holds a heading has a stable `id` on it or on its heading, and every `<h2>` and `<h3>` has an `id` and is a link to it (`a.sec-link`), so a reader can copy the address of that part. This includes headings built by script. A heading that already links to another page is exempt. Never change an existing id. New ids come from the heading text. On tabbed pages a section id must not equal a tab id, and a link to a section in a hidden tab must open that tab first. Run `python3 -I scripts/section_anchors.py` after adding sections. Builders run it on their output.
+
 ## 5. Style and checks
 
 - Follow [threatmodelling.html](threatmodelling.html) for content page style and copy its Made with AI note word for word. Write in English, let body text fill its column, and avoid em and en dashes.
 - Keep static flow and architecture figures in plain text ASCII files beside the page. Give each figure a text description of the flow.
+- Run `python3 -I scripts/section_anchors.py --check` before finishing. It fails if a section has no id or link.
 - Check layout changes on desktop and a narrow viewport for sideways page scroll and console errors. Test affected controls and shared links when behavior changes. Keep detailed diagram checks with the relevant page.
 
 ## 6. Recommendations
