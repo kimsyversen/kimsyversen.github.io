@@ -11,7 +11,7 @@ Working notes.
 - (Superseded by the 5 November review.) Only one MCP-specific attack is cited (Mitiga, May 2026). Anthropic called it out of scope and by design; Mitiga disagrees. Both positions are on the page. Other risks are described as OWASP categories or spec warnings with no incident cited.
 - (Superseded by the 5 November review.) Did not state the values of the VS Code chat.mcp.access setting. Docs and source disagree (see Developer-WS.html). Only the policy names are used.
 - Plugin4Shell excluded: Cloud Security Alliance does not name MCP as the affected component.
-- Friction estimates and the risk order are my judgement and are tagged [inference].
+- Friction estimates and the risk order are interpretation by AI and are tagged [inference].
 - Storage keys are mcp-tab and mcp-status. Both pages share one origin, so the old dev-* keys would mix state.
 - Made the page easier for people new to MCP security: added a "How MCP works" box, a glossary, a plain-words line per risk, and moved vendor setting names into a collapsed "How to set it". Why: the user asked whether the page suits learners, and the original assumed prior knowledge.
 - Added a separate "VS Code" tab and left the general risks as they were. Why: the user wanted VS Code as the base case, then chose to keep the general content and add a section. Each row names the risk it touches. The table stacks into cards under 680px so it does not scroll sideways.
@@ -56,7 +56,7 @@ Working notes.
 - **Per-item evidence (mechanism).** Each Microsoft card item, table row, diagram placement and callout carries quote ids. `qBlock` renders them as a collapsed list with a text-fragment link. Reason: AGENTS.md rule 3, the reader checks each claim from the diagram itself.
 - **`MSDATA` is the source of truth.** It is one JSON line in the page. The builder script that produced it is not shipped. Reason: the page is hand-written with no build step. Edit the line, then run the check script.
 - **Whitespace fallback.** The check first matches a quote word for word. If that fails it matches with whitespace ignored and prints a note. Only `cs3` needs it, because the source page lists a bold label and its colon as separate elements. `sp5` was shortened to drop a trailing period for the same reason.
-- **Start table (Microsoft view) holds recommendations.** They are design requirements, so they carry no quote. Friction labels stay my judgement, tagged in the Sources tab.
+- **Start table (Microsoft view) holds recommendations.** They are design requirements, so they carry no quote. Friction labels stay interpretation by AI, tagged in the Sources tab.
 - **One placement row per (risk, component) pair.** 33 rows. Reason: a popup lists each risk once per box, with its own quotes.
 - **Callouts** pair a scope statement with its date and quote, so a preview or prerelease label is never separated from its source.
 - **CVE sources have two URLs.** `u` is the human link, `f` is the CVE JSON used by the check. Reason: the MSRC page cannot be fetched. Text fragments are skipped for CVE links.
@@ -88,3 +88,56 @@ Working notes.
 - Trust and isolation claims name their product scope and bypass conditions. Source-matching quotations alone did not establish unconditional enforcement.
 - Research demonstrations name the demonstrated client. A vendor CVE record is not treated as proof of a victim incident, and one article cannot establish that no other demonstration exists.
 - The current fact-check inventory supersedes prior source mappings and wording. Historical reviews remain clearly labelled. Both cs3 and cxcmd need whitespace-insensitive quote matching; this supersedes the earlier claim that only cs3 needs it.
+
+## 9 November 2026, framework selector and CoSAI
+
+- **Three choices: All, OWASP MCP Top 10, CoSAI.** A risk shows when at least one entry of the chosen framework maps to it. Default is All, so existing links and saved state look the same as before except for the new risks.
+- **Twelve risks, not eight.** CoSAI has threats that M01 to M08 did not hold: approval prompts and trust in the model (#7, #9, #13), shared tenants (#10), runaway cost and payload limits (#14, #33), and unprotected transport or message integrity (#12, #23, #27, #28). They became M09 to M12. Existing ids M01 to M08 are unchanged.
+- **One home per framework entry.** Each of the 34 CoSAI threats and 10 OWASP entries has exactly one home risk, plus an optional "also" list. Reason: the page rule is mutually exclusive, collectively exhaustive, one authoritative home per fact.
+- **M07 has no OWASP entry.** The OWASP list has no DNS rebinding, CSRF or SSRF item. M07 stays under CoSAI (#26, #29, #30) and the MCP specification. Under the OWASP view M07 is hidden and the mapping table says why.
+- **M03 and OWASP MCP05 is a partial match.** MCP05 is about commands built from untrusted input. M03 is about a local server's start command. Both are arbitrary command execution. The mapping table says "partial" and tags it [inference].
+- **Mapping is interpretation by AI.** Tagged [inference]. The framework titles and ids are quoted from the sources.
+- **CoSAI paper quirks recorded.** Threat 4 cites "Prompt Injection (#12)" but the list numbers it #11. The page uses the list number. The paper is a draft.
+- **Microsoft view and M09 to M12.** The cards and placements are product neutral (CoSAI and the MCP specification). No Microsoft source was reviewed for them, so the Microsoft view says "not assessed" on each card.
+- **Placement fixes (general view).** M05 reuse of the stolen token moved from the local HTTP server to remote MCP servers, and a localhost-proxy row added at the local HTTP server. M06 confused-deputy row moved from "SaaS and cloud APIs" to "Remote MCP servers" and merged with the token row. M07 agent row no longer points to itself. M04 gets a row at the AI agent from the CoSAI definition. Reason: each row must sit where the quoted source says the control or the failure happens.
+- **"top 10 risks" wording removed** from diagram box labels. The page now has twelve risks, not a top 10.
+- **Counts are computed**, not typed, so the selector cannot leave a wrong number on the page.
+- **CoSAI status wording.** The paper says "Draft" on pp. 2 and 5 and "Governing Board approval" on p. 4. The page calls it a draft and does not say the Governing Board approved it. Both quotes are in the ledger.
+- **CoSAI category table quirk.** The category table labels #8 differently from the threat list. The page uses the threat list names and numbers (same rule as the #12 vs #11 quirk).
+- **Saved choice order.** A `&f=` in the link wins. Without it the page uses `mcp-framework` from local storage, then All. A deep link to a card hidden by the current choice (for example `#risk-m09` under OWASP) switches the choice to All so the card opens.
+- **Dead code left in.** Old helpers (`isX`, `MOREBY`, `openMoreRow`, `moreRows`) are unused and harmless. Not removed, to keep the change scoped.
+
+## 9 November 2026, tab 1 order
+- **Risk map first.** On the Risk map tab the order is now: Risk map of MCP, Risk by zone, Before you use the map, then How MCP works, In short and Words used on this page. Reason: the reader asked for the map at the top and the background at the bottom. Section ids and anchors are unchanged.
+- **Map intro paragraph removed** (owner's request, 9 Nov 2026). The Risk map of MCP section now starts with the chips. The ledger rows are marked REMOVED.
+- **How-to-use hints removed** (owner's request, 9 Nov 2026): "Pick a risk above, or select a marker or box in the diagram." (diagram summary line), "Select a marker or a box to see its risks." (caption), "Select a risk to show it in the diagram." (zone table intro) and the narrow-screen note "The diagram is wide. Drag sideways in it, or use the table below." The `.hint` CSS is left unused.
+- **No "framework" on the page** (owner's note, 9 Nov 2026). OWASP MCP Top 10 is a beta list and the CoSAI paper is a draft, so neither is a framework. The page now says "Risk list" (selector, header line, mapping table column and heading text, copied status text). The ids `framework-mapping` and the `mcp-framework` storage key and `&f=` hash key are unchanged, because public links and saved settings must keep working. Older notes in this file and the ledger still say "framework" where they describe history.
+- **Page column as wide as the diagram** (owner's request, 9 Nov 2026). `.wrap` max width went from 48rem to 1260px plus gutters, and the diagram figure no longer breaks out of the column. Every section, table and card now has the diagram's width (1260 px at a 1440 px window). Long paragraphs have longer lines on wide screens. Narrow screens are unchanged (no sideways scroll at 375 px on all five tabs).
+- **Default diagram summary removed** (owner's request, 9 Nov 2026): the "Most risks meet in: ..." line. The line under the chips is now empty and hidden until a risk or a box is selected, then it shows that selection's summary. Side effect: selecting adds one line above the diagram.
+- **"Before you use the map" section removed** (owner's request, 9 Nov 2026), both paragraphs and the heading. The anchor `#before-you-use-the-map` no longer exists on this page (AGENTS.md says never change an id; the owner asked for the text to go, and a heading with no text under it would be empty). The tab order in the entry above is now: Risk map of MCP, Risk by zone, How MCP works, In short, Words used. The statement that placement is interpretation by AI remains on the Risks tab (mapping table and grouping, tagged [inference]).
+- **Diagram description caption removed** (owner's request, 9 Nov 2026): "Servers, packages, config and content (1) reach the workstation (2) ..." in both the General and the Microsoft version. The caption still holds "Arrows show selected paths, not every data flow." and the legend. The zone numbers 1 to 4 stay visible in the diagram and in the Risk by zone table headers.
+- **Background sections removed** (owner's request, 9 Nov 2026): "How MCP works", "In short" (including the Microsoft item about two CVE records and Invariant Labs) and "Words used on this page". The anchors `#how-mcp-works`, `#in-short` and `#words-used-on-this-page` no longer exist on this page. The Risk map tab now holds only the risk map, the diagram and Risk by zone. The terms (DNS rebinding, confused deputy, token passthrough, SSRF and others) are no longer defined on the page. Most are still named in the risk cards, SSRF is not named in the Risks tab text.
+
+## 9 Nov 2026: "my judgement" becomes "interpretation by AI" (owner's request)
+
+- Owner's wording: "Marked [inference] is interpretation by AI, not stated in a source." Reason: the judgement is made by AI, not by the owner, so first person was wrong.
+- Replaced on every page that said it: MCP-Risk-Map.html, Developer-WS.html, AKS-sikkerhetsvurdering.html, and the wip governance summary (page and build script). Includes "my estimate" (now "an AI estimate"), "my own assessment", "these definitions are mine", "our reading" and the "My judgement" evidence heading (now "Interpretation by AI").
+- Added as a rule in AGENTS.md section 3 so new text follows it. Old diff lines in Developer-WS.factcheck.md keep the old wording as history.
+
+## 9 Nov 2026: risks made MECE (owner's /goal)
+
+- **Why.** The owner said two risks about the same thing means something is wrong, OWASP has 10 distinct risks and CoSAI might add some. A pair test found old overlaps: M02 held OWASP MCP03 (tool poisoning) and MCP04 (supply chain); M06 held MCP02 (scope creep) and MCP07 (authentication and authorization); M08 held MCP08 (audit) and MCP10 (over-sharing); M10 (CoSAI multitenancy) was the same subject as MCP10.
+- **Result: 14 risks.** One home risk per OWASP entry, so OWASP view shows exactly 10. CoSAI adds M07 network reach, M09 approval and over-trust, M11 runaway cost, M12 weak protocol and transport.
+- **Rules that keep them apart** (interpretation by AI): tool poisoning (M13) is the tool's own description or schema; prompt injection (M04) is content or output the model reads; supply chain (M02) is how code or a package arrived; command injection (M03) is the place where commands run; scope creep (M06) is how big permissions are; authentication and authorization (M14) is who may call and verify, including confused deputy and OAuth; token exposure (M05) is secret handling and reuse; transport (M12) is traffic unprotected in flight; network reach (M07) is binding, Origin, CORS, CSRF, SSRF; over-sharing (M10) is data or context reaching the wrong party, including other users of a shared server; audit (M08) is missing logs and inventory.
+- **Notable moves.** M01 to M12 keep their ids and meaning where possible, so saved statuses stay valid. M02 lost tool poisoning (now M13). M06 lost authentication, confused deputy and OAuth (now M14). M08 lost over-sharing (now M10). M10 gained CoSAI #24. Typosquatting (#5) is homed in M02, with M01 as Also. CoSAI #1 and #18 are homed in M14.
+- **OWASP's own MCP03 wording names the tools' outputs too.** The page keeps outputs under M04 and says so on the M13 card as interpretation by AI.
+- **Saved statuses.** M02, M06, M08, M10 now cover narrower subjects than before. A status saved earlier for one of these may be broader than the new card. The page does not migrate saved values; the owner can reset.
+- **Microsoft view.** M13 takes the tool-change reset (Visual Studio, Azure page). M14 takes API Management, CVE-2026-32211 and Copilot Studio authentication. M06 and M13 and M14 follow the same rule: no Microsoft source reviewed means "Not assessed" (M06). M10 takes only the OWASP listing placement.
+
+## Final MECE and attribution pass, 9 November 2026
+
+- Supersedes earlier claims that one home per framework entry alone proves MECE. Source categories overlap; classify individual failed controls with explicit exclusions and retain attack-chain cross-references.
+- Preserve all public risk and section IDs and saved-setting keys. Add classification-boundaries without renaming the historical the-eight-risks anchor.
+- Separate Copilot Studio evidence IDs (studio*) from CoSAI (cs*); add regression checks for source namespaces, entry coverage and static card labels.
+- Move permission breadth to M06, approval to M09 and Windows isolation to M03. These are different failed controls, even when a single attack involves all three.
+- Keep source claims distinct from interpretation by AI [inference]. No claim that a missing OWASP category name proves the topic absent from OWASP guidance.

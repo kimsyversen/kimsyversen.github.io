@@ -54,3 +54,43 @@ Applied AGENTS.md rule 6 to the Microsoft start table and the checks that pointe
 ## 9 November 2026 review completed
 
 Reviewed both views and all generated content against freshly retrieved primary sources. Corrected enforcement exceptions and research scope, added general diagram evidence, and updated the fact-check inventory and index. Quote, layout, JavaScript, link, shared-scope and saved-status checks passed. Product enforcement and exploit reproduction remain outside this documentation review.
+
+## 9 November 2026, framework selector and CoSAI risks (/goal)
+
+Goal: update the risk matrix so the reader can select the OWASP MCP Top 10 view, the CoSAI view, or all. Verify every statement and that each risk sits in the right place.
+
+Source added: CoSAI "Model Context Protocol (MCP) Security", Workstream 4, draft, 8 January 2026 (PDF, 34 threats, 12 categories).
+
+Steps
+1. Write these notes. Done.
+2. Define the mapping: every OWASP entry (MCP01 to MCP10) and every CoSAI threat (#1 to #34) gets one home risk, with optional "also" risks. Four new risks (M09 to M12) cover CoSAI threats that M01 to M08 did not.
+3. Add the selector (All, OWASP MCP Top 10, CoSAI). It filters chips, diagram markers, the zone table, Where to start, the cards, the tally and the copied status text. Stored in `mcp-framework`, shared in the link as `&f=`.
+4. Add a mapping table (Risks tab) that lists each framework entry and its risk, so nothing is placed twice or left out.
+5. Fix placements found wrong in the 9 November review (see decisions).
+6. Add CoSAI quotes (with PDF page) and MCP specification quotes for M09 to M12. Extend the check script to read the PDF.
+7. Browser checks, desktop and 375 px, both scopes, three framework choices.
+8. Update the fact check, the index dates and run the anchor and quote checks.
+
+Not done and not claimed: no Microsoft source was reviewed for M09 to M12, so the Microsoft view says "not assessed" for them.
+
+## Status, 9 November 2026 (framework selector)
+All eight steps done. Not committed. Browser checks: desktop and 375 px, light and dark, both scopes, all three choices, link priority, saved choice, deep link to a hidden card. Not tested: a real mouse click on every marker (scripted for all, real for a sample), any CoSAI threat reproduced, any product setting run. Microsoft view is "not assessed" for M09 to M12.
+
+## 9 November 2026, make the risks MECE (/goal)
+
+Goal: the risks must be mutually exclusive and collectively exhaustive. If two risks are about the same thing, something is wrong. OWASP MCP Top 10 has 10 different risks. CoSAI may add some.
+
+Finding (test of every risk pair): the old 12 risks merged OWASP entries (M02 held MCP03 and MCP04, M06 held MCP02 and MCP07, M08 held MCP08 and MCP10) and M10 (CoSAI multitenancy) was the same subject as OWASP MCP10 (over-sharing).
+
+Steps
+1. Test each risk pair for overlap. Done.
+2. Redesign: every OWASP entry is its own risk (10 risks). CoSAI adds four (M07 network reach, M09 approval and over-trust, M11 cost, M12 transport). Total 14, M01 to M14. M13 tool poisoning and M14 authentication and authorization are new. M10 is now over-sharing and shared servers (OWASP MCP10 plus CoSAI #10, #24).
+3. Apply to the page: mapping, cards, placements, start table, Microsoft view, counts.
+4. Update checker, ledger, index.
+5. Run checks, browser tests.
+
+Status, 9 November 2026 (MECE pass): all steps done. Page, Microsoft view, checker data, ledger and index updated. Checker 0 problems, anchor check passes, browser checks at desktop and 375 px for all three list choices in both scopes (OWASP 10 risks, CoSAI 14, All 14), no console errors, no sideways scroll. Not committed. Not tested: real mouse clicks on every marker.
+
+## Final audit, 9 November 2026
+
+Completed: explicit classification scope and boundaries; full source refresh; corrected citation collision and misplaced claims; current VS Code setup guidance; quote, label, mapping, anchor and browser validation. The final fact-check section supersedes earlier completion notes. No open documentation task remains. Product behavior and exploits were not tested and are not claimed as tested.

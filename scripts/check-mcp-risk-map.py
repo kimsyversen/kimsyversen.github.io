@@ -14,6 +14,9 @@ Checks:
      recorded verdict in MCP-Risk-Map.factcheck.md, and none changed since it was reviewed.
      Fact-style wording in those texts fails.
   5. No em dash, no en dash, no paragraph of more than 60 words.
+  6. Framework mapping (FW): every OWASP and CoSAI entry name appears in its source, every
+     entry has one home risk that has a card, and each card is the home of at least one entry.
+     CoSAI quotes are matched on the PDF page they cite (needs pdftotext).
 
 A pass proves the quotes are on the pages the sources serve today and that a verdict was
 recorded for the exact wording. It does not prove a verdict or a claim is right, and it
@@ -23,6 +26,7 @@ does not prove any setting works on a managed machine. Nothing was run on one.
 import html
 import json
 import re
+import subprocess
 import sys
 import urllib.request
 from collections import Counter
@@ -74,6 +78,27 @@ def fetch(url, cache):
     text = norm(re.sub(r"(?s)<[^>]+>", " ", raw))
     path.write_text(text, encoding="utf-8")
     return text
+
+
+def fetch_pdf(url, cache):
+    """Return the PDF text, one normalised string per page (index 0 is page 1)."""
+    path = cache / (re.sub(r"[^a-z0-9]+", "-", url.lower()).strip("-")[-120:] + ".pdf")
+    if not path.exists():
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        path.write_bytes(urllib.request.urlopen(req, timeout=60).read())
+    out = subprocess.run(["/opt/homebrew/bin/pdftotext", str(path), "-"],
+                         capture_output=True, text=True, check=True).stdout
+    pages = out.split("\f")
+    if pages and not pages[-1].strip():
+        pages.pop()
+    return [norm(p) for p in pages]
+
+
+def load_fw(markup):
+    m = re.search(r"^  var FW = (.*);$", markup, re.M)
+    if not m:
+        raise SystemExit("FAIL: FW line not found in the page")
+    return json.loads(m.group(1))
 
 
 def quote_ids(data, general_places=()):
@@ -187,6 +212,15 @@ def main():
             print(t)
         return 0
     problems = []
+    # Distinct evidence namespaces prevent valid but unrelated quotes from passing.
+    for qid, q in data['MSQ'].items():
+        if re.fullmatch(r'cs\d+', qid) and q['s'] != 'cosai':
+            problems.append(f'{qid}: CoSAI quote uses another source')
+        if qid.startswith('studio') and q['s'] not in {'csadd', 'csdlp'}:
+            problems.append(f'{qid}: Copilot Studio quote uses another source')
+    for where, text, qs in quote_ids(data):
+        if 'Copilot Studio' in text and any(re.fullmatch(r'cs\d+', q) for q in qs):
+            problems.append(f'{where}: Copilot Studio claim cites CoSAI evidence')
 
     # 1. quotes against sources
     srcs = {s["k"]: s for s in data["MSS"]}
@@ -197,9 +231,27 @@ def main():
         cache = Path(args[0])
         cache.mkdir(parents=True, exist_ok=True)
         pages = {}
+        pdf_pages = {}
         for qid, q in data["MSQ"].items():
             s = srcs[q["s"]]
             url = s.get("f") or s["u"]
+            if s.get("pdf"):
+                try:
+                    pdf_pages.setdefault(url, fetch_pdf(url, cache))
+                except Exception as exc:
+                    problems.append(f"{qid}: cannot read PDF {url}: {exc}")
+                    continue
+                pg = pdf_pages[url]
+                n = q.get("pg", 0)
+                if not 1 <= n <= len(pg):
+                    problems.append(f"{qid}: page {n} not in PDF ({len(pg)} pages)")
+                elif norm(q["q"]) in pg[n - 1]:
+                    pass
+                elif squash(q["q"]) in squash(pg[n - 1]):
+                    print(f"note {qid}: matches only when whitespace is ignored")
+                else:
+                    problems.append(f"{qid}: quote not found on page {n} of {url}")
+                continue
             try:
                 pages.setdefault(url, fetch(url, cache))
             except Exception as exc:
@@ -212,6 +264,59 @@ def main():
                 print(f"note {qid}: matches only when whitespace is ignored")
                 continue
             problems.append(f"{qid}: quote not found in {url}")
+
+    # 6. framework mapping
+    fw = load_fw(markup)
+    cards = set(re.findall(r'<article id="risk-m\d+" class="risk" data-id="(M\d+)"', markup))
+    homes = Counter()
+    for key in ("o", "c"):
+        ids = [e[0] for e in fw[key]]
+        if len(ids) != len(set(ids)):
+            problems.append(f"FW {key}: duplicate entry id")
+        expected = ({f'MCP{i:02}' for i in range(1, 11)} if key == 'o'
+                    else {str(i) for i in range(1, 35)})
+        if set(ids) != expected:
+            problems.append(f'FW {key}: missing or unexpected entry IDs')
+        if key == 'o' and len({e[2] for e in fw[key]}) != 10:
+            problems.append('OWASP entries must have ten distinct homes')
+        for eid, name, home, also in fw[key]:
+            homes[home] += 1
+            for r in [home] + also:
+                if r not in cards:
+                    problems.append(f"FW {key} {eid}: risk {r} has no card")
+            if home in also:
+                problems.append(f"FW {key} {eid}: home risk repeated under also")
+    for r in sorted(cards - set(homes)):
+        problems.append(f"card {r} is not the home of any framework entry")
+    for article in re.findall(r'<article\b.*?</article>', markup, re.S):
+        rid = re.search(r'data-id="(M\d+)"', article)
+        label = re.search(r'<p class="en">(.*?)</p>', article)
+        if not rid or not label:
+            continue
+        expected = {e[0] for e in fw['o'] if e[2] == rid[1]}
+        if set(re.findall(r'MCP\d+', label[1])) != expected:
+            problems.append(f'{rid[1]}: card OWASP label differs from home mapping')
+        expected = {e[0] for e in fw['c'] if e[2] == rid[1]}
+        if set(re.findall(r'#(\d+)', label[1])) != expected:
+            problems.append(f'{rid[1]}: card CoSAI label differs from home mapping')
+    if len(fw["o"]) != 10:
+        problems.append(f"FW o: {len(fw['o'])} OWASP entries, expected 10")
+    if "--offline" not in flags:
+        own = srcs["owasp"]
+        try:
+            otext = fetch(own.get("f") or own["u"], cache)
+            for eid, name, _, _ in fw["o"]:
+                if squash(eid + " " + name) not in squash(otext) and squash(name) not in squash(otext):
+                    problems.append(f"FW OWASP {eid}: name not found on the OWASP page: {name}")
+        except Exception as exc:
+            problems.append(f"cannot fetch OWASP page: {exc}")
+        cs = srcs["cosai"]
+        ctext = squash(" ".join(pdf_pages.get(cs["u"]) or fetch_pdf(cs["u"], cache)))
+        for eid, name, _, _ in fw["c"]:
+            if squash(name) not in ctext:
+                problems.append(f"FW CoSAI #{eid}: name not found in the PDF: {name}")
+        if len(fw["c"]) != 34:
+            problems.append(f"FW c: {len(fw['c'])} CoSAI entries, expected 34")
 
     # 2. ids used and defined
     used = Counter()

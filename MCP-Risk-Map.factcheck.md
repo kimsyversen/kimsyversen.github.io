@@ -1,4 +1,88 @@
+# Final statement and MECE audit: 9 November 2026
+
+This audit supersedes earlier completion claims and stale wording in the historical inventories below. The authoritative content is the current HTML and its generated data. The earlier claim that quote matching established correct attribution was false: four Copilot Studio quote identifiers had been overwritten by CoSAI quotes. Valid quotation text alone does not establish support for the attached claim.
+
+## Scope, method and verdict
+
+Reviewed the static prose, all 14 cards, the framework mapping, general placements, Microsoft cards and placements, product rows, first actions, labels and evidence declarations. Retrieved the external source set again into a fresh cache on 9 November 2026. Reviewed documentation as documentation; vendor claims are not measurements of enforcement. Research is attributed to its authors; CVE records are advisories, not independently verified victim incidents.
+
+MECE applies to individual control failures within the 10 OWASP and 34 CoSAI entries, not to entire attacks or to the overlapping source taxonomies. The classification-boundaries section defines a single home and explicit exclusions for each failure. Attack chains can contain different failures. Broad entries #24 and #27 have related-control references instead of implying their entire scope is exclusive to their assigned home. Outside-scope findings remain unclassified. These classification decisions are interpretation by AI [inference], not a claim made by either framework.
+
+## Final corrections and evidence
+
+| Content reviewed | Verdict on 9 November 2026 | Evidence / reason |
+| --- | --- | --- |
+| Card labels and 44 framework entry homes | Corrected and checked | OWASP project page and CoSAI numbered threat list; M01 home is #6, M02 homes are #5, #25, #32. M13 owns tool definition poisoning. Exact ID coverage and distinct OWASP homes checked. |
+| Boundaries for all 14 cards | Interpretation by AI [inference] | Distinguishes provenance, execution, model instructions, tool definitions, credentials, privileges, access checks, oversight, network reach, transport integrity, data isolation, resource limits, admission and visibility. Each definition names adjacent exclusions. |
+| Claims that OWASP does not cover oversight, costs or transport | Removed | An absent category name does not establish absent coverage. The page now states its own classification choice. |
+| Copilot Studio authentication, query keys, SSE and DLP | Citation attribution corrected; verified against source | Restored four quotations from the Copilot Studio add-server and DLP pages, now studio1 to studio4. cs1 to cs34 belong only to CoSAI. |
+| Microsoft permission breadth | Supported documentation summary | Azure MCP Server security asks users to review their signed-in identity's access. M06 now holds this fact. |
+| Microsoft approval controls | Supported documentation summary | Visual Studio tool confirmation and auto-confirm documentation now have their home in M09. Removed the false claim that no Microsoft source had been reviewed for M09. |
+| Windows isolation | Supported documentation summary | Windows on-device registry prerelease documentation. Moved to M03, with preview qualification retained. |
+| VS Code tool approval and server sampling risk links | Corrected interpretation by AI [inference] | Approval links to M09; model exposure and background requests link to M06/M11, not audit visibility. |
+| VS Code discovery and configuration destinations | Updated from current documentation | Add MCP servers now documents Customizations / Marketplace as the default browse route, Copilot Global configuration, experimental guided workspace-root setup, and compatibility destinations labelled deprecated in that flow. Removed obsolete general gallery-preview wording. Routes explicitly non-exhaustive. |
+| Remaining VS Code rows | Supported with harness and platform limits | Manage MCP servers, MCP configuration, AI security, enterprise policies, managed AI settings, telemetry and sandboxing pages freshly retrieved. No assumption that editor policies cover independently discovered runtime servers. |
+| General client restrictions, command identity and token guidance | Supported with stated exceptions | Claude managed MCP, Codex managed configuration, MCP security best practices, transports and tools. Command matching does not validate executable contents. Narrow scopes are separate from token lifecycle. |
+| Bearer-token explanation | Qualified | RFC 6750: validity, scope, expiry and revocation constrain reuse. |
+| Mitiga and Invariant research, two Azure CVEs | Attributed source reports | Existing prerequisite, client scope, persistence and incident qualifications retained. No exploit reproduced. |
+| M10 to M12 Microsoft coverage | Explicitly unassessed | General framework guidance remains visible; no new product capability is inferred from it. |
+| First actions, findings, diagram placements and friction | Interpretation by AI [inference] | Recommendations and representative scenarios, not measured prevalence, guarantees or vendor endorsements. Footer defines every [inference] marker as interpretation by AI. |
+| Status controls and section roles | Artifact definitions | Browser status is self-reported; OK requires the reader's own evidence. No evidence is stored in the tracker. Map, matrix and mapping are related views, not additional risks. |
+
+Primary source URLs and exact quotations remain in the page and source register below. All 135 quotations were compared with freshly retrieved source text, including the CoSAI PDF page numbers. The checker also validates the exact 10/34 ID sets, distinct OWASP homes, static card labels, quote namespaces and 120 reviewed presentation texts. A passing check is evidence consistency, not proof of product enforcement.
+
+## Validation and limits
+
+- Browser: 1440px and 375px, light and dark, both scopes, all five tabs; no sideways page overflow or console errors.
+- Frameworks: All = 14 risks / 44 entries, OWASP = 10 / 10, CoSAI = 14 / 34 in both scopes. New section deep link opens Risks; a link to a filtered-out risk reveals it. Status and quoted popovers checked.
+- Section anchor and quote/label checks pass. Index entry and footer already carry 9 November 2026; the description remains aligned with the 10/14 risk views.
+- No managed-product configuration, exploit reproduction, end-to-end OAuth test or per-marker manual mouse audit. No claim of exhaustive coverage outside the cited frameworks.
+
+## Historical audits below (superseded where wording differs)
+
 Belongs to [MCP-Risk-Map.html](MCP-Risk-Map.html).
+
+# Framework selector and CoSAI review: 9 November 2026
+
+Scope: the new Risk list buttons (All, OWASP MCP Top 10, CoSAI), the four new risks M09 to M12, every placement the CoSAI paper touches, and the placements found wrong in the earlier review. Method: read the CoSAI PDF (27 pages, 34 threats in twelve categories), compared each threat with the twelve risks, tied every added sentence to a quote, and ran `scripts/check-mcp-risk-map.py`. The check script matched 127 quotes, including every CoSAI quote on the PDF page it cites, and matched all 10 OWASP names and all 34 CoSAI names to their sources.
+
+## Placement corrections
+
+- **M05, token reuse:** Mitiga's reuse of the captured Atlassian token sat on the local HTTP server box. It is a call to the remote Atlassian MCP server, so it moved to Remote MCP servers. A separate M05 row now covers the localhost proxy (quote `mitlocal`).
+- **M06, confused deputy:** the OAuth proxy rule sat on SaaS and Azure APIs. The rule is about an MCP proxy server, so it was merged into the Remote MCP servers row, next to the token-audience rule.
+- **M07, self-reference:** the AI host row repeated a sentence about itself. It now says only what the quote says.
+- **Header counts:** "top 10" wording was removed. The page no longer claims the ten OWASP names are the whole list.
+
+## Mapping (updated 9 November 2026, MECE pass)
+
+Each OWASP entry and each CoSAI threat has one home risk, and each OWASP entry has a different home, so the OWASP view shows exactly ten risks. The assignment is interpretation by AI `[inference]`. The page has the full table under Risks.
+
+- OWASP: MCP01 M05, MCP02 M06, MCP03 M13, MCP04 M02, MCP05 M03, MCP06 M04, MCP07 M14, MCP08 M08, MCP09 M01, MCP10 M10.
+- CoSAI adds four risks of its own: M07 (network reach), M09 (approval and over-trust), M11 (cost), M12 (transport). CoSAI #10 (multitenancy) is not a separate risk: it is the same subject as OWASP MCP10 and sits under M10.
+- Partial fits, labelled on the page: OWASP MCP03 also names tool outputs, which the page keeps under M04; OWASP MCP05 also touches M04; CoSAI #28 is about stdio streams (home M12, also M03).
+- Before this pass, M02 held MCP03 and MCP04, M06 held MCP02 and MCP07, and M08 held MCP08 and MCP10. They were split (new M13 and M14) so no risk merges two OWASP entries.
+
+## Text added or changed in the MECE pass (9 November 2026)
+
+| Where | Statement | Source | Verdict |
+|---|---|---|---|
+| M02 | A tampered package, a bad update or a look-alike name brings malicious code in. | OWASP MCP04 name; CoSAI #5, #25, #32 (quotes on the card) | SUPPORTED, wording is interpretation by AI |
+| M03 | OWASP command injection definition (quote `owcmd`) | OWASP MCP05 page | VERIFIED by the checker |
+| M13 | OWASP tool poisoning definition (`ow2d`), CoSAI #2 and #3, specification: clients MUST consider tool annotations untrusted (`spt3`) | OWASP, CoSAI PDF, MCP Tools page | VERIFIED by the checker |
+| M13 | The line between M13 (description and schema) and M04 (outputs) | none | `[inference]`, interpretation by AI |
+| M14 | OWASP MCP07 name (`ow7`), CoSAI #1, #8, #18, specification token passthrough and confused deputy (moved from M06) | OWASP, CoSAI PDF, MCP security best practices | VERIFIED by the checker |
+| M06, M08, M10 | Retitled to one subject each; check lists reworded. New checks without a source are labelled `[inference]`. | as before | SUPPORTED |
+| Microsoft view | M13 takes the tool-change quote and check from M02; M14 takes the API Management and OAuth items from M06; M06 says not assessed | Microsoft Learn quotes unchanged | VERIFIED by the checker |
+
+Not tested: no product setting or exploit was run. Saved statuses for M02, M06, M08 and M10 may now describe a narrower card than the reader had in mind; no migration was done.
+
+## What was verified and what was not
+
+- Each added CoSAI and specification sentence is tied to an exact quote with a link (PDF page or text fragment). The spec quotes sit in the Tools page's "Security Considerations" lists (Servers MUST: rate limit tool invocations; human in the loop SHOULD be present).
+- The Microsoft view has no source for M06 and M09 to M12 and says so.
+- CoSAI status: the paper says "Status: Draft" (PDF page 2) and also says the CoSAI Project Governing Board approved it on 8 January 2026 (page 4). The page reports both.
+- CoSAI numbering quirks, not resolved by the paper: threat #4 cites "Prompt Injection (#12)" while the list numbers it #11; the category table (pages 8 and 9) names #8 "Confused Deputy (OAuth Proxy)" under one category and "Privilege Escalation" under another, while the list names #8 "Privilege Escalation via Authentication and Authorization Bypass". The page follows the list.
+- Not tested: no CoSAI threat was reproduced. Quote matching shows the text is in the PDF, not that the paper's claims are right.
 
 # Complete statement review: 9 November 2026
 
@@ -53,12 +137,14 @@ Keys ARCH, TOOLS, STDIO, HTTP, SEC, VER, OWASP, CC, CODEX, MITIGA, VADD, VMAN, V
 - **spsec**: [MCP security best practices (2026-07-28)](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices), retrieved 9 November 2026.
 - **spver**: [MCP versioning](https://modelcontextprotocol.io/specification/versioning), retrieved 9 November 2026.
 - **owasp**: [OWASP MCP Top 10](https://owasp.org/www-project-mcp-top-10/), retrieved 9 November 2026.
+- **cosai**: [CoSAI: Model Context Protocol (MCP) Security](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf), Workstream 4, 27 pages, retrieved 9 November 2026. Quotes are matched on the PDF page they cite.
+- **sptools**: [MCP specification: tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools), retrieved 9 November 2026.
 - **mit**: [Mitiga: MCP token theft in Claude Code](https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm), retrieved 9 November 2026.
 - **cc**: [Claude Code: managed MCP](https://code.claude.com/docs/en/managed-mcp), retrieved 9 November 2026.
 - **codex**: [Codex managed configuration](https://learn.chatgpt.com/docs/enterprise/managed-configuration), retrieved 9 November 2026.
 - **vconf**: [VS Code: MCP configuration reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration), retrieved 9 November 2026.
 
-## Current statement inventory
+## Historical statement inventory (see final audit above)
 
 Each row preserves a complete prose unit so its qualifications remain attached. Source text itself is checked through the quotation inventory; labels, recommendations and review declarations are not recast as empirical claims.
 
@@ -68,37 +154,21 @@ Each row preserves a complete prose unit so its qualifications remain attached. 
 | intro  | Risk map · MCP servers and AI agents · Microsoft ecosystem | SELF | LABEL / REVIEW SCOPE |
 | intro  | Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start. The detail is kept low on purpose. Exceptions exist. | SELF | LABEL / REVIEW SCOPE |
 | intro  | Where the main risks sit when developers connect AI agents to MCP servers through Microsoft products: VS Code, Visual Studio, GitHub Copilot, Copilot Studio, Windows, Azure and Microsoft Entra. Third-party servers used inside these clients still apply. The detail is kept low on purpose. Exceptions exist. | SELF | LABEL / REVIEW SCOPE |
-| p-map  | The host is the AI application. Its MCP clients connect to servers. Servers can offer tools for the agent to call; a server need not offer tools. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | A local server is a program on your computer. With the stdio transport the client starts it and talks to it over its standard streams. A server can also run behind an HTTP address, on your computer or elsewhere. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | The client sends tool arguments to a server and receives results. The host decides how to use those results, including whether to include them in the model's context. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | An MCP server can offer tools. An unrestricted local server can act with the launching account's privileges. A remote server receives the data sent to it; authentication and token storage depend on the deployment. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | The main questions are: which servers are allowed, what can each one reach, and who would notice if one changed? [inference] | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | In the general view, one MCP-specific research demonstration is cited (Mitiga, May 2026). The other risks come from OWASP categories or specification warnings, and no incident is cited for them. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | Two Azure MCP Server CVE records (vendor advisories, not observed victims) and one third-party demonstration (Invariant Labs, GitHub MCP server) are cited. The other risks rest on OWASP categories, specification warnings or Microsoft documentation. Preview status: see Current as of. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | An access token authorizes access to a service. A valid bearer token can be used by whoever holds it, within its permissions and other service checks. Tokens do not always represent a human user. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | A named permission requested or granted during authorization. The service must still enforce access checks. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | A list of permitted servers, enforced within the control's scope and documented exceptions. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | An isolation mechanism that restricts access to resources such as files and networks. Its protection depends on its rules and implementation. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | Malicious instructions in content the agent reads that may steer its behavior. They can be visible or hidden. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | An attacker changes where a domain resolves, potentially letting a web page reach a local server. Streamable HTTP servers must validate Origin; an invalid supplied origin requires HTTP 403. Local binding and authentication provide additional protection. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | In the MCP OAuth proxy scenario, an attacker can abuse reused consent and a malicious redirect to obtain an authorization code without fresh user approval. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | A server accepts a token that was not made for it and passes it on. The specification forbids this. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | Inducing a server-side component to request an unintended destination. In MCP OAuth discovery, the vulnerable component can be the MCP client. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | A gate that outbound traffic must pass. It can block internal destinations. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | From where servers and content come from, through the agent and its servers, to what goes out. Each marker shows where a risk enters or must be controlled. M01 to M08 are coloured by the status you set under Risks. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | The diagram is wide. Drag sideways in it, or use the table below. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | The same placement as the diagram. Select a risk to show it in the diagram. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
+| p-map  | (Removed 9 Nov 2026 at the owner's request.) The sections "How MCP works", "In short" and "Words used on this page" (host/client/server basics, the In short list, and the ten word definitions from Token to Egress proxy). | n/a | REMOVED |
+| p-map  | (Removed 9 Nov 2026 at the owner's request.) Was: "From where servers and content come from ... Risk list buttons above show the OWASP MCP Top 10 risks, the CoSAI risks or all of them." | n/a | REMOVED |
+| p-map  | (Removed 9 Nov 2026 at the owner's request.) Was: "The diagram is wide. Drag sideways in it, or use the table below." | n/a | REMOVED |
+| p-map  | The same placement as the diagram. (The sentence "Select a risk to show it in the diagram." was removed 9 Nov 2026.) | SELF | REVIEWED |
 | p-map  | Risk1 · Sources2 · Workstation3 · Outbound4 · Governance | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | This is a reference layout, not your organisation's setup. Common differences: only remote servers, only local servers, servers inside dev containers, or an internal gateway in front of all servers. Draw your own variant and move the markers. | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-map  | The placement of risks is my judgement based on the sources. [inference] | ARCH, TOOLS, STDIO, HTTP, SEC, OAUTH, BEARER; SELF for map instructions | REVIEWED / labelled judgement |
-| p-risks  | Grouped from the OWASP MCP Top 10 and the specification's security guidance. The order and the grouping are my judgement. [inference] OWASP's list is in beta and may change. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
+| p-map  | (Removed 9 Nov 2026 at the owner's request, with its heading "Before you use the map".) Was: "This is a reference layout, not your organisation's setup ... Draw your own variant and move the markers." | n/a | REMOVED |
+| p-map  | (Removed 9 Nov 2026 at the owner's request.) Was: "The placement of risks is interpretation by AI based on the sources. [inference]" The same judgement is still stated for the mapping table and the risk grouping. | n/a | REMOVED |
+| p-risks  | Grouped from the OWASP MCP Top 10 and the specification's security guidance. The order and the grouping are interpretation by AI. [inference] OWASP's list is in beta and may change. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
 | p-risks  | OWASP MCP Top 10: in beta (phase 3). IDs and names can change. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
 | p-risks  | Specification versions: the Origin, localhost and security rules were checked against version 2026-07-28, the current one on 9 November 2026. They can change. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
 | p-risks  | Claude Code: the managedMcpServers setting needs version 2.1.259 or later. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
 | p-risks  | Mitiga: Mitiga reports that Anthropic told it the behaviour is out of scope and by design. Mitiga disagrees. This page does not take a side. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
-| p-risks  | One suggested first control per risk. These are recommendations, and the friction is my estimate. [inference] None of them needs a preview feature. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
+| p-risks  | One suggested first control per risk. These are recommendations, and the friction is an AI estimate. [inference] None of them needs a preview feature. | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
 | p-risks  | RiskFirst controlFriction | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
-| p-risks  | OK: in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; the tracker stores status values in this browser, with no evidence attachments. Partial: covers some products, platforms or users. Missing: not in place. Unknown: looked at but not confirmed. Not assessed: nobody has looked yet. These definitions are mine. [inference] | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
+| p-risks  | OK: in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; the tracker stores status values in this browser, with no evidence attachments. Partial: covers some products, platforms or users. Missing: not in place. Unknown: looked at but not confirmed. Not assessed: nobody has looked yet. Definitions are interpretation by AI. [inference] | OWASP, VER, CC, MITIGA; SELF for status definitions | REVIEWED / recommendation or label |
 | p-risks M01 | OWASP MCP09 Shadow MCP Servers | CC, CODEX, VPOL, VMGMT | REVIEWED / recommendation or label |
 | p-risks M01 | In plain words: Without enforced restrictions, users can configure unapproved servers. An allowlist limits which servers can load within its documented scope. | CC, CODEX, VPOL, VMGMT | REVIEWED / recommendation or label |
 | p-risks M01 | By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it. | CC, CODEX, VPOL, VMGMT | REVIEWED / recommendation or label |
@@ -179,10 +249,10 @@ Each row preserves a complete prose unit so its qualifications remain attached. 
 | p-vscode  | What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 9 November 2026. Nothing here was tested. | SELF | REVIEWED / documentation scope |
 | p-vscode  | TopicWhat the source saysRisk | SELF | REVIEWED / documentation scope |
 | p-vscode  | VS Code has more than one kind of agent session (local and Copilot harness), and the settings do not always reach both. The rows say where the docs name a difference. Settings and policy names come from the docs; none was run on a managed machine. | SELF | REVIEWED / documentation scope |
-| p-evidence  | What was checked, what is my judgement, and what is still open. | SELF | LABEL / REVIEW SCOPE |
+| p-evidence  | What was checked, what is interpretation by AI, and what is still open. | SELF | LABEL / REVIEW SCOPE |
 | p-sources  | All opened on 9 November 2026, except the Developer-WS page, which is on this site. | SELF | LABEL / REVIEW SCOPE |
 | p-sources  | All external sources opened on 9 November 2026. The Developer-WS page sits on this site. | SELF | LABEL / REVIEW SCOPE |
-| p-sources  | Marked [inference] is my judgement, not taken directly from a source. The documented product settings and attack paths were not tested on a real system. | SELF | LABEL / REVIEW SCOPE |
+| p-sources  | Marked [inference] is interpretation by AI, not stated in a source. The documented product settings and attack paths were not tested on a real system. | SELF | LABEL / REVIEW SCOPE |
 | p-sources  | No setting or command on this page was run on a managed machine. | SELF | LABEL / REVIEW SCOPE |
 | p-sources  | Versions and dates change quickly in this area. Check the "Current" box against the sources before you use it in a report. | SELF | LABEL / REVIEW SCOPE |
 | p-sources  | Made with AIThis page was written with the help of AI. Its content has not necessarily been fully quality checked by a human. | SELF | LABEL / REVIEW SCOPE |
@@ -201,10 +271,10 @@ Each row preserves a complete prose unit so its qualifications remain attached. 
 | EVIDENCE Checked against sources | Claude Code managed MCP page: managed-mcp.json, allowedMcpServers and deniedMcpServers, allowManagedMcpServersOnly, URL and command matching, OpenTelemetry. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
 | EVIDENCE Checked against sources | Codex managed configuration: mcp_servers allowlist and string versus structured command matching; neither form verifies cwd or environment variables. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
 | EVIDENCE Checked against sources | VS Code docs (agent customization, manage MCP servers, MCP configuration reference, AI security, policies, telemetry): the rows on the VS Code tab. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
-| EVIDENCE My judgement | The choice of eight risks, their order and the OWASP mapping. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
-| EVIDENCE My judgement | Where each risk sits on the map. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
-| EVIDENCE My judgement | Statements tagged [inference] (advice questions, not facts), and the friction estimates. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
-| EVIDENCE My judgement | Which VS Code facts are shown, and the risk each is tied to. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
+| EVIDENCE Interpretation by AI | The choice of eight risks, their order and the OWASP mapping. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
+| EVIDENCE Interpretation by AI | Where each risk sits on the map. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
+| EVIDENCE Interpretation by AI | Statements tagged [inference] (advice questions, not facts), and the friction estimates. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
+| EVIDENCE Interpretation by AI | Which VS Code facts are shown, and the risk each is tied to. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
 | EVIDENCE Still open | The specification can change. This page was checked against version 2026-07-28, the current one on 9 November 2026. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
 | EVIDENCE Still open | The general view cites Mitiga; the Microsoft view adds Invariant Labs and two vendor CVE records. No victim incident was independently verified. That does not mean none exists. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
 | EVIDENCE Still open | Mitiga reports that Anthropic told it the issue was out of scope and by design. Mitiga disagrees. This page does not take a side. | Primary sources below; SELF for audit scope | REVIEWED / scope or judgement |
@@ -424,58 +494,58 @@ Source keys below apply to the relevant named sections, not to unrelated stateme
 | 2 | intro , line 273 | Where the main risks sit when developers connect AI agents to MCP servers, what to check for each, and where to start. | ARCH, SEC | REVIEWED |
 | 3 | intro , line 273 | The detail is kept low on purpose. | SELF | REVIEWED |
 | 4 | intro , line 273 | Exceptions exist. | SELF | REVIEWED |
-| 5 | p-map , line 295 | The host is the AI application. | ARCH, SEC | REVIEWED |
-| 6 | p-map , line 295 | Its MCP clients connect to servers. | ARCH, SEC | REVIEWED |
-| 7 | p-map , line 295 | Servers can offer tools for the agent to call; a server need not offer tools. | ARCH, SEC | REVIEWED |
-| 8 | p-map , line 296 | A local server is a program on your computer. | ARCH, SEC | REVIEWED |
-| 9 | p-map , line 296 | With the stdio transport the client starts it and talks to it over its standard streams. | ARCH, SEC, STDIO | REVIEWED |
-| 10 | p-map , line 296 | A server can also run behind an HTTP address, on your computer or elsewhere. | ARCH, SEC | REVIEWED |
-| 11 | p-map , line 297 | The client sends tool arguments to a server and receives results. | ARCH, SEC | REVIEWED |
-| 12 | p-map , line 297 | The host decides how to use those results, including whether to include them in the model's context. | ARCH, SEC | REVIEWED |
-| 13 | p-map , line 303 | An MCP server can offer tools. | ARCH, SEC | REVIEWED |
-| 14 | p-map , line 303 | An unrestricted local server can act with the launching account's privileges. | ARCH, SEC | REVIEWED |
-| 15 | p-map , line 303 | A remote server receives the data sent to it; authentication and token storage depend on the deployment. | ARCH, BEARER, OAUTH, SEC | REVIEWED |
-| 16 | p-map , line 304 | The main questions are: which servers are allowed, what can each one reach, and who would notice if one changed? [inference] | ARCH, SEC | JUDGEMENT / CHECK QUESTION |
-| 17 | p-map , line 305 | Only one MCP-specific research demonstration is cited here (Mitiga, May 2026). | MITIGA | REVIEWED |
-| 18 | p-map , line 305 | The other risks come from OWASP categories or specification warnings, and no incident is cited for them. | OWASP | REVIEWED |
-| 19 | p-map , line 311 | An access token authorizes access to a service. | BEARER, OAUTH, SEC | REVIEWED |
-| 20 | p-map , line 311 | A valid bearer token can be used by whoever holds it, within its permissions and other service checks. | BEARER, OAUTH, SEC | REVIEWED |
-| 21 | p-map , line 311 | Tokens do not always represent a human user. | BEARER, OAUTH, SEC | REVIEWED |
-| 22 | p-map , line 312 | A named permission requested or granted during authorization. | SELF | REVIEWED |
-| 23 | p-map , line 312 | The service must still enforce access checks. | SELF | REVIEWED |
-| 24 | p-map , line 313 | A list of permitted servers, enforced within the control's scope and documented exceptions. | ARCH, BEARER, OAUTH, SEC | REVIEWED |
-| 25 | p-map , line 314 | An isolation mechanism that restricts access to resources such as files and networks. | SELF | REVIEWED |
-| 26 | p-map , line 314 | Its protection depends on its rules and implementation. | SELF | REVIEWED |
-| 27 | p-map , line 315 | Malicious instructions in content the agent reads that may steer its behavior. | OWASP, VSEC | REVIEWED |
-| 28 | p-map , line 315 | They can be visible or hidden. | SELF | REVIEWED |
-| 29 | p-map , line 316 | An attacker changes where a domain resolves, potentially letting a web page reach a local server. | ARCH, SEC | REVIEWED |
-| 30 | p-map , line 316 | Streamable HTTP servers must validate Origin; an invalid supplied origin requires HTTP 403. | ARCH, HTTP, SEC | REVIEWED |
-| 31 | p-map , line 316 | Local binding and authentication provide additional protection. | SELF | REVIEWED |
-| 32 | p-map , line 317 | A proxy server that connects clients to another service can be tricked into giving an attacker a login code without the user agreeing. | ARCH, SEC | REVIEWED |
-| 33 | p-map , line 318 | A server accepts a token that was not made for it and passes it on. | ARCH, BEARER, OAUTH, SEC | REVIEWED |
-| 34 | p-map , line 318 | The specification forbids this. | SELF | REVIEWED |
-| 35 | p-map , line 319 | Tricking a client into requesting addresses it should not, such as internal systems or a cloud metadata address. | ARCH, SEC | REVIEWED |
-| 36 | p-map , line 320 | A gate that outbound traffic must pass. | SELF | REVIEWED |
-| 37 | p-map , line 320 | It can block internal destinations. | SELF | REVIEWED |
-| 38 | p-map , line 326 | From where servers and content come from, through the agent and its servers, to what goes out. | ARCH, SEC | REVIEWED |
-| 39 | p-map , line 326 | Each marker shows where a risk enters or must be controlled. | SELF | REVIEWED |
-| 40 | p-map , line 326 | M01 to M08 are coloured by the status you set under Risks. | SELF | REVIEWED |
-| 41 | p-map , line 337 | Servers, packages, config and content (1) reach the workstation (2), where this example places the agent, local servers and client credentials. | ARCH, SEC | REVIEWED |
+| 5 | p-map , line 295 | The host is the AI application. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 6 | p-map , line 295 | Its MCP clients connect to servers. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 7 | p-map , line 295 | Servers can offer tools for the agent to call; a server need not offer tools. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 8 | p-map , line 296 | A local server is a program on your computer. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 9 | p-map , line 296 | With the stdio transport the client starts it and talks to it over its standard streams. | ARCH, SEC, STDIO | REMOVED 9 Nov 2026 |
+| 10 | p-map , line 296 | A server can also run behind an HTTP address, on your computer or elsewhere. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 11 | p-map , line 297 | The client sends tool arguments to a server and receives results. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 12 | p-map , line 297 | The host decides how to use those results, including whether to include them in the model's context. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 13 | p-map , line 303 | An MCP server can offer tools. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 14 | p-map , line 303 | An unrestricted local server can act with the launching account's privileges. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 15 | p-map , line 303 | A remote server receives the data sent to it; authentication and token storage depend on the deployment. | ARCH, BEARER, OAUTH, SEC | REMOVED 9 Nov 2026 |
+| 16 | p-map , line 304 | The main questions are: which servers are allowed, what can each one reach, and who would notice if one changed? [inference] | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 17 | p-map , line 305 | Only one MCP-specific research demonstration is cited here (Mitiga, May 2026). | MITIGA | REMOVED 9 Nov 2026 |
+| 18 | p-map , line 305 | The other risks come from OWASP categories or specification warnings, and no incident is cited for them. | OWASP | REMOVED 9 Nov 2026 |
+| 19 | p-map , line 311 | An access token authorizes access to a service. | BEARER, OAUTH, SEC | REMOVED 9 Nov 2026 |
+| 20 | p-map , line 311 | A valid bearer token can be used by whoever holds it, within its permissions and other service checks. | BEARER, OAUTH, SEC | REMOVED 9 Nov 2026 |
+| 21 | p-map , line 311 | Tokens do not always represent a human user. | BEARER, OAUTH, SEC | REMOVED 9 Nov 2026 |
+| 22 | p-map , line 312 | A named permission requested or granted during authorization. | SELF | REMOVED 9 Nov 2026 |
+| 23 | p-map , line 312 | The service must still enforce access checks. | SELF | REMOVED 9 Nov 2026 |
+| 24 | p-map , line 313 | A list of permitted servers, enforced within the control's scope and documented exceptions. | ARCH, BEARER, OAUTH, SEC | REMOVED 9 Nov 2026 |
+| 25 | p-map , line 314 | An isolation mechanism that restricts access to resources such as files and networks. | SELF | REMOVED 9 Nov 2026 |
+| 26 | p-map , line 314 | Its protection depends on its rules and implementation. | SELF | REMOVED 9 Nov 2026 |
+| 27 | p-map , line 315 | Malicious instructions in content the agent reads that may steer its behavior. | OWASP, VSEC | REMOVED 9 Nov 2026 |
+| 28 | p-map , line 315 | They can be visible or hidden. | SELF | REMOVED 9 Nov 2026 |
+| 29 | p-map , line 316 | An attacker changes where a domain resolves, potentially letting a web page reach a local server. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 30 | p-map , line 316 | Streamable HTTP servers must validate Origin; an invalid supplied origin requires HTTP 403. | ARCH, HTTP, SEC | REMOVED 9 Nov 2026 |
+| 31 | p-map , line 316 | Local binding and authentication provide additional protection. | SELF | REMOVED 9 Nov 2026 |
+| 32 | p-map , line 317 | A proxy server that connects clients to another service can be tricked into giving an attacker a login code without the user agreeing. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 33 | p-map , line 318 | A server accepts a token that was not made for it and passes it on. | ARCH, BEARER, OAUTH, SEC | REMOVED 9 Nov 2026 |
+| 34 | p-map , line 318 | The specification forbids this. | SELF | REMOVED 9 Nov 2026 |
+| 35 | p-map , line 319 | Tricking a client into requesting addresses it should not, such as internal systems or a cloud metadata address. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 36 | p-map , line 320 | A gate that outbound traffic must pass. | SELF | REMOVED 9 Nov 2026 |
+| 37 | p-map , line 320 | It can block internal destinations. | SELF | REMOVED 9 Nov 2026 |
+| 38 | p-map , line 326 | From where servers and content come from, through the agent and its servers, to what goes out. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 39 | p-map , line 326 | Each marker shows where a risk enters or must be controlled. | SELF | REMOVED 9 Nov 2026 |
+| 40 | p-map , line 326 | M01 to M08 are coloured by the status you set under Risks. | SELF | REMOVED 9 Nov 2026 |
+| 41 | p-map , line 337 | Servers, packages, config and content (1) reach the workstation (2), where this example places the agent, local servers and client credentials. | ARCH, SEC | REMOVED 9 Nov 2026 (the Microsoft version too) |
 | 42 | p-map , line 337 | Traffic leaves through the egress boundary (3), a control point only where traffic is forced through a proxy or gateway. | SELF | REVIEWED |
 | 43 | p-map , line 337 | Governance and monitoring (4) covers every layer. | SELF | REVIEWED |
 | 44 | p-map , line 338 | Arrows show selected paths, not every data flow. | SELF | REVIEWED |
-| 45 | p-map , line 338 | Select a marker or a box to see its risks. | SELF | REVIEWED |
+| 45 | p-map , line 338 | Select a marker or a box to see its risks. | SELF | REMOVED 9 Nov 2026 |
 | 46 | p-map , line 348 | The diagram is wide. | SELF | REVIEWED |
-| 47 | p-map , line 348 | Drag sideways in it, or use the table below. | SELF | REVIEWED |
+| 47 | p-map , line 348 | Drag sideways in it, or use the table below. | SELF | REMOVED 9 Nov 2026 |
 | 48 | p-map , line 352 | The same placement as the diagram. | SELF | REVIEWED |
-| 49 | p-map , line 352 | Select a risk to show it in the diagram. | SELF | REVIEWED |
+| 49 | p-map , line 352 | Select a risk to show it in the diagram. | SELF | REMOVED 9 Nov 2026 |
 | 50 | p-map , line 356 | Risk1 · Sources2 · Workstation3 · Outbound4 · Governance | SELF | REVIEWED |
-| 51 | p-map , line 364 | This is a reference layout, not your organisation's setup. | SELF | REVIEWED |
-| 52 | p-map , line 364 | Common differences: only remote servers, only local servers, servers inside dev containers, or an internal gateway in front of all servers. | ARCH, SEC | REVIEWED |
-| 53 | p-map , line 364 | Draw your own variant and move the markers. | SELF | REVIEWED |
-| 54 | p-map , line 365 | The placement of risks is my judgement based on the sources. [inference] | SELF | JUDGEMENT / CHECK QUESTION |
+| 51 | p-map , line 364 | This is a reference layout, not your organisation's setup. | SELF | REMOVED 9 Nov 2026 |
+| 52 | p-map , line 364 | Common differences: only remote servers, only local servers, servers inside dev containers, or an internal gateway in front of all servers. | ARCH, SEC | REMOVED 9 Nov 2026 |
+| 53 | p-map , line 364 | Draw your own variant and move the markers. | SELF | REMOVED 9 Nov 2026 |
+| 54 | p-map , line 365 | The placement of risks is interpretation by AI based on the sources. [inference] | SELF | REMOVED 9 Nov 2026 |
 | 55 | p-risks , line 373 | Grouped from the OWASP MCP Top 10 and the specification's security guidance. | OWASP | JUDGEMENT / CHECK QUESTION |
-| 56 | p-risks , line 373 | The order and the grouping are my judgement. [inference] OWASP's list is in beta and may change. | OWASP | JUDGEMENT / CHECK QUESTION |
+| 56 | p-risks , line 373 | The order and the grouping are interpretation by AI. [inference] OWASP's list is in beta and may change. | OWASP | JUDGEMENT / CHECK QUESTION |
 | 57 | p-risks , line 379 | OWASP MCP Top 10: in beta (phase 3). | OWASP | REVIEWED |
 | 58 | p-risks , line 379 | IDs and names can change. | SELF | REVIEWED |
 | 59 | p-risks , line 380 | Specification versions: the Origin, localhost and security rules were checked against version 2026-07-28, the current one on 5 November 2026. | ARCH, HTTP, SEC, VER | REVIEWED |
@@ -485,14 +555,14 @@ Source keys below apply to the relevant named sections, not to unrelated stateme
 | 63 | p-risks , line 382 | Mitiga disagrees. | MITIGA | REVIEWED |
 | 64 | p-risks , line 382 | This page does not take a side. | SELF | REVIEWED |
 | 65 | p-risks , line 388 | One suggested first control per risk. | SELF | JUDGEMENT / CHECK QUESTION |
-| 66 | p-risks , line 388 | These are recommendations, and the friction is my estimate. [inference] | SELF | JUDGEMENT / CHECK QUESTION |
+| 66 | p-risks , line 388 | These are recommendations, and the friction is an AI estimate. [inference] | SELF | JUDGEMENT / CHECK QUESTION |
 | 67 | p-risks , line 392 | RiskFirst controlFriction | SELF | REVIEWED |
 | 68 | p-risks , line 400 | OK: in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; the tracker stores status values in this browser, with no evidence attachments. | SELF | JUDGEMENT / CHECK QUESTION |
 | 69 | p-risks , line 400 | Partial: covers some products, platforms or users. | SELF | JUDGEMENT / CHECK QUESTION |
 | 70 | p-risks , line 400 | Missing: not in place. | SELF | JUDGEMENT / CHECK QUESTION |
 | 71 | p-risks , line 400 | Unknown: looked at but not confirmed. | SELF | JUDGEMENT / CHECK QUESTION |
 | 72 | p-risks , line 400 | Not assessed: nobody has looked yet. | SELF | JUDGEMENT / CHECK QUESTION |
-| 73 | p-risks , line 400 | These definitions are mine. [inference] | SELF | JUDGEMENT / CHECK QUESTION |
+| 73 | p-risks , line 400 | Definitions are interpretation by AI. [inference] | SELF | JUDGEMENT / CHECK QUESTION |
 | 74 | p-risks M01, line 424 | OWASP MCP09 Shadow MCP Servers | ARCH, OWASP, SEC | REVIEWED |
 | 75 | p-risks M01, line 425 | In plain words: Without enforced restrictions, users can configure unapproved servers. | ARCH, SEC | REVIEWED |
 | 76 | p-risks M01, line 425 | An allowlist limits which servers can load within its documented scope. | ARCH, BEARER, OAUTH, SEC | REVIEWED |
@@ -642,9 +712,9 @@ Source keys below apply to the relevant named sections, not to unrelated stateme
 | 220 | p-vscode , line 591 | VS Code has more than one kind of agent session (local and Copilot harness), and the settings do not always reach both. | VADD, VCONF, VMAN, VMGMT, VOTEL, VPOL, VSEC | REVIEWED |
 | 221 | p-vscode , line 591 | The rows say where the docs name a difference. | VADD, VCONF, VMAN, VMGMT, VOTEL, VPOL, VSEC | REVIEWED |
 | 222 | p-vscode , line 591 | Settings and policy names come from the docs; none was run on a managed machine. | VADD, VCONF, VMAN, VMGMT, VOTEL, VPOL, VSEC | REVIEWED |
-| 223 | p-evidence , line 599 | What was checked, what is my judgement, and what is still open. | SELF | REVIEWED |
+| 223 | p-evidence , line 599 | What was checked, what is interpretation by AI, and what is still open. | SELF | REVIEWED |
 | 224 | p-sources , line 608 | All opened on 5 November 2026, except the Developer-WS page, which is on this site. | SELF | REVIEW SCOPE |
-| 225 | p-sources , line 614 | Marked [inference] is my judgement, not taken directly from a source. | SELF | JUDGEMENT / CHECK QUESTION |
+| 225 | p-sources , line 614 | Marked [inference] is interpretation by AI, not stated in a source. | SELF | JUDGEMENT / CHECK QUESTION |
 | 226 | p-sources , line 614 | The documented product settings and attack paths were not tested on a real system. | SELF | REVIEW SCOPE |
 | 227 | p-sources , line 615 | No setting or command on this page was run on a managed machine. | SELF | REVIEW SCOPE |
 | 228 | p-sources , line 616 | Versions and dates change quickly in this area. | SELF | REVIEWED |
@@ -694,10 +764,10 @@ Source keys below apply to the relevant named sections, not to unrelated stateme
 | 272 | EVIDENCE / Checked against sources | Claude Code managed MCP page: managed-mcp.json, allowedMcpServers and deniedMcpServers, allowManagedMcpServersOnly, URL and command matching, OpenTelemetry. | ARCH, CC, SEC | REVIEWED |
 | 273 | EVIDENCE / Checked against sources | Codex managed configuration: mcp_servers allowlist and string versus structured command matching; neither form verifies cwd or environment variables. | ARCH, CODEX, SEC | REVIEWED |
 | 274 | EVIDENCE / Checked against sources | VS Code docs (agent customization, manage MCP servers, MCP configuration reference, AI security, policies, telemetry): the rows on the VS Code tab. | ARCH, SEC, VCONF | REVIEWED |
-| 275 | EVIDENCE / My judgement | The choice of eight risks, their order and the OWASP mapping. | OWASP | JUDGEMENT |
-| 276 | EVIDENCE / My judgement | Where each risk sits on the map. | SELF | JUDGEMENT |
-| 277 | EVIDENCE / My judgement | Statements tagged [inference] (advice questions, not facts), and the friction estimates. | SELF | JUDGEMENT |
-| 278 | EVIDENCE / My judgement | Which VS Code facts are shown, and the risk each is tied to. | VCONF | JUDGEMENT |
+| 275 | EVIDENCE / Interpretation by AI | The choice of eight risks, their order and the OWASP mapping. | OWASP | JUDGEMENT |
+| 276 | EVIDENCE / Interpretation by AI | Where each risk sits on the map. | SELF | JUDGEMENT |
+| 277 | EVIDENCE / Interpretation by AI | Statements tagged [inference] (advice questions, not facts), and the friction estimates. | SELF | JUDGEMENT |
+| 278 | EVIDENCE / Interpretation by AI | Which VS Code facts are shown, and the risk each is tied to. | VCONF | JUDGEMENT |
 | 279 | EVIDENCE / Still open | The specification can change. This page was checked against version 2026-07-28, the current one on 5 November 2026. | VER | REVIEWED |
 | 280 | EVIDENCE / Still open | Only one MCP-specific research demonstration (Mitiga) is cited. For the other risks no incident was verified. That does not mean none exists. | MITIGA | REVIEWED |
 | 281 | EVIDENCE / Still open | Mitiga reports that Anthropic told it the issue was out of scope and by design. Mitiga disagrees. This page does not take a side. | BEARER, CC, MITIGA, OAUTH, SEC | REVIEWED |
@@ -986,8 +1056,6 @@ label	View
 label	General
 label	Microsoft ecosystem
 label	3 · VS Code and Microsoft
-requirement	Two Azure MCP Server CVE records (vendor advisories, not observed victims) and one third-party demonstration (Invariant Labs, GitHub MCP server) are cited. The other risks rest on OWASP categories, specification warnings or Microsoft documentation. Preview status: see Current as of.
-requirement	Servers, packages, config and content (1) reach the workstation (2), where this example places the Microsoft clients, local servers and client credentials. Traffic leaves through the egress boundary (3). The gateway or firewall box is a control point only where traffic is forced through it. Governance and monitoring (4) covers every layer.
 label	Current as of 9 November 2026
 requirement	None of them needs a preview feature.
 label	Other Microsoft surfaces
@@ -1006,12 +1074,15 @@ label	APIM, Agent 365, Entra GSA
 label	MCP gateway
 requirement	Set an enterprise allowlist and denylist in GitHub managed-settings.json, and review which repository custom agent profiles exist
 label	Moderate
-requirement	Pin package versions in each server command, and review tool changes before approving them again
+requirement	Pin package versions in each server command
 label	Low
+requirement	Review tool changes before approving them again
 requirement	Open unfamiliar repositories in Restricted mode and keep Workspace Trust on
 requirement	Use separate sessions for untrusted reading, without tools that can write or send
 requirement	Review changes to mcp.json and .mcp.json like code changes
-requirement	Prefer OAuth 2.0 over API keys when a server offers it, and keep tokens out of mcp.json. Add API Management only for remote servers you host yourself
+requirement	Validate caller identity and enforce authorization for each server operation
+requirement	Review the Azure identity and reduce unnecessary access
+requirement	Review Visual Studio auto-confirm grants for tools that write or send
 requirement	Bind local HTTP servers to 127.0.0.1 and check the Origin header. Allow remote servers only from the approved list in M01
 requirement	Export OpenTelemetry from VS Code to your existing log system, and keep a list of approved servers
 label	MCP on Windows: Windows On-device Agent Registry
@@ -1068,7 +1139,7 @@ label	VS Code: MCP configuration reference
 label	Also check
 label	Check
 label	Checked against sources
-label	My judgement
+label	Interpretation by AI
 label	Still open
 label	Microsoft claims and diagram claims have linked quotations. Quotes were compared with source text on 9 November 2026; the fact-check notes record the full statement review.
 label	Microsoft Learn: Windows on-device agent registry, Visual Studio MCP servers, Copilot Studio, Entra Global Secure Access, Azure API Management, Agent 365, Azure MCP Server security.
@@ -1076,7 +1147,7 @@ label	GitHub Docs: enterprise allowlist, MCP registry and registry enforcement. 
 label	VS Code tab rows: checked on 9 November 2026, shared by both views.
 label	CVE records CVE-2026-26118 and CVE-2026-32211, as published by Microsoft. Invariant Labs, a third-party demonstration against the GitHub MCP server.
 label	MCP specification 2026-07-28 (Origin validation, localhost binding, SSRF, authorization URLs) and the OWASP MCP Top 10 names.
-label	The same eight risks as the general view, and the order. Which Microsoft surface sits on which part of the map.
+label	The same risks as the general view, and the order. Which Microsoft surface sits on which part of the map.
 label	Statements tagged [inference], and the friction estimates in the start table.
 label	Which Microsoft facts are shown, and the risk each is tied to.
 requirement	Nothing was tested on a real system. No setting or command was run on a managed machine.
@@ -1085,5 +1156,16 @@ requirement	CVE records: vendor advisories only. No observed victim incident was
 label	Mitiga: the cited article demonstrates Claude Code, not the same chain in a Microsoft product.
 requirement	Third-party servers used inside Microsoft clients: covered by the general risks, not by Microsoft sources.
 requirement	Local servers and the Entra items: see the quoted scope under M07. Endpoint tooling was not researched.
+label	CoSAI
+label	Risk list
+label	Not assessed
+label	Not assessed for the Microsoft ecosystem
+label	CoSAI: Model Context Protocol (MCP) Security
+label	Coalition for Secure AI, Workstream 4. Marked Draft. Threat names, numbers and quoted sentences.
+label	MCP specification: tools
+label	Model Context Protocol, version 2026-07-28. Human in the loop and rate limiting.
+label	CoSAI MCP security paper (draft): threat names and numbers for the risk list buttons, and the sentences behind the CoSAI lines.
+label	M10 to M12 have no product-specific assessment here; general framework guidance is shown separately.
+label	All
 ```
 <!-- End reviewed presentation text (Microsoft view) -->
