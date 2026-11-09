@@ -126,6 +126,13 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
   .intro{padding:28px 0}
   footer{margin-top:24px}
 }
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
 </style>
 </head>
 <body>
@@ -148,7 +155,7 @@ footer{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px;color
   <main>
     <section class="notes" aria-labelledby="pages">
       <div class="section-head">
-        <h2 id="pages" class="eyebrow" tabindex="-1">Pages <span class="vh">in newest-first order</span></h2>
+        <h2 id="pages" class="eyebrow" tabindex="-1"><a class="sec-link" href="#pages">Pages <span class="vh">in newest-first order</span></a></h2>
         <p>06 pages · Newest first</p>
       </div>
       <ol class="list" role="list" reversed>

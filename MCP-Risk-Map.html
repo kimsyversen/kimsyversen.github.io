@@ -1,4 +1,12 @@
-<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+:is(section,article,h2,h3)[id]{scroll-margin-top:64px}
+</style></head><body>
 <title>MCP Risk Map</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -306,16 +314,16 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
 
   <!-- 1 MAP -->
   <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
-    <section>
-      <h2>How MCP works</h2>
+    <section id="how-mcp-works">
+      <h2><a class="sec-link" href="#how-mcp-works">How MCP works</a></h2>
       <ol class="short">
         <li><span>The <b>host</b> is the AI application. Its MCP <b>clients</b> connect to <b>servers</b>. Servers can offer <b>tools</b> for the agent to call; a server need not offer tools.</span></li>
         <li><span>A <b>local</b> server is a program on your computer. With the stdio transport the client starts it and talks to it over its standard streams. A server can also run behind an HTTP address, on your computer or elsewhere.</span></li>
         <li><span>The client sends tool arguments to a server and receives results. The host decides how to use those results, including whether to include them in the model's context.</span></li>
       </ol>
     </section>
-    <section>
-      <h2>In short</h2>
+    <section id="in-short">
+      <h2><a class="sec-link" href="#in-short">In short</a></h2>
       <ol class="short">
         <li><span>An MCP server can offer tools. An unrestricted local server can act with the launching account's privileges. A remote server receives the data sent to it; authentication and token storage depend on the deployment.</span></li>
         <li><span>The main questions are: which servers are allowed, what can each one reach, and who would notice if one changed? <span class="tag">[inference]</span></span></li>
@@ -323,8 +331,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <li class="sc-m"><span>Two Azure MCP Server CVE records (vendor advisories, not observed victims) and one third-party demonstration (Invariant Labs, GitHub MCP server) are cited. The other risks rest on OWASP categories, specification warnings or Microsoft documentation. Preview status: see Current as of.</span></li>
       </ol>
     </section>
-    <section>
-      <h2>Words used on this page</h2>
+    <section id="words-used-on-this-page">
+      <h2><a class="sec-link" href="#words-used-on-this-page">Words used on this page</a></h2>
       <dl style="display:grid;gap:10px;margin:0">
         <div><dt style="font-weight:600">Token</dt><dd style="margin:0">An access token authorizes access to a service. A valid bearer token can be used by whoever holds it, within its permissions and other service checks. Tokens do not always represent a human user.</dd></div>
         <div><dt style="font-weight:600">Scope</dt><dd style="margin:0">A named permission requested or granted during authorization. The service must still enforce access checks.</dd></div>
@@ -339,8 +347,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </dl>
     </section>
 
-    <section>
-      <h2>Risk map of MCP</h2>
+    <section id="risk-map-of-mcp">
+      <h2><a class="sec-link" href="#risk-map-of-mcp">Risk map of MCP</a></h2>
       <p class="sub">From where servers and content come from, through the agent and its servers, to what goes out. Each marker shows where a risk enters or must be controlled. M01 to M08 are coloured by the status you set under Risks.</p>
       <div class="rchips" id="dgChips" role="group" aria-label="Show a risk in the diagram"></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
@@ -366,8 +374,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </figure>
     <p class="note hint">The diagram is wide. Drag sideways in it, or use the table below.</p>
 
-    <section>
-      <h2>Risk by zone</h2>
+    <section id="risk-by-zone">
+      <h2><a class="sec-link" href="#risk-by-zone">Risk by zone</a></h2>
       <p class="sub">The same placement as the diagram. Select a risk to show it in the diagram.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk by zone table">
         <table class="mx">
@@ -378,8 +386,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </div>
     </section>
 
-    <section>
-      <h3>Before you use the map</h3>
+    <section id="before-you-use-the-map">
+      <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
       <p class="sub">This is a reference layout, not your organisation's setup. Common differences: only remote servers, only local servers, servers inside dev containers, or an internal gateway in front of all servers. Draw your own variant and move the markers.</p>
       <p class="sub">The placement of risks is my judgement based on the sources. <span class="tag">[inference]</span></p>
     </section>
@@ -387,14 +395,14 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
 
   <!-- 2 RISKS -->
   <div class="panel" role="tabpanel" id="p-risks" aria-labelledby="t-risks" hidden>
-    <section>
-      <h2>The eight risks</h2>
+    <section id="the-eight-risks">
+      <h2><a class="sec-link" href="#the-eight-risks">The eight risks</a></h2>
       <p class="sub">Grouped from the OWASP MCP Top 10 and the specification's security guidance. The order and the grouping are my judgement. <span class="tag">[inference]</span> OWASP's list is in beta and may change.</p>
     </section>
 
     <aside class="callout" id="current">
-      <h3 class="sc-g">Current as of 9 November 2026</h3>
-      <h3 class="sc-m">Current as of 9 November 2026</h3>
+      <h3 class="sc-g" id="current-as-of-9-november-2026"><a class="sec-link" href="#current-as-of-9-november-2026">Current as of 9 November 2026</a></h3>
+      <h3 class="sc-m" id="current-as-of-9-november-2026-2"><a class="sec-link" href="#current-as-of-9-november-2026-2">Current as of 9 November 2026</a></h3>
       <ul id="currentListM" class="sc-m"></ul>
       <ul id="currentList" class="sc-g">
         <li><b>OWASP MCP Top 10:</b> in beta (phase 3). IDs and names can change.</li>
@@ -404,8 +412,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </ul>
     </aside>
 
-    <section>
-      <h3>Where to start</h3>
+    <section id="where-to-start">
+      <h3><a class="sec-link" href="#where-to-start">Where to start</a></h3>
       <p class="sub">One suggested first control per risk. These are recommendations, and the friction is my estimate. <span class="tag">[inference]</span><span class="sc-m"> None of them needs a preview feature.</span></p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
@@ -417,7 +425,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </section>
 
     <section id="statusdef">
-      <h3>What a status means</h3>
+      <h3><a class="sec-link" href="#statusdef">What a status means</a></h3>
       <p class="sub"><b>OK:</b> in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; the tracker stores status values in this browser, with no evidence attachments. <b>Partial:</b> covers some products, platforms or users. <b>Missing:</b> not in place. <b>Unknown:</b> looked at but not confirmed. <b>Not assessed:</b> nobody has looked yet. These definitions are mine. <span class="tag">[inference]</span></p>
     </section>
 
@@ -441,8 +449,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
 
     <div class="risks" id="risks">
 
-      <article class="risk" data-id="M01" data-title="Unapproved MCP servers">
-        <div class="risk-head"><span class="rid">M01</span><div><h3>Unapproved MCP servers</h3><p class="en">OWASP MCP09 Shadow MCP Servers</p></div></div>
+      <article id="risk-m01" class="risk" data-id="M01" data-title="Unapproved MCP servers">
+        <div class="risk-head"><span class="rid">M01</span><div><h3><a class="sec-link" href="#risk-m01">Unapproved MCP servers</a></h3><p class="en">OWASP MCP09 Shadow MCP Servers</p></div></div>
         <p><b>In plain words:</b> Without enforced restrictions, users can configure unapproved servers. An allowlist limits which servers can load within its documented scope.</p>
         <p class="sc-g">By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it.</p>
         <div><span class="lbl">Check</span></div>
@@ -461,8 +469,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M01"></div>
       </article>
 
-      <article class="risk" data-id="M02" data-title="Tampered or malicious server code">
-        <div class="risk-head"><span class="rid">M02</span><div><h3>Tampered or malicious server code</h3><p class="en">OWASP MCP04 Software Supply Chain Attacks and Dependency Tampering · MCP03 Tool Poisoning</p></div></div>
+      <article id="risk-m02" class="risk" data-id="M02" data-title="Tampered or malicious server code">
+        <div class="risk-head"><span class="rid">M02</span><div><h3><a class="sec-link" href="#risk-m02">Tampered or malicious server code</a></h3><p class="en">OWASP MCP04 Software Supply Chain Attacks and Dependency Tampering · MCP03 Tool Poisoning</p></div></div>
         <p><b>In plain words:</b> A local server is a program someone wrote. If it is malicious, it can act with the launching account's privileges unless isolation restricts it.</p>
         <p>A local server may be installed from a package or repository, or written locally. Without adequate isolation, malicious server code can execute with the MCP client's privileges. No MCP-specific incident for this risk is cited here.</p>
         <div><span class="lbl">Check</span></div>
@@ -476,8 +484,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M02"></div>
       </article>
 
-      <article class="risk" data-id="M03" data-title="Local servers run commands as the user">
-        <div class="risk-head"><span class="rid">M03</span><div><h3>Local servers run commands as the user</h3><p class="en">OWASP MCP05 Command Injection and Execution</p></div></div>
+      <article id="risk-m03" class="risk" data-id="M03" data-title="Local servers run commands as the user">
+        <div class="risk-head"><span class="rid">M03</span><div><h3><a class="sec-link" href="#risk-m03">Local servers run commands as the user</a></h3><p class="en">OWASP MCP05 Command Injection and Execution</p></div></div>
         <p><b>In plain words:</b> A local server is started by a command. If the client executes a malicious command, attacker code runs within the configured execution environment.</p>
         <p>The MCP specification lists local server compromise as a risk: a malicious startup command in the client config, or a malicious payload in the server. The results it names are arbitrary code execution, no visibility and data exfiltration.</p>
         <div><span class="lbl">Check</span></div>
@@ -492,8 +500,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M03"></div>
       </article>
 
-      <article class="risk" data-id="M04" data-title="Prompt injection through tool output">
-        <div class="risk-head"><span class="rid">M04</span><div><h3>Prompt injection through tool output</h3><p class="en">OWASP MCP06 Prompt Injection via Contextual Payloads</p></div></div>
+      <article id="risk-m04" class="risk" data-id="M04" data-title="Prompt injection through tool output">
+        <div class="risk-head"><span class="rid">M04</span><div><h3><a class="sec-link" href="#risk-m04">Prompt injection through tool output</a></h3><p class="en">OWASP MCP06 Prompt Injection via Contextual Payloads</p></div></div>
         <p><b>In plain words:</b> The agent reads text that tools bring back. If that text contains malicious instructions, the agent may follow them.</p>
         <p>A tool can read pages, tickets or files that someone else wrote. Malicious instructions, visible or hidden, can steer the agent. OWASP lists this category. The Microsoft view cites an Invariant Labs research demonstration; no victim incident is verified here.</p>
         <div><span class="lbl">Check</span></div>
@@ -508,8 +516,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M04"></div>
       </article>
 
-      <article class="risk" data-id="M05" data-title="MCP tokens stolen or redirected">
-        <div class="risk-head"><span class="rid">M05</span><div><h3>MCP tokens stolen or redirected</h3><p class="en">OWASP MCP01 Token Mismanagement and Secret Exposure</p></div></div>
+      <article id="risk-m05" class="risk" data-id="M05" data-title="MCP tokens stolen or redirected">
+        <div class="risk-head"><span class="rid">M05</span><div><h3><a class="sec-link" href="#risk-m05">MCP tokens stolen or redirected</a></h3><p class="en">OWASP MCP01 Token Mismanagement and Secret Exposure</p></div></div>
         <p><b>In plain words:</b> A bearer token grants access to a service. An attacker who can intercept it may be able to reuse it.</p>
         <p class="sc-g">Mitiga (May 2026) showed an npm postinstall hook that edits <code>~/.claude.json</code> and points an MCP server URL at an attacker's localhost proxy. Mitiga shows interception and reuse of an OAuth bearer token with Atlassian. Its article discusses refresh-token persistence but does not separately demonstrate capture of a refresh token.</p><p class="sc-g">The chain requires local code execution through the npm installation. Mitiga describes a project SessionStart hook that restores the malicious endpoint; remediation must remove that persistence as well as repair the configuration and rotate credentials.</p>
         <div class="sc-g"><span class="lbl">Check</span></div>
@@ -524,8 +532,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M05"></div>
       </article>
 
-      <article class="risk" data-id="M06" data-title="Over-broad tokens and passed-through tokens">
-        <div class="risk-head"><span class="rid">M06</span><div><h3>Over-broad tokens and passed-through tokens</h3><p class="en">OWASP MCP02 Privilege Escalation via Scope Creep · MCP07 Insufficient Authentication and Authorization</p></div></div>
+      <article id="risk-m06" class="risk" data-id="M06" data-title="Over-broad tokens and passed-through tokens">
+        <div class="risk-head"><span class="rid">M06</span><div><h3><a class="sec-link" href="#risk-m06">Over-broad tokens and passed-through tokens</a></h3><p class="en">OWASP MCP02 Privilege Escalation via Scope Creep · MCP07 Insufficient Authentication and Authorization</p></div></div>
         <p><b>In plain words:</b> A key that opens many doors does more harm when stolen. An MCP server must reject client tokens intended for a different service.</p>
         <p>A stolen token with wide scope reaches further than a narrow one. The specification forbids token passthrough: an MCP server must not accept tokens that were not issued for it. It also warns that a proxy server with a static client ID can be abused (confused deputy).</p>
         <div><span class="lbl">Check</span></div>
@@ -540,8 +548,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M06"></div>
       </article>
 
-      <article class="risk" data-id="M07" data-title="Local HTTP servers and URLs from servers">
-        <div class="risk-head"><span class="rid">M07</span><div><h3>Local HTTP servers and URLs from servers</h3><p class="en">MCP specification: transports and security best practices</p></div></div>
+      <article id="risk-m07" class="risk" data-id="M07" data-title="Local HTTP servers and URLs from servers">
+        <div class="risk-head"><span class="rid">M07</span><div><h3><a class="sec-link" href="#risk-m07">Local HTTP servers and URLs from servers</a></h3><p class="en">MCP specification: transports and security best practices</p></div></div>
         <p><b>In plain words:</b> A server on your own computer can be reached by other programs, and sometimes by web pages. A server can also send your client to addresses it should not visit.</p>
         <p>An MCP server that listens on local HTTP can be reached by other local programs and, through DNS rebinding, by web pages. The specification also warns that a malicious server can supply URLs that point at internal addresses, such as 169.254.169.254.</p>
         <div><span class="lbl">Check</span></div>
@@ -556,8 +564,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         <div class="seg" data-id="M07"></div>
       </article>
 
-      <article class="risk" data-id="M08" data-title="Over-sharing and no audit trail">
-        <div class="risk-head"><span class="rid">M08</span><div><h3>Over-sharing and no audit trail</h3><p class="en">OWASP MCP10 Context Injection and Over-Sharing · MCP08 Lack of Audit and Telemetry</p></div></div>
+      <article id="risk-m08" class="risk" data-id="M08" data-title="Over-sharing and no audit trail">
+        <div class="risk-head"><span class="rid">M08</span><div><h3><a class="sec-link" href="#risk-m08">Over-sharing and no audit trail</a></h3><p class="en">OWASP MCP10 Context Injection and Over-Sharing · MCP08 Lack of Audit and Telemetry</p></div></div>
         <p><b>In plain words:</b> Without server inventories and suitable logs, it is harder to establish what was shared. <span class="tag">[inference]</span></p>
         <p>MCP calls send data to the selected server. Local calls can stay on the machine; external disclosure depends on the server, host and model deployment. OWASP separately lists context over-sharing and missing audit telemetry as risks. No MCP-specific incident for these risks is cited here.</p>
         <div><span class="lbl">Check</span></div>
@@ -589,8 +597,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
   </style>
   <!-- 3 VS CODE -->
   <div class="panel" role="tabpanel" id="p-vscode" aria-labelledby="t-vscode" hidden>
-    <section>
-      <h2>If you run MCP servers in VS Code</h2>
+    <section id="if-you-run-mcp-servers-in-vs-code">
+      <h2><a class="sec-link" href="#if-you-run-mcp-servers-in-vs-code">If you run MCP servers in VS Code</a></h2>
       <p class="sub">What the VS Code documentation says about MCP, and which risk each point touches. The general risks still apply. Rows summarize the VS Code docs on 9 November 2026 unless it is tagged <span class="tag">[inference]</span>. Nothing here was tested.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="VS Code and MCP table">
         <table class="tbl vs">
@@ -615,8 +623,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         </table>
       </div>
     </section>
-    <section class="sc-m">
-      <h3>Other Microsoft surfaces</h3>
+    <section id="other-microsoft-surfaces" class="sc-m">
+      <h3><a class="sec-link" href="#other-microsoft-surfaces">Other Microsoft surfaces</a></h3>
       <p class="sub">What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 9 November 2026. Nothing here was tested.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Other Microsoft surfaces table">
         <table class="tbl vs">
@@ -626,16 +634,16 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
         </table>
       </div>
     </section>
-    <section>
-      <h3>Limits</h3>
+    <section id="limits">
+      <h3><a class="sec-link" href="#limits">Limits</a></h3>
       <p class="sub">VS Code has more than one kind of agent session (local and Copilot harness), and the settings do not always reach both. The rows say where the docs name a difference. Settings and policy names come from the docs; none was run on a managed machine.</p>
     </section>
   </div>
 
   <!-- 3 EVIDENCE -->
   <div class="panel" role="tabpanel" id="p-evidence" aria-labelledby="t-evidence" hidden>
-    <section>
-      <h2>Evidence status</h2>
+    <section id="evidence-status">
+      <h2><a class="sec-link" href="#evidence-status">Evidence status</a></h2>
       <p class="sub">What was checked, what is my judgement, and what is still open.</p>
       <div class="cols" id="evidence"></div>
     </section>
@@ -643,8 +651,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
 
   <!-- SOURCES -->
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
-    <section>
-      <h2>Sources</h2>
+    <section id="sources-2">
+      <h2><a class="sec-link" href="#sources-2">Sources</a></h2>
       <p class="sub sc-g">All opened on 9 November 2026, except the Developer-WS page, which is on this site.</p>
       <p class="sub sc-m">All external sources opened on 9 November 2026. The Developer-WS page sits on this site.</p>
       <ol class="sources" id="sourceList"></ol>
@@ -721,13 +729,28 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     });
   });
   function toMore(){ show('map'); var m = document.getElementById('more'); if (m) setTimeout(function(){ m.scrollIntoView({ block: 'start' }); }, 0); }
+  /* Links to a section inside a tab: open that tab, then scroll to the section */
+  function openSection(id){
+    if (!id) return false;
+    try { id = decodeURIComponent(id); } catch(e){}
+    var el = document.getElementById(id); if (!el) return false;
+    var p = el.closest('[id^="p-"]');
+    var tab = p ? p.id.slice(2) : null;
+    if (tab && ids.indexOf(tab) >= 0 && p.hidden) show(tab);
+    var c = el.closest('.risk');
+    if (c && c.hidden){ var all = document.querySelector('.chip[data-path="all"]'); if (all) all.click(); }
+    try { history.replaceState(null, '', '#' + id + '&s=' + scope); } catch(e){}
+    el.scrollIntoView();
+    return true;
+  }
   var start = h0.tab;
   if (start === 'more') toMore();
   else show(ids.indexOf(start) >= 0 ? start : store.get('mcp-tab', 'map'));
+  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
   window.addEventListener('hashchange', function(){
     var h = parseHash();
     if ((h.s === 'ms' || h.s === 'g') && h.s !== scope) applyScope(h.s, false);
-    if (h.tab === 'more') toMore(); else if (ids.indexOf(h.tab) >= 0) show(h.tab);
+    if (h.tab === 'more') toMore(); else if (ids.indexOf(h.tab) >= 0) show(h.tab); else openSection(h.tab);
   });
 
   /* Copy */
@@ -906,10 +929,13 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     });
   }
 
+  /* Headings built by script get an id and a link too */
+  function slug(t){ return t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48).replace(/-$/, ''); }
+  function linkHead(h, id){ var a = htmlEl('a', 'sec-link', h.textContent); a.href = '#' + id; h.id = id; h.textContent = ''; h.appendChild(a); return h; }
   var pw = $('#personas');
   PERSONAS.forEach(function(p){
     var d = htmlEl('div', 'persona');
-    d.appendChild(htmlEl('h3', null, p.n));
+    d.appendChild(linkHead(htmlEl('h3', null, p.n), 'persona-' + slug(p.n)));
     d.appendChild(htmlEl('p', 'role', p.r));
     var ul = htmlEl('ul');
     p.f.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
@@ -920,7 +946,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     var ev = $('#evidence'); ev.innerHTML = '';
     (scope === 'ms' ? MSDATA.EVIDENCE_M : EVIDENCE).forEach(function(c){
       var d = htmlEl('div', 'col');
-      d.appendChild(htmlEl('h3', null, c.h));
+      d.appendChild(linkHead(htmlEl('h3', null, c.h), 'evidence-' + slug(c.h)));
       var ul = htmlEl('ul');
       c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
       d.appendChild(ul);
@@ -1356,6 +1382,8 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
 
   renderMsx(); renderCallout(); renderOther(); bindDiagramOnce();
   applyScope(scope, false);
+  /* A shared link to a section built by script: the section now exists */
+  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
 })();
 </script>
 </body></html>

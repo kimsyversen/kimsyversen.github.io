@@ -1,4 +1,12 @@
-<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+:is(section,article,h2,h3)[id]{scroll-margin-top:64px}
+</style></head><body>
 <title>Developer Workstation Risk Map</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -288,8 +296,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
   <!-- 1 MAP -->
   <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
-    <section>
-      <h2>In short</h2>
+    <section id="in-short">
+      <h2><a class="sec-link" href="#in-short">In short</a></h2>
       <ol class="short">
         <li><span>Everything on the laptop starts with the developer's rights: VS Code, extensions, agents, MCP servers and install scripts. A sandbox or per-tool permission narrows that only where it is on and covers the tool. Everything else can read what the developer can.</span></li>
         <li><span>The main question is: what can untrusted content, a bad add-on or a stolen token make the machine do, and what stops it? <span class="tag">[inference]</span></span></li>
@@ -297,8 +305,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       </ol>
     </section>
 
-    <section>
-      <h2>Risk map of the workstation</h2>
+    <section id="risk-map-of-the-workstation">
+      <h2><a class="sec-link" href="#risk-map-of-the-workstation">Risk map of the workstation</a></h2>
       <p class="sub">A typical enterprise developer machine, from what comes in to what goes out. Each marker shows where a risk enters or must be controlled. D01 to D10 are the top 10, coloured by the status you set under Top 10. D11 to D17, with dashed markers, are the further risks listed below the map.</p>
       <div class="rchips" id="dgChips" role="group" aria-label="Show a top 10 risk in the diagram"></div>
       <div class="rchips" id="dgChipsX" role="group" aria-label="Show a further risk, D11 to D17, in the diagram"><span class="chip-lbl">More risks</span></div>
@@ -326,8 +334,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </figure>
     <p class="note hint">The diagram is wide. Drag sideways in it, or use the table below.</p>
 
-    <section>
-      <h2>Risk by zone</h2>
+    <section id="risk-by-zone">
+      <h2><a class="sec-link" href="#risk-by-zone">Risk by zone</a></h2>
       <p class="sub">The same placement as the diagram, for the top 10 risks. D11 to D17 are in the same layout under More risks. Select a risk to show it in the diagram.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk by zone table">
         <table class="mx">
@@ -339,7 +347,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </section>
 
     <section id="more">
-      <h2>More risks</h2>
+      <h2><a class="sec-link" href="#more">More risks</a></h2>
       <p class="sub">Seven risks outside the top 10 that belong in a full assessment, placed the same way as the diagram. They have dashed markers in the diagram. Select a risk to show it in the diagram.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="More risks table">
         <table class="mx">
@@ -351,13 +359,13 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </section>
 
     <section id="first">
-      <h2>Relevance and first control</h2>
+      <h2><a class="sec-link" href="#first">Relevance and first control</a></h2>
       <p class="sub">All 17 risks in the order of the two tables above. Open a risk for its description and first control. For D01 to D10 the first control and its friction come from Where to start under Top 10. For D11 to D17 relevance is my judgement for an enterprise developer fleet. <span class="tag">[inference]</span></p>
       <div class="more-list" id="moreDetails"></div>
     </section>
 
-    <section>
-      <h3>Before you use the map</h3>
+    <section id="before-you-use-the-map">
+      <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
       <p class="sub">This is a reference layout, not your organisation's setup. Common differences: agents used only in the terminal, all agent work in dev containers or cloud sessions, an internal package proxy, and VS Code forks such as Cursor or Windsurf. Draw your own variant and move the markers.</p>
       <p class="sub">The placement of risks and the owner per zone are my judgement based on the sources. <span class="tag">[inference]</span></p>
     </section>
@@ -365,13 +373,13 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
   <!-- 2 TOP 10 -->
   <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
-    <section>
-      <h2>The ten risks</h2>
+    <section id="the-ten-risks">
+      <h2><a class="sec-link" href="#the-ten-risks">The ten risks</a></h2>
       <p class="sub">Proposed, not measured: the order weighs how often each risk appears in the cited reporting against how far the damage reaches. D09 and D10 are a control gap and a data governance risk, not attack paths. VS Code tunnels (D13), used in real attacks, are the strongest candidate to move up. The order and OWASP mapping are my judgement. <span class="tag">[inference]</span></p>
     </section>
 
     <aside class="callout" id="current">
-      <h3>Current as of 1 November 2026</h3>
+      <h3 id="current-as-of-1-november-2026"><a class="sec-link" href="#current-as-of-1-november-2026">Current as of 1 November 2026</a></h3>
       <ul id="currentList">
         <li><b>npm:</b> npm 12 has been out since July 2026 (12.2.1 is current on the npm registry). It no longer runs dependency install scripts unless they are approved. It still runs the project's own <code>.npm-extension.mjs</code> or <code>.npm-extension.cjs</code> on <code>npm install</code> (not on <code>npm ci</code>), and <code>dangerously-allow-all-scripts</code> switches script approval off.</li>
         <li><b>GitSpawn:</b> at publication on 1 September 2026, four of eight findings across seven agents were unpatched, including a second Claude Code path still open on 2.1.252. It needs a repo that arrives as files with its <code>.git</code> folder; a normal clone does not carry it. A global <code>core.fsmonitor</code> of false does not help, because the repo's own config wins.</li>
@@ -381,8 +389,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       </ul>
     </aside>
 
-    <section>
-      <h3>Where to start</h3>
+    <section id="where-to-start">
+      <h3><a class="sec-link" href="#where-to-start">Where to start</a></h3>
       <p class="sub">One first control per risk that gives visible value at fleet scale. Suggested by the endpoint reviewer; the friction is their estimate. <span class="tag">[inference]</span></p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
@@ -394,7 +402,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </section>
 
     <section id="statusdef">
-      <h3>What a status means</h3>
+      <h3><a class="sec-link" href="#statusdef">What a status means</a></h3>
       <p class="sub"><b>OK:</b> in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; this page stores only the status, in this browser. <b>Partial:</b> covers some products, platforms or users. <b>Missing:</b> not in place. <b>Unknown:</b> looked at but not confirmed. <b>Not assessed:</b> nobody has looked yet. These definitions are mine. <span class="tag">[inference]</span></p>
     </section>
 
@@ -416,8 +424,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status as text"></textarea>
     </div>
 
-    <section>
-      <h3>Filter by attack path</h3>
+    <section id="filter-by-attack-path">
+      <h3><a class="sec-link" href="#filter-by-attack-path">Filter by attack path</a></h3>
       <div class="chips" role="group" aria-label="Attack path">
         <button type="button" class="chip" data-path="all" aria-pressed="true">All</button>
         <button type="button" class="chip" data-path="content" aria-pressed="false">Poisoned content</button>
@@ -430,8 +438,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
     <div class="risks" id="risks">
 
-      <article class="risk" data-id="D01" data-title="Malicious packages and install scripts" data-paths="supply creds">
-        <div class="risk-head"><span class="rid">D01</span><div><h3>Malicious packages and install scripts</h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
+      <article id="risk-d01" class="risk" data-id="D01" data-title="Malicious packages and install scripts" data-paths="supply creds">
+        <div class="risk-head"><span class="rid">D01</span><div><h3><a class="sec-link" href="#risk-d01">Malicious packages and install scripts</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
         <p>A package install can run code before anyone reads it. ChainDrop (Microsoft, 4 August 2026) used a preinstall script in more than 400 npm packages to steal credentials and republish packages. Some copies had valid provenance from a real CI workflow, so provenance alone does not prove safety.</p>
         <p>In August 2025 the s1ngularity malware ran installed AI CLIs with their permission checks off to search the disk for secrets.</p>
         <div><span class="lbl">Check</span></div>
@@ -451,8 +459,8 @@ npm config get ignore-scripts min-release-age dangerously-allow-all-scripts igno
         <div class="seg" data-id="D01"></div>
       </article>
 
-      <article class="risk" data-id="D02" data-title="Code runs when a project is opened" data-paths="repo">
-        <div class="risk-head"><span class="rid">D02</span><div><h3>Code runs when a project is opened</h3><p class="en">OWASP ASI05 Unexpected Code Execution</p></div></div>
+      <article id="risk-d02" class="risk" data-id="D02" data-title="Code runs when a project is opened" data-paths="repo">
+        <div class="risk-head"><span class="rid">D02</span><div><h3><a class="sec-link" href="#risk-d02">Code runs when a project is opened</a></h3><p class="en">OWASP ASI05 Unexpected Code Execution</p></div></div>
         <p>Project files that survive a clone can name a program to run: <code>.vscode/tasks.json</code>, workspace settings, <code>.devcontainer/devcontainer.json</code> (its <code>initializeCommand</code> runs on the host), <code>.claude/settings.json</code>, <code>.mcp.json</code> and npm's root <code>.npm-extension</code> files. North Korea's Contagious Interview campaign sends fake coding tests whose tasks.json runs on folder open.</p>
         <p><code>.git/config</code> and hooks arrive only when a project is shared as files, such as a zip. In GitSpawn (September 2026), background Git calls in seven agents ran a command from that config, sometimes before the trust prompt.</p>
         <div><span class="lbl">Check</span></div>
@@ -471,8 +479,8 @@ npm config get ignore-scripts min-release-age dangerously-allow-all-scripts igno
         <div class="seg" data-id="D02"></div>
       </article>
 
-      <article class="risk" data-id="D03" data-title="Malicious or hijacked extensions" data-paths="supply">
-        <div class="risk-head"><span class="rid">D03</span><div><h3>Malicious or hijacked extensions</h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
+      <article id="risk-d03" class="risk" data-id="D03" data-title="Malicious or hijacked extensions" data-paths="supply">
+        <div class="risk-head"><span class="rid">D03</span><div><h3><a class="sec-link" href="#risk-d03">Malicious or hijacked extensions</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
         <p>An extension runs with the developer's rights. In July 2025 the official Amazon Q Developer extension 1.84.0 shipped with malicious code added through a mis-scoped GitHub token; AWS says it failed to run because of a syntax error.</p>
         <p>GlassWorm has hit Open VSX in waves since October 2025, and its 2026 variants also install into VS Code, Cursor and Windsurf. Cursor, Windsurf and VSCodium use Open VSX by default.</p>
         <div><span class="lbl">Check</span></div>
@@ -489,8 +497,8 @@ npm config get ignore-scripts min-release-age dangerously-allow-all-scripts igno
         <div class="seg" data-id="D03"></div>
       </article>
 
-      <article class="risk" data-id="D04" data-title="Secrets and long-lived tokens on the machine" data-paths="creds supply repo">
-        <div class="risk-head"><span class="rid">D04</span><div><h3>Secrets and long-lived tokens on the machine</h3><p class="en">OWASP ASI03 Identity and Privilege Abuse · MCP01 Token Mismanagement</p></div></div>
+      <article id="risk-d04" class="risk" data-id="D04" data-title="Secrets and long-lived tokens on the machine" data-paths="creds supply repo">
+        <div class="risk-head"><span class="rid">D04</span><div><h3><a class="sec-link" href="#risk-d04">Secrets and long-lived tokens on the machine</a></h3><p class="en">OWASP ASI03 Identity and Privilege Abuse · MCP01 Token Mismanagement</p></div></div>
         <p>A developer laptop holds SSH keys, Git, cloud and npm tokens, .env files, and now agent tokens and transcripts. Any process running as the user can read unprotected credential files and use credentials exposed through a helper or agent. Infostealers now collect AI agent tokens too (Gen Digital, September 2026).</p>
         <p>Sandboxes do not change that by default: Claude Code's sandbox reads <code>~/.ssh</code> and <code>~/.aws</code> unless denied, VS Code passes Git and GitHub CLI credentials in, and Dev Containers forward the SSH agent and reuse local Git credentials.</p>
         <div><span class="lbl">Check</span></div>
@@ -513,8 +521,8 @@ npm config get ignore-scripts min-release-age dangerously-allow-all-scripts igno
         <div class="seg" data-id="D04"></div>
       </article>
 
-      <article class="risk" data-id="D05" data-title="Prompt injection and poisoned instruction files" data-paths="content repo">
-        <div class="risk-head"><span class="rid">D05</span><div><h3>Prompt injection and poisoned instruction files</h3><p class="en">OWASP ASI01 Agent Goal Hijack</p></div></div>
+      <article id="risk-d05" class="risk" data-id="D05" data-title="Prompt injection and poisoned instruction files" data-paths="content repo">
+        <div class="risk-head"><span class="rid">D05</span><div><h3><a class="sec-link" href="#risk-d05">Prompt injection and poisoned instruction files</a></h3><p class="en">OWASP ASI01 Agent Goal Hijack</p></div></div>
         <p>Text the agent reads can redirect it: a web page, issue, README, code comment, file name or MCP tool output. Agents load instruction files such as AGENTS.md and CLAUDE.md as instructions, so these carry more weight.</p>
         <p>In October 2026 Forever Security reported a planted AGENTS.md in a customer's Downloads folder that tried to make Codex install a malicious npm package. In testing, Codex followed it in more than 90% of attempts.</p>
         <div><span class="lbl">Check</span></div>
@@ -533,8 +541,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
         <div class="seg" data-id="D05"></div>
       </article>
 
-      <article class="risk" data-id="D06" data-title="Untrusted MCP servers, plugins and skills" data-paths="supply content creds">
-        <div class="risk-head"><span class="rid">D06</span><div><h3>Untrusted MCP servers, plugins and skills</h3><p class="en">OWASP ASI04 · MCP03 Tool Poisoning · MCP07 Insufficient Authentication and Authorization · AST01 Malicious Skills</p></div></div>
+      <article id="risk-d06" class="risk" data-id="D06" data-title="Untrusted MCP servers, plugins and skills" data-paths="supply content creds">
+        <div class="risk-head"><span class="rid">D06</span><div><h3><a class="sec-link" href="#risk-d06">Untrusted MCP servers, plugins and skills</a></h3><p class="en">OWASP ASI04 · MCP03 Tool Poisoning · MCP07 Insufficient Authentication and Authorization · AST01 Malicious Skills</p></div></div>
         <p>A local MCP server runs as the developer, and its tool descriptions go straight into the model's context. A remote one holds its own tokens, sees what the agent sends and can return prompt injection. ClawHavoc put more than 1,000 malicious skills on ClawHub in early 2026.</p><p>In Plugin4Shell (September 2026), Claude Code, Codex and Copilot ran <code>git checkout &lt;SHA&gt;</code> for a pinned plugin without checking the result, so a branch named after the hash could win. It needs control of the plugin's repo, an update that re-pins it, and a Git host that allows hash-named branches.</p>
         <p>CSA says automatic updates, then on by default, made it zero-click; Claude Code's docs now leave them off for third-party marketplaces.</p>
         <div><span class="lbl">Check</span></div>
@@ -554,8 +562,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
         <div class="seg" data-id="D06"></div>
       </article>
 
-      <article class="risk" data-id="D07" data-title="No sandbox and open network" data-paths="content supply creds">
-        <div class="risk-head"><span class="rid">D07</span><div><h3>No sandbox and open network</h3><p class="en">OWASP ASI05 · makes exfiltration in ASI01 and ASI03 possible</p></div></div>
+      <article id="risk-d07" class="risk" data-id="D07" data-title="No sandbox and open network" data-paths="content supply creds">
+        <div class="risk-head"><span class="rid">D07</span><div><h3><a class="sec-link" href="#risk-d07">No sandbox and open network</a></h3><p class="en">OWASP ASI05 · makes exfiltration in ASI01 and ASI03 possible</p></div></div>
         <p>Claude Code's sandbox is off by default and does not run on native Windows. It covers shell commands only; hooks, local MCP servers and <code>apiKeyHelper</code> run outside it, and the Read, Edit and WebFetch tools follow permission rules instead.</p>
         <p>Codex sandboxes commands by default (network off, writes limited to the workspace) but by default leaves reads open. VS Code's agent sandbox leaves network on by default, is experimental on Windows, and is not a virtual machine or user-account boundary. A dev container gets Git credentials and the SSH agent by default.</p>
         <div><span class="lbl">Check</span></div>
@@ -574,8 +582,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
         <div class="seg" data-id="D07"></div>
       </article>
 
-      <article class="risk" data-id="D08" data-title="Approval bypass" data-paths="content repo">
-        <div class="risk-head"><span class="rid">D08</span><div><h3>Approval bypass</h3><p class="en">OWASP ASI02 Tool Misuse · ASI09 Human-Agent Trust Exploitation</p></div></div>
+      <article id="risk-d08" class="risk" data-id="D08" data-title="Approval bypass" data-paths="content repo">
+        <div class="risk-head"><span class="rid">D08</span><div><h3><a class="sec-link" href="#risk-d08">Approval bypass</a></h3><p class="en">OWASP ASI02 Tool Misuse · ASI09 Human-Agent Trust Exploitation</p></div></div>
         <p>Approval prompts fail when they are switched off (Allow all, Autopilot, bypass modes, or a project file), or when the prompt shows something other than what happens. CVE-2025-53773 let a prompt injection make Copilot write <code>"chat.tools.autoApprove": true</code> into workspace settings.</p>
         <p>GhostApproval (Wiz, July 2026) used repo symlinks to make six agents write outside the project, such as to <code>~/.ssh/authorized_keys</code>; in some, the prompt named a harmless file or came after the write. Anthropic disputed that it is a vulnerability.</p>
         <div><span class="lbl">Check</span></div>
@@ -593,8 +601,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
         <div class="seg" data-id="D08"></div>
       </article>
 
-      <article class="risk" data-id="D09" data-title="No inventory, version floor or agent telemetry" data-paths="content repo supply creds">
-        <div class="risk-head"><span class="rid">D09</span><div><h3>No inventory, version floor or agent telemetry</h3><p class="en">OWASP MCP08 Lack of Audit and Telemetry · ASI10 Rogue Agents (secondary, detection side)</p></div></div>
+      <article id="risk-d09" class="risk" data-id="D09" data-title="No inventory, version floor or agent telemetry" data-paths="content repo supply creds">
+        <div class="risk-head"><span class="rid">D09</span><div><h3><a class="sec-link" href="#risk-d09">No inventory, version floor or agent telemetry</a></h3><p class="en">OWASP MCP08 Lack of Audit and Telemetry · ASI10 Rogue Agents (secondary, detection side)</p></div></div>
         <p>You cannot act on the next GitSpawn without knowing which agents and versions run where. A Defender process event records the command lines of the new process and its parent, but only the grandparent's name and ID. It does not record the task, prompt, approval or agent session.</p>
         <p>Forever Security caught the planted AGENTS.md by watching the agent, not only the user. VS Code ignores a policy value with a syntax error, so policies can fail quietly.</p>
         <div><span class="lbl">Check</span></div>
@@ -618,8 +626,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
         <div class="seg" data-id="D09"></div>
       </article>
 
-      <article class="risk" data-id="D10" data-title="Code and context sent to unapproved AI services" data-paths="">
-        <div class="risk-head"><span class="rid">D10</span><div><h3>Code and context sent to unapproved AI services</h3><p class="en">Data governance, not an OWASP attack class</p></div></div>
+      <article id="risk-d10" class="risk" data-id="D10" data-title="Code and context sent to unapproved AI services" data-paths="">
+        <div class="risk-head"><span class="rid">D10</span><div><h3><a class="sec-link" href="#risk-d10">Code and context sent to unapproved AI services</a></h3><p class="en">Data governance, not an OWASP attack class</p></div></div>
         <p>Model requests can include code, files the agent read, terminal output, tool results and sometimes secrets. The risk is where they go: a personal account, a provider without a company agreement, or an own-key model, where VS Code says content filtering is not guaranteed. In July 2026 Grok Build CLI was found uploading whole Git repositories to xAI's storage.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -636,7 +644,7 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
     </div>
 
     <section id="respond">
-      <h2>If something got in</h2>
+      <h2><a class="sec-link" href="#respond">If something got in</a></h2>
       <p class="sub">Removing a planted instruction file or updating the agent does not undo what already ran. In Forever Security's case Codex first changed its own settings, which then applied to every later Codex session in any project. The order below is my judgement. <span class="tag">[inference]</span></p>
       <ol class="ir">
         <li><b>Isolate the device</b> through your endpoint tool before cleaning it, so stolen sessions and any open tunnel stop working from that machine. Keep it powered on and do not wipe it yet.</li>
@@ -651,27 +659,27 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
 
 <!-- 3 REVIEW -->
   <div class="panel" role="tabpanel" id="p-review" aria-labelledby="t-review" hidden>
-    <section>
-      <h2>How the analysis was checked</h2>
+    <section id="how-the-analysis-was-checked">
+      <h2><a class="sec-link" href="#how-the-analysis-was-checked">How the analysis was checked</a></h2>
       <p class="sub" id="reviewIntro">The earlier drafts were checked in persona-based review passes. Their notes and test records are not attached to this page, so treat them as structured self-checks rather than independent reviews. Their findings and the changes they caused are listed below. The Git behaviour they flagged was re-run on 29 October and 1 November 2026; see Evidence status.</p>
       <div class="personas" id="personas"></div>
     </section>
-    <section>
-      <h2>Merge check, 29 October 2026</h2>
+    <section id="merge-check-29-october-2026">
+      <h2><a class="sec-link" href="#merge-check-29-october-2026">Merge check, 29 October 2026</a></h2>
       <p class="sub">The separate More risks tab was merged into the Risk map. Three more persona-based passes checked the merge before it was published. Afterwards the further risks were renamed from E01 to E07 to D11 to D17 and given their own markers in the diagram.</p>
       <div class="personas">
-        <div class="persona"><h3>Content-integrity auditor</h3><p class="role">Did anything get lost or changed by accident?</p>
+        <div class="persona"><h3 id="content-integrity-auditor"><a class="sec-link" href="#content-integrity-auditor">Content-integrity auditor</a></h3><p class="role">Did anything get lost or changed by accident?</p>
           <ul>
             <li>Compared old and new versions field by field. Every further risk kept its ID, title, description, relevance and control, and the top 10, sources and review data were unchanged.</li>
             <li>Found that old links to the More risks section no longer reached it. Fixed.</li>
           </ul></div>
-        <div class="persona"><h3>Security architect</h3><p class="role">Are the further risks placed and scoped correctly?</p>
+        <div class="persona"><h3 id="security-architect"><a class="sec-link" href="#security-architect">Security architect</a></h3><p class="role">Are the further risks placed and scoped correctly?</p>
           <ul>
             <li>Policy gaps between agent harnesses repeated points already in the top 10, so it was folded into D09 as a check. There are now seven further risks instead of eight.</li>
             <li>Widened where several risks sit in the map, and rewrote VS Code tunnels and remote sessions as inbound remote access, with Microsoft's Dev Tunnels policies and Claude Code's remote-control switch as controls.</li>
             <li>Noted that VS Code tunnels have real-world use while D09 and D10 do not. The top 10 now says so.</li>
           </ul></div>
-        <div class="persona"><h3>QA and accessibility engineer</h3><p class="role">Does the merged map work by mouse, keyboard and screen reader?</p>
+        <div class="persona"><h3 id="qa-and-accessibility-engineer"><a class="sec-link" href="#qa-and-accessibility-engineer">QA and accessibility engineer</a></h3><p class="role">Does the merged map work by mouse, keyboard and screen reader?</p>
           <ul>
             <li>Confirmed every chip, table button and popover link outlines the right boxes, with no script errors and no sideways page scroll in light or dark at phone and desktop width.</li>
             <li>Fixed: keyboard focus hidden on outlined boxes, focus lost after popover links, a table wider than its column, an over-tall popover, and table rows that read the full description as a header.</li>
@@ -679,35 +687,35 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
       </div>
     </section>
 
-    <section>
-      <h2>Review round, 29 October 2026</h2>
+    <section id="review-round-29-october-2026">
+      <h2><a class="sec-link" href="#review-round-29-october-2026">Review round, 29 October 2026</a></h2>
       <p class="sub">Five reviewer lenses raised 22 findings. Each was checked against the source named below before the page changed; all were taken over, some in narrower form.</p>
       <div class="personas">
-        <div class="persona"><h3>Security architect</h3><p class="role">Is the map drawn correctly?</p>
+        <div class="persona"><h3 id="security-architect-2"><a class="sec-link" href="#security-architect-2">Security architect</a></h3><p class="role">Is the map drawn correctly?</p>
           <ul>
             <li>Rewrote the opening line: the same user account does not mean the same effective access once sandboxes and tool permissions apply.</li>
             <li>D07 now describes defaults per product. Codex sandboxes commands with network off by default (OpenAI docs).</li>
             <li>Added direct network paths from the terminal and from extensions, a two-way tunnel path, and a box for remote MCP servers. The egress point is now labelled as a conceptual boundary.</li>
           </ul></div>
-        <div class="persona"><h3>Offensive security researcher</h3><p class="role">Are attack prerequisites stated correctly?</p>
+        <div class="persona"><h3 id="offensive-security-researcher"><a class="sec-link" href="#offensive-security-researcher">Offensive security researcher</a></h3><p class="role">Are attack prerequisites stated correctly?</p>
           <ul>
             <li>D02 separates clones from repos received as files. Manifold's write-up says a clone does nothing; re-run here, a clone carried no config or hooks but did carry tracked <code>.vscode/</code>.</li>
             <li>GitSpawn is described as unsafe background Git calls, not seven fsmonitor runs: ultrareview used another key and Codex differed in mechanism (Manifold).</li>
             <li>Added <code>task.allowAutomaticTasks</code> (VS Code tasks docs) and the Plugin4Shell prerequisites (CSA research note).</li>
           </ul></div>
-        <div class="persona"><h3>Developer-platform engineer</h3><p class="role">Do the controls do what the page says?</p>
+        <div class="persona"><h3 id="developer-platform-engineer"><a class="sec-link" href="#developer-platform-engineer">Developer-platform engineer</a></h3><p class="role">Do the controls do what the page says?</p>
           <ul>
             <li>D04 separates read restriction from edit approval. <code>chat.tools.edits.autoApprove</code> only gates edits (VS Code security docs).</li>
             <li>Claude Code sandbox limits do not cover the Read or WebFetch tools (Anthropic sandboxing docs). Checks added to D04 and D07.</li>
             <li>Resolved the VSIX question, made CODEOWNERS enforcement explicit, qualified the worktree advice, and added Codex <code>requirements.toml</code> controls to D04, D06, D07, D08 and D09.</li>
           </ul></div>
-        <div class="persona"><h3>Incident responder and data governance</h3><p class="role">Can a team detect, respond and govern?</p>
+        <div class="persona"><h3 id="incident-responder-and-data-governance"><a class="sec-link" href="#incident-responder-and-data-governance">Incident responder and data governance</a></h3><p class="role">Can a team detect, respond and govern?</p>
           <ul>
             <li>D09 credits Defender with process command lines and names what it lacks (DeviceProcessEvents schema). The audit round below narrowed this: the schema has the initiating process's command line but not its parent's.</li>
             <li>D10 no longer says every prompt carries code, and asks for retention, training, residency, subprocessor and deletion terms.</li>
             <li>Added an incident-response section and widened D16 to signed-in browser sessions.</li>
           </ul></div>
-        <div class="persona"><h3>Assurance and QA</h3><p class="role">Are claims and the page itself sound?</p>
+        <div class="persona"><h3 id="assurance-and-qa"><a class="sec-link" href="#assurance-and-qa">Assurance and QA</a></h3><p class="role">Are claims and the page itself sound?</p>
           <ul>
             <li>The ranking is now a proposed priority order, and review claims without records were reworded.</li>
             <li>Fixed the tally, which counted Unknown as Not assessed. Unknown now has its own count.</li>
@@ -716,11 +724,11 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
       </div>
     </section>
 
-    <section>
-      <h2>Audit round, 29 October 2026</h2>
+    <section id="audit-round-29-october-2026">
+      <h2><a class="sec-link" href="#audit-round-29-october-2026">Audit round, 29 October 2026</a></h2>
       <p class="sub">An outside audit raised findings on controls, the diagram, the response sequence and some wording. Each was checked against the primary source before the page changed. All held; some were adopted in narrower form, as noted. Where a source could not settle a point, the page says so.</p>
       <div class="personas">
-        <div class="persona"><h3>Controls and checks</h3><p class="role">D01, D04, D06, D07, D08, D11</p>
+        <div class="persona"><h3 id="controls-and-checks"><a class="sec-link" href="#controls-and-checks">Controls and checks</a></h3><p class="role">D01, D04, D06, D07, D08, D11</p>
           <ul>
             <li>D01: a managed npmrc is a default, not enforcement. npm applies command line, environment, project, user, then global (npm docs). Added a route for urgent fixes, since a cooldown can block <code>npm audit fix</code>.</li>
             <li>D04 and D08: added GitHub's managed <code>permissions.deny</code> with <code>Read(...)</code>, its Agent Host limit, <code>sandbox.userPolicy.filesystem.deniedPaths</code>, and managed <code>permissions.ask</code>.</li>
@@ -728,7 +736,7 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
             <li>D08: in Codex, <code>on-request</code> can still be answered by automatic review. Added <code>allowed_approvals_reviewers</code> with <code>["user"]</code>, which OpenAI documents for manual approval (confirmed 30 October).</li>
             <li>D11: branch protection does not cover CI that runs before merge. Added a CI boundary (GitHub secure use reference). The pre-merge trigger point is marked as inference.</li>
           </ul></div>
-        <div class="persona"><h3>Diagram</h3><p class="role">Are the paths drawn that the text describes?</p>
+        <div class="persona"><h3 id="diagram"><a class="sec-link" href="#diagram">Diagram</a></h3><p class="role">Are the paths drawn that the text describes?</p>
           <ul>
             <li>Added direct Read and Edit arrows from the agent to workspace files and agent local data, outside the shell sandbox.</li>
             <li>Added a Local services box (Docker and other sockets, localhost ports) and an arrow from the agent.</li>
@@ -736,7 +744,7 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
             <li>The remote MCP box no longer implies a supplier runs it: ownership is separate from location (MCP architecture overview).</li>
             <li>Package fetches now enter the terminal rather than the workspace files box, and the credentials and workspace files boxes swapped places to keep the new arrows clear.</li>
           </ul></div>
-        <div class="persona"><h3>Wording and assurance</h3><p class="role">D06, D09, D16, response section, statuses</p>
+        <div class="persona"><h3 id="wording-and-assurance"><a class="sec-link" href="#wording-and-assurance">Wording and assurance</a></h3><p class="role">D06, D09, D16, response section, statuses</p>
           <ul>
             <li>D06: plugin updates are automatic only where the marketplace has them on, and Claude Code defaults differ by marketplace type. The unverified Codex side was removed on 1 November.</li>
             <li>D09: the Defender schema has the initiating process's command line but not its parent's. The query now includes copilot and is labelled an initial query with incomplete coverage.</li>
@@ -747,11 +755,11 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
       </div>
     </section>
 
-    <section>
-      <h2>Verification round, 29 October 2026</h2>
+    <section id="verification-round-29-october-2026">
+      <h2><a class="sec-link" href="#verification-round-29-october-2026">Verification round, 29 October 2026</a></h2>
       <p class="sub">A further audit raised ten findings. Each was checked against its source before the page changed; all ten changed the content, some in narrower form. A suggested field for product, operating system, version, assessor, evidence and date was not built: the page stores status only, a documented limit. Unconfirmed points are marked in the text.</p>
       <div class="personas">
-        <div class="persona"><h3>Controls and checks</h3><p class="role">Findings 1 to 5</p>
+        <div class="persona"><h3 id="controls-and-checks-2"><a class="sec-link" href="#controls-and-checks-2">Controls and checks</a></h3><p class="role">Findings 1 to 5</p>
           <ul>
             <li>npm: <code>npm install</code> runs a root <code>.npm-extension.mjs</code> or <code>.cjs</code>; <code>npm ci</code> does not (npm v12 docs). Added to D01, D02 and the Current box, with <code>dangerously-allow-all-scripts</code> and a review of <code>allowScripts</code> grants. Whether script approval covers the file is marked inference.</li>
             <li>Codex: an empty <code>mcp_servers</code> table disables all servers, and plugin-bundled servers use <code>plugins.&lt;plugin&gt;.mcp_servers</code> (OpenAI managed configuration). The 30 October check confirmed that OpenAI documents separate rules for Git marketplace sources, bundled plugins and workspace plugins.</li>
@@ -759,18 +767,18 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
             <li>D07 now asks for the effective sandbox policy and lists the helper processes outside it (Anthropic sandbox docs).</li>
             <li>D04 separates reading credential files from using exposed helpers or agents, and adds <code>ssh-add -t</code>, <code>-c</code> and <code>-h</code> (OpenBSD man page).</li>
           </ul></div>
-        <div class="persona"><h3>Diagram</h3><p class="role">Findings 6 and 7</p>
+        <div class="persona"><h3 id="diagram-2"><a class="sec-link" href="#diagram-2">Diagram</a></h3><p class="role">Findings 6 and 7</p>
           <ul>
             <li>Added a browser profile box outside the shell sandbox, and arrows from the terminal to local services, from local MCP servers to the agent and from model providers back. The top row was narrowed to fit.</li>
             <li>The caption said arrows show selected paths, not every data flow, and split access to a remote MCP server from its access to downstream SaaS. That split is now in the D06 map notes.</li>
           </ul></div>
-        <div class="persona"><h3>Mapping, output quality and accessibility</h3><p class="role">Findings 8 to 10</p>
+        <div class="persona"><h3 id="mapping-output-quality-and-accessibility"><a class="sec-link" href="#mapping-output-quality-and-accessibility">Mapping, output quality and accessibility</a></h3><p class="role">Findings 8 to 10</p>
           <ul>
             <li>D09 now maps first to OWASP MCP08 Lack of Audit and Telemetry, with ASI10 as a secondary relationship (OWASP MCP Top 10, beta).</li>
             <li>D11 now covers plausible but wrong or insecure agent code, gated by human review and security testing. GitHub's guidance does not address agent-written tests, so that check is marked inference.</li>
             <li>Every marker, risk chip and map table button now carries its status in its accessible name and refreshes when the status changes.</li>
           </ul></div>
-        <div class="persona"><h3>Found while checking</h3><p class="role">Not in the audit</p>
+        <div class="persona"><h3 id="found-while-checking"><a class="sec-link" href="#found-while-checking">Found while checking</a></h3><p class="role">Not in the audit</p>
           <ul>
             <li>Claude Code approval keys: the location of <code>disableAutoMode</code> was initially marked contested. Resolved on 30 October: the current settings reference explicitly accepts both the top-level and nested forms.</li>
             <li>Plugin4Shell: CSA reports automatic plugin updates on by default in Claude Code and Codex; Claude Code's docs differ by marketplace type. It was marked contested; D06 now attributes the default to CSA.</li>
@@ -779,8 +787,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
       </div>
     </section>
 
-    <section>
-      <h2>Source corrections, 30 October 2026</h2>
+    <section id="source-corrections-30-october-2026">
+      <h2><a class="sec-link" href="#source-corrections-30-october-2026">Source corrections, 30 October 2026</a></h2>
       <p>Six findings were corrected against current official documentation:</p>
       <ul><li>D14: plugin-only settings still permit plugin customisations.</li>
         <li>D10: the VS Code account gate checks organisation membership, not company ownership.</li>
@@ -791,8 +799,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
       <p class="note">This was a document and source review. It did not rerun product enforcement tests or independently verify the earlier review and test records. Unrelated unresolved findings remain open.</p>
     </section>
 
-    <section>
-      <h2>Fact check, 1 November 2026</h2>
+    <section id="fact-check-1-november-2026">
+      <h2><a class="sec-link" href="#fact-check-1-november-2026">Fact check, 1 November 2026</a></h2>
       <p>Statements were checked against their sources, and long ones were shortened. Changed:</p>
       <ul><li>D03: GlassWorm reaches other editors, not every editor.</li>
         <li>D04: <code>Read(./.env)</code> matches only the start folder; Dev Containers reuse local Git credentials and forward the SSH agent, as Microsoft words it.</li>
@@ -809,16 +817,16 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
       <p class="note">The Git tests were re-run on Git 2.54.0 with the same results. No product enforcement tests were run.</p>
     </section>
 
-    <section>
-      <h2>Evidence status</h2>
+    <section id="evidence-status">
+      <h2><a class="sec-link" href="#evidence-status">Evidence status</a></h2>
       <div class="cols" id="evidence"></div>
     </section>
   </div>
 
   <!-- SOURCES -->
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
-    <section>
-      <h2>Sources</h2>
+    <section id="sources-2">
+      <h2><a class="sec-link" href="#sources-2">Sources</a></h2>
       <p class="sub">The original review records these sources as opened on 29 October 2026. The six corrections dated 30 October used Microsoft's policy reference, Anthropic's settings and permissions references, and OpenAI's managed-configuration documentation. The 1 November fact check rechecked statements against them and added Grok Build and Antiy CERT. Dates in brackets are the page's own publication or update date.</p>
       <ol class="sources" id="sourceList"></ol>
     </section>
@@ -881,10 +889,25 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
     });
   });
   function toMore(){ show('map'); var m = document.getElementById('more'); if (m) setTimeout(function(){ m.scrollIntoView({ block: 'start' }); }, 0); }
+  /* Links to a section inside a tab: open that tab, then scroll to the section */
+  function openSection(id){
+    if (!id) return false;
+    try { id = decodeURIComponent(id); } catch(e){}
+    var el = document.getElementById(id); if (!el) return false;
+    var p = el.closest('[id^="p-"]');
+    var tab = p ? p.id.slice(2) : null;
+    if (tab && ids.indexOf(tab) >= 0 && p.hidden) show(tab);
+    var c = el.closest('.risk');
+    if (c && c.hidden){ var all = document.querySelector('.chip[data-path="all"]'); if (all) all.click(); }
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    el.scrollIntoView();
+    return true;
+  }
   var start = (location.hash || '').replace('#', '');
   if (start === 'more') toMore();
   else show(ids.indexOf(start) >= 0 ? start : store.get('dev-tab', 'map'));
-  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (h === 'more') toMore(); else if (ids.indexOf(h) >= 0) show(h); });
+  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
+  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (h === 'more') toMore(); else if (ids.indexOf(h) >= 0) show(h); else openSection(h); });
 
   /* Copy */
   function selectNode(node){
@@ -1000,10 +1023,13 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
   var SOURCES = [{"t": "Secure AI-assisted development in VS Code", "u": "https://code.visualstudio.com/docs/agents/run/security", "n": "Microsoft (October 2026). Trust boundaries, approvals, sandbox, risk categories, policy gaps per harness."}, {"t": "Centrally manage VS Code settings with policies", "u": "https://code.visualstudio.com/docs/enterprise/policies", "n": "Microsoft (28.10.2026). Policy names and behaviour, including the approved-organisation membership gate and plugin-only customisation scope. Rechecked for the six corrections on 30.10.2026."}, {"t": "Manage approvals and permissions", "u": "https://code.visualstudio.com/docs/agents/run/approvals", "n": "Microsoft. Permission levels and terminal auto-approval."}, {"t": "Manage extensions in enterprise environments", "u": "https://code.visualstudio.com/docs/enterprise/extensions", "n": "Microsoft. AllowedExtensions and the private marketplace."}, {"t": "Claude Code: example settings files", "u": "https://code.claude.com/docs/en/settings-example", "n": "Anthropic. Managed settings keys for permissions, MCP, plugins, sandbox and versions."}, {"t": "OWASP Top 10 for Agentic Applications for 2026", "u": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/", "n": "OWASP GenAI Security Project (9.12.2025). ASI names cross-checked against secondary summaries."}, {"t": "OWASP MCP Top 10", "u": "https://owasp.org/www-project-mcp-top-10/", "n": "OWASP. Beta (phase 3). MCP01 to MCP10."}, {"t": "OWASP Agentic Skills Top 10: AST01 Malicious Skills", "u": "https://owasp.org/www-project-agentic-skills-top-10/ast01.html", "n": "OWASP. ClawHavoc and skill persistence."}, {"t": "GitHub Copilot: Remote Code Execution via Prompt Injection (CVE-2025-53773)", "u": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection", "n": "Embrace The Red, original research."}, {"t": "Researcher uncovers 30+ flaws in AI coding tools (IDEsaster)", "u": "https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html", "n": "The Hacker News (December 2025)."}, {"t": "North Korea-linked hackers target developers with VS Code projects", "u": "https://thehackernews.com/2026/01/north-korea-linked-hackers-target.html", "n": "The Hacker News (January 2026). tasks.json with runOn: folderOpen."}, {"t": "Organizations warned of exploited Git vulnerability", "u": "https://www.securityweek.com/organizations-warned-of-exploited-git-vulnerability/", "n": "SecurityWeek. CVE-2025-48384 in CISA KEV. Fixed versions from Computing."}, {"t": "Malicious .git configs can make Claude, Codex, Cursor and other AI agents run attacker code", "u": "https://thehackernews.com/2026/09/malicious-git-configs-can-make-claude.html", "n": "The Hacker News (2.9.2026). GitSpawn by Manifold Security, versions and mitigations."}, {"t": "Claude Code flaws left AI tool wide open to hackers", "u": "https://www.itpro.com/software/development/claude-code-flaws-left-ai-tool-wide-open-to-hackers-heres-what-developers-need-to-know", "n": "ITPro (27.2.2026). Check Point findings, CVE-2025-59536 and CVE-2026-21852."}, {"t": "GhostApproval: a trust boundary gap in six AI coding agents", "u": "https://labs.cloudsecurityalliance.org/research/csa-research-note-ghostapproval-ai-coding-agents-20260715-cs/", "n": "Cloud Security Alliance (15.7.2026), on Wiz research of 8.7.2026."}, {"t": "73 Open VSX sleeper extensions linked to GlassWorm", "u": "https://socket.dev/blog/73-open-vsx-sleeper-extensions-glassworm", "n": "Socket (25.4.2026). Earlier wave: socket.dev/blog/open-vsx-transitive-glassworm-campaign."}, {"t": "s1ngularity: Nx build system package compromised", "u": "https://stepsecurity.io/blog/supply-chain-security-alert-popular-nx-build-system-package-compromised-with-data-stealing-malware", "n": "StepSecurity (August 2025). Malware abusing local AI CLIs."}, {"t": "ChainDrop supply chain compromise: anatomy of a self-propagating worm", "u": "https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/", "n": "Microsoft Threat Intelligence (4.8.2026). Mitigations and Defender detections."}, {"t": "Upcoming breaking changes for npm v12", "u": "https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/", "n": "GitHub (9.6.2026). Current npm release checked on the npm registry, 29.10.2026."}, {"t": "GitHub package firewall in public preview", "u": "https://github.blog/changelog/2026-10-20-github-package-firewall-in-public-preview/", "n": "GitHub (20.10.2026)."}, {"t": "ToxicSkills: malicious AI agent skills on ClawHub", "u": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/", "n": "Snyk (5.2.2026)."}, {"t": "AI coding agents' 0-click RCE flaw (Plugin4Shell)", "u": "https://www.theregister.com/a/5297335", "n": "The Register (September 2026), on research by Air Security."}, {"t": "Infostealers have found a new target: your AI agent", "u": "https://www.gendigital.com/blog/insights/research/infostealers-your-ai-agent", "n": "Gen Digital (8.9.2026)."}, {"t": "AI coding agents fall for malicious instructions planted in the Downloads folder", "u": "https://www.helpnetsecurity.com/2026/10/26/ai-coding-agents-malware-openai-codex/", "n": "Help Net Security (26.10.2026), on Forever Security research."}, {"t": "Stealing MCP tokens in Claude Code via ~/.claude.json", "u": "https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm", "n": "Mitiga (5.5.2026)."}, {"t": "git-credential-store", "u": "https://git-scm.com/docs/git-credential-store", "n": "Git documentation. The store helper keeps credentials in plaintext."}, {"t": "Operation Digital Eye: China APT targets Europe via VS Code tunnels", "u": "https://securityaffairs.com/171879/uncategorized/operation-digital-china-apt-targets-europe.html", "n": "Security Affairs (11.12.2024), on SentinelLabs and Tinexta Cyber research."}, {"t": "Claude Code: sandboxing", "u": "https://code.claude.com/docs/en/sandboxing", "n": "Anthropic. Platforms (no native Windows), what runs outside the sandbox, default read scope, limits of hostname filtering, Unix and Docker sockets."}, {"t": "Claude Code: deploy managed settings", "u": "https://code.claude.com/docs/en/managed-settings", "n": "Anthropic. Delivery per OS, malformed files stop Claude Code, local admin caveat."}, {"t": "VS Code: agent sandboxing", "u": "https://code.visualstudio.com/docs/agents/run/agent-sandboxing", "n": "Microsoft. Windows 11 requirements, default network, credential pass-through, managed enforcement in preview."}, {"t": "Sharing Git credentials with your container", "u": "https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials", "n": "Microsoft. Dev Containers copy .gitconfig, reuse local Git credentials and forward the SSH agent."}, {"t": "Dev Container metadata reference", "u": "https://containers.dev/implementors/json_reference/", "n": "Dev Containers spec. initializeCommand runs on the host."}, {"t": "AWS security bulletin AWS-2025-015", "u": "https://aws.amazon.com/security/security-bulletins/AWS-2025-015/", "n": "AWS (23.7.2025). Amazon Q Developer extension 1.84.0."}, {"t": "Git arbitrary file write (CVE-2025-48384)", "u": "https://securitylabs.datadoghq.com/articles/git-arbitrary-file-write/", "n": "Datadog Security Labs. Windows not affected."}, {"t": "VS Code source: McpAccessValue", "u": "https://github.com/microsoft/vscode/blob/main/src/vs/platform/mcp/common/mcpManagement.ts", "n": "Microsoft. chat.mcp.access values none, registry, all."}, {"t": "Plugin4Shell research note", "u": "https://labs.cloudsecurityalliance.org/research/csa-research-note-plugin4shell-ai-coding-agent-supply-chain/", "n": "Cloud Security Alliance (September 2026). Patched versions and Copilot status. Opened by the fact-checker."}, {"t": "Stately Taurus abuses VS Code in Southeast Asian espionage", "u": "https://unit42.paloaltonetworks.com/stately-taurus-abuses-vscode-southeast-asian-espionage", "n": "Unit 42 (September 2024). First reported real-world use of code tunnel."}, {"t": "Dev Tunnels policies", "u": "https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/policies", "n": "Microsoft. Windows-only Group Policy for Dev Tunnels and the Remote - Tunnels extension."}, {"t": "Claude Code settings reference", "u": "https://code.claude.com/docs/en/settings-reference", "n": "Anthropic. Plugin-only customisation scope, strictKnownMarketplaces, autoMemoryEnabled, disableRemoteControl and allowManagedHooksOnly. Explicitly accepts disableAutoMode at top level and under permissions. Rechecked for the six corrections on 30.10.2026."}, {"t": "VS Code Remote Tunnels", "u": "https://code.visualstudio.com/docs/remote/tunnels", "n": "Microsoft. code tunnel from VS Code or the standalone CLI, and code tunnel service install."}, {"t": "GitSpawn: a single flaw lets untrusted repos run code", "u": "https://www.manifold.security/blog/ai-coding-agents-git-hijack", "n": "Manifold Security (1.9.2026). Original research: clone does nothing, ultrareview uses another key, Codex mechanism differs."}, {"t": "Integrate with external tools via tasks", "u": "https://code.visualstudio.com/docs/debugtest/tasks", "n": "Microsoft (28.10.2026). task.allowAutomaticTasks and runOn: folderOpen."}, {"t": "Codex: agent approvals and security", "u": "https://developers.openai.com/codex/agent-approvals-security", "n": "OpenAI. Default sandbox with command network off."}, {"t": "Codex managed configuration", "u": "https://learn.chatgpt.com/docs/enterprise/managed-configuration", "n": "OpenAI. requirements.toml: approval policies and the user reviewer, permission profiles, deny_read, MCP identities, network, browser, remote control and marketplace source restrictions, including their scope limits. Rechecked for the six corrections on 30.10.2026."}, {"t": "About code owners", "u": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners", "n": "GitHub. Review requests versus required code-owner approval, and owning CODEOWNERS itself."}, {"t": "DeviceProcessEvents table", "u": "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table", "n": "Microsoft (7.8.2026). Command lines of the created and initiating process; parent file name, ID and creation time, but no parent command line."}, {"t": "Secure use reference (GitHub Actions)", "u": "https://docs.github.com/en/actions/reference/security/secure-use", "n": "GitHub. Least-privilege GITHUB_TOKEN, environments with required reviewers, ephemeral runners, CODEOWNERS on workflows, repository write access and secrets."}, {"t": "Enterprise managed settings for GitHub Copilot", "u": "https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings", "n": "GitHub. Managed permissions (deny, ask, allow), Read(...) rules, Agent Host scope, sandbox deniedPaths."}, {"t": "MCP specification: transports (Streamable HTTP)", "u": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#security-warning", "n": "Model Context Protocol, version 2025-06-18. Origin validation, localhost binding, authentication. Newer versions were not compared."}, {"t": "MCP architecture overview", "u": "https://modelcontextprotocol.io/docs/learn/architecture", "n": "Model Context Protocol. A server is the program that serves context, regardless of where it runs; local and remote servers use different transports."}, {"t": "npm config", "u": "https://docs.npmjs.com/cli/v11/using-npm/config", "n": "npm. Precedence cli, env, project, user, global; min-release-age and min-release-age-exclude."}, {"t": "Claude Code: discover and install plugins", "u": "https://code.claude.com/docs/en/plugins/install", "n": "Anthropic. Auto-update defaults per marketplace type."}, {"t": "Codex: automatic review", "u": "https://learn.chatgpt.com/codex/sandboxing/auto-review", "n": "OpenAI. Automatic review of escalation requests under the on-request policy."}, {"t": "Plan incident response", "u": "https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents", "n": "Microsoft Learn. Balance urgency with precision; do no harm; do not destroy forensic evidence."}, {"t": "npm: .npm-extension", "u": "https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/", "n": "npm. Root extension file run by npm install, not npm ci; transformManifest limits; ignore-extension; extension-file."}, {"t": "npm config (v12)", "u": "https://docs.npmjs.com/cli/v12/using-npm/config", "n": "npm. allow-scripts, dangerously-allow-all-scripts, ignore-scripts, ignore-extension, extension-file, min-release-age."}, {"t": "MCP security best practices (draft specification)", "u": "https://modelcontextprotocol.io/specification/draft/basic/security_best_practices", "n": "Model Context Protocol. Confused deputy and per-client consent, token passthrough and audience validation, local server compromise."}, {"t": "ssh-add(1)", "u": "https://man.openbsd.org/ssh-add.1", "n": "OpenBSD. -t maximum lifetime, -c confirmation on each use, -h destination constraints (OpenSSH 8.9 or later)."}, {"t": "Responsible use of GitHub Copilot cloud agent", "u": "https://docs.github.com/en/copilot/responsible-use/copilot-coding-agent", "n": "GitHub. Generated code can look valid while being wrong; automated checks supplement human review."}, {"t": "Claude Code: permissions", "u": "https://code.claude.com/docs/en/permissions", "n": "Anthropic. Permission rules and modes, WebFetch domain approvals, and disabling bypass and auto mode. Rechecked for the six corrections on 30.10.2026."}, {"t": "Grok Build uploaded entire Git repositories to xAI storage, not just files it read", "u": "https://thehackernews.com/2026/07/grok-build-uploads-entire-git.html", "n": "The Hacker News (July 2026). Researcher cereblab, Grok Build CLI 0.2.93."}, {"t": "ClawHavoc: analysis of large-scale poisoning campaign targeting the OpenClaw skill market for AI agents", "u": "https://www.antiy.net/p/clawhavoc-analysis-of-large-scale-poisoning-campaign-targeting-the-openclaw-skill-market-for-ai-agents/", "n": "Antiy CERT (6.2.2026). At least 1,184 malicious skills on ClawHub; Koi Security named the campaign."}];
   var START = [["D01", "A release cooldown (min-release-age) as a managed npmrc default, enforced at the registry or firewall where it must hold; npm 12 per team later", "Low"], ["D02", "Minimum agent versions, plus Git patching from vulnerability management", "Low"], ["D03", "AllowedExtensions at publisher level, seeded from the current inventory", "Moderate"], ["D04", "Expiry policy for GitHub and npm tokens", "None on the laptop"], ["D05", "CODEOWNERS review on AGENTS.md, CLAUDE.md, .vscode/, .claude/, .devcontainer/ and .npm-extension.*", "None on the laptop"], ["D06", "VS Code MCP registry mode plus Claude Code strictKnownMarketplaces", "Moderate"], ["D07", "Claude Code sandbox on macOS and WSL2 first, with failIfUnavailable", "Low on macOS"], ["D08", "Block global auto-approve and bypass mode by policy", "Low"], ["D09", "Agent and Git version inventory from Defender for Endpoint and Intune", "Low"], ["D10", "Restrict AI sign-in to approved organisations; verify company-managed identity separately", "Low"]];
 
+  /* Headings built by script get an id and a link too */
+  function slug(t){ return t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48).replace(/-$/, ''); }
+  function linkHead(h, id){ var a = htmlEl('a', 'sec-link', h.textContent); a.href = '#' + id; h.id = id; h.textContent = ''; h.appendChild(a); return h; }
   var pw = $('#personas');
   PERSONAS.forEach(function(p){
     var d = htmlEl('div', 'persona');
-    d.appendChild(htmlEl('h3', null, p.n));
+    d.appendChild(linkHead(htmlEl('h3', null, p.n), 'persona-' + slug(p.n)));
     d.appendChild(htmlEl('p', 'role', p.r));
     var ul = htmlEl('ul');
     p.f.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
@@ -1013,7 +1039,7 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
   var ev = $('#evidence');
   EVIDENCE.forEach(function(c){
     var d = htmlEl('div', 'col');
-    d.appendChild(htmlEl('h3', null, c.h));
+    d.appendChild(linkHead(htmlEl('h3', null, c.h), 'evidence-' + slug(c.h)));
     var ul = htmlEl('ul');
     c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
     d.appendChild(ul);
@@ -1517,6 +1543,8 @@ Get-ChildItem -Path $HOME -Recurse -Depth 4 -Include AGENTS.md,CLAUDE.md -ErrorA
 
   tally();
   applySel();
+  /* A shared link to a section built by script: the section now exists */
+  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
 })();
 </script>
 

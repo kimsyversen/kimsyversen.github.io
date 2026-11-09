@@ -76,6 +76,13 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
 .ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
 .ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
 @media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
 </style>
 </head>
 <body>
@@ -93,7 +100,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
   </div>
 </header>
 <section class="sec" id="answer">
-  <h2 data-rt>The answer</h2>
+  <h2 data-rt><a class="sec-link" href="#answer">The answer</a></h2>
   <p data-rt>The design must be: GitHub Copilot in VS Code is the only MCP client that runs, VS Code must carry a managed MCP server list, and Intune must deliver it and put it back when it changes.</p>
   <p class="claim">Intune has no MCP policy of its own. No Intune page read for this work names one. <span class="tg i">[inference]</span></p>
   <p class="claim">The VS Code docs name Intune for the imported policy templates on Windows and for macOS profiles. <a class="ev" href="#ev-V1">V1</a> <a class="ev" href="#ev-V48">V48</a></p>
@@ -108,19 +115,19 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
   <p class="claim">With VS Code as the only client, its managed list covers the local servers it starts. The open case is another client on the laptop, or another copy of VS Code that does not read the policy. <span class="tg i">[inference]</span> <a class="ev" href="#ev-V5">V5</a></p>
 </section>
 <section class="sec" id="layers">
-  <h2 data-rt>Seven layers</h2>
+  <h2 data-rt><a class="sec-link" href="#layers">Seven layers</a></h2>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th><span data-rt>Layer</span></th><th><span data-rt>What it must do</span></th><th><span data-rt>Carried by</span></th></tr></thead><tbody><tr><th scope="row" data-l="Layer"><span data-rt>Deliver</span></th><td data-l="What it must do"><span data-rt>The approved server list must be on every device.</span></td><td data-l="Carried by"><span data-rt>Intune: ADMX policies, macOS profiles</span></td></tr><tr><th scope="row" data-l="Layer"><span data-rt>Client policy</span></th><td data-l="What it must do"><span data-rt>VS Code with Copilot must refuse servers that are not approved.</span></td><td data-l="Carried by"><span data-rt>VS Code enterprise policy, GitHub managed settings</span></td></tr><tr><th scope="row" data-l="Layer"><span data-rt>Network policy</span></th><td data-l="What it must do"><span data-rt>Remote servers that are not approved must not be reachable.</span></td><td data-l="Carried by"><span data-rt>Intune firewall policy, Global Secure Access MCP firewall</span></td></tr><tr><th scope="row" data-l="Layer"><span data-rt>Detect</span></th><td data-l="What it must do"><span data-rt>Servers on devices must be found and compared with the approved list.</span></td><td data-l="Carried by"><span data-rt>Defender local agent discovery</span></td></tr><tr><th scope="row" data-l="Layer"><span data-rt>Re-apply</span></th><td data-l="What it must do"><span data-rt>A changed or missing policy must be put back.</span></td><td data-l="Carried by"><span data-rt>Intune remediations, custom compliance</span></td></tr><tr><th scope="row" data-l="Layer"><span data-rt>App control</span></th><td data-l="What it must do"><span data-rt>On Windows, only VS Code and approved local server programs must be allowed to run.</span></td><td data-l="Carried by"><span data-rt>Intune App Control for Business policy</span></td></tr><tr><th scope="row" data-l="Layer"><span data-rt>File hash list</span></th><td data-l="What it must do"><span data-rt>On macOS, known unapproved client programs and server scripts must be blocked by file hash.</span></td><td data-l="Carried by"><span data-rt>Defender file indicators</span></td></tr></tbody></table></div>
 </section>
 <section class="sec" id="clients">
-  <h2 data-rt>Copilot in VS Code</h2>
+  <h2 data-rt><a class="sec-link" href="#clients">Copilot in VS Code</a></h2>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th><span data-rt>Part</span></th><th><span data-rt>Intune route</span></th><th><span data-rt>Blocking control</span></th><th><span data-rt>Gap</span></th></tr></thead><tbody><tr><th scope="row" data-l="Part"><span data-rt>VS Code on Windows</span></th><td data-l="Intune route"><p class="claim">The docs name Microsoft Intune for the imported VS Code policy templates. Each release ships the ADMX files, from version 1.69. Intune's import of custom ADMX is a public preview. <a class="ev" href="#ev-V1">V1</a> <a class="ev" href="#ev-V6">V6</a> <a class="ev" href="#ev-V12">V12</a></p></td><td data-l="Blocking control"><p class="claim">ChatAllowedMcpServers lets only matching servers run. ChatDeniedMcpServers blocks matching servers, and deny wins. ChatAllowManagedMcpServersOnly uses only the managed allowlist. <a class="ev" href="#ev-V3">V3</a> <a class="ev" href="#ev-V4">V4</a> <a class="ev" href="#ev-V5">V5</a></p><p class="claim">A policy value overrides the setting at every level. Computer-level policy beats user-level policy. <a class="ev" href="#ev-V2">V2</a> <a class="ev" href="#ev-V7">V7</a></p></td><td data-l="Gap"><p class="claim">Only VS Code reads these policies. An MCP client other than VS Code is not covered by them. <span class="tg i">[inference]</span> <a class="ev" href="#ev-V5">V5</a></p></td></tr><tr><th scope="row" data-l="Part"><span data-rt>VS Code on macOS</span></th><td data-l="Intune route"><p class="claim">Each release ships a sample .mobileconfig file. The docs list Microsoft Intune as a way to deploy profiles at scale. <a class="ev" href="#ev-V47">V47</a> <a class="ev" href="#ev-V48">V48</a></p></td><td data-l="Blocking control"><p class="claim">Whether the macOS profile accepts the three MCP policies was not read in the sample file. <span class="tg u">[unverified]</span></p></td><td data-l="Gap"><p class="claim">A syntax error in a policy value stops the setting from being applied. <a class="ev" href="#ev-V49">V49</a></p></td></tr><tr><th scope="row" data-l="Part"><span data-rt>GitHub Copilot</span></th><td data-l="Intune route"><p class="claim">Native MDM delivery is available on Windows and macOS. All native MDM values must be strings. <a class="ev" href="#ev-V8">V8</a> <a class="ev" href="#ev-V9">V9</a></p><p class="claim">The deploy and reference pages do not name Intune, so an Intune route is an inference. <span class="tg i">[inference]</span></p></td><td data-l="Blocking control"><p class="claim">The effective allowlist is the intersection of all sources: a server must be permitted by every source. <a class="ev" href="#ev-V10">V10</a></p></td><td data-l="Gap"><p class="claim">First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules and cannot be blocked. <a class="ev" href="#ev-V21">V21</a></p></td></tr></tbody></table></div>
 </section>
 <section class="sec" id="delivery">
-  <h2 data-rt>How Intune delivers</h2>
+  <h2 data-rt><a class="sec-link" href="#delivery">How Intune delivers</a></h2>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th><span data-rt>Method</span></th><th><span data-rt>Our design</span></th><th><span data-rt>Facts from Microsoft Learn</span></th></tr></thead><tbody><tr><th scope="row" data-l="Method"><span data-rt>Settings catalog with imported ADMX</span></th><td data-l="Our design"><span data-rt>VS Code policy templates should be imported and assigned to the pilot group first.</span></td><td data-l="Facts from Microsoft Learn"><p class="claim">Intune can import custom ADMX and ADML templates. The import is a public preview. <a class="ev" href="#ev-V11">V11</a> <a class="ev" href="#ev-V12">V12</a></p></td></tr><tr><th scope="row" data-l="Method"><span data-rt>macOS custom profile</span></th><td data-l="Our design"><span data-rt>The sample profile from the VS Code app, edited to the approved list, should be uploaded as a .mobileconfig file.</span></td><td data-l="Facts from Microsoft Learn"><p class="claim">macOS settings must be in an .xml or .mobileconfig file. The channel cannot be changed after the profile is saved. <a class="ev" href="#ev-V13">V13</a> <a class="ev" href="#ev-V14">V14</a></p></td></tr></tbody></table></div>
 </section>
 <section class="sec" id="drift">
-  <h2 data-rt>Drift and tampering</h2>
+  <h2 data-rt><a class="sec-link" href="#drift">Drift and tampering</a></h2>
   <p class="claim">Remediations need devices that are Microsoft Entra joined or hybrid joined. One license listed is Windows Enterprise E3 or E5, included in Microsoft 365 F3, E3 or E5. <a class="ev" href="#ev-V15">V15</a> <a class="ev" href="#ev-V16">V16</a></p>
   <p class="claim">If a scheduled remediation run is missed, it runs when the device is online. <a class="ev" href="#ev-V17">V17</a></p>
   <p class="claim">Custom compliance uses a PowerShell script on Windows and a POSIX shell script on Linux and macOS. The management extension checks for new or updated scripts and runs discovery scripts every eight hours. <a class="ev" href="#ev-V18">V18</a> <a class="ev" href="#ev-V19">V19</a></p>
@@ -129,7 +136,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
   <p data-rt>The approved list must be compared with device state at least weekly.</p>
 </section>
 <section class="sec" id="network">
-  <h2 data-rt>Network and detection</h2>
+  <h2 data-rt><a class="sec-link" href="#network">Network and detection</a></h2>
   <p class="claim">An Intune firewall setting can block all outbound connections that do not match an outbound rule. It applies to Windows 1809 and later. <a class="ev" href="#ev-V33">V33</a> <a class="ev" href="#ev-V34">V34</a></p>
   <p class="claim">The Firewall CSP can be used with an MDM solution like Microsoft Intune. A rule for a domain name needs a DNS query to resolve it. Limits include proxy access, secure DNS services and some VPN tunnels. <a class="ev" href="#ev-V35">V35</a> <a class="ev" href="#ev-V36">V36</a> <a class="ev" href="#ev-V37">V37</a></p>
   <p class="claim">The Global Secure Access MCP firewall is in preview. It needs a valid Microsoft Entra Internet Access license, the client on a joined device, and TLS inspection. <a class="ev" href="#ev-V28">V28</a> <a class="ev" href="#ev-V30">V30</a> <a class="ev" href="#ev-V31">V31</a> <a class="ev" href="#ev-V32">V32</a></p>
@@ -139,7 +146,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
   <p class="claim">Discovery is not a complete inventory of installed software. It does not prove active use. <a class="ev" href="#ev-V25">V25</a> <a class="ev" href="#ev-V27">V27</a></p>
 </section>
 <section class="sec" id="gaps">
-  <h2 data-rt>Open gaps</h2>
+  <h2 data-rt><a class="sec-link" href="#gaps">Open gaps</a></h2>
   <p class="claim">Local servers that an allowed interpreter runs from a script file, and local servers on macOS that are not on a file deny list, are stopped by no layer here. The one lever is to leave the interpreter out of the Windows policy. <span class="tg i">[inference]</span> <a class="ev" href="#ev-V25">V25</a> <a class="ev" href="#ev-V29">V29</a> <a class="ev" href="#ev-V46">V46</a></p>
   <p class="claim">The Graph API can create a settings catalog policy. Whether every setting named on this page can be sent that way was not checked, so a pipeline from a repository to Intune is not shown. <span class="tg u">[unverified]</span> <a class="ev" href="#ev-V38">V38</a></p>
   <p class="claim">The Intune route for GitHub Copilot's own MDM values is not named by GitHub. <span class="tg i">[inference]</span></p>
@@ -149,11 +156,11 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
   <p data-rt>Nothing tested in a real tenant</p>
 </section>
 <section class="sec" id="rollout">
-  <h2 data-rt>Rollout</h2>
+  <h2 data-rt><a class="sec-link" href="#rollout">Rollout</a></h2>
   <ol class="steps"><li><span data-rt>VS Code and every other MCP-capable client on developer laptops must be listed first, from Defender discovery and from the software inventory.</span></li><li><span data-rt>One approved server list must live in a repository, and the VS Code policy values must be written from it.</span></li><li><span data-rt>A pilot group must get the Windows ADMX policy and the macOS profile first. VS Code must be tested with an approved and a blocked server.</span></li><li><span data-rt>A client other than VS Code must be removed. On Windows an App Control policy must block it. On macOS a file indicator must block it by hash.</span></li><li><span data-rt>Each laptop group must be assigned node and python as allowed or not allowed in its App Control policy, because allowing one allows every script it runs.</span></li><li><span data-rt>Approved remote servers must be the only MCP destinations allowed through the firewall policy or Global Secure Access.</span></li><li><span data-rt>Defender discovery must be compared with the approved list every week, and every difference must be explained or fixed.</span></li><li><span data-rt>A laptop whose VS Code policy has changed must be found, and the approved policy must be put back.</span></li><li><span data-rt>Nothing here must be called done until it has been tested in a real tenant.</span></li></ol>
 </section>
 <section class="sec" id="evidence">
-  <h2 data-rt>Evidence</h2>
+  <h2 data-rt><a class="sec-link" href="#evidence">Evidence</a></h2>
   <p data-rt>Checked 2026-11-06: every quote below matched its source word for word, by script.</p>
   <p data-rt>A match must be read as proof of the words only, not of the claim built on them.</p>
   <p data-rt>Tags: inference means reasoned from the quotes with no source of its own. Unverified means not checked.</p>

@@ -348,6 +348,13 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
   .toc{position:static}.btn{display:none}
   details.deep > summary::after{content:""}
 }
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
 
 .rt{display:block;font-weight:400;color:var(--muted);font-size:0.8rem;margin-top:2px}
 .matrix-row .ev{margin-right:4px}
@@ -440,7 +447,7 @@ p,li,td,th,dd,summary,figcaption,h4{text-wrap:wrap}
   <main id="main-content" tabindex="-1">
 
   <section class="sec" id="design" aria-labelledby="h-design">
-    <header class="sh"><h2 id="h-design">The design</h2>
+    <header class="sh"><h2 id="h-design"><a class="sec-link" href="#design">The design</a></h2>
     <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers.<span class="opt-preview"> With preview, add an Agent 365 admin view and optional blocking. Test preview features only in a sandbox.</span>&nbsp;<span class="tg r">recommendation</span></p>
     <p class="goal"><b>Designs</b>Released only is the target baseline. Use only confirmed released features; keep unverified automation out of production. With preview adds Agent 365 and tool threat protection, for a sandbox only.</p></header>
     <figure class="opt-safe">
@@ -531,7 +538,7 @@ Unlisted server denied                    | Connect gateway
     </figure>
 
     <div class="sub3" id="parts">
-      <h3>Parts of the design</h3>
+      <h3 id="parts-of-the-design"><a class="sec-link" href="#parts-of-the-design">Parts of the design</a></h3>
       <p class="q-note">This is a component map. Controls below contain the implementation requirements, product limits and supporting evidence. New marks a preview addition.</p>
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Part</th><th>Role in the flow</th><th>Released only</th><th>With preview</th></tr></thead>
@@ -551,7 +558,7 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec" id="controls" aria-labelledby="h-controls">
-    <header class="sh"><h2 id="h-controls">Controls</h2>
+    <header class="sh"><h2 id="h-controls"><a class="sec-link" href="#controls">Controls</a></h2>
     <p class="goal"><b>How to read</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers. These are targets, with coverage limits below. Each documented fact cites a quote.</p></header>
     <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Control</th><th>Design requirement</th><th>What Microsoft and GitHub document</th><th>Label</th></tr></thead>
@@ -570,7 +577,7 @@ Unlisted server denied                    | Connect gateway
 </tbody>
 </table></div>
     <div class="sub3 opt-preview">
-      <h3>Added with preview&nbsp;<span class="tg pv">preview</span></h3>
+      <h3 id="added-with-preview-preview"><a class="sec-link" href="#added-with-preview-preview">Added with preview&nbsp;<span class="tg pv">preview</span></a></h3>
       <p class="q-note">These requirements and limits apply to preview additions. Microsoft says preview features are not meant for production use and may have restricted functionality. <a class="ev" href="#ev-V35">V35</a></p>
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Control</th><th>Design requirement</th><th>What Microsoft documents</th><th>Label</th></tr></thead>
@@ -591,7 +598,7 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec" id="env" aria-labelledby="h-env">
-    <header class="sh"><h2 id="h-env">Environments</h2>
+    <header class="sh"><h2 id="h-env"><a class="sec-link" href="#env">Environments</a></h2>
     <p class="goal"><b>Goal</b>Map each environment to the controls that apply. Product details and limits live in Controls and Known gaps.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Environment</th><th>Controls to apply</th></tr></thead>
@@ -611,7 +618,7 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec" id="tests" aria-labelledby="h-tests">
-    <header class="sh"><h2 id="h-tests">Acceptance tests</h2>
+    <header class="sh"><h2 id="h-tests"><a class="sec-link" href="#tests">Acceptance tests</a></h2>
     <p class="goal"><b>Goal</b>Each row is a target outcome. API Management alone does not guarantee them.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Test</th><th>Expected result</th><th>Objective</th><th>Result</th></tr></thead>
@@ -628,7 +635,7 @@ Unlisted server denied                    | Connect gateway
 </tbody>
 </table></div>
     <div class="sub3 opt-preview">
-      <h3>Added with preview&nbsp;<span class="tg pv">preview</span></h3>
+      <h3 id="added-with-preview-preview-2"><a class="sec-link" href="#added-with-preview-preview-2">Added with preview&nbsp;<span class="tg pv">preview</span></a></h3>
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Test</th><th>Expected result</th><th>What establishes the guarantee</th><th>Result</th></tr></thead>
 <tbody>
@@ -645,7 +652,7 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec" id="order" aria-labelledby="h-order">
-    <header class="sh"><h2 id="h-order">Order of work</h2>
+    <header class="sh"><h2 id="h-order"><a class="sec-link" href="#order">Order of work</a></h2>
     <p class="goal"><b>Goal</b><span class="opt-safe">Four steps, in this order.</span><span class="opt-preview">Build the baseline first. The pilot starts only after it.</span>&nbsp;<span class="tg r">recommendation</span></p></header>
     <ol class="steps">
       <li><strong>First.</strong> Inventory MCP use, put the approved list in a repository and build the pipeline that applies it.</li>
@@ -654,7 +661,7 @@ Unlisted server denied                    | Connect gateway
       <li><strong>Finally.</strong> Add monitoring, review exceptions and run the bypass tests on a schedule.</li>
     </ol>
     <div class="sub3 opt-preview">
-      <h3>Preview pilot, after the baseline&nbsp;<span class="tg pv">preview</span></h3>
+      <h3 id="preview-pilot-after-the-baseline-preview"><a class="sec-link" href="#preview-pilot-after-the-baseline-preview">Preview pilot, after the baseline&nbsp;<span class="tg pv">preview</span></a></h3>
       <ol class="steps">
         <li><strong>Scope.</strong> Pick a low-risk server with two read-only tools and one controlled write tool. Record owner, data class, sign-in and expected clients.</li>
         <li><strong>Resource type.</strong> Create the AI Gateway on the new resource type in a supported region <a class="ev" href="#ev-V45">V45</a> <a class="ev" href="#ev-V52">V52</a>. Confirm eligibility, the public front door, networking, policy features and licensing.</li>
@@ -671,7 +678,7 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec" id="gaps" aria-labelledby="h-gaps">
-    <header class="sh"><h2 id="h-gaps">Known gaps and what has not been tested</h2>
+    <header class="sh"><h2 id="h-gaps"><a class="sec-link" href="#gaps">Known gaps and what has not been tested</a></h2>
     <p class="goal"><span class="tg u">Bad&nbsp;news&nbsp;first</span> Read these limits before relying on the design.</p></header>
     <ol>
 <li><strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.<span class="opt-preview"> This includes Agent 365 and Foundry against the new AI Gateway resource type.</span></li>
@@ -682,7 +689,7 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec opt-preview" id="fallback" aria-labelledby="h-fallback">
-    <header class="sh"><h2 id="h-fallback">Fallback</h2>
+    <header class="sh"><h2 id="h-fallback"><a class="sec-link" href="#fallback">Fallback</a></h2>
     <p class="goal"><b>Goal</b>If a preview feature changes, keep the released-only design running underneath. Use the preview controls in a sandbox only.&nbsp;<span class="tg r">recommendation</span></p></header>
     <ol class="steps">
       <li>Keep production MCP servers behind the released-only design, using only API Management features whose release status is confirmed.</li>
@@ -693,24 +700,24 @@ Unlisted server denied                    | Connect gateway
   </section>
 
   <section class="sec" id="open" aria-labelledby="h-open">
-    <header class="sh"><h2 id="h-open">Open questions</h2></header>
+    <header class="sh"><h2 id="h-open"><a class="sec-link" href="#open">Open questions</a></h2></header>
     <ol class="ans tight">
-      <li><span class="n">1</span><h3>Are preview features allowed at all?</h3><p>Choices: never, in a sandbox only, or later. Require released features for production. The proposed pipeline and cross-client enforcement still need validation.</p></li>
-      <li><span class="n">2</span><h3>Which comes first: developer workstations or hosted agents?</h3><p>Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the <a href="#env">environment table</a>.</p></li>
-      <li><span class="n">3</span><h3>Is a default outbound block on managed Windows laptops acceptable?</h3><p>Decide before rollout. The effect on other traffic is in the <a href="#gaps">gaps</a>.</p></li>
-      <li><span class="n">4</span><h3>Who reviews list changes and owns the pipeline?</h3><p>Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.</p></li>
-      <li><span class="n">5</span><h3>Is the built-in GitHub MCP server acceptable on managed clients?</h3><p>The allow and deny lists cannot block it. Choices: accept it, turn off the MCP servers in Copilot policy (stops all servers), or limit it through GitHub account permissions. <span class="tg i">inference</span> No source checked says whether that policy or Registry only covers the built-in server. Test both in a pilot.</p></li>
-      <li class="opt-preview"><span class="n">6</span><h3>Who approves and reviews the Agent 365 consent?</h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
-      <li class="opt-preview"><span class="n">7</span><h3>What ends the pilot?</h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>
-      <li class="opt-preview"><span class="n">8</span><h3>Does a gateway with no private endpoints fit the network rules?</h3><p>The new resource has no private endpoints. Check the rules before building. See the <a href="#gaps">gaps</a>.</p></li>
-      <li class="opt-preview"><span class="n">9</span><h3>Which Agent 365 route will the pilot use?</h3><p>Choose the API Management gateway integration or the separate BYO server registration route. See the <a href="#controls">controls</a>.</p></li>
+      <li><span class="n">1</span><h3 id="are-preview-features-allowed-at-all"><a class="sec-link" href="#are-preview-features-allowed-at-all">Are preview features allowed at all?</a></h3><p>Choices: never, in a sandbox only, or later. Require released features for production. The proposed pipeline and cross-client enforcement still need validation.</p></li>
+      <li><span class="n">2</span><h3 id="which-comes-first-developer-workstations-or"><a class="sec-link" href="#which-comes-first-developer-workstations-or">Which comes first: developer workstations or hosted agents?</a></h3><p>Workstations call for client rules and, on Windows, outbound limits. Hosted agents call for network isolation and data policies. Start where the more sensitive backends are. See the <a href="#env">environment table</a>.</p></li>
+      <li><span class="n">3</span><h3 id="is-a-default-outbound-block-on-managed-windows"><a class="sec-link" href="#is-a-default-outbound-block-on-managed-windows">Is a default outbound block on managed Windows laptops acceptable?</a></h3><p>Decide before rollout. The effect on other traffic is in the <a href="#gaps">gaps</a>.</p></li>
+      <li><span class="n">4</span><h3 id="who-reviews-list-changes-and-owns-the-pipeline"><a class="sec-link" href="#who-reviews-list-changes-and-owns-the-pipeline">Who reviews list changes and owns the pipeline?</a></h3><p>Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.</p></li>
+      <li><span class="n">5</span><h3 id="is-the-built-in-github-mcp-server-acceptable-on"><a class="sec-link" href="#is-the-built-in-github-mcp-server-acceptable-on">Is the built-in GitHub MCP server acceptable on managed clients?</a></h3><p>The allow and deny lists cannot block it. Choices: accept it, turn off the MCP servers in Copilot policy (stops all servers), or limit it through GitHub account permissions. <span class="tg i">inference</span> No source checked says whether that policy or Registry only covers the built-in server. Test both in a pilot.</p></li>
+      <li class="opt-preview"><span class="n">6</span><h3 id="who-approves-and-reviews-the-agent-365-consent"><a class="sec-link" href="#who-approves-and-reviews-the-agent-365-consent">Who approves and reviews the Agent 365 consent?</a></h3><p>The consent lets the service write API policies. Name an approver and a reviewer. See the <a href="#controls">controls</a>.</p></li>
+      <li class="opt-preview"><span class="n">7</span><h3 id="what-ends-the-pilot"><a class="sec-link" href="#what-ends-the-pilot">What ends the pilot?</a></h3><p>Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the <a href="#fallback">fallback</a>.</p></li>
+      <li class="opt-preview"><span class="n">8</span><h3 id="does-a-gateway-with-no-private-endpoints-fit"><a class="sec-link" href="#does-a-gateway-with-no-private-endpoints-fit">Does a gateway with no private endpoints fit the network rules?</a></h3><p>The new resource has no private endpoints. Check the rules before building. See the <a href="#gaps">gaps</a>.</p></li>
+      <li class="opt-preview"><span class="n">9</span><h3 id="which-agent-365-route-will-the-pilot-use"><a class="sec-link" href="#which-agent-365-route-will-the-pilot-use">Which Agent 365 route will the pilot use?</a></h3><p>Choose the API Management gateway integration or the separate BYO server registration route. See the <a href="#controls">controls</a>.</p></li>
     </ol>
   </section>
 
   <section id="evidence" aria-labelledby="h-e">
     <div class="part">
       <p class="lbl"><b>Fact check</b> · Each product claim against its source</p>
-      <h2 id="h-e">Fact check</h2>
+      <h2 id="h-e"><a class="sec-link" href="#evidence">Fact check</a></h2>
     </div>
     <div class="blk" style="margin-top:20px">
       <p class="sub">Product claims are supported by the source excerpts below, checked on 2026-11-08. Links request the quoted passage using browser text fragments. Page date is the date the page shows. <span class="opt-safe">55 quotes back the released-only design.</span><span class="opt-preview">96 quotes in all: 55 back the released-only design and 41 back the preview additions.</span></p>

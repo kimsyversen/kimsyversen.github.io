@@ -1,4 +1,12 @@
-<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="en-GB"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+:is(section,article,h2,h3)[id]{scroll-margin-top:64px}
+</style></head><body>
 <title>AKS security assessment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -295,8 +303,8 @@ figcaption{display:grid;gap:8px}
 
   <!-- 1 BASICS -->
   <div class="panel" role="tabpanel" id="p-basics" aria-labelledby="t-basics">
-    <section>
-      <h2>Short version</h2>
+    <section id="short-version">
+      <h2><a class="sec-link" href="#short-version">Short version</a></h2>
       <ol class="short">
         <li><span>Microsoft runs the control plane in AKS. You assess what the platform team has configured around it, and the limits the application teams work within.</span></li>
         <li><span>The main question is: what can an app team, a stolen identity or a compromised pod do, and what stops them? <span class="tag">[inference]</span></span></li>
@@ -304,8 +312,8 @@ figcaption{display:grid;gap:8px}
       </ol>
     </section>
 
-    <section>
-      <h2>Who owns what</h2>
+    <section id="who-owns-what">
+      <h2><a class="sec-link" href="#who-owns-what">Who owns what</a></h2>
       <p class="sub">Tap a layer to see who owns it and what you look for. Microsoft's part comes from Microsoft Learn. The split between platform team and app team is typical, but must be confirmed with them. <span class="tag">[inference]</span></p>
       <div class="stack" id="stack">
         <button type="button" class="layer" data-layer="0" aria-pressed="false"><span>Pipeline and container registry</span><span class="own delt">SHARED</span></button>
@@ -317,14 +325,14 @@ figcaption{display:grid;gap:8px}
         <button type="button" class="layer" data-layer="6" aria-pressed="false"><span>Control plane: API server, etcd, scheduler</span><span class="own ms">MICROSOFT</span></button>
       </div>
       <div class="layer-detail" id="layerDetail" aria-live="polite">
-        <h3>Cluster configuration</h3>
+        <h3 id="cluster-configuration"><a class="sec-link" href="#cluster-configuration">Cluster configuration</a></h3>
         <p>Check identity, API access, network, upgrades and add-ons. Which choices the platform team controls depends on the AKS mode.</p>
         <p class="note">Look for: unnecessary API exposure, local accounts, and gaps in updates, detection or policy enforcement.</p>
       </div>
     </section>
 
-    <section>
-      <h2>Kubernetes in five minutes</h2>
+    <section id="kubernetes-in-five-minutes">
+      <h2><a class="sec-link" href="#kubernetes-in-five-minutes">Kubernetes in five minutes</a></h2>
       <p class="sub">Kubernetes runs containers on a group of machines and keeps them in the desired state. The cluster's desired state is managed through the Kubernetes API. These are the terms you will meet, and why they matter for security.</p>
       <dl class="gloss">
         <div><dt>Cluster</dt><dd>Control plane plus nodes.</dd><dd class="sec"><b>Security:</b> A shared cluster does not give hard isolation between teams that do not trust each other.</dd></div>
@@ -345,20 +353,20 @@ figcaption{display:grid;gap:8px}
 
   <!-- 2 METHOD -->
   <div class="panel" role="tabpanel" id="p-method" aria-labelledby="t-method" hidden>
-    <section>
-      <h2>Six steps</h2>
+    <section id="six-steps">
+      <h2><a class="sec-link" href="#six-steps">Six steps</a></h2>
       <ol class="steps">
-        <li><div><h3>Define the scope and understand the model</h3><p>How many clusters and environments? AKS Automatic or Standard? Automatic has more pre-configured controls. Check the actual setup in both modes. Make a simple overview of what the platform team owns and what the app teams own.</p><p class="out"><b>Result:</b> scope and split of responsibility.</p></div></li>
-        <li><div><h3>Get read access</h3><p>Agree on Azure Reader, access to security findings and logs, and the read access you need in Kubernetes. With Entra ID, Cluster User or an equivalent permission allows fetching the kubeconfig. Without Entra integration, Cluster User gives the same access as Cluster Admin. See <a href="https://learn.microsoft.com/en-us/azure/aks/control-kubeconfig-access" target="_blank" rel="noopener">Microsoft's role overview</a>.</p><p class="note">“Azure Kubernetes Service RBAC Reader” does not give read access to roles, bindings or Secrets. Agree on help with the RBAC check.</p><p class="out"><b>Result:</b> clear read access and documented access limits.</p></div></li>
-        <li><div><h3>Interview the platform team</h3><p>Use the questions below. Ask for an architecture sketch and the infrastructure code (Terraform or Bicep). It shows how things are meant to be. Compare the sketch with the risk map under the Architecture tab.</p><p class="out"><b>Result:</b> the intended design, and where to look for deviations.</p></div></li>
-        <li><div><h3>Check the configuration</h3><p>Go through the top 10: the Azure layer (portal or az), the Kubernetes layer (kubectl), and pipeline and registry. Take at least one app team's namespace in detail.</p><p class="out"><b>Result:</b> findings with evidence.</p></div></li>
-        <li><div><h3>Let the tools work</h3><p>Defender for Cloud recommendations, Azure Policy compliance, and preferably Kubescape. Tools can find misconfiguration and access risk. Add a manual review of the model and routines. <span class="tag">[inference]</span></p><p class="out"><b>Result:</b> broad coverage and a check of your own findings.</p></div></li>
-        <li><div><h3>Assess and prioritise</h3><p>Go through the three attack paths under Top 10. Rank findings by impact and how easily they can be exploited. Give each finding an owner (platform or app team) and a concrete action.</p><p class="out"><b>Result:</b> prioritised report.</p></div></li>
+        <li><div><h3 id="define-the-scope-and-understand-the-model"><a class="sec-link" href="#define-the-scope-and-understand-the-model">Define the scope and understand the model</a></h3><p>How many clusters and environments? AKS Automatic or Standard? Automatic has more pre-configured controls. Check the actual setup in both modes. Make a simple overview of what the platform team owns and what the app teams own.</p><p class="out"><b>Result:</b> scope and split of responsibility.</p></div></li>
+        <li><div><h3 id="get-read-access"><a class="sec-link" href="#get-read-access">Get read access</a></h3><p>Agree on Azure Reader, access to security findings and logs, and the read access you need in Kubernetes. With Entra ID, Cluster User or an equivalent permission allows fetching the kubeconfig. Without Entra integration, Cluster User gives the same access as Cluster Admin. See <a href="https://learn.microsoft.com/en-us/azure/aks/control-kubeconfig-access" target="_blank" rel="noopener">Microsoft's role overview</a>.</p><p class="note">“Azure Kubernetes Service RBAC Reader” does not give read access to roles, bindings or Secrets. Agree on help with the RBAC check.</p><p class="out"><b>Result:</b> clear read access and documented access limits.</p></div></li>
+        <li><div><h3 id="interview-the-platform-team"><a class="sec-link" href="#interview-the-platform-team">Interview the platform team</a></h3><p>Use the questions below. Ask for an architecture sketch and the infrastructure code (Terraform or Bicep). It shows how things are meant to be. Compare the sketch with the risk map under the Architecture tab.</p><p class="out"><b>Result:</b> the intended design, and where to look for deviations.</p></div></li>
+        <li><div><h3 id="check-the-configuration"><a class="sec-link" href="#check-the-configuration">Check the configuration</a></h3><p>Go through the top 10: the Azure layer (portal or az), the Kubernetes layer (kubectl), and pipeline and registry. Take at least one app team's namespace in detail.</p><p class="out"><b>Result:</b> findings with evidence.</p></div></li>
+        <li><div><h3 id="let-the-tools-work"><a class="sec-link" href="#let-the-tools-work">Let the tools work</a></h3><p>Defender for Cloud recommendations, Azure Policy compliance, and preferably Kubescape. Tools can find misconfiguration and access risk. Add a manual review of the model and routines. <span class="tag">[inference]</span></p><p class="out"><b>Result:</b> broad coverage and a check of your own findings.</p></div></li>
+        <li><div><h3 id="assess-and-prioritise"><a class="sec-link" href="#assess-and-prioritise">Assess and prioritise</a></h3><p>Go through the three attack paths under Top 10. Rank findings by impact and how easily they can be exploited. Give each finding an owner (platform or app team) and a concrete action.</p><p class="out"><b>Result:</b> prioritised report.</p></div></li>
       </ol>
     </section>
 
-    <section>
-      <div class="qhead"><h2>Questions for the platform team</h2><span class="count" id="qCount">0 of 10 settled</span></div>
+    <section id="questions-for-the-platform-team">
+      <div class="qhead"><h2><a class="sec-link" href="#questions-for-the-platform-team">Questions for the platform team</a></h2><span class="count" id="qCount">0 of 10 settled</span></div>
       <p class="sub">Tick them off as you go. The answers are saved locally if the browser allows it.</p>
       <ul class="qlist" id="qlist">
         <li><label><input type="checkbox" id="q1"><span>Do you use AKS Automatic or Standard, and how many clusters do you have per environment?</span></label></li>
@@ -374,8 +382,8 @@ figcaption{display:grid;gap:8px}
       </ul>
     </section>
 
-    <section>
-      <h2>Commands with read access</h2>
+    <section id="commands-with-read-access">
+      <h2><a class="sec-link" href="#commands-with-read-access">Commands with read access</a></h2>
       <p class="sub">Replace <code>&lt;rg&gt;</code> and <code>&lt;cluster&gt;</code>. Check the subscription in Azure CLI. <code>kubectl</code> uses the active context, which may point to a different cluster. The RBAC check needs read access to roles and bindings across the whole cluster.</p>
       <div class="cmd"><pre><code><span class="c"># Version and available upgrades</span>
 az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;
@@ -405,13 +413,13 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
 
   <!-- 3 TOP 10 -->
   <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
-    <section>
-      <h2>Ten prioritised Kubernetes risks</h2>
+    <section id="ten-prioritised-kubernetes-risks">
+      <h2><a class="sec-link" href="#ten-prioritised-kubernetes-risks">Ten prioritised Kubernetes risks</a></h2>
       <p class="sub">The items follow OWASP's prioritised list from 2025. The checks are adapted to AKS. Status is saved locally if the browser allows it.</p>
     </section>
 
     <aside class="callout" id="current">
-      <h3>Current as of 1 November 2026</h3>
+      <h3 id="current-as-of-1-november-2026"><a class="sec-link" href="#current-as-of-1-november-2026">Current as of 1 November 2026</a></h3>
       <ul>
         <li><b>Versions:</b> Check the <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">support deadline</a> and whether LTS is enabled on the cluster. Limited “platform support” after regular support does not give security fixes for Kubernetes.</li>
         <li><b>Ingress NGINX:</b> The project's maintenance ended in March 2026. Microsoft supports critical security fixes for NGINX in the application routing add-on until the end of November 2026. Plan a migration.</li>
@@ -437,8 +445,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
       <textarea class="out-text" id="summaryOut" readonly hidden aria-label="Status as text"></textarea>
     </div>
 
-    <section>
-      <h3>Filter by attack path</h3>
+    <section id="filter-by-attack-path">
+      <h3><a class="sec-link" href="#filter-by-attack-path">Filter by attack path</a></h3>
       <div class="chips" role="group" aria-label="Attack path">
         <button type="button" class="chip" data-path="all" aria-pressed="true">All</button>
         <button type="button" class="chip" data-path="credentials" aria-pressed="false">Stolen credentials</button>
@@ -450,8 +458,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
 
     <div class="risks" id="risks">
 
-      <article class="risk" data-id="K01" data-title="Insecure workload configuration" data-paths="workload supply">
-        <div class="risk-head"><span class="rid">K01</span><div><h3>Insecure workload configuration</h3><p class="en">Insecure Workload Configurations</p></div></div>
+      <article id="risk-k01" class="risk" data-id="K01" data-title="Insecure workload configuration" data-paths="workload supply">
+        <div class="risk-head"><span class="rid">K01</span><div><h3><a class="sec-link" href="#risk-k01">Insecure workload configuration</a></h3><p class="en">Insecure Workload Configurations</p></div></div>
         <p>Containers that run as root or privileged, or that get access to the node's file system (hostPath) or network (hostNetwork). Such settings can increase the damage if a container is compromised. Root alone does not mean access to the host.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -465,8 +473,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <div class="seg" data-id="K01"></div>
       </article>
 
-      <article class="risk" data-id="K02" data-title="Overly broad permissions" data-paths="credentials workload">
-        <div class="risk-head"><span class="rid">K02</span><div><h3>Overly broad permissions</h3><p class="en">Overly Permissive Authorization Configurations</p></div></div>
+      <article id="risk-k02" class="risk" data-id="K02" data-title="Overly broad permissions" data-paths="credentials workload">
+        <div class="risk-head"><span class="rid">K02</span><div><h3><a class="sec-link" href="#risk-k02">Overly broad permissions</a></h3><p class="en">Overly Permissive Authorization Configurations</p></div></div>
         <p>Broad roles increase the damage. The right to create pods can also give access to Secrets and ServiceAccount permissions in the same namespace. See the <a href="https://kubernetes.io/docs/concepts/security/rbac-good-practices/#workload-creation" target="_blank" rel="noopener">Kubernetes RBAC guidance</a>.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -482,8 +490,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <div class="seg" data-id="K02"></div>
       </article>
 
-      <article class="risk" data-id="K03" data-title="Weak secrets management" data-paths="credentials workload supply">
-        <div class="risk-head"><span class="rid">K03</span><div><h3>Weak secrets management</h3><p class="en">Secrets Management Failures</p></div></div>
+      <article id="risk-k03" class="risk" data-id="K03" data-title="Weak secrets management" data-paths="credentials workload supply">
+        <div class="risk-head"><span class="rid">K03</span><div><h3><a class="sec-link" href="#risk-k03">Weak secrets management</a></h3><p class="en">Secrets Management Failures</p></div></div>
         <p>Secrets can leak from code, images and pods. Base64 in the manifest is not encryption. AKS has storage encryption; KMS adds an extra layer.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -497,8 +505,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <div class="seg" data-id="K03"></div>
       </article>
 
-      <article class="risk" data-id="K04" data-title="No policy enforcement in the cluster" data-paths="workload supply">
-        <div class="risk-head"><span class="rid">K04</span><div><h3>No policy enforcement in the cluster</h3><p class="en">Lack Of Cluster Level Policy Enforcement</p></div></div>
+      <article id="risk-k04" class="risk" data-id="K04" data-title="No policy enforcement in the cluster" data-paths="workload supply">
+        <div class="risk-head"><span class="rid">K04</span><div><h3><a class="sec-link" href="#risk-k04">No policy enforcement in the cluster</a></h3><p class="en">Lack Of Cluster Level Policy Enforcement</p></div></div>
         <p>Security policies are missing or not enforced. Audit and Warn do not reject rule violations.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -512,8 +520,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <div class="seg" data-id="K04"></div>
       </article>
 
-      <article class="risk" data-id="K05" data-title="Missing network segmentation" data-paths="workload">
-        <div class="risk-head"><span class="rid">K05</span><div><h3>Missing network segmentation</h3><p class="en">Missing Network Segmentation Controls</p></div></div>
+      <article id="risk-k05" class="risk" data-id="K05" data-title="Missing network segmentation" data-paths="workload">
+        <div class="risk-head"><span class="rid">K05</span><div><h3><a class="sec-link" href="#risk-k05">Missing network segmentation</a></h3><p class="en">Missing Network Segmentation Controls</p></div></div>
         <p>NetworkPolicy isolates pods separately for inbound and outbound traffic. Both directions are open by default. Check the actual traffic between teams and out of the cluster, including the Azure network.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -528,8 +536,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <div class="seg" data-id="K05"></div>
       </article>
 
-      <article class="risk" data-id="K06" data-title="Exposed Kubernetes components" data-paths="credentials">
-        <div class="risk-head"><span class="rid">K06</span><div><h3>Exposed Kubernetes components</h3><p class="en">Overly Exposed Kubernetes Components</p></div></div>
+      <article id="risk-k06" class="risk" data-id="K06" data-title="Exposed Kubernetes components" data-paths="credentials">
+        <div class="risk-head"><span class="rid">K06</span><div><h3><a class="sec-link" href="#risk-k06">Exposed Kubernetes components</a></h3><p class="en">Overly Exposed Kubernetes Components</p></div></div>
         <p>A public API server without IP restriction can be reached from the internet. Stolen, valid credentials can give access.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -545,8 +553,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="seg" data-id="K06"></div>
       </article>
 
-      <article class="risk" data-id="K07" data-title="Misconfigured and vulnerable cluster components" data-paths="workload">
-        <div class="risk-head"><span class="rid">K07</span><div><h3>Misconfigured and vulnerable cluster components</h3><p class="en">Misconfigured And Vulnerable Cluster Components</p></div></div>
+      <article id="risk-k07" class="risk" data-id="K07" data-title="Misconfigured and vulnerable cluster components" data-paths="workload">
+        <div class="risk-head"><span class="rid">K07</span><div><h3><a class="sec-link" href="#risk-k07">Misconfigured and vulnerable cluster components</a></h3><p class="en">Misconfigured And Vulnerable Cluster Components</p></div></div>
         <p>An outdated Kubernetes version, unpatched nodes and forgotten third-party components such as ingress controllers and operators. Outside security support you cannot count on new security fixes.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -561,8 +569,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="seg" data-id="K07"></div>
       </article>
 
-      <article class="risk" data-id="K08" data-title="From cluster to Azure" data-paths="workload">
-        <div class="risk-head"><span class="rid">K08</span><div><h3>From cluster to Azure</h3><p class="en">Cluster To Cloud Lateral Movement</p></div></div>
+      <article id="risk-k08" class="risk" data-id="K08" data-title="From cluster to Azure" data-paths="workload">
+        <div class="risk-head"><span class="rid">K08</span><div><h3><a class="sec-link" href="#risk-k08">From cluster to Azure</a></h3><p class="en">Cluster To Cloud Lateral Movement</p></div></div>
         <p>An attacker in a pod can misuse available Azure identities. Check which resources each identity can access.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -576,8 +584,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="seg" data-id="K08"></div>
       </article>
 
-      <article class="risk" data-id="K09" data-title="Weak authentication" data-paths="credentials">
-        <div class="risk-head"><span class="rid">K09</span><div><h3>Weak authentication</h3><p class="en">Broken Authentication Mechanisms</p></div></div>
+      <article id="risk-k09" class="risk" data-id="K09" data-title="Weak authentication" data-paths="credentials">
+        <div class="risk-head"><span class="rid">K09</span><div><h3><a class="sec-link" href="#risk-k09">Weak authentication</a></h3><p class="en">Broken Authentication Mechanisms</p></div></div>
         <p>Shared admin kubeconfig files, local accounts turned on, long-lived tokens or missing MFA. Static admin credentials bypass Entra ID, and so also MFA and Conditional Access.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -591,8 +599,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="seg" data-id="K09"></div>
       </article>
 
-      <article class="risk" data-id="K10" data-title="Insufficient logging and monitoring" data-paths="credentials workload supply">
-        <div class="risk-head"><span class="rid">K10</span><div><h3>Insufficient logging and monitoring</h3><p class="en">Inadequate Logging And Monitoring</p></div></div>
+      <article id="risk-k10" class="risk" data-id="K10" data-title="Insufficient logging and monitoring" data-paths="credentials workload supply">
+        <div class="risk-head"><span class="rid">K10</span><div><h3><a class="sec-link" href="#risk-k10">Insufficient logging and monitoring</a></h3><p class="en">Inadequate Logging And Monitoring</p></div></div>
         <p>Without available audit logs, API calls are harder to investigate. Alerts need an owner.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -606,8 +614,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="seg" data-id="K10"></div>
       </article>
 
-      <article class="risk" data-id="SC" data-title="Supply chain: images and pipeline" data-paths="supply">
-        <div class="risk-head"><span class="rid">Extra</span><div><h3>Supply chain: images and pipeline</h3><p class="en">Supply Chain Vulnerabilities (K02 in the 2022 edition)</p></div></div>
+      <article id="risk-sc" class="risk" data-id="SC" data-title="Supply chain: images and pipeline" data-paths="supply">
+        <div class="risk-head"><span class="rid">Extra</span><div><h3><a class="sec-link" href="#risk-sc">Supply chain: images and pipeline</a></h3><p class="en">Supply Chain Vulnerabilities (K02 in the 2022 edition)</p></div></div>
         <p>Images from unknown sources, vulnerable libraries, or a pipeline that many people can change. The item was K02 in the 2022 list and has no place of its own in the 2025 edition, but Microsoft's AKS recommendations have a separate section on it.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
@@ -625,8 +633,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
   <!-- 4 ARCHITECTURE -->
   <div class="panel" role="tabpanel" id="p-architecture" aria-labelledby="t-architecture" hidden>
-    <section class="wide">
-      <h2>Risk map of the architecture</h2>
+    <section id="risk-map-of-the-architecture" class="wide">
+      <h2><a class="sec-link" href="#risk-map-of-the-architecture">Risk map of the architecture</a></h2>
       <p class="sub">A typical AKS platform with several app teams, from code to operations. Each marker shows where a risk arises or must be checked. The colour follows the status you set under Top 10.</p>
       <div class="rchips" id="dgChips" role="group" aria-label="Show risk in the diagram"></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
@@ -653,8 +661,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
     </figure>
     <p class="note hint">The diagram is wide. Drag it sideways, or use the table below.</p>
 
-    <section class="wide">
-      <h2>Risk per part of the value chain</h2>
+    <section id="risk-per-part-of-the-value-chain" class="wide">
+      <h2><a class="sec-link" href="#risk-per-part-of-the-value-chain">Risk per part of the value chain</a></h2>
       <p class="sub">Same placement as in the diagram. Tap a risk to show it in the diagram.</p>
       <div class="mx-wrap">
         <table class="mx">
@@ -664,8 +672,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
       </div>
     </section>
 
-    <section>
-      <h3>Before you use the map</h3>
+    <section id="before-you-use-the-map">
+      <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
       <p class="sub">This is a typical reference architecture, not the platform team's actual setup. Common deviations are GitOps, where an agent in the cluster pulls from git instead of the pipeline deploying, Application Gateway for Containers with the data plane outside the cluster, and separate clusters per environment. Ask for their architecture sketch and draw the risks in where they belong in their setup.</p>
       <p class="sub">The placement of the risks and the ownership per zone are my own assessment based on OWASP and Microsoft. <span class="tag">[inference]</span></p>
     </section>
@@ -673,12 +681,12 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
   <!-- 5 RELEVANCE -->
   <div class="panel" role="tabpanel" id="p-relevance" aria-labelledby="t-relevance" hidden>
-    <section>
-      <h2>What is relevant, and what is not?</h2>
+    <section id="what-is-relevant-and-what-is-not">
+      <h2><a class="sec-link" href="#what-is-relevant-and-what-is-not">What is relevant, and what is not?</a></h2>
       <p class="sub">Microsoft runs the control plane. The customer controls their own workloads, access and data. Responsibility for nodes and network depends on the AKS mode.</p>
       <div class="cols">
         <div class="col yes">
-          <h3>Spend your time here</h3>
+          <h3 id="spend-your-time-here"><a class="sec-link" href="#spend-your-time-here">Spend your time here</a></h3>
           <ul>
             <li><b>Identity and access:</b> Entra ID, RBAC, local accounts, pipeline identity.</li>
             <li><b>Exposure:</b> API server, ingress and load balancers.</li>
@@ -692,7 +700,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
           </ul>
         </div>
         <div class="col no">
-          <h3>Less relevant for now</h3>
+          <h3 id="less-relevant-for-now"><a class="sec-link" href="#less-relevant-for-now">Less relevant for now</a></h3>
           <ul>
             <li><b>Hardening and patching the control plane</b> (API server, etcd, scheduler): Microsoft runs it.</li>
             <li><b>CIS checks of control plane nodes and files:</b> not visible to the customer in AKS. <span class="tag">[inference]</span></li>
@@ -710,29 +718,29 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
   <!-- 6 RUNTIME -->
   <div class="panel" role="tabpanel" id="p-runtime" aria-labelledby="t-runtime" hidden>
-    <section>
-      <h2>Runtime detection in brief</h2>
+    <section id="runtime-detection-in-brief">
+      <h2><a class="sec-link" href="#runtime-detection-in-brief">Runtime detection in brief</a></h2>
       <p class="sub">Runtime detection can spot suspicious activity in running workloads. Coverage depends on sensors, logs and rules. It complements image scanning and admission control.</p>
     </section>
 
-    <section>
-      <h2>Six steps to introduce it</h2>
+    <section id="six-steps-to-introduce-it">
+      <h2><a class="sec-link" href="#six-steps-to-introduce-it">Six steps to introduce it</a></h2>
       <ol class="steps">
-        <li><div><h3>Start with the threat scenarios</h3><p>Pick scenarios such as a shell in a container, privileged pods, Secret reads and access to IMDS. Find out which events and alerts the tool actually supports.</p><p class="out"><b>Result:</b> 5-10 scenarios with observable signals.</p></div></li>
-        <li><div><h3>Map a baseline per workload</h3><p>Map normal processes, outbound destinations and file paths. Use this to judge alerts. Start with the most exposed apps.</p><p class="out"><b>Result:</b> normal behaviour per workload.</p></div></li>
-        <li><div><h3>Choose data sources</h3><p>Combine relevant node sensors and Kubernetes audit logs. Check which scenarios the tool supports, and test the coverage.</p><p class="out"><b>Result:</b> coverage map: which scenario is caught by which source.</p></div></li>
-        <li><div><h3>Run in monitor mode first</h3><p>Start with alerting and tune the rules. Consider blocking only if the tool supports it and the consequences are tested.</p><p class="out"><b>Result:</b> rule set tuned to your own workloads.</p></div></li>
-        <li><div><h3>Simulate attacks in a test environment</h3><p>Use the tool's documented simulations, for example <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool" target="_blank" rel="noopener">Defender's test simulations</a>. Measure the expected alert and the delay. A shell or a file change does not necessarily trigger an alert.</p><p class="out"><b>Result:</b> test result per scenario, with time to alert.</p></div></li>
-        <li><div><h3>Define the operating model before rollout</h3><p>Who triages the alerts, in which SIEM, how long logs are kept, and what the response is: isolate the pod, take an image of the node, notify the app team. Measure false positives per week and time from event to alert.</p><p class="out"><b>Result:</b> owner, response routine and key figures.</p></div></li>
+        <li><div><h3 id="start-with-the-threat-scenarios"><a class="sec-link" href="#start-with-the-threat-scenarios">Start with the threat scenarios</a></h3><p>Pick scenarios such as a shell in a container, privileged pods, Secret reads and access to IMDS. Find out which events and alerts the tool actually supports.</p><p class="out"><b>Result:</b> 5-10 scenarios with observable signals.</p></div></li>
+        <li><div><h3 id="map-a-baseline-per-workload"><a class="sec-link" href="#map-a-baseline-per-workload">Map a baseline per workload</a></h3><p>Map normal processes, outbound destinations and file paths. Use this to judge alerts. Start with the most exposed apps.</p><p class="out"><b>Result:</b> normal behaviour per workload.</p></div></li>
+        <li><div><h3 id="choose-data-sources"><a class="sec-link" href="#choose-data-sources">Choose data sources</a></h3><p>Combine relevant node sensors and Kubernetes audit logs. Check which scenarios the tool supports, and test the coverage.</p><p class="out"><b>Result:</b> coverage map: which scenario is caught by which source.</p></div></li>
+        <li><div><h3 id="run-in-monitor-mode-first"><a class="sec-link" href="#run-in-monitor-mode-first">Run in monitor mode first</a></h3><p>Start with alerting and tune the rules. Consider blocking only if the tool supports it and the consequences are tested.</p><p class="out"><b>Result:</b> rule set tuned to your own workloads.</p></div></li>
+        <li><div><h3 id="simulate-attacks-in-a-test-environment"><a class="sec-link" href="#simulate-attacks-in-a-test-environment">Simulate attacks in a test environment</a></h3><p>Use the tool's documented simulations, for example <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool" target="_blank" rel="noopener">Defender's test simulations</a>. Measure the expected alert and the delay. A shell or a file change does not necessarily trigger an alert.</p><p class="out"><b>Result:</b> test result per scenario, with time to alert.</p></div></li>
+        <li><div><h3 id="define-the-operating-model-before-rollout"><a class="sec-link" href="#define-the-operating-model-before-rollout">Define the operating model before rollout</a></h3><p>Who triages the alerts, in which SIEM, how long logs are kept, and what the response is: isolate the pod, take an image of the node, notify the app team. Measure false positives per week and time from event to alert.</p><p class="out"><b>Result:</b> owner, response routine and key figures.</p></div></li>
       </ol>
     </section>
 
-    <section>
-      <h2>What can be detected?</h2>
+    <section id="what-can-be-detected">
+      <h2><a class="sec-link" href="#what-can-be-detected">What can be detected?</a></h2>
       <p class="sub">These are test scenarios, not a guarantee of coverage in Defender. Check the tool's support per OS and installation, and test the expected alerts.</p>
       <div class="cols">
         <div class="col yes">
-          <h3>Signals to test</h3>
+          <h3 id="signals-to-test"><a class="sec-link" href="#signals-to-test">Signals to test</a></h3>
           <ul>
             <li><b>Calls to pods/exec</b> in the audit log, or a shell process observed in the container.</li>
             <li><b>A binary that was not in the image</b> and gets run.</li>
@@ -743,7 +751,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
           </ul>
         </div>
         <div class="col no">
-          <h3>False positives or need context</h3>
+          <h3 id="false-positives-or-need-context"><a class="sec-link" href="#false-positives-or-need-context">False positives or need context</a></h3>
           <ul>
             <li><b>A shell during legitimate troubleshooting</b> (kubectl debug, operations work).</li>
             <li><b>Startup scripts, cron jobs, health checks</b> and package managers in normal operation.</li>
@@ -757,8 +765,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
       <p class="note">An alert must be assessed against the event and its context before you draw conclusions.</p>
     </section>
 
-    <section>
-      <h2>Check the static part first</h2>
+    <section id="check-the-static-part-first">
+      <h2><a class="sec-link" href="#check-the-static-part-first">Check the static part first</a></h2>
       <p class="sub">The command checks existing pod specifications. It needs <code>jq</code> and permission to list pods in all namespaces. It has not been run against a cluster here. <span class="tag">[unverified]</span></p>
       <div class="cmd"><pre><code><span class="c"># Pods with hostNetwork, hostPID, a privileged container or hostPath</span>
 kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or any((.spec.containers[]?, .spec.initContainers[]?, .spec.ephemeralContainers[]?); .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Copy</button></div>
@@ -768,8 +776,8 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
 
   <!-- SOURCES -->
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
-    <section>
-      <h2>Sources</h2>
+    <section id="sources-2">
+      <h2><a class="sec-link" href="#sources-2">Sources</a></h2>
       <p class="sub">Checked against primary sources on 1 November 2026. Recommendations and examples are not findings from an examined cluster.</p>
       <ol class="sources">
         <li><a href="https://kubernetes-top10.owasp.org/" target="_blank" rel="noopener">OWASP Kubernetes Top Ten</a><span>The 2025 and 2022 lists, with descriptions of K01-K10.</span></li>
@@ -852,12 +860,28 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
       if (n !== null){ e.preventDefault(); show(tabs[n].getAttribute('data-tab'), true); }
     });
   });
+  /* Links to a section inside a tab: open that tab, then scroll to the section */
+  function openSection(id){
+    if (!id) return false;
+    try { id = decodeURIComponent(id); } catch(e){}
+    var el = document.getElementById(id); if (!el) return false;
+    var p = el.closest('[id^="p-"]');
+    var tab = p ? p.id.slice(2) : null;
+    if (tab && ids.indexOf(tab) >= 0 && p.hidden) show(tab);
+    var c = el.closest('.risk');
+    if (c && c.hidden){ var all = document.querySelector('.chip[data-path="all"]'); if (all) all.click(); }
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    el.scrollIntoView();
+    return true;
+  }
   var start = (location.hash || '').replace('#', '');
   var prevTab = store.get('aks-tab', null);
   var archSeen = store.get('aks-arch-seen', false);
   /* Returning visitors see the new tab once */
   show(ids.indexOf(start) >= 0 ? start : (prevTab && !archSeen ? 'architecture' : (prevTab || 'basics')));
   store.set('aks-arch-seen', true);
+  if (start && ids.indexOf(start) < 0) openSection(start);
+  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (ids.indexOf(h) >= 0) show(h); else openSection(h); });
 
   /* Responsibility stack */
   var layers = [

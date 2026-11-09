@@ -348,6 +348,13 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
   .toc{position:static}.btn{display:none}
   details.deep > summary::after{content:""}
 }
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
 
 .rt{display:block;font-weight:400;color:var(--muted);font-size:0.8rem;margin-top:2px}
 .matrix-row .ev{margin-right:4px}
@@ -408,10 +415,10 @@ section[id]{scroll-margin-top:52px}
   <main id="main-content" tabindex="-1">
 
   <section class="sec" id="q1" aria-labelledby="h-q1">
-    <header class="sh"><h2 id="h-q1">How we govern MCP servers</h2>
+    <header class="sh"><h2 id="h-q1"><a class="sec-link" href="#q1">How we govern MCP servers</a></h2>
     <p class="goal"><b>Goal</b>Keep one approved list in Git and distribute it automatically. Verify each route before allowing use.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="decision">
-      <h3>Answer&nbsp;<span class="tg r">recommendation</span></h3>
+      <h3 id="answer-recommendation"><a class="sec-link" href="#answer-recommendation">Answer&nbsp;<span class="tg r">recommendation</span></a></h3>
       <p>Keep one approved MCP list in Git, and publish it by pull request into each technology's own control: the GitHub settings file for VS Code and Copilot, the Agent 365 registry or gateway for agents, data policies for Copilot Studio, Azure Policy for Foundry, and the network firewall for remote servers.</p>
       <p>No single control covers every agent, so combine these, restrict direct API access with permissions at the source, and accept that most of these are previews that are untested in our tenant (see the <a href="#can">route table</a>).</p>
     </div>
@@ -515,7 +522,7 @@ section[id]{scroll-margin-top:52px}
       <figcaption>Proposed workflow. Record delivery, configuration and enforcement separately. Check <a href="#pub-vscode">GitHub and VS Code</a>, <a href="#pub-a365">Agent 365</a>, <a href="#pub-foundry">Foundry</a> and <a href="#pub-apic">API Center</a> in the route matrix. Follow the <a href="#operate">revocation procedure</a>.</figcaption>
     </figure>
     
-    <h3 id="traffic" style="font-size:1.05rem;margin-top:28px">Where MCP traffic flows, and what is the end user's client&nbsp;<span class="tg r">recommendation</span></h3>
+    <h3 id="traffic" style="font-size:1.05rem;margin-top:28px"><a class="sec-link" href="#traffic">Where MCP traffic flows, and what is the end user's client&nbsp;<span class="tg r">recommendation</span></a></h3>
     <figure>
       <p class="fig-hint">Scroll the diagram sideways to follow all paths.</p>
       <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP traffic diagram, horizontally scrollable">
@@ -610,7 +617,7 @@ section[id]{scroll-margin-top:52px}
       <li><h4>Enable and monitor</h4><p>Enable only tested routes. On incident, <a href="#operate">block access and verify revocation</a>.</p></li>
     </ol>
     <div id="tiers">
-    <h3 style="font-size:1.05rem;margin-top:8px">Risk tiers&nbsp;<span class="tg r">recommendation</span></h3>
+    <h3 style="font-size:1.05rem;margin-top:8px" id="risk-tiers-recommendation"><a class="sec-link" href="#risk-tiers-recommendation">Risk tiers&nbsp;<span class="tg r">recommendation</span></a></h3>
     <p class="sub">Apply the highest applicable tier. Assess who operates the server separately from whether the endpoint is public. Use the action policy below for all permitted write and outbound tools.</p>
     <ol class="tiers">
       <li><span class="n">1</span><span class="what">Read-only, internal, no sensitive data</span><span class="ex">Internal case search</span><span class="apt">Automate checklist checks. Record approval in the pull request.</span></li>
@@ -619,7 +626,7 @@ section[id]{scroll-margin-top:52px}
       <li><span class="n">4</span><span class="what">Third-party operated or untrusted code</span><span class="ex">Community MCP servers</span><span class="apt">Default deny. A recorded exception must still meet the action policy.</span></li>
     </ol>
     <div class="decision" id="action-policy">
-      <h3>Approval for tools and actions&nbsp;<span class="tg r">recommendation</span></h3>
+      <h3 id="approval-for-tools-and-actions-recommendation"><a class="sec-link" href="#approval-for-tools-and-actions-recommendation">Approval for tools and actions&nbsp;<span class="tg r">recommendation</span></a></h3>
       <dl class="route-notes">
         <div><dt>Before publication</dt><dd>Review the endpoint, tool version, schema, data and permissions in the pull request. Security and the data owner approve tier 2 and tier 3 tools. Tier 4 also needs an exception.</dd></div>
         <div><dt>For each call</dt><dd>Check that the caller may use this server, tool and resource. Apply access checks independently of the model.</dd></div>
@@ -627,7 +634,7 @@ section[id]{scroll-margin-top:52px}
         <div><dt>For execution</dt><dd>Use a separate, narrowly scoped identity to execute an approved action. Record the approval and outcome.</dd></div>
       </dl>
     </div>
-    <h3 style="font-size:1.05rem;margin-top:8px">Server checklist&nbsp;<span class="tg r">recommendation</span></h3>
+    <h3 style="font-size:1.05rem;margin-top:8px" id="server-checklist-recommendation"><a class="sec-link" href="#server-checklist-recommendation">Server checklist&nbsp;<span class="tg r">recommendation</span></a></h3>
     <p class="muted" style="font-size:0.92rem">Copy this into the pull request template. Every item needs an answer.</p>
     <ul class="chk">
       <li>Named owner</li><li>Purpose</li><li>Publisher and source</li><li>Authentication type</li><li>Data it can read</li><li>Actions it can take</li><li>Logging available</li><li>How to disable it</li><li>Review date</li>
@@ -636,7 +643,7 @@ section[id]{scroll-margin-top:52px}
   </section>
 
   <section class="sec" id="can" aria-labelledby="h-can">
-    <header class="sh"><h2 id="h-can">What we can and cannot do, route by route</h2>
+    <header class="sh"><h2 id="h-can"><a class="sec-link" href="#can">What we can and cannot do, route by route</a></h2>
     <p class="goal"><b>Read this first</b>Each row cites exact quotes below. A label marks anything a quote does not show.</p></header>
     <div class="blk" style="margin-top:14px">
       <div class="matrix" role="table" aria-labelledby="h-can">
@@ -737,18 +744,18 @@ section[id]{scroll-margin-top:52px}
   </section>
 
   <section class="sec" id="q2" aria-labelledby="h-q2">
-    <header class="sh"><h2 id="h-q2">The target state, as part of the governance</h2>
+    <header class="sh"><h2 id="h-q2"><a class="sec-link" href="#q2">The target state, as part of the governance</a></h2>
     <p class="goal"><b>Goal</b>Show how the pieces fit. One policy in Git, enforced by each platform, with work access from a managed desktop.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="decision">
-      <h3>Answer&nbsp;<span class="tg r">recommendation</span></h3>
+      <h3 id="answer-recommendation-2"><a class="sec-link" href="#answer-recommendation-2">Answer&nbsp;<span class="tg r">recommendation</span></a></h3>
       <p>The target state is the same approved list, enforced in layers. Git holds the policy. Each platform enforces it with its own control. Consultants work from a managed desktop. Agents get their own identity, start read-only and need approval for high-impact actions. Logs and revocation close the loop.</p>
     </div>
     <ol class="ans tight">
-        <li><span class="n">1</span><h3>Apply one policy through each platform's own controls</h3><p>Verify where each control applies before enabling a route. <a href="#can">Compare the routes</a>.</p></li>
-        <li><span class="n">2</span><h3>Allow only approved MCP servers and tools</h3><p>Start from default deny where supported. Test the exceptions and block or restrict alternate paths. <a href="#q1">Review and publish the approved list</a>.</p></li>
-        <li><span class="n">3</span><h3>Keep code and sensitive data on managed devices</h3><p>Give consultants on personal laptops a managed cloud desktop for work. <a href="enterprise-ai-agent-security-recommendation.html#s22">Set up identity and device access</a>.</p></li>
-        <li><span class="n">4</span><h3>Give agents their own identity and least privilege</h3><p>Start with read-only access. Require human approval for high-impact actions. Use rules only for explicitly approved, bounded low-risk actions. <a href="#action-policy">Read the action policy</a>.</p></li>
-        <li><span class="n">5</span><h3>Manage policy changes in Git</h3><p>Require an approved pull request, publish the list automatically and verify the deployed policy. <a href="#q1">Follow the publication workflow</a>.</p></li>
+        <li><span class="n">1</span><h3 id="apply-one-policy-through-each-platform-s-own"><a class="sec-link" href="#apply-one-policy-through-each-platform-s-own">Apply one policy through each platform's own controls</a></h3><p>Verify where each control applies before enabling a route. <a href="#can">Compare the routes</a>.</p></li>
+        <li><span class="n">2</span><h3 id="allow-only-approved-mcp-servers-and-tools"><a class="sec-link" href="#allow-only-approved-mcp-servers-and-tools">Allow only approved MCP servers and tools</a></h3><p>Start from default deny where supported. Test the exceptions and block or restrict alternate paths. <a href="#q1">Review and publish the approved list</a>.</p></li>
+        <li><span class="n">3</span><h3 id="keep-code-and-sensitive-data-on-managed-devices"><a class="sec-link" href="#keep-code-and-sensitive-data-on-managed-devices">Keep code and sensitive data on managed devices</a></h3><p>Give consultants on personal laptops a managed cloud desktop for work. <a href="enterprise-ai-agent-security-recommendation.html#s22">Set up identity and device access</a>.</p></li>
+        <li><span class="n">4</span><h3 id="give-agents-their-own-identity-and-least"><a class="sec-link" href="#give-agents-their-own-identity-and-least">Give agents their own identity and least privilege</a></h3><p>Start with read-only access. Require human approval for high-impact actions. Use rules only for explicitly approved, bounded low-risk actions. <a href="#action-policy">Read the action policy</a>.</p></li>
+        <li><span class="n">5</span><h3 id="manage-policy-changes-in-git"><a class="sec-link" href="#manage-policy-changes-in-git">Manage policy changes in Git</a></h3><p>Require an approved pull request, publish the list automatically and verify the deployed policy. <a href="#q1">Follow the publication workflow</a>.</p></li>
       </ol>
     <figure id="five-points">
         <h4>The five points on the target state</h4>
@@ -835,7 +842,7 @@ section[id]{scroll-margin-top:52px}
     <p class="muted">All five points describe the proposed design.</p>
 
     <div class="blk" id="tools">
-      <h3>Which tool does which job</h3>
+      <h3 id="which-tool-does-which-job"><a class="sec-link" href="#which-tool-does-which-job">Which tool does which job</a></h3>
       <div class="body"><div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Job</th><th>Main tool</th><th>Where to look</th></tr></thead>
 <tbody>
@@ -857,7 +864,7 @@ section[id]{scroll-margin-top:52px}
   </section>
 
   <section class="sec" id="auto" aria-labelledby="h-auto">
-    <header class="sh"><h2 id="h-auto">Automation and admin work</h2>
+    <header class="sh"><h2 id="h-auto"><a class="sec-link" href="#auto">Automation and admin work</a></h2>
     <p class="goal"><b>Goal</b>Automate every step a source shows can be automated. Name each step a person still does.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="blk" style="margin-top:14px">
       <div class="body"><div class="tbl-wrap"><table class="tbl">
@@ -927,7 +934,7 @@ section[id]{scroll-margin-top:52px}
   </section>
 
   <section class="sec" id="operate" aria-labelledby="ops-title">
-    <header class="sh"><h2 id="ops-title">Monitor and stop an agent</h2>
+    <header class="sh"><h2 id="ops-title"><a class="sec-link" href="#operate">Monitor and stop an agent</a></h2>
     <p class="goal"><b>Runbook</b>Use these steps for the affected route.&nbsp;<span class="tg r">recommendation</span></p></header>
     <ol class="path">
       <li><h4>Find the affected calls</h4><p>Use the <a href="enterprise-ai-agent-security-recommendation.html#s65">tool-call record</a> to identify the caller, route, tool, resource and decision.</p></li>
@@ -941,11 +948,11 @@ section[id]{scroll-margin-top:52px}
   <section id="gaps" aria-labelledby="h-g">
     <div class="part">
       <p class="lbl"><b>Gaps</b> · Read before you rely on any of it</p>
-      <h2 id="h-g">Known gaps and what has not been tested</h2>
+      <h2 id="h-g"><a class="sec-link" href="#gaps">Known gaps and what has not been tested</a></h2>
     </div>
     <div class="blk" style="margin-top:20px" id="watchlist">
       <p class="sub"><span class="tg u">Bad&nbsp;news&nbsp;first</span> Nothing here has been run in our tenant. Every place that says test is a step still to do.</p>
-      <h3 style="font-size:1.05rem">Preview watchlist</h3>
+      <h3 style="font-size:1.05rem" id="preview-watchlist"><a class="sec-link" href="#preview-watchlist">Preview watchlist</a></h3>
       <p class="muted" style="font-size:0.92rem;max-width:46rem">Controls its vendor labels preview. Re-check them monthly.</p>
       <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th>Control</th><th>Evidence</th></tr></thead>
@@ -956,7 +963,7 @@ section[id]{scroll-margin-top:52px}
 <tr><td>Global Secure Access MCP firewall</td><td><a class="ev" href="#ev-V29">V29</a></td></tr>
         </tbody>
       </table></div>
-      <h3 style="font-size:1.05rem;margin-top:10px">The gaps</h3>
+      <h3 style="font-size:1.05rem;margin-top:10px" id="the-gaps"><a class="sec-link" href="#the-gaps">The gaps</a></h3>
       <div class="body"><ol>
 <li><strong>Nothing is tested in our tenant.</strong> Each place that says test is a step still to do, not a result. <span class="tg u">unverified</span></li>
 <li><strong>Gateway and BYO carry the preview label.</strong> Scope and behavior can change. <a class="ev" href="#ev-V13">V13</a> <a class="ev" href="#ev-V20">V20</a></li>
@@ -977,14 +984,14 @@ section[id]{scroll-margin-top:52px}
   <section id="discuss" aria-labelledby="h-d">
     <div class="part">
       <p class="lbl"><b>Open questions</b> · For the owners</p>
-      <h2 id="h-d">Open questions</h2>
+      <h2 id="h-d"><a class="sec-link" href="#discuss">Open questions</a></h2>
     </div>
     <div class="blk" style="margin-top:20px">
       <ol class="ans tight">
-        <li><span class="n">1</span><h3>Is Git the one source of the approved MCP list?</h3><p>Every route then takes its entries from one reviewed file. Without it, each platform keeps its own list and the lists drift. See <a href="#q1">how the list is governed</a>.</p></li>
-        <li><span class="n">2</span><h3>Which routes do we enable?</h3><p>Enable only the routes that fit our needs. Keep the rest disabled. The <a href="#can">route table</a> shows what each route can and cannot do.</p></li>
-        <li><span class="n">3</span><h3>Who owns the list, and who approves tiers 2 and 3?</h3><p>Name an owner for the list and for each server. Security and the data owner approve tiers 2 and 3. See the <a href="#tiers">risk tiers</a>.</p></li>
-        <li><span class="n">4</span><h3>Do we accept preview controls?</h3><p>The watchlist names every control that its vendor labels preview. Decide whether we use them, and who re-checks them each month. See the <a href="#watchlist">preview watchlist</a>.</p></li>
+        <li><span class="n">1</span><h3 id="is-git-the-one-source-of-the-approved-mcp-list"><a class="sec-link" href="#is-git-the-one-source-of-the-approved-mcp-list">Is Git the one source of the approved MCP list?</a></h3><p>Every route then takes its entries from one reviewed file. Without it, each platform keeps its own list and the lists drift. See <a href="#q1">how the list is governed</a>.</p></li>
+        <li><span class="n">2</span><h3 id="which-routes-do-we-enable"><a class="sec-link" href="#which-routes-do-we-enable">Which routes do we enable?</a></h3><p>Enable only the routes that fit our needs. Keep the rest disabled. The <a href="#can">route table</a> shows what each route can and cannot do.</p></li>
+        <li><span class="n">3</span><h3 id="who-owns-the-list-and-who-approves-tiers-2-and-3"><a class="sec-link" href="#who-owns-the-list-and-who-approves-tiers-2-and-3">Who owns the list, and who approves tiers 2 and 3?</a></h3><p>Name an owner for the list and for each server. Security and the data owner approve tiers 2 and 3. See the <a href="#tiers">risk tiers</a>.</p></li>
+        <li><span class="n">4</span><h3 id="do-we-accept-preview-controls"><a class="sec-link" href="#do-we-accept-preview-controls">Do we accept preview controls?</a></h3><p>The watchlist names every control that its vendor labels preview. Decide whether we use them, and who re-checks them each month. See the <a href="#watchlist">preview watchlist</a>.</p></li>
       </ol>
     </div>
   </section>
@@ -992,7 +999,7 @@ section[id]{scroll-margin-top:52px}
   <section id="evidence" aria-labelledby="h-e">
     <div class="part">
       <p class="lbl"><b>Evidence</b> · Exact quotes and sources</p>
-      <h2 id="h-e">Quotes behind the route table</h2>
+      <h2 id="h-e"><a class="sec-link" href="#evidence">Quotes behind the route table</a></h2>
     </div>
     <div class="blk" style="margin-top:20px">
       <p class="sub">Each quote was found word for word on its source page on 2026-11-06. The link opens the page at the quote. Page date is the date the page shows.</p>

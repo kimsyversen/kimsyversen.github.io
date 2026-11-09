@@ -242,6 +242,13 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
 .ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
 .ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
 @media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
 </style>
 </head>
 <body>
@@ -267,17 +274,17 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
   </header>
 
   <ol class="qs" aria-label="The four questions">
-    <li class="q"><span class="n">1</span><h2>What are we working on?</h2><p>Set the scope, list what is worth protecting and draw the data flow with trust boundaries.</p><p class="out">You end with a drawing.</p></li>
-    <li class="q"><span class="n">2</span><h2>What can go wrong?</h2><p>Walk through each element with STRIDE. Write every threat as one sentence.</p><p class="out">You end with a threat list.</p></li>
-    <li class="q"><span class="n">3</span><h2>What are we going to do about it?</h2><p>Score each threat, choose a response, and give every control an owner and a test.</p><p class="out">You end with a ranked plan.</p></li>
-    <li class="q"><span class="n">4</span><h2>Did we do a good enough job?</h2><p>Look for gaps, run the tests and write down what you learned.</p><p class="out">You end done, or go round again.</p></li>
+    <li class="q"><span class="n">1</span><h2 id="what-are-we-working-on"><a class="sec-link" href="#what-are-we-working-on">What are we working on?</a></h2><p>Set the scope, list what is worth protecting and draw the data flow with trust boundaries.</p><p class="out">You end with a drawing.</p></li>
+    <li class="q"><span class="n">2</span><h2 id="what-can-go-wrong"><a class="sec-link" href="#what-can-go-wrong">What can go wrong?</a></h2><p>Walk through each element with STRIDE. Write every threat as one sentence.</p><p class="out">You end with a threat list.</p></li>
+    <li class="q"><span class="n">3</span><h2 id="what-are-we-going-to-do-about-it"><a class="sec-link" href="#what-are-we-going-to-do-about-it">What are we going to do about it?</a></h2><p>Score each threat, choose a response, and give every control an owner and a test.</p><p class="out">You end with a ranked plan.</p></li>
+    <li class="q"><span class="n">4</span><h2 id="did-we-do-a-good-enough-job"><a class="sec-link" href="#did-we-do-a-good-enough-job">Did we do a good enough job?</a></h2><p>Look for gaps, run the tests and write down what you learned.</p><p class="out">You end done, or go round again.</p></li>
   </ol>
   <div class="loop"><span>Something changed? Start again at 1.</span></div>
 
   <main class="board">
 
     <section class="panel c7 pl" aria-labelledby="p1">
-      <div class="ph"><p class="lbl">Questions 1 and 2</p><h2 id="p1">The claims portal, with its threats</h2></div>
+      <div class="ph"><p class="lbl">Questions 1 and 2</p><h2 id="p1"><a class="sec-link" href="#p1">The claims portal, with its threats</a></h2></div>
       <dl class="facts">
         <div><dt class="lbl">The system</dt><dd>Customers sign in, report damage and upload photos and documents. Claims handlers read them.</dd></div>
         <div><dt class="lbl">In scope</dt><dd>Sign-in, upload and viewing. Not the handlers' internal system.</dd></div>
@@ -299,7 +306,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
     </section>
 
     <section class="panel c5 pr" aria-labelledby="p2">
-      <div class="ph"><p class="lbl">Question 2</p><h2 id="p2">STRIDE: six ways to fail</h2></div>
+      <div class="ph"><p class="lbl">Question 2</p><h2 id="p2"><a class="sec-link" href="#p2">STRIDE: six ways to fail</a></h2></div>
       <ul class="stride">
         <li><span class="L">S</span><span><b>Spoofing.</b> <span>Are you who you say you are?</span></span></li>
         <li><span class="L">T</span><span><b>Tampering.</b> <span>Can someone change data unseen?</span></span></li>
@@ -327,7 +334,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
     </section>
 
     <section class="panel c8 pl" aria-labelledby="p3">
-      <div class="ph"><p class="lbl">Questions 2 and 3</p><h2 id="p3">Threat register, ranked</h2></div>
+      <div class="ph"><p class="lbl">Questions 2 and 3</p><h2 id="p3"><a class="sec-link" href="#p3">Threat register, ranked</a></h2></div>
       <div class="tbl-wrap" tabindex="0">
         <table class="tbl" id="tt">
           <thead><tr><th>#</th><th>Threat</th><th title="Likelihood, 1 to 5">L</th><th title="Impact, 1 to 5">I</th><th>Score</th><th>Response and first control</th></tr></thead>
@@ -345,7 +352,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
     </section>
 
     <section class="panel c4 pr" aria-labelledby="p4">
-      <div class="ph"><p class="lbl">Question 3</p><h2 id="p4">Score and rank</h2></div>
+      <div class="ph"><p class="lbl">Question 3</p><h2 id="p4"><a class="sec-link" href="#p4">Score and rank</a></h2></div>
       <p class="eq">Score = likelihood <span>×</span> impact</p>
       <p class="small muted">Rate each from 1 to 5, then multiply. You get 1 to 25.</p>
       <figure>
@@ -366,17 +373,17 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
     </section>
 
     <section class="panel" aria-labelledby="p5">
-      <div class="ph"><p class="lbl">Question 3</p><h2 id="p5">Pick one of four responses</h2></div>
+      <div class="ph"><p class="lbl">Question 3</p><h2 id="p5"><a class="sec-link" href="#p5">Pick one of four responses</a></h2></div>
       <div class="four">
-        <div class="r"><h3>Remove</h3><p>Take away the feature or the data that creates the threat.</p><p class="ex"><b>E</b>The portal never opens uploaded files.</p></div>
-        <div class="r"><h3>Reduce</h3><p>Add a control that makes it less likely or less harmful.</p><p class="ex"><b>I</b>An ownership check on every fetch.</p></div>
-        <div class="r"><h3>Move</h3><p>Hand the responsibility to someone else, with a ready-made service and a written agreement.</p><p class="ex"><b>Sign-in</b>An external provider checks passwords, so the portal never receives them.</p></div>
-        <div class="r"><h3>Accept</h3><p>Only in writing, with a named owner and a date to look again.</p><p class="ex"><b>R</b>Product owner, review in six months.</p></div>
+        <div class="r"><h3 id="remove"><a class="sec-link" href="#remove">Remove</a></h3><p>Take away the feature or the data that creates the threat.</p><p class="ex"><b>E</b>The portal never opens uploaded files.</p></div>
+        <div class="r"><h3 id="reduce"><a class="sec-link" href="#reduce">Reduce</a></h3><p>Add a control that makes it less likely or less harmful.</p><p class="ex"><b>I</b>An ownership check on every fetch.</p></div>
+        <div class="r"><h3 id="move"><a class="sec-link" href="#move">Move</a></h3><p>Hand the responsibility to someone else, with a ready-made service and a written agreement.</p><p class="ex"><b>Sign-in</b>An external provider checks passwords, so the portal never receives them.</p></div>
+        <div class="r"><h3 id="accept"><a class="sec-link" href="#accept">Accept</a></h3><p>Only in writing, with a named owner and a date to look again.</p><p class="ex"><b>R</b>Product owner, review in six months.</p></div>
       </div>
     </section>
 
     <section class="panel c7 pl" aria-labelledby="p6">
-      <div class="ph"><p class="lbl">Question 3</p><h2 id="p6">Make controls provable (threat I)</h2></div>
+      <div class="ph"><p class="lbl">Question 3</p><h2 id="p6"><a class="sec-link" href="#p6">Make controls provable (threat I)</a></h2></div>
       <p class="small muted">Every control gets an owner and a test that shows it works. A control without a test is only a claim.</p>
       <div class="tbl-wrap" tabindex="0">
         <table class="tbl ctl" style="min-width:560px">
@@ -397,7 +404,7 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
     </section>
 
     <section class="panel c5 pr" aria-labelledby="p7">
-      <div class="ph"><p class="lbl">Question 4</p><h2 id="p7">Good enough? Check, then repeat</h2></div>
+      <div class="ph"><p class="lbl">Question 4</p><h2 id="p7"><a class="sec-link" href="#p7">Good enough? Check, then repeat</a></h2></div>
       <ul class="q4">
         <li><b>Did we miss something?</b> Walk the drawing again with people who were not in the room. Is there another way to the data, or more people with access?</li>
         <li><b>Do the controls work?</b> Run the tests above. Add security testing and code review where you can.</li>

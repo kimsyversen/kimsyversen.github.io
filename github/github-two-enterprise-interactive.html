@@ -271,6 +271,13 @@ button{font:inherit}
   .hint{display:none}
   .pop{width:calc(100% - 16px);max-height:80vh;overflow-y:auto}
 }
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
 </style>
 </head>
 <body>
@@ -616,9 +623,9 @@ button{font:inherit}
     var pol = (A ? POL_A : POL_B).map(function(p){ return p[0]; });
     var exe = A ? ['A.e1','A.e2','A.e3'] : ['B.e1','B.e2','B.e3'];
     var evi = A ? ['A.v1','A.v2','A.v3'] : ['B.v1','B.v2','B.v3'];
-    var h = '<section class="tower ' + (A ? 'tw-a pa' : 'tw-b pb') + '" aria-label="Enterprise ' + k + '">';
-    h += '<header class="th">' + ic(A ? 'lock' : 'globe') + '<div><h2>' +
-      (A ? 'ENTERPRISE A · SENSITIVE' : 'ENTERPRISE B · INTERNAL AND PUBLIC') + '</h2><p>' +
+    var h = '<section class="tower ' + (A ? 'tw-a pa' : 'tw-b pb') + '" id="enterprise-' + k.toLowerCase() + '" aria-label="Enterprise ' + k + '">';
+    h += '<header class="th">' + ic(A ? 'lock' : 'globe') + '<div><h2><a class="sec-link" href="#enterprise-' + k.toLowerCase() + '">' +
+      (A ? 'ENTERPRISE A · SENSITIVE' : 'ENTERPRISE B · INTERNAL AND PUBLIC') + '</a></h2><p>' +
       (A ? 'Enterprise Managed Users. Source code and IaC for classified critical systems.' : 'Personal accounts, with SAML and SCIM set up per org. Internal work and public releases.') + '</p></div></header>';
     h += layer('IDENTITY', '<div class="row3">' + ident.map(function(i){ return card(i); }).join('') + '</div>');
     h += gapHTML('accounts and groups');
@@ -669,13 +676,13 @@ button{font:inherit}
     h += '</div>';
 
     h += '<div class="ops">';
-    h += '<div class="col"><div class="sec"><h3>BUILD AND DEPLOY</h3><span>Each domain has its own runners, identity and target.</span></div>' +
+    h += '<div class="col"><div class="sec" id="build-and-deploy"><h3><a class="sec-link" href="#build-and-deploy">BUILD AND DEPLOY</a></h3><span>Each domain has its own runners, identity and target.</span></div>' +
       lane('L.a') + lane('L.brel') + lane('L.bpr') + '</div>';
-    h += '<div class="col"><div class="sec"><h3>EXCHANGE AND RESPOND</h3><span>Transfer is an external process. Remove it if prohibited.</span></div>' +
+    h += '<div class="col"><div class="sec" id="exchange-and-respond"><h3><a class="sec-link" href="#exchange-and-respond">EXCHANGE AND RESPOND</a></h3><span>Transfer is an external process. Remove it if prohibited.</span></div>' +
       lane('L.exp') + lane('L.imp') + lane('L.ir') + '</div>';
-    h += '<div class="col"><div class="sec"><h3>PLATFORM OPERATIONS</h3><span>Per domain.</span></div><div class="panel c4 ps">' +
+    h += '<div class="col"><div class="sec" id="platform-operations"><h3><a class="sec-link" href="#platform-operations">PLATFORM OPERATIONS</a></h3><span>Per domain.</span></div><div class="panel c4 ps">' +
       OPS.map(function(o){ return card(o[0], 'chip'); }).join('') + '</div></div>';
-    h += '<div class="col"><div class="sec"><h3>ACCOUNTABILITY</h3><span>Every control has a named owner.</span></div><div class="panel c3 ps">' +
+    h += '<div class="col"><div class="sec" id="accountability"><h3><a class="sec-link" href="#accountability">ACCOUNTABILITY</a></h3><span>Every control has a named owner.</span></div><div class="panel c3 ps">' +
       ACC.map(function(o){ return card(o[0], 'chip'); }).join('') + '</div></div>';
     h += '</div>';
     return h;
@@ -964,7 +971,8 @@ button{font:inherit}
     paintArrows();
     summary();
     try {
-      var hash = selId ? '#n=' + encodeURIComponent(selId) : (filter ? '#f=' + encodeURIComponent(key(filter)) : '');
+      var hash = selId ? '#n=' + encodeURIComponent(selId) : (filter ? '#f=' + encodeURIComponent(key(filter)) : secHash);
+      if (selId || filter) secHash = '';
       history.replaceState(null, '', location.pathname + location.search + hash);
     } catch (e) {}
   }
@@ -1142,9 +1150,12 @@ button{font:inherit}
   /* start */
   var hash = '';
   try { hash = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (e) {}
+  var secHash = '', secEl = /^[a-z][a-z0-9-]*$/.test(hash) ? document.getElementById(hash) : null;
+  if (secEl) secHash = '#' + hash;
   buildBar();
   layout();
   apply();
+  if (secEl) secEl.scrollIntoView();
   if (/^n=/.test(hash) && D[hash.slice(2)] && nodeEls[hash.slice(2)]) openPop(hash.slice(2), nodeEls[hash.slice(2)]);
   else if (/^f=/.test(hash)){ var fv = hash.slice(2); if (fv !== 'all' && fv.indexOf(':') > 0){ filter = fv.split(':'); apply(); } }
   if (window.ResizeObserver){
