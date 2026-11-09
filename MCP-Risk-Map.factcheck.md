@@ -29,7 +29,7 @@ MECE applies to individual control failures within the 10 OWASP and 34 CoSAI ent
 | First actions, findings, diagram placements and friction | Interpretation by AI [inference] | Recommendations and representative scenarios, not measured prevalence, guarantees or vendor endorsements. Footer defines every [inference] marker as interpretation by AI. |
 | Status controls and section roles | Artifact definitions | Browser status is self-reported; OK requires the reader's own evidence. No evidence is stored in the tracker. Map, matrix and mapping are related views, not additional risks. |
 
-Primary source URLs and exact quotations remain in the page and source register below. All 135 quotations were compared with freshly retrieved source text, including the CoSAI PDF page numbers. The checker also validates the exact 10/34 ID sets, distinct OWASP homes, static card labels, quote namespaces and 120 reviewed presentation texts. A passing check is evidence consistency, not proof of product enforcement.
+Primary source URLs and exact quotations remain in the page data and source register below. The online checker compared all 135 quotations with freshly retrieved source text, including their CoSAI PDF pages. It validates the exact 10/34 ID sets, distinct OWASP homes, static card labels, quote namespaces and 98 distinct Microsoft-view presentation strings against the recorded verdicts. Two quotations, `cxcmd` and `studio3`, matched after whitespace normalization. A passing check is evidence consistency, not proof of product enforcement.
 
 ## Evidence moved from the reader-facing tab
 
@@ -37,10 +37,11 @@ The separate Evidence and Sources tabs have been removed, and the Risks tab is h
 
 ## Validation and limits
 
-- Browser: 1440px and 375px, light and dark, both scopes, all five tabs; no sideways page overflow or console errors.
-- Frameworks: All = 14 risks / 44 entries, OWASP = 10 / 10, CoSAI = 14 / 34 in both scopes. New section deep link opens Risks; a link to a filtered-out risk reveals it. Status and quoted popovers checked.
+- Earlier browser checks covered 1440px and 375px, light and dark, both scopes, and five tabs. They predate removal of the Evidence and Sources tabs and hiding Risks from navigation. The current page has three tab panels and two visible navigation tabs. A fresh browser check could not be completed because the browser would not open the local workspace page.
+- Framework mapping: All = 14 risks / 44 entries, OWASP = 10 / 10, CoSAI = 14 / 34 in both scopes. The static link-routing code opens Risks for its deep links and reveals a filtered-out risk; these behaviors were not rechecked in a browser after the navigation change.
 - Section anchor and quote/label checks pass. Index entry and footer already carry 9 November 2026; the description remains aligned with the 10/14 risk views.
 - No managed-product configuration, exploit reproduction, end-to-end OAuth test or per-marker manual mouse audit. No claim of exhaustive coverage outside the cited frameworks.
+- Reviewed HTML SHA-256: `4aaa95e601679274c7c170e43a42911cbdc1f54ae55237b81631aac2950d8c95`.
 
 ## Historical audits below (superseded where wording differs)
 
