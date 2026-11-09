@@ -49,3 +49,8 @@ All ten steps done. The check script passes with 0 problems. Index dates updated
 
 ## Design principles pass, 8 Nov 2026
 Applied AGENTS.md rule 6 to the Microsoft start table and the checks that pointed at preview features or an extra service. See the decisions file.
+
+
+## 9 November 2026 review completed
+
+Reviewed both views and all generated content against freshly retrieved primary sources. Corrected enforcement exceptions and research scope, added general diagram evidence, and updated the fact-check inventory and index. Quote, layout, JavaScript, link, shared-scope and saved-status checks passed. Product enforcement and exploit reproduction remain outside this documentation review.

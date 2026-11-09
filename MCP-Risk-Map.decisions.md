@@ -80,3 +80,11 @@ Working notes.
 - **Preview features stay on the page, labelled.** Cards, popups, the Other Microsoft surfaces table and the Preview callout still describe them, because a reader may meet them. None is in the start table. The page says so.
 - Not changed: M01 (the GitHub enterprise allowlist, not marked preview in the source page read), M02 to M05. Not checked: whether the GitHub allowlist moves to preview later. Recheck before moving "Current as of".
 - Check script: 69 quotes found, 104 reviewed texts, 0 problems.
+
+
+## 9 November 2026, complete source review
+
+- General diagram markers now use the same quotation rendering as Microsoft markers. Both sets are included in the quotation checker. Detailed controls stay in the risk cards; marker prose is limited to the evidence attached to it.
+- Trust and isolation claims name their product scope and bypass conditions. Source-matching quotations alone did not establish unconditional enforcement.
+- Research demonstrations name the demonstrated client. A vendor CVE record is not treated as proof of a victim incident, and one article cannot establish that no other demonstration exists.
+- The current fact-check inventory supersedes prior source mappings and wording. Historical reviews remain clearly labelled. Both cs3 and cxcmd need whitespace-insensitive quote matching; this supersedes the earlier claim that only cs3 needs it.

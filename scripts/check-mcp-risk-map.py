@@ -1,4 +1,4 @@
-"""Check the Microsoft ecosystem view of MCP-Risk-Map.html.
+"""Check both views of MCP-Risk-Map.html.
 
 Usage:
   python3 -I scripts/check-mcp-risk-map.py <cache-dir>           run all checks (fetches sources)
@@ -76,9 +76,10 @@ def fetch(url, cache):
     return text
 
 
-def quote_ids(data):
+def quote_ids(data, general_places=()):
     """Return every list of quote ids with a description of where it sits."""
-    out = []
+    out = [(f"general place[{i}] {p[0]}/{p[1]}", p[2], p[3] if len(p) > 3 else [])
+           for i, p in enumerate(general_places)]
     for cid, c in data["MSCARD"].items():
         for kind in ("body", "checks", "how"):
             for i, x in enumerate(c.get(kind, [])):
@@ -179,6 +180,7 @@ def main():
     flags = {a for a in sys.argv[1:] if a.startswith("--")}
     markup = PAGE.read_text(encoding="utf-8")
     data = load_msdata(markup)
+    general_places = json.loads(re.search(r"^  var PLACE = (.*);$", markup, re.M)[1])
     texts, _ = presentation_texts(markup, data)
     if "--list" in flags:
         for t in dict.fromkeys(texts):
@@ -213,7 +215,7 @@ def main():
 
     # 2. ids used and defined
     used = Counter()
-    for where, text, qs in quote_ids(data):
+    for where, text, qs in quote_ids(data, general_places):
         for q in qs:
             used[q] += 1
             if q not in data["MSQ"]:
@@ -225,7 +227,7 @@ def main():
             problems.append(f"quote {q} is never used")
 
     # 3. sourced sentences
-    for where, text, qs in quote_ids(data):
+    for where, text, qs in quote_ids(data, general_places):
         if not qs and not SOURCED.search(text):
             problems.append(f"{where}: no quote and no [inference] or [unverified]: {text[:70]}")
         if len(text.split()) > 60:
