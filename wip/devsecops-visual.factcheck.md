@@ -35,6 +35,10 @@ Verified 10 November 2026. All excerpts below match the linked primary sources. 
 | Phase | Risk pill | Verified excerpt and source |
 |---|---|---|
 | Plan | No named risk owner | “Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.” [NIST CSF 2.0 · GV.RR-02](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17) |
+| Plan | Critical service goes unclassified | “Assets are prioritized based on classification, criticality, resources, and impact on the mission.” [NIST CSF 2.0 · ID.AM-05](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=18) |
+| Plan | Sensitive data processing remains unknown | “a description of the categories of data subjects and of the categories of personal data” [GDPR · Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_30) |
+| Plan | DPIA need or completion goes unchecked | “likely to result in a high risk to the rights and freedoms of natural persons” [GDPR · Article 35](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_35) |
+| Plan | Privacy compliance cannot be demonstrated | “to ensure and to be able to demonstrate that processing is performed in accordance with this Regulation.” [GDPR · Article 24](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_24) |
 | Design | Risk response left undefined | “Strategic direction that describes appropriate risk response options is established and communicated.” [NIST CSF 2.0 · GV.RM-04](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17) |
 | Code | Development starts without security requirements | “Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.” [NIST SSDF 1.1 · PO.1.2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14) |
 | Build | Security findings go untracked | “Record and track all security defects in a defined location.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=Record%20and%20track%20all%20security%20defects%20in%20a%20defined%20location.) |
@@ -45,7 +49,7 @@ Verified 10 November 2026. All excerpts below match the linked primary sources. 
 | Monitor | Overdue fixes go unreported | “centrally monitor and regularly report on SLA breaches.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=centrally%20monitor%20and%20regularly%20report%20on%20SLA%20breaches.) |
 | Retire | Retention obligations left unresolved | “You have retention requirements for data, and you destroy backups in a timely manner after the relevant retention period ends” [OWASP SAMM · Data Protection](https://owaspsamm.org/model/operations/operational-management/stream-a/#:~:text=You%20have%20retention%20requirements%20for%20data%2C%20and%20you%20destroy%20backups%20in%20a%20timely%20manner%20after%20the%20relevant%20retention%20period%20ends) |
 
-The three-lane layout and the governance summaries are interpretation by AI. The retirement governance prompt is also interpretation by AI, based on the supplied lifecycle description. The page does not claim these are formal organizational requirements.
+The three-lane layout and the governance summaries are interpretation by AI. The retirement governance prompt is also interpretation by AI, based on the supplied lifecycle description. The classification risks about personal data, DPIAs and demonstrable privacy compliance are mapped to the GDPR; this does not enumerate all laws or regulations that may apply. The page does not claim these are formal organizational requirements.
 
 ## Verification gaps
 
