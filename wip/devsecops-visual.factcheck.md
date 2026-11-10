@@ -10,13 +10,13 @@ The page is a high-level synthesis of the lifecycle descriptions supplied with t
 
 ## Interpretation by AI
 
-The risk pills describe potential consequences of skipping the activity in the same lane. Governance consequences are framed as business impact; engineering consequences are framed as technical impact. This cause-and-consequence wording, as well as the phase mapping, is interpretation by AI. The cited passages establish the risk mechanism or the purpose of the control.
+The risk table lists potential consequences of skipping an activity in the same lane. Governance consequences are framed as business impact; engineering consequences are framed as technical impact. This cause-and-consequence wording, as well as the phase mapping, is interpretation by AI. The cited passages establish the risk mechanism or the purpose of the control.
 
 Verified 10 November 2026. All excerpts below match the linked primary sources. The data recovery example concerns media that should be sanitized at retirement.
 
 ### Engineering risks
 
-| Phase | Risk pill | Verified excerpt and source |
+| Phase | Risk | Verified excerpt and source |
 |---|---|---|
 | Plan | Sensitive data left out of scope, leaving it without the intended security controls. | “protection requirements concerning confidentiality, integrity, availability, and authenticity of all data assets” [OWASP A06 · Requirements and Resource Management](https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets) |
 | Design | Abuse paths left open, allowing unauthorized access or actions. | “Threat modeling is a structured activity for identifying, evaluating, and managing system threats, architectural design flaws, and recommended security mitigations.” [OWASP SAMM · Threat Modeling](https://owaspsamm.org/model/design/threat-assessment/stream-b/#:~:text=Threat%20modeling%20is%20a%20structured%20activity%20for%20identifying%2C%20evaluating%2C%20and%20managing%20system%20threats%2C%20architectural%20design%20flaws%2C%20and%20recommended%20security%20mitigations.) |
@@ -34,7 +34,7 @@ Verified 10 November 2026. All excerpts below match the linked primary sources. 
 
 ### Governance risks
 
-| Phase | Risk pill | Verified excerpt and source |
+| Phase | Risk | Verified excerpt and source |
 |---|---|---|
 | Plan | No named risk owner, delaying decisions and leaving business exposure unresolved. | “Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.” [NIST CSF 2.0 · GV.RR-02](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17) |
 | Plan | Critical service goes unclassified, leaving resilience planning and investment out of step with its business importance. | “Assets are prioritized based on classification, criticality, resources, and impact on the mission.” [NIST CSF 2.0 · ID.AM-05](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=18) |
