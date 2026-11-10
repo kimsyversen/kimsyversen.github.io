@@ -1,20 +1,30 @@
 DEVSECOPS LIFECYCLE MAP
 
-Flow description: Governance checkpoints guide decisions and evidence as work
-moves through the lifecycle. Secure development activities turn requirements
-into verified controls. Monitoring feeds changes and new risks back to planning.
+Flow description: Read the phase spine from top to bottom. A branch on the left
+joins each phase to its governance activity, and a branch on the right joins it
+to its engineering activity. A diamond marks each of the five BP checkpoints.
+On narrow screens, each phase is followed by its two labeled activities.
 
 GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
 ---------------------           --------------       -----------------------------
-BP1: classify service       --> Plan             --> Set scope and security goals
-BP2: choose concept         --> Design           --> Model threats and requirements
-BP3: ready to build         --> Code             --> Secure coding and review
-Track evidence and owners   --> Build            --> Package traceable artifact
-Review test evidence        --> Test             --> Verify function, quality, security
-BP4: production go/no-go    --> Release          --> Approve verified version
-Control promotion          --> Deploy           --> Harden settings and access
-BP5: operations handover   --> Operate          --> Patch, back up, respond
-Measure and improve        --> Monitor          --> Track service and security signals
-Closeout                   --> Retire           --> Revoke access and handle data
+BP1: classify service       <>-- 01 Plan    --+ Set scope and security goals
+                                |
+BP2: choose concept         <>-- 02 Design  --+ Model threats and requirements
+                                |
+BP3: ready to build         <>-- 03 Code    --+ Secure coding and review
+                                |
+Track evidence and owners    o-- 04 Build   --+ Package traceable artifact
+                                |
+Review test evidence         o-- 05 Test    --+ Verify function, quality, security
+                                |
+BP4: production go/no-go    <>-- 06 Release --+ Approve verified version
+                                |
+Control promotion            o-- 07 Deploy  --+ Harden settings and access
+                                |
+BP5: operations handover    <>-- 08 Operate --+ Patch, back up, respond
+                                |
+Measure and improve          o-- 09 Monitor --+ Track service and security signals
+                                |
+Closeout                     o-- 10 Retire  --+ Revoke access and handle data
 
 Monitoring, incidents, changes and vulnerabilities can return work to Plan.

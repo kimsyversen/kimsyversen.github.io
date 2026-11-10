@@ -2,7 +2,7 @@
 
 Checked: 10 November 2026
 
-This is an alternate visual draft. The current page remains at `../devsecops.html`; this draft is not added to the published index. Content and source excerpts match the current page. The graphic lifecycle overview is described in `devsecops-visual.flow.txt`.
+This draft uses a single vertical diagram. The recommendations and source excerpts follow the first version at `../devsecops.html`. The diagram is described in `devsecops-visual.flow.txt`.
 
 ## Scope and verdict
 
@@ -12,7 +12,7 @@ The excerpts were checked against the supplied PDF using text extraction. Verdic
 
 ## Exact source excerpts
 
-- BP1, p. 3: “Sikkerhetskriterier for go/no-go: Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået. DPIA-behovet er avklart, og risikoer er dokumentert.”
+- BP1, p. 3: “Sikkerhetskriterier for go/no-go: Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået. DPIA-behovet er avklart, og risikoer er dokumentert”
 - BP2, p. 4: “Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”
 - BP3, p. 5: “Trusselmodellen er gjennomført, og risikoregisteret er oppdatert. Sikkerhetskravene i backlog.”
 - BP4, p. 6: “Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått.”
@@ -24,4 +24,4 @@ The three-lane layout and the governance summaries are interpretation by AI. The
 
 ## Verification gaps
 
-The case presentation is a supplied exercise brief, not an independently verified policy source. No external source review was needed for the requested high-level synthesis. Responsive layout and browser behavior are checked during implementation; operational security advice is not validated for a specific system.
+The case presentation is a supplied exercise brief. The in-app browser blocked access to the local HTML, so desktop and narrow viewport rendering, overflow, and console behavior remain unverified.
