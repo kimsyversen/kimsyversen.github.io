@@ -2,21 +2,11 @@
 
 Checked: 10 November 2026
 
-This draft uses a single vertical diagram. The lifecycle and governance checkpoints follow the first version at `../devsecops.html`. The diagram is described in `devsecops-visual.flow.txt`.
+This draft uses a single vertical diagram to connect lifecycle phases, governance work and secure development activities. The diagram is described in `devsecops-visual.flow.txt`.
 
 ## Scope and verdict
 
-The page is a high-level synthesis of the lifecycle descriptions supplied with the request and the governance checkpoints in `Casepresentasjon.pdf`. Governance labels BP1-BP5 are attributed to the case presentation and linked on-page to the short source excerpts below. The phase descriptions and secure development activities reflect the supplied lifecycle outline. No external policy, regulatory interpretation or product capability is asserted.
-
-The excerpts were checked against the supplied PDF using text extraction. Verdict: source wording matches the relevant sections. Page references are PDF pages 3-7.
-
-## Exact source excerpts
-
-- BP1, p. 3: “Sikkerhetskriterier for go/no-go: Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået. DPIA-behovet er avklart, og risikoer er dokumentert”
-- BP2, p. 4: “Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”
-- BP3, p. 5: “Trusselmodellen er gjennomført, og risikoregisteret er oppdatert. Sikkerhetskravene i backlog.”
-- BP4, p. 6: “Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått. Pentest er gjennomført, og ingen kritiske eller høye funn står åpne uten at systemeier har akseptert restrisikoen.”
-- BP5, p. 7: “Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.”
+The page is a high-level synthesis of the lifecycle descriptions supplied with the request. The governance risks are supported by public primary sources from NIST and OWASP. The phase descriptions and secure development activities reflect the supplied lifecycle outline. No external policy, regulatory interpretation or product capability is asserted.
 
 ## Interpretation by AI
 
@@ -42,18 +32,16 @@ Verified 10 November 2026. All excerpts below match the linked primary sources. 
 
 ### Governance risks
 
-Verified 10 November 2026. The Norwegian excerpts match the cited pages of the supplied case presentation. The other excerpts match the linked NIST and OWASP passages.
-
 | Phase | Risk pill | Verified excerpt and source |
 |---|---|---|
-| Plan | No named risk owner | “Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået.” [Case presentation · BP1, p. 3](devsecops-visual.html#evidence-bp1-quote) |
-| Design | Concept chosen without a risk rationale | “Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.” [Case presentation · BP2, p. 4](devsecops-visual.html#evidence-bp2-quote) |
-| Code | Development starts without security requirements | “Sikkerhetskravene i backlog.” [Case presentation · BP3, p. 5](devsecops-visual.html#evidence-bp3-quote) |
+| Plan | No named risk owner | “Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.” [NIST CSF 2.0 · GV.RR-02](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17) |
+| Design | Risk response left undefined | “Strategic direction that describes appropriate risk response options is established and communicated.” [NIST CSF 2.0 · GV.RM-04](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17) |
+| Code | Development starts without security requirements | “Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.” [NIST SSDF 1.1 · PO.1.2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14) |
 | Build | Security findings go untracked | “Record and track all security defects in a defined location.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=Record%20and%20track%20all%20security%20defects%20in%20a%20defined%20location.) |
 | Test | Security sign-off lacks test evidence | “consider the passing of security tests as part of merge requirements before allowing new code to enter the main code base.” [OWASP SAMM · Control Verification](https://owaspsamm.org/model/verification/requirements-driven-testing/stream-a/#:~:text=consider%20the%20passing%20of%20security%20tests%20as%20part%20of%20merge%20requirements%20before%20allowing%20new%20code%20to%20enter%20the%20main%20code%20base.) |
-| Release | Serious findings bypass owner sign-off | “ingen kritiske eller høye funn står åpne uten at systemeier har akseptert restrisikoen.” [Case presentation · BP4, p. 6](devsecops-visual.html#evidence-bp4-quote) |
+| Release | Accepted risk lacks stakeholder review | “all relevant stakeholders have a solid understanding of the imposed risk.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/) |
 | Deploy | Unapproved changes reach production | “Implement approved configuration-controlled changes to the system” [NIST SP 800-53 Rev. 5 · CM-3](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r5.pdf#page=125) |
-| Operate | Open actions lost at handover | “Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.” [Case presentation · BP5, p. 7](devsecops-visual.html#evidence-bp5-quote) |
+| Operate | Open actions lose ownership at handover | “Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.” [NIST CSF 2.0 · GV.RR-02](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17) |
 | Monitor | Overdue fixes go unreported | “centrally monitor and regularly report on SLA breaches.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=centrally%20monitor%20and%20regularly%20report%20on%20SLA%20breaches.) |
 | Retire | Retention obligations left unresolved | “You have retention requirements for data, and you destroy backups in a timely manner after the relevant retention period ends” [OWASP SAMM · Data Protection](https://owaspsamm.org/model/operations/operational-management/stream-a/#:~:text=You%20have%20retention%20requirements%20for%20data%2C%20and%20you%20destroy%20backups%20in%20a%20timely%20manner%20after%20the%20relevant%20retention%20period%20ends) |
 

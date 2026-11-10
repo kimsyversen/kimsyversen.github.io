@@ -64,7 +64,7 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outli
   min-height: 60px;
   border-bottom: 1px solid var(--line);
 }
-.mast p, .lane-name, .phase-num, .feedback-mark, .source-ref, .mobile-lane {
+.mast p, .lane-name, .phase-num, .feedback-mark, .mobile-lane {
   font: 500 .69rem/1.3 var(--mono);
 }
 .mast p { color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
@@ -173,6 +173,8 @@ h1 {
 .phase-text p { margin-top: 4px; color: var(--muted); font-size: .8125rem; }
 
 .gov-cell, .work-cell { position: relative; padding: 25px 20px 20px; }
+.gov-title, .work-title { min-height: 2.5em; }
+.cell-copy { min-height: 4.44em; }
 .gov-cell { grid-area: governance; }
 .work-cell { grid-area: engineering; }
 .gov-cell::after, .work-cell::before {
@@ -197,7 +199,6 @@ h1 {
 .work-cell::before { left: -3px; background: var(--engineering); }
 .gov-title, .work-title { color: var(--ink); font: 600 1.04rem/1.25 var(--sans); }
 .work-title { color: var(--engineering); }
-.source-ref { margin-right: .48em; color: var(--accent); white-space: nowrap; }
 .cell-copy { margin-top: 5px; color: var(--muted); }
 .mobile-lane { display: none; }
 
@@ -207,6 +208,7 @@ h1 {
 }
 .risk-heading {
   margin: 12px 0 5px;
+  min-height: 1.3em;
   color: var(--muted);
   font: 500 .68rem/1.3 var(--mono);
   letter-spacing: .06em;
@@ -263,21 +265,6 @@ h1 {
 .feedback-mark { flex: none; color: var(--accent); font-size: 1.25rem; }
 .loop-note a { color: var(--accent); }
 
-.evidence { margin-top: 47px; border-block: 1px solid var(--line); }
-.evidence summary { padding: 15px 0; cursor: pointer; font-weight: 600; }
-.evidence summary::marker { color: var(--accent); }
-.evidence-intro { max-width: 70ch; color: var(--muted); }
-.quote-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-  gap: 20px;
-  padding: 16px 0 22px;
-}
-.quote { min-width: 0; border-top: 1px solid var(--line); padding-top: 9px; }
-.quote:target, .quote:has(h3:target) { border-color: var(--accent); }
-.quote h3 { margin-bottom: 6px; font-size: .96rem; }
-.quote blockquote { color: var(--muted); font-size: .875rem; }
-.quote cite { display: block; margin-top: 8px; color: var(--accent); font-style: normal; font-size: .8125rem; }
 footer { padding: 22px 0 42px; color: var(--muted); font-size: .8125rem; }
 .ai-note { max-width: 72ch; }
 .ai-note b { margin-right: .55em; color: var(--ink); }
@@ -322,7 +309,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   .phase-cell::before, .phase-cell::after { display: none; }
   .phase-text { padding: 0; }
   .phase-text h3 { font-size: 1.9rem; }
-  .gov-cell, .work-cell { padding: 0 0 0 44px; }
+  .gov-cell, .work-cell { display: block; padding: 0 0 0 44px; }
+  .gov-title, .work-title, .cell-copy { min-height: 0; }
   .gov-cell::after, .work-cell::before {
     top: 4px;
     right: auto;
@@ -378,7 +366,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     <section class="map" id="lifecycle" aria-labelledby="map-heading">
       <div class="map-title">
         <h2 id="map-heading"><a class="sec-link" href="#map-heading">The delivery lifecycle</a></h2>
-        <p>Diamonds mark the five decision points. Select a risk pill to see its source.</p>
+        <p>Each phase connects governance with secure development. Select a risk pill to see its source.</p>
       </div>
 
       <div class="lanes">
@@ -398,15 +386,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title"><a class="source-ref" href="#evidence-bp1" aria-label="BP1 source note">BP1</a> Classify</p>
+            <p class="gov-title">Classify</p>
             <p class="cell-copy">Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>No named risk owner</summary>
                 <div class="risk-evidence">
-                  <blockquote lang="no">“Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået.”</blockquote>
-                  <a href="#evidence-bp1-quote">Case presentation · BP1, p. 3</a>
+                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                 </div>
               </details>
             </div>
@@ -415,7 +403,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Security requirements</p>
             <p class="cell-copy">Set scope, acceptance criteria, security and privacy requirements, and likely threats.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Sensitive data left out of scope</summary>
@@ -438,15 +426,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title"><a class="source-ref" href="#evidence-bp2" aria-label="BP2 source note">BP2</a> Choose concept</p>
+            <p class="gov-title">Choose concept</p>
             <p class="cell-copy">Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
-                <summary>Concept chosen without a risk rationale</summary>
+                <summary>Risk response left undefined</summary>
                 <div class="risk-evidence">
-                  <blockquote lang="no">“Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”</blockquote>
-                  <a href="#evidence-bp2-quote">Case presentation · BP2, p. 4</a>
+                  <blockquote>“Strategic direction that describes appropriate risk response options is established and communicated.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
                 </div>
               </details>
             </div>
@@ -455,7 +443,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Threat modeling</p>
             <p class="cell-copy">Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Abuse paths left open</summary>
@@ -478,15 +466,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title"><a class="source-ref" href="#evidence-bp3" aria-label="BP3 source note">BP3</a> Ready to build</p>
+            <p class="gov-title">Ready to build</p>
             <p class="cell-copy">Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Development starts without security requirements</summary>
                 <div class="risk-evidence">
-                  <blockquote lang="no">“Sikkerhetskravene i backlog.”</blockquote>
-                  <a href="#evidence-bp3-quote">Case presentation · BP3, p. 5</a>
+                  <blockquote>“Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PO.1.2 <span aria-hidden="true">↗</span></a>
                 </div>
               </details>
             </div>
@@ -495,7 +483,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Secure coding and review</p>
             <p class="cell-copy">Use secure coding standards, review changes, protect secrets and assess dependencies.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Credentials exposed in code</summary>
@@ -520,7 +508,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Track evidence</p>
             <p class="cell-copy">Track whether security activities are complete. Keep findings, owners and due dates visible.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Security findings go untracked</summary>
@@ -535,7 +523,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Build traceability</p>
             <p class="cell-copy">Package from trusted inputs and keep the artifact traceable to its source and dependencies.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Build output tampered with</summary>
@@ -560,7 +548,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Review test evidence</p>
             <p class="cell-copy">Review test evidence against the agreed security requirements and follow unresolved findings to closure.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Security sign-off lacks test evidence</summary>
@@ -575,7 +563,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Security testing</p>
             <p class="cell-copy">Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Broken controls go unnoticed</summary>
@@ -598,15 +586,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title"><a class="source-ref" href="#evidence-bp4" aria-label="BP4 source note">BP4</a> Production go / no-go</p>
+            <p class="gov-title">Production go / no-go</p>
             <p class="cell-copy">Require verified controls, tested recovery and monitoring. Close critical and high findings or get the system owner’s explicit risk acceptance.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
-                <summary>Serious findings bypass owner sign-off</summary>
+                <summary>Accepted risk lacks stakeholder review</summary>
                 <div class="risk-evidence">
-                  <blockquote lang="no">“ingen kritiske eller høye funn står åpne uten at systemeier har akseptert restrisikoen.”</blockquote>
-                  <a href="#evidence-bp4-quote">Case presentation · BP4, p. 6</a>
+                  <blockquote>“all relevant stakeholders have a solid understanding of the imposed risk.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
                 </div>
               </details>
             </div>
@@ -615,7 +603,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Release verification</p>
             <p class="cell-copy">Approve a verified, traceable software version after required checks pass.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>A substituted artifact ships</summary>
@@ -640,7 +628,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Controlled promotion</p>
             <p class="cell-copy">Promote only the approved release and confirm the rollout is understood and reversible.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Unapproved changes reach production</summary>
@@ -655,7 +643,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Rollout and rollback</p>
             <p class="cell-copy">Use hardened settings and least-privilege access. Verify the rollout and support rollback.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Insecure settings go live</summary>
@@ -678,15 +666,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title"><a class="source-ref" href="#evidence-bp5" aria-label="BP5 source note">BP5</a> Handover</p>
+            <p class="gov-title">Handover</p>
             <p class="cell-copy">Transfer operations and open actions with named owners, dates and the evidence needed to continue.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
-                <summary>Open actions lost at handover</summary>
+                <summary>Open actions lose ownership at handover</summary>
                 <div class="risk-evidence">
-                  <blockquote lang="no">“Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.”</blockquote>
-                  <a href="#evidence-bp5-quote">Case presentation · BP5, p. 7</a>
+                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                 </div>
               </details>
             </div>
@@ -695,7 +683,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Service maintenance</p>
             <p class="cell-copy">Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Known flaws stay exploitable</summary>
@@ -720,7 +708,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Measure: Improve</p>
             <p class="cell-copy">Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Overdue fixes go unreported</summary>
@@ -735,7 +723,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Detection and alerting</p>
             <p class="cell-copy">Track service health, performance, user experience and security events. Alert on suspicious activity or change.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Attacks go undetected</summary>
@@ -760,7 +748,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Closeout: Confirm</p>
             <p class="cell-copy">Assign closure ownership and confirm remaining access and data obligations are addressed.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Retention obligations left unresolved</summary>
@@ -775,7 +763,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Secure decommissioning</p>
             <p class="cell-copy">Decommission the service, revoke credentials and access, and handle data under retention requirements.</p>
-            <p class="risk-heading">What can go wrong</p>
+            <p class="risk-heading">Risks</p>
             <div class="risk-list">
               <details class="risk">
                 <summary>Old credentials still work</summary>
@@ -799,54 +787,11 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
       <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Monitoring, incidents, changes and new vulnerabilities can send work <a href="#plan">back to planning</a>.</span></p>
     </section>
 
-    <details class="evidence" id="case-evidence">
-      <summary>Case presentation excerpts for BP1 to BP5</summary>
-      <p class="evidence-intro">These excerpts preserve the Norwegian wording from the case presentation. Each checkpoint links to the corresponding excerpt.</p>
-      <div class="quote-grid">
-        <article class="quote" id="evidence-bp1">
-          <h3 id="evidence-bp1-quote"><a class="sec-link" href="#evidence-bp1-quote">BP1 · Classification</a></h3>
-          <blockquote lang="no">“Sikkerhetskriterier for go/no-go: Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået. DPIA-behovet er avklart, og risikoer er dokumentert”</blockquote>
-          <cite>Casepresentasjon.pdf, p. 3</cite>
-        </article>
-        <article class="quote" id="evidence-bp2">
-          <h3 id="evidence-bp2-quote"><a class="sec-link" href="#evidence-bp2-quote">BP2 · Concept choice</a></h3>
-          <blockquote lang="no">“Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”</blockquote>
-          <cite>Casepresentasjon.pdf, p. 4</cite>
-        </article>
-        <article class="quote" id="evidence-bp3">
-          <h3 id="evidence-bp3-quote"><a class="sec-link" href="#evidence-bp3-quote">BP3 · Design and development</a></h3>
-          <blockquote lang="no">“Trusselmodellen er gjennomført, og risikoregisteret er oppdatert. Sikkerhetskravene i backlog.”</blockquote>
-          <cite>Casepresentasjon.pdf, p. 5</cite>
-        </article>
-        <article class="quote" id="evidence-bp4">
-          <h3 id="evidence-bp4-quote"><a class="sec-link" href="#evidence-bp4-quote">BP4 · Production readiness</a></h3>
-          <blockquote lang="no">“Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått. Pentest er gjennomført, og ingen kritiske eller høye funn står åpne uten at systemeier har akseptert restrisikoen.”</blockquote>
-          <cite>Casepresentasjon.pdf, p. 6</cite>
-        </article>
-        <article class="quote" id="evidence-bp5">
-          <h3 id="evidence-bp5-quote"><a class="sec-link" href="#evidence-bp5-quote">BP5 · Operations handover</a></h3>
-          <blockquote lang="no">“Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.”</blockquote>
-          <cite>Casepresentasjon.pdf, p. 7</cite>
-        </article>
-      </div>
-    </details>
   </main>
 
   <footer>
-    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risk pills are an interpretation by AI. Each pill describes what can happen if the activity above it is skipped.</span></p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risks are an interpretation by AI. Each risk describes a possible consequence when the activity above it is skipped.</span></p>
   </footer>
 </div>
-<script>
-(function(){
-  var evidence = document.getElementById('case-evidence');
-  function openEvidenceForHash(){
-    if (location.hash.indexOf('#evidence-') === 0) evidence.open = true;
-  }
-  openEvidenceForHash();
-  document.querySelectorAll('a[href^="#evidence-bp"]').forEach(function(link){
-    link.addEventListener('click', function(){ evidence.open = true; });
-  });
-})();
-</script>
 </body>
 </html>

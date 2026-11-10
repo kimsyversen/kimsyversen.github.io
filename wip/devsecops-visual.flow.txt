@@ -2,31 +2,31 @@ DEVSECOPS LIFECYCLE MAP
 
 Flow description: Read the phase spine from top to bottom. A branch on the left
 joins each phase to its governance activity, and a branch on the right joins it
-to its engineering activity. A diamond marks each of the five BP checkpoints.
+to its engineering activity. Diamond markers indicate governance checkpoints.
 On narrow screens, each phase is followed by its two labeled activities.
-The governance and engineering activities on each row list their own example
-risks under "What can go wrong". Select a risk on the page to read its source.
+The governance and engineering activities on each row list their own risks.
+Select a risk on the page to read its source.
 
 GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
 ---------------------           --------------       -----------------------------
-BP1: classify service       <>-- 01 Plan    --+ Set scope and security goals
+Classify service                o-- 01 Plan    --+ Set scope and security goals
                                 |
-BP2: choose concept         <>-- 02 Design  --+ Model threats and requirements
+Choose concept                  o-- 02 Design  --+ Model threats and requirements
                                 |
-BP3: ready to build         <>-- 03 Code    --+ Secure coding and review
+Ready to build                  o-- 03 Code    --+ Secure coding and review
                                 |
-Track evidence and owners    o-- 04 Build   --+ Package traceable artifact
+Track evidence and owners       o-- 04 Build   --+ Package traceable artifact
                                 |
-Review test evidence         o-- 05 Test    --+ Verify function, quality, security
+Review test evidence            o-- 05 Test    --+ Verify function, quality, security
                                 |
-BP4: production go/no-go    <>-- 06 Release --+ Approve verified version
+Production go / no-go           o-- 06 Release --+ Approve verified version
                                 |
-Control promotion            o-- 07 Deploy  --+ Harden settings and access
+Control promotion               o-- 07 Deploy  --+ Harden settings and access
                                 |
-BP5: operations handover    <>-- 08 Operate --+ Patch, back up, respond
+Operations handover             o-- 08 Operate --+ Patch, back up, respond
                                 |
-Measure and improve          o-- 09 Monitor --+ Track service and security signals
+Measure and improve             o-- 09 Monitor --+ Track service and security signals
                                 |
-Closeout                     o-- 10 Retire  --+ Revoke access and handle data
+Closeout                        o-- 10 Retire  --+ Revoke access and handle data
 
 Monitoring, incidents, changes and vulnerabilities can return work to Plan.
