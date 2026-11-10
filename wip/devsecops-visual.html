@@ -201,6 +201,10 @@ h1 {
 .cell-copy { margin-top: 5px; color: var(--muted); }
 .mobile-lane { display: none; }
 
+.gov-cell .risk {
+  --risk: var(--accent);
+  --risk-border: #a57957;
+}
 .risk-heading {
   margin: 12px 0 5px;
   color: var(--muted);
@@ -396,6 +400,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title"><a class="source-ref" href="#evidence-bp1" aria-label="BP1 source note">BP1</a> Classify</p>
             <p class="cell-copy">Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>No named risk owner</summary>
+                <div class="risk-evidence">
+                  <blockquote lang="no">“Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået.”</blockquote>
+                  <a href="#evidence-bp1-quote">Case presentation · BP1, p. 3</a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -426,6 +440,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title"><a class="source-ref" href="#evidence-bp2" aria-label="BP2 source note">BP2</a> Choose concept</p>
             <p class="cell-copy">Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Concept chosen without a risk rationale</summary>
+                <div class="risk-evidence">
+                  <blockquote lang="no">“Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”</blockquote>
+                  <a href="#evidence-bp2-quote">Case presentation · BP2, p. 4</a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -456,6 +480,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title"><a class="source-ref" href="#evidence-bp3" aria-label="BP3 source note">BP3</a> Ready to build</p>
             <p class="cell-copy">Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Development starts without security requirements</summary>
+                <div class="risk-evidence">
+                  <blockquote lang="no">“Sikkerhetskravene i backlog.”</blockquote>
+                  <a href="#evidence-bp3-quote">Case presentation · BP3, p. 5</a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -486,6 +520,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Track evidence</p>
             <p class="cell-copy">Track whether security activities are complete. Keep findings, owners and due dates visible.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Security findings go untracked</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Record and track all security defects in a defined location.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=Record%20and%20track%20all%20security%20defects%20in%20a%20defined%20location.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -516,6 +560,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Review test evidence</p>
             <p class="cell-copy">Review test evidence against the agreed security requirements and follow unresolved findings to closure.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Security sign-off lacks test evidence</summary>
+                <div class="risk-evidence">
+                  <blockquote>“consider the passing of security tests as part of merge requirements before allowing new code to enter the main code base.”</blockquote>
+                  <a href="https://owaspsamm.org/model/verification/requirements-driven-testing/stream-a/#:~:text=consider%20the%20passing%20of%20security%20tests%20as%20part%20of%20merge%20requirements%20before%20allowing%20new%20code%20to%20enter%20the%20main%20code%20base.">OWASP SAMM · Control Verification <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -546,6 +600,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title"><a class="source-ref" href="#evidence-bp4" aria-label="BP4 source note">BP4</a> Production go / no-go</p>
             <p class="cell-copy">Require verified controls, tested recovery and monitoring. Close critical and high findings or get the system owner’s explicit risk acceptance.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Serious findings bypass owner sign-off</summary>
+                <div class="risk-evidence">
+                  <blockquote lang="no">“ingen kritiske eller høye funn står åpne uten at systemeier har akseptert restrisikoen.”</blockquote>
+                  <a href="#evidence-bp4-quote">Case presentation · BP4, p. 6</a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -576,6 +640,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Controlled promotion</p>
             <p class="cell-copy">Promote only the approved release and confirm the rollout is understood and reversible.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Unapproved changes reach production</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Implement approved configuration-controlled changes to the system”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r5.pdf#page=125">NIST SP 800-53 Rev. 5 · CM-3 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -606,6 +680,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title"><a class="source-ref" href="#evidence-bp5" aria-label="BP5 source note">BP5</a> Handover</p>
             <p class="cell-copy">Transfer operations and open actions with named owners, dates and the evidence needed to continue.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Open actions lost at handover</summary>
+                <div class="risk-evidence">
+                  <blockquote lang="no">“Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.”</blockquote>
+                  <a href="#evidence-bp5-quote">Case presentation · BP5, p. 7</a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -636,6 +720,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Measure: Improve</p>
             <p class="cell-copy">Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Overdue fixes go unreported</summary>
+                <div class="risk-evidence">
+                  <blockquote>“centrally monitor and regularly report on SLA breaches.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=centrally%20monitor%20and%20regularly%20report%20on%20SLA%20breaches.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -666,6 +760,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Closeout: Confirm</p>
             <p class="cell-copy">Assign closure ownership and confirm remaining access and data obligations are addressed.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Retention obligations left unresolved</summary>
+                <div class="risk-evidence">
+                  <blockquote>“You have retention requirements for data, and you destroy backups in a timely manner after the relevant retention period ends”</blockquote>
+                  <a href="https://owaspsamm.org/model/operations/operational-management/stream-a/#:~:text=You%20have%20retention%20requirements%20for%20data%2C%20and%20you%20destroy%20backups%20in%20a%20timely%20manner%20after%20the%20relevant%20retention%20period%20ends">OWASP SAMM · Data Protection <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -716,7 +820,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
         </article>
         <article class="quote" id="evidence-bp4">
           <h3 id="evidence-bp4-quote"><a class="sec-link" href="#evidence-bp4-quote">BP4 · Production readiness</a></h3>
-          <blockquote lang="no">“Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått.”</blockquote>
+          <blockquote lang="no">“Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått. Pentest er gjennomført, og ingen kritiske eller høye funn står åpne uten at systemeier har akseptert restrisikoen.”</blockquote>
           <cite>Casepresentasjon.pdf, p. 6</cite>
         </article>
         <article class="quote" id="evidence-bp5">
@@ -729,7 +833,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   </main>
 
   <footer>
-    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risk pills are an interpretation by AI. Each pill describes what can happen if the activity on that row is skipped.</span></p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risk pills are an interpretation by AI. Each pill describes what can happen if the activity above it is skipped.</span></p>
   </footer>
 </div>
 <script>
@@ -739,7 +843,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     if (location.hash.indexOf('#evidence-') === 0) evidence.open = true;
   }
   openEvidenceForHash();
-  document.querySelectorAll('.source-ref').forEach(function(link){
+  document.querySelectorAll('a[href^="#evidence-bp"]').forEach(function(link){
     link.addEventListener('click', function(){ evidence.open = true; });
   });
 })();
