@@ -19,6 +19,8 @@
   --trace: #697571;
   --accent: #f3ab76;
   --engineering: #b6ccc2;
+  --risk: #efb6a5;
+  --risk-border: #9b7063;
   --serif: "Newsreader", Georgia, serif;
   --sans: "Source Sans 3", system-ui, sans-serif;
   --mono: "IBM Plex Mono", monospace;
@@ -199,6 +201,54 @@ h1 {
 .cell-copy { margin-top: 5px; color: var(--muted); }
 .mobile-lane { display: none; }
 
+.risk-heading {
+  margin: 12px 0 5px;
+  color: var(--muted);
+  font: 500 .68rem/1.3 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.risk-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.risk { min-width: 0; max-width: 100%; }
+.risk[open] { flex-basis: 100%; }
+.risk summary {
+  display: flex;
+  align-items: center;
+  gap: .55em;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 34px;
+  padding: 4px 11px;
+  border: 1px solid var(--risk-border);
+  border-radius: 999px;
+  color: var(--risk);
+  font: 600 .875rem/1.25 var(--sans);
+  list-style: none;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.risk summary::-webkit-details-marker { display: none; }
+.risk summary::after {
+  content: "";
+  flex: none;
+  width: .36em;
+  height: .36em;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+}
+.risk summary:hover, .risk[open] summary { border-color: var(--risk); }
+.risk[open] summary::after { transform: rotate(225deg); }
+.risk-evidence {
+  margin: 9px 0 3px;
+  padding-left: 11px;
+  border-left: 1px solid var(--risk-border);
+  color: var(--muted);
+  font-size: .875rem;
+  overflow-wrap: anywhere;
+}
+.risk-evidence a { display: inline-block; margin-top: 5px; color: var(--risk); }
+
 .loop-note {
   display: flex;
   align-items: baseline;
@@ -282,6 +332,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     letter-spacing: .05em;
   }
   .work-cell .mobile-lane { color: var(--engineering); }
+  .risk summary { min-height: 40px; }
 }
 
 @media (forced-colors: active) {
@@ -293,6 +344,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     color-scheme: light;
     --paper: #fff; --ink: #111; --muted: #333; --accent: #813509;
     --engineering: #183d31; --line: #aaa; --trace: #666;
+    --risk: #7c392a; --risk-border: #9b7063;
   }
   .shell { width: 100%; }
   .skip, .mast a { display: none; }
@@ -322,7 +374,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     <section class="map" id="lifecycle" aria-labelledby="map-heading">
       <div class="map-title">
         <h2 id="map-heading"><a class="sec-link" href="#map-heading">The delivery lifecycle</a></h2>
-        <p>Diamonds mark the five project decision points (BP1 to BP5).</p>
+        <p>Diamonds mark the five decision points. Select a risk pill to see its source.</p>
       </div>
 
       <div class="lanes">
@@ -349,6 +401,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Security requirements</p>
             <p class="cell-copy">Set scope, acceptance criteria, security and privacy requirements, and likely threats.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Sensitive data left out of scope</summary>
+                <div class="risk-evidence">
+                  <blockquote>“protection requirements concerning confidentiality, integrity, availability, and authenticity of all data assets”</blockquote>
+                  <a href="https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets">OWASP A06 · Requirements and Resource Management <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -369,6 +431,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Threat modeling</p>
             <p class="cell-copy">Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Abuse paths left open</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Threat modeling is a structured activity for identifying, evaluating, and managing system threats, architectural design flaws, and recommended security mitigations.”</blockquote>
+                  <a href="https://owaspsamm.org/model/design/threat-assessment/stream-b/#:~:text=Threat%20modeling%20is%20a%20structured%20activity%20for%20identifying%2C%20evaluating%2C%20and%20managing%20system%20threats%2C%20architectural%20design%20flaws%2C%20and%20recommended%20security%20mitigations.">OWASP SAMM · Threat Modeling <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -389,6 +461,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Secure coding and review</p>
             <p class="cell-copy">Use secure coding standards, review changes, protect secrets and assess dependencies.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Credentials exposed in code</summary>
+                <div class="risk-evidence">
+                  <blockquote>“The product contains hard-coded credentials, such as a password or cryptographic key.”</blockquote>
+                  <a href="https://cwe.mitre.org/data/definitions/798.html#:~:text=The%20product%20contains%20hard%2Dcoded%20credentials%2C%20such%20as%20a%20password%20or%20cryptographic%20key.">MITRE CWE-798 · Hard-coded Credentials <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -409,6 +491,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Build traceability</p>
             <p class="cell-copy">Package from trusted inputs and keep the artifact traceable to its source and dependencies.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Build output tampered with</summary>
+                <div class="risk-evidence">
+                  <blockquote>“An adversary introduces an unauthorized change to a build output through tampering of the build process”</blockquote>
+                  <a href="https://slsa.dev/spec/v1.2/threats#:~:text=An%20adversary%20introduces%20an%20unauthorized%20change%20to%20a%20build%20output%20through%20tampering%20of%20the%20build%20process">SLSA 1.2 · Build Process Threats <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -429,6 +521,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Security testing</p>
             <p class="cell-copy">Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Broken controls go unnoticed</summary>
+                <div class="risk-evidence">
+                  <blockquote>“ensure that the implemented security controls operate as expected and satisfy the project’s stated security requirements”</blockquote>
+                  <a href="https://owaspsamm.org/model/verification/requirements-driven-testing/#:~:text=ensure%20that%20the%20implemented%20security%20controls%20operate%20as%20expected%20and%20satisfy%20the%20project%E2%80%99s%20stated%20security%20requirements">OWASP SAMM · Requirements-driven Testing <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -449,6 +551,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Release verification</p>
             <p class="cell-copy">Approve a verified, traceable software version after required checks pass.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>A substituted artifact ships</summary>
+                <div class="risk-evidence">
+                  <blockquote>“SLSA Build L2 covers tampering of the artifact or provenance after the build.”</blockquote>
+                  <a href="https://slsa.dev/spec/v1.2/verifying-artifacts#:~:text=SLSA%20Build%20L2%20covers%20tampering%20of%20the%20artifact%20or%20provenance%20after%20the%20build.">SLSA 1.2 · Verifying Artifacts <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -469,6 +581,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Rollout and rollback</p>
             <p class="cell-copy">Use hardened settings and least-privilege access. Verify the rollout and support rollback.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Insecure settings go live</summary>
+                <div class="risk-evidence">
+                  <blockquote>“missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services”</blockquote>
+                  <a href="https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration/#:~:text=missing%20appropriate%20security%20hardening%20across%20any%20part%20of%20the%20application%20stack%20or%20improperly%20configured%20permissions%20on%20cloud%20services">OWASP A02 · Security Misconfiguration <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -489,6 +611,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Service maintenance</p>
             <p class="cell-copy">Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Known flaws stay exploitable</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Help ensure that vulnerabilities are remediated in accordance with risk to reduce the window of opportunity for attackers.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=26">NIST SSDF 1.1 · RV.2 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -509,6 +641,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Detection and alerting</p>
             <p class="cell-copy">Track service health, performance, user experience and security events. Alert on suspicious activity or change.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Attacks go undetected</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Without logging and monitoring, attacks and breaches cannot be detected”</blockquote>
+                  <a href="https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/#:~:text=Without%20logging%20and%20monitoring%2C%20attacks%20and%20breaches%20cannot%20be%20detected">OWASP A09 · Security Logging and Alerting Failures <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 
@@ -529,6 +671,23 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <p class="mobile-lane">Secure development</p>
             <p class="work-title">Secure decommissioning</p>
             <p class="cell-copy">Decommission the service, revoke credentials and access, and handle data under retention requirements.</p>
+            <p class="risk-heading">What can go wrong</p>
+            <div class="risk-list">
+              <details class="risk">
+                <summary>Old credentials still work</summary>
+                <div class="risk-evidence">
+                  <blockquote>“When secrets are no longer required or potentially compromised, you must securely revoke them to restrict access.”</blockquote>
+                  <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet#273-revocation">OWASP · Secrets Revocation <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+              <details class="risk">
+                <summary>Data remains recoverable</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Media sanitization refers to a process that renders access to target data on the media infeasible for a given level of effort.”</blockquote>
+                  <a href="https://csrc.nist.gov/pubs/sp/800/88/r2/final#:~:text=Media%20sanitization%20refers%20to%20a%20process%20that%20renders%20access%20to%20target%20data%20on%20the%20media%20infeasible%20for%20a%20given%20level%20of%20effort.">NIST SP 800-88 Rev. 2 · Media Sanitization <span aria-hidden="true">↗</span></a>
+                </div>
+              </details>
+            </div>
           </div>
         </section>
       </div>
@@ -570,7 +729,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   </main>
 
   <footer>
-    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">Interpretation by AI: This map organizes the supplied lifecycle outline and case presentation into a single view. Adapt the activities and decision criteria to the service and its owners.</span></p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risk pills are an interpretation by AI. Each pill describes what can happen if the activity on that row is skipped.</span></p>
   </footer>
 </div>
 <script>

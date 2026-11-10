@@ -4,6 +4,8 @@ Flow description: Read the phase spine from top to bottom. A branch on the left
 joins each phase to its governance activity, and a branch on the right joins it
 to its engineering activity. A diamond marks each of the five BP checkpoints.
 On narrow screens, each phase is followed by its two labeled activities.
+The engineering activity on each row lists example risks under
+"What can go wrong". Select a risk on the page to read its source.
 
 GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
 ---------------------           --------------       -----------------------------
