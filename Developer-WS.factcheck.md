@@ -2,7 +2,7 @@
 
 Belongs to [Developer-WS.html](Developer-WS.html), named `Developer Workstation Risk Map.html` when this work was done. Other notes for the same page: [plan](Developer-WS.plan.md), [decisions](Developer-WS.decisions.md).
 
-Checked 30 October to 1 November 2026. Every statement on the page, one row each, compared with its source.
+Checked 30 October to 1 November 2026. Every statement on the page, one row each, compared with its source. Three drift items were updated on 10 November 2026; see **Recheck, 10 November 2026**.
 
 Page checked: `Developer-WS.html` (then named `Developer Workstation Risk Map.html`), MD5 `c20d450b532e5615bef1db0dcf6e9a7c`.
 
@@ -13,6 +13,24 @@ Page checked: `Developer-WS.html` (then named `Developer Workstation Risk Map.ht
 - Long statements were shortened in passes 3 to 6, 8 and 9. The **Change log** at the end shows every changed sentence, before and after.
 - Paragraph length after pass 9: 240 text blocks (paragraphs, list items, table cells, caption rows and labels); the longest is 60 words, median 24, none over 60. Code samples are not counted. The longest text field in the page's data (More risks, map notes, Evidence, Review, Sources) is 58 words.
 - Every statement was checked. The Hacker News blocks scripted fetches, so its three articles were read in a browser on 1 November.
+
+## Recheck, 10 November 2026
+
+A claim-by-claim recheck of the page against fresh copies of its sources, written up in [Developer-WS.assessment.md](Developer-WS.assessment.md). It found no factual error and three drift items. The page was updated for those three only.
+
+| Rows | What changed | How known |
+| --- | --- | --- |
+| 69, 629, npm source note | "12.2.1 is current" is now "12.2.2 was current ... on 10 November 2026". | npm registry API on 10 Nov 2026: `latest` is 12.2.2, published 4 Nov 2026. 12.2.1 was published 15 Oct 2026, so the old sentence was true on 1 November. |
+| 287, 702 | Added that the Codex network table is `[network_proxy]` from 0.166.0. `[experimental_network]` stays as the name the page uses. | OpenAI managed configuration page on 10 Nov 2026: "In Codex 0.166.0, [network\_proxy] is the canonical table"; "Keep [experimental\_network] in published policies until every client and policy validator supports [network\_proxy]." Not checked: whether this text was already there on 1 November. |
+| 683, 686, 710, 717 | Source titles changed to match the live pages. Links are unchanged. | Live page titles on 10 Nov 2026. |
+
+Limits of this recheck:
+
+- The "Current as of 1 November 2026" heading was not moved. This was not a full row-by-row check, and six items could not be checked on 10 November. They are listed under "Not checked" in the assessment.
+- Rows 505 and 650 still name `[experimental_network]` only. They are still correct, because the older name is accepted.
+- The **Where** line numbers in the tables are from 1 November and were not renumbered.
+- The verdict counts under **What was found** are unchanged. No verdict changed.
+- The quotes for rows 69 to 717 were checked by text search in the fetched pages. No setting was run on a machine.
 
 ## How to read the tables
 
@@ -55,7 +73,7 @@ A row that shares a verdict with the rows around it says "same as #N". The note 
 | 668 | SOURCES[9] | Researcher uncovers 30+ flaws in AI coding tools (IDEsaster) \| https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html \| The Hacker News (December 2025). | Was "Researchers uncover". Read in a browser on 1 Nov: the headline is "Researcher Uncovers 30+ Flaws in AI Coding Tools", one researcher (Ari Marzouk), dated 6 Dec 2025. |
 | 671 | SOURCES[12] | Malicious .git configs can make Claude, Codex, Cursor and other AI agents run attacker code \| https://thehackernews.com/2026/09/malicious-git-configs-can-make-claude.html \| The Hacker News (2.9.2026). GitSpawn by Manifold Security, versions and mitigations. | Note now says GitSpawn by Manifold. The day is right: read in a browser on 1 Nov, the article is dated Sep 02, 2026 and names Manifold Security. |
 | 680 | SOURCES[21] | AI coding agents' 0-click RCE flaw (Plugin4Shell) \| https://www.theregister.com/a/5297335 \| The Register (September 2026), on research by Air Security. | Research credited to Air Security, as The Register says. |
-| 683 | SOURCES[24] | Stealing MCP tokens in Claude Code via ~/.claude.json \| https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm \| Mitiga (5.5.2026). | Date corrected to 5.5.2026. |
+| 683 | SOURCES[24] | MCP Token Theft in Claude Code: A Man-in-the-Middle Attack Chain \| https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm \| Mitiga (5.5.2026). | Date corrected to 5.5.2026. |
 | 719 | SOURCES[60] | Grok Build uploaded entire Git repositories to xAI storage, not just files it read \| https://thehackernews.com/2026/07/grok-build-uploads-entire-git.html \| The Hacker News (July 2026). Researcher cereblab, Grok Build CLI 0.2.93. | Added: Hacker News, July 2026, cereblab, CLI 0.2.93. Read in a browser on 1 Nov: dated 14 Jul 2026, researcher cereblab, version 0.2.93. |
 | 720 | SOURCES[61] | ClawHavoc: analysis of large-scale poisoning campaign targeting the OpenClaw skill market for AI agents \| https://www.antiy.net/p/clawhavoc-analysis-of-large-scale-poisoning-campaign-targeting-the-openclaw-skill-market-for-ai-agents/ \| Antiy CERT (6.2.2026). At least 1,184 malicious skills on ClawHub; Koi Security named the campaign. | Added: Antiy CERT, 6.2.2026, at least 1,184 skills; Koi named the campaign. |
 | 745-746 | PLACE[9] D02/agent | GitSpawn: background Git calls in several agents ran a command from the repo's Git config, sometimes before the trust prompt. Separately, Check Point found Claude Code running project config before trust (CVE-2025-59536). | Pass 4. Before: one sentence put GitSpawn and the Check Point findings together as background Git calls. Check Point's finding (CVE-2025-59536) was project config, not Git. Now two sentences. |
@@ -68,7 +86,7 @@ A row that shares a verdict with the rows around it says "same as #N". The note 
 
 ## Sources used as evidence
 
-All read between 30 October and 1 November 2026.
+All read between 30 October and 1 November 2026. The npm registry, the OpenAI managed configuration page and the four retitled sources were read again on 10 November 2026.
 
 | Key | Source |
 | --- | --- |
@@ -238,13 +256,13 @@ All read between 30 October and 1 November 2026.
 | 51 | L352 | All 17 risks in the order of the two tables above. | - | UI | - | same as #38 |
 | 52 | L352 | Open a risk for its description and first control. | - | UI | 3 | same as #38 |
 | 53 | L352 | For D01 to D10 the first control and its friction come from Where to start under Top 10. | - | UI | 3 | same as #38 |
-| 54 | L352 | For D11 to D17 relevance is my judgement for an enterprise developer fleet. | - | JUDGEMENT | - | Relevance of D11 to D17 is the author's call. Tagged. |
+| 54 | L352 | For D11 to D17 relevance is interpretation by AI for an enterprise developer fleet. | - | JUDGEMENT | - | Relevance of D11 to D17 is the author's call. Tagged. |
 | 55 | L352 | [inference] | - | JUDGEMENT | - | same as #54 |
 | 56 | L357 | Before you use the map | - | UI | - | Heading. |
 | 57 | L358 | This is a reference layout, not your organisation's setup. | - | JUDGEMENT | 3 | Reference layout and placement are the author's call. Tagged. |
 | 58 | L358 | Common differences: agents used only in the terminal, all agent work in dev containers or cloud sessions, an internal package proxy, and VS Code forks such as Cursor or Windsurf. | - | JUDGEMENT | 3 | same as #57 |
 | 59 | L358 | Draw your own variant and move the markers. | - | JUDGEMENT | 3 | same as #57 |
-| 60 | L359 | The placement of risks and the owner per zone are my judgement based on the sources. | - | JUDGEMENT | - | same as #57 |
+| 60 | L359 | The placement of risks and the owner per zone are interpretation by AI based on the sources. | - | JUDGEMENT | - | same as #57 |
 | 61 | L359 | [inference] | - | JUDGEMENT | - | same as #57 |
 
 ### The ten risks
@@ -255,10 +273,10 @@ All read between 30 October and 1 November 2026.
 | 63 | L367 | Proposed, not measured: the order weighs how often each risk appears in the cited reporting against how far the damage reaches. | - | JUDGEMENT | 9 | Priority method and classification. The page calls it proposed, not measured. Pass 9: joined two sentences (was "A proposed priority order, not a measured ranking. It weighs how often ..."). |
 | 64 | L367 | D09 and D10 are a control gap and a data governance risk, not attack paths. | - | JUDGEMENT | - | Priority method and classification. The page calls it proposed, not measured. |
 | 65 | L367 | VS Code tunnels (D13), used in real attacks, are the strongest candidate to move up. | unit42, secaffairs | CUT | 9 | Unit 42 (Sep 2024) and SentinelLabs via Security Affairs (Dec 2024) report attackers using VS Code tunnels. "Strongest candidate to move up" is judgement. Pass 9: "have been used in real attacks and are" became "used in real attacks, are". Same claim. |
-| 66 | L367 | The order and OWASP mapping are my judgement. | - | JUDGEMENT | 9 | Tagged [inference]. Pass 9: dropped "the". |
+| 66 | L367 | The order and OWASP mapping are interpretation by AI. | - | JUDGEMENT | 9 | Tagged [inference]. Pass 9: dropped "the". |
 | 67 | L367 | [inference] | - | JUDGEMENT | - | Tagged [inference]. |
 | 68 | L371 | Current as of 1 November 2026 | - | FIXED | 1 | Was 30 October. Now 1 November 2026, the date of this check. |
-| 69 | L373 | npm: npm 12 has been out since July 2026 (12.2.1 is current on the npm registry). | npm-reg | OK | - | Registry on 1 Nov 2026: latest 12.2.1; 12.0.0 published 8 Jul 2026. |
+| 69 | L373 | npm: npm 12 has been out since July 2026 (12.2.2 was current on the npm registry on 10 November 2026). | npm-reg | OK | - | Registry on 1 Nov 2026: latest 12.2.1; 12.0.0 published 8 Jul 2026. Rechecked 10 Nov 2026: latest 12.2.2, published 4 Nov 2026; statement updated. |
 | 70 | L373 | It no longer runs dependency install scripts unless they are approved. | npm12-blog, npm12-cfg | OK | - | npm 12 runs dependency install scripts only when allowed by allow-scripts. |
 | 71 | L373 | It still runs the project's own.npm-extension.mjs or.npm-extension.cjs on npm install (not on npm ci), and dangerously-allow-all-scripts switches script approval off. | npm-ext, npm12-cfg | OK | - | npm install runs the root .npm-extension file, npm ci does not. dangerously-allow-all-scripts turns approval off. |
 | 72 | L374 | GitSpawn: at publication on 1 September 2026, four of eight findings across seven agents were unpatched, including a second Claude Code path still open on 2.1.252. | manifold | OK | 3 | Manifold, 1 Sep 2026: 8 findings across 7 agents, 4 unpatched; a second Claude Code path still open on 2.1.252. |
@@ -280,7 +298,7 @@ All read between 30 October and 1 November 2026.
 | 88 | L395 | Missing: not in place. | - | JUDGEMENT | - | Status definitions. The page says they are the author's. |
 | 89 | L395 | Unknown: looked at but not confirmed. | - | JUDGEMENT | 3 | same as #88 |
 | 90 | L395 | Not assessed: nobody has looked yet. | - | JUDGEMENT | 3 | same as #88 |
-| 91 | L395 | These definitions are mine. | - | JUDGEMENT | 3 | same as #88 |
+| 91 | L395 | These definitions are interpretation by AI. | - | JUDGEMENT | 3 | same as #88 |
 | 92 | L395 | [inference] | - | JUDGEMENT | - | same as #88 |
 | 93 | L400 | OK 0 | - | UI | - | Counters, buttons and filter labels. |
 | 94 | L401 | Partial 0 | - | UI | - | same as #93 |
@@ -297,7 +315,7 @@ All read between 30 October and 1 November 2026.
 | 105 | L422 | Supply chain | - | UI | - | same as #93 |
 | 106 | L423 | Stolen tokens | - | UI | - | same as #93 |
 | 107 | L425 | Shows all ten. | - | UI | - | same as #93 |
-| 108 | L425 | The link between attack path and risk is my judgement. | - | JUDGEMENT | - | Path-to-risk link. Tagged. |
+| 108 | L425 | The link between attack path and risk is interpretation by AI. | - | JUDGEMENT | - | Path-to-risk link. Tagged. |
 | 109 | L425 | [inference] | - | JUDGEMENT | - | same as #108 |
 
 ### D01
@@ -511,7 +529,7 @@ All read between 30 October and 1 November 2026.
 | 284 | L563 | Is outbound access allowlisted? | - | QUESTION | 9 | Check question. Pass 9: "limited to an allowlist" became "allowlisted". |
 | 285 | L563 | Claude Code: sandbox.network.allowedDomains with allowManagedDomainsOnly covers shell commands; WebFetch(domain:...) allow rules only pre-approve fetches and are not an allowlist. | cc-sbx, cc-perm | OK | 5 | allowedDomains limits sandboxed commands. A WebFetch allow rule means "fetches without prompting"; other domains still prompt. |
 | 286 | L563 | VS Code: sandbox.userPolicy.network.allowOutbound for commands, ChatAgentNetworkFilter for the fetch tool and integrated browser. | gh-cms, vsc-pol | OK | 5 | sandbox.userPolicy.network.allowOutbound for commands; ChatAgentNetworkFilter covers "agent tools (fetch tool, integrated browser)". |
-| 287 | L563 | Codex: [experimental\_network] in requirements.toml for commands, with enabled = true; limited Windows support. | cx-mc | OK | 5 | "Set experimental\_network.enabled = true to activate the managed proxy"; Windows support "still limited". |
+| 287 | L563 | Codex: [experimental\_network] ([network\_proxy] from 0.166.0) in requirements.toml for commands, with enabled = true; limited Windows support. | cx-mc | OK | 5 | "Set experimental\_network.enabled = true to activate the managed proxy"; Windows support "still limited". Rechecked 10 Nov 2026: "In Codex 0.166.0, [network\_proxy] is the canonical table"; "Codex also accepts the older [experimental\_network] name"; OpenAI says to keep the older name until every client supports the new one. |
 | 288 | L563 | Web search, MCP and apps have separate controls. | cx-mc | OK | 3 | Web search, MCP and apps have their own requirements keys. |
 | 289 | L564 | Is an allowed domain still a way out? | - | QUESTION | - | Check question. |
 | 290 | L564 | An allowed service such as github.com can receive data into an attacker's account. | - | JUDGEMENT | 3 | Known exfiltration pattern; no single source needed. |
@@ -624,7 +642,7 @@ All read between 30 October and 1 November 2026.
 | 377 | L636 | If something got in | - | UI | - | Heading. |
 | 378 | L637 | Removing a planted instruction file or updating the agent does not undo what already ran. | - | JUDGEMENT | - | General incident-response point. |
 | 379 | L637 | In Forever Security's case Codex first changed its own settings, which then applied to every later Codex session in any project. | helpnet | FIXED | 2 | Was a config.toml detail Help Net does not name. Help Net: Codex "first changed its own settings", then every later session in any project ran the attacker's command. |
-| 380 | L637 | The order below is my judgement. | - | JUDGEMENT | - | Order is the author's; tagged [inference]. |
+| 380 | L637 | The order below is interpretation by AI. | - | JUDGEMENT | - | Order is the author's; tagged [inference]. |
 | 381 | L637 | [inference] | - | JUDGEMENT | - | same as #380 |
 | 382 | L639 | Isolate the device through your endpoint tool before cleaning it, so stolen sessions and any open tunnel stop working from that machine. | ms-ir | JUDGEMENT | - | Isolate first, keep powered on. Consistent with Microsoft IR guidance; order is judgement. |
 | 383 | L639 | Keep it powered on and do not wipe it yet. | ms-ir | JUDGEMENT | - | same as #382 |
@@ -833,7 +851,7 @@ All read between 30 October and 1 November 2026.
 
 | # | Where | Statement | Evidence | Verdict | Pass | Note |
 | --- | --- | --- | --- | --- | --- | --- |
-| 539 | L825 | Marked [inference] is my judgement, not taken directly from a source. | - | UI | - | Tag definitions. |
+| 539 | L825 | Marked [inference] is interpretation by AI, not stated in a source. | - | UI | - | Tag definitions. |
 | 540 | L825 | Marked [unverified] or [not run here] was not checked against a source or a real system here. | - | UI | - | same as #539 |
 | 541 | L826 | The git commands were re-run on 29 October 2026 on Git 2.43.0 and on 1 November 2026 on Git 2.54.0 in throwaway repos, including a normal clone and a copied folder. | git-test | FIXED | 1 | Added the 1 Nov re-run on Git 2.54.0. |
 | 542 | L826 | The npm, VS Code, PowerShell and Defender hunting commands were not run here. | - | RECORD | - | True: those commands were not run. |
@@ -938,7 +956,7 @@ All read between 30 October and 1 November 2026.
 | 626 | EVIDENCE[0].h | Verified here | - | UI | - | Heading. |
 | 627 | EVIDENCE[0].i[0] | Setting and policy names against the VS Code and Claude Code docs, both updated in October 2026. | - | RECORD | - | Scope of a past check. |
 | 628 | EVIDENCE[0].i[1] | Git behaviour in throwaway repos, run 29 October 2026 on Git 2.43.0 and re-run 1 November 2026 on Git 2.54.0: a repo's own core.fsmonitor overrides the global value; the environment override and git -c both block it; a normal clone carries no config or hooks but keeps tracked.vscode files; a copied folder with.git runs the command. | git-test | OK | - | Each Git result reproduced on 1 Nov 2026. |
-| 629 | EVIDENCE[0].i[2] | npm 12.0.0 was released on 8 July 2026, 12.2.1 is current, and npm 12 needs Node.js 22.22.2, 24.15.0 or 26 (npm registry). | npm-reg | OK | - | Registry: 12.0.0 published 8 Jul 2026, latest 12.2.1, engines node ^22.22.2, ^24.15.0 or &gt;=26. |
+| 629 | EVIDENCE[0].i[2] | npm 12.0.0 was released on 8 July 2026, 12.2.2 was current on 10 November 2026, and npm 12 needs Node.js 22.22.2, 24.15.0 or 26 (npm registry). | npm-reg | OK | - | Registry: 12.0.0 published 8 Jul 2026, latest 12.2.1, engines node ^22.22.2, ^24.15.0 or &gt;=26. Rechecked 10 Nov 2026: latest 12.2.2, published 4 Nov 2026; statement updated. |
 | 630 | EVIDENCE[0].i[3] | Incidents and CVEs against the vendor advisory or the original research where one was available. | - | RECORD | - | Scope of past checks. |
 | 631 | EVIDENCE[0].i[4] | Against vendor docs on 29 October 2026: Codex sandbox defaults and requirements.toml keys, VS Code automatic tasks and VSIX allowlists, GitHub code-owner rules, Claude Code sandbox scope and Defender process columns. | - | RECORD | 4 | same as #630 |
 | 632 | EVIDENCE[0].i[5] | In the audit round: Copilot managed permissions, Actions secure use, npm config precedence, MCP transport security (2025-06-18), Claude Code plugin update defaults, Codex automatic review and Microsoft incident-response guidance. | - | RECORD | 4 | same as #630 |
@@ -950,7 +968,7 @@ All read between 30 October and 1 November 2026.
 | 638 | EVIDENCE[0].i[8] | Git re-run on 2.54.0. | - | RECORD | - | same as #637 |
 | 639 | EVIDENCE[0].i[8] | GitHub's sandbox.userPolicy keys confirmed. | - | RECORD | 2 | same as #637 |
 | 640 | EVIDENCE[0].i[8] | Grok Build and Antiy CERT sources added. | - | RECORD | 2 | same as #637 |
-| 641 | EVIDENCE[1].h | My judgement | - | UI | - | Heading. |
+| 641 | EVIDENCE[1].h | Interpretation by AI | - | UI | - | Heading. |
 | 642 | EVIDENCE[1].i[0] | The priority order, which is not scored, and the mapping to OWASP IDs. | - | JUDGEMENT | - | Listed as judgement. |
 | 643 | EVIDENCE[1].i[1] | Where each risk sits on the map, and the owner per zone. | - | JUDGEMENT | - | same as #642 |
 | 644 | EVIDENCE[1].i[2] | Relevance of the further risks, and the friction estimates for first controls. | - | JUDGEMENT | - | same as #642 |
@@ -991,16 +1009,16 @@ All read between 30 October and 1 November 2026.
 | 674 | SOURCES[15] | 73 Open VSX sleeper extensions linked to GlassWorm \| https://socket.dev/blog/73-open-vsx-sleeper-extensions-glassworm \| Socket (25.4.2026). Earlier wave: socket.dev/blog/open-vsx-transitive-glassworm-campaign. | socket-gw | OK | - | 25.4.2026. |
 | 675 | SOURCES[16] | s1ngularity: Nx build system package compromised \| https://stepsecurity.io/blog/supply-chain-security-alert-popular-nx-build-system-package-compromised-with-data-stealing-malware \| StepSecurity (August 2025). Malware abusing local AI CLIs. | s1ng | OK | - | August 2025. |
 | 676 | SOURCES[17] | ChainDrop supply chain compromise: anatomy of a self-propagating worm \| https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/ \| Microsoft Threat Intelligence (4.8.2026). Mitigations and Defender detections. | chaindrop | OK | - | 4.8.2026. |
-| 677 | SOURCES[18] | Upcoming breaking changes for npm v12 \| https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/ \| GitHub (9.6.2026). Current npm release checked on the npm registry, 29.10.2026. | npm12-blog, npm-reg | OK | - | 9.6.2026. |
+| 677 | SOURCES[18] | Upcoming breaking changes for npm v12 \| https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/ \| GitHub (9.6.2026). Current npm release checked on the npm registry, 10.11.2026. | npm12-blog, npm-reg | OK | - | 9.6.2026. Rechecked 10 Nov 2026: check date in the note updated. |
 | 678 | SOURCES[19] | GitHub package firewall in public preview \| https://github.blog/changelog/2026-10-20-github-package-firewall-in-public-preview/ \| GitHub (20.10.2026). | gh-fw | OK | - | 20.10.2026, public preview. |
 | 679 | SOURCES[20] | ToxicSkills: malicious AI agent skills on ClawHub \| https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/ \| Snyk (5.2.2026). | snyk | OK | - | 5.2.2026. |
 | 680 | SOURCES[21] | AI coding agents' 0-click RCE flaw (Plugin4Shell) \| https://www.theregister.com/a/5297335 \| The Register (September 2026), on research by Air Security. | register-p4s | FIXED | 7 | Research credited to Air Security, as The Register says. |
 | 681 | SOURCES[22] | Infostealers have found a new target: your AI agent \| https://www.gendigital.com/blog/insights/research/infostealers-your-ai-agent \| Gen Digital (8.9.2026). | gen | OK | - | 8.9.2026. |
 | 682 | SOURCES[23] | AI coding agents fall for malicious instructions planted in the Downloads folder \| https://www.helpnetsecurity.com/2026/10/26/ai-coding-agents-malware-openai-codex/ \| Help Net Security (26.10.2026), on Forever Security research. | helpnet | OK | - | 26.10.2026, Forever Security. |
-| 683 | SOURCES[24] | Stealing MCP tokens in Claude Code via ~/.claude.json \| https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm \| Mitiga (5.5.2026). | mitiga | FIXED | 7 | Date corrected to 5.5.2026. |
+| 683 | SOURCES[24] | MCP Token Theft in Claude Code: A Man-in-the-Middle Attack Chain \| https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm \| Mitiga (5.5.2026). | mitiga | FIXED | 7 | Date corrected to 5.5.2026. Rechecked 10 Nov 2026: title updated to the live page title. |
 | 684 | SOURCES[25] | git-credential-store \| https://git-scm.com/docs/git-credential-store \| Git documentation. The store helper keeps credentials in plaintext. | git-cred | OK | - | Plaintext storage. |
 | 685 | SOURCES[26] | Operation Digital Eye: China APT targets Europe via VS Code tunnels \| https://securityaffairs.com/171879/uncategorized/operation-digital-china-apt-targets-europe.html \| Security Affairs (11.12.2024), on SentinelLabs and Tinexta Cyber research. | secaffairs | OK | - | 11.12.2024. |
-| 686 | SOURCES[27] | Claude Code: sandboxing \| https://code.claude.com/docs/en/sandboxing \| Anthropic. Platforms (no native Windows), what runs outside the sandbox, default read scope, limits of hostname filtering, Unix and Docker sockets. | cc-sbx | OK | - | Each listed topic is on the page. |
+| 686 | SOURCES[27] | Claude Code: configure the sandboxed Bash tool \| https://code.claude.com/docs/en/sandboxing \| Anthropic. Platforms (no native Windows), what runs outside the sandbox, default read scope, limits of hostname filtering, Unix and Docker sockets. | cc-sbx | OK | - | Each listed topic is on the page. Rechecked 10 Nov 2026: title updated to the live page title. |
 | 687 | SOURCES[28] | Claude Code: deploy managed settings \| https://code.claude.com/docs/en/managed-settings \| Anthropic. Delivery per OS, malformed files stop Claude Code, local admin caveat. | cc-mset | OK | - | Each listed topic is on the page. |
 | 688 | SOURCES[29] | VS Code: agent sandboxing \| https://code.visualstudio.com/docs/agents/run/agent-sandboxing \| Microsoft. Windows 11 requirements, default network, credential pass-through, managed enforcement in preview. | vsc-sbx | OK | 4 | Each listed topic is on the page. |
 | 689 | SOURCES[30] | Sharing Git credentials with your container \| https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials \| Microsoft. Dev Containers copy .gitconfig, reuse local Git credentials and forward the SSH agent. | dc-cred | OK | 4 | Copies .gitconfig, reuses credentials, forwards the SSH agent. |
@@ -1016,7 +1034,7 @@ All read between 30 October and 1 November 2026.
 | 699 | SOURCES[40] | GitSpawn: a single flaw lets untrusted repos run code \| https://www.manifold.security/blog/ai-coding-agents-git-hijack \| Manifold Security (1.9.2026). Original research: clone does nothing, ultrareview uses another key, Codex mechanism differs. | manifold | OK | - | 1.9.2026. |
 | 700 | SOURCES[41] | Integrate with external tools via tasks \| https://code.visualstudio.com/docs/debugtest/tasks \| Microsoft (28.10.2026). task.allowAutomaticTasks and runOn: folderOpen. | vsc-tasks | OK | - | 28.10.2026; task.allowAutomaticTasks and runOn: folderOpen. |
 | 701 | SOURCES[42] | Codex: agent approvals and security \| https://developers.openai.com/codex/agent-approvals-security \| OpenAI. Default sandbox with command network off. | cx-appr | OK | - | Network off by default. |
-| 702 | SOURCES[43] | Codex managed configuration \| https://learn.chatgpt.com/docs/enterprise/managed-configuration \| OpenAI. requirements.toml: approval policies and the user reviewer, permission profiles, deny\_read, MCP identities, network, browser, remote control and marketplace source restrictions, including their scope limits. Rechecked for the six corrections on 30.10.2026. | cx-mc | OK | - | Each listed topic is on the page. |
+| 702 | SOURCES[43] | Codex managed configuration \| https://learn.chatgpt.com/docs/enterprise/managed-configuration \| OpenAI. requirements.toml: approval policies and the user reviewer, permission profiles, deny\_read, MCP identities, network, browser, remote control and marketplace source restrictions, including their scope limits. Rechecked for the six corrections on 30.10.2026. From Codex 0.166.0 the network table is [network\_proxy]; [experimental\_network] is still accepted (checked 10.11.2026). | cx-mc | OK | - | Each listed topic is on the page. Rechecked 10 Nov 2026: table name note added, same as row 287. |
 | 703 | SOURCES[44] | About code owners \| https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners \| GitHub. Review requests versus required code-owner approval, and owning CODEOWNERS itself. | codeowners | OK | - | Review requests vs required code-owner approval. |
 | 704 | SOURCES[45] | DeviceProcessEvents table \| https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table \| Microsoft (7.8.2026). Command lines of the created and initiating process; parent file name, ID and creation time, but no parent command line. | mde | OK | - | 7.8.2026; columns as described. |
 | 705 | SOURCES[46] | Secure use reference (GitHub Actions) \| https://docs.github.com/en/actions/reference/security/secure-use \| GitHub. Least-privilege GITHUB\_TOKEN, environments with required reviewers, ephemeral runners, CODEOWNERS on workflows, repository write access and secrets. | gh-secure | OK | - | Each listed topic is on the page. |
@@ -1024,14 +1042,14 @@ All read between 30 October and 1 November 2026.
 | 707 | SOURCES[48] | MCP specification: transports (Streamable HTTP) \| https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#security-warning \| Model Context Protocol, version 2025-06-18. Origin validation, localhost binding, authentication. Newer versions were not compared. | mcp-tr | OK | - | Origin, localhost, authentication under 2025-06-18. |
 | 708 | SOURCES[49] | MCP architecture overview \| https://modelcontextprotocol.io/docs/learn/architecture \| Model Context Protocol. A server is the program that serves context, regardless of where it runs; local and remote servers use different transports. | mcp-arch | OK | - | Local and remote servers, different transports. |
 | 709 | SOURCES[50] | npm config \| https://docs.npmjs.com/cli/v11/using-npm/config \| npm. Precedence cli, env, project, user, global; min-release-age and min-release-age-exclude. | npm11-cfg | OK | - | Precedence and min-release-age on the v11 page. |
-| 710 | SOURCES[51] | Claude Code: discover and install plugins \| https://code.claude.com/docs/en/plugins/install \| Anthropic. Auto-update defaults per marketplace type. | cc-plug | OK | - | Auto-update by marketplace type. |
+| 710 | SOURCES[51] | Claude Code: install and manage plugins \| https://code.claude.com/docs/en/plugins/install \| Anthropic. Auto-update defaults per marketplace type. | cc-plug | OK | - | Auto-update by marketplace type. Rechecked 10 Nov 2026: title updated to the live page title. |
 | 711 | SOURCES[52] | Codex: automatic review \| https://learn.chatgpt.com/codex/sandboxing/auto-review \| OpenAI. Automatic review of escalation requests under the on-request policy. | cx-ar | OK | - | Auto-review under on-request. |
 | 712 | SOURCES[53] | Plan incident response \| https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents \| Microsoft Learn. Balance urgency with precision; do no harm; do not destroy forensic evidence. | ms-ir | OK | - | Do not destroy forensic evidence. |
 | 713 | SOURCES[54] | npm: .npm-extension \| https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/ \| npm. Root extension file run by npm install, not npm ci; transformManifest limits; ignore-extension; extension-file. | npm-ext | OK | - | npm install, not npm ci; options as listed. |
 | 714 | SOURCES[55] | npm config (v12) \| https://docs.npmjs.com/cli/v12/using-npm/config \| npm. allow-scripts, dangerously-allow-all-scripts, ignore-scripts, ignore-extension, extension-file, min-release-age. | npm12-cfg | OK | - | Each listed option is on the page. |
 | 715 | SOURCES[56] | MCP security best practices (draft specification) \| https://modelcontextprotocol.io/specification/draft/basic/security\_best\_practices \| Model Context Protocol. Confused deputy and per-client consent, token passthrough and audience validation, local server compromise. | mcp-bp | OK | - | Each listed topic is on the page. |
 | 716 | SOURCES[57] | ssh-add(1) \| https://man.openbsd.org/ssh-add.1 \| OpenBSD. -t maximum lifetime, -c confirmation on each use, -h destination constraints (OpenSSH 8.9 or later). | ssh-add | OK | - | -t, -c, -h (OpenSSH 8.9). |
-| 717 | SOURCES[58] | Responsible use of GitHub Copilot cloud agent \| https://docs.github.com/en/copilot/responsible-use/copilot-coding-agent \| GitHub. Generated code can look valid while being wrong; automated checks supplement human review. | gh-resp | OK | - | Generated code can look valid while wrong. |
+| 717 | SOURCES[58] | Application card: GitHub Copilot Agents \| https://docs.github.com/en/copilot/responsible-use/copilot-coding-agent \| GitHub. Generated code can look valid while being wrong; automated checks supplement human review. | gh-resp | OK | - | Generated code can look valid while wrong. Rechecked 10 Nov 2026: title updated to the live page title. |
 | 718 | SOURCES[59] | Claude Code: permissions \| https://code.claude.com/docs/en/permissions \| Anthropic. Permission rules and modes, WebFetch domain approvals, and disabling bypass and auto mode. Rechecked for the six corrections on 30.10.2026. | cc-perm | OK | - | Each listed topic is on the page. |
 | 719 | SOURCES[60] | Grok Build uploaded entire Git repositories to xAI storage, not just files it read \| https://thehackernews.com/2026/07/grok-build-uploads-entire-git.html \| The Hacker News (July 2026). Researcher cereblab, Grok Build CLI 0.2.93. | grok | FIXED | 1, 2 | Added: Hacker News, July 2026, cereblab, CLI 0.2.93. Read in a browser on 1 Nov: dated 14 Jul 2026, researcher cereblab, version 0.2.93. |
 | 720 | SOURCES[61] | ClawHavoc: analysis of large-scale poisoning campaign targeting the OpenClaw skill market for AI agents \| https://www.antiy.net/p/clawhavoc-analysis-of-large-scale-poisoning-campaign-targeting-the-openclaw-skill-market-for-ai-agents/ \| Antiy CERT (6.2.2026). At least 1,184 malicious skills on ClawHub; Koi Security named the campaign. | antiy | FIXED | 2 | Added: Antiy CERT, 6.2.2026, at least 1,184 skills; Koi named the campaign. |
@@ -1189,7 +1207,7 @@ All read between 30 October and 1 November 2026.
 
 | # | Where | Statement | Evidence | Verdict | Pass | Note |
 | --- | --- | --- | --- | --- | --- | --- |
-| 860 | DESC.all | Shows all ten. The link between attack path and risk is my judgement. | - | JUDGEMENT | - | States itself as judgement. |
+| 860 | DESC.all | Shows all ten. The link between attack path and risk is interpretation by AI. | - | JUDGEMENT | - | States itself as judgement. |
 | 861 | DESC.content | Poisoned content: a web page, issue, README or tool output carries instructions, and the agent acts on them with the developer’s rights. | - | UI | - | Definitions of the four attack paths. |
 | 862 | DESC.repo | Booby-trapped project: a repo, archive or shared folder is built so that opening it, or letting an agent look at it, runs code. | - | UI | - | same as #861 |
 | 863 | DESC.supply | Supply chain: an extension, package, MCP server, plugin or skill is malicious from the start or turns malicious in an update. | - | UI | - | same as #861 |

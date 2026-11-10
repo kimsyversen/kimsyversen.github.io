@@ -302,7 +302,7 @@ label	MCP firewall
 requirement	MCP traffic paths and the end user client
 label	NOT THE USER'S CLIENT: CLOUD AND NETWORK
 requirement	Proposed view of where MCP traffic flows. The left zone is the end user's device and holds VS Code with GitHub Copilot, a local MCP server and the Global Secure Access client. The right zone is not the user's client and holds the GitHub settings file, the MCP firewall, agents in the cloud, the Agent 365 gateway and remote MCP servers. Seven numbered paths are explained in the table below.
-requirement	Proposed view. Numbers match the paths in the table below. The placement of the cloud services is our reading.
+requirement	Proposed view. Numbers match the paths in the table below. The placement of the cloud services is interpretation by AI.
 requirement	Red dashed box: preview
 requirement	Red dashed line: path with a gap
 label	Remote MCP servers

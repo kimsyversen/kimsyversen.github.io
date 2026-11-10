@@ -290,14 +290,14 @@ TRAFFIC = f"""
 <text class="al" x="554" y="386">Red dashed box: preview</text>
 </svg>
       </div>
-      <figcaption>Proposed view. Numbers match the paths in the table below. The placement of the cloud services is our reading.</figcaption>
+      <figcaption>Proposed view. Numbers match the paths in the table below. The placement of the cloud services is interpretation by AI.</figcaption>
     </figure>
     <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>No</th><th>Path</th><th>Where</th><th>What the sources say</th><th>Evidence</th></tr></thead>
 <tbody>
 {TRAFFIC_ROWS}
 </tbody></table></div>
-    <p class="q-note">VS Code, the local server and the Global Secure Access client are on the device. {ev("fw-remote", "log-client")} Placing the other boxes in the cloud is our reading, because no quote says where they run.&nbsp;{INF}</p>
+    <p class="q-note">VS Code, the local server and the Global Secure Access client are on the device. {ev("fw-remote", "log-client")} Placing the other boxes in the cloud is interpretation by AI, because no quote says where they run.&nbsp;{INF}</p>
 """
 
 Q1 = f"""
@@ -342,7 +342,7 @@ ROWS = "".join([
     route("route-builder", "Agent Builder", "Microsoft 365 Copilot, users build their own agents",
           "Show Agent Builder agents in the Agent 365 inventory. Switch Agent Builder on or off for the organization.",
           f"Add actions that integrate external services in Agent Builder: copy the agent to Copilot Studio for that. See draft Agent Builder agents in the inventory. Use MCP servers: the page does not mention them. {UNV}",
-          f"A person switches Agent Builder on or off. After a copy to Copilot Studio, the Copilot Studio row applies, which is our reading of the quote. {INF}",
+          f"A person switches Agent Builder on or off. After a copy to Copilot Studio, the Copilot Studio row applies, which is interpretation by AI of the quote. {INF}",
           ["ab-inv", "ab-draft", "ab-ext", "ab-copy", "ab-admin"]),
     route("route-toolkit", "Agents Toolkit", "Microsoft 365 Agents Toolkit, developers build declarative agents with MCP plugins",
           "Build a declarative agent that uses an MCP server as a plugin. Block the plugin package or manage who can use it in the Microsoft 365 admin center. Review plugin access requests and standalone MCP server registration requests there.",

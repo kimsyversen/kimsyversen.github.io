@@ -595,7 +595,7 @@ section[id]{scroll-margin-top:52px}
 <text class="al" x="554" y="386">Red dashed box: preview</text>
 </svg>
       </div>
-      <figcaption>Proposed view. Numbers match the paths in the table below. The placement of the cloud services is our reading.</figcaption>
+      <figcaption>Proposed view. Numbers match the paths in the table below. The placement of the cloud services is interpretation by AI.</figcaption>
     </figure>
     <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>No</th><th>Path</th><th>Where</th><th>What the sources say</th><th>Evidence</th></tr></thead>
@@ -608,7 +608,7 @@ section[id]{scroll-margin-top:52px}
 <tr id="tp6"><td>6</td><td>Agents in the cloud straight to a remote server</td><td>Not the client</td><td>Agent 365 does not send agents through a customer-hosted gateway by itself. To prevent direct access, make the gateway the only permitted caller or use private networking. For Copilot Studio agents, the Global Secure Access integration forwards agent traffic, including custom MCP servers, and logs MCP traffic without TLS inspection. Web content filtering, threat intelligence filtering and network file filtering apply to it. No source shows the MCP firewall applying to this traffic. The firewall is enforced through a Conditional Access policy, and Copilot Studio agents are documented only with the baseline profile, not with profiles linked to Conditional Access. So the firewall most likely does not apply.&nbsp;<span class="tg i">inference</span></td><td><a class="ev" href="#ev-V40">V40</a> <a class="ev" href="#ev-V41">V41</a> <a class="ev" href="#ev-V68">V68</a> <a class="ev" href="#ev-V76">V76</a> <a class="ev" href="#ev-V77">V77</a> <a class="ev" href="#ev-V78">V78</a> <a class="ev" href="#ev-V79">V79</a> <a class="ev" href="#ev-V80">V80</a></td></tr>
 <tr id="tp7"><td>7</td><td>Policy on agents in the cloud</td><td>Not the client</td><td>Policy, not traffic. In Copilot Studio, blocking Power Platform connectors also blocks the tools in connected MCP servers. In Foundry, an Azure Policy deny stops a non-matching request and marks existing resources non-compliant. The approved-tools policy is in preview.</td><td><a class="ev" href="#ev-V21">V21</a> <a class="ev" href="#ev-V22">V22</a> <a class="ev" href="#ev-V23">V23</a> <a class="ev" href="#ev-V24">V24</a></td></tr>
 </tbody></table></div>
-    <p class="q-note">VS Code, the local server and the Global Secure Access client are on the device. <a class="ev" href="#ev-V31">V31</a> <a class="ev" href="#ev-V34">V34</a> Placing the other boxes in the cloud is our reading, because no quote says where they run.&nbsp;<span class="tg i">inference</span></p>
+    <p class="q-note">VS Code, the local server and the Global Secure Access client are on the device. <a class="ev" href="#ev-V31">V31</a> <a class="ev" href="#ev-V34">V34</a> Placing the other boxes in the cloud is interpretation by AI, because no quote says where they run.&nbsp;<span class="tg i">inference</span></p>
 
     <ol class="path">
       <li><h4>Request and review</h4><p>Submit a pull request with the owner, data, tools and risk tier. Record the approval or rejection.</p></li>
@@ -686,7 +686,7 @@ section[id]{scroll-margin-top:52px}
             <h4 role="rowheader">Agent Builder <span class="rt">Microsoft 365 Copilot, users build their own agents</span></h4>
             <div role="cell"><b class="matrix-label" aria-hidden="true">We can</b><p>Show Agent Builder agents in the Agent 365 inventory. Switch Agent Builder on or off for the organization.</p></div>
             <div role="cell"><b class="matrix-label" aria-hidden="true">We cannot</b><p>Add actions that integrate external services in Agent Builder: copy the agent to Copilot Studio for that. See draft Agent Builder agents in the inventory. Use MCP servers: the page does not mention them. <span class="tg u">unverified</span></p></div>
-            <div role="cell"><b class="matrix-label" aria-hidden="true">Admin work</b><p>A person switches Agent Builder on or off. After a copy to Copilot Studio, the Copilot Studio row applies, which is our reading of the quote. <span class="tg i">inference</span></p></div>
+            <div role="cell"><b class="matrix-label" aria-hidden="true">Admin work</b><p>A person switches Agent Builder on or off. After a copy to Copilot Studio, the Copilot Studio row applies, which is interpretation by AI of the quote. <span class="tg i">inference</span></p></div>
             <div role="cell"><b class="matrix-label" aria-hidden="true">Evidence</b><p><a class="ev" href="#ev-V47">V47</a> <a class="ev" href="#ev-V48">V48</a> <a class="ev" href="#ev-V49">V49</a> <a class="ev" href="#ev-V50">V50</a> <a class="ev" href="#ev-V51">V51</a></p></div>
           </div>
           <div class="matrix-row" id="route-toolkit" role="row">

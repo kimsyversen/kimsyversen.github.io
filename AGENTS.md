@@ -17,6 +17,7 @@ For pages with multiple sections or tables, define each section's job and scope.
 ## 3. Evidence
 
 - Verify factual claims against primary sources and record the date and verdict in the fact check. Cut unsupported claims or label them `[unverified]` or `[inference]`. Record gaps in testing.
+- Write `[inference]` as interpretation by AI, not stated in a source. Never write it as the owner's or a person's own view: no "my", "our" or "mine" (not "my judgement", "my estimate", "our reading", "these definitions are mine"). Use "interpretation by AI" or "AI estimate" in sentences, headings and generated text on every page, and in the fact check.
 - Put the exact quote and a link to its passage beside each sourced diagram claim. Reserve diagram text without evidence for requirements and labels.
 - Run the page's quote and label checks when evidence or wording changes. Recheck sources and update the fact check before moving the page's "Current as of" date.
 

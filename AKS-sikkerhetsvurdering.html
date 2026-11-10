@@ -453,7 +453,7 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <button type="button" class="chip" data-path="workload" aria-pressed="false">Compromised workload</button>
         <button type="button" class="chip" data-path="supply" aria-pressed="false">Supply chain</button>
       </div>
-      <p class="path-desc" id="pathDesc">Showing all items. The link between attack path and item is my own assessment. <span class="tag">[inference]</span></p>
+      <p class="path-desc" id="pathDesc">Showing all items. The link between attack path and item is interpretation by AI. <span class="tag">[inference]</span></p>
     </section>
 
     <div class="risks" id="risks">
@@ -675,7 +675,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
     <section id="before-you-use-the-map">
       <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
       <p class="sub">This is a typical reference architecture, not the platform team's actual setup. Common deviations are GitOps, where an agent in the cluster pulls from git instead of the pipeline deploying, Application Gateway for Containers with the data plane outside the cluster, and separate clusters per environment. Ask for their architecture sketch and draw the risks in where they belong in their setup.</p>
-      <p class="sub">The placement of the risks and the ownership per zone are my own assessment based on OWASP and Microsoft. <span class="tag">[inference]</span></p>
+      <p class="sub">The placement of the risks and the ownership per zone are interpretation by AI based on OWASP and Microsoft. <span class="tag">[inference]</span></p>
     </section>
   </div>
 
@@ -1012,7 +1012,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
 
   /* Filter */
   var DESC = {
-    all: 'Showing all items. The link between attack path and item is my own assessment.',
+    all: 'Showing all items. The link between attack path and item is interpretation by AI.',
     credentials: 'Stolen credentials: An attacker can misuse stolen sign-in data if the API server is reachable and the identity has access.',
     workload: 'Compromised workload: an attacker exploits a flaw in an app and gets to run code in a pod. The question is how far they get from there.',
     supply: 'Supply chain: A tampered image or a compromised pipeline can bring malicious code into the cluster.'
