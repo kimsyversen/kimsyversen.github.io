@@ -419,7 +419,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     <section class="map" id="lifecycle" aria-labelledby="map-heading">
       <div class="map-title">
         <h2 id="map-heading"><a class="sec-link" href="#map-heading">The delivery lifecycle</a></h2>
-        <p>Each phase connects governance with secure development. Risks are grouped in the table below.</p>
+        <p>This working lifecycle connects governance with secure development. The idea that activities can overlap and repeat, and this phase mapping, are interpretations by AI, not a prescribed or universal sequence. Risks are grouped in the table below.</p>
       </div>
 
       <div class="lanes">
@@ -540,7 +540,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
             <p class="gov-title">Production go / no-go</p>
-            <p class="cell-copy">Require verified controls, tested recovery and monitoring. Close critical and high findings or get the system owner’s explicit risk acceptance.</p>
+            <p class="cell-copy">Check required controls, recovery and monitoring. Resolve critical and high findings before release, or use a time-limited exception approved by the authorized risk owner, with compensating controls where appropriate.</p>
           </div>
           <div class="cell work-cell">
             <p class="mobile-lane">Secure development</p>
@@ -653,32 +653,32 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>No named risk owner, delaying decisions and leaving business exposure unresolved.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
                 <summary>Critical service goes unclassified, leaving resilience planning and investment out of step with its business importance.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Assets are prioritized based on classification, criticality, resources, and impact on the mission.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=18">NIST CSF 2.0 · ID.AM-05 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=23">NIST CSF 2.0 · ID.AM-05 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
-                <summary>Sensitive data processing remains unknown, risking costly remediation and loss of customer trust if data is exposed.</summary>
+                <summary>Where GDPR requires a record of processing, missing data categories can weaken accountability and data handling decisions.</summary>
                 <div class="risk-evidence">
                   <blockquote>“a description of the categories of data subjects and of the categories of personal data”</blockquote>
                   <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_30">GDPR · Article 30 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
-                <summary>DPIA need or completion goes unchecked, leaving privacy impacts unassessed and remediation costly.</summary>
+                <summary>When processing is likely to create high risk, a required DPIA is missed or incomplete, leaving privacy impacts unassessed.</summary>
                 <div class="risk-evidence">
                   <blockquote>“likely to result in a high risk to the rights and freedoms of natural persons”</blockquote>
                   <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_35">GDPR · Article 35 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
-                <summary>Privacy compliance cannot be demonstrated, weakening audit assurance and putting contracts and customer trust at risk.</summary>
+                <summary>A controller cannot demonstrate GDPR compliance, weakening accountability.</summary>
                 <div class="risk-evidence">
                   <blockquote>“to ensure and to be able to demonstrate that processing is performed in accordance with this Regulation.”</blockquote>
                   <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_24">GDPR · Article 24 <span aria-hidden="true">↗</span></a>
@@ -704,7 +704,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Risk response left undefined, leaving the business exposed to losses beyond its agreed tolerance.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Strategic direction that describes appropriate risk response options is established and communicated.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -741,19 +741,19 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 </div>
               </details></li>
                 <li><details class="risk">
-                <summary>Supply chain attacks causing theft of tokens and unauthorized access to critical systems.</summary>
+                <summary>A compromised or vulnerable dependency enters the product, exposing downstream users to malicious behavior or known flaws.</summary>
                 <div class="risk-evidence">
                   <blockquote>“An SSC attack is when a malicious party tampers with the steps, artifacts, or actors within the chain to compromise the consumers of a software artifact down the line.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204D.pdf#page=7">NIST SP 800-204D · Software supply chain attacks <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204D.pdf#page=15">NIST SP 800-204D · Software supply chain attacks <span aria-hidden="true">↗</span></a>
                   <blockquote>“Build into the toolchain automatic detection of known vulnerabilities in software components.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=13">NIST SSDF 1.1 · PW.4.4 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=22">NIST SSDF 1.1 · PW.4.4 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
                 <summary>Unnoticed first-party code vulnerabilities, enabling unauthorized access or data theft.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Help identify vulnerabilities so that they can be corrected before the software is released to prevent exploitation.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PW.7 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=23">NIST SSDF 1.1 · PW.7 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -858,7 +858,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Open actions lose ownership at handover, delaying fixes and increasing incident response costs.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=17">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -918,7 +918,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 </div>
               </details></li>
                 <li><details class="risk">
-                <summary>Data remains recoverable, exposing it after the service is shut down.</summary>
+                <summary>Data-bearing media is disposed of without suitable sanitization, leaving data recoverable after the service is shut down.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Media sanitization refers to a process that renders access to target data on the media infeasible for a given level of effort.”</blockquote>
                   <a href="https://csrc.nist.gov/pubs/sp/800/88/r2/final#:~:text=Media%20sanitization%20refers%20to%20a%20process%20that%20renders%20access%20to%20target%20data%20on%20the%20media%20infeasible%20for%20a%20given%20level%20of%20effort.">NIST SP 800-88 Rev. 2 · Media Sanitization <span aria-hidden="true">↗</span></a>
