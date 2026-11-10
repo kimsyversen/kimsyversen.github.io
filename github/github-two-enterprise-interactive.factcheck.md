@@ -1218,3 +1218,86 @@ Scope: the 62 sourced sentences, the 12 inference sentences and the product feat
 - **Requirement and label sentences (256) and the 855 other visible texts (titles, summaries, chips, steps, banners, checks):** each read for hidden product claims. None found. They state what this design requires or how to test it. Product features they rely on were checked in the docs: enterprise 2FA requirement, block user-namespace repositories (managed users), private-repository forking policy, plus the list above. Two are plain engineering statements with no source: dev containers can run non-root, and repository names, paths and identities can reveal critical-system details. Both are left as design reasoning.
 - **Page date:** "Facts checked" moved from 5 to 6 November 2026 after this recheck.
 - **Not done:** the person sign-off is still NONE. It must be a person reading the reviewed list and running `--sign`; an agent must not.
+
+## Independent assessment, 10 November 2026
+
+Question: is the content of the page correct? Done by an AI. Nothing was tested on a real GitHub tenant. The page was not changed.
+
+### Verdict
+
+Mostly correct. No sourced sentence was found to be false. Two sentences leave out something that changes how a control works (findings 1 and 2). Two are slightly off in wording (findings 3 and 4). The page's own checker fails today for a reason that is not about facts (finding 5).
+
+### How it was checked
+
+- Ran `node github/verify-evidence.mjs` on 10 November 2026. It fetched all 33 sources live. All 90 quotes still appear word for word. Exit code 1 because of finding 5.
+- Read all 106 boxes, the 4 design-choice notes, the 5 flow summaries and the static page text.
+- Fetched 25 GitHub docs pages and the npm trusted publishing page again and read the passages behind the sourced sentences for meaning, not only wording. Also looked for docs that contradict a sentence, including pages the page does not cite.
+
+### Findings
+
+1. **acc.2, A.p14, B.p14: an enterprise security manager role now exists. Medium. Confirmed in the docs, not tested.**
+   The page says "Security manager is an organization role" and "Assign it only within an approved compartment". That is true of the organization role. But [Abilities of roles in an enterprise](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/abilities-of-roles) now lists a second, enterprise-level role: "The enterprise security manager role is in public preview and subject to change." and "they have read access for code in all repositories and write access for all security alerts in the enterprise." A reader who trusts the page would not know that this role reads every repository in every compartment. The role is a preview feature. Suggested fix: say the organization role is the one this design uses, and add a requirement that the enterprise security manager role (public preview) is not assigned in A, or only with approval.
+
+2. **B.p2: organization owners are not stopped by the settings named. Medium. Confirmed in the docs, not tested.**
+   The page says public visibility is allowed only in `public-open-source`, that elsewhere "repository creation is limited to private repositories", and the check expects "Set a repo to public in internal-engineering. Expected: it is blocked." The [repository management policies page](https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise) says: "Organization owners can always create any type of repository". The visibility-change policy can at most "restrict repository visibility changes to organization owners". So the block holds for members, not for an organization owner. The newer repository policies can restrict visibilities for everyone except a bypass list, but they are "currently in public preview". Suggested fix: say the limit applies to members, name organization owners as a trusted exception or use the preview repository policy (labelled preview), and run the check as a member and as an owner.
+
+3. **B.o1.tools and design-choice note 3: the guest collaborator exception does not exist in B. Low. Confirmed in the docs.**
+   The page says internal visibility grants broad read "with exceptions such as managed guest collaborators". The roles page says: "The guest collaborator role is only available with Enterprise Managed Users." B uses personal accounts, so this exception cannot apply there. The main point of the box (internal visibility is broad, so B uses private) is still right. Suggested fix: drop the exception from the B box or say it is EMU only.
+
+4. **B.p7: "public activity has source-IP gaps" is weaker than the source. Low. Confirmed in the docs.**
+   The [IP display page](https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/displaying-ip-addresses-in-the-audit-log-for-your-enterprise) says that for personal accounts GitHub "does not display an event or IP address in the audit log" for interactions with a public repository owned by the organization. So the event can be missing, not only the IP. B.v3 already says "only partly visible", which fits. Suggested fix: use the B.v3 wording in B.p7.
+
+5. **The checker fails and the fact check record is out of date. Process, not a content error. Observed 10 November 2026.**
+   `verify-evidence.mjs` reports "857 found, 855 reviewed, 2 unreviewed" and exits 1. The two new texts are script fragments for section links (`id="enterprise-` and `<a class="sec-link" href="#enterprise-`). They came with commit e728279 on 9 November, after the 6 November recheck that recorded "0 unreviewed". They are not reader-facing claims. The person sign-off is still NONE.
+
+### Checked and found correct
+
+Each was read against the live docs on 10 November 2026.
+
+- GHE.com: managed users only, no public repositories or gists, data stored in region with exceptions (g2).
+- Managed users: only private and internal repositories, no collaboration outside the enterprise, SCIM deprovisioning suspends and never deletes (A.scim, A.p1).
+- Enterprise teams can sync from IdP groups, for managed users only. The page uses this only in A (A.scim, A.p10).
+- Enterprise-level SAML drops organization SCIM, and there is no SCIM for an enterprise with personal accounts (B.scim, B.p12, note 1).
+- With organization-level SAML, members need no SAML session for internal repositories (B.o1.tools, note 3).
+- Repository policies are still in public preview (A.p2).
+- The SHA pinning policy still lets reusable workflows use tags. The restricted `GITHUB_TOKEN` default is read for contents and packages. Pull request creation and approval by Actions is off by default (A.p5, B.p5).
+- Blocking classic PATs does not stop SSH keys created with them. Lifetime limits block organization access and do not revoke tokens. Administrators can be exempted. Public resources stay readable (A.p6, B.p6).
+- Git events are kept for seven days, other audit events for 180 days (A.p7, B.p7).
+- Conditional access for managed users with Entra ID and OIDC enforces IP conditions, not device compliance (A.p8).
+- The organization security manager role reads all repositories in its organization (A.p14, B.p14).
+- The Copilot cloud agent firewall does not cover MCP server processes or setup steps. Enterprise owners can enable third-party agents and agent apps (A.p13, B.p13).
+- Azure private networking works only with larger runners, 2 to 64 vCPU, Ubuntu and Windows (A.e1, note 4).
+- GitHub-hosted runners run with passwordless sudo on Linux and macOS and as administrator on Windows (B.e2).
+- The Actions OIDC token has `enterprise` and `enterprise_id` claims and the issuer can be made enterprise-specific (A.e2).
+- npm trusted publishing does not support self-hosted runners. Automatic provenance needs a public package from a public repository and can be turned off (B.p15, B.o2.proj).
+- Organizations in an enterprise can be archived (ops.10).
+
+### Not checked
+
+- The 256 requirement and label sentences are design choices. They were read for hidden product claims, and the two findings above came from that reading, but a design choice cannot be right or wrong against a source.
+- Whether the design is adequate for classified work. That is for the security authority.
+- "Set a remediation deadline per alert severity" (A.p4, tagged G). No GitHub setting with that name was looked up. [unverified]
+- "Block Git over SSH" (A.p8). Whether GitHub or the proxy does this was not looked up. [unverified]
+- The PyPI page, beyond the checker's quote match.
+- Anything on a live tenant.
+
+## Fixes for the independent assessment, 10 November 2026
+
+Done by an AI on the owner's request. Nothing was tested on a real GitHub tenant. Earlier text in this file that says "the page was not changed" describes the state before these fixes.
+
+| Finding | Boxes | What changed | Source and verdict |
+|---|---|---|---|
+| 1 | A.p14, B.p14, acc.2 | The text now names two roles. The organization security manager role reads all repositories in its organization. The enterprise security manager role (public preview) reads code in all repositories in the enterprise. New requirement: assign the enterprise role only with recorded approval. | [Abilities of roles in an enterprise](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/abilities-of-roles): "The enterprise security manager role is in public preview and subject to change." and "In addition, they have read access for code in all repositories and write access for all security alerts in the enterprise." Quotes found word for word, 10 Nov 2026. Preview feature, so it may change. |
+| 2 | B.p2 | The limit is now stated for members. New sourced sentence: organization owners can always create any type of repository. New requirement: keep the owner list short and review the other organizations for public repositories on a schedule. The check now runs as a member and as an organization owner. | [Repository management policies](https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise): "Organization owners can always create any type of repository". Quote found word for word, 10 Nov 2026. The preview repository policy was not added as a control, because recommendations must work without preview features. |
+| 3 | B.o1.tools, design-choice note 3 | The guest collaborator exception was removed, with its evidence rows and the managed-accounts source for this box. | The role exists only with Enterprise Managed Users, and B uses personal accounts. Remaining quotes unchanged and found, 10 Nov 2026. |
+| 4 | B.p7 | "public activity has source-IP gaps" became "for some activity in public repositories the audit log shows no event or no source IP". | Same two quotes from the IP display page as before. Found, 10 Nov 2026. |
+| 5 | reviewed list | The two script fragments for section links got verdict N (code token). Six new or reworded texts got a verdict: four requirement sentences R, the check for B.p2 R, the source title "Enterprise roles" L. All verdicts were set by the AI. | Person sign-off is still NONE. |
+
+Checks run on 10 November 2026 after the fixes:
+
+- `node github/verify-evidence.mjs`: exit 0. 95 of 95 quotes found on 34 live pages. 861 outside texts, 0 unreviewed, 0 stale. 66 sourced sentences, 12 inference, 260 requirement or label.
+- `python3 -I scripts/section_anchors.py --check`: exit 0.
+- Headless Chrome on a copy of the page with a test script added: the six changed popups open with the new wording at 1280 px and 500 px wide, no sideways scroll, 0 script errors. Gap: 500 px is the narrowest window headless Chrome gave, so 375 px was not tested. The full click test of all popups was not rerun.
+- "Facts checked", "quotes checked" and "Primary sources" dates on the page moved to 10 Nov 2026. The index entry date moved to 10 Nov 2026.
+
+Still open: the two `[unverified]` items in the assessment above (A.p4 remediation deadline, A.p8 Git over SSH) were not looked up.

@@ -113,3 +113,11 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - Did not move any date: the page has no "current as of" line and the index lists no per-page date.
 - Not rerun this time: the headless click test and the 375px check. This change is one sentence of text.
 - Extended the recheck to the 12 inference sentences, 256 requirement sentences and all 855 other texts. No hidden product claims found. Moved "Facts checked" on the page to 6 Nov 2026. Person sign-off stays NONE by rule.
+
+## fixes after the independent assessment (2026-11-10)
+
+- Security manager (A.p14, B.p14, acc.2): name both roles and require recorded approval for the enterprise role. Chose this over forbidding the role outright, because the role is in public preview and the owner may have a reason to use it. The role is labelled public preview in the text.
+- B.p2: state the limit for members and add a sourced sentence that organization owners can always create any type of repository. Chose a short owner list plus a scheduled review over the repository policy with a bypass list, because that policy is in public preview and recommendations must work without preview features.
+- B.o1.tools and note 3: removed the guest collaborator exception instead of marking it "EMU only". It cannot apply in B, so it only added noise there.
+- B.p7: say that the event itself can be missing, to match the source and B.v3.
+- Reviewed list: the two section-link script fragments from 9 November got verdict N. Verdicts for the new sentences were set by the AI. Sign-off by a person stays NONE.

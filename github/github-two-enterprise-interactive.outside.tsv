@@ -71,7 +71,7 @@ R	A.p16 proposed check	Change a shared workflow without a code-owner review. Exp
 L	B.p1 title	2FA, owner-added orgs
 R	B.p1 proposed check	Try to add an org to the enterprise as a normal member and record the result. Monitor for orgs outside the enterprise.
 L	B.p2 title	Public repos only in publishing org
-R	B.p2 proposed check	Set a repo to public in internal-engineering. Expected: it is blocked. Record the result.
+R	B.p2 proposed check	Set a repo to public in internal-engineering as a member. Expected: it is blocked. Repeat as an organization owner and record both results.
 L	B.p3 title	Enterprise rulesets baseline
 R	B.p3 proposed check	Negative tests as in A: push to main, force push, bypass.
 R	B.p4 proposed check	Create a repo in each org and confirm the baseline appears.
@@ -328,7 +328,8 @@ R	A.p13 description[3]	Assess runner or sandbox isolation and spending controls.
 R	A.p13 description[5]	Require independent network controls.
 R	A.p14 description[0]	Delegate organization duties with security manager or custom roles instead of broad Admin where suitable.
 R	A.p14 description[2]	Assign it only within an approved compartment.
-R	A.p14 description[3]	This design requires two owners per organization, no Admin base permission, named app managers and a short enterprise-owner list.
+R	A.p14 description[4]	Assign that role only with recorded approval.
+R	A.p14 description[5]	This design requires two owners per organization, no Admin base permission, named app managers and a short enterprise-owner list.
 R	A.p15 description[0]	Dependency review is a required check.
 R	A.p15 description[1]	Lockfiles are mandatory, and install-time lifecycle scripts are off in builds.
 R	A.p15 description[2]	Builds produce signed artifacts with provenance, and deploys verify them.
@@ -341,7 +342,8 @@ R	A.p16 description[4]	Each has its own copy.
 R	B.p1 description[0]	Two-factor is required for every organization in the enterprise.
 R	B.p1 description[2]	Watch for organizations that appear outside the enterprise.
 R	B.p2 description[0]	Public visibility is allowed only in public-open-source.
-R	B.p2 description[1]	In every other organization, repository creation is limited to private repositories and visibility changes are restricted, so the aim is that no private repo is made public by mistake.
+R	B.p2 description[1]	In every other organization, members may create private repositories only and may not change repository visibility, so the aim is that no private repo is made public by mistake.
+R	B.p2 description[3]	Keep the owner list short and review every other organization for public repositories on a schedule.
 R	B.p3 description[0]	Apply enterprise branch and tag rulesets to all in-scope repositories or custom-property selections.
 R	B.p3 description[1]	Allow no bypass by default; document any emergency exception and review its use.
 R	B.p4 description[0]	Apply security configurations to existing repositories and set defaults for new ones.
@@ -477,6 +479,7 @@ R	acc.1 description[0]	Decides classification, approves the hosting service, and
 R	acc.2 description[0]	Own the enterprise baseline and make sure audit data is delivered.
 R	acc.2 description[1]	Keep a short named owner list.
 R	acc.2 description[2]	Delegate through suitable enterprise roles.
+R	acc.2 description[5]	Assign the enterprise role only with recorded approval.
 R	acc.3 description[0]	Own organization teams, installed apps and runner groups.
 R	acc.4 description[0]	Own code review, remediation of findings and deployments for their repo.
 R	acc.5 description[0]	Own detection and response, and keep the evidence.
@@ -601,7 +604,9 @@ N	script	chip
 N	script	<section class="tower
 N	script	tw-a pa
 N	script	tw-b pb
+N	script	" id="enterprise-
 N	script	" aria-label="Enterprise
+N	script	<a class="sec-link" href="#enterprise-
 L	script	ENTERPRISE A · SENSITIVE
 L	script	ENTERPRISE B · INTERNAL AND PUBLIC
 R	script	Enterprise Managed Users. Source code and IaC for classified critical systems.
@@ -663,6 +668,7 @@ L	script	Webhook verification and delivery IDs
 L	script	Artifact attestations
 L	script	Custom properties
 L	script	Repository policies (preview)
+L	script	Enterprise roles
 L	script	Copilot cloud policies
 L	script	Ruleset layering
 L	script	Security configurations
@@ -806,7 +812,7 @@ N	script	DEV.
 L	script	Design choice
 L	script	of 4.
 N	script	ev
-L	script	Evidence (quotes checked 6 Nov 2026)
+L	script	Evidence (quotes checked 10 Nov 2026)
 N	script	ol
 N	script	li
 N	script	ev-q
@@ -818,7 +824,7 @@ L	script	Numbers link to the evidence. Sentences without a number are design req
 L	script	No sentence here needs a source: each is a design requirement, a label or marked as inference.
 N	script	ul
 N	script	1.1rem
-L	script	Primary sources (6 Nov 2026)
+L	script	Primary sources (10 Nov 2026)
 L	script	Primary sources
 L	script	None needed. These are design requirements, labels or marked as inference.
 L	script	Proposed check (not run)
@@ -838,7 +844,7 @@ L	page text	Reference architecture · GitHub Enterprise Cloud
 L	page text	GitHub for classified, internal and public work
 R	page text	Two enterprises, three policy layers and shared operations on one page. Click any box to see what it does and how to check it. Use the filters to follow a flow or a type of control.
 L	page text	Facts checked
-L	page text	6 Nov 2026
+L	page text	10 Nov 2026
 L	page text	Basis
 L	page text	GitHub, npm and PyPI documentation
 L	page text	Names
