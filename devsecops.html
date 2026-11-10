@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DevSecOps · Kim Syversen</title>
+<meta name="description" content="A one-page view of governance checkpoints and secure development activities across the software lifecycle.">
+<meta name="theme-color" content="#09151a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#09151a; --panel:#102127; --panel-hi:#142a30; --ink:#f1f5ef;
+  --muted:#a8b9b5; --soft:#7d9692; --line:rgba(202,231,218,.15);
+  --lime:#c5f36d; --mint:#69dbc2; --lilac:#d5a7f5; --amber:#f1bd75;
+  --sans:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --display:"Manrope",var(--sans); --mono:"DM Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{margin:0;background:radial-gradient(ellipse at 82% 4%,rgba(60,123,106,.18),transparent 38rem),var(--bg);color:var(--ink);font:400 1rem/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+::selection{background:var(--lime);color:#102127}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em}
+a:focus-visible{outline:2px solid var(--lime);outline-offset:4px;border-radius:2px}
+h1,h2,h3,p{margin:0;font-size:inherit;font-weight:inherit}
+.skip{position:absolute;z-index:5;top:12px;left:20px;transform:translateY(-200%);padding:10px 14px;background:var(--lime);color:#09151a}
+.skip:focus{transform:none}
+.shell{width:min(1500px,100% - 64px);margin:0 auto;padding:26px 0 54px}
+.mast{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 0 16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;font:500 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.brand-mark{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--mint);border-radius:9px;color:var(--mint);font:700 .8rem/1 var(--display)}
+.back{font-size:.78rem;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--lime)}
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);align-items:end;gap:60px;padding:64px 0 44px}
+.eyebrow,.micro{font:500 .66rem/1.5 var(--mono);letter-spacing:.11em;text-transform:uppercase}
+.hero .eyebrow{color:var(--mint);margin-bottom:18px}
+h1{font:600 clamp(4.3rem,10vw,9rem)/.88 var(--display);letter-spacing:-.075em}
+h1 span{color:var(--lime)}
+.hero-copy{max-width:38rem;padding-bottom:5px}
+.hero-copy p{color:#d6e2dc;font-size:clamp(1.05rem,1.7vw,1.35rem);line-height:1.5;text-wrap:pretty}
+.summary{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.summary span{padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:400 .67rem/1.2 var(--mono);letter-spacing:.02em}
+.summary b{color:var(--lime);font-weight:500}
+.map-title{display:flex;justify-content:space-between;align-items:end;gap:24px;margin:8px 0 14px}
+.map-title h2{font:600 1.25rem/1.2 var(--display);letter-spacing:-.025em}
+.map-title p{max-width:36rem;color:var(--muted);font-size:.78rem;text-align:right}
+.lanes{position:relative;isolation:isolate}
+.lane-head,.phase-row{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(190px,.75fr) minmax(0,1.7fr);column-gap:14px}
+.lane-head{position:sticky;top:0;z-index:3;padding:9px 0;background:rgba(9,21,26,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lane-name{padding:0 15px;color:var(--muted);font:500 .64rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.lane-name:first-child{color:var(--lilac)}
+.lane-name:nth-child(2){color:var(--lime)}
+.lane-name:last-child{color:var(--mint)}
+.phase-row{position:relative;align-items:stretch;min-height:126px;border-bottom:1px solid var(--line);scroll-margin-top:72px}
+.phase-row::before{content:"";position:absolute;z-index:-1;left:calc((100% - 28px) * .32 + 14px);top:0;bottom:0;width:1px;background:linear-gradient(var(--line),rgba(197,243,109,.3),var(--line))}
+.cell{min-width:0;padding:17px 15px 18px}
+.gov-cell{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px}
+.governance{display:inline-flex;align-items:center;gap:7px;color:var(--lilac);font:500 .62rem/1.3 var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.governance::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+.gov-cell p{max-width:29rem;color:#c7d3cf;font-size:.79rem;line-height:1.48}
+.source-ref{color:#e2c6f5;font:500 .62rem/1 var(--mono);text-decoration:none;border-bottom:1px solid rgba(213,167,245,.4)}
+.source-ref:hover{border-color:var(--lilac)}
+.phase-cell{display:flex;align-items:center;gap:13px;padding-left:18px;padding-right:12px}
+.phase-num{display:grid;flex:none;place-items:center;width:29px;height:29px;border:1px solid rgba(197,243,109,.42);border-radius:50%;background:var(--bg);color:var(--lime);font:400 .66rem/1 var(--mono)}
+.phase-text{min-width:0}
+.phase-text h3{font:700 1.08rem/1.2 var(--display);letter-spacing:-.025em}
+.phase-text p{margin-top:5px;color:var(--soft);font-size:.7rem;line-height:1.4}
+.work-cell{display:flex;align-items:center;gap:13px;border-left:1px solid var(--line)}
+.work-icon{display:grid;flex:none;place-items:center;width:30px;height:30px;border-radius:9px;background:rgba(105,219,194,.09);color:var(--mint);font:500 .72rem/1 var(--mono)}
+.work-cell p{max-width:57rem;color:#d5e1db;font-size:.82rem;line-height:1.52}
+.phase-row:nth-child(even) .cell{background:linear-gradient(90deg,rgba(255,255,255,.014),rgba(255,255,255,.025))}
+.phase-row:target{outline:1px solid var(--lime);outline-offset:-1px;background:rgba(197,243,109,.035)}
+.go-live .governance,.handover .governance{color:var(--amber)}
+.loop-note{display:flex;align-items:center;gap:12px;margin:24px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(16,33,39,.7);color:var(--muted);font-size:.77rem}
+.loop-note .loop{color:var(--lime);font:500 1.1rem/1 var(--mono)}
+.evidence{margin-top:50px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.evidence summary{display:flex;justify-content:space-between;gap:20px;align-items:center;min-height:64px;cursor:pointer;list-style:none;color:var(--muted);font:500 .7rem/1.4 var(--mono);letter-spacing:.07em;text-transform:uppercase}
+.evidence summary::-webkit-details-marker{display:none}
+.evidence summary::after{content:"+";color:var(--lime);font-size:1.15rem}
+.evidence[open] summary::after{content:"−"}
+.evidence-intro{max-width:50rem;padding:4px 0 18px;color:var(--soft);font-size:.78rem}
+.quote-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:0 0 18px}
+.quote{min-width:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:rgba(16,33,39,.55);scroll-margin-top:90px}
+.quote h3{margin-bottom:9px;color:var(--lilac);font:500 .61rem/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase}
+.quote blockquote{margin:0;color:#d4dfd9;font-size:.72rem;line-height:1.5}
+.quote cite{display:block;margin-top:11px;color:var(--soft);font:400 .6rem/1.4 var(--mono);font-style:normal}
+footer{display:grid;grid-template-columns:1fr minmax(280px,.85fr);gap:42px;margin-top:32px;color:var(--soft);font-size:.7rem;line-height:1.6}
+.ai-note{max-width:38rem;justify-self:end}
+.ai-note b{display:block;margin-bottom:5px;color:var(--ink);font-weight:600}
+.ai-note .interpretation{display:block;margin-top:10px;color:#c3d1cc}
+/* Section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.4em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.55}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:4px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media (max-width:900px){
+  .shell{width:min(100% - 40px,760px)}
+  .hero{grid-template-columns:1fr;gap:25px;padding:48px 0 38px}
+  .hero-copy{max-width:42rem}
+  .lane-head,.phase-row{grid-template-columns:minmax(0,1fr) minmax(178px,.68fr) minmax(0,1.45fr);column-gap:7px}
+  .lane-name{padding-left:10px;padding-right:8px;font-size:.58rem}
+  .phase-row::before{left:calc((100% - 14px) * .348 + 7px)}
+  .cell{padding-left:10px;padding-right:10px}
+  .phase-cell{gap:9px;padding-left:10px}
+  .phase-text h3{font-size:.98rem}
+  .gov-cell p,.work-cell p{font-size:.74rem}
+  .work-cell{gap:9px}
+  .quote-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:620px){
+  html{scroll-padding-top:16px}
+  .shell{width:calc(100% - 32px);padding-top:16px}
+  .mast{padding-bottom:12px}
+  .brand{font-size:.6rem}
+  .brand-mark{width:25px;height:25px}
+  .hero{gap:20px;padding:40px 0 31px}
+  h1{font-size:clamp(4.2rem,18vw,6rem)}
+  .hero-copy p{font-size:1rem}
+  .summary{margin-top:16px}
+  .map-title{display:block;margin-bottom:13px}
+  .map-title p{margin-top:8px;text-align:left;font-size:.73rem}
+  .lane-head{display:none}
+  .phase-row{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:13px 0 15px}
+  .phase-row::before{left:13.5px;top:0;bottom:0;height:auto;width:1px;background:linear-gradient(var(--lime),var(--line))}
+  .cell{padding:0;background:none!important}
+  .phase-cell{order:0;min-height:48px;padding:0 0 10px;gap:11px}
+  .phase-num{width:28px;height:28px;background:var(--bg)}
+  .phase-text h3{font-size:1.08rem}
+  .phase-text p{margin-top:2px;font-size:.68rem}
+  .gov-cell{order:1;display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start;gap:5px 10px;padding:8px 0 9px 39px}
+  .governance{font-size:.56rem}
+  .gov-cell p{font-size:.73rem}
+  .source-ref{grid-column:2;justify-self:start}
+  .work-cell{order:2;display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;padding:10px 0 0 39px;border-left:0;border-top:1px solid var(--line)}
+  .work-icon{width:20px;height:20px;border-radius:6px;font-size:.6rem}
+  .work-cell p{font-size:.76rem}
+  .loop-note{align-items:flex-start;margin-top:19px;padding:12px;font-size:.72rem}
+  .evidence{margin-top:36px}
+  .evidence summary{min-height:58px;font-size:.62rem}
+  .quote-grid{grid-template-columns:1fr 1fr;gap:7px}
+  .quote{padding:10px}
+  .quote blockquote{font-size:.68rem}
+  footer{grid-template-columns:1fr;gap:18px;margin-top:25px}
+  .ai-note{justify-self:start}
+}
+@media (max-width:390px){
+  .gov-cell{grid-template-columns:1fr;gap:4px;padding-left:39px}
+  .source-ref{grid-column:1}
+  .quote-grid{grid-template-columns:1fr}
+  .summary span{font-size:.6rem}
+}
+@media (forced-colors:active){
+  .phase-row:target{outline:2px solid Highlight}
+  a:focus-visible{outline-color:Highlight}
+}
+@media print{
+  :root{color-scheme:light;--bg:#fff;--ink:#111;--muted:#444;--soft:#555;--panel:#fff;--line:#aaa}
+  body{background:#fff;color:#111}
+  .shell{width:100%;padding:0}
+  .mast{border-color:#555}
+  .back,.skip{display:none}
+  .lane-head{position:static;background:#fff;backdrop-filter:none}
+  .phase-row,.quote,.loop-note{break-inside:avoid}
+  .cell,.phase-row:nth-child(even) .cell{background:none!important}
+  .gov-cell p,.work-cell p,.phase-text p,.evidence-intro,.quote blockquote,footer{color:#333}
+  .evidence:not([open]) > *:not(summary){display:block}
+  .evidence summary::after{display:none}
+  footer{grid-template-columns:1fr 1fr}
+}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#lifecycle">Skip to the lifecycle map</a>
+<div class="shell">
+  <header>
+    <div class="mast">
+      <p class="brand"><span class="brand-mark" aria-hidden="true">S</span> Security in the delivery lifecycle</p>
+      <a class="back" href="index.html">← All pages</a>
+    </div>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Governance × delivery × security</p>
+        <h1>DevSecOps<span>.</span></h1>
+      </div>
+      <div class="hero-copy">
+        <p>Security moves with the work, from the first decision to the last credential revoked. Follow the checkpoints, the delivery phases and the practices that keep them connected.</p>
+        <div class="summary" aria-label="Map overview">
+          <span><b>10</b> lifecycle phases</span>
+          <span><b>5</b> decision points</span>
+          <span><b>1</b> continuous loop</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="map" id="lifecycle" aria-labelledby="map-heading">
+      <div class="map-title">
+        <h2 id="map-heading"><a class="sec-link" href="#map-heading">One connected lifecycle</a></h2>
+        <p>BP marks a project decision point. Governance sets direction and checks evidence; engineering turns security goals into working controls.</p>
+      </div>
+
+      <div class="lanes">
+        <div class="lane-head" aria-hidden="true">
+          <p class="lane-name">Governance activities</p>
+          <p class="lane-name">Delivery phase</p>
+          <p class="lane-name">Secure development activities</p>
+        </div>
+
+        <section class="phase-row" id="phase-plan" aria-labelledby="plan">
+          <div class="cell gov-cell">
+            <span class="governance">BP1 · Classify</span>
+            <p>Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks.</p>
+            <a class="source-ref" href="#evidence-bp1">Source note ↘</a>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">01</span><div class="phase-text"><h3 id="plan"><a class="sec-link" href="#plan">Plan</a></h3><p>Set the direction</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">01</span><p>Set scope, acceptance criteria, security and privacy requirements, and likely threats.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-design" aria-labelledby="design">
+          <div class="cell gov-cell">
+            <span class="governance">BP2 · Choose concept</span>
+            <p>Compare options for architecture and supplier risk; record the security case, expected residual risk, plan and budget.</p>
+            <a class="source-ref" href="#evidence-bp2">Source note ↘</a>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">02</span><div class="phase-text"><h3 id="design"><a class="sec-link" href="#design">Design</a></h3><p>Shape the solution</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">02</span><p>Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-code" aria-labelledby="code">
+          <div class="cell gov-cell">
+            <span class="governance">BP3 · Ready to build</span>
+            <p>Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</p>
+            <a class="source-ref" href="#evidence-bp3">Source note ↘</a>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">03</span><div class="phase-text"><h3 id="code"><a class="sec-link" href="#code">Code</a></h3><p>Build to the standard</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">03</span><p>Use secure coding standards, review changes, protect secrets and assess dependencies.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-build" aria-labelledby="build">
+          <div class="cell gov-cell">
+            <span class="governance">Assurance · Evidence</span>
+            <p>Track whether security activities are complete; keep findings, owners and due dates visible.</p>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">04</span><div class="phase-text"><h3 id="build"><a class="sec-link" href="#build">Build</a></h3><p>Package trusted inputs</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">04</span><p>Package from trusted inputs and keep the artifact traceable to its source and dependencies.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-test" aria-labelledby="test">
+          <div class="cell gov-cell">
+            <span class="governance">Assurance · Verify</span>
+            <p>Review test evidence against the agreed security requirements and follow unresolved findings to closure.</p>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">05</span><div class="phase-text"><h3 id="test"><a class="sec-link" href="#test">Test</a></h3><p>Verify the controls</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">05</span><p>Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</p></div>
+        </section>
+
+        <section class="phase-row go-live" id="phase-release" aria-labelledby="release">
+          <div class="cell gov-cell">
+            <span class="governance">BP4 · Production go / no-go</span>
+            <p>Require verified controls, tested recovery and monitoring. Close critical and high findings or get the system owner’s explicit risk acceptance.</p>
+            <a class="source-ref" href="#evidence-bp4">Source note ↘</a>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">06</span><div class="phase-text"><h3 id="release"><a class="sec-link" href="#release">Release</a></h3><p>Approve the version</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">06</span><p>Approve a verified, traceable software version after required checks pass.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-deploy" aria-labelledby="deploy">
+          <div class="cell gov-cell">
+            <span class="governance">Controlled promotion</span>
+            <p>Promote only the approved release and confirm the rollout is understood and reversible.</p>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">07</span><div class="phase-text"><h3 id="deploy"><a class="sec-link" href="#deploy">Deploy</a></h3><p>Deliver with guardrails</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">07</span><p>Use hardened settings and least-privilege access; verify the rollout and support rollback.</p></div>
+        </section>
+
+        <section class="phase-row handover" id="phase-operate" aria-labelledby="operate">
+          <div class="cell gov-cell">
+            <span class="governance">BP5 · Handover</span>
+            <p>Transfer operations and open actions with named owners, dates and the evidence needed to continue.</p>
+            <a class="source-ref" href="#evidence-bp5">Source note ↘</a>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">08</span><div class="phase-text"><h3 id="operate"><a class="sec-link" href="#operate">Operate</a></h3><p>Run the service</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">08</span><p>Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-monitor" aria-labelledby="monitor">
+          <div class="cell gov-cell">
+            <span class="governance">Measure · Improve</span>
+            <p>Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</p>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">09</span><div class="phase-text"><h3 id="monitor"><a class="sec-link" href="#monitor">Monitor</a></h3><p>Learn from live signals</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">09</span><p>Track service health, performance, user experience and security events; alert on suspicious activity or change.</p></div>
+        </section>
+
+        <section class="phase-row" id="phase-retire" aria-labelledby="retire">
+          <div class="cell gov-cell">
+            <span class="governance">Closeout · Confirm</span>
+            <p>Assign closure ownership and confirm remaining access and data obligations are addressed.</p>
+          </div>
+          <div class="cell phase-cell">
+            <span class="phase-num">10</span><div class="phase-text"><h3 id="retire"><a class="sec-link" href="#retire">Retire</a></h3><p>Close the lifecycle</p></div>
+          </div>
+          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">10</span><p>Decommission the service, revoke credentials and access, and handle data under retention requirements.</p></div>
+        </section>
+      </div>
+
+      <p class="loop-note"><span class="loop" aria-hidden="true">↺</span><span>Security is continuous: monitoring, incidents, changes and new vulnerabilities can send work back to planning.</span></p>
+    </section>
+
+    <details class="evidence" id="case-evidence">
+      <summary>Case presentation · decision-point evidence</summary>
+      <p class="evidence-intro">The governance checkpoints above condense the supplied case presentation. These short Norwegian excerpts show the source criteria for BP1-BP5. Other lifecycle guidance follows the supplied phase descriptions; the organization should set its own owners and thresholds.</p>
+      <div class="quote-grid">
+        <article class="quote" id="evidence-bp1"><h3><a class="sec-link" href="#evidence-bp1">BP1 · Classification</a></h3><blockquote lang="no">“Sikkerhetskriterier for go/no-go: Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået. DPIA-behovet er avklart, og risikoer er dokumentert.”</blockquote><cite>Casepresentasjon.pdf, p. 3</cite></article>
+        <article class="quote" id="evidence-bp2"><h3><a class="sec-link" href="#evidence-bp2">BP2 · Concept choice</a></h3><blockquote lang="no">“Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”</blockquote><cite>Casepresentasjon.pdf, p. 4</cite></article>
+        <article class="quote" id="evidence-bp3"><h3><a class="sec-link" href="#evidence-bp3">BP3 · Design and development</a></h3><blockquote lang="no">“Trusselmodellen er gjennomført, og risikoregisteret er oppdatert. Sikkerhetskravene i backlog.”</blockquote><cite>Casepresentasjon.pdf, p. 5</cite></article>
+        <article class="quote" id="evidence-bp4"><h3><a class="sec-link" href="#evidence-bp4">BP4 · Production readiness</a></h3><blockquote lang="no">“Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått.”</blockquote><cite>Casepresentasjon.pdf, p. 6</cite></article>
+        <article class="quote" id="evidence-bp5"><h3><a class="sec-link" href="#evidence-bp5">BP5 · Operations handover</a></h3><blockquote lang="no">“Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.”</blockquote><cite>Casepresentasjon.pdf, p. 7</cite></article>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    <p>Use the checkpoints as prompts for evidence and ownership. They are a high-level view, not a substitute for the organization’s own policies, risk criteria or release authority.</p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">Interpretation by AI: This map organizes the supplied lifecycle outline and case presentation into a single view. Adapt the activities and decision criteria to the service and its owners.</span></p>
+  </footer>
+</div>
+<script>
+(function(){
+  var evidence = document.getElementById('case-evidence');
+  function openEvidenceForHash(){
+    if (location.hash.indexOf('#evidence-') === 0) evidence.open = true;
+  }
+  openEvidenceForHash();
+  document.querySelectorAll('.source-ref').forEach(function(link){
+    link.addEventListener('click', function(){ evidence.open = true; });
+  });
+})();
+</script>
+</body>
+</html>

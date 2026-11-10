@@ -1,0 +1,20 @@
+DEVSECOPS LIFECYCLE MAP
+
+Flow description: Governance checkpoints guide decisions and evidence as work
+moves through the lifecycle. Secure development activities turn requirements
+into verified controls. Monitoring feeds changes and new risks back to planning.
+
+GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
+---------------------           --------------       -----------------------------
+BP1: classify service       --> Plan             --> Set scope and security goals
+BP2: choose concept         --> Design           --> Model threats and requirements
+BP3: ready to build         --> Code             --> Secure coding and review
+Track evidence and owners   --> Build            --> Package traceable artifact
+Review test evidence        --> Test             --> Verify function, quality, security
+BP4: production go/no-go    --> Release          --> Approve verified version
+Control promotion          --> Deploy           --> Harden settings and access
+BP5: operations handover   --> Operate          --> Patch, back up, respond
+Measure and improve        --> Monitor          --> Track service and security signals
+Closeout                   --> Retire           --> Revoke access and handle data
+
+Monitoring, incidents, changes and vulnerabilities can return work to Plan.
