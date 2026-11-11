@@ -1,8 +1,8 @@
 # DevSecOps visual draft fact check
 
-Checked: 10 November 2026
+Checked: 11 November 2026
 
-This draft uses a single vertical diagram to connect lifecycle phases, governance work and secure development activities. The diagram is described in `devsecops-visual.flow.txt`. Checked against primary sources on 10 November 2026.
+This draft uses a single vertical diagram to connect lifecycle phases, governance work and secure development activities. The diagram is described in `devsecops-visual.flow.txt`. The original source review was completed on 10 November 2026; the legal-obligations risk and its additional sources were reviewed on 11 November 2026.
 
 ## Scope and verdict
 
@@ -12,7 +12,7 @@ The ten phases and their assignments are an editorial lifecycle synthesis, not a
 
 The risk table lists possible consequences of skipping an activity in the same lane. Governance consequences are framed as business impact; engineering consequences are framed as technical impact. This cause-and-consequence wording and phase mapping are interpretation by AI. The quoted passages establish the risk mechanism or control purpose, not the probability, cost or certainty of each consequence. The table is illustrative, not exhaustive.
 
-Verified 10 November 2026. All quoted excerpts below were checked against the linked primary sources. GDPR references are conditional on the regulation applying and on the specific legal conditions. Article 30 has exceptions. A [2026 proposal to amend its record-keeping threshold](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CONSIL%3AST_10978_2026_INIT) was visible during this check, but was not treated as enacted law. The data recovery example concerns data-bearing media that is due for sanitization, not data that must still be retained.
+Existing risk excerpts were verified on 10 November 2026. The consolidated legal-obligations risk and its ISO/NIST sources were checked on 11 November 2026. GDPR references are conditional on the regulation applying and on the specific legal conditions. Article 30 has exceptions. A [2026 proposal to amend its record-keeping threshold](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CONSIL%3AST_10978_2026_INIT) was visible during the 10 November check, but was not treated as enacted law. The data recovery example concerns data-bearing media that is due for sanitization, not data that must still be retained.
 
 ### Source version status
 
@@ -21,6 +21,7 @@ Verified 10 November 2026. All quoted excerpts below were checked against the li
 - [SLSA specification 1.2](https://slsa.dev/spec/v1.2/) is marked approved on its source pages.
 - [NIST SP 800-88 Rev. 2](https://csrc.nist.gov/pubs/sp/800/88/r2/final), published in September 2025, supersedes Rev. 1 and is used for the media sanitization claim.
 - [NIST CSF 2.0](https://www.nist.gov/cyberframework) is the cited framework version. NIST SP 800-53 Rev. 5 CM-3 wording was checked against the linked publication.
+- [ISO 37301:2021](https://www.iso.org/standard/75080.html) was confirmed current in 2026, with Amendment 1:2024. Its committee FAQ summarizes identification and evaluation of obligations related to an organization's products, services or activities.
 
 ## Lifecycle map review
 
@@ -43,7 +44,7 @@ The feedback sentence under the map is interpretation by AI: monitoring, inciden
 
 - The lifecycle introduction now explicitly identifies the ten-stage map as a working interpretation, not a universal or prescribed sequence.
 - Release guidance no longer implies that a system owner may accept any critical or high finding without process constraints. It calls for resolution or a time-limited exception approved by the authorized risk owner, where policy permits, with compensating controls where appropriate.
-- GDPR-related risks now state their conditions and avoid suggesting Article 30 applies to every organization or that a DPIA is always required.
+- The three separate GDPR risks were combined into one general legal and regulatory compliance risk. GDPR Articles 30, 35 and 24 remain as conditional examples inside its evidence details; they do not imply that all three provisions apply to every organization or processing activity.
 - The Code supply-chain risk now describes a compromised or vulnerable dependency reaching downstream users. The cited NIST supply-chain definition and SSDF component-vulnerability practice support this wording; the previous claim about token theft and access to critical systems was too specific for its evidence.
 - The retirement recovery risk now concerns data-bearing media due for sanitization and does not imply that retained data should be destroyed.
 - Privacy compliance wording was narrowed to the controller's GDPR accountability obligation. The prior references to contracts and customer trust were not established by the cited Article 24 excerpt.
@@ -75,9 +76,7 @@ The feedback sentence under the map is interpretation by AI: monitoring, inciden
 |---|---|---|
 | Plan | No named risk owner, delaying decisions and leaving business exposure unresolved. | “Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.” [NIST CSF 2.0 · GV.RR-02](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22) |
 | Plan | Critical service goes unclassified, leaving resilience planning and investment out of step with its business importance. | “Assets are prioritized based on classification, criticality, resources, and impact on the mission.” [NIST CSF 2.0 · ID.AM-05](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=23) |
-| Plan | Where GDPR requires a record of processing, missing data categories can weaken accountability and data handling decisions. | “a description of the categories of data subjects and of the categories of personal data” [GDPR · Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_30) |
-| Plan | When processing is likely to create high risk, a required DPIA is missed or incomplete, leaving privacy impacts unassessed. | “likely to result in a high risk to the rights and freedoms of natural persons” [GDPR · Article 35](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_35) |
-| Plan | A controller cannot demonstrate GDPR compliance, weakening accountability. | “to ensure and to be able to demonstrate that processing is performed in accordance with this Regulation.” [GDPR · Article 24](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_24) |
+| Plan | Applicable legal and regulatory obligations are not identified or reviewed, increasing the risk of non-compliance. | “Identify compliance obligations related to the organization's products, services, or activities, and evaluate compliance risks” [ISO/TC 309 · ISO 37301 FAQ, question 12](https://committee.iso.org/files/live/sites/tc309/files/FAQ%2037301/ISO%2037301%20FAQs%2C%20May%202022.pdf); “Legal, regulatory, and contractual requirements regarding cybersecurity” [NIST CSF 2.0 · GV.OC-03](https://csrc.nist.gov/projects/cybersecurity-framework/filters). Conditional GDPR examples: Article 30, “a description of the categories of data subjects and of the categories of personal data” [Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_30); Article 35, “likely to result in a high risk to the rights and freedoms of natural persons” [Article 35](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_35); Article 24, “to ensure and to be able to demonstrate that processing is performed in accordance with this Regulation” [Article 24](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_24). |
 | Design | Risk response left undefined, leaving the business exposed to losses beyond its agreed tolerance. | “Strategic direction that describes appropriate risk response options is established and communicated.” [NIST CSF 2.0 · GV.RM-04](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22) |
 | Build | Security findings go untracked, allowing unresolved issues to accumulate and increase delivery delays or incident costs. | “Record and track all security defects in a defined location.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=Record%20and%20track%20all%20security%20defects%20in%20a%20defined%20location.) |
 | Test | Security sign-off lacks test evidence, increasing the chance of a release decision that disrupts the business. | “consider the passing of security tests as part of merge requirements before allowing new code to enter the main code base.” [OWASP SAMM · Control Verification](https://owaspsamm.org/model/verification/requirements-driven-testing/stream-a/#:~:text=consider%20the%20passing%20of%20security%20tests%20as%20part%20of%20merge%20requirements%20before%20allowing%20new%20code%20to%20enter%20the%20main%20code%20base.) |
@@ -87,7 +86,7 @@ The feedback sentence under the map is interpretation by AI: monitoring, inciden
 | Monitor | Overdue fixes go unreported, allowing manageable issues to grow into costly incidents. | “centrally monitor and regularly report on SLA breaches.” [OWASP SAMM · Defect Tracking](https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=centrally%20monitor%20and%20regularly%20report%20on%20SLA%20breaches.) |
 | Retire | Retention obligations remain unresolved, creating unnecessary storage costs and privacy or legal exposure. | “You have retention requirements for data, and you destroy backups in a timely manner after the relevant retention period ends” [OWASP SAMM · Data Protection](https://owaspsamm.org/model/operations/operational-management/stream-a/#:~:text=You%20have%20retention%20requirements%20for%20data%2C%20and%20you%20destroy%20backups%20in%20a%20timely%20manner%20after%20the%20relevant%20retention%20period%20ends) |
 
-The three-lane layout and the governance summaries are interpretation by AI. The retirement governance prompt is also interpretation by AI, based on the supplied lifecycle description. The classification risks about personal data, DPIAs and demonstrable privacy compliance are mapped to the GDPR; this does not enumerate all laws or regulations that may apply. The page does not claim these are formal organizational requirements.
+The three-lane layout and the governance summaries are interpretation by AI. The retirement governance prompt is also interpretation by AI, based on the supplied lifecycle description. The single legal and regulatory risk is a general compliance risk category, not a complete register of laws, regulations or other obligations that apply to a particular organization. Its GDPR references are examples only. The page does not determine which laws apply or claim these are formal organizational requirements.
 
 ## Verification gaps
 
