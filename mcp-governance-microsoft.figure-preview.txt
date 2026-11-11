@@ -27,7 +27,8 @@ MCP CLIENTS  v                            v                            v        
              v                                                                                      |
 +------------------------+   +------------------------+   +------------------------+                |
 | [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY, PREVIEW[/b]    |   | [b]COMPANY MCP SERVER[/b]     |                |
-| URL allowlist          |   | Publish MCP endpoints  |   | Gateway only (target)  |                |
+| URL allowlist: VS Code |   | Publish MCP endpoints  |   | Gateway only (target)  |                |
+| and GitHub Copilot     |   |                        |   |                        |                |
 | Windows egress limits  |-->| Check identity         |-->|                        |                |
 | Sign-in required       |   | Authorize requests     |   |                        |                |
 |                        |   | Log every call         |   |                        |                |

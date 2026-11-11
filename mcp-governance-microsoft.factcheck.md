@@ -4,6 +4,14 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 Documentation checked: 2026-11-11.
 
+## 2026-11-11, remote MCP URL allowlist scope
+
+- **Asked.** Clarify whether the design's URL allowlist belongs to VS Code and is synced through GitHub settings into Intune.
+- **Method.** Rechecked the current VS Code enterprise policy, GitHub enterprise managed settings and deployment documentation on 2026-11-11.
+- **Finding.** The figures now label the remote MCP URL allowlist for managed VS Code and GitHub Copilot. VS Code has its own enterprise policies. GitHub managed `allowedMcpServers` supports remote server URL matchers and local server command matchers. GitHub settings can be delivered through GitHub or separately through MDM; the design's pipeline writes to GitHub managed settings and does not describe propagation into Intune. Device egress rules are separate.
+- **Verification.** This wording describes the proposed control scope, not a tested tenant configuration. Sources: [VS Code enterprise policies](https://code.visualstudio.com/docs/enterprise/policies), [GitHub managed settings](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings), [GitHub deployment methods](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings).
+- **Reviewed presentation text.** Added the two-line figure label and clarified its scope in each figure's accessibility description. See the ledger below.
+
 ## 2026-11-11, Microsoft 365 agent inventory and approval workflow
 
 - **Asked.** Show the Microsoft 365 admin center agent inventory, MCP tool/server states and Requests (preview) in the design, and explain how approve and deny decisions work.
@@ -384,7 +392,8 @@ label	GitHub Copilot
 label	CLIENT CONTROLS
 label	API MANAGEMENT
 label	COMPANY MCP SERVER
-label	URL allowlist
+label	URL allowlist: VS Code
+label	and GitHub Copilot
 requirement	Check identity
 requirement	Gateway only (target)
 requirement	Windows egress limits
@@ -506,7 +515,7 @@ requirement	Approved connectors
 requirement	By hand
 requirement	By pipeline
 label	Control planes
-requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub Enterprise managed settings, and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. Microsoft 365 Copilot calls API Management from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Agent 365 is not drawn: company servers join it through preview features.
+requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub Enterprise managed settings, and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. The remote MCP URL allowlist applies to managed VS Code and GitHub Copilot clients; it is separate from device egress rules. Microsoft 365 Copilot calls API Management from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Agent 365 is not drawn: company servers join it through preview features.
 label	Approval boundaries and cross-cutting guardrails
 label	Foundry portal
 label	GITHUB ENTERPRISE
@@ -555,7 +564,7 @@ label	Keep unavailable;
 label	record reason in Git
 label	Apply target policies
 label	and backend authorization
-requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue.
+requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. The remote MCP URL allowlist applies to managed VS Code and GitHub Copilot clients; it is separate from device egress rules. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue.
 requirement	A developer proposes a server in the reviewed Git inventory. A security reviewer approves or rejects the pull request. Rejection stops the request and is recorded as denied. After approval and merge, the developer registers the server through the Agent 365 preview flow. An administrator reviews the request in Microsoft 365 admin center Requests preview and approves or rejects it. Rejection leaves the server unavailable and the reason is recorded. Approval is followed by Microsoft Entra tenant consent; only then does the server become Available in the tools registry. The admin records the approved server and consent in the inventory, applies target-specific access controls, and monitors calls. A later deny blocks the server in the tools registry and updates the inventory and other policy targets.
 requirement	The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. The registry status is Available only after admin approval and required Microsoft Entra consent. V184 V185 V87
 requirement	With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The view combines distinct admin pages: Agents > All agents > Registry, and Agents > Tools > Registry or Requests (preview). V182 V183 V189 The BYO server route is separate; its limits are listed below.

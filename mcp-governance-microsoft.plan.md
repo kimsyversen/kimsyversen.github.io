@@ -87,3 +87,8 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - [x] Add source quotes V181 to V193 and update the page fact check and decisions note.
 - [x] Builder, section anchors and reviewed-text checks.
 - [ ] Browser check at desktop and 375 px. No tenant check; acceptance tests are listed as not run.
+
+## URL allowlist scope 2026-11-11
+- [x] Both design figures specify managed VS Code and GitHub Copilot; accessibility descriptions and fact-check ledger updated.
+- [x] Builder, section-anchor, reviewed-label and diff whitespace checks passed.
+- [ ] Desktop and narrow browser check not run: local server could not bind and browser blocks local file URLs.
