@@ -249,3 +249,4 @@ Moved the page and its notes from `wip/` to the repository root and listed it in
 
 - The client-control figures identify the URL allowlist as a remote MCP control for managed VS Code and GitHub Copilot. Reason: the approved list is translated into client-specific policy, and this label must not imply that the GitHub URL matcher also governs Copilot Studio, Foundry, or Microsoft 365 Copilot.
 - Device egress rules remain a separate control. GitHub managed settings can use a remote server URL matcher or a local server command matcher; the diagram label refers to the URL matcher only.
+- Figure labels separately identify client sign-in, gateway identity checks and authorization, Intune-managed Windows egress, and the backend rule that only the gateway can reach it. This avoids implying that sign-in replaces gateway or backend authorization.

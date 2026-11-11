@@ -371,7 +371,7 @@ DESC_SAFE = ("Design target: a Git repository holds the approved and denied MCP 
              "After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, "
              "GitHub Enterprise managed settings, and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: "
              "Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through "
-             "client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. "
+             "client sign-in, Windows outbound firewall rules administered by Intune on managed Windows devices where applicable, API Management identity checks and authorization, and the company MCP server, which accepts calls only from the gateway. "
              "The remote MCP URL allowlist applies to managed VS Code and GitHub Copilot clients; it is separate from device egress rules. "
              "Microsoft 365 Copilot calls API Management from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. "
              "Agent 365 is not drawn: company servers join it through preview features.")
@@ -379,7 +379,7 @@ DESC_PREVIEW = ("Design target: the released-only design with preview additions.
                 "After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, "
                 "GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: "
                 "Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. "
-                "The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. "
+                "The first three pass through client sign-in, Windows outbound firewall rules administered by Intune on managed Windows devices where applicable, Azure AI Gateway identity checks and authorization with tool threat protection, and a company MCP server that accepts calls only from the gateway. "
                 "The remote MCP URL allowlist applies to managed VS Code and GitHub Copilot clients; it is separate from device egress rules. "
                 "Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. "
                 "A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue.")

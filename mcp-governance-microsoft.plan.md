@@ -92,3 +92,9 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - [x] Both design figures specify managed VS Code and GitHub Copilot; accessibility descriptions and fact-check ledger updated.
 - [x] Builder, section-anchor, reviewed-label and diff whitespace checks passed.
 - [ ] Desktop and narrow browser check not run: local server could not bind and browser blocks local file URLs.
+
+## Client and backend control labels 2026-11-11
+- [x] Both figures distinguish client sign-in from gateway identity and authorization, identify Windows egress as Intune-managed, and say the backend accepts calls only from the gateway.
+- [x] Updated accessibility descriptions, fact-check ledger and decisions note.
+- [x] Builder, section-anchor, reviewed-label and diff whitespace checks.
+- [ ] Quote source check not verified: all 193 fetches failed because source hosts did not resolve. Desktop and narrow browser check not run: local server could not bind and browser blocks local file URLs.
