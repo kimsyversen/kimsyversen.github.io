@@ -2,6 +2,13 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 # Decisions: MCP Governance in a Microsoft ecosystem
 
+## 2026-11-11, Agent admin view and approval workflow
+
+- **Show the Microsoft 365 admin views separately.** Agents > All agents > Registry inventories agents. Agents > Tools > Registry shows MCP server availability, and Requests (preview) handles MCP registration requests. They are not one screen and visibility does not enforce access. Agent details can show read-only, incomplete tool metadata.
+- **Use two approval gates for the Agent 365 BYO preview route.** First, an internal reviewed Git change establishes the source-of-truth decision. Then an M365 admin separately approves or rejects the registered server request. Required Entra consent follows approval; the server is not available before consent. A rejection at either gate stops rollout.
+- **Deny immediately, then reconcile.** For a live server, block it in the registry first, then record the deny in Git, remove it from target allowlists, and verify runtime calls fail. The sync pipeline and Microsoft 365 admin actions are independent, so the workflow must reconcile them.
+- **BYO per-tool controls remain a gap.** Microsoft says tool-level blocking is rolling out for supported Agent 365 servers and is planned for BYO servers. Use server-level blocking and server-side authorization for BYO in the interim.
+
 ## 2026-11-08
 
 - **Page lives in `wip/`.** Same place as the governance summary. The index has no wip links, so the index is not edited.

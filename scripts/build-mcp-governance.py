@@ -276,6 +276,16 @@ def control_link(anchor, title):
     return f'<a href="#ctrl-{anchor}">{title}</a>'
 
 
+def ascii_fig(name):
+    raw = (ROOT / f"mcp-governance-microsoft.figure-{name}.txt").read_text(encoding="utf-8")
+    for tag in ("red", "b"):
+        if raw.count(f"[{tag}]") != raw.count(f"[/{tag}]"):
+            sys.exit(f"unbalanced [{tag}] markers in figure {name}")
+    out = html.escape(raw.rstrip("\n"), quote=False)
+    out = out.replace("[red]", '<span class="stop">').replace("[b]", '<span class="ttl">')
+    return out.replace("[/red]", "</span>").replace("[/b]", "</span>")
+
+
 PARTS_ROWS = [
     part("Approved list in Git", "Source of truth",
          "Reviewed record of approved and denied MCP servers.",
@@ -299,7 +309,7 @@ PARTS_ROWS = [
          "Company MCP server; only the gateway may reach it.",
          "Yes", "Yes"),
     part("Agent 365 gateway integration", "Preview admin view",
-         "Admin view connected to the gateway. Product controls are detailed below.",
+         "In the preview design, the Microsoft 365 admin center shows the organization agent registry, the tools registry with MCP server status, and MCP server registration requests. Connect the gateway to discover its servers.",
          "No", "New"),
     part("Other preview additions", "Optional controls",
          "Tool threat protection, Foundry gateway routing, and optional remote-server filtering. Details are in Controls.",
@@ -317,31 +327,44 @@ PARTS = f"""
 PLANES = f"""
     <div class="sub3" id="planes">
       <h3>Control planes</h3>
-      <p class="q-note">Each row is one admin surface where MCP is governed. The same approved list must reach every row, or the rules differ between clients. Rows point to the control that holds the details. {REC}</p>
+      <p class="q-note">Each row is an admin surface for policy or visibility. Map the approved inventory into policy targets. Registry views help administrators inspect agents, servers and requests, but visibility alone does not enforce access. {REC}</p>
       {table(["Control plane", "Administered in", "What it governs for MCP in this design", "Control"], [
         ["Power Platform", f"Power Platform admin center {UNV}", "MCP connectors that Copilot Studio agents may use.", control_link('power-platform', 'Policy sync, Power Platform')],
         ["GitHub Enterprise", f"Managed settings file in the .github-private repository {ev('gh-file')}", "MCP servers that VS Code and GitHub Copilot may use.", f"{control_link('client', 'Client allowlist')}; {control_link('pipeline', 'Policy sync, pipeline')}"],
         ["Microsoft Foundry", f"Foundry portal {UNV}", "Tools each Foundry agent may call on an MCP server.", control_link('foundry', 'Policy sync, Foundry')],
         ["Microsoft 365 Copilot", f"Microsoft 365 admin center {ev('m365-admin')}", "MCP servers offered to Microsoft 365 Copilot as federated connectors.", control_link('m365', 'Policy sync, Microsoft 365 Copilot')],
-        ["Microsoft Agent 365", f"Microsoft 365 admin center {ev('a365-registry')}", f"Released product {ev('a365-ga')}. A company MCP server joins it by BYO registration or a connected gateway, and both are preview features {ev('a365-byo-reg', 'a365-byo-pre', 'a365-gw-pre')}. {safe('Not used in this design.')}{prev('Admin view and blocking.')}", safe("None") + prev(f"{control_link('a365', 'Agent 365 gateway integration')}; {control_link('byo', 'Agent 365 BYO server route')}")],
+        ["Microsoft 365 agent inventory", f"Agents > All agents > Registry {ev('a365-agent-all')}", f"Organization-wide agent inventory. Agent details include tools when the platform reports them, but the metadata is read-only and incomplete for some agents {ev('a365-agent-readonly', 'a365-agent-incomplete')}.", "Visibility only; agent approval and lifecycle are not this MCP server control."],
+        ["Microsoft Agent 365 tools", f"Agents > Tools > Registry and Requests {ev('a365-tools-overview', 'a365-tools-tabs')}", f"Registry shows MCP server status as Available or Blocked {ev('a365-tools-status')}. Requests (preview) reviews server registrations. {safe('Not used in this design.')}{prev('Admin view and blocking.')}", safe("None") + prev(f"{control_link('a365', 'Agent 365 gateway integration')}; {control_link('byo', 'Agent 365 BYO server route')}; <a href=\"#approval-workflow\">Approval and denial workflow</a>")],
         ["Azure API Management", f"Azure {INF}", "The one door to the company MCP server, for every client.", f"{control_link('gateway', 'Gateway')}; {control_link('backend', 'Backend isolation')}; {control_link('identity', 'Identity')}"],
         ["Device management", f"Intune and VS Code policy {INF}", "URL allowlist and Windows outbound rules on managed devices.", f"{control_link('client', 'Client allowlist')}; {control_link('windows', 'Windows outbound limits')}; {control_link('stdio', 'Local stdio servers')}"],
       ])}
-      <p class="q-note">{UNV} marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. {INF} marks interpretation by AI. Agent 365 inventory, identity and lifecycle for agents are outside this page, which covers MCP servers only.</p>
+      <p class="q-note">{UNV} marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. {INF} marks interpretation by AI. The agent inventory provides visibility; approval and lifecycle for agents are separate from this page's MCP server workflow.</p>
+    </div>
+    <div class="sub3 opt-preview" id="approval-workflow">
+      <h3>Approval and denial workflow</h3>
+      <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other. {REC}</p>
+      <figure>
+        <p class="fig-hint">Approval and denial path for a company MCP server.</p>
+        <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP server approval workflow, horizontally scrollable">
+<pre class="ascii" role="img" aria-label="A developer proposes a server in the reviewed Git inventory. A security reviewer approves or rejects the pull request. Rejection stops the request and is recorded as denied. After approval and merge, the developer registers the server through the Agent 365 preview flow. An administrator reviews the request in Microsoft 365 admin center Requests preview and approves or rejects it. Rejection leaves the server unavailable and the reason is recorded. Approval is followed by Microsoft Entra tenant consent; only then does the server become Available in the tools registry. The admin records the approved server and consent in the inventory, applies target-specific access controls, and monitors calls. A later deny blocks the server in the tools registry and updates the inventory and other policy targets.">{ascii_fig("approval")}</pre>
+        </div>
+        <figcaption class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. The registry status is Available only after admin approval and required Microsoft Entra consent. {ev('a365-tools-approve', 'a365-tools-consent')} {evp('pv-byo-approval')}</figcaption>
+      </figure>
+      <ol>
+        <li><strong>Propose.</strong> The requester adds the MCP server URL, owner, authentication, declared tools, permissions and risk notes to the approved inventory. The developer registration must use the same server and gateway endpoint.</li>
+        <li><strong>Review internally.</strong> Review the server and each tool, identity path, data access, owner and rollback plan. Merge the pull request only if approved. If denied, record the reason and keep the server out of every target.</li>
+        <li><strong>Submit for Microsoft approval.</strong> For the Agent 365 BYO preview route, the developer registers the server. An AI Administrator or Global Administrator reviews its requester, publisher, server information and declared tools under Agents &gt; Tools &gt; Requests (preview), then approves or rejects it. {ev('a365-tools-role-ai', 'a365-tools-role-global')} {evp('pv-byo-approval')}</li>
+        <li><strong>Consent and enable.</strong> After approval, grant the required Microsoft Entra tenant consent. The server becomes available only after consent. Record the consent and resulting Available state in the inventory. {ev('a365-tools-consent', 'a365-tools-status')}</li>
+        <li><strong>Limit and monitor.</strong> Restrict access with target-specific policies and backend authorization. Individual tool controls are rolling out for supported Agent 365 servers; BYO server tool-level blocking is planned, so use server-level blocking and gateway/backend authorization for BYO until tool controls are supported. {ev('a365-tools-granular')} {evp('pv-byo-roll', 'pv-a365-ctrl')}</li>
+        <li><strong>Reject or revoke.</strong> A rejected request stays unavailable. If an approved server later fails review, block it in the registry, mark it denied in Git, remove it from target allowlists, and verify calls are denied. Microsoft 365 admin actions do not automatically update the other target policies. {REC}</li>
+      </ol>
+      <p class="q-note">This is the MCP server request queue. Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. {ev('a365-agent-approve', 'a365-agent-request-review', 'a365-agent-readonly', 'a365-agent-incomplete')}</p>
     </div>
 """
 
 # ---- design figures ------------------------------------------------------
 # The figures are plain text files beside the page. Edit them, then rebuild.
 # [red]...[/red] marks text that means caution, unverified or denied. [b]...[/b] marks a box title.
-def ascii_fig(name):
-    raw = (ROOT / f"mcp-governance-microsoft.figure-{name}.txt").read_text(encoding="utf-8")
-    for tag in ("red", "b"):
-        if raw.count(f"[{tag}]") != raw.count(f"[/{tag}]"):
-            sys.exit(f"unbalanced [{tag}] markers in figure {name}")
-    out = html.escape(raw.rstrip("\n"), quote=False)
-    out = out.replace("[red]", '<span class="stop">').replace("[b]", '<span class="ttl">')
-    return out.replace("[/red]", "</span>").replace("[/b]", "</span>")
 
 
 DESC_SAFE = ("Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. "
@@ -357,7 +380,7 @@ DESC_PREVIEW = ("Design target: the released-only design with preview additions.
                 "Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. "
                 "The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. "
                 "Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. "
-                "A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.")
+                "A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue.")
 
 FIGURE = f"""
   <section class="sec" id="design" aria-labelledby="h-design">
@@ -375,7 +398,7 @@ FIGURE = f"""
       <div class="fig-scroll" tabindex="0" role="region" aria-label="With-preview MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="{DESC_PREVIEW}">{ascii_fig("preview")}</pre>
       </div>
-      <figcaption class="q-note">With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.</figcaption>
+      <figcaption class="q-note">With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The view combines distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')} The BYO server route is separate; its limits are listed below.</figcaption>
     </figure>
 {PARTS}{PLANES}  </section>
 """
@@ -560,6 +583,10 @@ TESTS = f"""
         ["Admin blocks a single tool in the API Management integration", "Denied, only on a supported gateway with a static tool list", "An explicit tool-level policy test", "Not run"],
         ["Pre-invocation evaluation denies a tool argument", "Tool not run", "Block mode before the call", "Not run"],
         ["Post-invocation evaluation denies a tool result", "Result withheld; the tool may already have run", "Block mode after the call", "Not run"],
+        ["Microsoft admin rejects a registered MCP server request", "Server remains unavailable", "Requests preview decision", "Not run"],
+        ["Microsoft admin approves without granting Entra consent", "Server remains unavailable to agent-building surfaces", "Approval plus required tenant consent", "Not run"],
+        ["Admin blocks an Available MCP server", "Tool calls are denied at runtime", "Registry block and the connected Agent 365 enforcement path", "Not run"],
+        ["Review the Agent registry, Tools registry and Requests queue", "Agent inventory, Available or Blocked server states, and pending preview requests are visible in their respective views", "Microsoft 365 admin center", "Not run"],
         ["An app-only caller reaches a tool with the delegated-token protection", "Unsupported, or the protected call fails", "An explicit sign-in compatibility test", "Not run"],
         ["The gateway is down, or a preview feature is withdrawn", "Safe stop, or a rollback to the released-only design", "Backend and client controls, and the fallback plan", "Not run"],
       ])}

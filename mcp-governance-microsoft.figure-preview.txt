@@ -38,10 +38,12 @@ MCP CLIENTS  v                            v                            v        
                                    |            +---------------------------------------------------+
                                    |              Microsoft cloud, fixed outbound addresses
                                    | Connect gateway
-                             +------------------------+
-                             | [b]AGENT 365, PREVIEW[/b]     |
-                             | Admin view             |
-                             | Gateway integration    |
-                             +------------------------+
+                             +--------------------------+
+                             | [b]AGENT 365 ADMIN VIEW[/b]  |
+                             | Agents > All agents     |
+                             | Tools: Available/Blocked|
+                             | Requests (preview)      |
+                             | Gateway integration     |
+                             +--------------------------+
 
 Unlisted server denied

@@ -4,6 +4,17 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 Documentation checked: 2026-11-11.
 
+## 2026-11-11, Microsoft 365 agent inventory and approval workflow
+
+- **Asked.** Show the Microsoft 365 admin center agent inventory, MCP tool/server states and Requests (preview) in the design, and explain how approve and deny decisions work.
+- **Method.** Read current Microsoft Learn pages for the Tools page, MCP server approval, the Agent Registry, agent details and agent requests on 2026-11-11. Added 13 quotes, V181 to V193, 193 total.
+- **Finding.** These are related but distinct admin views: Agents > All agents > Registry inventories agents; Agents > Tools > Registry lists tools and shows Available or Blocked status; Agents > Tools > Requests (preview) reviews tool and MCP server registration requests. Agent details can show Data & tools metadata, but it is read-only and is missing for some agents. Approval of an agent publication is a separate workflow from approval of an MCP server registration.
+- **Approval flow added as a recommendation.** Review the server and its declared tools through an internal Git pull request first. If it passes, merge the inventory change and register the server through the Agent 365 BYO preview route. A Microsoft 365 administrator separately approves or rejects the request. Approval alone does not make the server available: the required Microsoft Entra tenant consent must also be granted. On rejection, keep the server unavailable and record the reason. For later revocation, block the server, mark it denied in Git, remove it from each target policy and test that calls fail. Microsoft admin-center actions do not update the other targets automatically.
+- **Tool-level limit.** Individual tool controls are rolling out for supported Agent 365 server types. Microsoft says BYO server tool-level blocking is planned, so this workflow requires server-level blocking plus backend authorization for the BYO route until per-tool support is available.
+- **Changed.** Preview design diagram now shows the separate agent inventory, tool registry status and Requests queue. The control-planes table names both agent and MCP server views. A new workflow figure, steps and acceptance tests describe the two approval gates and deny path.
+- **Reviewed presentation text.** Added the heading and figure labels to the machine-readable ledger below. The labels describe navigation or the proposed flow. Product claims link to V181 to V193 and existing Agent 365 evidence. The new acceptance tests are targets and remain Not run.
+- **Verification.** Builder, section-anchor check and reviewed-text check passed. No tenant or browser test was run. The local quote-fetch script cannot reach documentation hosts in this environment; the current source pages were read in the web research results.
+
 ## 2026-11-11, approval boundaries and cross-cutting guardrails
 
 - **Asked.** Add crucial cross-cutting points after comparing approval, server governance and guardrails across the four targets.
@@ -387,7 +398,6 @@ requirement	Publish MCP endpoints
 requirement	Tool threat protection
 requirement	Connect gateway
 label	AGENT 365, PREVIEW
-label	Admin view
 label	Gateway integration
 label	Added with preview preview
 label	Acceptance tests
@@ -420,7 +430,6 @@ requirement	Are preview features allowed at all?
 label	Environments
 label	Fallback
 requirement	Released only is the baseline. Compare it with the preview design, then read the open questions.
-requirement	With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.
 label	(Preview)
 label	(default: always)
 label	1 USER INPUT
@@ -498,7 +507,6 @@ requirement	By hand
 requirement	By pipeline
 label	Control planes
 requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub Enterprise managed settings, and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. Microsoft 365 Copilot calls API Management from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Agent 365 is not drawn: company servers join it through preview features.
-requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
 label	Approval boundaries and cross-cutting guardrails
 label	Foundry portal
 label	GITHUB ENTERPRISE
@@ -513,6 +521,44 @@ label	Power Platform admin
 label	TARGETS
 label	center
 label	repository
+label	Approval and denial workflow
+label	AGENT 365 ADMIN VIEW
+label	Agents > All agents
+label	Tools: Available/Blocked
+label	Requests (preview)
+label	(preview)
+label	COMPANY GOVERNANCE
+label	M365 ADMIN CENTER
+label	SECURITY REVIEW
+label	APPROVE
+label	DENY
+label	STOP
+label	REJECT
+label	Registry: AVAILABLE
+label	LATER DENY: BLOCK SERVER NOW,
+label	MARK DENIED IN GIT, SYNC TARGETS,
+label	TEST THAT CALLS FAIL
+label	Requester adds server, owner,
+label	auth, tools, and risk to Git
+label	Developer registers server
+label	after the internal PR merges
+label	Review server and each tool
+label	Agents > Tools > Requests
+label	Review requester, URL,
+label	auth, tools, permissions
+label	Merge approved
+label	inventory
+label	Record denied
+label	reason in Git
+label	Grant Entra consent
+label	Keep unavailable;
+label	record reason in Git
+label	Apply target policies
+label	and backend authorization
+requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue.
+requirement	A developer proposes a server in the reviewed Git inventory. A security reviewer approves or rejects the pull request. Rejection stops the request and is recorded as denied. After approval and merge, the developer registers the server through the Agent 365 preview flow. An administrator reviews the request in Microsoft 365 admin center Requests preview and approves or rejects it. Rejection leaves the server unavailable and the reason is recorded. Approval is followed by Microsoft Entra tenant consent; only then does the server become Available in the tools registry. The admin records the approved server and consent in the inventory, applies target-specific access controls, and monitors calls. A later deny blocks the server in the tools registry and updates the inventory and other policy targets.
+requirement	The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. The registry status is Available only after admin approval and required Microsoft Entra consent. V184 V185 V87
+requirement	With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The view combines distinct admin pages: Agents > All agents > Registry, and Agents > Tools > Registry or Requests (preview). V182 V183 V189 The BYO server route is separate; its limits are listed below.
 ```
 <!-- End reviewed presentation text -->
 

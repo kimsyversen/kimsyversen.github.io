@@ -501,7 +501,7 @@ Agent 365 not drawn: company servers join it through preview features</pre>
     <figure class="opt-preview">
       <p class="fig-hint">Scroll the diagram sideways to follow the flow.</p>
       <div class="fig-scroll" tabindex="0" role="region" aria-label="With-preview MCP gateway design diagram, horizontally scrollable">
-<pre class="ascii" role="img" aria-label="Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.">SOURCE OF TRUTH              APPLY ON MERGE
+<pre class="ascii" role="img" aria-label="Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue.">SOURCE OF TRUTH              APPLY ON MERGE
 +------------------------+   +------------------------+
 | <span class="ttl">GIT REPOSITORY</span>         |--&gt;| <span class="ttl">PIPELINE</span>               |
 | Change by pull request |   | Runs after merge       |
@@ -541,15 +541,17 @@ MCP CLIENTS  v                            v                            v        
                                    |            +---------------------------------------------------+
                                    |              Microsoft cloud, fixed outbound addresses
                                    | Connect gateway
-                             +------------------------+
-                             | <span class="ttl">AGENT 365, PREVIEW</span>     |
-                             | Admin view             |
-                             | Gateway integration    |
-                             +------------------------+
+                             +--------------------------+
+                             | <span class="ttl">AGENT 365 ADMIN VIEW</span>  |
+                             | Agents &gt; All agents     |
+                             | Tools: Available/Blocked|
+                             | Requests (preview)      |
+                             | Gateway integration     |
+                             +--------------------------+
 
 Unlisted server denied</pre>
       </div>
-      <figcaption class="q-note">With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.</figcaption>
+      <figcaption class="q-note">With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The view combines distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). <a class="ev" href="#ev-V182">V182</a> <a class="ev" href="#ev-V183">V183</a> <a class="ev" href="#ev-V189">V189</a> The BYO server route is separate; its limits are listed below.</figcaption>
     </figure>
 
     <div class="sub3" id="parts">
@@ -565,7 +567,7 @@ Unlisted server denied</pre>
 <tr><td>Client controls<span class="rt">Enforcement</span></td><td>Managed URL policies and, on Windows, outbound firewall rules where applicable. They sit on the device, so they do not cover Microsoft 365 Copilot. See <a href="#ctrl-m365">Policy sync, Microsoft 365 Copilot</a>.</td><td>Yes</td><td>Yes</td></tr>
 <tr><td>Gateway product<span class="rt">Gateway</span></td><td>API Management in the released-only path; the preview path adds Azure AI Gateway capabilities.</td><td>API Management</td><td>Azure AI Gateway added</td></tr>
 <tr><td>Company MCP server, gateway only<span class="rt">Backend</span></td><td>Company MCP server; only the gateway may reach it.</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>Agent 365 gateway integration<span class="rt">Preview admin view</span></td><td>Admin view connected to the gateway. Product controls are detailed below.</td><td>No</td><td>New</td></tr>
+<tr><td>Agent 365 gateway integration<span class="rt">Preview admin view</span></td><td>In the preview design, the Microsoft 365 admin center shows the organization agent registry, the tools registry with MCP server status, and MCP server registration requests. Connect the gateway to discover its servers.</td><td>No</td><td>New</td></tr>
 <tr><td>Other preview additions<span class="rt">Optional controls</span></td><td>Tool threat protection, Foundry gateway routing, and optional remote-server filtering. Details are in Controls.</td><td>No</td><td>New</td></tr>
 </tbody>
 </table></div>
@@ -573,7 +575,7 @@ Unlisted server denied</pre>
 
     <div class="sub3" id="planes">
       <h3 id="control-planes"><a class="sec-link" href="#control-planes">Control planes</a></h3>
-      <p class="q-note">Each row is one admin surface where MCP is governed. The same approved list must reach every row, or the rules differ between clients. Rows point to the control that holds the details. <span class="tg r">recommendation</span></p>
+      <p class="q-note">Each row is an admin surface for policy or visibility. Map the approved inventory into policy targets. Registry views help administrators inspect agents, servers and requests, but visibility alone does not enforce access. <span class="tg r">recommendation</span></p>
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Control plane</th><th>Administered in</th><th>What it governs for MCP in this design</th><th>Control</th></tr></thead>
 <tbody>
@@ -581,12 +583,70 @@ Unlisted server denied</pre>
 <tr><td>GitHub Enterprise</td><td>Managed settings file in the .github-private repository <a class="ev" href="#ev-V82">V82</a></td><td>MCP servers that VS Code and GitHub Copilot may use.</td><td><a href="#ctrl-client">Client allowlist</a>; <a href="#ctrl-pipeline">Policy sync, pipeline</a></td></tr>
 <tr><td>Microsoft Foundry</td><td>Foundry portal <span class="tg u">unverified</span></td><td>Tools each Foundry agent may call on an MCP server.</td><td><a href="#ctrl-foundry">Policy sync, Foundry</a></td></tr>
 <tr><td>Microsoft 365 Copilot</td><td>Microsoft 365 admin center <a class="ev" href="#ev-V163">V163</a></td><td>MCP servers offered to Microsoft 365 Copilot as federated connectors.</td><td><a href="#ctrl-m365">Policy sync, Microsoft 365 Copilot</a></td></tr>
-<tr><td>Microsoft Agent 365</td><td>Microsoft 365 admin center <a class="ev" href="#ev-V177">V177</a></td><td>Released product <a class="ev" href="#ev-V176">V176</a>. A company MCP server joins it by BYO registration or a connected gateway, and both are preview features <a class="ev" href="#ev-V178">V178</a> <a class="ev" href="#ev-V179">V179</a> <a class="ev" href="#ev-V180">V180</a>. <span class="opt-safe">Not used in this design.</span><span class="opt-preview">Admin view and blocking.</span></td><td><span class="opt-safe">None</span><span class="opt-preview"><a href="#ctrl-a365">Agent 365 gateway integration</a>; <a href="#ctrl-byo">Agent 365 BYO server route</a></span></td></tr>
+<tr><td>Microsoft 365 agent inventory</td><td>Agents > All agents > Registry <a class="ev" href="#ev-V189">V189</a></td><td>Organization-wide agent inventory. Agent details include tools when the platform reports them, but the metadata is read-only and incomplete for some agents <a class="ev" href="#ev-V190">V190</a> <a class="ev" href="#ev-V191">V191</a>.</td><td>Visibility only; agent approval and lifecycle are not this MCP server control.</td></tr>
+<tr><td>Microsoft Agent 365 tools</td><td>Agents > Tools > Registry and Requests <a class="ev" href="#ev-V181">V181</a> <a class="ev" href="#ev-V182">V182</a></td><td>Registry shows MCP server status as Available or Blocked <a class="ev" href="#ev-V183">V183</a>. Requests (preview) reviews server registrations. <span class="opt-safe">Not used in this design.</span><span class="opt-preview">Admin view and blocking.</span></td><td><span class="opt-safe">None</span><span class="opt-preview"><a href="#ctrl-a365">Agent 365 gateway integration</a>; <a href="#ctrl-byo">Agent 365 BYO server route</a>; <a href="#approval-workflow">Approval and denial workflow</a></span></td></tr>
 <tr><td>Azure API Management</td><td>Azure <span class="tg i">inference</span></td><td>The one door to the company MCP server, for every client.</td><td><a href="#ctrl-gateway">Gateway</a>; <a href="#ctrl-backend">Backend isolation</a>; <a href="#ctrl-identity">Identity</a></td></tr>
 <tr><td>Device management</td><td>Intune and VS Code policy <span class="tg i">inference</span></td><td>URL allowlist and Windows outbound rules on managed devices.</td><td><a href="#ctrl-client">Client allowlist</a>; <a href="#ctrl-windows">Windows outbound limits</a>; <a href="#ctrl-stdio">Local stdio servers</a></td></tr>
 </tbody>
 </table></div>
-      <p class="q-note"><span class="tg u">unverified</span> marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. <span class="tg i">inference</span> marks interpretation by AI. Agent 365 inventory, identity and lifecycle for agents are outside this page, which covers MCP servers only.</p>
+      <p class="q-note"><span class="tg u">unverified</span> marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. <span class="tg i">inference</span> marks interpretation by AI. The agent inventory provides visibility; approval and lifecycle for agents are separate from this page's MCP server workflow.</p>
+    </div>
+    <div class="sub3 opt-preview" id="approval-workflow">
+      <h3 id="approval-and-denial-workflow"><a class="sec-link" href="#approval-and-denial-workflow">Approval and denial workflow</a></h3>
+      <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other. <span class="tg r">recommendation</span></p>
+      <figure>
+        <p class="fig-hint">Approval and denial path for a company MCP server.</p>
+        <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP server approval workflow, horizontally scrollable">
+<pre class="ascii" role="img" aria-label="A developer proposes a server in the reviewed Git inventory. A security reviewer approves or rejects the pull request. Rejection stops the request and is recorded as denied. After approval and merge, the developer registers the server through the Agent 365 preview flow. An administrator reviews the request in Microsoft 365 admin center Requests preview and approves or rejects it. Rejection leaves the server unavailable and the reason is recorded. Approval is followed by Microsoft Entra tenant consent; only then does the server become Available in the tools registry. The admin records the approved server and consent in the inventory, applies target-specific access controls, and monitors calls. A later deny blocks the server in the tools registry and updates the inventory and other policy targets.">COMPANY GOVERNANCE                                   AGENT 365, PREVIEW
++--------------------------------+                  +--------------------------------+
+| Requester adds server, owner,   |                  | Developer registers server     |
+| auth, tools, and risk to Git    |                  | after the internal PR merges   |
++---------------+----------------+                  +---------------+----------------+
+                |                                                   |
+                v                                                   v
++--------------------------------+                  +--------------------------------+
+| SECURITY REVIEW                |                  | M365 ADMIN CENTER              |
+| Review server and each tool    |                  | Agents &gt; Tools &gt; Requests      |
++---------------+----------------+                  | (preview)                      |
+                |                                   +---------------+----------------+
+         +------+-------+                                           |
+         |              |                                           v
+         v              v                                +-------------------------+
+      APPROVE         DENY                               | Review requester, URL,   |
+         |              |                                | auth, tools, permissions |
+         v              v                                +-----------+-------------+
+  Merge approved   Record denied                                     |
+  inventory       reason in Git                          +-----------+-----------+
+         |              |                                 |                       |
+         |              +--&gt; STOP                         v                       v
+         |                                             APPROVE                  REJECT
+         |                                                 |                       |
+         |                                                 v                       v
+         |                                       Grant Entra consent      Keep unavailable;
+         |                                                 |              record reason in Git
+         |                                                 v
+         |                                      Registry: AVAILABLE
+         |                                      Apply target policies
+         |                                      and backend authorization
+         |                                                 |
+         +-------------------------------------------------+
+                                                           |
+                                                           v
+                                            LATER DENY: BLOCK SERVER NOW,
+                                            MARK DENIED IN GIT, SYNC TARGETS,
+                                            TEST THAT CALLS FAIL</pre>
+        </div>
+        <figcaption class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. The registry status is Available only after admin approval and required Microsoft Entra consent. <a class="ev" href="#ev-V184">V184</a> <a class="ev" href="#ev-V185">V185</a> <a class="ev" href="#ev-V87">V87</a></figcaption>
+      </figure>
+      <ol>
+        <li><strong>Propose.</strong> The requester adds the MCP server URL, owner, authentication, declared tools, permissions and risk notes to the approved inventory. The developer registration must use the same server and gateway endpoint.</li>
+        <li><strong>Review internally.</strong> Review the server and each tool, identity path, data access, owner and rollback plan. Merge the pull request only if approved. If denied, record the reason and keep the server out of every target.</li>
+        <li><strong>Submit for Microsoft approval.</strong> For the Agent 365 BYO preview route, the developer registers the server. An AI Administrator or Global Administrator reviews its requester, publisher, server information and declared tools under Agents &gt; Tools &gt; Requests (preview), then approves or rejects it. <a class="ev" href="#ev-V186">V186</a> <a class="ev" href="#ev-V187">V187</a> <a class="ev" href="#ev-V87">V87</a></li>
+        <li><strong>Consent and enable.</strong> After approval, grant the required Microsoft Entra tenant consent. The server becomes available only after consent. Record the consent and resulting Available state in the inventory. <a class="ev" href="#ev-V183">V183</a> <a class="ev" href="#ev-V185">V185</a></li>
+        <li><strong>Limit and monitor.</strong> Restrict access with target-specific policies and backend authorization. Individual tool controls are rolling out for supported Agent 365 servers; BYO server tool-level blocking is planned, so use server-level blocking and gateway/backend authorization for BYO until tool controls are supported. <a class="ev" href="#ev-V188">V188</a> <a class="ev" href="#ev-V37">V37</a> <a class="ev" href="#ev-V44">V44</a></li>
+        <li><strong>Reject or revoke.</strong> A rejected request stays unavailable. If an approved server later fails review, block it in the registry, mark it denied in Git, remove it from target allowlists, and verify calls are denied. Microsoft 365 admin actions do not automatically update the other target policies. <span class="tg r">recommendation</span></li>
+      </ol>
+      <p class="q-note">This is the MCP server request queue. Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. <a class="ev" href="#ev-V190">V190</a> <a class="ev" href="#ev-V191">V191</a> <a class="ev" href="#ev-V192">V192</a> <a class="ev" href="#ev-V193">V193</a></p>
     </div>
   </section>
 
@@ -693,6 +753,10 @@ Unlisted server denied</pre>
 <tr><td>Admin blocks a single tool in the API Management integration</td><td>Denied, only on a supported gateway with a static tool list</td><td>An explicit tool-level policy test</td><td>Not run</td></tr>
 <tr><td>Pre-invocation evaluation denies a tool argument</td><td>Tool not run</td><td>Block mode before the call</td><td>Not run</td></tr>
 <tr><td>Post-invocation evaluation denies a tool result</td><td>Result withheld; the tool may already have run</td><td>Block mode after the call</td><td>Not run</td></tr>
+<tr><td>Microsoft admin rejects a registered MCP server request</td><td>Server remains unavailable</td><td>Requests preview decision</td><td>Not run</td></tr>
+<tr><td>Microsoft admin approves without granting Entra consent</td><td>Server remains unavailable to agent-building surfaces</td><td>Approval plus required tenant consent</td><td>Not run</td></tr>
+<tr><td>Admin blocks an Available MCP server</td><td>Tool calls are denied at runtime</td><td>Registry block and the connected Agent 365 enforcement path</td><td>Not run</td></tr>
+<tr><td>Review the Agent registry, Tools registry and Requests queue</td><td>Agent inventory, Available or Blocked server states, and pending preview requests are visible in their respective views</td><td>Microsoft 365 admin center</td><td>Not run</td></tr>
 <tr><td>An app-only caller reaches a tool with the delegated-token protection</td><td>Unsupported, or the protected call fails</td><td>An explicit sign-in compatibility test</td><td>Not run</td></tr>
 <tr><td>The gateway is down, or a preview feature is withdrawn</td><td>Safe stop, or a rollback to the released-only design</td><td>Backend and client controls, and the fallback plan</td><td>Not run</td></tr>
 </tbody>
@@ -968,7 +1032,7 @@ Unlisted server denied</pre>
     </div>
     <details class="blk ev-fold" id="evidence-details" style="margin-top:20px">
       <summary>Show the source quotes</summary>
-      <p class="sub">Product claims are supported by the source excerpts below, checked on 2026-11-11. Links request the quoted passage using browser text fragments. Page date is the date the page shows. <span class="opt-safe">109 quotes back the released-only design.</span><span class="opt-preview">180 quotes in all: 109 back the released-only design and 71 back the preview additions.</span></p>
+      <p class="sub">Product claims are supported by the source excerpts below, checked on 2026-11-11. Links request the quoted passage using browser text fragments. Page date is the date the page shows. <span class="opt-safe">122 quotes back the released-only design.</span><span class="opt-preview">193 quotes in all: 122 back the released-only design and 71 back the preview additions.</span></p>
       <div class="tbl-wrap"><table class="tbl src">
         <thead><tr><th>Id</th><th>Quote</th><th>Source</th><th>Page date</th></tr></thead>
         <tbody>
@@ -1152,6 +1216,19 @@ Unlisted server denied</pre>
 <tr id="ev-V178"><td>V178</td><td>Registration through the bring-your-own (BYO) process enables centralized review and governance.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview#:~:text=Registration%20through%20the%20bring%2Dyour%2Down%20%28BYO%29%20process,process%20enables%20centralized%20review%20and%20governance.">Microsoft Learn, MCP server options in Agent 365</a></td><td>2026-10-08</td></tr>
 <tr id="ev-V179"><td>V179</td><td>This feature is in preview.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server#:~:text=This%20feature%20is%20in%20preview.">Microsoft Learn, Agent 365 bring-your-own MCP server</a></td><td>2026-11-05</td></tr>
 <tr id="ev-V180"><td>V180</td><td>This feature is in preview.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway#:~:text=This%20feature%20is%20in%20preview.">Microsoft Learn, Agent 365 tools gateway</a></td><td>2026-11-06</td></tr>
+<tr id="ev-V181"><td>V181</td><td>The Tools page in the Microsoft 365 admin center provides a centralized view of the AI-powered tools available in your organization, including plugins, skills, Model Context Protocol (MCP) servers, and connectors.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=The%20Tools%20page%20in%20the%20Microsoft,Context%20Protocol%20%28MCP%29%20servers%2C%20and%20connectors.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V182"><td>V182</td><td>Use the Registry tab to discover and manage tools available in your tenant. Use the Requests tab to review and approve user requests for tools.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Use%20the%20Registry%20tab%20to%20discover,and%20approve%20user%20requests%20for%20tools.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V183"><td>V183</td><td>Shows whether the tool is Available or Blocked.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Shows%20whether%20the%20tool%20is%20Available%20or%20Blocked.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V184"><td>V184</td><td>Select Approve to make the server available in the organizational registry, or Reject to deny the request.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Select%20Approve%20to%20make%20the%20server,or%20Reject%20to%20deny%20the%20request.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V185"><td>V185</td><td>After approval, consent to the Microsoft Entra permissions required by the MCP server. The server becomes available to agent-building surfaces only after consent is granted.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=After%20approval%2C%20consent%20to%20the%20Microsoft,surfaces%20only%20after%20consent%20is%20granted.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V186"><td>V186</td><td>AI Administrator.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=AI%20Administrator.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V187"><td>V187</td><td>Global Administrator.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Global%20Administrator.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V188"><td>V188</td><td>This capability is rolling out for supported MCP servers registered on Agent 365. Support for BYO MCP servers is planned for a future release.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=This%20capability%20is%20rolling%20out%20for,is%20planned%20for%20a%20future%20release.">Microsoft Learn, manage plugins, skills, and MCP servers</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V189"><td>V189</td><td>The agent registry in Microsoft 365 admin center provides a centralized view of all agents available for your organization.</td><td><a href="https://learn.microsoft.com/en-us/entra/agent-id/agent-metadata-discoverability#:~:text=The%20agent%20registry%20in%20Microsoft%20365,all%20agents%20available%20for%20your%20organization.">Microsoft Learn, Agent Registry in Microsoft 365 admin center</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V190"><td>V190</td><td>The Data &amp; tools tab is read-only and shows metadata reported by the agent platform.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-details#:~:text=The%20Data%20%26%20tools%20tab%20is%20read%2Donly%20and%20shows%20metadata%20reported%20by%20the%20agent%20platform.">Microsoft Learn, understand agent details in Microsoft 365 admin center</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V191"><td>V191</td><td>Currently, Microsoft 365 admin center doesn't have data and tools information for all agents.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-details#:~:text=Currently%2C%20Microsoft%20365%20admin%20center,and%20tools%20information%20for%20all%20agents.">Microsoft Learn, understand agent details in Microsoft 365 admin center</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V192"><td>V192</td><td>When a member of your organization publishes an agent to your tenant, the agent requires administrator approval before becoming available tenant-wide.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-requests#:~:text=When%20a%20member%20of%20your%20organization,administrator%20approval%20before%20becoming%20available%20tenant%2Dwide.">Microsoft Learn, manage agent requests in Microsoft 365 admin center</a></td><td>2026-11-11</td></tr>
+<tr id="ev-V193"><td>V193</td><td>Administrators can review the agent's details, such as its description, owner, data, and tools, and then approve or reject the request.</td><td><a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-requests#:~:text=Administrators%20can%20review%20the,then%20approve%20or%20reject%20the%20request.">Microsoft Learn, manage agent requests in Microsoft 365 admin center</a></td><td>2026-11-11</td></tr>
         </tbody>
       </table></div>
     </details>

@@ -1,0 +1,38 @@
+COMPANY GOVERNANCE                                   AGENT 365, PREVIEW
++--------------------------------+                  +--------------------------------+
+| Requester adds server, owner,   |                  | Developer registers server     |
+| auth, tools, and risk to Git    |                  | after the internal PR merges   |
++---------------+----------------+                  +---------------+----------------+
+                |                                                   |
+                v                                                   v
++--------------------------------+                  +--------------------------------+
+| SECURITY REVIEW                |                  | M365 ADMIN CENTER              |
+| Review server and each tool    |                  | Agents > Tools > Requests      |
++---------------+----------------+                  | (preview)                      |
+                |                                   +---------------+----------------+
+         +------+-------+                                           |
+         |              |                                           v
+         v              v                                +-------------------------+
+      APPROVE         DENY                               | Review requester, URL,   |
+         |              |                                | auth, tools, permissions |
+         v              v                                +-----------+-------------+
+  Merge approved   Record denied                                     |
+  inventory       reason in Git                          +-----------+-----------+
+         |              |                                 |                       |
+         |              +--> STOP                         v                       v
+         |                                             APPROVE                  REJECT
+         |                                                 |                       |
+         |                                                 v                       v
+         |                                       Grant Entra consent      Keep unavailable;
+         |                                                 |              record reason in Git
+         |                                                 v
+         |                                      Registry: AVAILABLE
+         |                                      Apply target policies
+         |                                      and backend authorization
+         |                                                 |
+         +-------------------------------------------------+
+                                                           |
+                                                           v
+                                            LATER DENY: BLOCK SERVER NOW,
+                                            MARK DENIED IN GIT, SYNC TARGETS,
+                                            TEST THAT CALLS FAIL

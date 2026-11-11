@@ -80,3 +80,10 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - [x] Quote, label and anchor checks.
 - [ ] Browser check at desktop and 375 px for this pass. Not done.
 - Open: tenant tests. Unverified items are listed in the fact check.
+
+## Agent inventory and approval workflow 2026-11-11
+- [x] Show separate all-agent inventory, MCP Tools registry status and Requests (preview) views in the preview design.
+- [x] Add a reviewed Git decision followed by the separate Agent 365 BYO server request, Entra consent, and approve/reject/revoke steps.
+- [x] Add source quotes V181 to V193 and update the page fact check and decisions note.
+- [x] Builder, section anchors and reviewed-text checks.
+- [ ] Browser check at desktop and 375 px. No tenant check; acceptance tests are listed as not run.

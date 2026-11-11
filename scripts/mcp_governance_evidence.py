@@ -114,6 +114,14 @@ SOURCES = {
                 "https://learn.microsoft.com/en-us/microsoft-agent-365/overview", "2026-08-19"),
     "a365-tools": ("Microsoft Learn, MCP server options in Agent 365",
                    "https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview", "2026-10-08"),
+    "a365-admin-tools": ("Microsoft Learn, manage plugins, skills, and MCP servers",
+                         "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers", "2026-11-11"),
+    "a365-agent-registry": ("Microsoft Learn, Agent Registry in Microsoft 365 admin center",
+                            "https://learn.microsoft.com/en-us/entra/agent-id/agent-metadata-discoverability", "2026-11-11"),
+    "a365-agent-details": ("Microsoft Learn, understand agent details in Microsoft 365 admin center",
+                           "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-details", "2026-11-11"),
+    "a365-agent-requests": ("Microsoft Learn, manage agent requests in Microsoft 365 admin center",
+                            "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-requests", "2026-11-11"),
 }
 
 # (key, source key, exact quote). Order is the order of the table. Ids V1.. follow the order.
@@ -305,6 +313,20 @@ QUOTES = [
     ("a365-byo-reg", "a365-tools", "Registration through the bring-your-own (BYO) process enables centralized review and governance."),
     ("a365-byo-pre", "a365-byo", "This feature is in preview."),
     ("a365-gw-pre", "a365-gw", "This feature is in preview."),
+    # Added 2026-11-11, for the Microsoft 365 admin inventory and workflow.
+    ("a365-tools-overview", "a365-admin-tools", "The Tools page in the Microsoft 365 admin center provides a centralized view of the AI-powered tools available in your organization, including plugins, skills, Model Context Protocol (MCP) servers, and connectors."),
+    ("a365-tools-tabs", "a365-admin-tools", "Use the Registry tab to discover and manage tools available in your tenant. Use the Requests tab to review and approve user requests for tools."),
+    ("a365-tools-status", "a365-admin-tools", "Shows whether the tool is Available or Blocked."),
+    ("a365-tools-approve", "a365-admin-tools", "Select Approve to make the server available in the organizational registry, or Reject to deny the request."),
+    ("a365-tools-consent", "a365-admin-tools", "After approval, consent to the Microsoft Entra permissions required by the MCP server. The server becomes available to agent-building surfaces only after consent is granted."),
+    ("a365-tools-role-ai", "a365-admin-tools", "AI Administrator."),
+    ("a365-tools-role-global", "a365-admin-tools", "Global Administrator."),
+    ("a365-tools-granular", "a365-admin-tools", "This capability is rolling out for supported MCP servers registered on Agent 365. Support for BYO MCP servers is planned for a future release."),
+    ("a365-agent-all", "a365-agent-registry", "The agent registry in Microsoft 365 admin center provides a centralized view of all agents available for your organization."),
+    ("a365-agent-readonly", "a365-agent-details", "The Data & tools tab is read-only and shows metadata reported by the agent platform."),
+    ("a365-agent-incomplete", "a365-agent-details", "Currently, Microsoft 365 admin center doesn't have data and tools information for all agents."),
+    ("a365-agent-approve", "a365-agent-requests", "When a member of your organization publishes an agent to your tenant, the agent requires administrator approval before becoming available tenant-wide."),
+    ("a365-agent-request-review", "a365-agent-requests", "Administrators can review the agent's details, such as its description, owner, data, and tools, and then approve or reject the request."),
 ]
 
 # Quotes that back only the preview-enabled path. The page hides their rows on the safe path.
