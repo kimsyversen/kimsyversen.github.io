@@ -250,3 +250,68 @@ Moved the page and its notes from `wip/` to the repository root and listed it in
 - The client-control figures identify the URL allowlist as a remote MCP control for managed VS Code and GitHub Copilot. Reason: the approved list is translated into client-specific policy, and this label must not imply that the GitHub URL matcher also governs Copilot Studio, Foundry, or Microsoft 365 Copilot.
 - Device egress rules remain a separate control. GitHub managed settings can use a remote server URL matcher or a local server command matcher; the diagram label refers to the URL matcher only.
 - Figure labels separately identify client sign-in, gateway identity checks and authorization, Intune-managed Windows egress, and the backend rule that only the gateway can reach it. This avoids implying that sign-in replaces gateway or backend authorization.
+
+## 2026-11-11, which gateway
+
+- One table names the three things Microsoft calls an AI gateway and says which one each path uses. Reason: the page mixed them, and the choice changes tier, cost and migration work.
+- Released-only path: recommend a v2 tier of API Management. Reason: the Foundry gateway integration lists only v2 instances (V199), and the preview Agent 365 integration does not support v1 tiers. A classic tier works for MCP today but blocks both later.
+- Recommend connecting Foundry to the company's existing v2 instance instead of letting Foundry create a new Basic v2 one. Reason: one gateway and one set of policies is less upkeep. That one instance can do both jobs is interpretation by AI and is listed as a gap.
+- The dedicated AI Gateway stays preview path only. Moving to it is treated as a migration.
+- Failing quotes from earlier passes were corrected to the live wording instead of loosening the checker.
+
+## 2026-11-11, one-page simplification
+
+- Moved all 202 source quotes out of the page into the fact check file. Reason: the page was 13,800 words and most of it was evidence a reader does not need to read the design. Quote marks (V1 to V202) stay on the page and link to the row. Supersedes the earlier decisions that the page lists every quote and keeps the fact check inside the page.
+- Quote links point to the GitHub blob URL of the fact check on master. Reason: the page is a static file with no other host for the notes. Cost: the links work only after the owner publishes master. Old `#ev-V` page links redirect there.
+- Removed the safe/preview path switch (supersedes "Two paths" and the `opt-safe`/`opt-preview` decisions). Reason: it hid half the page and duplicated tables. Now one released-only design and one With preview section that builds on it. `?path=preview` still opens With preview.
+- Merged the three design tables (Parts, Control planes, Which gateway) into one: "Parts and control planes". Reason: the same parts appeared in three tables. The gateway kinds are two rows (API Management, AI Gateway integrated with Foundry) with the recommendation in the row.
+- Merged Controls and Guardrails into one section with two tables. Reason: both answer "what limits a call". Deviation from a full merge: they stay two tables because the controls table is by design requirement and the guardrails table is by call layer.
+- Preview-only guardrail facts live only in With preview ("Guardrails added with preview", a delta table). The preview guardrail figure was dropped (`figure-guardrails-preview.txt` deleted). Reason: it repeated the released figure with a few extra boxes; the table holds the same facts once.
+- Dropped the `seg-lbl` anchor (the path switch label). Every other id from the old page is kept, most as empty anchors.
+- Wording: "path" no longer appears in reader text, since there is one design and one section for preview. Figure descriptions say "design".
+- The checker `check-evidence-quotes.py` checks the fact check table when the markers exist, and keeps the old page-table check for the other governance page.
+
+
+## 2026-11-11, one table by call layer
+Decision: Controls and guardrails are one table ordered by call layer, with a group row per layer. Reason: the owner found two tables with two orders (design requirement, call layer) hard to read as one section. Layer order matches the flow figure, so the figure and the table agree.
+Supersedes the earlier decision to keep two tables inside one section.
+Choices: rows with no design requirement say "None added" instead of an empty cell. Harm levels and the GitHub content filter have one home at layer 1 and are named in the layer 8 header, so no fact is listed twice. Identity sits at layer 5 because the figure puts the identity check in the gateway box. Rows that cited the same quote as another row were merged.
+
+## 2026-11-11: one figure with shading, not two figures
+
+Chose one released-based figure with the preview additions shaded over a second full copy. Reason: with two full copies the reader had to compare them by eye to find the difference. Shading uses `[new]` markers in the figure text file; it adds underline as well as tint so it works without color. Foundry routing and Defender checks stay in the tables because they are not boxes on the path. The BYO route is drawn as a separate box with no arrow, because its path to the backend is not documented in the sources used here.
+
+## 2026-11-11: cut obvious statements
+
+Cut: "One row per part"; "Map each environment to the controls that apply"; "Rows under Whole path apply to the call as a whole"; "Each documented fact cites a quote"; "Every test is a target outcome that has not run" (the Gaps section already says nothing is tested); "Decide before rollout"; "A rejected request stays unavailable"; "These requirements and limits apply to preview additions"; "Start the pilot only after the baseline is built" (the Baseline paragraph says build it first); the three "Scroll the diagram sideways" hints.
+Kept: the tag legends, "Visibility alone does not enforce access", "It does not prove that none exists", and all caveats, because each changes how a reader acts.
+Reason: the user asked to stop stating the obvious. The scroll hints are the one cut that costs something: on a phone the figure scrolls with no written cue.
+
+## 2026-11-11: switch for the two designs, scoped to The design
+
+Chose a switch that changes only the figure and Scope line in The design, like the published page, over bringing back the full page switch. Reason: the page was just merged into one table per topic, and a full switch would bring back the duplicate views. The preview figure lives once, in The design. Classes are view-safe and view-preview, not opt-preview, because the guardrail table already uses opt-preview as a row tag. Without JavaScript and in print both designs show. `?path=preview` keeps working as a saved link and now selects the preview design (it used to scroll to the preview section).
+
+## 2026-11-11: simplified for a skilled audience
+
+Owner's ask: simplify, keep the essentials, readers are skilled. Fact check off the page, no open questions for the preview.
+
+- Fact check section removed from the page. A one-line link sits under the Made with AI note. `#evidence` still lands there. Supersedes the decision to keep a short Fact check section.
+- Open questions for the preview removed. Each one repeated a requirement that is already a row in Added controls or a pilot step.
+- Removed as duplicate views: Start by role (the contents bar does it), Where each control applies and Where the preview controls apply (the Applies to column does it), Approval boundaries and cross-cutting guardrails (every fact is in the controls table). Reason: one home per fact.
+- Removed as obvious to this audience: Fallback (one sentence in the With preview header now), the MCP clients row, pilot steps Publish, Client policy and Monitor, and the internal review steps of the approval workflow. Threat protection is merged into Test blocking.
+- Microsoft 365 agent registry row removed from the parts table. It was marked "not used in this design" and the preview section covers it.
+- Result column (all "Not run") and Label column (all preview, recommendation) replaced by one line above each table.
+- Kept on purpose: both figures and the design switch, the full controls table by call layer, all gaps, the five main open questions, both test tables, every caveat and tag. The layer 1 and layer 8 content guardrails are not MCP specific, but they stay because the guardrails figure shows them and needs its quotes beside it.
+- All old ids are kept as empty anchors.
+- Result: 8,100 words to 7,109, 27 sub-headings to 15.
+
+## 2026-11-11: content guardrails cut, layers renumbered
+
+- Cut the user input and final answer layers, plus Agent over model and Content moderation. Reason: they are generic content filters, the same with or without MCP, and the audience knows them. This supersedes the "kept on purpose" note for layers 1 and 8 in the entry above.
+- Renumbered the remaining layers 1 to 6, so the list does not start at 2. No id carries a layer number, so no link breaks.
+- Kept the Copilot Studio prompt attack block and moved it to tool response, because indirect prompt injection through tool results is an MCP risk. Its layer is an interpretation by AI.
+- The unused quotes stay in the evidence file to keep the V numbers stable.
+
+## 2026-11-11: open questions removed
+
+- Cut the five main open questions. They were decisions for the owner, not facts for readers, and the gaps already carry the limits. Old ids `open`, `h-open` and `open-questions` stay as empty anchors. This supersedes the note above that kept five main open questions.

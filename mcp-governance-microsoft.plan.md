@@ -6,35 +6,33 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 A short, sound design to govern MCP in the Microsoft ecosystem. Make Azure API Management (APIM) the only way to reach a company MCP backend, and limit managed clients to approved MCP addresses.
 
-## Page order
+## Page order (rewritten 2026-11-11, simplified for a skilled audience)
 
-1. (Removed 2026-11-08, now the "In short" line in The design.) The answer. Two objectives: A (every request to a company backend passes APIM) and B (no AI client talks to an MCP server outside APIM).
-2. The design. One diagram: clients, client and network controls, APIM, private backend.
-3. Four controls: backend isolation, identity, client allowlist, outbound limits.
-4. What works in each environment (seven rows).
-5. Acceptance tests (target outcomes, none run).
-6. Known gaps and what has not been tested.
-7. Open questions.
-8. Evidence: exact quotes with links.
+1. The design: lead with the answer, one figure per design (switch), one table "Parts and control planes" (10 rows).
+2. Controls: one table by call layer, with the guardrails figure. Released-only content.
+3. Rollout and tests: order of work, acceptance tests.
+4. Gaps and open questions (open questions 1 to 5).
+5. With preview: added controls, approval and denial workflow, guardrails added, tests added, pilot.
+6. Footer: Made with AI note, then a link to `mcp-governance-microsoft.factcheck.md`, which holds the 202 source quotes (V1 to V202).
 
-## Two paths (added 2026-11-08)
+## Released and preview content (rewritten 2026-11-11)
 
-Safe choice (default) uses supported MCP capabilities in the Azure API Management service. The preview-enabled choice uses the separate AI Gateway product, Agent 365 integration and tool threat protection. Added sections: Choose a path, Order of work, Fallback (preview only). Preview-only blocks carry class `opt-preview`, safe-only blocks `opt-safe`. Sources: `~/Downloads/enterprise-mcp-governance-solution.md` and `enterprise-mcp-governance-preview-enabled.md`.
+The path switch is gone. The page has no hidden content. Released-only design first, preview in its own section. Rule: a preview-only quote is cited only in With preview (the builder's `ev()` stops the build otherwise). Sources: `~/Downloads/enterprise-mcp-governance-solution.md` and `enterprise-mcp-governance-preview-enabled.md`.
 
 ## Policy source and sync (added 2026-11-08)
 
-A Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. On merge a pipeline we build applies the list to Power Platform (Copilot Studio), GitHub managed settings, Foundry, and on the preview path Agent 365. Both figures show repository, pipeline, targets and the clients each target governs, with the limit of each target as status text. The figures are ASCII text files built into the page. Not built or tested. Sources added: pp-block, pp-api, pp-pipe, pp-deny, fy-allowed, gh-deploy (70 quotes at that time, 39 on the safe path; now 84 and 48).
+A Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. On merge a pipeline we build applies the list to Power Platform (Copilot Studio), GitHub managed settings, Foundry, and in the preview design Agent 365. Both figures show repository, pipeline, targets and the clients each target governs, with the limit of each target as status text. The figures are ASCII text files built into the page. Not built or tested. Sources added: pp-block, pp-api, pp-pipe, pp-deny, fy-allowed, gh-deploy (70 quotes at that time, 39 on the safe path; now 84 and 48).
 
 ## Rules
 
 - Same look as `enterprise-ai-agent-governance-summary.html` (copied from it by the builder).
 - Every product fact has a quote in `scripts/mcp_governance_evidence.py`. Design choices are labelled recommendation. Gaps in the sources are labelled inference or unverified.
-- The safe path needs no preview feature. The preview path labels every preview feature and keeps the safe design underneath.
+- The released-only design needs no preview feature. The With preview section labels every preview feature and keeps the released-only design underneath.
 - Paragraphs and cells at most 60 words. No em or en dashes.
 
 ## Figures
 
-Edit `mcp-governance-microsoft.figure-safe.txt` or `.figure-preview.txt`, then rebuild. `[red]...[/red]` marks red text. Update the reviewed-text ledger in the fact check when wording changes.
+Edit `mcp-governance-microsoft.figure-safe.txt`, `.figure-preview.txt`, `.figure-approval.txt` or `.figure-guardrails-safe.txt`, then rebuild. `[red]...[/red]` marks red text. Update the reviewed-text ledger in the fact check when wording changes.
 
 ## Build
 
@@ -105,3 +103,66 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - [x] Read current primary Microsoft Learn sources for API Management MCP support, AI gateway terminology, AI Gateway, Agent 365 integration and tool threat protection.
 - [x] Builder, section-anchor, reviewed-label (208 texts) and whitespace checks passed.
 - [ ] Automated quote fetch: all 196 requests failed because source hosts did not resolve. Browser layout check not run: local server cannot bind and browser blocks local file URLs.
+
+## Which gateway 2026-11-11
+- [x] Source-checked the AI Gateway integrated with Foundry (6 quotes, V197 to V202, 202 total).
+- [x] "Which gateway" table under The design, gap-one-gateway, link from Parts.
+- [x] Repaired nine older quotes that no longer matched the live sources.
+- Open: test one v2 instance as both Foundry AI Gateway and company MCP gateway. Tenant tests.
+- Browser check 2026-11-11 (localhost, built-in browser): Which gateway table shows 3 rows on both paths, heading link present, 0 dead links in it, no sideways page scroll at 1280 px or 375 px, no console errors. Not tried on a real phone or in Safari.
+
+## One-page simplification 2026-11-11
+- [x] Source quotes moved to `mcp-governance-microsoft.factcheck.md` (table between the Begin and End source quotes markers, generated by the builder). Quote marks on the page link to it. Old `#ev-V` links redirect there.
+- [x] Three design tables merged into "Parts and control planes". Controls and Guardrails are one section. All preview content is in "With preview". Tail sections merged into Rollout and tests, and Gaps and open questions.
+- [x] Path switch removed. `?path=preview` still scrolls to With preview. Old ids kept as empty anchors, except `seg-lbl`.
+- [x] Page 13,785 words to 8,023 (visible text, nav and footer included), 221 KB to 142 KB.
+- [x] Checks: builder, anchor check, label check (200 texts), quote check (202 quotes, 0 problems; the older governance page's check still passes, 88 quotes). `check-evidence-quotes.py` now checks the factcheck.md table when it has the markers.
+- [x] Browser check (localhost, built-in browser): no sideways scroll at desktop and 375 px, no console errors, 0 dead in-page links, every h2 and h3 has an id and link, `#preview` and `#controls` jump correctly.
+- [ ] Not checked: the `#ev-V` redirect and the quote links (they point to the GitHub copy of the fact check on master, so they work only after the owner publishes master; anchor behavior on GitHub not tested). Not tried on a real phone or in Safari.
+
+## One table by call layer 2026-11-11
+- [x] The Controls table (by design requirement) and the "What each guardrail does" table (by layer) are one table, "Controls by call layer": 30 rows under 9 group rows (Whole path, layers 1 to 8). Columns: Control, Applies to, Design requirement, What Microsoft and GitHub document. The Label column is gone; the recommendation tag sits in the requirement cell.
+- [x] Merged: Data policy into Policy sync, Power Platform; Tool list into Policy sync, Foundry; Allow and deny lists into Client allowlist. The Foundry toolbox network text moved to a new anchor, `ctrl-foundry-network`, at layer 5. The Microsoft 365 Copilot note became a Write approval row at layer 3.
+- [x] Old ids kept: `guardrails`, `h-guardrails`, `what-each-guardrail-does` are empty anchors. All `ctrl-*` anchors work.
+- [x] Checks: builder, anchor check, label check (199 texts), quote check (202, 0 problems), no dashes, no lost id except the ones removed earlier, 0 dead links. Browser (localhost): no sideways scroll at 1280 and 375 px, no console errors.
+- [ ] Not checked on a real phone or in Safari. The `#ev-V` links still go to the GitHub copy on master.
+
+## 2026-11-11: show what preview adds
+
+Done: the With preview figure is now the released design with the preview additions shaded (underlined and tinted, so it does not rely on color). Added items: Global Secure Access MCP firewall, AI Gateway (separate product, public preview, Agent 365 tool block, tool threat protection), Agent 365 admin view, BYO server route box. A legend sits under the figure.
+Open: nothing drawn for Foundry gateway routing or the Defender checks (legend points to the tables). Not tried on a real phone or in Safari.
+
+## 2026-11-11: cut obvious statements
+
+Done: removed sentences that only restated the section, the heading or another line (listed in decisions). Left in place: scope notes, legends for the unverified and inference tags, and every caveat.
+
+## 2026-11-11: both designs at the top
+
+Done: "Select design: Released only | With preview" is back in the contents bar. It switches the figure and the Scope line in The design. The preview figure moved from the With preview section to the top; that section links to it. The shared link `?path=preview` selects the preview design again.
+Open: the switch changes only The design. Controls, Rollout and Gaps are not filtered by it. Not tried on a real phone or in Safari.
+
+## 2026-11-11: simplify for a skilled audience
+
+Owner's ask: simplify, keep the essentials, readers are skilled. Fact check off the page (link under the Made with AI note). No open questions for the preview.
+
+- [x] Fact check section removed. Link in the footer. `#evidence` kept as an anchor there.
+- [x] Open questions for the preview removed. Ids kept as empty anchors.
+- [x] "Start by role" links removed (the contents bar does the same job).
+- [x] "Where each control applies" and "Where the preview controls apply" removed. The Applies to column already says it. The cloud agent firewall fact moves to Gaps.
+- [x] "Approval boundaries and cross-cutting guardrails" removed. Every fact in it is already in the controls table. The one new rule (re-review on change) moves to the Approved inventory row.
+- [x] Parts table: MCP clients row removed.
+- [x] Tests: Result column removed, one line says none have run. Preview Label column removed.
+- [x] Preview: Fallback removed, pilot cut to the steps that are specific to the preview.
+- [x] Checks: builder, anchors, labels, dashes, dead links, browser at desktop and 375 px.
+- Browser check (localhost, built-in browser, dark theme): contents bar has five links, footer shows the fact check link, design switch works, no sideways page scroll at 1024 px (both designs) and 375 px, no console errors. Old anchors `#env`, `#evidence` and `#preview-open` scroll to their new places. The jump on page load was seen for `#env` only, and only after the pane got a click (the pane delays smooth scrolling). Not tried on a real phone, in Safari or in light theme. The fact check link points to the GitHub copy on master, so it shows this pass only after publishing.
+
+## 2026-11-11: cut content guardrails
+
+- [x] Remove old layers 1 and 8, Agent over model and Content moderation from the controls table
+- [x] Redraw the guardrails figure with six layers and renumber every layer reference
+- [x] Move the Copilot Studio prompt attack block to tool response
+- [x] Update the ledger, fact check and decisions
+
+## 2026-11-11: remove open questions
+
+- [x] Remove the Open questions block, rename the section Gaps, update the ledger and notes

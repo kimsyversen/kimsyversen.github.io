@@ -3,15 +3,7 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
 [b]FOUNDRY AGENT[/b]                    [b]COPILOT STUDIO[/b]                   [b]VS CODE, GITHUB COPILOT[/b]       
 
 +----------------------------+   +----------------------------+   +----------------------------+
-| [b]1 USER INPUT[/b]               |   | [b]1 USER INPUT[/b]               |   | [b]1 USER INPUT[/b]               |
-| Harm levels                |   | Built-in prompt attack     |   | GitHub content filter      |
-| Prompt attack check        |   | block (UPIA, XPIA)         |   | [red]may scan prompts[/red]           |
-|                            |   | (layer: AI estimate)       |   | (source says 'may')        |
-+----------------------------+   +----------------------------+   +----------------------------+
-               |                                |                                |              
-               v                                v                                v              
-+----------------------------+   +----------------------------+   +----------------------------+
-| [b]2 WHICH SERVER[/b]             |   | [b]2 WHICH SERVER[/b]             |   | [b]2 WHICH SERVER[/b]             |
+| [b]1 WHICH SERVER[/b]             |   | [b]1 WHICH SERVER[/b]             |   | [b]1 WHICH SERVER[/b]             |
 | allowed_tools list         |   | Data policy: whole server  |   | Allow and deny lists       |
 | (empty = all tools)        |   |                            |   | (policy, managed settings) |
 |                            |   |                            |   | Server trust prompt        |
@@ -19,7 +11,7 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
                |                                |                                |              
                v                                v                                v              
 +----------------------------+   +----------------------------+   +----------------------------+
-| [b]3 PERSON APPROVES[/b]          |   | [b]3 PERSON APPROVES[/b]          |   | [b]3 PERSON APPROVES[/b]          |
+| [b]2 PERSON APPROVES[/b]          |   | [b]2 PERSON APPROVES[/b]          |   | [b]2 PERSON APPROVES[/b]          |
 | require_approval           |   | Ask user before running    |   | Confirmation dialog        |
 | (default: always)          |   | [red]Off by default[/red]             |   | (default: Manual)          |
 | Can be set to never        |   | (for MCP: unverified)      |   | [red]Allow all skips it[/red]         |
@@ -28,15 +20,15 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
                |                                |                                |              
                v                                v                                v              
 +----------------------------+   +----------------------------+   +----------------------------+
-| [b]4 CALL CONTENT[/b]             |   | [b]4 CALL CONTENT[/b]             |   | [b]4 CALL CONTENT[/b]             |
+| [b]3 CALL CONTENT[/b]             |   | [b]3 CALL CONTENT[/b]             |   | [b]3 CALL CONTENT[/b]             |
 | [red]Preview only[/red]               |   | [red]Preview only[/red]               |   | preToolUse hook can deny   |
 |                            |   |                            |   | (for MCP: unverified)      |
 +----------------------------+   +----------------------------+   +----------------------------+
                |                                |                                |              
                v                                v                                v              
 +----------------------------------------------------------------------------------------------+
-| [b]5 NETWORK AND GATEWAY[/b]                                                                        |
-| Every client, from the design above:                                                         |
+| [b]4 NETWORK AND GATEWAY[/b]                                                                        |
+| Every client, in the table below:                                                            |
 | Outbound rules, then API Management: check identity, authorize, limit rate, log.             |
 | Foundry only: hosted agents run in a VM sandbox.                                             |
 | Foundry only: Network control limits outbound traffic for hosted and Copilot-harness agents. |
@@ -44,25 +36,14 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
                                                 |                                               
                                                 v                                               
 +----------------------------------------------------------------------------------------------+
-| [b]6 COMPANY MCP SERVER[/b]                                                                         |
-| Design target: only the gateway can call it. See the design above.                           |
+| [b]5 COMPANY MCP SERVER[/b]                                                                         |
+| Design target: only the gateway can call it. See the table below.                            |
 +----------------------------------------------------------------------------------------------+
                                                 |  response comes back                          
                                                 v                                               
 +----------------------------+   +----------------------------+   +----------------------------+
-| [b]7 TOOL RESPONSE[/b]            |   | [b]7 TOOL RESPONSE[/b]            |   | [b]7 TOOL RESPONSE[/b]            |
-| [red]Preview only[/red]               |   | [red]None found[/red]                 |   | Result review before it    |
-|                            |   |                            |   | enters the chat context    |
+| [b]6 TOOL RESPONSE[/b]            |   | [b]6 TOOL RESPONSE[/b]            |   | [b]6 TOOL RESPONSE[/b]            |
+| [red]Preview only[/red]               |   | Prompt attack block (XPIA) |   | Result review before it    |
+|                            |   | (layer: AI estimate)       |   | enters the chat context    |
 |                            |   |                            |   | [red]Can be switched off[/red]        |
 +----------------------------+   +----------------------------+   +----------------------------+
-               |                                |                                |              
-               v                                v                                v              
-+----------------------------+   +----------------------------+   +----------------------------+
-| [b]8 FINAL ANSWER[/b]             |   | [b]8 FINAL ANSWER[/b]             |   | [b]8 FINAL ANSWER[/b]             |
-| Harm levels                |   | [red]Not stated[/red]                 |   | GitHub content filter      |
-| Protected material (flag)  |   | (see below)                |   | [red]may scan answers[/red]           |
-|                            |   |                            |   | (source says 'may')        |
-+----------------------------+   +----------------------------+   +----------------------------+
-
-[b]ANY LAYER[/b]: Copilot Studio content moderation. The sources checked do not say at which layer.
-[b]FOUNDRY[/b]: agent guardrails (Preview). With none set, the agent uses its model's guardrail.

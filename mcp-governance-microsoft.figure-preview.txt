@@ -26,26 +26,30 @@ MCP CLIENTS  v                            v                            v        
              |                                                                                      |
              v                                                                                      |
 +------------------------+   +------------------------+   +------------------------+                |
-| [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY[/b]              |   | [b]COMPANY MCP SERVER[/b]     |                |
-| URL allowlist: VS Code |   | Separate product       |   | Accepts calls from     |                |
-| and GitHub Copilot     |   | Public preview         |   | Gateway only           |                |
+| [b]CLIENT CONTROLS[/b]        |   | [new][b]AI GATEWAY[/b][/new]             |   | [b]COMPANY MCP SERVER[/b]     |                |
+| URL allowlist: VS Code |   | [new]Separate product[/new]       |   | Accepts calls from     |                |
+| and GitHub Copilot     |   | [new]Public preview[/new]         |   | Gateway only           |                |
 | Windows egress (Intune)|-->| Check identity         |-->|                        |                |
 | Client signed in       |   | Authorize requests     |   |                        |                |
-|                        |   | Log usage              |   |                        |                |
-|                        |   | Limit request rate     |   |                        |                |
-|                        |   | Agent 365 tool block   |   |                        |                |
-|                        |   | Tool threat protection |   |                        |                |
+| [new]Global Secure Access[/new]   |   | Log usage              |   |                        |                |
+| [new]MCP firewall[/new]           |   | Limit request rate     |   |                        |                |
+|                        |   | [new]Agent 365 tool block[/new]   |   |                        |                |
+|                        |   | [new]Tool threat protection[/new] |   |                        |                |
 +------------------------+   +------------------------+   +------------------------+                |
                                    ^            ^                                                   |
                                    |            +---------------------------------------------------+
                                    |              Microsoft cloud, fixed outbound addresses
-                                   | Connect gateway
-                             +--------------------------+
-                             | [b]AGENT 365 ADMIN VIEW[/b]  |
-                             | Agents > All agents     |
-                             | Tools: Available/Blocked|
-                             | Requests (preview)      |
-                             | Gateway link (preview)  |
+                                   | [new]Connect gateway[/new]
+                             +--------------------------+      +----------------------------+
+                             | [new][b]AGENT 365 ADMIN VIEW[/b][/new]     |      | [new][b]BYO SERVER ROUTE[/b][/new]           |
+                             | [new]Agents > All agents[/new]      |      | [new]Separate from the gateway[/new]  |
+                             | [new]Tools: Available/Blocked[/new] |      | [new]Agent 365 Tooling Gateway[/new]  |
+                             | [new]Requests (preview)[/new]       |      | [new]Not for Foundry agents[/new]     |
+                             | [new]Gateway link (preview)[/new]   |      +----------------------------+
                              +--------------------------+
 
 Unlisted server denied
+
+[new]Shaded[/new] = added by preview. AI Gateway takes the place of API Management.
+Everything else is the released design.
+Foundry gateway routing and the Defender checks are in the tables below.

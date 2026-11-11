@@ -7,7 +7,9 @@ and a page under wip/ to check another page, for example
   mcp_governance_evidence mcp-governance-microsoft.html
 
 Fetches each source URL once into <cache-dir> (text, quotes straightened, whitespace
-collapsed), then looks for each quote. Also checks that the built page lists every quote.
+collapsed), then looks for each quote. Also checks that the built page lists every quote. When the page's
+<name>.factcheck.md has a source quotes table (between the Begin and End source quotes markers),
+the table is checked instead, and every V-link on the page must point to a row in it.
 Exit code 1 if any quote is missing. A pass shows the words are on the page the
 source URL serves today. It does not show the claim built on the quote is right.
 """
@@ -73,7 +75,27 @@ def main():
         else:
             print(f"FAIL {qid} {key}: quote not found")
             bad += 1
-    if PAGE.exists():
+    notes = PAGE.with_suffix(".factcheck.md")
+    begin, end = "<!-- Begin source quotes -->", "<!-- End source quotes -->"
+    if PAGE.exists() and notes.exists() and begin in notes.read_text(encoding="utf-8"):
+        text = notes.read_text(encoding="utf-8")
+        table = text[text.index(begin):text.index(end)]
+        rows = {}
+        for m in re.finditer(r'^\| <a id="ev-(V\d+)"></a>V\d+ \| (.*?) \| \[', table, re.M):
+            rows[m.group(1)] = html.unescape(m.group(2))
+        for qid, quote in [(IDS[k], q) for k, _, q in QUOTES]:
+            if rows.get(qid) != quote:
+                print(f"FAIL {qid}: not listed word for word in {notes.name}")
+                bad += 1
+        extra = set(rows) - {IDS[k] for k, _, _ in QUOTES}
+        for qid in sorted(extra):
+            print(f"FAIL {qid}: row in {notes.name} has no quote in the evidence module")
+            bad += 1
+        page = PAGE.read_text(encoding="utf-8")
+        for qid in sorted(set(re.findall(r'href="[^"]*#ev-(V\d+)"', page)) - set(rows)):
+            print(f"FAIL {qid}: linked on the page but not in {notes.name}")
+            bad += 1
+    elif PAGE.exists():
         page = PAGE.read_text(encoding="utf-8")
         for qid, quote in [(IDS[k], q) for k, _, q in QUOTES]:
             if f'id="ev-{qid}"' not in page or html.escape(quote, quote=False) not in page:
