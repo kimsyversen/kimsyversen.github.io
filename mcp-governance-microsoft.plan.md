@@ -58,3 +58,32 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - Claim check 2026-11-08 (second pass): every claim re-read against its source context, 8 quotes added (84 total), wording trimmed where it overstated a source. See the fact check.
 - Live verification 2026-11-08 (third pass): 90 of 91 quotes matched live, V80 read in a browser, 22 of 22 dates matched, V91 added, ledger repaired. See the fact check.
 - Built-in GitHub server check 2026-11-09: gap and open question 5 reworded, 5 quotes added (96 total). Still open: test the MCP servers in Copilot policy and Registry only against the built-in server in a pilot enterprise.
+- Guardrails by layer 2026-11-11: new last section with a flow figure per path and a 16-row table, Defender and Agent 365 runtime protection included (preview path), 33 quotes added (130 total), all matched. Fact check moved below it, collapsed by default. All 53 ledger texts for the section reviewed by hand, which fixed four unsupported claims and the layer 5 header. Browser check: see below. Still open: tenant tests, guardrail gaps marked none found, Agent 365 preview label is interpretation by AI.
+- Browser check 2026-11-11 (final): built-in browser on the file. Released only: 14 table rows. With preview: 16 rows, Defender line in the flow figure. Fact check is last and collapsed on load, opens on a quote link and on a `#ev-V121` hash. No sideways page scroll at 375px or desktop. Only console error came from the test script itself.
+- Browser check 2026-11-11 (rerun after the hand review, over localhost because the file preview drops the hash): Fact check is closed on load with no hash. Open on load for `#ev-V129` (safe path) and for `?path=preview#ev-V121` and `#ev-V125` (preview path, desktop and 375px, row scrolled into view). Opens on a quote link click. 14 table rows released only, 16 with preview. Figure box lines all 96 wide, layer 5 shows Foundry only lines. No sideways scroll at 375px, no console errors. A plain reload at 375px keeps the earlier scroll position instead of jumping to the hash, which is browser behaviour.
+
+## Browser check 2026-11-11, quote links on load (third check)
+- Localhost server, 131 `#ev-V` links, both paths, 986 px and 375 px, loaded in iframes: 524 of 524 had the Fact check open, the row visible, the row in view and no sideways scroll (after the fix to the jump; before it 0 of 262 were scrolled into view).
+- Open: not tried on a real phone or in Safari.
+
+## Guardrails by layer, verification pass 2026-11-11
+- [x] Reread every source of the section live. No old statement wrong.
+- [x] Added what was missing: 30 quotes (V132 to V161, 161 total), table now 25 rows (20 released only), both figures redrawn with the VS Code column filled.
+- [x] Quote check 161 of 161, label check 151 texts, anchor check.
+- Open: tenant and device tests. Three unverified items (Copilot Studio ask-before-running for MCP tools, VS Code hooks for MCP calls, default result review). See the fact check.
+- Browser check 2026-11-11 (localhost, built-in browser): released only 20 table rows, with preview 25 rows, one figure shown per path, 0 dead quote links in the section. No sideways page scroll at 1280 px or 375 px on both paths. No console errors. Not tried on a real phone or in Safari.
+
+## Control planes 2026-11-11
+- [x] Four policy targets by control plane in both figures, Microsoft 365 Copilot as target and client, Agent 365 line in the released-only figure, preview figure boxes aligned.
+- [x] Control planes table (7 rows), two Controls rows, 19 quotes (V162 to V180, 180 total).
+- [x] Cross-cutting approval boundaries and guardrails: translate the shared inventory into target-specific policies; re-review capability changes; document GitHub and Power Platform coverage limits; enforce identity at the service; verify and audit the path. Existing evidence IDs were rechecked against current primary product documentation on 2026-11-11.
+- [x] Quote, label and anchor checks.
+- [ ] Browser check at desktop and 375 px for this pass. Not done.
+- Open: tenant tests. Unverified items are listed in the fact check.
+
+## Agent inventory and approval workflow 2026-11-11
+- [x] Show separate all-agent inventory, MCP Tools registry status and Requests (preview) views in the preview design.
+- [x] Add a reviewed Git decision followed by the separate Agent 365 BYO server request, Entra consent, and approve/reject/revoke steps.
+- [x] Add source quotes V181 to V193 and update the page fact check and decisions note.
+- [x] Builder, section anchors and reviewed-text checks.
+- [ ] Browser check at desktop and 375 px. No tenant check; acceptance tests are listed as not run.

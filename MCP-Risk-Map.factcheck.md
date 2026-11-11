@@ -1,3 +1,17 @@
+# 10 November 2026: risk-by-zone table scope and controls
+
+This review supersedes the 9 November check for the risk-by-zone table. The page now shows each mapped component with its related finding, requirement, or control, exposes an exact quote and source link where the claim has a registered quote, and links each risk to its full checklist. “No mapped component” means this reference scenario assigns no component to that zone. It does not claim that no control exists.
+
+New Microsoft policy claims were checked against primary documentation retrieved on 10 November 2026. The General-view sandbox and approval recommendations reuse MCP specification and CoSAI evidence reviewed on 9 November 2026:
+
+- **M03 / Device policy, General view:** the page recommends requiring local servers to run sandboxed with minimal default privileges, tagged `[inference]`. It also says covered Copilot allowlists can match specific commands but do not verify code or provide runtime isolation, tagged `[inference]`. Evidence: `localsandbox`, `gh1`, `gh2`, `gh4`.
+- **M03 / Device policy, Microsoft view:** the same Copilot command allowlist is shown with its scope and limitations. Windows On-device Agent Registry can control server access per agent, but it is prerelease and specific to that registry. Evidence: `gh1`, `gh2`, `gh4`, `odr2`, `odr4`.
+- **M09 / Device policy, General view:** requiring human approval for high-impact tools and keeping prompts reviewable is a recommendation, tagged `[inference]`, based on the specification and CoSAI's human-in-the-loop and approval-fatigue risks. Evidence: `spt1`, `cs9`, `cs13`.
+- **M09 / Device policy, Microsoft view:** VS Code's enterprise policy can make selected tools ineligible for auto-approval; the documentation says those tools always request confirmation. Evidence: `vp2`.
+- **VS Code tool-approval row:** the new `ChatToolsEligibleForAutoApproval` control and its confirmation behavior were checked against the policy reference. The distinction from global auto-approval remains explicit.
+
+The table still does not assert every control available for every product. Detailed risk checks remain in the risk cards. Browser status is self-reported, and no client policy or command was run. The quote checker verifies source wording and source links, not enforcement behavior.
+
 # Final statement and MECE audit: 9 November 2026
 
 This audit supersedes earlier completion claims and stale wording in the historical inventories below. The authoritative content is the current HTML and its generated data. The earlier claim that quote matching established correct attribution was false: four Copilot Studio quote identifiers had been overwritten by CoSAI quotes. Valid quotation text alone does not establish support for the attached claim.
@@ -119,9 +133,9 @@ The map explains the reference scenario and gives source-backed placement summar
 
 Keys ARCH, TOOLS, STDIO, HTTP, SEC, VER, OWASP, CC, CODEX, MITIGA, VADD, VMAN, VCONF, VSEC, VPOL, VMGMT, VOTEL, OAUTH and BEARER refer to the primary-source URLs in the historical register below, freshly retrieved for this review. SELF means the page's code, interface, declared scenario or editorial choice. VSANDBOX is [VS Code Copilot agent sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing), including Experimental Windows support. Lowercase keys below identify the quotation sources in the page.
 
-- **odr**: [MCP on Windows: Windows On-device Agent Registry](https://learn.microsoft.com/en-us/windows/ai/mcp/overview), retrieved 9 November 2026.
+- **odr**: [MCP on Windows: Windows On-device Agent Registry](https://learn.microsoft.com/en-us/windows/ai/mcp/overview), retrieved 10 November 2026.
 - **vs**: [Visual Studio: use MCP servers](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers), retrieved 9 November 2026.
-- **ghal**: [GitHub: configure an enterprise MCP allowlist](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist), retrieved 9 November 2026.
+- **ghal**: [GitHub: configure an enterprise MCP allowlist](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist), retrieved 10 November 2026.
 - **ghreg**: [GitHub: configure an MCP registry](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry), retrieved 9 November 2026.
 - **ghenf**: [GitHub: MCP private registry enforcement](https://docs.github.com/en/copilot/reference/enterprise-administrators/mcp-private-registry-enforcement), retrieved 9 November 2026.
 - **csadd**: [Copilot Studio: add an existing MCP server](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent), retrieved 9 November 2026.
@@ -136,7 +150,7 @@ Keys ARCH, TOOLS, STDIO, HTTP, SEC, VER, OWASP, CC, CODEX, MITIGA, VADD, VMAN, V
 - **cve32211**: [CVE-2026-32211 (Azure MCP Server)](https://www.cve.org/CVERecord?id=CVE-2026-32211), retrieved 9 November 2026.
 - **inv**: [Invariant Labs: GitHub MCP exploited](https://invariantlabs.ai/blog/mcp-github-vulnerability), retrieved 9 November 2026.
 - **vscm**: [VS Code: manage MCP servers](https://code.visualstudio.com/docs/agents/run/manage-mcp-servers), retrieved 9 November 2026.
-- **vspol**: [Centrally manage VS Code settings with policies](https://code.visualstudio.com/docs/enterprise/policies), retrieved 9 November 2026.
+- **vspol**: [Centrally manage VS Code settings with policies](https://code.visualstudio.com/docs/enterprise/policies), retrieved 10 November 2026.
 - **vstel**: [VS Code: enterprise telemetry](https://code.visualstudio.com/docs/enterprise/telemetry), retrieved 9 November 2026.
 - **sphttp**: [MCP specification: transports (Streamable HTTP)](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http), retrieved 9 November 2026.
 - **spsec**: [MCP security best practices (2026-07-28)](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices), retrieved 9 November 2026.
@@ -235,7 +249,7 @@ Each row preserves a complete prose unit so its qualifications remain attached. 
 | p-risks M08 | Can you see MCP use? Claude Code usage can be monitored with OpenTelemetry; OTEL_LOG_TOOL_DETAILS=1 is the variable the docs name for tool details. | ARCH, OWASP, CC | REVIEWED / recommendation or label |
 | p-risks M08 | Has someone decided what may be sent to remote servers? [inference] | ARCH, OWASP, CC | REVIEWED / recommendation or label |
 | p-risks M08 | Typical findingsNo inventory, no usage logs, remote servers receiving whole files. [inference] | ARCH, OWASP, CC | REVIEWED / recommendation or label |
-| p-vscode  | What the VS Code documentation says about MCP, and which risk each point touches. The general risks still apply. Rows summarize the VS Code docs on 9 November 2026 unless it is tagged [inference]. Nothing here was tested. | SELF | REVIEWED / documentation scope |
+| p-vscode  | What the VS Code documentation says about MCP, and which risk each point touches. The general risks still apply. Rows summarize the VS Code docs checked on 9 November 2026, except for the enterprise tool-approval policy checked on 10 November. Nothing here was tested. | SELF | REVIEWED / documentation scope |
 | p-vscode  | TopicWhat VS Code doesRisk | SELF | REVIEWED / documentation scope |
 | p-vscode  | Ways a server gets addedFrom the MCP server gallery (Preview), MCP: Add Server, your user mcp.json, a repo's .vscode/mcp.json or root .mcp.json, a Dev Container's devcontainer.json, or code --add-mcp.M01 | VADD, VCONF | REVIEWED / documentation scope |
 | p-vscode  | Servers found in other appschat.mcp.discovery.enabled picks the sources. GitHub Copilot CLI discovery is on by default. Claude Desktop, Cursor and Windsurf are off by default. Copilot harness sessions independently read CLI configuration; this discovery setting does not control that path.M01 | VCONF | REVIEWED / documentation scope |
@@ -972,9 +986,9 @@ Verdict VERIFIED 8 Nov 2026 means the quote was found in the source. Each quote 
 
 | Id | Source | Quote | Used in | Verdict |
 |---|---|---|---|---|
-| odr2 | odr | Some information relates to prereleased product that might change substantially before it's commercially released. | M04.body[1]; M08.body[2]; row[5] Windows on-device agent registry (prerelease); place[16] M04/local; place[30] M08/policy; callout[2] | VERIFIED 8 Nov 2026 |
+| odr2 | odr | Some information relates to prereleased product that might change substantially before it's commercially released. | M04.body[1]; M08.body[2]; row[5] Windows on-device agent registry (prerelease); place[13] M03/policy; place[16] M04/local; place[30] M08/policy; callout[2] | VERIFIED 10 Nov 2026 |
 | odr3 | odr | MCP servers are contained in a separate environment by default and can only access approved resources, limiting vulnerability to threats like cross-prompt injection attacks | M04.body[1]; row[5] Windows on-device agent registry (prerelease); place[16] M04/local | VERIFIED 8 Nov 2026 |
-| odr4 | odr | users and IT admins can control access to MCP servers for each agent by using Windows Settings and management tools like Microsoft Intune | row[5] Windows on-device agent registry (prerelease) | VERIFIED 8 Nov 2026 |
+| odr4 | odr | users and IT admins can control access to MCP servers for each agent by using Windows Settings and management tools like Microsoft Intune | row[5] Windows on-device agent registry (prerelease); place[13] M03/policy | VERIFIED 10 Nov 2026 |
 | odr5 | odr | users and administrators can log and audit interactions between MCP clients and servers | M08.body[2]; row[5] Windows on-device agent registry (prerelease); place[30] M08/policy | VERIFIED 8 Nov 2026 |
 | vs1 | vs | MCP server trust is available in Visual Studio 2026 version 18.7 and later. | M03.checks[1]; row[0] Visual Studio trust and tool reset; place[9] M03/cfgin; callout[3] | VERIFIED 8 Nov 2026 |
 | vs2 | vs | Visual Studio asks you to trust an MCP server again when the server changes since the last time you used it. | M03.body[0]; M05.body[1]; row[0] Visual Studio trust and tool reset; place[9] M03/cfgin | VERIFIED 8 Nov 2026 |
@@ -985,10 +999,10 @@ Verdict VERIFIED 8 Nov 2026 means the quote was found in the source. Each quote 
 | vs9 | vs | Visual Studio also checks for MCP configurations that other development environments set up. | row[2] Visual Studio configuration discovery; place[1] M01/cfgin | VERIFIED 8 Nov 2026 |
 | vs10 | vs | MCP server usage in Visual Studio respects allow list policies set by organization administrators through GitHub. | M01.checks[1]; place[3] M01/policy | VERIFIED 8 Nov 2026 |
 | vs11 | vs | Visual Studio respects whatever command you specify, so you can pin versions or pass flags as needed. | M02.checks[0]; M02.how[0]; place[8] M02/policy | VERIFIED 8 Nov 2026 |
-| gh1 | ghal | You can define an allowlist and denylist to control which MCP servers users in your enterprise can run in Copilot clients and cloud sandboxes. | M01.body[0] | VERIFIED 8 Nov 2026 |
-| gh2 | ghal | don't apply to MCP servers defined in repository custom agent profiles. | M01.body[0]; M01.checks[0]; row[3] GitHub allowlist and registry (preview); place[3] M01/policy | VERIFIED 8 Nov 2026 |
+| gh1 | ghal | You can define an allowlist and denylist to control which MCP servers users in your enterprise can run in Copilot clients and cloud sandboxes. | M01.body[0]; place[12] M03/policy | VERIFIED 10 Nov 2026 |
+| gh2 | ghal | don't apply to MCP servers defined in repository custom agent profiles. | M01.body[0]; M01.checks[0]; row[3] GitHub allowlist and registry (preview); place[3] M01/policy; place[12] M03/policy | VERIFIED 10 Nov 2026 |
 | gh3 | ghal | Because deny rules take precedence | M01.how[0] | VERIFIED 8 Nov 2026 |
-| gh4 | ghal | You can match by name, server URL, or specific commands. | M01.how[0] | VERIFIED 8 Nov 2026 |
+| gh4 | ghal | You can match by name, server URL, or specific commands. | M01.how[0]; place[12] M03/policy | VERIFIED 10 Nov 2026 |
 | gh5 | ghal | This blocks all servers except built-in default servers. | M01.how[1] | VERIFIED 8 Nov 2026 |
 | gh6 | ghreg | This feature is in public preview and is not the recommended method for restricting access to MCP servers. | M01.body[1]; row[3] GitHub allowlist and registry (preview); place[0] M01/src; callout[2] | VERIFIED 8 Nov 2026 |
 | gh7 | ghenf | Enforcement is based only on server name/ID matching, which can be bypassed by editing configuration files. | M01.body[1]; row[3] GitHub allowlist and registry (preview) | VERIFIED 8 Nov 2026 |
@@ -1030,11 +1044,13 @@ Verdict VERIFIED 8 Nov 2026 means the quote was found in the source. Each quote 
 | vc4 | vscm | On macOS and Linux, per-server sandboxing restricts file system and network access for stdio MCP servers. | M03.body[1]; place[11] M03/local | VERIFIED 8 Nov 2026 |
 | vc5 | vscm | This mechanism isn't available on Windows. | M03.body[1]; place[11] M03/local | VERIFIED 8 Nov 2026 |
 | vp1 | vspol | Servers matching any entry are blocked from being installed or run, even if they also match the allow list; deny rules always take precedence. | M01.how[2] | VERIFIED 8 Nov 2026 |
+| vp2 | vspol | Tools set to 'false' will always present a confirmation and will never offer the option to auto-approve. | place[29] M09/policy | VERIFIED 10 Nov 2026 |
 | vt1 | vstel | Copilot Chat in VS Code can export traces, metrics, and events via OpenTelemetry (OTel) to give you real-time visibility into agent interactions, LLM calls, tool execution, and token usage. | M08.body[0]; M08.checks[0]; place[31] M08/tele | VERIFIED 8 Nov 2026 |
 | sp1 | sphttp | Servers MUST validate the Origin header on all incoming connections to prevent DNS rebinding attacks. | M07.checks[0]; place[24] M07/lhttp | VERIFIED 8 Nov 2026 |
 | sp2 | sphttp | servers SHOULD bind only to localhost (127.0.0.1) rather than all network interfaces (0.0.0.0). | M07.checks[0]; place[24] M07/lhttp | VERIFIED 8 Nov 2026 |
 | sp3 | spsec | URLs targeting http://169.254.169.254/ (AWS/GCP/Azure metadata service) can exfiltrate cloud credentials and instance information | place[25] M07/egress | VERIFIED 8 Nov 2026 |
 | sp4 | spsec | OAuth authorization URLs provided by malicious MCP servers can exploit client-side URL handling vulnerabilities, leading to Cross-Site Scripting (XSS) attacks and Remote Code Execution (RCE). | place[26] M07/agent | VERIFIED 8 Nov 2026 |
+| localsandbox | spsec | Execute MCP server commands in a sandboxed environment with minimal default privileges | place[12] M03/policy | VERIFIED 9 Nov 2026 |
 | sp5 | spver | The current protocol version is 2026-07-28 | callout[1] | VERIFIED 8 Nov 2026 |
 | ow1 | owasp | MCP04:2025 - Software Supply Chain Attacks & Dependency Tampering | place[5] M02/pkg | VERIFIED 8 Nov 2026 |
 | ow2 | owasp | MCP03:2025 - Tool Poisoning | place[7] M02/agent | VERIFIED 8 Nov 2026 |
@@ -1063,7 +1079,7 @@ label	Microsoft ecosystem
 label	Current as of 9 November 2026
 requirement	None of them needs a preview feature.
 label	Other Microsoft surfaces
-label	What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 9 November 2026. Nothing here was tested.
+label	What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Earlier rows were checked on 9 November 2026; new governance claims were checked on 10 November. Nothing here was tested.
 label	Gallery, GitHub, registries
 label	VS Code, Visual Studio, Copilot
 code token	mcp.json, .mcp.json

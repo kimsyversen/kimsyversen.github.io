@@ -2,6 +2,13 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 # Decisions: MCP Governance in a Microsoft ecosystem
 
+## 2026-11-11, Agent admin view and approval workflow
+
+- **Show the Microsoft 365 admin views separately.** Agents > All agents > Registry inventories agents. Agents > Tools > Registry shows MCP server availability, and Requests (preview) handles MCP registration requests. They are not one screen and visibility does not enforce access. Agent details can show read-only, incomplete tool metadata.
+- **Use two approval gates for the Agent 365 BYO preview route.** First, an internal reviewed Git change establishes the source-of-truth decision. Then an M365 admin separately approves or rejects the registered server request. Required Entra consent follows approval; the server is not available before consent. A rejection at either gate stops rollout.
+- **Deny immediately, then reconcile.** For a live server, block it in the registry first, then record the deny in Git, remove it from target allowlists, and verify runtime calls fail. The sync pipeline and Microsoft 365 admin actions are independent, so the workflow must reconcile them.
+- **BYO per-tool controls remain a gap.** Microsoft says tool-level blocking is rolling out for supported Agent 365 servers and is planned for BYO servers. Use server-level blocking and server-side authorization for BYO in the interim.
+
 ## 2026-11-08
 
 - **Page lives in `wip/`.** Same place as the governance summary. The index has no wip links, so the index is not edited.
@@ -206,3 +213,34 @@ Moved the page and its notes from `wip/` to the repository root and listed it in
 ## 2026-11-09, built-in GitHub MCP server wording
 
 - Narrowed "Client policy cannot block it" to "Allow and deny lists cannot block it", because the evidence only covers those lists. Named the MCP servers in Copilot policy and Registry only as untested switches instead of claiming they work. Did not add the pasted VS Code deny entry: the sources contradict it. Open question 5 now asks for a pilot test of both.
+
+## 2026-11-11, guardrails by layer
+
+- Placed the section last. It is a second view of the design, so layers 5 and 6 only point back to it. Then the Fact check moved below it and is collapsed by default (owner request). Links to a quote open it.
+- Superseded: the first version was a layer-by-client matrix. The owner wanted the flow figure, so both figure files are now one flow: call goes down, response comes back. The table stays as the second view.
+- One figure per path. The released-only figure shows "Preview only" for Foundry tool call and tool response and Copilot Studio threat detection. The preview figure shows what the preview features do and their limits.
+- Added Microsoft Defender real-time protection and the Agent 365 path after a review found them missing. Preview path only. The Agent 365 preview label is interpretation by AI.
+- Missing guardrails are shown as "None found", never as "no guardrail", because a missing page is not proof.
+- Foundry tool call and tool response guardrails are shown as not covering MCP, labelled as interpretation by AI.
+- Ledger verdicts for all 53 figure and section texts were reviewed one by one (not only the new ones) and recorded with a basis in the fact check. The review changed the page: four quotes added (V127 to V130), layer 5 no longer says "same for every client" because it holds Foundry only lines, layer 6 is worded as a design target, and two parameter names became `code token`.
+- Moved the documentation date to 11 Nov only after all 131 quotes matched.
+- 2026-11-11, second verification method: a script compares each table sentence with the text of the quotes it cites, and 14 key phrases are asserted. It found four real gaps (see the fact check) and they were fixed instead of loosened. Chose to reword "managed settings" to "VS Code policies and GitHub managed settings" because the VS Code page calls them policies. Added V131 (GitHub: deny rules take precedence) at the end, so existing quote numbers did not move.
+- 2026-11-11, hash on load: the jump to a quote row is now instant and repeated once after the load event. Smooth scroll started during load was cancelled by the browser, so links into the Fact check opened it but stayed at the top. Tested on all 131 links, both paths, two widths.
+
+## 2026-11-11, guardrails by layer, verification pass
+
+- Filled the VS Code and GitHub Copilot column instead of leaving "None found". Reason: the VS Code documentation describes approval levels, a result review, a server trust prompt and hooks, and GitHub describes a content filter. Each carries its limit in the same cell (Allow all skips it, can be switched off, source says "may").
+- Kept weak or unchecked controls visible with a label rather than leaving them out: GitHub content filter (interpretation by AI: not a control to count on), hooks and Copilot Studio "Ask before running" (unverified for MCP tools). Reason: a reader would otherwise assume nothing exists or assume it works.
+- Defender for Endpoint runtime protection is a line under the preview figure and a table row, not a cell in a layer. Reason: the source states no layer for the VS Code GitHub Copilot extension.
+- Split the Defender row into three (what it checks, the Agent 365 path, rules and scope). Reason: one cell had 96 words against the 60 word limit.
+- New quotes were appended (V132 to V161) so earlier quote numbers and links stay the same.
+- Superseded: "None found" for VS Code and GitHub Copilot at layers 1, 4, 7 and 8 and for Copilot Studio at layer 3.
+
+## 2026-11-11, control planes
+
+- Policy targets are named by control plane, not by product: Power Platform, GitHub Enterprise, Foundry, Microsoft 365. Each box names its admin surface. Reason: the owner checks the design against a list of control planes. Superseded: the target names "Copilot Studio" and "GitHub managed settings".
+- Microsoft 365 Copilot is a fourth target and a fourth client. Its list is applied by hand, because the source says Agent and plugin access has no PowerShell or API option (V171).
+- Agent 365 stays on the preview path although the product is released (V176). Reason: a company MCP server joins it only through BYO registration or a connected gateway, and both are preview (V179, V180). The released-only figure says so in one line.
+- Azure API Management and device management are listed as control planes. Interpretation by AI: they enforce MCP rules, so leaving them out would hide where rules live.
+- Microsoft 365 Copilot got a note, not a column, in Guardrails by layer. Reason: its layers were not read in depth.
+- Figures are generated from a script so box lines stay aligned.

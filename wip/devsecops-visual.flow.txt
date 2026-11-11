@@ -1,0 +1,32 @@
+DEVSECOPS LIFECYCLE MAP
+
+Flow description: Read the phase spine from top to bottom. A branch on the left
+joins each phase to its governance activity, and a branch on the right joins it
+to its engineering activity. Diamond markers indicate governance checkpoints.
+On narrow screens, each phase is followed by its two labeled activities.
+A risk table below the process groups governance and secure development
+risks by phase. Select a risk to expand its source evidence.
+
+GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
+---------------------           --------------       -----------------------------
+Classify service                o-- 01 Plan    --+ Set scope and security goals
+                                |
+Choose concept                  o-- 02 Design  --+ Model threats and requirements
+                                |
+Ready to build                  o-- 03 Code    --+ Secure coding and review
+                                |
+Track evidence and owners       o-- 04 Build   --+ Package traceable artifact
+                                |
+Review test evidence            o-- 05 Test    --+ Verify function, quality, security
+                                |
+Production go / no-go           o-- 06 Release --+ Approve verified version
+                                |
+Control promotion               o-- 07 Deploy  --+ Harden settings and access
+                                |
+Operations handover             o-- 08 Operate --+ Patch, back up, respond
+                                |
+Measure and improve             o-- 09 Monitor --+ Track service and security signals
+                                |
+Closeout                        o-- 10 Retire  --+ Revoke access and handle data
+
+Monitoring, incidents, changes and vulnerabilities can return work to Plan.

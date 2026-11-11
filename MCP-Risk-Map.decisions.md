@@ -141,3 +141,11 @@ Working notes.
 - Separate Copilot Studio evidence IDs (studio*) from CoSAI (cs*); add regression checks for source namespaces, entry coverage and static card labels.
 - Move permission breadth to M06, approval to M09 and Windows isolation to M03. These are different failed controls, even when a single attack involves all three.
 - Keep source claims distinct from interpretation by AI [inference]. No claim that a missing OWASP category name proves the topic absent from OWASP guidance.
+
+## 10 November 2026: risk-by-zone table
+
+- The zone table now shows every mapped component's finding, requirement, or control statement. Exact quotes and source links appear where the claim has a registered quote. Each risk row links to the detailed checks in its risk card. An unmapped cell is labeled as such and does not imply that no control exists.
+- Added governance coverage for M03: the General view recommends sandboxing local servers with minimal default privileges and distinguishes that recommendation from the command allowlist, which only restricts which covered Copilot command can start. In the Microsoft view, the Windows on-device registry's per-agent access control is separately identified as prerelease and scoped to that registry.
+- Added governance coverage for M09: the General view states a recommendation as interpretation by AI [inference]. The Microsoft view records the VS Code policy that makes selected tools require confirmation.
+- The table is a summarized control and evidence index, not an exhaustive inventory of every control available in every client. The risk card remains the authoritative checklist.
+- Rechecked the new Microsoft policy claims on 10 November 2026 and updated the index entry date. Kept the page-wide current-as-of date at 9 November because the older sources were not all rechecked.
