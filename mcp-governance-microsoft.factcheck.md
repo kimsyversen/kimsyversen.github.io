@@ -2,7 +2,181 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 # Fact check: MCP Governance in a Microsoft ecosystem
 
-Documentation checked: 2026-11-08.
+Documentation checked: 2026-11-11.
+
+## 2026-11-11, approval boundaries and cross-cutting guardrails
+
+- **Asked.** Add crucial cross-cutting points after comparing approval, server governance and guardrails across the four targets.
+- **Method.** Rechecked the cited primary Microsoft and GitHub documentation on 2026-11-11. The new subsection uses existing quote IDs; no new product claims or quote IDs were added.
+- **Verification limits.** Anchor and reviewed-text checks passed. The local quote-fetch check could not reach documentation hosts from the execution environment, so it could not validate all stored quotes. No tenant or browser test was run for these recommendations.
+- **Added.** One reviewed inventory must map to each target's different policy type; re-review server URL, authentication, permissions and exposed-tool changes; record the GitHub built-in server and custom agent profile exceptions and Power Platform's server-level-only blocking; require authentication and authorization at the gateway and backend; test denied server, tool and identity cases; verify policy sync and retain logs.
+- **Reviewed text.**
+
+| Text | Verdict | Basis |
+|---|---|---|
+| Approval boundaries and cross-cutting guardrails | label | Subsection heading. |
+| Keep one reviewed inventory, but translate it into each target's control. A server allowlist, an agent's tool allowlist, and a federated connector audience are different settings. | requirement | Proposed governance model. The target-specific controls are described in the Control planes table and the policy sync rows. |
+| Re-review a server when its URL, authentication, permissions, or exposed tools change. | requirement | Change review requirement for the approved inventory. |
+| Keep Foundry's `allowed_tools` list nonempty. An empty list permits all tools. | requirement | Foundry MCP tool evidence V69. |
+| GitHub's allow and deny lists do not block the built-in GitHub MCP server and do not apply to servers in custom agent profiles. | product claim | GitHub evidence V20 and V21. |
+| Power Platform blocks MCP servers as a whole, not individual tools. | product claim | Power Platform evidence V65. |
+| Require authentication and authorize each request at the gateway and backend. | requirement | Identity control design. Microsoft IP allowlist limitation V174 and gateway identity evidence support the requirement. |
+| Network allowlisting and a client approval prompt do not grant permission to read or change data. | requirement | Security design principle; the server remains responsible for identity and authorization. Microsoft explicitly states IP allowlisting does not replace authentication or authorization (V174). |
+| Test that an unapproved server, an unapproved tool, and an unauthorized identity are denied. | requirement | Proposed acceptance criteria. |
+| Check that each policy target received the current inventory. | requirement | Proposed sync verification for the target-specific pipeline. |
+| Retain gateway logs and review connector activity in Purview where applicable. | requirement | Gateway logging evidence V3; Purview activity audit evidence V165. |
+
+## 2026-11-11, control planes pass (latest)
+
+Asked: given five control planes (Agent 365, GitHub Enterprise AI Controls, Power Platform, Foundry Control Plane, Microsoft 365 Copilot controls), make the design cover every plane where MCP must be governed. Method: the Microsoft 365 Copilot connector pages and the Agent 365 pages were read live on 2026-11-11.
+
+- **Finding.** The design figures had three policy targets and no Microsoft 365 Copilot. Microsoft 365 Copilot connects to MCP servers through federated connectors (V162), governed in the Microsoft 365 admin center (V163). It was missing as a policy target and as a client.
+- **Added (19 quotes, V162 to V180, 180 total, 0 problems in the quote check).**
+  - Microsoft 365 Copilot: federated connectors use MCP (V162); admins control availability (V163, V168); a custom connector starts with an MCP server (V166) and needs Global Administrator or AI Administrator (V167); every setting must allow the user (V169); tool and connector blocking (V172); write tools need user approval (V164); audit in Purview (V165).
+  - No automation: Agent and plugin access has no PowerShell or API option (V171). The figures mark this target "By hand".
+  - Network path: MCP calls use fixed outbound addresses (V173); a server that filters by source address must allow them (V170); allow listing does not replace sign-in or authorization (V174); the list can change with seven days' notice (V175).
+  - Agent 365: generally available since 1 May 2026 (V176); the Tools registry in the Microsoft 365 admin center is the source of truth for MCP servers in the tenant (V177); BYO registration (V178) and the tools gateway are preview features (V179, V180). So the released-only figure leaves Agent 365 out and says why.
+- **Changed on the page.** Both design figures redrawn from a script: four policy targets named by control plane, each with its admin surface and how the list is applied; Microsoft 365 Copilot as a fourth client that reaches the gateway from the Microsoft cloud. New "Control planes" table (7 rows). Two new Controls rows, one Environments row, three acceptance tests (not run), two gaps, one line in open question 4, one note in Guardrails by layer. The misaligned box lines in the old preview figure are gone.
+- **Interpretation by AI.** That device URL policy and Windows firewall rules do not see Microsoft 365 Copilot calls, because they leave from the Microsoft cloud. That federated connectors are released: the pages carry no preview label for them (only a note on Work IQ Dev Tools). That Azure API Management and device management count as control planes for MCP. That the Microsoft 365 admin center is a fourth policy target.
+- **Unverified, not tested.** The admin surface names "Power Platform admin center" and "Foundry portal" are not quoted from a source. Whether a custom federated connector can be created by API. Whether blocking under Agents > Tools needs an Agent 365 licence. Declarative agents that carry their own MCP server were not read in depth. Viewing a connector's tools in the admin center is listed as coming soon. Nothing was tested in a tenant.
+- **Reviewed text.** 21 new or changed texts, 6 removed. Each was read against the figure and the sources:
+
+| Text | Verdict | Basis |
+|---|---|---|
+| A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry, Co... | requirement | Figure description or page text. It states the design; product facts in it are sourced in Controls and the Control planes table. |
+| Agent 365 not drawn: company servers join it through preview features | label | Scope note for the released-only figure. The claim is sourced in the Control planes table (V176, V179, V180). |
+| Approved connectors | requirement | Design requirement: only approved servers become custom federated connectors. |
+| By hand | requirement | Design requirement. Backed in Controls by V171 (no PowerShell or API for Agent and plugin access). |
+| By pipeline | requirement | Design target. The pipeline is proposed and not built. The Power Platform path is marked unverified in Controls. |
+| Control planes | label | Heading. |
+| Design target: a Git repository holds the approved and denied MCP servers. A reviewed p... | requirement | Figure description or page text. It states the design; product facts in it are sourced in Controls and the Control planes table. |
+| Design target: the released-only design with preview additions. A Git repository holds ... | requirement | Figure description or page text. It states the design; product facts in it are sourced in Controls and the Control planes table. |
+| Foundry portal | label | Admin surface name. Marked unverified in the Control planes table. |
+| GITHUB ENTERPRISE | label | Box title. Replaces GITHUB MANAGED SETTINGS. |
+| MICROSOFT 365 | label | Box title, new fourth target. |
+| Managed settings | label | Admin surface, first line. Sourced by V55 and the managed settings quotes in Controls. |
+| Microsoft 365 Copilot | label | Client name. |
+| Microsoft 365 admin | label | Admin surface name, first line. Sourced in the Control planes table (V163). |
+| Microsoft cloud, fixed outbound addresses | label | Path label. Sourced in Controls (V173). That device controls do not see these calls is interpretation by AI. |
+| Name the reviewers of the repository, the pipeline owner and the person called when a t... | requirement | Figure description or page text. It states the design; product facts in it are sourced in Controls and the Control planes table. |
+| POWER PLATFORM | label | Box title. Replaces COPILOT STUDIO as the target name; Copilot Studio stays as the client. |
+| Power Platform admin | label | Admin surface name, first line. From the control plane list the page was checked against. Marked unverified in the Control planes table. |
+| TARGETS | label | Row label for the policy targets. |
+| center | label | Second line of an admin surface name. |
+| repository | label | Second line of the managed settings surface. |
+
+
+## 2026-11-11, guardrails by layer, verification pass
+
+Asked: are the statements in "Guardrails by layer" correct, and is important information missing. Method: every source page of the section was read again live on 2026-11-11, then the product documentation was searched for guardrails the section did not name.
+
+- **Existing statements.** All 131 earlier quotes matched live. No statement in the old 16 rows was found wrong. Two were too narrow and are widened below (Foundry approval, VS Code confirmation dialog).
+- **Missing, now added (30 quotes, V132 to V161, 161 total, 0 problems in the quote check).**
+  - Foundry: agent guardrails are in preview (V134). With no agent guardrail the agent inherits the guardrail of its model deployment (V135). `require_approval` can also be `never` or a list of tools that skip approval (V136). Preview: controls take no effect for tools outside the supported list (V132), and the tool response control scans for indirect prompt injection (V133).
+  - Copilot Studio: tool setting "Ask the end user before running", off by default (V137). Fills layer 3, which said None found. Preview threat detection: generative orchestration only (V138), error behaviour can be set to block (V139), data is shared with the provider (V140).
+  - Defender real-time protection (preview path): blocking scenarios (V141 to V143 and the earlier email quote), email scenario only at the tool request (V144), rule scope only for agents with a Microsoft Entra agent ID (V145), local agents are covered by Defender for Endpoint instead (V146).
+  - Defender for Endpoint runtime protection (preview path): prerelease (V148), blocks before an action runs when the inspection method allows it (V147), Windows (preview) table lists the VS Code GitHub Copilot extension (V149, V150). No layer stated for this client.
+  - VS Code: Manual permissions is the default and asks for confirmation (V151), Allow all skips confirmation (V152), Assisted permissions uses an LLM judge (V153), post-approval and result review (V154, V155), policy and managed setting that lock approval (V156, V157), server trust decision (V158), preToolUse hook (V159) and its stated limit (V160).
+  - GitHub Copilot Chat: a content filter "may" scan prompts and responses (V161). The page marks this as weak wording, interpretation by AI.
+- **Interpretation by AI.** Which layer each new control sits at (the sources name no layer numbers). That the GitHub content filter is not a control to count on. That on the released-only path the Foundry controls should sit on the model deployment. That the Foundry supported-tool list not naming MCP means the tool call and tool response controls should not be relied on for MCP (unchanged).
+- **Unverified, not tested.** Whether Copilot Studio offers "Ask the end user before running" for MCP tools. Whether a VS Code preToolUse hook sees MCP tool calls. Which VS Code tools ask for a result review by default. The VS Code approval policy on a managed device. Nothing in this section was tested in a tenant or on a device.
+- **None found.** Now only Copilot Studio at layer 7 (tool response). Defender for Copilot Studio covers tool invocations only (V119, V120). Not proof that no guardrail exists.
+- **Result.** Table: 25 rows, 20 on the released-only path. Label checker: 151 distinct texts, 0 missing, 0 stale. Ledger rows for the 18 new or changed figure texts are in the table of the next section. Three texts were removed from the figure ("if a call needs approval", "(documented for VS Code)", and the old descriptions).
+- **Superseded in the section below.** The counts (16 rows, 131 quotes, 135 texts, 53 ledger texts) and the list of None found cells are history.
+
+## 2026-11-11, guardrails by layer section
+
+- **Scope.** Last section "Guardrails by layer", then the collapsed "Fact check" section (moved to the bottom, collapsed by default, opens on a link to a quote). Two figure files, `.figure-guardrails-safe.txt` and `.figure-guardrails-preview.txt`, drawn as one flow: a tool call goes down through layers 1 to 6, the response comes back up through layers 7 and 8. The table has 16 rows, 14 on the released-only path. 33 quotes added (V97 to V130), 130 in all.
+- **Live check.** All 131 quotes matched their sources on 2026-11-11 (0 problems), so the documentation date moved from 8 to 11 Nov.
+- **Defender and Agent 365 runtime protection.** Read the page "Protect AI agents in real time using Microsoft Defender" (checked 2026-10-15, V117 to V125 and the Defender quote V116). Foundry agents (Preview) are checked at user request, agent response, tool invocation and tool response. Copilot Studio agents (Preview) are checked at tool invocation. Agent 365 covers tool invocations, including customer MCP tools onboarded to Agent 365; unsupported tools and agents are not covered. The default rule only audits, custom rules block. Shown on the preview path only. The Agent 365 line is not labelled preview on the page, but its MCP path is called preview in the sources, so the preview label is interpretation by AI.
+- **Foundry tool call and tool response guardrails do not cover MCP.** The intervention points page lists the supported tools (Azure AI Search, Azure Functions, OpenAPI, Sharepoint Grounding, Fabric Data Agent, Bing Grounding, Bing Custom Search, Browser Automation). MCP is not on it (V104, V105). The page never says "MCP is not supported", so the figure marks this as interpretation by AI.
+- **Protected material.** Annotate only, with a flag in the annotation response (V99, V126). It does not block.
+- **"None found" cells are not proof.** They mean the pages read on 2026-11-11 do not describe a guardrail at that layer: VS Code and GitHub Copilot at layers 1, 4, 7 and 8; Copilot Studio at layers 3 and 7. Not tested in a tenant.
+- **Copilot Studio content moderation (V111).** The source does not say at which layer, so the figure has an "ANY LAYER" line and the table has its own row.
+- **Foundry default approval (V106).** The page text says the default is `always`, while one REST sample sets `never`. The page cites the stated default only.
+- **Browser check.** See "Browser check 2026-11-11" in `.plan.md`.
+- **Second method, claim words against quote text (script, 2026-11-11).** For each of the 16 table rows, every sentence was split into content words and each word was looked up in the text of the quotes the row cites. 56 sentences, 31 had words not in the quotes. All 31 were read by hand: paraphrase verbs ("checks", "scans", "limits", "shows"), names ("Microsoft") or sentences marked as interpretation by AI. Four were real gaps and were fixed: Data policy "not per tool" now also cites V65 (granular control over individual MCP tools isn't available); Allow and deny lists named "managed settings" for VS Code, but VS Code calls them policies, so the row and the figure label now say "VS Code policies and GitHub managed settings", and the deny-wins claim for GitHub has its own quote (new V131); Protected material "annotate only" was not in V99, so V99 now starts with "Action: Annotate only"; V128 now starts with the full sentence about the two ways to edit a control. The script also asserts key phrases in 14 quotes (for example V105 does not name MCP). Limit: it matches words, not meaning, so a sentence that reuses the quote's words with the wrong sense would pass. The hand review above covers that.
+- **Quote links on load (browser, localhost, 2026-11-11).** All 131 `#ev-V` links were loaded on both paths at 986 px and 375 px (524 loads): the Fact check opened, the row existed and was visible, the row was inside the viewport, and the page had no sideways scroll. The first run failed 262 of 262 in-view checks: the jump on load was a smooth scroll that the browser cancelled while loading, so the page stayed at the top. Fixed with an instant jump plus one repeat after the load event. After the fix 524 of 524 passed. Not tested: a real phone, Safari.
+- **Reviewed text, by hand.** The first ledger lines for this section were set by script. They were all reviewed again on 2026-11-11, one by one, against the figure, the table and the quote text in the sources, not only the 20 new ones. The table below has the verdict and basis for all 53 texts. The review found and fixed these:
+  - Four table claims had no quote that contained them: prompt attack check "blocks" (new V127), harm controls "cannot be deleted" (V128), approval "every call" (V129), Copilot Studio "blocks attacks" (V130).
+  - Layer 5 was headed "same for every client" but listed Foundry only lines (VM sandbox, Network control). The header is gone and the lines now say Foundry only or Agent 365 path only. The section goal and the figure description were fixed to match.
+  - Layer 6 and its description stated "only the gateway can call it" as fact. It is a design target, now ledgered as `requirement` and worded that way.
+  - "No reply in 1 s: allowed" now says by default (V114). "per tool call (VS Code)" overstated V115 and now says if a call needs approval, documented for VS Code.
+  - Copilot Studio prompt attack protection: the source names no layer. The figure and table now say the layer is interpretation by AI (AI estimate).
+  - Verdict corrections: `allowed_tools list` and `require_approval` are `code token`, not `label`.
+  The label checker counts 135 distinct texts, 0 missing, 0 stale. That proves only that each text has a verdict. The review itself is the table.
+
+| Text (start) | Verdict | Basis |
+| --- | --- | --- |
+| 1 USER INPUT | label | Layer name. Order of layers is the call path, interpretation by AI. |
+| 2 WHICH SERVER | label | Layer name. |
+| 3 PERSON APPROVES | label | Layer name. |
+| 4 CALL CONTENT | label | Layer name. |
+| 5 NETWORK AND GATEWAY | label | Layer name. Old suffix 'same for every client' removed: the layer lists Foundry only lines, so it was wrong. |
+| 6 COMPANY MCP SERVER | label | Layer name. |
+| 7 TOOL RESPONSE | label | Layer name. |
+| 8 FINAL ANSWER | label | Layer name. |
+| FOUNDRY AGENT | label | Column title. |
+| VS CODE, GITHUB COPILOT | label | Column title. Rows cover VS Code (V115) and GitHub Copilot managed settings (V14, V16, V19). |
+| GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes  | label | Figure title. |
+| Guardrails by layer | label | Section heading. |
+| What each guardrail does | label | Table heading. |
+| response comes back | label | Arrow caption. |
+| (Preview) | label | Status marker. Foundry tool call and response V102, V103. Copilot Studio threat detection V112. Defender Foundry V117, Copilot Studio V119. |
+| Preview only | label | Released-only path marker for features that are preview (V102, V103, V112, V113). |
+| Preview: tool threat protection | label | Name of a preview gateway control from the design above (Controls: tool threat protection, V58, V59). |
+| unverified | label | Badge for the None found note. Defined by the sentence next to it. |
+| None found | label | Gap marker. Now only Copilot Studio at layer 7. Not proof that no guardrail exists. Explained under the figure. |
+| Not stated | label | Gap marker. The source gives no layer (V111). |
+| (see below) | label | Points to the ANY LAYER line under the figure. |
+| ANY LAYER: Copilot Studio content moderation. The sources checked do n | label | Names a gap: no layer stated. V111. |
+| Harm levels | label | Name of a control. V98. Cannot be deleted, only overridden: V128. |
+| Prompt attack check | label | Name of a control. V97. Blocks the input: V127. |
+| Protected material (flag) | label | Name of a control. Annotate only, with a flag: V99, V126. |
+| allowed_tools list | code token | Parameter name. V69. |
+| (empty = all tools) | code token | Qualifier of allowed_tools. V69. |
+| require_approval | code token | Parameter name. V106. |
+| (default: always) | label | V106. Meaning (developer approves every call): V129. |
+| Tool call guardrail | label | Name of a preview intervention point. V102. |
+| Tool response guardrail | label | Name of a preview intervention point. V103. |
+| MCP is not on its list | label | Interpretation by AI: the supported-tool list does not name MCP (V104, V105). The next line says so. |
+| (interpretation by AI) | label | Marks the line above as interpretation by AI. Basis: V104, V105. |
+| Built-in prompt attack | label | Name of a control. V110. |
+| block (UPIA, XPIA) | label | V130 (runtime blocks these attacks), V110 (names UPIA, XPIA). |
+| (layer: AI estimate) | label | Says the layer of this control is interpretation by AI. V110 names no layer. |
+| Data policy: whole server | label | Summary of V27: blocking connectors blocks the tools of connected MCP servers, per server, not per tool. |
+| Threat detection (Preview) | label | Name of a preview control. V112, V113. |
+| No reply in 1 s: allowed | label | Summary of V114: the call goes ahead if there is no reply within one second. |
+| (by default) | label | Qualifier from V114 ('by default'). |
+| Defender rule (Preview) | label | Name of a preview control. Foundry layers 1, 4, 7, 8: V117, V118. Copilot Studio layer 4: V119, V120. |
+| Allow and deny lists | label | Name of a control. V14, V16, V19. |
+| (policy, managed settings) | label | Where the lists are set: VS Code policy (V14, V16), GitHub managed settings (V19, V131). |
+| Confirmation dialog | label | Name of a control. V115, V151. |
+| Every client, from the design above: | requirement | Design target. The design above applies to every client behind the gateway. Not a product claim. |
+| Outbound rules, then API Management: check identity, authorize, limit  | requirement | Design target from the main design. Not a product claim. |
+| Agent 365 path only: Defender rule checks tool calls to MCP tools onbo | label | Summary of V121, V122. Marked 'only' because it applies to that path alone. |
+| Foundry only: hosted agents run in a VM sandbox | label | Summary of V109 (per-session VM-isolated sandboxes). Marked Foundry only. |
+| Foundry only: Network control limits outbound traffic for hosted and C | label | Summary of V101. Marked Foundry only. |
+| Design target: only the gateway can call it. See the design above | requirement | Design target. It was a `label` before this review. Corrected. |
+| GitHub content filter | label | Name of a control. V161: Copilot Chat may include a content filter that scans prompts and responses. |
+| may scan prompts | label | V161 says 'may', at layer 1. Weak wording kept on purpose. |
+| may scan answers | label | V161 says 'may', at layer 8. |
+| (source says 'may') | label | Qualifier. V161 uses 'At times' and 'may'. Interpretation by AI: not a control to count on. |
+| Server trust prompt | label | Name of a control. V158. |
+| Can be set to never | label | V136: a list of tools can skip approval, and require_approval takes never. |
+| Ask user before running | label | Name of a tool setting. V137. |
+| Off by default | label | V137: the option is off by default. |
+| (for MCP: unverified) | label | Marks a gap. V137 covers tools in general, V159 names supported tools. Not checked for MCP tools. |
+| (default: Manual) | label | V151: Manual permissions is the default level and asks for confirmation. |
+| Allow all skips it | label | V152: Allow all runs all tool calls without confirmation. |
+| Policy can lock it | label | V156 (policy turns off global auto-approval), V157 (managed setting disables Allow all). Not tested on a managed device. |
+| preToolUse hook can deny | label | V159. V160: hooks are not a substitute for enforced permissions or enterprise controls. |
+| Result review before it | label | First half of a two-line cell. V154, V155. |
+| enters the chat context | label | Second half. V154: post-approval adds the result to the chat context without review. |
+| Can be switched off | label | V154: post-approval skips the review. |
+| FOUNDRY: agent guardrails (Preview). With none set, the agent uses its | label | V134 (preview), V135 (inherits the guardrail of the model deployment). |
+| VS CODE: Defender for Endpoint runtime protection (Preview, Windows).  | label | Preview path only. V146, V148, V149, V150. No layer stated for this client. |
+| Guardrails by layer for one MCP tool call, in three columns: Foundry a | label | Text alternative of the figure, both paths. Rewritten and read sentence by sentence against the new figures on 2026-11-11 (second pass). Each sentence restates one cell that has a row above. |
 
 ## Completed statement audit, 2026-11-08
 
@@ -181,7 +355,6 @@ label	Decision makers
 label	recommendation
 label	preview
 label	The design
-requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub managed settings, and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. A direct call from a client to the server is blocked.
 label	SOURCE OF TRUTH
 label	APPLY ON MERGE
 label	GIT REPOSITORY
@@ -189,9 +362,7 @@ label	PIPELINE
 label	Change by pull request
 label	Runs after merge
 label	COPILOT STUDIO
-label	GITHUB MANAGED SETTINGS
 label	FOUNDRY
-label	Policy target
 requirement	Approved list
 requirement	Approved tools
 label	MCP CLIENTS
@@ -211,7 +382,6 @@ requirement	Sign-in required
 requirement	Log every call
 requirement	Limit request rate
 requirement	Unlisted server denied
-requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub managed settings and Foundry. Each target points to the clients it governs. The clients then pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
 label	AI GATEWAY, PREVIEW
 requirement	Publish MCP endpoints
 requirement	Tool threat protection
@@ -231,14 +401,12 @@ requirement	Workstations call for client rules and, on Windows, outbound limits.
 requirement	Is a default outbound block on managed Windows laptops acceptable?
 requirement	Decide before rollout. The effect on other traffic is in the gaps.
 requirement	Who reviews list changes and owns the pipeline?
-requirement	Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update.
 requirement	Who approves and reviews the Agent 365 consent?
 requirement	The consent lets the service write API policies. Name an approver and a reviewer. See the controls.
 requirement	What ends the pilot?
 requirement	Set the exit evidence now: terms accepted, features released, clients covered. Without it the pilot has no end. See the fallback.
 requirement	Does a gateway with no private endpoints fit the network rules?
 requirement	The new resource has no private endpoints. Check the rules before building. See the gaps.
-requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry and Copilot Studio.
 requirement	Is the built-in GitHub MCP server acceptable on managed clients?
 requirement	The allow and deny lists cannot block it. Choices: accept it, turn off the MCP servers in Copilot policy (stops all servers), or limit it through GitHub account permissions. inference No source checked says whether that policy or Registry only covers the built-in server. Test both in a pilot.
 label	inference
@@ -253,6 +421,98 @@ label	Environments
 label	Fallback
 requirement	Released only is the baseline. Compare it with the preview design, then read the open questions.
 requirement	With preview, connect the API Management gateway to Agent 365 and test tool threat protection in a sandbox. The BYO server route is separate; its limits are listed below.
+label	(Preview)
+label	(default: always)
+label	1 USER INPUT
+label	2 WHICH SERVER
+label	3 PERSON APPROVES
+label	4 CALL CONTENT
+label	6 COMPANY MCP SERVER
+label	7 TOOL RESPONSE
+label	8 FINAL ANSWER
+label	Allow and deny lists
+label	Built-in prompt attack
+label	Confirmation dialog
+requirement	Design target: only the gateway can call it. See the design above
+label	FOUNDRY AGENT
+label	Guardrails by layer
+label	None found
+label	Not stated
+label	Preview only
+label	Threat detection (Preview)
+label	Tool call guardrail
+label	Tool response guardrail
+label	VS CODE, GITHUB COPILOT
+label	What each guardrail does
+code token	allowed_tools list
+label	block (UPIA, XPIA)
+code token	require_approval
+label	unverified
+code token	(empty = all tools)
+label	(interpretation by AI)
+label	(see below)
+label	ANY LAYER: Copilot Studio content moderation. The sources checked do not say at which layer
+label	Data policy: whole server
+label	Defender rule (Preview)
+label	GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
+label	Harm levels
+label	MCP is not on its list
+label	No reply in 1 s: allowed
+requirement	Outbound rules, then API Management: check identity, authorize, limit rate, log
+label	Preview: tool threat protection
+label	Prompt attack check
+label	Protected material (flag)
+label	response comes back
+label	(by default)
+label	(layer: AI estimate)
+label	5 NETWORK AND GATEWAY
+label	Agent 365 path only: Defender rule checks tool calls to MCP tools onboarded there
+requirement	Every client, from the design above
+label	Foundry only: Network control limits outbound traffic for hosted and Copilot-harness agents
+label	Foundry only: hosted agents run in a VM sandbox
+label	(policy, managed settings)
+label	(default: Manual)
+label	(for MCP: unverified)
+label	(source says 'may')
+label	Allow all skips it
+label	Ask user before running
+label	Can be set to never
+label	Can be switched off
+label	FOUNDRY: agent guardrails (Preview). With none set, the agent uses its model's guardrail
+label	GitHub content filter
+label	Guardrails by layer for one MCP tool call, in three columns: Foundry agent, Copilot Studio, and VS Code with GitHub Copilot. Layer 1 user input: Foundry has harm levels and a prompt attack check, Copilot Studio has a built-in prompt attack block, whose layer is an AI estimate, and GitHub says its content filter may scan prompts. Layer 2 which server: Foundry allowed_tools, Copilot Studio data policy, VS Code and GitHub allow and deny lists plus a server trust prompt in VS Code. Layer 3 person approves: Foundry require_approval, default always, which can be set to never. Copilot Studio can ask the user before running a tool, off by default and unverified for MCP tools. VS Code shows a confirmation dialog by default, the Allow all level skips it, and a company policy can lock it. Layer 4 call content: Foundry has a tool call guardrail in preview that does not list MCP, Copilot Studio has threat detection in preview that by default allows the call after one second without a reply. In VS Code a preToolUse hook can deny a call, unverified for MCP tools. Layer 5 network and gateway: the design above applies to every client, with tool threat protection in preview, plus a Defender rule for tool calls to MCP tools onboarded to Agent 365 and two lines that apply to Foundry only. Layer 6 company MCP server: the design target is that only the gateway can call it. Layer 7 tool response: Foundry has a tool response guardrail in preview that does not list MCP, none found for Copilot Studio. VS Code can ask for a review of the result before it enters the chat context, and this can be switched off. Layer 8 final answer: Foundry has harm levels and a protected material flag, Copilot Studio is not stated, and GitHub says its content filter may scan answers. Below the figure: Copilot Studio content moderation has no stated layer. Foundry agent guardrails have preview status, and with none set the agent uses the guardrail of its model. In preview, a Microsoft Defender real-time protection rule also applies for Foundry at layers 1, 4, 7 and 8 and for Copilot Studio at layer 4. Defender for Endpoint runtime protection, in preview on Windows, lists the VS Code GitHub Copilot extension, with no layer stated.
+label	Guardrails by layer for one MCP tool call, in three columns: Foundry agent, Copilot Studio, and VS Code with GitHub Copilot. Layer 1 user input: Foundry has harm levels and a prompt attack check, Copilot Studio has a built-in prompt attack block, whose layer is an AI estimate, and GitHub says its content filter may scan prompts. Layer 2 which server: Foundry allowed_tools, Copilot Studio data policy, VS Code and GitHub allow and deny lists plus a server trust prompt in VS Code. Layer 3 person approves: Foundry require_approval, default always, which can be set to never. Copilot Studio can ask the user before running a tool, off by default and unverified for MCP tools. VS Code shows a confirmation dialog by default, the Allow all level skips it, and a company policy can lock it. Layer 4 call content: preview only for Foundry and Copilot Studio. In VS Code a preToolUse hook can deny a call, unverified for MCP tools. Layer 5 network and gateway: the design above applies to every client, plus two lines that apply to Foundry only. Layer 6 company MCP server: the design target is that only the gateway can call it. Layer 7 tool response: preview only for Foundry, none found for Copilot Studio. VS Code can ask for a review of the result before it enters the chat context, and this can be switched off. Layer 8 final answer: Foundry has harm levels and a protected material flag, Copilot Studio is not stated, and GitHub says its content filter may scan answers. Below the figure: Copilot Studio content moderation has no stated layer. Foundry agent guardrails have preview status, and with none set the agent uses the guardrail of its model.
+label	Off by default
+label	Policy can lock it
+label	Result review before it
+label	Server trust prompt
+label	VS CODE: Defender for Endpoint runtime protection (Preview, Windows). Layer not stated
+label	enters the chat context
+label	may scan answers
+label	may scan prompts
+label	preToolUse hook can deny
+requirement	A proposed design for governing MCP servers across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.
+label	Agent 365 not drawn: company servers join it through preview features
+requirement	Approved connectors
+requirement	By hand
+requirement	By pipeline
+label	Control planes
+requirement	Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, GitHub Enterprise managed settings, and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, API Management and the company MCP server, which only the gateway can reach. Microsoft 365 Copilot calls API Management from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. Agent 365 is not drawn: company servers join it through preview features.
+requirement	Design target: the released-only design with preview additions. A Git repository holds the approved and denied MCP servers. After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The first three pass through client controls, Windows outbound firewall rules where applicable, Azure AI Gateway with tool threat protection, and a company MCP server that only the gateway can reach. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. The design connects the Agent 365 admin view below the gateway.
+label	Approval boundaries and cross-cutting guardrails
+label	Foundry portal
+label	GITHUB ENTERPRISE
+label	MICROSOFT 365
+label	Managed settings
+label	Microsoft 365 Copilot
+label	Microsoft 365 admin
+label	Microsoft cloud, fixed outbound addresses
+requirement	Name the reviewers of the repository, the pipeline owner and the person called when a target fails to update. Name who applies the list by hand in the Microsoft 365 admin center.
+label	POWER PLATFORM
+label	Power Platform admin
+label	TARGETS
+label	center
+label	repository
 ```
 <!-- End reviewed presentation text -->
 

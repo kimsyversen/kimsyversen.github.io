@@ -5,30 +5,36 @@ SOURCE OF TRUTH              APPLY ON MERGE
 |                        |   |                        |
 +------------------------+   +------------+-----------+
                                           |
-             +----------------------------+----------------------------+
-             |                            |                            |
-             v                            v                            v
-+------------------------+   +------------------------+   +------------------------+
-| [b]COPILOT STUDIO[/b]         |   | [b]GITHUB MANAGED SETTINGS[/b]|   | [b]FOUNDRY[/b]                |
-| Policy target          |   | Policy target          |   | Policy target           |
-| Approved list          |   | Approved list          |   | Approved tools          |
-+------------------------+   +------------------------+   +------------------------+
-             |                            |                            |
-MCP CLIENTS  v                            v                            v
-+------------------------+   +------------------------+   +------------------------+
-| Copilot Studio         |   | VS Code                |   | Foundry agents         |
-|                        |   | GitHub Copilot         |   |                        |
-+------------------------+   +------------------------+   +------------------------+
-             |                            |                            |
-             +----------------------------+----------------------------+
-             |
-             v
-+------------------------+   +------------------------+   +------------------------+
-| [b]CLIENT CONTROLS[/b]        |   | [b]API MANAGEMENT[/b]         |   | [b]COMPANY MCP SERVER[/b]     |
-| URL allowlist          |   | Check identity         |   | Gateway only (target)  |
-| Windows egress limits  |-->| Authorize requests     |-->|                        |
-| Sign-in required       |   | Log every call         |   |                        |
-|                        |   | Limit request rate     |   |                        |
-+------------------------+   +------------------------+   +------------------------+
+             +----------------------------+----------------------------+----------------------------+
+             |                            |                            |                            |
+TARGETS      v                            v                            v                            v
++------------------------+   +------------------------+   +------------------------+   +------------------------+
+| [b]POWER PLATFORM[/b]         |   | [b]GITHUB ENTERPRISE[/b]      |   | [b]FOUNDRY[/b]                |   | [b]MICROSOFT 365[/b]          |
+| Power Platform admin   |   | Managed settings       |   | Foundry portal         |   | Microsoft 365 admin    |
+| center                 |   | repository             |   |                        |   | center                 |
+| Approved list          |   | Approved list          |   | Approved tools         |   | Approved connectors    |
+| By pipeline            |   | By pipeline            |   | By pipeline            |   | [red]By hand[/red]                |
++------------------------+   +------------------------+   +------------------------+   +------------------------+
+             |                            |                            |                            |
+MCP CLIENTS  v                            v                            v                            v
++------------------------+   +------------------------+   +------------------------+   +------------------------+
+| Copilot Studio         |   | VS Code                |   | Foundry agents         |   | Microsoft 365 Copilot  |
+|                        |   | GitHub Copilot         |   |                        |   |                        |
++------------------------+   +------------------------+   +------------------------+   +------------------------+
+             |                            |                            |                            |
+             +----------------------------+----------------------------+                            |
+             |                                                                                      |
+             v                                                                                      |
++------------------------+   +------------------------+   +------------------------+                |
+| [b]CLIENT CONTROLS[/b]        |   | [b]API MANAGEMENT[/b]         |   | [b]COMPANY MCP SERVER[/b]     |                |
+| URL allowlist          |   | Check identity         |   | Gateway only (target)  |                |
+| Windows egress limits  |-->| Authorize requests     |-->|                        |                |
+| Sign-in required       |   | Log every call         |   |                        |                |
+|                        |   | Limit request rate     |   |                        |                |
++------------------------+   +------------------------+   +------------------------+                |
+                                          ^                                                         |
+                                          +---------------------------------------------------------+
+                                            Microsoft cloud, fixed outbound addresses
 
 Unlisted server denied
+Agent 365 not drawn: company servers join it through preview features
