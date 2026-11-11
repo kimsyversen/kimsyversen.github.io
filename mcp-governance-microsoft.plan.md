@@ -19,7 +19,7 @@ A short, sound design to govern MCP in the Microsoft ecosystem. Make Azure API M
 
 ## Two paths (added 2026-11-08)
 
-Safe choice (default) and preview-enabled choice (safe plus Agent 365, Azure AI Gateway, tool threat protection). Added sections: Choose a path, Order of work, Fallback (preview only). Preview-only blocks carry class `opt-preview`, safe-only blocks `opt-safe`. Sources: `~/Downloads/enterprise-mcp-governance-solution.md` and `enterprise-mcp-governance-preview-enabled.md`.
+Safe choice (default) uses supported MCP capabilities in the Azure API Management service. The preview-enabled choice uses the separate AI Gateway product, Agent 365 integration and tool threat protection. Added sections: Choose a path, Order of work, Fallback (preview only). Preview-only blocks carry class `opt-preview`, safe-only blocks `opt-safe`. Sources: `~/Downloads/enterprise-mcp-governance-solution.md` and `enterprise-mcp-governance-preview-enabled.md`.
 
 ## Policy source and sync (added 2026-11-08)
 
@@ -98,3 +98,10 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - [x] Updated accessibility descriptions, fact-check ledger and decisions note.
 - [x] Builder, section-anchor, reviewed-label and diff whitespace checks.
 - [ ] Quote source check not verified: all 193 fetches failed because source hosts did not resolve. Desktop and narrow browser check not run: local server could not bind and browser blocks local file URLs.
+
+## Gateway preview status 2026-11-11
+- [x] Diagram distinguishes supported MCP capabilities in the API Management service from the separate AI Gateway public preview product.
+- [x] Diagram and component map clarify preview-only Agent 365 tool controls and tool threat protection; Foundry gateway integration and remote MCP firewall are named as separate preview features.
+- [x] Read current primary Microsoft Learn sources for API Management MCP support, AI gateway terminology, AI Gateway, Agent 365 integration and tool threat protection.
+- [x] Builder, section-anchor, reviewed-label (208 texts) and whitespace checks passed.
+- [ ] Automated quote fetch: all 196 requests failed because source hosts did not resolve. Browser layout check not run: local server cannot bind and browser blocks local file URLs.

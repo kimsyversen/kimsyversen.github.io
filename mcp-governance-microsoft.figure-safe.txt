@@ -27,10 +27,11 @@ MCP CLIENTS  v                            v                            v        
              v                                                                                      |
 +------------------------+   +------------------------+   +------------------------+                |
 | [b]CLIENT CONTROLS[/b]        |   | [b]API MANAGEMENT[/b]         |   | [b]COMPANY MCP SERVER[/b]     |                |
-| URL allowlist: VS Code |   | Check identity         |   | Accepts calls from     |                |
+| URL allowlist: VS Code |   | MCP: supported tiers   |   | Accepts calls from     |                |
 | and GitHub Copilot     |   |                        |   | Gateway only           |                |
-| Windows egress (Intune)|-->| Authorize requests     |-->|                        |                |
-| Client signed in       |   | Log every call         |   |                        |                |
+| Windows egress (Intune)|-->| Check identity         |-->|                        |                |
+| Client signed in       |   | Authorize requests     |   |                        |                |
+|                        |   | Log every call         |   |                        |                |
 |                        |   | Limit request rate     |   |                        |                |
 +------------------------+   +------------------------+   +------------------------+                |
                                           ^                                                         |

@@ -26,13 +26,14 @@ MCP CLIENTS  v                            v                            v        
              |                                                                                      |
              v                                                                                      |
 +------------------------+   +------------------------+   +------------------------+                |
-| [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY, PREVIEW[/b]    |   | [b]COMPANY MCP SERVER[/b]     |                |
-| URL allowlist: VS Code |   | Publish MCP endpoints  |   | Accepts calls from     |                |
-| and GitHub Copilot     |   |                        |   | Gateway only           |                |
+| [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY[/b]              |   | [b]COMPANY MCP SERVER[/b]     |                |
+| URL allowlist: VS Code |   | Separate product       |   | Accepts calls from     |                |
+| and GitHub Copilot     |   | Public preview         |   | Gateway only           |                |
 | Windows egress (Intune)|-->| Check identity         |-->|                        |                |
 | Client signed in       |   | Authorize requests     |   |                        |                |
-|                        |   | Log every call         |   |                        |                |
+|                        |   | Log usage              |   |                        |                |
 |                        |   | Limit request rate     |   |                        |                |
+|                        |   | Agent 365 tool block   |   |                        |                |
 |                        |   | Tool threat protection |   |                        |                |
 +------------------------+   +------------------------+   +------------------------+                |
                                    ^            ^                                                   |
@@ -44,7 +45,7 @@ MCP CLIENTS  v                            v                            v        
                              | Agents > All agents     |
                              | Tools: Available/Blocked|
                              | Requests (preview)      |
-                             | Gateway integration     |
+                             | Gateway link (preview)  |
                              +--------------------------+
 
 Unlisted server denied

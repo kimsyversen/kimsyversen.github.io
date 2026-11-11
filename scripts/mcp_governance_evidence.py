@@ -66,6 +66,8 @@ SOURCES = {
                "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol", "2026-10-28"),
     "apim-genai": ("Microsoft Learn, API Management AI gateway capabilities",
                    "https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities", "2026-05-29"),
+    "ai-gw-ov": ("Microsoft Learn, What is AI Gateway?",
+                 "https://learn.microsoft.com/en-us/azure/ai-gateway/overview", "2026-10-28"),
     "azupd-mcp": ("Microsoft Apps on Azure Blog, Ignite 2025",
                   "https://techcommunity.microsoft.com/blog/appsonazureblog/azure-app-platform-at-ignite-2025-new-innovations-for-all-your-apps-and-agents/4470759", "2025-11-18"),
     "apim-mcp": ("Microsoft Learn, about MCP servers in API Management",
@@ -327,6 +329,10 @@ QUOTES = [
     ("a365-agent-incomplete", "a365-agent-details", "Currently, Microsoft 365 admin center doesn't have data and tools information for all agents."),
     ("a365-agent-approve", "a365-agent-requests", "When a member of your organization publishes an agent to your tenant, the agent requires administrator approval before becoming available tenant-wide."),
     ("a365-agent-request-review", "a365-agent-requests", "Administrators can review the agent's details, such as its description, owner, data, and tools, and then approve or reject the request."),
+    # Added 2026-11-11, to distinguish API Management's AI gateway features from AI Gateway.
+    ("pv-a365-matrix", "apim-a365", "Centralized MCP server inventory Block or unblock MCP servers Tool-level blocking Tool activity observability Tool threat protection"),
+    ("pv-aig-separate", "ai-gw-ov", "AI Gateway is a dedicated product for AI traffic."),
+    ("apim-ai-not-separate", "apim-genai", "The AI gateway, including MCP server capabilities, extends API Management's existing API gateway; it's not a separate offering."),
 ]
 
 # Quotes that back only the preview-enabled path. The page hides their rows on the safe path.
