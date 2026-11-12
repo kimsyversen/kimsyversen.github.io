@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MCP governance threat model</title>
+<meta name="description" content="STRIDE per element and DREAD scores for a proposed MCP governance design in a Microsoft ecosystem. Select a threat on the data flow diagram to read it.">
+<meta name="theme-color" content="#F3F0E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15140F" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* A printed worksheet, like the design page it models: paper, ink, hairline rules.
+   Red marks trust boundaries and bypass flows. Rating colours appear only on threat ids and scores. */
+:root{
+  color-scheme:light;
+  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F;
+  --red:#B5321C; --hover:rgba(23,21,15,.045); --node:#FBF9F4; --store:#ECE7DB;
+  --high:#B5321C; --high-soft:#F4DDD4; --med:#946000; --med-soft:#F4E7C6; --low:#2D6A45; --low-soft:#DBEADF;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB;
+    --red:#F07A60; --hover:rgba(236,231,219,.05); --node:#1D1C17; --store:#26241D;
+    --high:#F07A60; --high-soft:#3A2019; --med:#E2B04E; --med-soft:#352A12; --low:#88C79D; --low-soft:#1A2E21;
+  }
+}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1440px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+a:focus-visible,button:focus-visible,.fig-scroll:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0}
+h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
+p{margin:0}
+p,li,dd{text-wrap:pretty}
+.lbl{font:600 0.7rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.skip{position:absolute;top:8px;left:16px;z-index:30;background:var(--bg);padding:8px 12px;transform:translateY(-150%)}
+.skip:focus{transform:none}
+.tg{display:inline;font:500 0.7rem/1.5 var(--mono);padding:0 5px;margin:0 1px;white-space:nowrap}
+.tg.i{border:1px dashed var(--muted);color:var(--muted)}
+.r-high{--c:var(--high);--soft:var(--high-soft)}
+.r-medium{--c:var(--med);--soft:var(--med-soft)}
+.r-low{--c:var(--low);--soft:var(--low-soft)}
+
+/* masthead */
+.mast{border-top:6px solid var(--rule);padding-top:10px}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
+h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-height:0.95;letter-spacing:-0.035em;margin:26px 0 0 -0.04em}
+.intro{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:24px 56px;align-items:start;padding:26px 0 30px}
+.lead{font-size:clamp(1.1rem,1.9vw,1.36rem);line-height:1.42;max-width:38rem}
+.spec{margin:0;display:grid;grid-template-columns:auto 1fr;font-size:0.9rem;border-top:1px solid var(--line)}
+.spec dt,.spec dd{padding:7px 0;border-bottom:1px solid var(--line)}
+.spec dt{padding-right:18px;color:var(--muted)}
+.spec dd{margin:0}
+.ratio{display:flex;height:8px;margin-top:6px;max-width:320px}
+.ratio i{display:block;background:var(--c)}
+@media (max-width:860px){.intro{grid-template-columns:1fr}}
+
+/* section heads */
+.sec{margin-top:42px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 24px;border-top:2px solid var(--rule);padding-top:12px}
+.sec-head p{color:var(--muted);font-size:0.92rem;max-width:44rem}
+
+/* filters, shared by the diagram and the register */
+.filters{position:sticky;top:0;z-index:6;background:var(--bg);display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:10px 0;margin-top:12px;border-bottom:1px solid var(--line)}
+.fgroup{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.fgroup > .lbl{margin-right:4px}
+.fb{font:500 0.8rem/1 var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);padding:7px 9px;min-height:32px;cursor:pointer;border-radius:3px}
+.fb .k{font:600 0.82rem var(--mono)}
+.fb .nm{color:var(--muted)}
+.fb:hover{border-color:var(--ink)}
+.fb[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fb[aria-pressed="true"] .nm{color:var(--bg);opacity:.75}
+.fb.rate[aria-pressed="true"]{background:var(--c);border-color:var(--c)}
+.fb.rate::before{content:"";display:inline-block;width:9px;height:9px;margin-right:6px;background:var(--c);vertical-align:-1px}
+.fb.rate[aria-pressed="true"]::before{background:var(--bg)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:0.82rem;border:1px solid var(--ink);padding:4px 4px 4px 9px;border-radius:3px}
+.pill[hidden]{display:none}
+.pill b{font-family:var(--mono)}
+.pill button{border:0;background:transparent;color:inherit;font:600 1rem/1 var(--body);cursor:pointer;padding:3px 6px}
+.fcount{margin-left:auto;font-size:0.84rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.fclear{font:500 0.8rem var(--body);background:none;border:0;color:var(--ink);text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px;cursor:pointer;padding:6px 0}
+@media (max-width:700px){
+  .filters{position:static}
+  .fb .nm{display:none}
+  .fcount{margin-left:0;width:100%}
+}
+
+/* the diagram */
+.fig{margin:14px 0 0}
+.fig-scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.fig-hint{display:none;font-size:0.84rem;color:var(--muted);margin-top:8px}
+@media (max-width:1080px){.fig-hint{display:block}}
+.dfd{display:block;width:100%;min-width:1080px;height:auto;font-family:var(--body)}
+.tb rect{fill:none;stroke:var(--red);stroke-width:1.3;stroke-dasharray:7 5}
+.tb text{font:600 12.5px var(--body);fill:var(--red)}
+.tbid{font-family:var(--mono)}
+.shape{fill:var(--node);stroke:var(--ink);stroke-width:1.3;transition:stroke-width .15s}
+.k-ext .shape{fill:var(--bg)}
+.k-store .shape{fill:var(--store);stroke:none}
+.store-line{stroke:var(--ink);stroke-width:2.2;fill:none}
+.nm{font:500 13.5px var(--body);fill:var(--ink)}
+.eid{font-family:var(--mono);font-weight:600}
+.edge{fill:none;stroke-width:1.5;transition:stroke-width .15s}
+.e-flow{stroke:var(--muted)}
+.e-bad{stroke:var(--red);stroke-dasharray:7 4}
+.e-thin{stroke:var(--muted);stroke-width:1.1;stroke-dasharray:3 3}
+.mk-flow{fill:var(--muted)} .mk-bad{fill:var(--red)} .mk-thin{fill:none;stroke:var(--muted);stroke-width:1.4}
+.edge.on,.edge.focus{stroke-width:3.2}
+.e-flow.on,.e-flow.focus{stroke:var(--ink)}
+.elabel rect{fill:var(--bg)}
+.elabel text{font:12px var(--body);fill:var(--muted);text-anchor:middle}
+.flab-bg{fill:var(--bg);stroke:var(--line)}
+.flab text{font:500 13px var(--body);fill:var(--ink);text-anchor:middle}
+.flab .hit{fill:transparent}
+.flab.focus .flab-bg{stroke:var(--ink);stroke-width:2}
+.el-hit{cursor:pointer;outline:none}
+.el-hit:hover .shape{stroke-width:2.4}
+.el-hit:focus-visible .shape,.el-hit:focus-visible .hit{stroke:var(--red);stroke-width:3}
+.el-hit[aria-pressed="true"] .shape{stroke-width:3.4}
+.flab .el-hit[aria-pressed="true"] .hit{fill:var(--hover)}
+.node.focus .shape{stroke-width:3.4}
+@media (prefers-reduced-motion:no-preference){
+  .node.focus .shape{animation:pulse 1.6s ease-out 1}
+  @keyframes pulse{0%{stroke-width:7}100%{stroke-width:3.4}}
+}
+.node,.flab{transition:opacity .2s}
+.quiet{opacity:.38}
+.chip{cursor:pointer;outline:none;transition:opacity .2s}
+.chip rect{fill:var(--soft);stroke:var(--c);stroke-width:1.3;transition:stroke-width .12s}
+.chip text{font:600 13px var(--mono);fill:var(--c);text-anchor:middle;pointer-events:none}
+.chip.pub rect{fill:var(--c)}
+.chip.pub text{fill:var(--bg)}
+.chip:hover rect{stroke-width:2.6}
+.chip:focus-visible rect{stroke:var(--ink);stroke-width:2.8}
+.chip.sel rect{stroke:var(--ink);stroke-width:3.2}
+.chip.dim{opacity:.13}
+.legend{display:flex;flex-wrap:wrap;gap:8px 28px;margin:12px 0 0;padding:10px 0 0;border-top:1px solid var(--line);list-style:none;font-size:0.85rem;color:var(--muted)}
+.legend li{display:flex;align-items:center;gap:8px}
+.sw{display:inline-block;font:600 0.74rem/1 var(--mono);padding:3px 5px;border:1.3px solid var(--c);background:var(--soft);color:var(--c);border-radius:3px}
+.sw.pub{background:var(--c);color:var(--bg)}
+.ln{display:inline-block;width:30px;border-top:2px dashed var(--red)}
+.bx{display:inline-block;width:22px;height:14px;border:1.3px dashed var(--red);border-radius:3px}
+
+/* register */
+.spread-fig{margin:18px 0 6px;max-width:900px}
+.spread{display:block;width:100%;height:auto}
+.spread .band{opacity:.55}
+.b-low{fill:var(--low-soft)} .b-med{fill:var(--med-soft)} .b-high{fill:var(--high-soft)}
+.bandl{font:600 11px var(--body);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.axis{stroke:var(--muted);stroke-width:1;fill:none}
+.tick{font:11px var(--mono);fill:var(--muted);text-anchor:middle}
+.dot{fill:var(--soft);stroke:var(--c);stroke-width:1.5;cursor:pointer;transition:opacity .2s}
+.dot.pub{fill:var(--c)}
+.dot.sel{stroke:var(--ink);stroke-width:3}
+.dot.dim{opacity:.12}
+.spread-fig figcaption{font-size:0.84rem;color:var(--muted)}
+.reg{width:100%;border-collapse:collapse;margin-top:16px;font-size:0.92rem}
+.reg th{text-align:left;font:600 0.7rem/1.3 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:8px 6px;border-bottom:2px solid var(--rule);vertical-align:bottom;white-space:nowrap}
+.sort{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;background:none;border:0;padding:4px 0;cursor:pointer}
+.sort::after{content:"";display:inline-block;width:1em;text-align:center}
+[aria-sort="ascending"] .sort,[aria-sort="descending"] .sort{color:var(--ink)}
+[aria-sort="ascending"] .sort::after{content:"\2191"}
+[aria-sort="descending"] .sort::after{content:"\2193"}
+.reg td{padding:11px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.reg tbody tr{cursor:pointer;scroll-margin-top:72px}
+.reg tbody tr:hover{background:var(--hover)}
+.reg tbody tr.sel{background:var(--hover);box-shadow:inset 3px 0 0 var(--ink)}
+.cid{width:64px}
+.chip-b{font:600 0.84rem/1 var(--mono);padding:4px 7px;border:1.3px solid var(--c);background:var(--soft);color:var(--c);border-radius:3px;cursor:pointer}
+.chip-b.pub{background:var(--c);color:var(--bg)}
+.tx p{max-width:46rem}
+.tx .sub{font-size:0.8rem;color:var(--muted);margin-top:3px}
+.tx .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
+.f{width:46px;font:500 0.86rem var(--mono);font-variant-numeric:tabular-nums}
+.f i{display:block;height:3px;width:calc(var(--v) * 10%);background:var(--ink);opacity:.5;margin-top:5px}
+.sc{width:78px}
+.sc b{font:750 1.1rem/1 var(--display);font-variant-numeric:tabular-nums}
+.rt{display:block;font-size:0.75rem;color:var(--c);margin-top:3px;font-weight:600}
+.ev{width:120px}
+.lv{display:inline-block;font:500 0.74rem/1.5 var(--mono);padding:0 5px;border:1px solid var(--line);color:var(--muted)}
+.lv-exploited{background:var(--red);border-color:var(--red);color:var(--bg)}
+.lv-disclosed{border-color:var(--ink);color:var(--ink)}
+.nref{display:block;font-size:0.76rem;color:var(--muted);margin-top:3px}
+.empty{padding:18px 0;color:var(--muted)}
+@media (max-width:760px){
+  .reg thead tr{display:flex;flex-wrap:wrap;gap:0 14px;border-bottom:2px solid var(--rule)}
+  .reg th{border:0;padding:6px 0}
+  .reg th.th-tx{display:none}
+  .reg tbody tr{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"id ev sc" "tx tx tx";gap:6px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .reg td{border:0;padding:0;width:auto}
+  .reg td.f{display:none}
+  .cid{grid-area:id}.tx{grid-area:tx}.sc{grid-area:sc;text-align:right}.ev{grid-area:ev}
+  .rt{display:inline;margin-left:6px}
+  .nref{display:inline;margin-left:6px}
+}
+
+/* method */
+.method{display:grid;grid-template-columns:minmax(9rem,1fr) minmax(0,4fr);margin:14px 0 0;font-size:0.94rem}
+.method dt,.method dd{padding:10px 0;border-bottom:1px solid var(--line)}
+.method dt{font-weight:600;padding-right:16px}
+.method dd{margin:0;max-width:52rem}
+@media (max-width:620px){.method{grid-template-columns:1fr}.method dt{border:0;padding-bottom:0}}
+
+/* detail drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:20;width:min(470px,100%);overflow-y:auto;overscroll-behavior:contain;background:var(--bg);border-left:2px solid var(--rule);box-shadow:-24px 0 48px rgba(0,0,0,.14);padding:16px 24px 40px}
+.drawer[hidden]{display:none}
+@media (prefers-reduced-motion:no-preference){.drawer.in{animation:slide .22s ease-out}@keyframes slide{from{transform:translateX(28px);opacity:0}}}
+.d-top{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--rule);padding-bottom:12px}
+.d-id{font:700 1.5rem/1 var(--mono);padding:6px 10px;border:2px solid var(--c);background:var(--soft);color:var(--c);border-radius:4px}
+.d-id.pub{background:var(--c);color:var(--bg)}
+.d-cat{font:700 1rem/1.2 var(--display);font-stretch:105%}
+.d-nav{margin-left:auto;display:flex;gap:4px}
+.d-nav button{width:36px;height:36px;border:1px solid var(--line);background:transparent;color:var(--ink);font:500 1.05rem/1 var(--body);cursor:pointer;border-radius:3px}
+.d-nav button:hover{border-color:var(--ink)}
+.d-title{font:650 1.18rem/1.4 var(--body);margin:16px 0 0;outline:none}
+.d-title:focus-visible{outline:none}
+.d-el{font-size:0.86rem;color:var(--muted);margin-top:8px}
+.d-el b{font-family:var(--mono);color:var(--ink)}
+.d-score{display:flex;align-items:baseline;gap:10px;margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
+.d-score b{font:800 2.6rem/1 var(--display);font-stretch:110%;font-variant-numeric:tabular-nums}
+.d-score .rt{display:inline;font-size:0.95rem;margin:0}
+.d-score .tg{margin-left:auto}
+.d-bars{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:7px}
+.d-bars li{display:grid;grid-template-columns:8.6rem 1fr 1.6rem;gap:10px;align-items:center;font-size:0.84rem}
+.cells{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;height:12px}
+.cells i{background:var(--line)}
+.cells i.on{background:var(--c)}
+.cells i.lift{background:repeating-linear-gradient(135deg,var(--c) 0 2px,transparent 2px 5px);outline:1px solid var(--c);outline-offset:-1px}
+.d-bars .v{font:600 0.86rem var(--mono);text-align:right}
+.d-lift{font-size:0.82rem;color:var(--muted);margin-top:10px}
+.d-block{margin-top:20px;padding-top:12px;border-top:1px solid var(--line);font-size:0.9rem}
+.d-block .lbl{margin-bottom:6px}
+.d-block ul{margin:0;padding-left:1.1rem}
+.d-block li{margin:4px 0}
+.d-sib{display:flex;flex-wrap:wrap;gap:6px}
+.d-link{margin-top:22px;font-size:0.86rem}
+
+/* footer */
+footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;font-size:0.85rem;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+.tag-key{margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;font-size:0.78rem;line-height:1.5}
+.tag-key h2{font-size:0.68rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);line-height:1.5;padding-top:1px;font-family:var(--body)}
+.tag-key dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;align-items:baseline}
+.tag-key dt,.tag-key dd{margin:0}
+@media (max-width:560px){.ai-note,.tag-key{grid-template-columns:1fr}.tag-key dl{grid-template-columns:1fr;gap:2px 0}}
+@media print{
+  .filters,.drawer,.skip,.fig-hint{display:none}
+  .page{max-width:none}
+  .dfd{min-width:0}
+}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#register">Skip to the register</a>
+<div class="page">
+  <header class="mast">
+    <div class="meta"><span>Threat model · STRIDE and DREAD · MCP</span><span>Current as of <time datetime="{{ASOF}}">{{ASOFT}}</time></span></div>
+    <h1>MCP governance threat model</h1>
+    <div class="intro">
+      <p class="lead">STRIDE per element and DREAD scores for the <a href="{{DESIGN}}">proposed design for MCP governance in a Microsoft ecosystem</a>. Select a threat id to read the threat, its five scores and any public record behind it.</p>
+      <dl class="spec">
+        <dt>Threats</dt><dd>{{N}}: {{HIGH}} High, {{MED}} Medium, {{LOW}} Low
+          <span class="ratio" aria-hidden="true"><i class="r-high" style="flex:{{HIGH}}"></i><i class="r-medium" style="flex:{{MED}}"></i><i class="r-low" style="flex:{{LOW}}"></i></span></dd>
+        <dt>Public record</dt><dd>{{EXPL}} exploited, {{DISC}} disclosed, {{THEO}} theoretical</dd>
+        <dt>Elements</dt><dd>{{NEXT}} external entities, {{NPROC}} processes, {{NSTORE}} data stores, {{NFLOW}} data flows, {{NTB}} trust boundaries</dd>
+        <dt>Source files</dt><dd><a href="mcp-governance-stride.drawio">draw.io diagram</a>, <a href="mcp-governance-stride.threats.tsv">register as TSV</a></dd>
+      </dl>
+    </div>
+  </header>
+
+  <main>
+    <section class="sec" id="model">
+      <div class="sec-head">
+        <h2 id="h-model"><a class="sec-link" href="#model">Data flow diagram</a></h2>
+        <p>Each chip is one threat. Select a box or flow name to show only its threats.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter threats in the diagram and the register">
+        <div class="fgroup" role="group" aria-label="STRIDE category"><span class="lbl" aria-hidden="true">STRIDE</span>
+          <button type="button" class="fb" data-f="cat" data-v="S" aria-pressed="false"><span class="k">S</span><span class="nm"> Spoofing</span></button>
+          <button type="button" class="fb" data-f="cat" data-v="T" aria-pressed="false"><span class="k">T</span><span class="nm"> Tampering</span></button>
+          <button type="button" class="fb" data-f="cat" data-v="R" aria-pressed="false"><span class="k">R</span><span class="nm"> Repudiation</span></button>
+          <button type="button" class="fb" data-f="cat" data-v="I" aria-pressed="false"><span class="k">I</span><span class="nm"> Information disclosure</span></button>
+          <button type="button" class="fb" data-f="cat" data-v="D" aria-pressed="false"><span class="k">D</span><span class="nm"> Denial of service</span></button>
+          <button type="button" class="fb" data-f="cat" data-v="E" aria-pressed="false"><span class="k">E</span><span class="nm"> Elevation of privilege</span></button>
+        </div>
+        <div class="fgroup" role="group" aria-label="DREAD rating"><span class="lbl" aria-hidden="true">Rating</span>
+          <button type="button" class="fb rate r-high" data-f="rating" data-v="High" aria-pressed="false">High</button>
+          <button type="button" class="fb rate r-medium" data-f="rating" data-v="Medium" aria-pressed="false">Medium</button>
+          <button type="button" class="fb rate r-low" data-f="rating" data-v="Low" aria-pressed="false">Low</button>
+        </div>
+        <div class="fgroup"><button type="button" class="fb" data-f="pub" aria-pressed="false">Public record only</button></div>
+        <span class="pill" id="el-pill" hidden><span id="el-pill-text"></span><button type="button" id="el-pill-x" aria-label="Show all elements">&times;</button></span>
+        <p class="fcount" id="fcount" aria-live="polite"></p>
+        <button type="button" class="fclear" id="fclear" hidden>Clear filters</button>
+      </div>
+      <figure class="fig">
+        <div class="fig-scroll" tabindex="0" role="region" aria-label="Data flow diagram">{{SVG}}</div>
+        <p class="fig-hint">The diagram scrolls sideways.</p>
+        <figcaption>
+          <ul class="legend">
+            <li><span class="sw r-high">S1</span><span class="sw r-medium">T1</span><span class="sw r-low">R1</span> DREAD rating</li>
+            <li><span class="sw pub r-high">E5</span> Solid: matches a public record</li>
+            <li><span class="bx"></span> Trust boundary</li>
+            <li><span class="ln"></span> Bypass flow</li>
+          </ul>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="sec" id="register">
+      <div class="sec-head">
+        <h2 id="h-register"><a class="sec-link" href="#register">DREAD register</a></h2>
+        <p>Threats and scores <span class="tg i">inference</span> Select a row for the detail.</p>
+      </div>
+      <figure class="spread-fig">
+        {{SPREAD}}
+        <figcaption>One dot per threat by DREAD score. Solid dots match a public record.</figcaption>
+      </figure>
+      <table class="reg" id="reg">
+        <caption class="vh">DREAD register. Sort with the column buttons.</caption>
+        <thead><tr>
+          <th scope="col" aria-sort="none" data-k="id"><button type="button" class="sort" data-k="id">ID</button></th>
+          <th scope="col" class="th-tx">Threat</th>
+          <th scope="col" aria-sort="none" data-k="0"><button type="button" class="sort" data-k="0" title="Damage">D</button></th>
+          <th scope="col" aria-sort="none" data-k="1"><button type="button" class="sort" data-k="1" title="Reproducibility">R</button></th>
+          <th scope="col" aria-sort="none" data-k="2"><button type="button" class="sort" data-k="2" title="Exploitability">E</button></th>
+          <th scope="col" aria-sort="none" data-k="3"><button type="button" class="sort" data-k="3" title="Affected users">A</button></th>
+          <th scope="col" aria-sort="none" data-k="4"><button type="button" class="sort" data-k="4" title="Discoverability">Di</button></th>
+          <th scope="col" aria-sort="descending" data-k="score"><button type="button" class="sort" data-k="score">Score</button></th>
+          <th scope="col" aria-sort="none" data-k="ev"><button type="button" class="sort" data-k="ev">Evidence</button></th>
+        </tr></thead>
+        <tbody>{{ROWS}}</tbody>
+      </table>
+      <p class="empty" id="empty" hidden>No threat matches these filters.</p>
+    </section>
+
+    <section class="sec" id="method">
+      <div class="sec-head"><h2 id="h-method"><a class="sec-link" href="#method">Method</a></h2></div>
+      <dl class="method">
+        <dt>STRIDE per element</dt><dd>External entities are checked for spoofing and repudiation, processes for all six categories, data stores for tampering, repudiation, information disclosure and denial of service, and data flows for tampering, information disclosure and denial of service. Every one of these cells has at least one threat.</dd>
+        <dt>DREAD</dt><dd>Damage, Reproducibility, Exploitability, Affected users and Discoverability, each 1 to 10. The score is the mean of the five. High is 6 or above, Medium 4 to 5.9, Low below 4.</dd>
+        <dt>Evidence</dt><dd><b>Exploited</b>: used in attacks, shown by a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident. <b>Disclosed</b>: a public CVE, vendor advisory or researcher demo, with no confirmed attacks found. <b>Theoretical</b>: no matching public record found. Many records come from other MCP products and show that the failure type is real, not that this design is hit. The match between a record and a threat is <span class="tg i">inference</span></dd>
+        <dt>Evidence rule</dt><dd>Where a public record exists, Discoverability is raised to at least 7. Where the record is exploited, Reproducibility and Exploitability are raised to at least 7 too. The detail view shows which scores were raised.</dd>
+        <dt>Basis</dt><dd>V numbers point to quoted claims in the design page's <a href="{{REPO}}mcp-governance-microsoft-interactive.factcheck.md">fact check</a>. Ids starting with ctrl- or gap- are controls and gaps on the <a href="{{DESIGN}}">design page</a>.</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human. <span id="evidence">Sources and review notes: <a href="{{REPO}}mcp-governance-stride.factcheck.md">fact check</a>.</span></span></p>
+    <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
+      <dl>
+        <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI. It is not stated in a source.</dd>
+      </dl>
+    </section>
+  </footer>
+</div>
+
+<aside class="drawer" id="detail" role="dialog" aria-modal="false" aria-labelledby="d-title" hidden>
+  <div class="d-top">
+    <span class="d-id" id="d-id"></span>
+    <span class="d-cat" id="d-cat"></span>
+    <div class="d-nav">
+      <button type="button" id="d-prev" aria-label="Previous threat" title="Previous threat">&larr;</button>
+      <button type="button" id="d-next" aria-label="Next threat" title="Next threat">&rarr;</button>
+      <button type="button" id="d-close" aria-label="Close detail" title="Close (Esc)">&times;</button>
+    </div>
+  </div>
+  <p class="d-title" id="d-title" tabindex="-1"></p>
+  <p class="d-el" id="d-el"></p>
+  <div class="d-score"><b id="d-score"></b><span class="rt" id="d-rating"></span><span class="tg i">inference</span></div>
+  <ol class="d-bars" id="d-bars"></ol>
+  <p class="d-lift" id="d-lift" hidden></p>
+  <div class="d-block"><p class="lbl">Evidence</p><div id="d-ev"></div></div>
+  <div class="d-block"><p class="lbl">Controls on the design page</p><ul id="d-ctrl"></ul></div>
+  <div class="d-block"><p class="lbl">Basis</p><p id="d-basis"></p></div>
+  <div class="d-block"><p class="lbl" id="d-sib-l"></p><div class="d-sib" id="d-sib"></div></div>
+  <p class="d-link"><a id="d-link" href="#">Link to this threat</a></p>
+</aside>
+
+<script type="application/json" id="data">{{DATA}}</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const T = Object.fromEntries(D.threats.map(t => [t.id, t]));
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ORDER = id => 'STRIDE'.indexOf(id[0]) * 100 + parseInt(id.slice(1), 10);
+  const LV = { exploited: 0, disclosed: 1, theoretical: 2 };
+  const st = { cat: new Set(), rating: new Set(), pub: false, el: null, sort: { k: 'score', dir: -1 }, sel: null };
+  const drawer = $('#detail');
+  const tbody = $('#reg tbody');
+  let trigger = null;
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const rcls = t => 'r-' + t.rating.toLowerCase() + (t.level !== 'theoretical' ? ' pub' : '');
+  const match = t => (!st.cat.size || st.cat.has(t.cat)) && (!st.rating.size || st.rating.has(t.rating)) &&
+    (!st.pub || t.level !== 'theoretical') && (!st.el || t.el === st.el);
+  const active = () => st.cat.size || st.rating.size || st.pub || st.el;
+
+  function apply() {
+    $$('.chip, .dot').forEach(c => c.classList.toggle('dim', !match(T[c.dataset.t])));
+    let n = 0;
+    [...tbody.rows].forEach(r => { const m = match(T[r.dataset.t]); r.hidden = !m; if (m) n++; });
+    $$('.node, .flab').forEach(g => {
+      const el = g.dataset.el;
+      g.classList.toggle('quiet', !!active() && !D.threats.some(t => t.el === el && match(t)));
+    });
+    $$('.el-hit').forEach(h => h.setAttribute('aria-pressed', String(st.el === h.dataset.el)));
+    $$('.edge[data-el]').forEach(p => p.classList.toggle('on', st.el === p.dataset.el));
+    $$('.fb').forEach(b => {
+      const f = b.dataset.f;
+      b.setAttribute('aria-pressed', String(f === 'pub' ? st.pub : st[f].has(b.dataset.v)));
+    });
+    const pill = $('#el-pill');
+    pill.hidden = !st.el;
+    if (st.el) $('#el-pill-text').innerHTML = '<b>' + esc(st.el) + '</b> ' + esc(D.elements[st.el][2]);
+    $('#fcount').textContent = n === D.threats.length ? D.threats.length + ' threats' : n + ' of ' + D.threats.length + ' threats';
+    $('#fclear').hidden = !active();
+    $('#empty').hidden = n > 0;
+  }
+
+  function sortRows() {
+    const { k, dir } = st.sort;
+    const val = t => k === 'id' ? ORDER(t.id) : k === 'score' ? t.score : k === 'ev' ? LV[t.level] : t.dr[+k];
+    const rows = [...tbody.rows].sort((a, b) => {
+      const A = T[a.dataset.t], B = T[b.dataset.t];
+      return (val(A) - val(B)) * dir || B.score - A.score || ORDER(A.id) - ORDER(B.id);
+    });
+    rows.forEach(r => tbody.appendChild(r));
+    $$('#reg th[data-k]').forEach(th => th.setAttribute('aria-sort', th.dataset.k === k ? (dir > 0 ? 'ascending' : 'descending') : 'none'));
+  }
+
+  function visibleOrder() { return [...tbody.rows].filter(r => !r.hidden).map(r => r.dataset.t); }
+
+  function chipBtn(t) {
+    return '<button type="button" class="chip-b ' + rcls(t) + '" data-t="' + t.id + '" aria-label="Open ' + t.id + '">' + t.id + '</button>';
+  }
+
+  function open(id, opts = {}) {
+    const t = T[id];
+    if (!t) return;
+    if (drawer.hidden) trigger = opts.from || document.activeElement;
+    st.sel = id;
+    const el = D.elements[t.el];
+    drawer.className = 'drawer ' + 'r-' + t.rating.toLowerCase();
+    const idEl = $('#d-id');
+    idEl.textContent = t.id;
+    idEl.className = 'd-id' + (t.level !== 'theoretical' ? ' pub' : '');
+    $('#d-cat').textContent = D.stride[t.cat];
+    $('#d-title').textContent = t.text;
+    $('#d-el').innerHTML = '<b>' + esc(t.el) + '</b> ' + esc(el[1]) + ' · ' + esc(D.kind[el[0]]);
+    $('#d-score').textContent = t.score.toFixed(1);
+    $('#d-rating').textContent = t.rating;
+    $('#d-bars').innerHTML = D.factors.map((f, i) => {
+      const v = t.dr[i], r = t.raw[i];
+      let cells = '';
+      for (let c = 1; c <= 10; c++) cells += '<i class="' + (c <= r ? 'on' : c <= v ? 'lift' : '') + '"></i>';
+      return '<li><span>' + f + '</span><span class="cells" aria-hidden="true">' + cells + '</span><span class="v">' + v + '</span></li>';
+    }).join('');
+    const lifted = D.factors.map((f, i) => t.dr[i] !== t.raw[i] ? f + ' from ' + t.raw[i] + ' to ' + t.dr[i] : null).filter(Boolean);
+    const lift = $('#d-lift');
+    lift.hidden = !lifted.length;
+    lift.textContent = lifted.length ? 'Raised by the evidence rule: ' + lifted.join(', ') + '. Hatched cells show the rise.' : '';
+    $('#d-ev').innerHTML = t.refs.length
+      ? '<p><span class="lv lv-' + t.level + '">' + t.level + '</span></p><ul>' +
+        t.refs.map(r => '<li><a href="' + esc(r[2]) + '" rel="noopener">' + esc(r[1]) + '</a>' + (r[0] !== t.level ? ' <span class="lv lv-' + r[0] + '">' + r[0] + '</span>' : '') + '</li>').join('') + '</ul>'
+      : '<p><span class="lv lv-theoretical">theoretical</span> No matching public record found.</p>';
+    $('#d-ctrl').innerHTML = t.ctrls.map(c => '<li><a href="' + D.design + '#' + c + '">' + esc(D.ctrl[c] || c) + '</a></li>').join('');
+    const basis = esc(t.basis.charAt(0).toUpperCase() + t.basis.slice(1));
+    $('#d-basis').innerHTML = basis
+      .replace(/\bV\d+\b/g, v => '<a href="' + D.fc + v + '" rel="noopener">' + v + '</a>')
+      .replace(/\b(?:gap|ctrl)-[a-z0-9-]+/g, g => '<a href="' + D.design + '#' + g + '">' + g + '</a>');
+    const sib = D.threats.filter(x => x.el === t.el && x.id !== t.id);
+    $('#d-sib-l').textContent = sib.length ? 'Other threats on ' + t.el : 'No other threats on ' + t.el;
+    $('#d-sib').innerHTML = sib.map(chipBtn).join('');
+    $('#d-link').href = '#t-' + t.id;
+
+    $$('[data-t]').forEach(x => x.classList.toggle('sel', x.dataset.t === id));
+    $$('.node, .flab').forEach(g => g.classList.toggle('focus', g.dataset.el === t.el));
+    $$('.edge').forEach(p => p.classList.toggle('focus', p.dataset.el === t.el));
+    const wasHidden = drawer.hidden;
+    drawer.hidden = false;
+    if (wasHidden) { drawer.classList.add('in'); }
+    drawer.scrollTop = 0;
+    if (location.hash !== '#t-' + id) history.replaceState(null, '', '#t-' + id);
+    if (opts.focus !== false) $('#d-title').focus({ preventScroll: true });
+  }
+
+  function close() {
+    if (drawer.hidden) return;
+    drawer.hidden = true;
+    st.sel = null;
+    $$('.sel').forEach(x => x.classList.remove('sel'));
+    $$('.focus').forEach(x => x.classList.remove('focus'));
+    history.replaceState(null, '', location.pathname + location.search);
+    if (trigger && document.contains(trigger) && trigger.focus) trigger.focus({ preventScroll: true });
+    trigger = null;
+  }
+
+  function step(d) {
+    const order = visibleOrder();
+    if (!order.length) return;
+    const i = order.indexOf(st.sel);
+    const next = i < 0 ? order[0] : order[(i + d + order.length) % order.length];
+    open(next);
+    const row = document.getElementById('t-' + next);
+    if (row && row.getBoundingClientRect().top > innerHeight) row.scrollIntoView({ block: 'nearest' });
+  }
+
+  function setEl(el) {
+    st.el = st.el === el ? null : el;
+    apply();
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const fb = e.target.closest('.fb');
+    if (fb) {
+      const f = fb.dataset.f;
+      if (f === 'pub') st.pub = !st.pub;
+      else st[f].has(fb.dataset.v) ? st[f].delete(fb.dataset.v) : st[f].add(fb.dataset.v);
+      apply();
+      return;
+    }
+    const sort = e.target.closest('.sort');
+    if (sort) {
+      const k = sort.dataset.k;
+      st.sort = st.sort.k === k ? { k, dir: -st.sort.dir } : { k, dir: k === 'id' ? 1 : -1 };
+      sortRows();
+      return;
+    }
+    const t = e.target.closest('[data-t]');
+    if (t) { open(t.dataset.t, { from: t.matches('tr') ? t.querySelector('button') : t }); return; }
+    const h = e.target.closest('.el-hit');
+    if (h) { setEl(h.dataset.el); return; }
+  });
+  $('#el-pill-x').addEventListener('click', () => { st.el = null; apply(); });
+  $('#fclear').addEventListener('click', () => { st.cat.clear(); st.rating.clear(); st.pub = false; st.el = null; apply(); });
+  $('#d-close').addEventListener('click', close);
+  $('#d-prev').addEventListener('click', () => step(-1));
+  $('#d-next').addEventListener('click', () => step(1));
+  $('#d-link').addEventListener('click', e => {
+    e.preventDefault();
+    const url = location.href.split('#')[0] + '#t-' + st.sel;
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => {
+      const a = $('#d-link'); a.textContent = 'Link copied'; setTimeout(() => { a.textContent = 'Link to this threat'; }, 1600);
+    }).catch(() => {});
+  });
+  document.addEventListener('keydown', e => {
+    const r = e.target.closest && e.target.closest('svg [role="button"]');
+    if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); r.dispatchEvent(new MouseEvent('click', { bubbles: true })); return; }
+    if (e.key === 'Escape' && !drawer.hidden) { close(); return; }
+    if (!drawer.hidden && drawer.contains(e.target) && !e.target.matches('a')) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+    }
+  });
+  const fromHash = () => {
+    const m = location.hash.match(/^#t-([A-Z]\d+)$/);
+    if (m && T[m[1]]) open(m[1], { focus: false });
+  };
+  addEventListener('hashchange', fromHash);
+  apply();
+  fromHash();
+})();
+</script>
+</body>
+</html>
