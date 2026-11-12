@@ -32,6 +32,7 @@ Make every section linkable. Each `<section>` and each `<article>` that holds a 
 - Follow [threatmodelling.html](threatmodelling.html) for content page style and copy its Made with AI note word for word. Write in English, let body text fill its column, and avoid em and en dashes.
 - Keep static flow and architecture figures in plain text ASCII files beside the page. Give each figure a text description of the flow.
 - Run `python3 -I scripts/section_anchors.py --check` before finishing. It fails if a section has no id or link.
+- Write only sentences the reader would miss if you deleted them; never restate a heading or label, say where something is on the page, or state the obvious.
 - Check layout changes on desktop and a narrow viewport for sideways page scroll and console errors. Test affected controls and shared links when behavior changes. Keep detailed diagram checks with the relevant page.
 
 ## 6. Recommendations
