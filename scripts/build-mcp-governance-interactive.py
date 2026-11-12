@@ -1094,7 +1094,7 @@ WF_STEPS = [
         ("a1", "4 Developer registers the server", "For the separate BYO pilot, register the test endpoint after internal approval. Do not register direct access to the private company backend."),
         ("a2", "5 Admin reviews the request", "An AI Administrator or Global Administrator reviews the requester, address, sign-in, tools and permissions under Agents &gt; Tools &gt; Requests (preview). "
                f"{ev('a365-tools-role-ai', 'a365-tools-role-global')} {evp('pv-byo-approval')} Individual tool controls are rolling out for supported Agent 365 servers. BYO server tool-level blocking is planned. Until then, block at server level and authorize at the gateway and backend. {ev('a365-tools-granular')} {evp('pv-byo-roll', 'pv-a365-ctrl')}"),
-        ("a3", "6a Approve, consent, available", f"Approval is followed by Microsoft Entra tenant consent. Only then is the server Available in the registry. {ev('a365-tools-approve', 'a365-tools-consent')} {evp('pv-byo-approval')} Then apply target policies and backend authorization."),
+        ("a3", "6a Approve, consent, available", f"Approval makes the server available in the organizational registry. It becomes available to agent-building surfaces only after Microsoft Entra tenant consent. {ev('a365-tools-approve', 'a365-tools-consent')} {evp('pv-byo-approval')} Then apply target policies and backend authorization."),
         ("a4", "6b Reject", "Rejection leaves the server unavailable. Record the reason in Git."),
         ("a5", "7 Later deny", f"Mark the server denied in Git; the pipeline removes it from its targets. In the Microsoft 365 admin center, block it in the registry and remove its connector by hand. Verify that calls are denied. {REC}"),
     ]),
@@ -1118,7 +1118,7 @@ PREVIEW = f"""
       <h3>Approval and denial workflow</h3>
       <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other. {REC}</p>
       {workflow_html()}
-      <p class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. This is the MCP server request queue {ev('a365-tools-overview')}. </p><p class="q-note">Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. {ev('a365-agent-approve', 'a365-agent-request-review', 'a365-agent-readonly', 'a365-agent-incomplete')} The view combines distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')}</p>
+      <p class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. This is the MCP server request queue {ev('a365-tools-overview')}. </p><p class="q-note">Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. {ev('a365-agent-approve', 'a365-agent-request-review', 'a365-agent-readonly', 'a365-agent-incomplete')} These are distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')}</p>
     </div>
     {cut_block('<div class="sub3" id="preview-tests">', '<div class="sub3" id="pilot">')}
     {cut_block('<div class="sub3" id="pilot">', '<span id="fallback">')}
@@ -1168,7 +1168,7 @@ _extra_tests = [
     ("Switch accounts or start a client without cached server policy", "Required device policy remains enforced; verify each supported client", "B"),
     ("Change custom agent profiles, use a cloud session or call through a shell tool", "Document exclusions; prove separate client and egress controls before claiming coverage", "B"),
     ("Try an unapproved MCP destination from each Foundry and Copilot Studio path", "Blocked by the configured network or connector policy, or recorded as an unresolved gap", "B"),
-    ("Deny a server while a client has stale policy or an active session", "Company gateway and backend reject new calls; manually reconcile all other targets", "A and B"),
+    ("Deny a company MCP server while a client has stale policy or an active session", "Company gateway and backend reject new calls; automated targets update after refresh, and manual targets need recorded administrator changes", "A and B"),
     ("Check custom and HTTP connector restrictions while ACP is enabled", "Mixed mode retains the required classic policy blocks", "B"),
     ("Send one tool call and inspect gateway, backend and Purview records", "Caller and request correlate where supported; secrets are redacted and access is restricted", "A and B"),
 ]

@@ -606,3 +606,18 @@ Both passes below were run on the final build. The rendered page text (537 lines
 | Browser, local server | 375 px and desktop: no sideways scroll, no console errors |
 
 No tenant, adapter or attack test was run.
+
+### Goal review, two passes (2026-11-12)
+
+| Item | Verdict |
+|---|---|
+| Step 6a said consent made the server Available in the registry | wrong. V184: approval makes it available in the organizational registry. V185: it reaches agent-building surfaces only after consent. Reworded |
+| Deny test said "manually reconcile all other targets" | conflicted with the automated pipeline and step 7. Now: automated targets update after refresh; manual targets need recorded administrator changes |
+| Preview note "The view combines distinct admin pages" | dangling; reworded to "These are distinct admin pages" |
+| Approval lock carried `unverified` with "Not tested on a managed device" | misapplied. V157 quotes the managed setting `permissions.disableBypassPermissionsMode`; source text re-read in the 2026-11-12 cache. Tag and sentence removed. `unverified` is still used elsewhere, so the key row stays |
+| Uncited details: ACP-only mode, design-time GA, tool threat protection exclusions and Defender mode, AI Gateway public frontend, MCP tiers, publisher types, OBO downstream token, VS Code trust scope | confirmed in source text |
+| STRIDE page, threats TSV and data | none repeat the corrected wording; I2 cites V152 V157. Rebuild gave no diff |
+| Quote checker against the 2026-11-12 cache | 216 quotes, 0 problems |
+| Label check, section anchors `--check`, `check-mcp-stride.py` | passed |
+
+The first page (`mcp-governance-microsoft.html`) still has the Available-after-consent caption and the Approval lock tag; it was outside this review. No browser check: only wording changed.

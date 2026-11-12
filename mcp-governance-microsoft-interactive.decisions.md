@@ -115,3 +115,4 @@ Edited the page file directly; the builder script was behind the page at the tim
 - **Split** the Microsoft 365 and Power Platform manual steps in the order of work. **Why:** Microsoft 365 agent access has no API option (V171), so it is manual by design, while Power Platform is manual only until its API path is verified.
 
 - 2026-11-12: removed "This is a proposed architecture. Neither objective is proven in a tenant." from the lead and relabelled the line Coverage. The owner asked for no blanket untested disclaimers on design pages; test status stays on the tests and on single gap items.
+- 2026-11-12: removed the Approval lock's `unverified` tag through the review module, not the shared builder. **Why:** the claim is quoted (V157), and changing the shared builder would also change the first page, which was outside this review.
