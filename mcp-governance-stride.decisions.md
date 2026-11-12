@@ -54,3 +54,9 @@ Chose a height computed from the text in each row over a fixed 30 px per row, be
 
 - I15 (F5, information disclosure) now covers cloud agents and unrestricted egress, and links Windows outbound limits, Foundry network and sandbox and the new design page gap `gap-foundry-prompt-agents` instead of backend isolation. Its basis cites V101. **Why:** the design page audit found that the Foundry Network control does not affect prompt agents outside the Copilot harness, and backend isolation does not stop traffic to another server. Id, element, letter and scores are unchanged, so public anchors and counts stay.
 - No other row changed. The other design page fixes (gateway lead, Later deny step, pilot citation, device scope, rollout step) do not change a threat, a control link or a basis on this page.
+
+## Governance alignment (2026-11-12)
+
+Preserve all threat and element IDs, scenarios and scores. Correct related controls and bases for E5, I15 and T9 and the F1 scope instead of inventing new incidents or inferring lower residual risk from design edits. Explicitly exclude direct BYO access to the private backend; a gateway-fronted variant is untested.
+
+- Completion pass: retain T9/T14 scenarios and scores while linking the actual Power Platform mixed-mode requirement and preview tool-evaluation scope. Discovery metadata is excluded from tool-invocation evaluation; no new attack coverage is claimed.

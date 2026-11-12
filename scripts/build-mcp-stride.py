@@ -319,7 +319,8 @@ Governance:
   EE3 Requester/approver -> DS1 Approved list in Git -> P1 Sync pipeline
   P1 -> [F1 Policy update] -> DS2 Policy targets -> P2 Managed client
                                              -> P3 Cloud agents
-  Microsoft 365 connector access is applied manually; F1 does not establish API support.
+  Microsoft 365 access is manual; Power Platform MCP policy stays manual until API validation.
+  F1 aggregates validated automation and manual changes; it does not establish API support.
 
 Tool execution:
   EE1 Developer -> P2 --[F2 Tool call]--> P4 Gateway --[F3]--> P5 MCP server
@@ -350,7 +351,11 @@ Logical zones (not proof of effective security boundaries):
 
 The figure aggregates product variants. OAuth exchanges, downstream APIs and
 stores, package distribution, external detector boundaries and non-gateway audit
-feeds need more detailed models. A gateway does not inspect local stdio traffic.
+feeds need more detailed models. A gateway does not inspect local stdio traffic. The direct Agent 365 BYO route is
+excluded from this private backend; a gateway-fronted BYO composition is untested.
+Foundry Network guardrails are preview; toolbox networking is a separate control.
+ACP must retain mixed mode where classic policies protect custom/HTTP connectors.
+Preview tool threat protection excludes discovery and session-management operations.
 """
 
 

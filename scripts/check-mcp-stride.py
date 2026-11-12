@@ -4,8 +4,8 @@
   python3 -I scripts/check-mcp-stride.py --quotes /tmp/fresh-source-cache
 
 The optional cache contains freshly fetched source text, using the filenames from
-check-evidence-quotes.py. Unlike that shared module, this check reads all 208 quote
-rows, including the interactive page's six additional Purview quotes. Checks prove
+check-evidence-quotes.py. This check reads the complete interactive evidence
+inventory, including its Purview and architecture-review additions. Checks prove
 consistency and quote presence, not semantic correctness or mitigation efficacy.
 """
 
@@ -31,7 +31,7 @@ def norm(text):
     text = html.unescape(text)
     for a, b in (("’", "'"), ("‘", "'"), ("“", '"'), ("”", '"')):
         text = text.replace(a, b)
-    return " ".join(text.split())
+    return re.sub(r"\s+:", ":", " ".join(text.split()))
 
 
 class DiagramLabels(HTMLParser):
@@ -117,16 +117,22 @@ def check(cache=None):
     if cache:
         source_notes = (ROOT / "mcp-governance-microsoft-interactive.factcheck.md").read_text()
         quotes = re.findall(r'^\| <a id="ev-(V\d+)"></a>V\d+ \| (.*?) \| \[[^\]]+\]\((https://.*?)\) \|', source_notes, re.M)
-        assert len(quotes) == 208, "source quote inventory changed; review it"
+        from mcp_governance_interactive_evidence import QUOTES, IDS, UNAVAILABLE
+        assert len(quotes) == len(QUOTES), "source quote inventory differs from the interactive evidence module"
+        unavailable_ids = {IDS[key] for key in UNAVAILABLE}
         urls = set()
         for qid, quote, link in quotes:
+            if qid in unavailable_ids:
+                assert qid not in page, f"{qid}: unresolved quote used on STRIDE page"
+                print(f"UNVERIFIED {qid}: source unavailable, historical quote only")
+                continue
             url = urldefrag(link)[0]
             name = re.sub(r"[^a-z0-9]+", "-", url.lower()).strip("-")[-120:] + ".txt"
             file = cache / name
             assert file.exists(), f"{qid}: missing fresh source cache: {url}"
             assert norm(quote) in norm(file.read_text()), f"{qid}: quote absent from {url}"
             urls.add(url)
-        print(f"{len(quotes)} quotes present across {len(urls)} source URLs (including V203-V208)")
+        print(f"{len(quotes) - len(unavailable_ids)} quotes present across {len(urls)} source URLs; {len(unavailable_ids)} explicitly unverified")
 
 
 if __name__ == "__main__":

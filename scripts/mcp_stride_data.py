@@ -30,7 +30,7 @@ ELEMENTS = {
     "DS1": ("store", "Approved list in Git"),
     "DS2": ("store", "Policy targets (GitHub, Foundry, Power Platform, M365 admin center)"),
     "DS3": ("store", "Logs and Purview audit"),
-    "F1": ("flow", "Policy sync: Git to pipeline to policy targets"),
+    "F1": ("flow", "Policy sync: validated adapters and manual target changes"),
     "F2": ("flow", "Tool call: client or agent to gateway"),
     "F3": ("flow", "Gateway to company MCP server"),
     "F4": ("flow", "Tool response back to the agent"),
@@ -162,7 +162,7 @@ THREATS = [
     ("P4", "D", "An attacker exhausts gateway capacity or request quotas, denying legitimate calls when clients depend on that deployment and no adequate isolation or failover is configured.",
      ["ctrl-gateway", "ctrl-ai-limits"], ["APIM", "WAF"], (7, 5, 5, 8, 6), "AI inference; V47 V52 document private-endpoint and regional limits for AI Gateway preview, not an Azure region pair or an APIM-wide limitation"),
     ("P4", "E", "A gateway fails to enforce caller-specific tool authorization, allowing a low-privilege caller to invoke privileged operations through a more powerful shared backend connection.",
-     ["ctrl-ai-publish", "ctrl-identity"], ["MI", "RBAC"], (7, 5, 4, 5, 3), "V79 supports shared connection permissions; missing caller-specific authorization is AI inference. A shared connection alone is not a vulnerability"),
+     ["ctrl-gateway", "ctrl-identity", "ctrl-ai-publish"], ["MI", "RBAC"], (7, 5, 4, 5, 3), "The shared managed-identity baseline also requires upstream caller authorization. V79 illustrates shared connection permissions in the preview gateway; missing authorization is AI inference, not inherent to a shared identity"),
 
     # P5 Company MCP server
     ("P5", "S", "A backend with missing authentication or incomplete token validation accepts an unauthenticated request or a token issued for another resource as an approved caller.",
@@ -206,7 +206,7 @@ THREATS = [
 
     # DS2 Policy targets
     ("DS2", "T", "An attacker or administrator bypasses required review with a manual policy-target edit, allowing servers that the approved Git list excludes.",
-     ["ctrl-pipeline", "ctrl-m365", "gap-m365-by-hand"], ["M365AGENTS", "POLICY"], (6, 7, 4, 5, 6), "V171"),
+     ["ctrl-pipeline", "ctrl-m365", "ctrl-power-platform", "gap-m365-by-hand"], ["M365AGENTS", "POLICY"], (6, 7, 4, 5, 6), "V171; Microsoft 365 access is manual, and Power Platform MCP automation is unverified. Direct target edits can bypass review; the proposed adapters cover only validated targets. V214 requires mixed-mode evaluation to retain classic custom/HTTP connector restrictions. Confirm workload-specific ACP availability (V216) before relying on it in a released deployment"),
     ("DS2", "R", "An operator denies a manual target-policy change, and retained target history cannot link the write to an authenticated operator or a reviewed change request.",
      ["ctrl-m365", "ctrl-logging"], ["PURVAUDIT"], (4, 7, 3, 4, 6), "gap-m365-by-hand"),
     ("DS2", "I", "A policy target grants configuration read access to an unauthorized principal, exposing sensitive server inventory or connection details.",
@@ -250,7 +250,7 @@ THREATS = [
 
     # F4 Tool response
     ("F4", "T", "A tool result carries instructions that the agent follows (indirect prompt injection).",
-     ["ctrl-g-untrusted-results", "ctrl-g-tool-call-and-tool-response-guardrails", "ctrl-g-result-review"], ["GUARD", "RTP"], (9, 7, 6, 6, 8), "V107 V133 V154"),
+     ["ctrl-g-untrusted-results", "ctrl-g-tool-call-and-tool-response-guardrails", "ctrl-g-result-review", "ctrl-ttp-modes"], ["GUARD", "RTP"], (9, 7, 6, 6, 8), "V107 V133 V154; preview tool threat protection can evaluate results but excludes discovery/session operations (V213). Hostile tool descriptions need separate review; this row models result injection"),
     ("F4", "I", "A response with data for one user is returned to another user's agent session.",
      ["ctrl-identity", "ctrl-ttp-users"], ["APPID", "DSPM"], (7, 3, 3, 4, 3), "AI inference"),
     ("F4", "D", "A very large or endless response fills the agent's context or the gateway buffer.",
@@ -260,7 +260,7 @@ THREATS = [
     ("F5", "T", "A client directly reaches a backend that lacks equivalent action authorization and performs an unauthorized write that gateway policy would have blocked.",
      ["ctrl-backend", "ctrl-windows"], ["PE", "NSG", "FW"], (9, 5, 5, 6, 5), "AI inference, acceptance test 12"),
     ("F5", "I", "A compromised client or cloud agent sends company data directly to an unapproved MCP server over an allowed or unrestricted egress path, bypassing gateway inspection and its audit trail.",
-     ["ctrl-windows", "ctrl-foundry-network", "gap-foundry-prompt-agents", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101: the Foundry Network control does not affect prompt agents outside the Copilot harness. Data theft over that path is AI inference"),
+     ["ctrl-client", "ctrl-windows", "ctrl-foundry-network", "ctrl-foundry-egress", "gap-foundry-prompt-agents", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101 V134: the Network guardrail is preview and limited to documented agent types. Released toolbox networking requires configured downstream egress; connection tool lists and inbound private endpoints alone do not restrict server destinations. Data theft is AI inference"),
     ("F5", "D", "A direct flood skips gateway rate limits.",
      ["ctrl-backend", "ctrl-gateway"], ["PE", "WAF", "FW"], (6, 5, 4, 6, 4), "AI inference"),
 ]

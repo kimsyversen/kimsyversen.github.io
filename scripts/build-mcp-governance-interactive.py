@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build mcp-governance-microsoft-interactive.html.
 
-The text of every control, part, gap and test is shared with scripts/build-mcp-governance.py:
-this builder runs that file's definitions (not its output step) and lays the same content out
-as one interactive diagram. Each control has one home box.
+Reuses definitions from scripts/build-mcp-governance.py without writing its page.
+Interactive-only wording corrections and evidence live in the companion modules.
+Each control has one home box.
 
 Usage: python3 -I scripts/build-mcp-governance-interactive.py
 """
@@ -13,6 +13,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import quote as urlquote
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -33,6 +34,9 @@ _src = _src.replace('NOTES = ROOT / "mcp-governance-microsoft.factcheck.md"', f'
 sys.path.insert(0, str(HERE))
 ns = {"__file__": str(OLD_PATH), "__name__": "shared_content"}
 exec(compile(_src, str(OLD_PATH), "exec"), ns)
+import mcp_governance_interactive_evidence as interactive_evidence
+ns.update({name: getattr(interactive_evidence, name) for name in
+           ("QUOTES", "IDS", "SOURCES", "PREVIEW_ONLY", "CHECKED")})
 
 from section_anchors import add_anchors  # noqa: E402
 
@@ -45,6 +49,16 @@ GR_PREV_FY = ns["GR_PREV"][0]
 PREVIEW_HTML, ROLLOUT, GAPS = ns["PREVIEW"], ns["ROLLOUT"], ns["GAPS"]
 QUOTES, IDS, SOURCES, PREVIEW_ONLY, CHECKED = ns["QUOTES"], ns["IDS"], ns["SOURCES"], ns["PREVIEW_ONLY"], ns["CHECKED"]
 frag, ev, evp, anchors = ns["frag"], ns["ev"], ns["evp"], ns["anchors"]
+
+_shared_frag = frag
+
+
+def frag(quote):
+    """Keep published fragments unless the shared helper produces an empty range."""
+    fragment = _shared_frag(quote)
+    if fragment.startswith('#:~:text=,') or fragment.endswith(','):
+        return '#:~:text=' + urlquote(quote, safe='').replace('-', '%2D')
+    return fragment
 
 # The Foundry tool call and tool response intervention points are labelled Preview in their source,
 # so they back the preview design here. The shared list still counts them as released.
@@ -63,29 +77,6 @@ if STYLE.count(_AI_NOTE_CSS) != 1:
     sys.exit("ai-note style rule not found exactly once in the shared style")
 STYLE = STYLE.replace(_AI_NOTE_CSS, _AI_NOTE_CSS + _TAG_KEY_CSS)
 
-# Quotes used only on this page, for the Purview audit control. They continue the shared numbering,
-# so the shared ids keep their numbers. Checked against the live pages 2026-11-12; the shared
-# quote checker does not cover them, so recheck them by hand when the sources change.
-SOURCES.update({
-    "purview-a365": ("Microsoft Learn, use Microsoft Purview for Microsoft Agent 365",
-                     "https://learn.microsoft.com/en-us/purview/ai-agent-365", "2026-05-01"),
-    "purview-dspm": ("Microsoft Learn, learn about Microsoft Purview Data Security Posture Management",
-                     "https://learn.microsoft.com/en-us/purview/data-security-posture-management-learn-about", "2026-05-26"),
-    "purview-foundry": ("Microsoft Learn, use Microsoft Purview for Microsoft Foundry",
-                        "https://learn.microsoft.com/en-us/purview/ai-azure-foundry", "2026-05-01"),
-})
-for _key, _skey, _q in [
-    ("purview-audit-on", "purview-a365", "When you create an agent instance for Agent 365, it's automatically enabled for audit"),
-    ("purview-audit-tools", "purview-a365", "Supported interactions: All agent-to-human, human-to-agent, agent-to-tools, and agent-to-agent interactions."),
-    ("purview-audit-search", "purview-a365", "search the audit log for Agent 365 activities"),
-    ("purview-dlp-scope", "purview-a365", "Block or audit agent-to-human and human-to-agent for Microsoft Teams, OneDrive or SharePoint, and emails."),
-    ("purview-dspm-inventory", "purview-dspm", "An inventory of all AI apps and agents (including recently released Microsoft Agent 365) with activity in the last 30 days"),
-    ("purview-foundry-audit", "purview-foundry", "prompts and responses are captured in the unified audit log"),
-]:
-    if _key in IDS:
-        sys.exit(f"page quote key already in the shared list: {_key}")
-    QUOTES.append((_key, _skey, _q))
-    IDS[_key] = f"V{len(QUOTES)}"
 
 TITLE = "A proposed design for MCP Governance in a Microsoft ecosystem"
 DESC = ("The MCP governance design as one interactive diagram: select a box to see its controls, "
@@ -157,6 +148,20 @@ for name, product, layer, text in [GR_PREV_FY] + [r[1] for r in GR_PREV_RAW]:
                          doc=text, layers=PV_GR_LAYERS[name], objs=[], preview=True, guardrail=True,
                          layer_text=layer))
 
+# The Network guardrail is preview (guardrails overview); toolbox network isolation is separate.
+for _c in CONTROLS:
+    if _c["id"] == "foundry-network":
+        _c["doc"] = (f"For a Foundry toolbox, its hosting project governs network access {ev('fy-gov')}. "
+                     f"Downstream connectivity depends on the tool and its hosting {ev('fy-tool')}. "
+                     f"Configure egress separately from inbound private access. {REC}")
+CONTROLS.append(dict(
+    id="foundry-egress", title="Foundry Network guardrail", meta="Objective B",
+    applies="Hosted agents and prompt agents on the Copilot harness", layers=[4], objs=["B"],
+    preview=True, guardrail=False,
+    req=f"Pilot explicit destination rules; do not count this guardrail as part of the released-only baseline. {REC}",
+    doc=(f"The Network control covers hosted agents and prompt agents on the Copilot harness, not other prompt agents {ev('gr-fy-net')}. "
+         f"Agent guardrails are preview {evp('gr-fy-agprev')}; hosted agents use per-session VM sandboxes {ev('gr-fy-sandbox')}.")))
+
 # Page-only control. The first page has no Purview row; this one adds what Purview records about agent tool calls.
 CONTROLS.append(dict(
     id="purview-audit", title="Purview audit of agent tool calls", meta="Objectives A and B",
@@ -199,7 +204,7 @@ def clean_use(use, here=()):
 NODES = [
     dict(id="git", kind="Source of truth", role="pol", place=(2, 3, 2, 3), title=["Approved list", "in Git"], sub="Approved and denied",
          parts=["Approved list in Git"], ctl=["inventory"], applies=True),
-    dict(id="pipeline", kind="Source of truth", role="pol", place=(4, 5, 2, 3), title=["Sync pipeline"], sub="Writes the list to targets",
+    dict(id="pipeline", kind="Source of truth", role="pol", place=(4, 5, 2, 3), title=["Sync pipeline"], sub="Proposed automation",
          parts=["Sync pipeline"], ctl=["pipeline"], applies=True),
     dict(id="ghe", kind="Policy target", role="pol", place=(2, 3, 4, 5), title=["GitHub Enterprise"], sub="Managed settings file",
          parts=["GitHub Enterprise"], ctl=[]),
@@ -216,11 +221,11 @@ NODES = [
          parts=["Microsoft Foundry"], ctl=["foundry"]),
     dict(id="fy", kind="Client", role="call", place=(4, 5, 6, 7), title=["Foundry agents"], sub="",
          parts=[], ctl=["g-approval", "g-untrusted-results", "foundry-network", "foundry-routing",
-                        "g-tool-call-and-tool-response-guardrails"]),
+                        "g-tool-call-and-tool-response-guardrails", "foundry-egress"]),
     dict(id="defender", kind="Preview guardrail product", role="pv", place=(6, 7, 6, 8), title=["Microsoft", "Defender"], sub="Checks tool calls",
          parts=[], ctl=["g-defender-real-time-protection", "g-defender-on-the-agent-365-path", "g-defender-rules-and-scope"],
          preview=True, applies=True),
-    dict(id="pp", kind="Policy target", role="pol", place=(2, 3, 7, 8), title=["Power Platform"], sub="MCP connector policy",
+    dict(id="pp", kind="Policy target", role="pol", place=(2, 3, 7, 8), title=["Power Platform"], sub="Manual until API verified",
          parts=["Power Platform"], ctl=["power-platform"]),
     dict(id="cs", kind="Client", role="call", place=(4, 5, 7, 8), title=["Copilot Studio"], sub="",
          parts=[], ctl=["g-ask-before-running", "g-prompt-attack-block", "g-threat-detection"]),
@@ -230,7 +235,7 @@ NODES = [
          parts=["Azure API Management", "AI Gateway integrated with Foundry"],
          ctl=["gateway", "identity", "a365", "a365-consent", "ai-resource", "ai-limits", "ai-publish", "ttp-users", "ttp-modes"],
          applies=True),
-    dict(id="byo", kind="Separate preview route", role="pv", place=(2, 3, 10, 11), title=["Agent 365 BYO route"], sub="Not through the gateway",
+    dict(id="byo", kind="Separate preview route", role="pv", place=(2, 3, 10, 11), title=["Agent 365 BYO route"], sub="Alternative; excluded",
          parts=[], ctl=["byo"], preview=True),
     dict(id="be", kind="Backend", role="be", place=(2, 8, 11, 12), title=["Company MCP server"], sub="Gateway-only access",
          parts=["Company MCP server"], ctl=["backend"]),
@@ -272,7 +277,7 @@ EDGES = [
     dict(id="to-ghe", a="pipeline", b="ghe", k="pol", r="branch", paths=["policy"]),
     dict(id="to-m365admin", a="pipeline", b="m365admin", k="pol dash", r="branch", paths=["policy"]),
     dict(id="to-fypolicy", a="pipeline", b="fypolicy", k="pol", r="branch", paths=["policy"]),
-    dict(id="to-pp", a="pipeline", b="pp", k="pol", r="branch", paths=["policy"]),
+    dict(id="to-pp", a="pipeline", b="pp", k="pol dash", r="branch", paths=["policy"]),
     dict(id="ghe-vs", a="ghe", b="vs", k="pol", r="h", paths=["policy"]),
     dict(id="m365admin-m365", a="m365admin", b="m365", k="pol", r="h", paths=["policy"]),
     dict(id="fypolicy-fy", a="fypolicy", b="fy", k="pol", r="h", paths=["policy"]),
@@ -288,7 +293,7 @@ EDGES = [
     dict(id="gw-be", a="gw", b="be", k="call", r="v", paths=["vs", "m365", "fy", "cs"]),
     dict(id="log-gw", a="log", b="gw", k="log", r="h", paths=[]),
     dict(id="direct", a="vs", b="be", k="red", r="blocked", paths=["direct"]),
-    dict(id="byo-be", a="byo", b="be", k="red", r="v", paths=["byo"], view="preview"),
+    dict(id="byo-be", a="byo", b="be", k="red", r="blocked", paths=["byo"], view="preview"),
 ]
 for e in EDGES:
     for end in (e["a"], e["b"]):
@@ -299,10 +304,12 @@ for e in EDGES:
 PATHS = [
     dict(id="policy", label="Approved list", k="pol",
          nodes=["git", "pipeline", "ghe", "m365admin", "fypolicy", "pp", "vs", "m365", "fy", "cs"],
-         note="A pipeline writes the approved list from Git to GitHub Enterprise, Microsoft Foundry and Power Platform. "
-              "The Microsoft 365 admin center is set by hand. Each policy target governs one client."),
+         note="The proposed pipeline maps Git decisions to GitHub settings and Foundry connection tool lists. "
+              "Power Platform stays manual until its MCP API path is verified; Microsoft 365 connector access is manual. "
+              "These are separate policy scopes, not interchangeable server allowlists."),
     dict(id="vs", label="VS Code", k="call", nodes=["vs", "device", "gw", "be"],
-         note="VS Code and GitHub Copilot pass a managed Windows device first, then reach the gateway, which calls the company MCP server."),
+         note="VS Code and local GitHub Copilot run on the managed Windows device and call the gateway. "
+              "The gateway calls the company MCP server. Remote and cloud sessions need their own controls."),
     dict(id="m365", label="Microsoft 365 Copilot", k="call", nodes=["m365", "gw", "be"],
          note="Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses. No device is on this path."),
     dict(id="fy", label="Foundry agents", k="call", nodes=["fy", "gw", "be"], nodes_pv=["defender"],
@@ -314,9 +321,10 @@ PATHS = [
          note_pv=f"Copilot Studio calls the gateway, which calls the company MCP server. Microsoft Defender checks the tool call before it runs. "
                  f"{INF} Interpretation by AI: the sources do not say where Defender runs."),
     dict(id="direct", label="Direct call", k="red", nodes=["vs", "m365", "fy", "cs", "be"],
-         note="A direct call from a client to the company MCP server is blocked. The server accepts calls from the gateway only."),
+         note="Design requirement: reject direct client access to the company MCP server. Verify every bypass route in the acceptance tests."),
     dict(id="byo", label="Agent 365 route", k="red", nodes=["byo", "be"], preview=True,
-         note="The separate Agent 365 route reaches the company MCP server without the gateway. It is a preview route."),
+         note="Alternative preview route, excluded from this topology: BYO needs a public endpoint through the Agent 365 Tooling Gateway. "
+              "Direct access to the private company backend must fail. Registering the company gateway URL instead requires a separate compatibility test."),
 ]
 for p in PATHS:
     for nid in p["nodes"] + p.get("nodes_pv", []):
@@ -345,7 +353,7 @@ def box(n):
         out.append('<span class="bp">Preview</span>')
     out.append(f'<span class="bt">{esc(" ".join(n["title"]))}</span>')
     if n["id"] == "gw":
-        out.append('<span class="bs view-safe">Azure API Management</span><span class="bs view-preview">AI Gateway, preview</span>')
+        out.append('<span class="bs view-safe">Azure API Management</span><span class="bs view-preview">API Management or AI Gateway</span>')
     elif n["sub"]:
         out.append(f'<span class="bs">{esc(n["sub"])}</span>')
     if n["n_all"] != n["n_safe"] and not n["preview"]:
@@ -368,7 +376,7 @@ def map_html():
            '<span class="g-rail" aria-hidden="true" style="grid-area:4/7/11/8"></span>',
            '<p class="wl" style="grid-area:5/6/6/7">Microsoft cloud, fixed addresses</p>',
            '<p class="zl z-gw" style="grid-area:8/2/9/4">Control point</p>',
-           '<p class="xl" style="grid-area:8/4/9/7">Direct call from a client: blocked</p>']
+           '<p class="xl" style="grid-area:8/4/9/7">Direct call: must be blocked</p>']
     out += [box(n) for n in NODES]
     out.append("</div>")
     return "\n".join(out)
@@ -383,14 +391,12 @@ def path_buttons():
     return "".join(b)
 
 
-DESC_FIG = ("A Git repository holds the approved and denied MCP servers. A pipeline writes the list to four policy targets: "
-            "GitHub Enterprise for VS Code and GitHub Copilot, the Microsoft 365 admin center for Microsoft 365 Copilot (set by hand), "
-            "Microsoft Foundry for Foundry agents, and Power Platform for Copilot Studio. "
-            "Every client reaches the company MCP server only through the gateway, which then calls the server. "
-            "VS Code and GitHub Copilot pass a managed Windows device first. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses. "
-            "A direct call from a client to the server is blocked. Logging and checks cover the gateway and the clients, and Purview audits agent activity. "
-            "In the preview design the gateway is the separate AI Gateway product, Microsoft Defender checks Foundry and Copilot Studio tool calls before they run, "
-            "and a separate Agent 365 route reaches the server without the gateway.")
+DESC_FIG = ("Design requirements, not a deployed or tested topology. Git holds approval decisions. "
+            "The proposed pipeline updates GitHub settings and Foundry connection tool lists. Power Platform is manual until MCP API support is verified; Microsoft 365 connector access is manual. "
+            "Approved clients call the gateway; only the gateway reaches the private company MCP backend. VS Code runs on the managed Windows device. "
+            "Microsoft 365 Copilot calls from the Microsoft cloud; its documented egress addresses do not replace authentication. "
+            "Logging joins gateway and client records; Purview coverage depends on the agent integration. "
+            "Preview adds optional detection and an optional dedicated AI Gateway. The alternative Agent 365 BYO route is excluded from direct backend access.")
 
 
 # ---- panels --------------------------------------------------------------
@@ -455,7 +461,7 @@ def panel(n):
     # The layer gaps the first page states in its controls table. Without this the reader sees them
     # only when a layer filter is on.
     if n["id"] == "fy":
-        extra = ('<p class="q-note">No released guardrail checks call content (layer 3) or tool responses (layer 6). '
+        extra = ('<p class="q-note">For Foundry agents, no released guardrail was established by this review for call content (layer 3) or tool responses (layer 6). '
                  'The pages read on 2026-11-11 describe only preview controls at both layers.</p>')
     if n["id"] == "cs":
         extra = ('<p class="q-note">No released guardrail checks call content (layer 3). '
@@ -923,8 +929,8 @@ SCRIPT = """<script>
       fn.textContent = on ? ('(' + on + ' on)') : '';
     }
     var s = document.getElementById('dgSum');
-    var gaps = {'3': 'Layer 3: Foundry and Copilot Studio have no released control here. Theirs are in With preview.',
-                '6': 'Layer 6: Foundry has a preview control only, in With preview.'};
+    var gaps = {'3': 'Layer 3: this review established no released content guardrail for Foundry or Copilot Studio agents.',
+                '6': 'Layer 6: the reviewed Foundry content guardrails are preview; MCP coverage is not established.'};
     var gapTxt = Object.keys(gaps).filter(function(k){ return laySel[k]; }).map(function(k){ return ' ' + gaps[k]; }).join('');
     if(s){ s.textContent = active ? (shown + ' of ' + total + ' controls match. Boxes without a match are dimmed.' + gapTxt) : (total + ' controls in ' + nb + ' boxes.'); }
   }
@@ -1038,7 +1044,7 @@ KEY = ('<ul class="key" aria-label="Line key">'
 DESIGN = f"""
   <section class="sec" id="design" aria-labelledby="h-design">
     <header class="sh"><h2 id="h-design">The design</h2>
-    <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers. Map the approved inventory into each policy target, because visibility alone does not enforce access.&nbsp;{REC}</p>
+    <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers. Map the approved inventory into each policy target, because visibility alone does not enforce access.&nbsp;{REC}</p><p class="goal"><b>Validation</b>This is a proposed architecture. Neither objective is proven in a tenant. <a href="#gaps">Coverage gaps</a> limit Objective B; a gateway does not govern every client or external MCP server by itself.</p>
     <p class="goal view-safe"><b>Scope</b>This is the released-only design. It uses supported MCP capabilities in the API Management service, subject to tier availability. Preview features are in the other design: select With preview above, or read <a href="#preview">With preview</a>.</p>
     <p class="goal view-preview"><b>Scope</b>This design replaces the API Management service gateway with the separate AI Gateway product, which is in public preview, and adds the Agent 365 integration. Use it only in a sandbox. The released-only design stays underneath. Details and limits are in <a href="#preview">With preview</a>.</p>
     <p class="goal"><b>Objectives</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers.</p></header>
@@ -1085,7 +1091,7 @@ WF_STEPS = [
         ("g4", "3b Deny and stop", "Denial records the reason in Git and stops the request."),
     ]),
     ("a365", "Agent 365 route, preview", [
-        ("a1", "4 Developer registers the server", "The developer registers the server after the internal pull request merges."),
+        ("a1", "4 Developer registers the server", "For the separate BYO pilot, register the test endpoint after internal approval. Do not register direct access to the private company backend."),
         ("a2", "5 Admin reviews the request", "An AI Administrator or Global Administrator reviews the requester, address, sign-in, tools and permissions under Agents &gt; Tools &gt; Requests (preview). "
                f"{ev('a365-tools-role-ai', 'a365-tools-role-global')} {evp('pv-byo-approval')} Individual tool controls are rolling out for supported Agent 365 servers. BYO server tool-level blocking is planned. Until then, block at server level and authorize at the gateway and backend. {ev('a365-tools-granular')} {evp('pv-byo-roll', 'pv-a365-ctrl')}"),
         ("a3", "6a Approve, consent, available", f"Approval is followed by Microsoft Entra tenant consent. Only then is the server Available in the registry. {ev('a365-tools-approve', 'a365-tools-consent')} {evp('pv-byo-approval')} Then apply target policies and backend authorization."),
@@ -1156,7 +1162,27 @@ def stack_tables(src):
     return re.sub(r"<table\b.*?</table>", one, src, flags=re.S)
 
 
+_extra_tests = [
+    ("Use a valid token with the wrong audience, tenant or caller permission", "Rejected before backend execution", "A"),
+    ("A read-only caller requests a write tool through the shared gateway identity", "Denied by caller-specific authorization", "A"),
+    ("Switch accounts or start a client without cached server policy", "Required device policy remains enforced; verify each supported client", "B"),
+    ("Change custom agent profiles, use a cloud session or call through a shell tool", "Document exclusions; prove separate client and egress controls before claiming coverage", "B"),
+    ("Try an unapproved MCP destination from each Foundry and Copilot Studio path", "Blocked by the configured network or connector policy, or recorded as an unresolved gap", "B"),
+    ("Deny a server while a client has stale policy or an active session", "Company gateway and backend reject new calls; manually reconcile all other targets", "A and B"),
+    ("Check custom and HTTP connector restrictions while ACP is enabled", "Mixed mode retains the required classic policy blocks", "B"),
+    ("Send one tool call and inspect gateway, backend and Purview records", "Caller and request correlate where supported; secrets are redacted and access is restricted", "A and B"),
+]
+_test_rows = "".join("<tr>" + "".join(f"<td>{v}</td>" for v in row) + "</tr>" for row in _extra_tests)
+assert ROLLOUT_HTML.count("</tbody>") == 1
+ROLLOUT_HTML = ROLLOUT_HTML.replace("</tbody>", _test_rows + "</tbody>")
 ROLLOUT_HTML = stack_tables(ROLLOUT_HTML)
+_preview_extra_tests = [
+    ("Initialize a session and list tools with tool threat protection enabled", "These operations are not evaluated by this policy", "Separate authentication and server/metadata review"),
+    ("Withhold the result of a completed controlled write", "No automatic retry; verify whether the action completed", "Post-invocation denial cannot reverse side effects"),
+]
+_preview_rows = "".join("<tr>" + "".join(f"<td>{v}</td>" for v in row) + "</tr>" for row in _preview_extra_tests)
+assert PREVIEW.count("</tbody>") == 1
+PREVIEW = PREVIEW.replace("</tbody>", _preview_rows + "</tbody>")
 PREVIEW = stack_tables(PREVIEW)
 
 BODY = f"""{HEAD}{STYLE}
@@ -1187,6 +1213,9 @@ for _old, _new in EDITS:
     if FINAL.count(_old) != 1:
         sys.exit(f"page edit does not apply exactly once: {_old[:80]!r}")
     FINAL = FINAL.replace(_old, _new)
+from mcp_governance_interactive_review import apply_review
+FINAL = apply_review(FINAL, ev, REC, INF, UNV, evp)
+
 for ch in (chr(0x2014), chr(0x2013)):
     if ch in FINAL:
         i = FINAL.index(ch)
@@ -1196,7 +1225,9 @@ print(f"wrote {OUT.name}, {len(FINAL.splitlines())} lines, {len(CONTROLS)} contr
 
 # ---- quote table in the fact check file ----------------------------------
 QUOTES_BEGIN, QUOTES_END = "<!-- Begin source quotes -->", "<!-- End source quotes -->"
-SAFE_COUNT = len(QUOTES) - len(PREVIEW_ONLY)
+_unavailable = set(interactive_evidence.UNAVAILABLE)
+PREVIEW_COUNT = len(PREVIEW_ONLY - _unavailable)
+SAFE_COUNT = len(QUOTES) - PREVIEW_COUNT - len(_unavailable)
 
 
 def md_cell(text):
@@ -1213,10 +1244,10 @@ def md_url(url):
 rows = []
 for key, skey, q in QUOTES:
     title, url, date = SOURCES[skey]
-    where = "preview" if key in PREVIEW_ONLY else "released"
-    rows.append(f'| <a id="ev-{IDS[key]}"></a>{IDS[key]} | {md_cell(q)} | [{md_cell(title)}]({md_url(url + frag(q))}) | {date or "none shown"} | {where} |')
+    where = "unverified: source unavailable 2026-11-12" if key == "pv-aig-separate" else "preview" if key in PREVIEW_ONLY else "released"
+    rows.append(f'| <a id="ev-{IDS[key]}"></a>{IDS[key]} | {md_cell(q)} | [{md_cell(title)}]({md_url(url + frag(q))}) | {date or "not captured in review"} | {where} |')
 table = (f"{QUOTES_BEGIN}\nGenerated by `scripts/build-mcp-governance-interactive.py` from the shared quote list. Do not edit by hand. "
-         f"{len(QUOTES)} quotes, checked {CHECKED}: {SAFE_COUNT} back the released-only design and {len(PREVIEW_ONLY)} back the preview additions. "
+         f"{len(QUOTES)} quotes, checked {CHECKED}: {SAFE_COUNT} back the released-only design and {PREVIEW_COUNT} back the preview additions; one historical quote is unverified because its source was unavailable. "
          "Links request the quoted passage with browser text fragments. Page date is the date the source page shows.\n\n"
          "| Id | Quote | Source | Page date | Design |\n|---|---|---|---|---|\n" + "\n".join(rows) + f"\n{QUOTES_END}")
 notes = NOTES.read_text(encoding="utf-8")

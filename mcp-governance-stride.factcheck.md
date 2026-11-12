@@ -305,3 +305,25 @@ requirement	uses
 - No attack, mitigation efficacy, SDK-version applicability or tenant configuration test was performed. The open-work plan records those limits.
 
 The SC-500 export is labeled as related study topics, not proven mitigations. R1 local configuration history and R6 endpoint runtime attribution are marked outside the outline (with Sentinel ingestion retained as a related topic); D2 Windows outbound policy and E2 local approval bypass are no longer presented as Azure Firewall/NSG or Azure RBAC/PIM implementation controls.
+
+## Governance alignment review (2026-11-12)
+
+Reconciled the model with the interactive design's holistic review. This supplements the earlier row-by-row review; it does not reverify the model's CVEs or incident records.
+
+- E5: related controls now include baseline gateway authorization. The shared managed-identity baseline can need caller-specific authorization just as a preview shared connection does; V79 illustrates the latter only.
+- I15: added client policy and `ctrl-foundry-egress`; its basis identifies Network guardrails as preview (V101/V134) and distinguishes released toolbox egress from inbound private access. The scenario text and scores stay unchanged.
+- T9: basis now states the manual Microsoft 365 and unverified Power Platform MCP automation paths. F1's name describes validated adapters and manual target changes.
+- DFD text and Method now explicitly exclude direct BYO access to the private company backend and record gateway-fronted BYO composition as untested. The diagram remains aggregated; it does not claim a validated deployment or draw that excluded composition.
+- Rebuilt HTML, TSV and draw.io exports from their sources. All 74 threat IDs, 18 element IDs and DREAD scores are preserved. The source checker follows the expanded 215-row governance evidence inventory and explicitly reports the unavailable historical V195 quote.
+
+The governance quote verification covers 214 available source quotes with one explicitly unverified historical quote. It does not establish tenant protection or revalidate the threat model's external vulnerability records. Browser and build results for this revision are recorded in the associated design fact check.
+
+### Completion alignment (2026-11-12)
+
+T9 now links Power Platform policy configuration and records that mixed mode is required where classic policies protect custom/HTTP connectors (V214). T14 links the preview tool-evaluation control and states that discovery/session operations are outside its evaluation scope (V213); the scenario remains tool-result injection. Hostile discovery metadata requires its own review. No scenario, score, public identifier or incident association changed. The DFD text export carries these deployment constraints.
+
+The complete governance quote inventory now has 215 rows: 214 matching the same-day source snapshots and one explicitly unavailable historical quote (V195), unused by active claims. New passages were read live through the web connector. Browser QA was attempted but blocked by unavailable headless Chrome and a locked Mac; tenant and attack validation remain outside this design-stage review.
+
+### Final governance alignment (2026-11-12)
+
+T9 now also records the workload-specific ACP availability qualification from V216. The final governance inventory has 216 rows: 215 match the existing same-day source snapshots and V195 remains explicitly unverified and unused. All 74 threat scenarios, scores, IDs and incident associations remain unchanged. Both exports and the HTML were regenerated; quote, register, label, anchor, local-link, syntax and deterministic-build checks pass. Browser QA for this revision remains blocked by unavailable headless Chrome and a failed in-app browser session; no tenant or attack test was run.

@@ -95,3 +95,15 @@ Edited the page file directly; the builder script was behind the page at the tim
 - **Chose** to fix "7 Later deny" in the builder source and the shared wording through edit pairs, as before. **Why:** the first page must not change.
 - **Kept** the acceptance test order. **Why:** the threat model cites acceptance test 12 by number.
 - **Left** the device "Managed URL policies" wording as is. The VS Code allowlist set through Intune is a device policy that the pipeline does not write; whether it conflicts with the GitHub managed settings file was not checked, and the page does not claim either way.
+
+## Holistic review (2026-11-12)
+
+- Supersedes the earlier baseline placement of Foundry's Network guardrail: it is preview. Keep released toolbox networking and preview guardrails separate, preserving the original anchor and adding `ctrl-foundry-egress`.
+- Supersedes direct Agent 365 BYO access to the private backend. Retain the public path/node IDs as an excluded alternative, with a rejected line. Gateway-fronted composition needs its own compatibility test.
+- Use manual Power Platform MCP policy until the actual API adapter is verified; Git review and policy sync do not imply interchangeable policy targets.
+- Preserve the shared original page. Isolate interactive evidence and review corrections in two small modules, with exact-match checks so rebuilds cannot silently undo the corrections. V195 remains an explicitly unverified historical anchor, unused by current claims.
+
+- Require Power Platform mixed mode while classic policies protect connector types unsupported by ACP; ACP-only mode would discard those protections.
+- Document preview tool threat protection's discovery/session exclusions and avoid automatic retries after a result is withheld; neither post-call inspection nor a successful HTTP response proves a write did not execute.
+
+- Qualify ACP inclusion in the released-only deployment by workload-specific general availability (V216); keep classic connector policies until coverage is established. Do not present unrun acceptance tests as guarantees.

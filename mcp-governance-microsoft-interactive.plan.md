@@ -55,3 +55,17 @@ Steps:
 - [x] Compare content with the old build: every control, part and note still present
 - [x] Browser checks: 375 px, 768 px and desktop, both designs, filters, paths, shared links, console
 - [x] Label check, anchor check, fact check log
+
+## Holistic review completed (2026-11-12)
+
+- [x] Review all control, part, gap, test and workflow wording against current primary-source passages.
+- [x] Correct released/preview boundaries, manual target work, identity/authorization and BYO topology.
+- [x] Align STRIDE bases and related controls; preserve public IDs and regenerate exports.
+- [x] Run quote, label, anchor, local-link, JavaScript/JSON syntax and deterministic-build checks.
+- [ ] Browser QA follow-up: desktop/narrow rendering, console, filters, paths and preview deep links. Blocked by locked native access and in-app browser local-file URL policy; see fact check. No tenant acceptance tests have been run.
+
+Completion pass: added mixed-mode connector enforcement and preview discovery/retry limits, aligned STRIDE T9/T14, and reran all static/build/evidence checks successfully. Browser QA was attempted again; Chrome remained unavailable and the Mac was locked. The browser follow-up above remains blocked; design-stage content review is complete.
+
+Final completion pass: source and logic review complete, including workload-specific ACP availability (V216) and remaining automation wording. Static, source-snapshot and reproducible-build checks pass. Browser QA was retried and remains environment-blocked; no tenant acceptance test is claimed.
+
+Commit attempted on `dev`; the workspace denied creation of `.git/index.lock` because git metadata is read-only. Reviewed changes remain uncommitted. Nothing was published.

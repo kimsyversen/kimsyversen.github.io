@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MODULE = sys.argv[2] if len(sys.argv) > 2 else "governance_evidence"
 _ev = importlib.import_module(MODULE)
 IDS, QUOTES, SOURCES = _ev.IDS, _ev.QUOTES, _ev.SOURCES
+UNAVAILABLE = getattr(_ev, "UNAVAILABLE", {})
 _name = sys.argv[3] if len(sys.argv) > 3 else "enterprise-ai-agent-governance-summary.html"
 PAGE = ROOT / _name if (ROOT / _name).exists() else ROOT / "wip" / _name
 
@@ -35,13 +36,13 @@ def norm(text):
     text = html.unescape(text)
     for a, b in (("’", "'"), ("‘", "'"), ("“", '"'), ("”", '"'), (" ", " ")):
         text = text.replace(a, b)
-    return re.sub(r"\s+", " ", text).strip()
+    return re.sub(r"\s+:", ":", re.sub(r"\s+", " ", text)).strip()
 
 
 def fetch(url, cache):
     path = cache / (re.sub(r"[^a-z0-9]+", "-", url.lower()).strip("-")[-120:] + ".txt")
     if path.exists():
-        return path.read_text(encoding="utf-8")
+        return norm(path.read_text(encoding="utf-8"))
     agent = "curl/8.7.1" if "releasecommunications" in url else "Mozilla/5.0"  # the feed refuses a browser name
     req = urllib.request.Request(url, headers={"User-Agent": agent})
     raw = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace")
@@ -62,7 +63,11 @@ def main():
     cache.mkdir(parents=True, exist_ok=True)
     texts = {}
     bad = 0
-    for qid, key, quote in [(IDS[k], s, q) for k, s, q in QUOTES]:
+    for quote_key, key, quote in QUOTES:
+        qid = IDS[quote_key]
+        if quote_key in UNAVAILABLE:
+            print(f"UNVERIFIED {qid}: {UNAVAILABLE[quote_key]}")
+            continue
         url = SOURCES[key][1]
         try:
             texts.setdefault(url, fetch(url, cache))
@@ -92,6 +97,15 @@ def main():
             print(f"FAIL {qid}: row in {notes.name} has no quote in the evidence module")
             bad += 1
         page = PAGE.read_text(encoding="utf-8")
+        for quote_key in UNAVAILABLE:
+            qid = IDS[quote_key]
+            if f'#ev-{qid}"' in page:
+                print(f"FAIL {qid}: an explicitly unverified quote is used by an active claim")
+                bad += 1
+        for target, label in re.findall(r'href="[^\"]*#ev-(V\d+)"[^>]*>(V\d+)</a>', page):
+            if target != label:
+                print(f"FAIL {label}: evidence link targets {target}")
+                bad += 1
         for qid in sorted(set(re.findall(r'href="[^"]*#ev-(V\d+)"', page)) - set(rows)):
             print(f"FAIL {qid}: linked on the page but not in {notes.name}")
             bad += 1
@@ -101,7 +115,7 @@ def main():
             if f'id="ev-{qid}"' not in page or html.escape(quote, quote=False) not in page:
                 print(f"FAIL {qid}: not listed word for word on the page")
                 bad += 1
-    print(f"{len(QUOTES)} quotes, {bad} problems")
+    print(f"{len(QUOTES)} quotes, {len(UNAVAILABLE)} explicitly unverified, {bad} unexpected problems")
     return 1 if bad else 0
 
 
