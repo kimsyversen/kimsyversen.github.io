@@ -424,7 +424,7 @@ body[data-view="preview"] .view-safe{display:none!important}
       <li><a href="#controls">Controls</a></li>
       <li><a href="#rollout">Rollout</a></li>
       <li><a href="#gaps">Gaps</a></li>
-      <li><a href="#preview">With preview</a></li>
+      <li class="view-preview"><a href="#preview">With preview</a></li>
     </ul>
     <div class="seg-wrap"><span class="seg-lbl" id="seg-lbl">Select design</span>
     <div class="seg" role="group" aria-labelledby="seg-lbl">
@@ -550,7 +550,7 @@ Foundry gateway routing and the Defender checks are in the tables below.</pre>
     <div class="sub3" id="parts">
       <span id="parts-of-the-design"></span><span id="planes"></span><span id="control-planes"></span><span id="which-gateway"></span><span id="which-gateway-2"></span>
       <h3 id="parts-and-control-planes"><a class="sec-link" href="#parts-and-control-planes">Parts and control planes</a></h3>
-      <p class="q-note">Each policy target is an admin surface for policy or visibility. Map the approved inventory into those targets. Visibility alone does not enforce access. <span class="tg r">recommendation</span></p>
+      <p class="q-note">Map the approved inventory into each policy target. Visibility alone does not enforce access. <span class="tg r">recommendation</span></p>
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Part</th><th>What it does</th><th>Where it is set or run</th><th>Use in this design</th></tr></thead>
 <tbody>
@@ -572,7 +572,7 @@ Foundry gateway routing and the Defender checks are in the tables below.</pre>
 
   <section class="sec" id="controls" aria-labelledby="h-controls">
     <header class="sh"><h2 id="h-controls"><a class="sec-link" href="#controls">Controls</a></h2>
-    <p class="goal"><b>How to read</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers. These are targets, with coverage limits below.</p></header>
+    <p class="goal"><b>How to read</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers.</p></header>
 
     <div class="sub3" id="controls-by-layer">
       <span id="guardrails"></span><span id="h-guardrails"></span><span id="what-each-guardrail-does"></span>
@@ -667,14 +667,14 @@ Foundry gateway routing and the Defender checks are in the tables below.</pre>
 <tr><td>Result review<span class="rt">Guardrail</span></td><td>VS Code</td><td>None added.</td><td>Tool approval covers confirmation before or after a tool runs <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V155">V155</a>. Post-approval adds a tool result to the chat context without review, and VS Code warns about prompt injection in external data <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V154">V154</a>. <span class="tg u">unverified</span> Not checked which tools ask for a result review by default.</td></tr>
 </tbody>
 </table></div>
-      <p class="q-note">None found means the pages read on 2026-11-11 do not describe a guardrail at that layer. <span class="tg u">unverified</span> It does not prove that none exists. Microsoft 365 Copilot is not a column in the figure; its rows are in layers 1, 2 and 4. Microsoft Defender real-time protection and Defender for Endpoint runtime protection are in <a href="#guardrails-preview">With preview</a>.</p>
+      <p class="q-note">None found means the pages read on 2026-11-11 do not describe a guardrail at that layer. <span class="tg u">unverified</span> Microsoft 365 Copilot is not a column in the figure; its rows are in layers 1, 2 and 4. Microsoft Defender real-time protection and Defender for Endpoint runtime protection are in <a href="#guardrails-preview">With preview</a>.</p>
     </div>
     <span id="approval-boundaries"></span><span id="approval-boundaries-and-cross-cutting-guardrails"></span><span id="env"></span><span id="h-env"></span>
   </section>
 
   <section class="sec" id="rollout" aria-labelledby="h-rollout">
     <header class="sh"><h2 id="h-rollout"><a class="sec-link" href="#rollout">Rollout and tests</a></h2>
-    <p class="goal"><b>Goal</b>Build in four steps, then run the tests. API Management alone does not guarantee them.&nbsp;<span class="tg r">recommendation</span></p></header>
+    <p class="goal"><b>Goal</b>API Management alone does not guarantee objectives A and B.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="sub3" id="order">
       <h3 id="h-order"><a class="sec-link" href="#h-order">Order of work</a></h3>
     <ol class="steps">
@@ -709,10 +709,10 @@ Foundry gateway routing and the Defender checks are in the tables below.</pre>
 
   <section class="sec" id="gaps" aria-labelledby="h-gaps">
     <header class="sh"><h2 id="h-gaps"><a class="sec-link" href="#gaps">Gaps</a></h2>
-    <p class="goal"><span class="tg u">Bad&nbsp;news&nbsp;first</span> Read these limits before relying on the design.</p></header>
+    </header>
     <ol>
 <li><strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.</li>
-<li><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V21">V21</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V92">V92</a>. Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V93">V93</a>, and Registry only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V94">V94</a>, a public preview with weaker enforcement <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V95">V95</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V96">V96</a>. The design has no control for it. See the <a href="#open">open questions</a>.</li>
+<li><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V21">V21</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V92">V92</a>. Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP servers <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V93">V93</a>, and Registry only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V94">V94</a>, a public preview with weaker enforcement <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V95">V95</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V96">V96</a>. The design has no control for it. Test both switches in a pilot, or limit it through GitHub account permissions.</li>
 <li><strong id="gap-m365-manual">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V171">V171</a>, so the pipeline cannot keep this target in step. <span class="tg u">unverified</span> No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.</li>
 <li><strong id="gap-one-gateway">One gateway for Foundry and the other clients.</strong> <span class="tg i">inference</span> Interpretation by AI: the same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.</li>
 <li><strong id="gap-m365-status">Microsoft 365 Copilot connector status.</strong> <span class="tg i">inference</span> Interpretation by AI: the federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.</li>
@@ -723,10 +723,10 @@ Foundry gateway routing and the Defender checks are in the tables below.</pre>
     <span id="open"></span><span id="h-open"></span><span id="open-questions"></span>
   </section>
 
-  <section class="sec" id="preview" aria-labelledby="h-preview">
+  <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
     <header class="sh"><h2 id="h-preview"><a class="sec-link" href="#preview">With preview&nbsp;<span class="tg pv">preview</span></a></h2>
     <p class="goal"><b>In short</b>Use the separate AI Gateway product and the Agent 365 integration in place of the API Management service gateway. AI Gateway is in public preview. Use this design only in a sandbox. If a preview feature changes, switch it off and fall back to the released-only design. <span class="tg r">recommendation</span></p>
-    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type. The figure is in <a href="#design" data-view-go="preview">the design at the top</a>.</p></header>
+    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type.</p></header>
     <div class="sub3" id="preview-controls">
       <span id="added-with-preview-preview"></span>
       <h3 id="added-controls"><a class="sec-link" href="#added-controls">Added controls</a></h3>
@@ -857,7 +857,7 @@ Foundry gateway routing and the Defender checks are in the tables below.</pre>
   </main>
 
   <footer>
-    <p>Documentation checked 2026-11-11. The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
+    <p>The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
     <p id="evidence"><span id="evidence-details"></span><span id="h-e"></span>Sources and review notes: <a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md">fact check</a>.</p>
   </footer>

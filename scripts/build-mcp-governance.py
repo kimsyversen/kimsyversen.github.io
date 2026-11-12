@@ -252,7 +252,7 @@ MAST = f"""
       <li><a href="#controls">Controls</a></li>
       <li><a href="#rollout">Rollout</a></li>
       <li><a href="#gaps">Gaps</a></li>
-      <li><a href="#preview">With preview</a></li>
+      <li class="view-preview"><a href="#preview">With preview</a></li>
     </ul>
     <div class="seg-wrap"><span class="seg-lbl" id="seg-lbl">Select design</span>
     <div class="seg" role="group" aria-labelledby="seg-lbl">
@@ -310,7 +310,7 @@ DESIGN = f"""
     <div class="sub3" id="parts">
       {anchors("parts-of-the-design", "planes", "control-planes", "which-gateway", "which-gateway-2")}
       <h3>Parts and control planes</h3>
-      <p class="q-note">Each policy target is an admin surface for policy or visibility. Map the approved inventory into those targets. Visibility alone does not enforce access. {REC}</p>
+      <p class="q-note">Map the approved inventory into each policy target. Visibility alone does not enforce access. {REC}</p>
       {table(["Part", "What it does", "Where it is set or run", "Use in this design"], DESIGN_ROWS)}
       <p class="q-note">{UNV} marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. {INF} marks interpretation by AI. Agent approval and lifecycle are separate from this page's MCP server workflow.</p>
     </div>
@@ -492,14 +492,14 @@ GUARDRAILS = f"""
         </div>
       </figure>
       {table(["Control", "Applies to", "Design requirement", "What Microsoft and GitHub document"], LAYER_ROWS)}
-      <p class="q-note">None found means the pages read on 2026-11-11 do not describe a guardrail at that layer. {UNV} It does not prove that none exists. Microsoft 365 Copilot is not a column in the figure; its rows are in layers 1, 2 and 4. Microsoft Defender real-time protection and Defender for Endpoint runtime protection are in <a href="#guardrails-preview">With preview</a>.</p>
+      <p class="q-note">None found means the pages read on 2026-11-11 do not describe a guardrail at that layer. {UNV} Microsoft 365 Copilot is not a column in the figure; its rows are in layers 1, 2 and 4. Microsoft Defender real-time protection and Defender for Endpoint runtime protection are in <a href="#guardrails-preview">With preview</a>.</p>
     </div>
 """
 
 CONTROLS = f"""
   <section class="sec" id="controls" aria-labelledby="h-controls">
     <header class="sh"><h2 id="h-controls">Controls</h2>
-    <p class="goal"><b>How to read</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers. These are targets, with coverage limits below.</p></header>
+    <p class="goal"><b>How to read</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers.</p></header>
 {GUARDRAILS}    {anchors("approval-boundaries", "approval-boundaries-and-cross-cutting-guardrails", "env", "h-env")}
   </section>
 """
@@ -509,7 +509,7 @@ CONTROLS = f"""
 ROLLOUT = f"""
   <section class="sec" id="rollout" aria-labelledby="h-rollout">
     <header class="sh"><h2 id="h-rollout">Rollout and tests</h2>
-    <p class="goal"><b>Goal</b>Build in four steps, then run the tests. API Management alone does not guarantee them.&nbsp;{REC}</p></header>
+    <p class="goal"><b>Goal</b>API Management alone does not guarantee objectives A and B.&nbsp;{REC}</p></header>
     <div class="sub3" id="order">
       <h3 id="h-order">Order of work</h3>
     <ol class="steps">
@@ -543,7 +543,7 @@ ROLLOUT = f"""
 # ---- gaps ---------------------------------------------
 GAPS_LIST = [
     "<strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.",
-    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it {ev('gh-builtin-order', 'gh-builtin')}. Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. The design has no control for it. See the <a href=\"#open\">open questions</a>.",
+    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it {ev('gh-builtin-order', 'gh-builtin')}. Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP servers {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. The design has no control for it. Test both switches in a pilot, or limit it through GitHub account permissions.",
     f"<strong id=\"gap-m365-manual\">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option {ev('m365-noapi')}, so the pipeline cannot keep this target in step. {UNV} No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.",
     f"<strong id=\"gap-one-gateway\">One gateway for Foundry and the other clients.</strong> {INF} Interpretation by AI: the same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.",
     f"<strong id=\"gap-m365-status\">Microsoft 365 Copilot connector status.</strong> {INF} Interpretation by AI: the federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.",
@@ -555,7 +555,7 @@ GAPS_OL = "\n".join(f"<li>{x}</li>" for x in GAPS_LIST)
 GAPS = f"""
   <section class="sec" id="gaps" aria-labelledby="h-gaps">
     <header class="sh"><h2 id="h-gaps">Gaps</h2>
-    <p class="goal">{tg("u", "Bad&nbsp;news&nbsp;first")} Read these limits before relying on the design.</p></header>
+    </header>
     <ol>
 {GAPS_OL}
     </ol>
@@ -565,10 +565,10 @@ GAPS = f"""
 
 # ---- with preview --------------------------------------------------------
 PREVIEW = f"""
-  <section class="sec" id="preview" aria-labelledby="h-preview">
+  <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
     <header class="sh"><h2 id="h-preview">With preview&nbsp;{PRE}</h2>
     <p class="goal"><b>In short</b>Use the separate AI Gateway product and the Agent 365 integration in place of the API Management service gateway. AI Gateway is in public preview. Use this design only in a sandbox. If a preview feature changes, switch it off and fall back to the released-only design. {REC}</p>
-    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type. The figure is in <a href="#design" data-view-go="preview">the design at the top</a>.</p></header>
+    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type.</p></header>
     <div class="sub3" id="preview-controls">
       {anchors("added-with-preview-preview")}
       <h3>Added controls</h3>
@@ -666,7 +666,7 @@ PREVIEW = f"""
 
 FOOTER = f"""
   <footer>
-    <p>Documentation checked {CHECKED}. The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
+    <p>The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
     {AI_NOTE}
     <p id="evidence">{anchors("evidence-details", "h-e")}Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</p>
   </footer>
