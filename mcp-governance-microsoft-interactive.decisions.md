@@ -67,7 +67,7 @@ The Gateway panel opens with one sentence saying there are two ways to build the
 
 ## 2026-11-12, logic and consistency audit
 
-Edited the page file directly; the builder script is already behind the page (it lacks earlier hand edits), so rebuilding would undo them. Fixes:
+Edited the page file directly; the builder script was behind the page at the time. Superseded below: the builder now reproduces the page. Fixes:
 
 - The figure description said a pipeline writes to four targets, one "set by hand". Now three by pipeline, the Microsoft 365 admin center by hand, as the Sync pipeline box and the path notes already said.
 - With preview said AI Gateway replaces the API Management gateway, yet the Agent 365 integration, the server-block test and the pilot all use API Management v2. Now AI Gateway is an option that can replace it, and the Agent 365 integration is the addition. The single-tool block test now names the AI Gateway product, the only gateway with tool blocking (V42).
@@ -79,3 +79,11 @@ Edited the page file directly; the builder script is already behind the page (it
 - Tag key: the unverified row claimed the tag marks names from a control plane list; it is also used for untested behavior. Now "Not confirmed in a quoted source."
 - Smaller: "covers them" in the first gap; the Defender for Endpoint row no longer points at "rules above".
 - Second pass, claim by claim against the cited quotes: the request queue sentence now cites V182 (Requests tab), not V181 (Registry tab). The cloud agent gap sentence "Only the client allowlist applies" is not in V23, so it is tagged inference. The backend lock step says "frontend private endpoints", matching V47. The fact check rows for V102 and V103 say preview, as the quotes do. The label ledger was repaired (4 stale rows removed, 6 added).
+
+## Builder reconciled with the page (2026-11-12)
+
+- **Chose** to make `scripts/build-mcp-governance-interactive.py` reproduce the hand-edited page again. **Why:** a rebuild had been silently undoing the 2026-11-12 fixes (title, tag key, wording).
+- Title, heading, footer with the tag key, and the tag key and Control label styles now live in the builder source.
+- The wording edits made by hand to shared content are listed in `scripts/mcp_governance_interactive_edits.py` and applied after the page is built. Each must match exactly once or the build stops. **Why:** that text comes from the first page's builder, which this page must not change. Move an edit into the source when its wording is next touched.
+- V102 and V103 are labelled Preview in their source, so the quote table now marks them preview and the header counts are 132 released and 76 preview (the committed table already marked them preview but still said 134 and 74).
+- **Removed** the Rollout "Goal" sentence ("API Management alone does not guarantee objectives A and B") and the closing note under the design panels ("Agent approval and lifecycle are separate from this page's MCP server workflow"). **Why:** the owner found them wrong or unneeded. The first page keeps them.

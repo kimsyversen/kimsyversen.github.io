@@ -46,6 +46,23 @@ PREVIEW_HTML, ROLLOUT, GAPS = ns["PREVIEW"], ns["ROLLOUT"], ns["GAPS"]
 QUOTES, IDS, SOURCES, PREVIEW_ONLY, CHECKED = ns["QUOTES"], ns["IDS"], ns["SOURCES"], ns["PREVIEW_ONLY"], ns["CHECKED"]
 frag, ev, evp, anchors = ns["frag"], ns["ev"], ns["evp"], ns["anchors"]
 
+# The Foundry tool call and tool response intervention points are labelled Preview in their source,
+# so they back the preview design here. The shared list still counts them as released.
+PREVIEW_ONLY = set(PREVIEW_ONLY) | {k for k, v in IDS.items() if v in ("V102", "V103")}
+
+# Tag key block, placed after the AI note rules. The shared style from the first page has none.
+_AI_NOTE_CSS = "@media (max-width:560px){.ai-note{grid-template-columns:1fr}}\n"
+_TAG_KEY_CSS = (
+    ".tag-key{margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;font-size:0.78rem;line-height:1.5}\n"
+    ".tag-key h2{font-size:0.68rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);line-height:1.5;padding-top:1px}\n"
+    ".tag-key dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;align-items:baseline}\n"
+    ".tag-key dt{margin:0}\n"
+    ".tag-key dd{margin:0}\n"
+    "@media (max-width:560px){.tag-key{grid-template-columns:1fr}.tag-key dl{grid-template-columns:1fr;gap:2px 0}.tag-key dd{margin-bottom:8px}}\n")
+if STYLE.count(_AI_NOTE_CSS) != 1:
+    sys.exit("ai-note style rule not found exactly once in the shared style")
+STYLE = STYLE.replace(_AI_NOTE_CSS, _AI_NOTE_CSS + _TAG_KEY_CSS)
+
 # Quotes used only on this page, for the Purview audit control. They continue the shared numbering,
 # so the shared ids keep their numbers. Checked against the live pages 2026-11-12; the shared
 # quote checker does not cover them, so recheck them by hand when the sources change.
@@ -70,7 +87,7 @@ for _key, _skey, _q in [
     QUOTES.append((_key, _skey, _q))
     IDS[_key] = f"V{len(QUOTES)}"
 
-TITLE = "MCP Governance in a Microsoft ecosystem, interactive"
+TITLE = "A proposed design for MCP Governance in a Microsoft ecosystem"
 DESC = ("The MCP governance design as one interactive diagram: select a box to see its controls, "
         "and filter by objective or call layer.")
 HEAD = re.sub(r"<title>.*?</title>", f"<title>{TITLE}</title>", HEAD, flags=re.S)
@@ -643,6 +660,7 @@ figure.mapfig{margin:0;gap:12px}
 .np .part{margin-top:28px}
 .np header + .part{margin-top:14px}
 .ctl.off{opacity:.3}
+.ctl::before{content:"Control";display:block;font:600 0.66rem/1 var(--mono);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .js .np{display:none}
 .js .np.sel{display:block}
 .np .q-note{margin-top:12px}
@@ -990,10 +1008,7 @@ MAST = f"""
   <a class="skip" href="#main-content">Skip to content</a>
   <header class="mast">
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked {CHECKED}</span></div>
-    <h1>MCP Governance in a Microsoft ecosystem, interactive</h1>
-    <div class="intro">
-      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.</p>
-    </div>
+    <h1>A proposed design for MCP Governance in a Microsoft ecosystem</h1>
   </header>
 
   <nav class="toc" aria-label="Contents">
@@ -1044,7 +1059,6 @@ DESIGN = f"""
 {"".join(panel(n) for n in NODES)}
       </div>
     </div>
-    <p class="q-note">{UNV} marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. {INF} marks interpretation by AI. Agent approval and lifecycle are separate from this page's MCP server workflow.</p>
   </section>
 """
 
@@ -1106,9 +1120,15 @@ PREVIEW = f"""
 
 FOOTER = f"""
   <footer>
-    <p>The design is proposed. The preview additions are for a sandbox pilot.</p>
-    {AI_NOTE}
-    <p id="evidence">Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human. <span id="evidence">Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</span></span></p>
+    <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
+      <dl>
+        <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI. It is not stated in a source.</dd>
+        <dt><span class="tg u">unverified</span></dt><dd>Not confirmed in a quoted source.</dd>
+        <dt><span class="tg r">recommendation</span></dt><dd>A design choice proposed on this page, not documented Microsoft or GitHub behavior.</dd>
+        <dt><span class="tg pv">preview</span></dt><dd>The feature is in preview. Use it for a sandbox pilot only.</dd>
+      </dl>
+    </section>
   </footer>
 """
 
@@ -1159,8 +1179,19 @@ for ch in (chr(0x2014), chr(0x2013)):
         i = BODY.index(ch)
         sys.exit(f"em or en dash in output near {BODY[max(0, i - 60):i + 20]!r}")
 
-OUT.write_text(add_anchors(BODY), encoding="utf-8")
-print(f"wrote {OUT.name}, {len(BODY.splitlines())} lines, {len(CONTROLS)} controls on {len(NODES)} boxes")
+from mcp_governance_interactive_edits import EDITS  # noqa: E402
+
+FINAL = add_anchors(BODY)
+for _old, _new in EDITS:
+    if FINAL.count(_old) != 1:
+        sys.exit(f"page edit does not apply exactly once: {_old[:80]!r}")
+    FINAL = FINAL.replace(_old, _new)
+for ch in (chr(0x2014), chr(0x2013)):
+    if ch in FINAL:
+        i = FINAL.index(ch)
+        sys.exit(f"em or en dash in final page near {FINAL[max(0, i - 60):i + 20]!r}")
+OUT.write_text(FINAL, encoding="utf-8")
+print(f"wrote {OUT.name}, {len(FINAL.splitlines())} lines, {len(CONTROLS)} controls on {len(NODES)} boxes")
 
 # ---- quote table in the fact check file ----------------------------------
 QUOTES_BEGIN, QUOTES_END = "<!-- Begin source quotes -->", "<!-- End source quotes -->"
@@ -1196,12 +1227,12 @@ if head + table + tail != notes:
     NOTES.write_text(head + table + tail, encoding="utf-8")
     print(f"updated the quote table in {NOTES.name}")
 
-for m in re.finditer(r"<(p|dd|td|li)\b[^>]*>(.*?)</\1>", BODY, re.S):
+for m in re.finditer(r"<(p|dd|td|li)\b[^>]*>(.*?)</\1>", FINAL, re.S):
     if m.group(1) == "li" and "<p" in m.group(2):
         continue
     words = len(re.sub(r"<[^>]+>", " ", m.group(2)).split())
     if words > 60:
         print(f"WARN {words} words: {re.sub(r'<[^>]+>', ' ', m.group(2))[:70]!r}")
-defined = set(re.findall(r'\bid="([^"]+)"', BODY))
-for t in sorted(set(re.findall(r'href="#([^"]+)"', BODY)) - defined):
+defined = set(re.findall(r'\bid="([^"]+)"', FINAL))
+for t in sorted(set(re.findall(r'href="#([^"]+)"', FINAL)) - defined):
     print(f"WARN dead anchor #{t}")
