@@ -235,9 +235,7 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 .cells{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;height:12px}
 .cells i{background:var(--line)}
 .cells i.on{background:var(--c)}
-.cells i.lift{background:repeating-linear-gradient(135deg,var(--c) 0 2px,transparent 2px 5px);outline:1px solid var(--c);outline-offset:-1px}
 .d-bars .v{font:600 0.86rem var(--mono);text-align:right}
-.d-lift{font-size:0.82rem;color:var(--muted);margin-top:10px}
 .d-block{margin-top:20px;padding-top:12px;border-top:1px solid var(--line);font-size:0.9rem}
 .d-block .lbl{margin-bottom:6px}
 .d-block ul{margin:0;padding-left:1.1rem}
@@ -310,7 +308,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <span class="ratio" aria-hidden="true"><i class="r-high" style="flex:{{HIGH}}"></i><i class="r-medium" style="flex:{{MED}}"></i><i class="r-low" style="flex:{{LOW}}"></i></span></dd>
         <dt>Public record</dt><dd>{{EXPL}} exploited, {{DISC}} disclosed, {{THEO}} theoretical</dd>
         <dt>Elements</dt><dd>{{NEXT}} external entities, {{NPROC}} processes, {{NSTORE}} data stores, {{NFLOW}} data flows, {{NTB}} trust boundaries</dd>
-        <dt>Source files</dt><dd><a href="mcp-governance-stride.drawio">draw.io diagram</a>, <a href="mcp-governance-stride.threats.tsv">register as TSV</a></dd>
+        <dt>Source files</dt><dd><a href="mcp-governance-stride.drawio">draw.io diagram</a>, <a href="mcp-governance-stride.dfd.txt">text flow description</a>, <a href="mcp-governance-stride.threats.tsv">register as TSV</a></dd>
       </dl>
     </div>
   </header>
@@ -344,9 +342,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <div class="fig-scroll" tabindex="0" role="region" aria-label="Data flow diagram">{{SVG}}</div>
         <p class="fig-hint">The diagram scrolls sideways.</p>
         <figcaption>
+          <p>Policy approvals feed Git, a sync pipeline and policy targets. Clients and agents call the gateway, which calls the backend and exports logs; F5 represents attempted bypasses. F4 draws only the backend-to-gateway response leg.</p>
           <ul class="legend">
-            <li><span class="sw r-high">S1</span><span class="sw r-medium">T1</span><span class="sw r-low">R1</span> DREAD rating</li>
-            <li><span class="sw pub r-high">E5</span> Solid: matches a public record</li>
+            <li><span class="sw r-high">E4</span><span class="sw r-medium">S1</span><span class="sw r-low">R2</span> DREAD rating</li>
+            <li><span class="sw pub r-medium">S8</span> Solid: matches a public record</li>
             <li><span class="bx"></span> Trust boundary</li>
             <li><span class="ln"></span> Bypass flow</li>
           </ul>
@@ -384,11 +383,14 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="sec" id="method">
       <div class="sec-head"><h2 id="h-method"><a class="sec-link" href="#method">Method</a></h2></div>
       <dl class="method">
-        <dt>STRIDE per element</dt><dd>External entities are checked for spoofing and repudiation, processes for all six categories, data stores for tampering, repudiation, information disclosure and denial of service, and data flows for tampering, information disclosure and denial of service. Every one of these cells has at least one threat.</dd>
-        <dt>DREAD</dt><dd>Damage, Reproducibility, Exploitability, Affected users and Discoverability, each 1 to 10. The score is the mean of the five. High is 6 or above, Medium 4 to 5.9, Low below 4.</dd>
-        <dt>Evidence</dt><dd><b>Exploited</b>: used in attacks, shown by a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident. <b>Disclosed</b>: a public CVE, vendor advisory or researcher demo, with no confirmed attacks found. <b>Theoretical</b>: no matching public record found. Many records come from other MCP products and show that the failure type is real, not that this design is hit. The match between a record and a threat is <span class="tg i">inference</span></dd>
-        <dt>Evidence rule</dt><dd>Where a public record exists, Discoverability is raised to at least 7. Where the record is exploited, Reproducibility and Exploitability are raised to at least 7 too. The detail view shows which scores were raised.</dd>
-        <dt>Basis</dt><dd>V numbers point to quoted claims in the design page's <a href="{{REPO}}mcp-governance-microsoft-interactive.factcheck.md">fact check</a>. Ids starting with ctrl- or gap- are controls and gaps on the <a href="{{DESIGN}}">design page</a>.</dd>
+        <dt>Scope and assets</dt><dd>This is a design-stage review of the proposed governance architecture. Protected assets are credentials, company data, tool and policy integrity, attribution records and service availability. The boxes aggregate products with different enforcement paths; they do not establish a deployed topology or an effective security boundary.</dd>
+        <dt>STRIDE per element</dt><dd>External entities are checked for spoofing and repudiation, processes for all six categories, data stores for tampering, repudiation, information disclosure and denial of service, and data flows for tampering, information disclosure and denial of service. Store repudiation covers approval and change history in DS1 and DS2, and audit evidence in DS3. The 71 selected cells have threats; this checks enumeration, not completeness or correct mitigation. Related rows can describe stages or consequences of the same attack; their scores are not additive.</dd>
+        <dt>DREAD</dt><dd>Damage, Reproducibility, Exploitability, Affected users and Discoverability, each 1 to 10. The score is the mean of the five. High is 6 or above, Medium 4 to 5.9, Low below 4. These bands are local choices. Scores are uncalibrated AI estimates for the stated scenarios, not measured likelihood, CVSS or residual risk. No tenant attack or mitigation was tested.</dd>
+        <dt>Evidence</dt><dd><b>Exploited</b>: the linked failure class was used in attacks, shown by a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident. <b>Disclosed</b>: a public CVE, vendor advisory or researcher demo; exploitation was not confirmed by the sources checked. <b>Theoretical</b>: no matching public record is attached. Records from other products do not establish that this design, its Microsoft services or their current versions are affected. Record matching is <span class="tg i">inference</span></dd>
+        <dt>Evidence and scores</dt><dd>Public records are tracked separately from scores. An exploit in another product does not establish reproducibility or ease of exploitation here. No automatic score increase is applied.</dd>
+        <dt>Related controls</dt><dd>Control links locate relevant design choices, not verified fixes. Server-side input validation, per-caller tool authorization, TLS validation and local process isolation still need implementation-specific review. Preview detection is an optional layer; authentication, authorization and network restrictions must work without it.</dd>
+        <dt>Unmodeled detail</dt><dd>OAuth authorization servers and consent exchanges, downstream APIs and data stores, package distribution, individual product boundaries, full response routes and non-gateway audit feeds are not drawn. Manual Microsoft 365 administration is not an automated pipeline target. OAuth confused-deputy, token-passthrough, state-handle and protocol-version-specific session attacks in the <a href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices">MCP security guidance</a> need a separate detailed review. A gateway does not inspect local stdio traffic.</dd>
+        <dt>Basis and verification</dt><dd>V numbers point to quoted claims in the design page's <a href="{{REPO}}mcp-governance-microsoft-interactive.factcheck.md">fact check</a>. Ids starting with ctrl- or gap- link to that design. The <a href="{{REPO}}mcp-governance-stride.factcheck.md#row-by-row-review-2026-11-12">row-by-row review</a> records corrections, evidence exclusions and unresolved validation work.</dd>
       </dl>
     </section>
   </main>
@@ -397,7 +399,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human. <span id="evidence">Sources and review notes: <a href="{{REPO}}mcp-governance-stride.factcheck.md">fact check</a>.</span></span></p>
     <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
       <dl>
-        <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI. It is not stated in a source.</dd>
+        <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
       </dl>
     </section>
   </footer>
@@ -419,7 +421,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   <div id="d-tview">
     <div class="d-score"><b id="d-score"></b><span class="rt" id="d-rating"></span><span class="tg i">inference</span></div>
     <ol class="d-bars" id="d-bars"></ol>
-    <p class="d-lift" id="d-lift" hidden></p>
+    <p id="d-lift" hidden></p>
     <div class="d-block"><p class="lbl">Evidence</p><div id="d-ev"></div></div>
     <div class="d-block"><p class="lbl">Controls on the design page</p><ul id="d-ctrl"></ul></div>
     <div class="d-block"><p class="lbl">Basis</p><p id="d-basis"></p></div>
@@ -442,7 +444,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const ORDER = id => 'STRIDE'.indexOf(id[0]) * 100 + parseInt(id.slice(1), 10);
-  const LV = { exploited: 0, disclosed: 1, theoretical: 2 };
+  const LV = { exploited: 2, disclosed: 1, theoretical: 0 };
   const st = { cat: new Set(), rating: new Set(), pub: false, el: null, sort: { k: 'score', dir: -1 }, sel: null };
   const drawer = $('#detail');
   const tbody = $('#reg tbody');
@@ -521,9 +523,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 
   function card(t) {
     const mini = D.factors.map((f, i) => {
-      const v = t.dr[i], r = t.raw[i];
-      return '<span title="' + f + ' ' + v + (v !== r ? ', raised from ' + r : '') + '">' + ['D', 'R', 'E', 'A', 'Di'][i] + '<b>' + v + '</b>' +
-        '<i><u style="width:' + r * 10 + '%"></u><s style="width:' + (v - r) * 10 + '%"></s></i></span>';
+      const v = t.dr[i];
+      return '<span title="' + f + ' ' + v + '">' + ['D', 'R', 'E', 'A', 'Di'][i] + '<b>' + v + '</b>' +
+        '<i><u style="width:' + v * 10 + '%"></u></i></span>';
     }).join('');
     const ev = t.refs.length ? '<span class="lv lv-' + t.level + '">' + t.level + '</span>' + t.refs.length + (t.refs.length === 1 ? ' record' : ' records')
       : '<span class="lv lv-theoretical">theoretical</span>';
@@ -588,18 +590,14 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     $('#d-score').textContent = t.score.toFixed(1);
     $('#d-rating').textContent = t.rating;
     $('#d-bars').innerHTML = D.factors.map((f, i) => {
-      const v = t.dr[i], r = t.raw[i];
+      const v = t.dr[i];
       let cells = '';
-      for (let c = 1; c <= 10; c++) cells += '<i class="' + (c <= r ? 'on' : c <= v ? 'lift' : '') + '"></i>';
+      for (let c = 1; c <= 10; c++) cells += '<i class="' + (c <= v ? 'on' : '') + '"></i>';
       return '<li><span>' + f + '</span><span class="cells" aria-hidden="true">' + cells + '</span><span class="v">' + v + '</span></li>';
     }).join('');
-    const lifted = D.factors.map((f, i) => t.dr[i] !== t.raw[i] ? f + ' from ' + t.raw[i] + ' to ' + t.dr[i] : null).filter(Boolean);
-    const lift = $('#d-lift');
-    lift.hidden = !lifted.length;
-    lift.textContent = lifted.length ? 'Raised by the evidence rule: ' + lifted.join(', ') + '. Hatched cells show the rise.' : '';
     $('#d-ev').innerHTML = t.refs.length
       ? '<p><span class="lv lv-' + t.level + '">' + t.level + '</span></p><ul>' +
-        t.refs.map(r => '<li><a href="' + esc(r[2]) + '" rel="noopener">' + esc(r[1]) + '</a>' + (r[0] !== t.level ? ' <span class="lv lv-' + r[0] + '">' + r[0] + '</span>' : '') + '</li>').join('') + '</ul>'
+        t.refs.map(r => '<li><a href="' + esc(r[2]) + '" rel="noopener">' + esc(r[1]) + '</a>' + (r[0] !== t.level ? ' <span class="lv lv-' + r[0] + '">' + r[0] + '</span>' : '') + '</li>').join('') + '</ul><p>Failure-class match <span class="tg i">inference</span> Product, version and deployment applicability require separate confirmation.</p>'
       : '<p><span class="lv lv-theoretical">theoretical</span> No matching public record found.</p>';
     $('#d-ctrl').innerHTML = t.ctrls.map(c => '<li><a href="' + D.design + '#' + c + '">' + esc(D.ctrl[c] || c) + '</a></li>').join('');
     const basis = esc(t.basis.charAt(0).toUpperCase() + t.basis.slice(1));

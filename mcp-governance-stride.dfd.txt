@@ -1,0 +1,38 @@
+MCP governance: logical DFD
+
+Governance:
+  EE3 Requester/approver -> DS1 Approved list in Git -> P1 Sync pipeline
+  P1 -> [F1 Policy update] -> DS2 Policy targets -> P2 Managed client
+                                             -> P3 Cloud agents
+  Microsoft 365 connector access is applied manually; F1 does not establish API support.
+
+Tool execution:
+  EE1 Developer -> P2 --[F2 Tool call]--> P4 Gateway --[F3]--> P5 MCP server
+  EE2 User      -> P3 --[F2 Tool call]--> P4
+                  P3 -> P6 Runtime detection
+                  P4 <--[F4 Response]--- P5
+                  P4 -> DS3 Logs and audit
+
+Attempted bypasses (requirements to prevent, not verified blocks):
+  P2 --[F5]--> P5
+  P2 --[F5]--> EE4 Unapproved server
+
+Flow description: a reviewed list supplies policy targets through a pipeline where
+automation is supported. Clients and cloud agents request tools through a gateway;
+the gateway calls the backend and exports audit data. F5 covers direct backend
+access and unapproved external servers. F4 draws the backend response leg only;
+gateway-to-client response legs and cloud-agent bypass legs are not drawn.
+
+Logical zones (not proof of effective security boundaries):
+  TB0 Internet: EE4
+  TB1 Company governance: EE3, DS1, P1
+  TB2 Policy targets: DS2
+  TB3 Managed Windows device: EE1, P2
+  TB4 Microsoft cloud agents: EE2, P3, P6
+  TB5 Company Azure gateway: P4
+  TB6 Private backend network (design requirement): P5
+  TB7 Monitoring: DS3
+
+The figure aggregates product variants. OAuth exchanges, downstream APIs and
+stores, package distribution, external detector boundaries and non-gateway audit
+feeds need more detailed models. A gateway does not inspect local stdio traffic.

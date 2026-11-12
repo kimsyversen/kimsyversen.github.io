@@ -1,30 +1,11 @@
-# MCP governance STRIDE and DREAD model: plan
+# MCP governance STRIDE model: open work
 
-Source page: mcp-governance-microsoft-interactive.html (read only, not edited).
-Outputs: mcp-governance-stride.drawio (3 pages), .threats.tsv, .dfd.xml.
-Rebuild: `python3 -I scripts/build-mcp-stride.py`. Data lives in scripts/mcp_stride_data.py.
+The 2026-11-12 verification review is complete for the current design-stage scope. See the fact check for all 74 row verdicts, source checks and evidence exclusions. Builders and consistency checks are recorded there. Publication remains the owner's separate action from `master`.
 
-## Done
-- DFD with 4 external entities, 6 processes, 3 data stores, 5 flows, trust boundaries TB0 to TB7.
-- STRIDE per element: 71 applicable cells, each with at least one threat (74 threats after three incident-based rows).
-- DREAD score per threat: 14 High, 54 Medium, 6 Low (after the evidence lift).
-- Evidence level per threat: 3 exploited, 12 disclosed, 59 theoretical. Links in OBSERVED in scripts/mcp_stride_data.py, checked 2026-11-12.
-- SC-500 skill mapping per threat; 7 threats flagged outside SC-500.
-- DFD rendered in draw.io; edge routing fixed (explicit waypoints, no edge through a shape).
+Before treating the inventory as a validated deployment threat model:
 
-## Open
-- Page requested 2026-11-12: mcp-governance-stride.html, index entry 12.
-- No threat is tested in a tenant. All scores are AI estimates.
-- draw.io's own render of the final DFD was not seen. Open the .drawio file once to confirm label fit.
-- Recheck the OBSERVED links, the CISA KEV file and the 208 source quotes when the model is next used (scripted check, see the fact check).
-
-- 2026-11-12: threat ids renumbered by STRIDE letter (S1, T1 ...); the DFD shows each element's threat ids as chips coloured by DREAD rating (solid = public record); the register drops the SC-500 column. Rendered all 3 pages and checked them.
-- 2026-11-12: external entities renamed EE1 to EE4 so they no longer clash with threat ids E1 to E7.
-
-## Page (2026-11-12)
-Owner asked for one interactive page: the DFD from the .drawio on top, click a threat for its detail, the DREAD register below.
-- Builder: `python3 -I scripts/build-mcp-stride-page.py`. Reads node and boundary geometry and edge routes from page 1 of the .drawio, threat data from scripts/mcp_stride_data.py. Never hand edit the html.
-- Diagram: inline SVG, chips are buttons. Selecting a chip opens a detail drawer (DREAD bars, evidence links, basis, page controls). Selecting an element box filters both views to it.
-- Filters (STRIDE letter, rating, public record) apply to diagram and register together.
-- Register: sortable table, row opens the same drawer. Deep link: #t-<id>.
-- Checks: section_anchors --check, desktop and 375 px width, no sideways page scroll, no console errors, keyboard open and close.
+- Decompose the selected gateway and agent products; add OAuth/consent exchanges, downstream services and stores, external detector boundaries, package distribution, full response routes, cloud bypasses and audit feeds.
+- Review OAuth confused deputy, token passthrough/resource binding, client metadata and state/session ownership for the deployed protocol and SDK versions.
+- Validate every applicable attack precondition and mitigation in a representative tenant/device environment. Record control owners, status and remaining risk.
+- Calibrate DREAD factor values against actual data sensitivity, reach and attack conditions, or choose a risk method with documented criteria. Existing scores are uncalibrated AI estimates.
+- Render the draw.io exports in draw.io (not installed on the machine used for the 2026-11-12 recheck). The page's layout at desktop and 375 px, console, deep links, filters and register sorting were checked on 2026-11-12 (see the fact check).

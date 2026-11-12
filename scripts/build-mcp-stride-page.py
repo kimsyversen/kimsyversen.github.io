@@ -123,16 +123,11 @@ def point_at(path, frac):
 
 # ---------- threats ----------
 def threats():
-    raw = {}
-    per = {}
-    for t in build.THREATS:
-        per[t[1]] = per.get(t[1], 0) + 1
-        raw[f"{t[1]}{per[t[1]]}"] = t[5]
     out = []
     for tid, el, cat, text, ctrls, _sc, dr, basis in build.numbered():
         s = dread_score(dr)
         out.append({"id": tid, "el": el, "cat": cat, "text": text, "ctrls": ctrls, "dr": list(dr),
-                    "raw": list(raw[tid]), "score": s, "rating": rating(s), "level": level_of(tid),
+                    "score": s, "rating": rating(s), "level": level_of(tid),
                     "refs": [list(r) for r in OBSERVED.get(tid, [])],
                     "basis": basis.replace("AI inference", "interpretation by AI")})
     return out
@@ -203,7 +198,7 @@ SHORT = {
     "EE3": "Requester and approver", "DS1": "Approved list in Git", "P1": "Sync pipeline",
     "DS2": "Policy targets (GitHub, Foundry, Power Platform, M365 admin center)", "EE1": "Developer",
     "P2": "Managed client (VS Code, Windows device)", "EE2": "M365 Copilot user", "P3": "Cloud agents",
-    "P6": "Defender checks (preview)", "P4": "Gateway (API Management or AI Gateway)", "P5": "Company MCP server",
+    "P6": "Runtime detection", "P4": "Gateway (API Management or AI Gateway)", "P5": "Company MCP server",
     "EE4": "Unapproved or malicious MCP server", "DS3": "Logs and Purview audit",
 }
 

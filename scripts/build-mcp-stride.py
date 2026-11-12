@@ -189,7 +189,7 @@ def dfd_page(rows):
     node("P2", 220, 400, 180, 150, "Managed client (VS Code, Windows device)", "proc")
     node("EE2", 465, 420, 115, 110, "M365 Copilot user", "ext")
     node("P3", 620, 395, 190, 120, "Cloud agents", "proc")
-    node("P6", 620, 530, 190, 100, "Defender checks (preview)", "proc")
+    node("P6", 620, 530, 190, 100, "Runtime detection", "proc")
     node("P4", 880, 410, 215, 130, "Gateway (API Management or AI Gateway)", "proc")
     node("P5", 1275, 410, 245, 130, "Company MCP server", "proc")
     node("EE4", 60, 790, 320, 70, "Unapproved or malicious MCP server", "ext")
@@ -214,7 +214,7 @@ def dfd_page(rows):
 
     p.edge("EE3", "DS1", "pull request", flow)
     p.edge("DS1", "P1", "on merge", flow)
-    fl("P1", "DS2", "F1", "policy sync", flow)
+    fl("P1", "DS2", "F1", "policy update", flow)
     p.edge("DS2", "P2", "applied", thin + anc(0.05, 1, 0.5, 0), pts=[(1021, 322), (310, 322)])
     p.edge("DS2", "P3", "applied", thin + anc(0.15, 1, 0.5, 0), pts=[(1063, 338), (715, 338)])
     p.edge("EE1", "P2", "uses", flow + anc(1, 0.5, 0, 0.5))
@@ -225,12 +225,12 @@ def dfd_page(rows):
     fl("P4", "P5", "F3", "calls", flow + anc(1, 0.3, 0, 0.3))
     fl("P5", "P4", "F4", "response", flow + anc(0, 0.75, 1, 0.75))
     p.edge("P4", "DS3", "log", thin + anc(0.6, 1, 0.5, 0))
-    fl("P2", "P5", "F5", "direct call: blocked", bad + anc(0.4, 1, 0.5, 1), pts=[(292, 700), (1397, 700)])
+    fl("P2", "P5", "F5", "direct bypass attempt", bad + anc(0.4, 1, 0.5, 1), pts=[(292, 700), (1397, 700)])
     fl("P2", "EE4", "F5", "unapproved server", bad + anc(0.1, 1, 0.5, 0), show=False)
 
     legend = ("<div style='font-size:12px;font-weight:bold;color:#1F2937;margin-bottom:4px;'>How to read it</div>"
-              f"<div style='line-height:19px;'>{chip('S1', 'High', False)} High {chip('T1', 'Medium', False)} Medium {chip('R1', 'Low', False)} Low: DREAD rating<br>"
-              f"{chip('E5', 'High', True)} solid chip: matches a public record<br>"
+              f"<div style='line-height:19px;'>{chip('E4', 'High', False)} High {chip('S1', 'Medium', False)} Medium {chip('R2', 'Low', False)} Low: DREAD rating<br>"
+              f"{chip('S8', 'Medium', True)} solid chip: matches a public record<br>"
               "Ids: S spoofing, T tampering, R repudiation, I information disclosure, D denial of service, E elevation of privilege<br>"
               "<span style='color:#B03A36;'>Red dashed box</span>: trust boundary. "
               "<span style='color:#B03A36;'>Red dashed line</span>: bypass flow</div>")
@@ -304,11 +304,54 @@ def sc500_page(rows):
     for code, text in SC500.items():
         ids = sorted(by.get(code, []), key=lambda t: ("STRIDE".index(t[0]), int(t[1:])))
         out.append({"cells": [esc(text), esc(", ".join(ids)) if ids else "<i>not used by an MCP threat</i>", str(len(ids))]})
-    out.append({"cells": ["<b>Mitigations outside the SC-500 outline (GitHub, VS Code, Intune, Power Platform)</b>",
+    out.append({"cells": ["<b>Related controls outside the SC-500 outline (GitHub, VS Code, Intune, Power Platform)</b>",
                           esc(", ".join(r[0] for r in rows if OUTSIDE in r[5])), str(sum(1 for r in rows if OUTSIDE in r[5]))],
                 "bg": {0: "#FFF9DB"}})
-    return table_page("3 SC-500 map", ["SC-500 skill measured (Microsoft Learn study guide, page last updated 2026-05-13)", "Threat ids it helps with", "Count"],
-                      out, [640, 560, 50], "SC-500 skills used as mitigations (skill names as published)")
+    return table_page("3 SC-500 map", ["SC-500 skill measured (Microsoft Learn study guide, page last updated 2026-05-13)", "Related threat ids", "Count"],
+                      out, [640, 560, 50], "Related SC-500 study topics (not verified mitigations; skill names as published)")
+
+
+def dfd_text():
+    """ASCII companion: logical flows and design requirements, not deployment evidence."""
+    return """MCP governance: logical DFD
+
+Governance:
+  EE3 Requester/approver -> DS1 Approved list in Git -> P1 Sync pipeline
+  P1 -> [F1 Policy update] -> DS2 Policy targets -> P2 Managed client
+                                             -> P3 Cloud agents
+  Microsoft 365 connector access is applied manually; F1 does not establish API support.
+
+Tool execution:
+  EE1 Developer -> P2 --[F2 Tool call]--> P4 Gateway --[F3]--> P5 MCP server
+  EE2 User      -> P3 --[F2 Tool call]--> P4
+                  P3 -> P6 Runtime detection
+                  P4 <--[F4 Response]--- P5
+                  P4 -> DS3 Logs and audit
+
+Attempted bypasses (requirements to prevent, not verified blocks):
+  P2 --[F5]--> P5
+  P2 --[F5]--> EE4 Unapproved server
+
+Flow description: a reviewed list supplies policy targets through a pipeline where
+automation is supported. Clients and cloud agents request tools through a gateway;
+the gateway calls the backend and exports audit data. F5 covers direct backend
+access and unapproved external servers. F4 draws the backend response leg only;
+gateway-to-client response legs and cloud-agent bypass legs are not drawn.
+
+Logical zones (not proof of effective security boundaries):
+  TB0 Internet: EE4
+  TB1 Company governance: EE3, DS1, P1
+  TB2 Policy targets: DS2
+  TB3 Managed Windows device: EE1, P2
+  TB4 Microsoft cloud agents: EE2, P3, P6
+  TB5 Company Azure gateway: P4
+  TB6 Private backend network (design requirement): P5
+  TB7 Monitoring: DS3
+
+The figure aggregates product variants. OAuth exchanges, downstream APIs and
+stores, package distribution, external detector boundaries and non-gateway audit
+feeds need more detailed models. A gateway does not inspect local stdio traffic.
+"""
 
 
 def main():
@@ -326,6 +369,7 @@ def main():
         diagrams += f'<diagram id="p{i+1}" name="{esc(pg.name)}">{pg.xml(w, h)}</diagram>'
     (ROOT / f"{BASE}.drawio").write_text(f'<mxfile host="app.diagrams.net" version="26.0.0">{diagrams}</mxfile>\n')
     (ROOT / f"{BASE}.dfd.xml").write_text(pages[0].xml(1560, 900) + "\n")
+    (ROOT / f"{BASE}.dfd.txt").write_text(dfd_text())
     scores = [dread_score(r[6]) for r in rows]
     print(len(rows), "threats;", {k: sum(1 for s in scores if rating(s) == k) for k in ("High", "Medium", "Low")})
 

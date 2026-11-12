@@ -42,3 +42,7 @@ Checked 5 November 2026 for the index redesign. This checks the index against th
 - Not tested: entry 08 at 375px in light mode, a screen reader, physical devices.
 
 - Entry 09 description, checked 8 Nov 2026 against `mcp-governance-microsoft.html` and its fact check: it says "proposed" because the design is untested, and every product claim on that page does link to an exact quote (91 quotes).
+
+## Entry 12 review, 12 Nov 2026
+
+The revised MCP STRIDE description matches `mcp-governance-stride.html` and its row-by-row fact check: reviewed conditional scenarios, public evidence, explicit model limits, estimated DREAD scores and related controls. Entry number, URL and same-day content/footer dates are preserved. Link destinations are checked locally; browser rendering was blocked by the environment's URL policy in this session.
