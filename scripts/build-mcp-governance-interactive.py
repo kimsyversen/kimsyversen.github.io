@@ -1002,6 +1002,7 @@ MAST = f"""
       <li><a href="#rollout">Rollout</a></li>
       <li><a href="#gaps">Gaps</a></li>
       <li class="view-preview"><a href="#preview">With preview</a></li>
+      <li><a href="mcp-governance-stride.html">Threat model</a></li>
     </ul>
     <div class="seg-wrap"><span class="seg-lbl" id="seg-lbl">Select design</span>
     <div class="seg" role="group" aria-labelledby="seg-lbl">
