@@ -57,6 +57,17 @@ Checked 2026-11-12 against the first page's quotes and the design text. Verdicts
 | Foundry tool list limits one connection and does not stop another server | interpretation by AI | V69 and V101 describe the list and the Network control. No quote states the second half. |
 | Cloud agent: the client allowlist is the main control left | interpretation by AI | Tagged inference. V23 only says the firewall does not apply to MCP server processes. |
 | Tests for merge and hand edit name pipeline targets only | design | Follows from V171. |
+| Windows outbound limits: Intune firewall blocks unmatched outbound traffic; Microsoft says it fits highly secure environments | sourced | V32, V33 match the live pages. Layer 4 is interpretation by AI (traffic leaving the device). Not tested on a device. |
+| Windows outbound block can miss traffic via proxies, secure DNS, some VPN tunnels | sourced | V34. |
+| Global Secure Access MCP firewall: URL patterns, preview, remote servers only | sourced | V29, V30, V31. Layer 4 is AI estimate, labelled. |
+| Defender for Endpoint covers local agents, not the Foundry, Copilot Studio and Agent 365 rules; layer not stated | sourced | V146 to V150. The page says the layer is not stated. |
+| Defender real-time protection: Foundry layers 3 and 6, Copilot Studio layer 3 | sourced | V116 to V120: tool calls and tool responses for Foundry, tool invocations for Copilot Studio. Layer numbers map the page's own layer list. |
+| Defender on the Agent 365 path covers customer MCP tools onboarded to Agent 365 | sourced, inference on release status | V121, V122. The preview status comes from V43. |
+| Agent 365 integration: server block on API Management v2 and AI Gateway, tool controls only on AI Gateway | sourced | V36, V38, V41, V42, V194. |
+| Agent 365 BYO route skips the gateway; tool blocking planned | sourced | V85, V86, V44. |
+| Layer 4 for tool threat protection | sourced | The first page states layer 4. |
+| Layer 1 for Server trust prompt | interpretation by AI | V158 says the person makes a trust decision about a server. Layer 1 is "which server". Not tested. |
+| Purview audit scope: Agent 365 agent instances; MCP calls as agent-to-tools | sourced, inference on MCP | V203 to V208. The Purview pages do not name MCP; tagged on the page. |
 | Control counts per box | derived | Counted by the builder from the control mapping. |
 | Objective and layer filters | derived | Taken from each control's stated objective and layer. Guardrails have no objective, so the Objective filter hides them. |
 
