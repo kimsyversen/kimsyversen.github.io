@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MCP Governance in a Microsoft ecosystem, interactive</title>
+<meta name="description" content="The MCP governance design as one interactive diagram: select a box to see its controls, and filter by objective or call layer.">
+<meta name="theme-color" content="#F3F0E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15140F" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* A printed worksheet: paper, ink, hairline rules. Red has one meaning on this page: caution
+   (preview, not verified, not tested). Same fonts and look as the threat modeling page. */
+:root{
+  color-scheme:light;
+  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F;
+  --red:#B5321C; --red-soft:#F0DCD3; --hatch:rgba(181,50,28,.13); --hover:rgba(23,21,15,.04);
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB;
+    --red:#F07A60; --red-soft:#3B211A; --hatch:rgba(240,122,96,.12); --hover:rgba(236,231,219,.05);
+  }
+}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+html{scroll-padding-top:56px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+svg a{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:pointer}
+svg a:hover{fill:var(--red)}
+a:focus-visible,button:focus-visible,summary:focus-visible,.fig-scroll:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+p,li,td,th,dd,summary,figcaption,h4{text-wrap:balance}
+h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
+h3{font-size:1rem;font-weight:700;line-height:1.25}
+p{margin:0}
+code{font-family:var(--mono);font-size:0.86em;overflow-wrap:anywhere}
+.muted{color:var(--muted)}
+.lbl{font:600 0.7rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* tags: how sure the page is */
+.tg{display:inline;font:500 0.7rem/1.5 var(--mono);padding:0 5px;border:1px solid var(--ink);margin:0 1px;white-space:normal;color:var(--ink)}
+.nw{white-space:nowrap}
+.tg.r{border-color:var(--muted);color:var(--muted);background:var(--hover)}
+.tg.i{border-style:dashed;border-color:var(--muted);color:var(--muted)}
+.tg.u,.tg.pv{border-color:var(--red);color:var(--red)}
+.legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--rule);margin:0;padding:0;list-style:none}
+.legend li{padding:12px 18px;border-left:1px solid var(--line);display:grid;gap:6px;align-content:start;font-size:0.88rem;color:var(--muted)}
+.legend li:first-child{padding-left:0;border-left:0}
+.legend li .tg{justify-self:start}
+@media (max-width:800px){
+  .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .legend li:nth-child(odd){border-left:0;padding-left:0}
+  .legend li:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:420px){
+  .legend{grid-template-columns:1fr}
+  .legend li{border-left:0;padding-left:0;border-top:1px solid var(--line)}
+  .legend li:first-child{border-top:0}
+}
+
+/* masthead */
+.mast{border-top:6px solid var(--rule);padding-top:10px}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
+h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-height:0.95;letter-spacing:-0.035em;margin:26px 0 0;margin-left:-0.04em}
+.intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px 56px;align-items:start;padding:26px 0 30px}
+.lead{font-size:clamp(1.1rem,1.9vw,1.36rem);line-height:1.42;max-width:36rem}
+.spec{margin:0;display:grid;grid-template-columns:auto 1fr;font-size:0.9rem;border-top:1px solid var(--line)}
+.spec dt,.spec dd{padding:7px 0;border-bottom:1px solid var(--line)}
+.spec dt{padding-right:18px}
+.spec dd{margin:0}
+.spec dd.w{color:var(--red)}
+@media (max-width:800px){.intro{grid-template-columns:1fr}}
+@media (max-width:560px){
+  .intro{gap:16px;padding:20px 0}
+  .spec dt,.spec dd{padding-block:5px}
+}
+
+/* contents bar */
+.toc{position:sticky;top:0;z-index:5;background:var(--bg);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:34px}
+.toc ul{list-style:none;margin:0;padding:0;display:flex;gap:4px 22px;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
+.toc a{display:block;padding:11px 0;font-size:0.84rem;text-decoration:none;color:var(--muted)}
+.toc a:hover,.toc a.on{color:var(--ink);text-decoration:underline;text-decoration-color:var(--rule)}
+.toc .btn{margin-left:auto}
+.skip{position:absolute;top:8px;left:16px;z-index:10;background:var(--bg);padding:8px 12px;transform:translateY(-150%)}
+.skip:focus{transform:none}
+.routes{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--line)}
+.routes li{padding:12px 16px;border-left:1px solid var(--line);display:grid;gap:3px;align-content:start}
+.routes li:first-child{border-left:0;padding-left:0}
+.routes a{font-weight:600}
+.routes p{color:var(--muted);font-size:0.9rem}
+.platform-links{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;padding:0;font-size:0.9rem}
+.decision{border-top:1px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0;display:grid;gap:5px}
+.decision p{max-width:48rem}
+.path{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-block:1px solid var(--line);counter-reset:step}
+.path li{padding:12px;display:grid;gap:5px;align-content:start;counter-increment:step;border-left:1px solid var(--line)}
+.path li:first-child{border-left:0;padding-left:0}
+.path li::before{content:counter(step,decimal-leading-zero);font:600 0.75rem var(--mono);color:var(--muted)}
+.path h4,.pilot-tests h4{margin:0;font:700 1rem/1.25 var(--display)}
+.path li p,.route-notes dd{font-size:0.9rem;color:var(--muted)}
+.route-notes{display:grid;gap:0;margin:0}
+.route-notes > div{display:grid;grid-template-columns:minmax(7rem,1fr) minmax(0,4fr);gap:4px 16px;padding:9px 0;border-bottom:1px solid var(--line)}
+.route-notes dt{font-weight:600}
+.route-notes dd{margin:0}
+.matrix{border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.matrix-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line)}
+.matrix-row > *{padding:10px 12px;min-width:0;overflow-wrap:anywhere}
+.matrix-row > :first-child{padding-left:0}
+.matrix-row h4{font-size:0.92rem;margin:0}
+.matrix-row p{font-size:0.87rem;line-height:1.45}
+.matrix-head{border-top:0;font:600 0.75rem/1.4 var(--body);color:var(--muted)}
+.matrix-detail{grid-column:1/-1;margin:0 0 12px;padding:0}
+.matrix-label{display:none;font-size:0.76rem;color:var(--muted)}
+.pilot-tests{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0;padding:0;list-style:none;border-top:1px solid var(--rule)}
+.pilot-tests li{display:grid;gap:5px;padding:12px 0;border-bottom:1px solid var(--line);align-content:start}
+.pilot-tests p{font-size:0.92rem;color:var(--muted)}
+.fig-hint{display:none;font-size:0.85rem;color:var(--muted)}
+@media (max-width:880px){.fig-hint{display:block}}
+.ev{white-space:nowrap}
+@media (max-width:800px){
+  .matrix-head{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .matrix-row{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 0;gap:8px 14px}
+  .matrix-row > *{padding:0}
+  .matrix-row h4,.matrix-detail{grid-column:1/-1}
+  .matrix-label{display:block}
+  .matrix-detail{margin:0}
+}
+@media (max-width:560px){
+  .routes,.path,.matrix-row,.pilot-tests{grid-template-columns:minmax(0,1fr)}
+  .routes li,.path li{border-left:0;border-top:1px solid var(--line);padding:9px 0}
+  .routes li:first-child,.path li:first-child{border-top:0}
+  .path li{grid-template-columns:2rem minmax(0,1fr);column-gap:8px}
+  .path li::before{grid-row:1/span 2;padding-top:3px}
+  .path li p{grid-column:2}
+  .route-notes > div{grid-template-columns:minmax(0,1fr)}
+}
+.btn{font:600 0.74rem/1 var(--body);letter-spacing:0.05em;text-transform:uppercase;border:1px solid var(--ink);background:none;color:var(--ink);padding:7px 10px;margin:5px 0;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+
+/* parts and sections */
+.part{margin-top:56px;border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:6px;grid-template-columns:minmax(0,1fr)}
+.part h2{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:800;font-stretch:108%;letter-spacing:-0.025em;line-height:1}
+.part .lbl b{color:var(--ink);font-weight:600}
+.blk{margin-top:44px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.blk > h3{font-size:1.3rem;font-weight:750;font-family:var(--display);letter-spacing:-0.01em;padding-top:12px;border-top:1px solid var(--rule)}
+.body{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.blk > .sub{color:var(--muted);font-size:0.93rem;max-width:46rem}
+.sec{margin-top:52px;border-top:1px solid var(--rule);padding-top:14px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.target-state{margin-top:32px;border-top:0;padding-top:0}
+.target-state .part{margin-top:0}
+.sh{display:grid;grid-template-columns:4.4rem minmax(0,1fr);gap:4px 14px;align-items:baseline}
+.sh .num{font:800 2.6rem/0.9 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.sh h2{grid-column:2}
+.goal{grid-column:2;font-size:0.95rem;color:var(--muted);max-width:44rem}
+.goal b{color:var(--ink);font-weight:600;margin-right:6px}
+@media (max-width:520px){.sh{grid-template-columns:3.2rem minmax(0,1fr)}.sh .num{font-size:2rem}}
+
+.glance{margin:0;padding:0;list-style:none;display:grid;border-top:1px solid var(--line)}
+.glance li{padding:9px 0;border-bottom:1px solid var(--line);font-size:0.95rem;display:grid;grid-template-columns:1.2rem minmax(0,1fr);gap:8px}
+.glance li::before{content:"";width:7px;height:7px;margin-top:0.55em;background:var(--ink)}
+@media (min-width:1000px){.glance.two{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px}}
+
+details.deep{border:1px solid var(--line)}
+details.deep > summary{cursor:pointer;list-style:none;padding:11px 14px;font-weight:600;font-size:0.92rem;display:flex;gap:12px}
+details.deep > summary::-webkit-details-marker{display:none}
+details.deep > summary::after{content:"+";font:500 1.2rem/1 var(--mono);margin-left:auto}
+details.deep[open] > summary::after{content:"\2212"}
+details.deep[open] > summary{border-bottom:1px solid var(--line)}
+details.deep > summary span{font-weight:400;color:var(--muted);margin-left:8px}
+details.deep > .body{padding:16px 14px 18px;display:grid;gap:12px;font-size:0.93rem;grid-template-columns:minmax(0,1fr)}
+.body > p{max-width:56rem}
+.body ul,.body ol{margin:0;padding-left:1.25rem;display:grid;gap:5px}
+.body ul ul,.body ol ul,.body ul ol,.body ol ol{margin-top:5px}
+.body li::marker{color:var(--muted)}
+.body li > p{margin:0}
+.pp{display:block}
+.pp + .pp{margin-top:5px}
+.body pre{margin:0;padding:12px 14px;overflow-x:auto;border:1px solid var(--line);background:var(--hover);font:0.8rem/1.5 var(--mono)}
+.body pre code{font-size:1em}
+.body strong{font-weight:600}
+
+/* tables */
+.tbl-wrap{overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;min-width:640px;font-size:0.88rem;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:10px 10px;border-top:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{padding-left:4px}
+.tbl thead th{font:600 0.68rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-top:8px;padding-bottom:8px;border-top:0;border-bottom:1px solid var(--rule)}
+.tbl tbody tr:first-child > *{border-top:0}
+.tbl td:first-child{font-weight:600}
+.tbl td p + p{margin-top:5px}
+.tbl.map{min-width:820px}
+.tbl.map td:first-child{width:19%}
+.src{min-width:760px}
+.src td.u{font:0.76rem/1.45 var(--mono);overflow-wrap:anywhere}
+.src td.d{font-size:0.8rem;color:var(--muted);white-space:nowrap}
+.src td:first-child{font-weight:400;width:26%}
+
+/* figures */
+figure{margin:0;display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.fig-scroll{overflow-x:auto}
+.fig-scroll svg{display:block;width:100%;height:auto;min-width:820px}
+figcaption{font-size:0.86rem;color:var(--muted);max-width:50rem}
+figcaption b{color:var(--ink);font-weight:600;margin-right:6px}
+.fg text{font-family:var(--body)}
+.fg .zone{fill:none;stroke:var(--line);stroke-width:1.2}
+.fg .zl{fill:var(--muted);font:600 10.5px var(--body);letter-spacing:0.12em}
+.fg .box{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.fg .box.pv,.fg .box.stop{stroke:var(--red);stroke-dasharray:6 4}
+.fg .box.cat{stroke:var(--muted);stroke-dasharray:2 4}
+.fg .bar{fill:var(--hover);stroke:var(--ink);stroke-width:1.5}
+.fg .t{fill:var(--ink);font:700 13.5px var(--display);text-anchor:middle}
+.fg .s{fill:var(--muted);font-size:11.5px;font-style:italic;text-anchor:middle}
+.fg .t.l,.fg .s.l{text-anchor:start}
+.fg .ln{fill:none;stroke:var(--ink);stroke-width:1.3}
+.fg .ln.stop{stroke:var(--red);stroke-dasharray:5 4}
+.fg .al{fill:var(--muted);font:italic 11.5px var(--body)}
+.fg .al.stop{fill:var(--red)}
+.fg .pt{fill:var(--ink)}
+.fg .pn{fill:var(--bg);font:700 11px var(--body);text-anchor:middle}
+.key .kp{fill:var(--ink)}
+.key .kn{fill:var(--bg);font:700 9px var(--body);text-anchor:middle}
+.key{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:0.84rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.key li{display:flex;align-items:center;gap:8px}
+.key svg{width:30px;height:14px;flex:none;overflow:visible}
+.key .k{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.key .k.pv,.key .k.stop{stroke:var(--red);stroke-dasharray:5 3}
+.key .k.cat{stroke:var(--muted);stroke-dasharray:2 3}
+
+/* five answers */
+.ans{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.ans li{display:grid;grid-template-columns:4rem minmax(0,1fr);gap:4px 18px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.ans .n{font:800 3rem/0.85 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.ans h3{font-size:1.25rem;font-weight:750;letter-spacing:-0.01em}
+.ans p{grid-column:2;color:var(--muted);font-size:0.95rem;max-width:46rem}
+.ans h3 + p{margin-top:-2px}
+@media (max-width:520px){.ans li{grid-template-columns:2.6rem minmax(0,1fr);gap:4px 12px}.ans .n{font-size:2.2rem}}
+
+/* layers */
+.layers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--rule);padding:0;margin:0;list-style:none}
+.layer{padding:18px 18px 20px;border-left:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.layer:first-child{border-left:0;padding-left:0}
+.layer:last-child{padding-right:0}
+.layer .n{font:800 3.2rem/0.85 var(--display);font-stretch:112%;letter-spacing:-0.03em}
+.layer h3{font-size:1.1rem;margin-top:4px}
+.layer ul{margin:0;padding-left:1rem;display:grid;gap:5px;font-size:0.88rem;color:var(--muted)}
+.layer li::marker{color:var(--muted)}
+.loop{grid-column:2/6;margin:0 10%;position:relative;height:20px;border:1.5px solid var(--ink);border-top:0}
+.loop::before{content:"";position:absolute;left:-6px;top:-9px;border:5px solid transparent;border-top:0;border-bottom:9px solid var(--ink)}
+.loop::after{content:"";position:absolute;right:-1.5px;top:-6px;height:6px;border-right:1.5px solid var(--ink)}
+.loop span{position:absolute;left:50%;bottom:-0.72em;transform:translateX(-50%);background:var(--bg);padding:0 12px;font-size:0.88rem;font-style:italic;white-space:nowrap}
+.layerbox{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));row-gap:6px}
+.layerbox .layers{display:contents}
+.fbm{display:none}
+@media (max-width:1000px){
+  .layerbox{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .layer:nth-child(odd){border-left:0;padding-left:0}
+  .layer:nth-child(even){padding-right:0}
+  .layer:nth-child(n+3){border-top:1px solid var(--line)}
+  .layer:last-child{grid-column:1/-1;border-left:0;padding-left:0}
+  .loop{display:none}
+  .fbm{display:block;grid-column:1/-1;border-top:1px solid var(--line);padding-top:10px;font-style:italic;font-size:0.9rem}
+}
+@media (max-width:520px){
+  .layerbox{grid-template-columns:1fr}
+  .layer{border-left:0;padding-left:0;padding-right:0;border-top:1px solid var(--line)}
+  .layer:first-child{border-top:0}
+}
+
+/* four surprises */
+.stack{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px;border-top:1px solid var(--rule)}
+.stack li{padding:14px 0 16px;border-bottom:1px solid var(--line);display:grid;gap:6px;align-content:start}
+.stack h4{margin:0;font:700 1.05rem/1.25 var(--display)}
+.stack p{font-size:0.92rem;color:var(--muted)}
+.stack p b{color:var(--ink);font-weight:600}
+@media (max-width:800px){.stack{grid-template-columns:1fr}}
+
+/* tiers */
+.tiers{list-style:none;margin:0;padding:0;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+.tiers li{display:grid;grid-template-columns:3.2rem minmax(0,1.2fr) minmax(0,1.6fr) minmax(0,1.3fr);gap:6px 18px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline;font-size:0.92rem}
+.tiers li:first-child{border-top:0}
+.tiers .n{font:800 2rem/1 var(--display)}
+.tiers .what{font-weight:600}
+.tiers .ex{color:var(--muted)}
+@media (max-width:700px){
+  .tiers li{grid-template-columns:2.4rem minmax(0,1fr);}
+  .tiers .what,.tiers .ex,.tiers .apt{grid-column:2}
+  .tiers .n{grid-row:1/span 3}
+}
+.chk{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px 8px}
+.chk li{border:1px solid var(--ink);padding:3px 9px;font-size:0.86rem}
+
+/* release stepper */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--rule)}
+.flow li{padding:14px 12px 4px;border-left:1px solid var(--line);display:grid;gap:4px;align-content:start;position:relative}
+.flow li:first-child{border-left:0;padding-left:0}
+.flow .n{font:800 2.2rem/0.9 var(--display);font-stretch:112%}
+.flow h3{font-size:0.98rem}
+.flow p{font-size:0.84rem;color:var(--muted)}
+.flow li.gate h3::after{content:" \25C7";font-weight:400}
+.returns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 36px;font-size:0.9rem;border-top:1px solid var(--line);padding-top:12px}
+.returns p{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.returns b{font:600 0.7rem/1.4 var(--mono)}
+@media (max-width:1000px){
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow li:nth-child(odd){border-left:0;padding-left:0}
+  .flow li:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:520px){
+  .flow{grid-template-columns:1fr}
+  .flow li{border-left:0;padding-left:0;padding-right:0;grid-template-columns:2.6rem 1fr;column-gap:12px}
+  .flow li:nth-child(n+2){border-top:1px solid var(--line)}
+  .flow .n{grid-row:1/span 2;font-size:2rem}
+  .returns{grid-template-columns:1fr;gap:8px}
+}
+
+/* timeline */
+.gantt{border-top:2px solid var(--rule);border-bottom:2px solid var(--rule);font-size:0.84rem}
+.gr{display:grid;grid-template-columns:7.6rem minmax(0,1fr);align-items:center;border-top:1px solid var(--line)}
+.gr:first-child{border-top:0}
+.gr .rl{font-weight:600;padding:9px 8px 9px 0}
+.gr.hd .rl{font:600 0.66rem/1.4 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+.wk{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));font:600 0.66rem/1.4 var(--mono);color:var(--muted);text-align:center}
+.wk i{font-style:normal;border-left:1px solid var(--line);padding:6px 0}
+.trk{position:relative;height:34px;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),var(--line) calc(10% - 1px) 10%)}
+.trk .bar{position:absolute;top:11px;height:12px;background:var(--ink)}
+.trk .bar.r{background:repeating-linear-gradient(135deg,var(--ink) 0 3px,transparent 3px 6px);border:1px solid var(--ink)}
+@media (max-width:520px){.gr{grid-template-columns:5.6rem minmax(0,1fr)}.gantt{font-size:0.78rem}}
+
+/* watchlist */
+.watch{min-width:640px}
+.watch td:nth-child(2){white-space:nowrap}
+
+footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;font-size:0.85rem;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
+.ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+@media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+@media print{
+  .toc{position:static}.btn{display:none}
+  details.deep > summary::after{content:""}
+}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+
+.rt{display:block;font-weight:400;color:var(--muted);font-size:0.8rem;margin-top:2px}
+.matrix-row .ev{margin-right:4px}
+.q-note{font-size:0.9rem;color:var(--muted);max-width:46rem;margin-top:10px}
+.sh{display:block}
+section[id]{scroll-margin-top:52px}
+.sh h2{grid-column:auto}
+.ans.tight li{grid-template-columns:1.6rem minmax(0,5fr) minmax(0,6fr);gap:2px 16px;padding:10px 0}
+.ans.tight .n{font-size:1.15rem;line-height:1.3}
+.ans.tight h3{font-size:1rem;line-height:1.3}
+.ans.tight p{grid-column:3;grid-row:1;font-size:0.9rem;margin-top:0}
+@media (max-width:640px){.ans.tight li{grid-template-columns:1.6rem minmax(0,1fr);gap:2px 10px}.ans.tight p{grid-column:2;grid-row:auto}}
+</style>
+<style>
+.intro{grid-template-columns:1fr}
+.fig-scroll pre.ascii{margin:0;font:0.8rem/1.3 var(--mono);white-space:pre;min-width:max-content;padding:2px 0}
+pre.ascii .stop{color:var(--red)}
+pre.ascii .ttl{font-weight:700}
+pre.ascii .new{background:var(--red-soft);text-decoration:underline;text-underline-offset:2px}
+.sub3{margin-top:6px}
+.sub3 h3{font:700 1.02rem/1.35 var(--display);font-stretch:105%;margin:0 0 4px}
+.sub3 h4{font:700 0.95rem/1.35 var(--display);margin:14px 0 4px}
+.sec > .sub3{margin-top:26px}
+tr.grp th{text-align:left;background:var(--bg2,rgba(127,127,127,.12));font-weight:700;padding:8px 10px}
+.steps{margin:0;padding-left:1.4rem;display:grid;gap:8px}
+/* Text uses the full page width. The shared style caps these at 36 to 56rem and sets text-wrap:balance, which shortens every line to about half of the 1200px page. */
+.lead,.decision p,.blk > .sub,.goal,.body > p,figcaption,.ans p,.q-note{max-width:none}
+p,li,td,th,dd,summary,figcaption,h4{text-wrap:wrap}
+/* Design switch. Blocks tagged view-safe or view-preview show for one choice only. */
+body[data-view="safe"] .view-preview{display:none!important}
+body[data-view="preview"] .view-safe{display:none!important}
+.toc{display:flex;align-items:center;gap:12px}
+.toc ul{flex:1;min-width:0}
+.seg-wrap{display:flex;flex:none;align-items:center;gap:10px;margin:5px 0}
+.seg-lbl{font:600 0.72rem/1 var(--body);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.seg{display:flex;flex:none}
+.seg button{font:600 0.72rem/1 var(--body);letter-spacing:0.05em;text-transform:uppercase;padding:7px 9px;border:1px solid var(--ink);background:none;color:var(--ink);cursor:pointer;white-space:nowrap}
+.seg button + button{border-left:0}
+.seg button:hover{background:var(--hover)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+/* On a phone only the switch stays pinned. The contents links scroll away with the page. */
+@media (max-width:640px){.toc{display:contents}.toc ul{margin-top:34px;border-top:1px solid var(--rule)}.seg-wrap{position:sticky;top:0;z-index:5;background:var(--bg);margin:0;padding:8px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}}
+@media print{.seg-wrap{display:none}.view-safe,.view-preview{display:revert!important}}
+
+:root{
+  --bg:#EEF2F3; --surface:#FFFFFF; --ink:#13212A; --muted:#506069; --line:#C9D3D8; --rule:#13212A;
+  --hover:rgba(19,33,42,.05);
+  --red:#B42D1A; --red-soft:#F7E1DC; --hatch:rgba(180,45,26,.10);
+  --pol:#8A5300; --pol-line:#C7861C; --pol-bg:#FBF0DC;
+  --call:#1B5B85; --call-line:#2D6E9C; --call-bg:#E1ECF4;
+  --gw-bg:#1B5B85; --gw-ink:#FFFFFF; --gw-muted:rgba(255,255,255,.78);
+  --log:#6A7880;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E161B; --surface:#15212A; --ink:#E2EAEE; --muted:#97A8B2; --line:#2A3B46; --rule:#E2EAEE;
+    --hover:rgba(226,234,238,.06);
+    --red:#F07A60; --red-soft:#3A1F19; --hatch:rgba(240,122,96,.13);
+    --pol:#EBB45C; --pol-line:#C9902F; --pol-bg:#2E2414;
+    --call:#7DB8E3; --call-line:#4F93C4; --call-bg:#142C3C;
+    --gw-bg:#2A6E9E; --gw-ink:#FFFFFF; --gw-muted:rgba(255,255,255,.8);
+    --log:#8395A0;
+  }
+}
+a{text-decoration-color:var(--call-line)}
+a:hover{color:var(--call)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--call);outline-offset:3px}
+.mast{border-top-color:var(--call)}
+.toc{background:var(--bg)}
+/* compact header so the paths and the map show on the first screen */
+h1{font-size:clamp(2.2rem,4.6vw,3.4rem);margin-top:18px}
+.toc{margin-top:22px}
+@media (max-width:640px){.toc ul{margin-top:22px}}
+.toc + .sec,.toc + main > .sec:first-child{margin-top:28px}
+.seg button[aria-pressed="true"]{background:var(--call);border-color:var(--call);color:#fff}
+.seg button[data-view-btn="preview"][aria-pressed="true"]{background:var(--red);border-color:var(--red)}
+
+/* controls above the map */
+.dg-tools{display:grid;gap:10px;margin:6px 0 0}
+.chipset{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.cl{flex:0 0 100%;font:600 0.7rem/1 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 0}
+.chip{--c:var(--ink);display:inline-flex;align-items:center;gap:7px;font:500 0.82rem/1.2 var(--body);padding:6px 10px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--c)}
+.chip[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:var(--surface)}
+.chip[data-val="A"]{--c:var(--call)}
+.chip[data-val="B"]{--c:var(--pol-line)}
+.chip.pk[data-k="pol"]{--c:var(--pol-line)}
+.chip.pk[data-k="call"]{--c:var(--call)}
+.chip.pk[data-k="red"]{--c:var(--red)}
+.sw{display:inline-block;width:18px;height:0;border-top:2.5px solid var(--c)}
+.chip[data-k="red"] .sw{border-top-style:dashed}
+.chip[aria-pressed="true"] .sw{border-color:var(--surface)}
+.dg-sum{font:500 0.85rem/1.4 var(--body);color:var(--muted);margin:0}
+.path-note{font-size:0.9rem;margin:0;padding:8px 0 0;border-top:1px solid var(--line);min-height:1.5em}
+.path-note:empty{display:none}
+
+/* map and detail panel side by side on a wide screen, stacked on a narrow one */
+.dg-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;margin-top:14px;align-items:start}
+@media (min-width:1000px){
+  .dg-layout{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:30px}
+  .panels{position:sticky;top:58px;max-height:calc(100vh - 72px);overflow:auto;overscroll-behavior:contain}
+}
+figure.mapfig{margin:0;gap:12px}
+.map{position:relative;display:grid;grid-template-columns:16px minmax(0,1fr) 30px minmax(0,1fr) 30px minmax(0,1fr) 36px;row-gap:14px;align-items:stretch}
+.map > p{margin:0}
+.wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.zl{font:600 0.7rem/1.2 var(--body);letter-spacing:0.09em;text-transform:uppercase;align-self:end}
+.zl.z-pol,.ch.z-pol{color:var(--pol)}
+.zl.z-gw,.ch.z-call{color:var(--call)}
+.ch{font:600 0.66rem/1.2 var(--body);letter-spacing:0.07em;text-transform:uppercase;align-self:end;padding-top:12px}
+.wl{position:relative;z-index:1;align-self:start;justify-self:center;text-align:center;font:italic 500 0.72rem/1.25 var(--body);color:var(--call);background:var(--bg);padding:2px 4px;margin-top:2px}
+.xl{position:relative;z-index:1;align-self:end;text-align:right;font:600 0.72rem/1.25 var(--body);color:var(--red);padding-right:6px}
+.bx{--c:var(--call-line);position:relative;z-index:1;display:flex;flex-direction:column;gap:2px;min-height:68px;padding:8px 10px 9px;
+  border:1.5px solid var(--c);border-radius:3px;background:var(--surface);color:var(--ink);text-decoration:none;
+  transition:opacity .15s,box-shadow .15s}
+.bx:hover{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--c)}
+.bx:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+.bx[aria-current="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--c)}
+.bx.pol{--c:var(--pol-line);background:var(--pol-bg)}
+.bx.gw{--c:var(--gw-bg);background:var(--gw-bg);color:var(--gw-ink);justify-content:center;padding:14px 16px}
+.bx.gw:hover{color:var(--gw-ink);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+.bx.be{--c:var(--call-line);background:var(--call-bg);border-width:2px;align-items:center;text-align:center;justify-content:center;min-height:62px;margin-top:16px}
+.bx.log{--c:var(--log);border-style:dashed}
+.bx.pv{--c:var(--red);border-style:dashed;background:repeating-linear-gradient(135deg,var(--hatch) 0 6px,transparent 6px 12px),var(--surface)}
+.bt{font:700 0.92rem/1.18 var(--display);overflow-wrap:anywhere}
+.bx.gw .bt{font-size:1.3rem}
+.bx.be .bt{font-size:1.05rem}
+.bs{font:500 0.74rem/1.25 var(--body);color:var(--muted)}
+.bc,.bf{font:600 0.68rem/1.2 var(--mono);color:var(--muted);margin-top:auto;padding-top:4px}
+.bx.gw .bs,.bx.gw .bc,.bx.gw .bf{color:var(--gw-muted)}
+.bx.gw .bc,.bx.gw .bf{margin-top:6px}
+.bp{align-self:flex-start;font:600 0.6rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:0.06em;color:var(--red);border:1px solid var(--red);padding:0 4px;margin-bottom:2px;background:var(--surface)}
+.bf{display:none;color:var(--ink)}
+.filtering .bx .bc{display:none}
+.filtering .bx .bf{display:block}
+.bx.gw .bf{color:var(--gw-ink)}
+.bx.dim,.bx.fade{opacity:.28}
+.bx.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--c)}
+/* lines */
+.w{fill:none;stroke-width:1.6;stroke-linejoin:round;transition:opacity .15s,stroke-width .15s}
+.w.pol{stroke:var(--pol-line)}
+.w.call{stroke:var(--call-line);stroke-width:2}
+.w.red{stroke:var(--red);stroke-dasharray:6 4}
+.w.log{stroke:var(--log);stroke-dasharray:2 4}
+.w.dash{stroke-dasharray:6 4}
+.w.pv{stroke-dasharray:3 3}
+.w.hot{stroke-width:3}
+.w.lit{stroke-width:3.2}
+.w.fade{opacity:.15}
+@media (prefers-reduced-motion:no-preference){
+  .w.lit.red,.w.lit.dash,.w.lit.pv{animation:flow 1.8s linear infinite}
+}
+@keyframes flow{to{stroke-dashoffset:-30}}
+.key{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:0.8rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.key li{display:flex;align-items:center;gap:7px}
+.key i{display:inline-block;width:22px;border-top:2.5px solid}
+.key .k-pol{border-color:var(--pol-line)}
+.key .k-hand{border-color:var(--pol-line);border-top-style:dashed}
+.key .k-call{border-color:var(--call-line)}
+.key .k-red{border-color:var(--red);border-top-style:dashed}
+.key .k-log{border-color:var(--log);border-top-style:dotted}
+@media (max-width:640px){
+  .map{grid-template-columns:12px minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr) 30px;row-gap:12px}
+  .bx{padding:6px 7px 7px;min-height:62px}
+  .bt{font-size:0.8rem}
+  .bs{font-size:0.68rem}
+  .bc,.bf{font-size:0.62rem}
+  .bx.gw{padding:10px 12px}
+  .bx.gw .bt{font-size:1.1rem}
+  .bx.be .bt{font-size:0.95rem}
+  .ch{font-size:0.6rem;letter-spacing:0.04em}
+  .wl{font-size:0.64rem;padding:1px 2px}
+  .xl{font-size:0.66rem}
+}
+
+/* detail panel */
+.panels{border-top:2px solid var(--rule);background:var(--surface);padding:0 16px 14px}
+.pnav{display:none;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:2;background:var(--surface);padding:10px 0;border-bottom:1px solid var(--line)}
+.js .pnav{display:flex}
+.cl-note{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
+.flt{display:block}
+.flt > summary{cursor:pointer;width:max-content;max-width:100%;font:600 0.7rem/1.2 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:6px 0}
+.flt > summary:hover{color:var(--ink)}
+.flt-n{margin-left:8px;color:var(--call);letter-spacing:0}
+.flt .chipset + .chipset{margin-top:10px}
+#map,#details{scroll-margin-top:52px}
+@media (max-width:999px){.pnav{top:var(--segh,46px)}}
+.np [id]:not(.np){scroll-margin-top:140px}
+@media (min-width:1000px){.np [id]:not(.np){scroll-margin-top:68px}}
+.pnav button{font:600 0.74rem/1 var(--body);letter-spacing:0.04em;text-transform:uppercase;padding:7px 10px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+.pnav button:hover{border-color:var(--ink)}
+.pnav .pos{font:600 0.72rem/1 var(--mono);color:var(--muted)}
+.pnav .back{margin-left:auto;font-size:0.8rem}
+@media (min-width:1000px){.pnav .back{display:none}}
+.np{--c:var(--call);padding:14px 0 4px}
+.np + .np{border-top:1px solid var(--line)}
+.js .np + .np{border-top:0}
+.np[data-role="pol"]{--c:var(--pol)}
+.np[data-role="pv"]{--c:var(--red)}
+.np[data-role="log"]{--c:var(--log)}
+.np header{display:grid;gap:4px;margin:0 0 4px}
+.np header h3{margin:0;font-size:1.45rem;font-weight:750;letter-spacing:-0.012em;line-height:1.1}
+.kind{font:600 0.7rem/1 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--c)}
+.np h4{font:700 0.98rem/1.35 var(--display);margin:0 0 4px}
+.np h4 .tg{margin-left:6px}
+.np .rt{font:500 0.76rem/1.3 var(--body);color:var(--muted);margin-top:3px}
+.np dl{display:grid;gap:2px;margin:6px 0 0}
+.np dt{font:600 0.68rem/1.4 var(--body);letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.np dd{margin:0;font-size:0.93rem}
+.ctl,.part{padding:14px 0 12px;border-top:1px solid var(--line)}
+.np header + .ctl,.np header + .part{border-top:2px solid var(--rule)}
+.np .part{margin-top:28px}
+.np header + .part{margin-top:14px}
+.ctl.off{opacity:.3}
+.js .np{display:none}
+.js .np.sel{display:block}
+.np .q-note{margin-top:12px}
+
+/* approval workflow */
+.wf-lane{--c:var(--pol-line);margin:16px 0 0}
+.wf-lane[data-wf="a365"]{--c:var(--red)}
+.wf-lane h4{margin:0 0 6px;font:700 0.95rem/1.35 var(--display)}
+.wf-steps{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.wf-steps button{font:500 0.82rem/1.25 var(--body);text-align:left;padding:7px 10px;border:1px solid var(--c);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+.wf-steps button:hover{box-shadow:inset 0 0 0 1px var(--c)}
+.wf-steps button[aria-pressed="true"]{background:var(--c);color:var(--surface)}
+.wf-detail{padding:10px 12px;border:1px solid var(--c);border-radius:3px;background:var(--surface)}
+.wf-detail p{margin:0}
+.js .wf-detail{display:none}
+.js .wf-detail.sel{display:block}
+
+/* tables stack into label and value pairs on a phone */
+.tbl{background:var(--surface)}
+.tbl td[data-label="Expected result"]{color:var(--ink)}
+@media (max-width:640px){
+  .tbl-wrap{overflow:visible}
+  .tbl{min-width:0;background:none}
+  .tbl thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .tbl tr{display:block;padding:10px 0;border-top:1px solid var(--line)}
+  .tbl tbody tr:first-child{border-top:0}
+  .tbl td{display:grid;grid-template-columns:7.2rem minmax(0,1fr);gap:10px;border:0;padding:2px 0!important}
+  .tbl td::before{content:attr(data-label);font:600 0.66rem/1.6 var(--body);letter-spacing:0.07em;text-transform:uppercase;color:var(--muted)}
+  .tbl td:first-child{display:block;padding-bottom:4px!important}
+  .tbl td:first-child::before{content:none}
+}
+.steps li::marker{color:var(--call);font-weight:700}
+@media print{.dg-tools,.pnav,.wires{display:none}.np{display:block!important}.panels{position:static;max-height:none}}
+</style>
+<noscript><style>body[data-view] .view-preview,body[data-view] .view-safe{display:revert!important}.seg-wrap{display:none!important}
+:root{
+  --bg:#EEF2F3; --surface:#FFFFFF; --ink:#13212A; --muted:#506069; --line:#C9D3D8; --rule:#13212A;
+  --hover:rgba(19,33,42,.05);
+  --red:#B42D1A; --red-soft:#F7E1DC; --hatch:rgba(180,45,26,.10);
+  --pol:#8A5300; --pol-line:#C7861C; --pol-bg:#FBF0DC;
+  --call:#1B5B85; --call-line:#2D6E9C; --call-bg:#E1ECF4;
+  --gw-bg:#1B5B85; --gw-ink:#FFFFFF; --gw-muted:rgba(255,255,255,.78);
+  --log:#6A7880;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E161B; --surface:#15212A; --ink:#E2EAEE; --muted:#97A8B2; --line:#2A3B46; --rule:#E2EAEE;
+    --hover:rgba(226,234,238,.06);
+    --red:#F07A60; --red-soft:#3A1F19; --hatch:rgba(240,122,96,.13);
+    --pol:#EBB45C; --pol-line:#C9902F; --pol-bg:#2E2414;
+    --call:#7DB8E3; --call-line:#4F93C4; --call-bg:#142C3C;
+    --gw-bg:#2A6E9E; --gw-ink:#FFFFFF; --gw-muted:rgba(255,255,255,.8);
+    --log:#8395A0;
+  }
+}
+a{text-decoration-color:var(--call-line)}
+a:hover{color:var(--call)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--call);outline-offset:3px}
+.mast{border-top-color:var(--call)}
+.toc{background:var(--bg)}
+/* compact header so the paths and the map show on the first screen */
+h1{font-size:clamp(2.2rem,4.6vw,3.4rem);margin-top:18px}
+.toc{margin-top:22px}
+@media (max-width:640px){.toc ul{margin-top:22px}}
+.toc + .sec,.toc + main > .sec:first-child{margin-top:28px}
+.seg button[aria-pressed="true"]{background:var(--call);border-color:var(--call);color:#fff}
+.seg button[data-view-btn="preview"][aria-pressed="true"]{background:var(--red);border-color:var(--red)}
+
+/* controls above the map */
+.dg-tools{display:grid;gap:10px;margin:6px 0 0}
+.chipset{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.cl{flex:0 0 100%;font:600 0.7rem/1 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 0}
+.chip{--c:var(--ink);display:inline-flex;align-items:center;gap:7px;font:500 0.82rem/1.2 var(--body);padding:6px 10px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--c)}
+.chip[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:var(--surface)}
+.chip[data-val="A"]{--c:var(--call)}
+.chip[data-val="B"]{--c:var(--pol-line)}
+.chip.pk[data-k="pol"]{--c:var(--pol-line)}
+.chip.pk[data-k="call"]{--c:var(--call)}
+.chip.pk[data-k="red"]{--c:var(--red)}
+.sw{display:inline-block;width:18px;height:0;border-top:2.5px solid var(--c)}
+.chip[data-k="red"] .sw{border-top-style:dashed}
+.chip[aria-pressed="true"] .sw{border-color:var(--surface)}
+.dg-sum{font:500 0.85rem/1.4 var(--body);color:var(--muted);margin:0}
+.path-note{font-size:0.9rem;margin:0;padding:8px 0 0;border-top:1px solid var(--line);min-height:1.5em}
+.path-note:empty{display:none}
+
+/* map and detail panel side by side on a wide screen, stacked on a narrow one */
+.dg-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;margin-top:14px;align-items:start}
+@media (min-width:1000px){
+  .dg-layout{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:30px}
+  .panels{position:sticky;top:58px;max-height:calc(100vh - 72px);overflow:auto;overscroll-behavior:contain}
+}
+figure.mapfig{margin:0;gap:12px}
+.map{position:relative;display:grid;grid-template-columns:16px minmax(0,1fr) 30px minmax(0,1fr) 30px minmax(0,1fr) 36px;row-gap:14px;align-items:stretch}
+.map > p{margin:0}
+.wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.zl{font:600 0.7rem/1.2 var(--body);letter-spacing:0.09em;text-transform:uppercase;align-self:end}
+.zl.z-pol,.ch.z-pol{color:var(--pol)}
+.zl.z-gw,.ch.z-call{color:var(--call)}
+.ch{font:600 0.66rem/1.2 var(--body);letter-spacing:0.07em;text-transform:uppercase;align-self:end;padding-top:12px}
+.wl{position:relative;z-index:1;align-self:start;justify-self:center;text-align:center;font:italic 500 0.72rem/1.25 var(--body);color:var(--call);background:var(--bg);padding:2px 4px;margin-top:2px}
+.xl{position:relative;z-index:1;align-self:end;text-align:right;font:600 0.72rem/1.25 var(--body);color:var(--red);padding-right:6px}
+.bx{--c:var(--call-line);position:relative;z-index:1;display:flex;flex-direction:column;gap:2px;min-height:68px;padding:8px 10px 9px;
+  border:1.5px solid var(--c);border-radius:3px;background:var(--surface);color:var(--ink);text-decoration:none;
+  transition:opacity .15s,box-shadow .15s}
+.bx:hover{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--c)}
+.bx:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+.bx[aria-current="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--c)}
+.bx.pol{--c:var(--pol-line);background:var(--pol-bg)}
+.bx.gw{--c:var(--gw-bg);background:var(--gw-bg);color:var(--gw-ink);justify-content:center;padding:14px 16px}
+.bx.gw:hover{color:var(--gw-ink);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+.bx.be{--c:var(--call-line);background:var(--call-bg);border-width:2px;align-items:center;text-align:center;justify-content:center;min-height:62px;margin-top:16px}
+.bx.log{--c:var(--log);border-style:dashed}
+.bx.pv{--c:var(--red);border-style:dashed;background:repeating-linear-gradient(135deg,var(--hatch) 0 6px,transparent 6px 12px),var(--surface)}
+.bt{font:700 0.92rem/1.18 var(--display);overflow-wrap:anywhere}
+.bx.gw .bt{font-size:1.3rem}
+.bx.be .bt{font-size:1.05rem}
+.bs{font:500 0.74rem/1.25 var(--body);color:var(--muted)}
+.bc,.bf{font:600 0.68rem/1.2 var(--mono);color:var(--muted);margin-top:auto;padding-top:4px}
+.bx.gw .bs,.bx.gw .bc,.bx.gw .bf{color:var(--gw-muted)}
+.bx.gw .bc,.bx.gw .bf{margin-top:6px}
+.bp{align-self:flex-start;font:600 0.6rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:0.06em;color:var(--red);border:1px solid var(--red);padding:0 4px;margin-bottom:2px;background:var(--surface)}
+.bf{display:none;color:var(--ink)}
+.filtering .bx .bc{display:none}
+.filtering .bx .bf{display:block}
+.bx.gw .bf{color:var(--gw-ink)}
+.bx.dim,.bx.fade{opacity:.28}
+.bx.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--c)}
+/* lines */
+.w{fill:none;stroke-width:1.6;stroke-linejoin:round;transition:opacity .15s,stroke-width .15s}
+.w.pol{stroke:var(--pol-line)}
+.w.call{stroke:var(--call-line);stroke-width:2}
+.w.red{stroke:var(--red);stroke-dasharray:6 4}
+.w.log{stroke:var(--log);stroke-dasharray:2 4}
+.w.dash{stroke-dasharray:6 4}
+.w.pv{stroke-dasharray:3 3}
+.w.hot{stroke-width:3}
+.w.lit{stroke-width:3.2}
+.w.fade{opacity:.15}
+@media (prefers-reduced-motion:no-preference){
+  .w.lit.red,.w.lit.dash,.w.lit.pv{animation:flow 1.8s linear infinite}
+}
+@keyframes flow{to{stroke-dashoffset:-30}}
+.key{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:0.8rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.key li{display:flex;align-items:center;gap:7px}
+.key i{display:inline-block;width:22px;border-top:2.5px solid}
+.key .k-pol{border-color:var(--pol-line)}
+.key .k-hand{border-color:var(--pol-line);border-top-style:dashed}
+.key .k-call{border-color:var(--call-line)}
+.key .k-red{border-color:var(--red);border-top-style:dashed}
+.key .k-log{border-color:var(--log);border-top-style:dotted}
+@media (max-width:640px){
+  .map{grid-template-columns:12px minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr) 30px;row-gap:12px}
+  .bx{padding:6px 7px 7px;min-height:62px}
+  .bt{font-size:0.8rem}
+  .bs{font-size:0.68rem}
+  .bc,.bf{font-size:0.62rem}
+  .bx.gw{padding:10px 12px}
+  .bx.gw .bt{font-size:1.1rem}
+  .bx.be .bt{font-size:0.95rem}
+  .ch{font-size:0.6rem;letter-spacing:0.04em}
+  .wl{font-size:0.64rem;padding:1px 2px}
+  .xl{font-size:0.66rem}
+}
+
+/* detail panel */
+.panels{border-top:2px solid var(--rule);background:var(--surface);padding:0 16px 14px}
+.pnav{display:none;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:2;background:var(--surface);padding:10px 0;border-bottom:1px solid var(--line)}
+.js .pnav{display:flex}
+.cl-note{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
+.flt{display:block}
+.flt > summary{cursor:pointer;width:max-content;max-width:100%;font:600 0.7rem/1.2 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:6px 0}
+.flt > summary:hover{color:var(--ink)}
+.flt-n{margin-left:8px;color:var(--call);letter-spacing:0}
+.flt .chipset + .chipset{margin-top:10px}
+#map,#details{scroll-margin-top:52px}
+@media (max-width:999px){.pnav{top:var(--segh,46px)}}
+.np [id]:not(.np){scroll-margin-top:140px}
+@media (min-width:1000px){.np [id]:not(.np){scroll-margin-top:68px}}
+.pnav button{font:600 0.74rem/1 var(--body);letter-spacing:0.04em;text-transform:uppercase;padding:7px 10px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+.pnav button:hover{border-color:var(--ink)}
+.pnav .pos{font:600 0.72rem/1 var(--mono);color:var(--muted)}
+.pnav .back{margin-left:auto;font-size:0.8rem}
+@media (min-width:1000px){.pnav .back{display:none}}
+.np{--c:var(--call);padding:14px 0 4px}
+.np + .np{border-top:1px solid var(--line)}
+.js .np + .np{border-top:0}
+.np[data-role="pol"]{--c:var(--pol)}
+.np[data-role="pv"]{--c:var(--red)}
+.np[data-role="log"]{--c:var(--log)}
+.np header{display:grid;gap:4px;margin:0 0 4px}
+.np header h3{margin:0;font-size:1.45rem;font-weight:750;letter-spacing:-0.012em;line-height:1.1}
+.kind{font:600 0.7rem/1 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--c)}
+.np h4{font:700 0.98rem/1.35 var(--display);margin:0 0 4px}
+.np h4 .tg{margin-left:6px}
+.np .rt{font:500 0.76rem/1.3 var(--body);color:var(--muted);margin-top:3px}
+.np dl{display:grid;gap:2px;margin:6px 0 0}
+.np dt{font:600 0.68rem/1.4 var(--body);letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.np dd{margin:0;font-size:0.93rem}
+.ctl,.part{padding:14px 0 12px;border-top:1px solid var(--line)}
+.np header + .ctl,.np header + .part{border-top:2px solid var(--rule)}
+.np .part{margin-top:28px}
+.np header + .part{margin-top:14px}
+.ctl.off{opacity:.3}
+.js .np{display:none}
+.js .np.sel{display:block}
+.np .q-note{margin-top:12px}
+
+/* approval workflow */
+.wf-lane{--c:var(--pol-line);margin:16px 0 0}
+.wf-lane[data-wf="a365"]{--c:var(--red)}
+.wf-lane h4{margin:0 0 6px;font:700 0.95rem/1.35 var(--display)}
+.wf-steps{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.wf-steps button{font:500 0.82rem/1.25 var(--body);text-align:left;padding:7px 10px;border:1px solid var(--c);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+.wf-steps button:hover{box-shadow:inset 0 0 0 1px var(--c)}
+.wf-steps button[aria-pressed="true"]{background:var(--c);color:var(--surface)}
+.wf-detail{padding:10px 12px;border:1px solid var(--c);border-radius:3px;background:var(--surface)}
+.wf-detail p{margin:0}
+.js .wf-detail{display:none}
+.js .wf-detail.sel{display:block}
+
+/* tables stack into label and value pairs on a phone */
+.tbl{background:var(--surface)}
+.tbl td[data-label="Expected result"]{color:var(--ink)}
+@media (max-width:640px){
+  .tbl-wrap{overflow:visible}
+  .tbl{min-width:0;background:none}
+  .tbl thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .tbl tr{display:block;padding:10px 0;border-top:1px solid var(--line)}
+  .tbl tbody tr:first-child{border-top:0}
+  .tbl td{display:grid;grid-template-columns:7.2rem minmax(0,1fr);gap:10px;border:0;padding:2px 0!important}
+  .tbl td::before{content:attr(data-label);font:600 0.66rem/1.6 var(--body);letter-spacing:0.07em;text-transform:uppercase;color:var(--muted)}
+  .tbl td:first-child{display:block;padding-bottom:4px!important}
+  .tbl td:first-child::before{content:none}
+}
+.steps li::marker{color:var(--call);font-weight:700}
+@media print{.dg-tools,.pnav,.wires{display:none}.np{display:block!important}.panels{position:static;max-height:none}}
+</style></noscript>
+</head>
+<body data-view="safe">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--ink)"/></marker>
+  <marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--red)"/></marker>
+</defs></svg>
+
+<div class="page" id="top">
+
+  <a class="skip" href="#main-content">Skip to content</a>
+  <header class="mast">
+    <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 2026-11-11</span></div>
+    <h1>MCP Governance in a Microsoft ecosystem, interactive</h1>
+    <div class="intro">
+      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot. Nothing is tested in a tenant.</p>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <ul>
+      <li><a href="#design">Design</a></li>
+      <li><a href="#rollout">Rollout</a></li>
+      <li><a href="#gaps">Gaps</a></li>
+      <li class="view-preview"><a href="#preview">With preview</a></li>
+    </ul>
+    <div class="seg-wrap"><span class="seg-lbl" id="seg-lbl">Select design</span>
+    <div class="seg" role="group" aria-labelledby="seg-lbl">
+      <button type="button" data-view-btn="safe" aria-pressed="true">Released only</button>
+      <button type="button" data-view-btn="preview" aria-pressed="false">With preview</button>
+    </div></div>
+  </nav>
+
+  <main id="main-content" tabindex="-1">
+
+  <section class="sec" id="design" aria-labelledby="h-design">
+    <header class="sh"><h2 id="h-design"><a class="sec-link" href="#design">The design</a></h2>
+    <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers. Map the approved inventory into each policy target, because visibility alone does not enforce access.&nbsp;<span class="tg r">recommendation</span></p>
+    <p class="goal view-safe"><b>Scope</b>This is the released-only design. It uses supported MCP capabilities in the API Management service, subject to tier availability. Preview features are in the other design: select With preview above, or read <a href="#preview">With preview</a>.</p>
+    <p class="goal view-preview"><b>Scope</b>This design replaces the API Management service gateway with the separate AI Gateway product, which is in public preview, and adds the Agent 365 integration. Use it only in a sandbox. The released-only design stays underneath. Details and limits are in <a href="#preview">With preview</a>.</p>
+    <p class="goal"><b>Objectives</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers.</p></header>
+    <div class="dg-tools">
+      <div class="chipset" role="group" aria-label="Follow a path"><span class="cl">Follow a path</span><button type="button" class="chip pk" data-path="policy" data-k="pol" aria-pressed="false"><span class="sw sw-pol" aria-hidden="true"></span>Approved list</button><button type="button" class="chip pk" data-path="vs" data-k="call" aria-pressed="false"><span class="sw sw-call" aria-hidden="true"></span>VS Code</button><button type="button" class="chip pk" data-path="m365" data-k="call" aria-pressed="false"><span class="sw sw-call" aria-hidden="true"></span>Microsoft 365 Copilot</button><button type="button" class="chip pk" data-path="fy" data-k="call" aria-pressed="false"><span class="sw sw-call" aria-hidden="true"></span>Foundry agents</button><button type="button" class="chip pk" data-path="cs" data-k="call" aria-pressed="false"><span class="sw sw-call" aria-hidden="true"></span>Copilot Studio</button><button type="button" class="chip pk" data-path="direct" data-k="red" aria-pressed="false"><span class="sw sw-red" aria-hidden="true"></span>Direct call</button><button type="button" class="chip pk view-preview" data-path="byo" data-k="red" aria-pressed="false"><span class="sw sw-red" aria-hidden="true"></span>Agent 365 route</button></div>
+      <p class="path-note" id="pathNote" aria-live="polite"></p>
+      <details class="flt" open><summary>Filter by objective or call layer<span class="flt-n" id="fltN"></span></summary><div class="chipset" role="group" aria-label="Objective"><span class="cl">Objective</span><button type="button" class="chip" data-grp="obj" data-val="A" aria-pressed="false">A: company server only through the gateway</button><button type="button" class="chip" data-grp="obj" data-val="B" aria-pressed="false">B: managed clients limited to approved servers</button></div><div class="chipset" role="group" aria-label="Call layer"><span class="cl">Call layer</span><button type="button" class="chip" data-grp="layer" data-val="0" aria-pressed="false">Whole path</button><button type="button" class="chip" data-grp="layer" data-val="1" aria-pressed="false">1 Which server</button><button type="button" class="chip" data-grp="layer" data-val="2" aria-pressed="false">2 Person approves</button><button type="button" class="chip" data-grp="layer" data-val="3" aria-pressed="false">3 Call content</button><button type="button" class="chip" data-grp="layer" data-val="4" aria-pressed="false">4 Network and gateway</button><button type="button" class="chip" data-grp="layer" data-val="5" aria-pressed="false">5 Company server</button><button type="button" class="chip" data-grp="layer" data-val="6" aria-pressed="false">6 Tool response</button></div><p class="cl-note">Content filters on the user input and the final answer are left out: they are not MCP controls.</p></details>
+      <p class="dg-sum" id="dgSum" aria-live="polite"></p>
+    </div>
+    <div class="dg-layout">
+      <figure class="mapfig" id="map" aria-describedby="figDesc">
+<div class="map" id="mapGrid">
+<p class="zl z-pol" style="grid-area:1/2/2/-1">Source of truth</p>
+<p class="ch z-pol" style="grid-area:3/2/4/3">Policy target</p>
+<p class="ch z-call" style="grid-area:3/4/4/5">Client</p>
+<p class="ch z-call" style="grid-area:3/6/4/7">Before the gateway</p>
+<span class="g-trunk" aria-hidden="true" style="grid-area:4/1/8/2"></span>
+<span class="g-rail" aria-hidden="true" style="grid-area:4/7/11/8"></span>
+<p class="wl" style="grid-area:5/6/6/7">Microsoft cloud, fixed addresses</p>
+<p class="zl z-gw" style="grid-area:8/2/9/4">Control point</p>
+<p class="xl" style="grid-area:8/4/9/7">Direct call from a client: blocked</p>
+<a class="bx pol" id="b-git" href="#n-git" data-node="git" style="grid-area:2/2/3/3"><span class="bt">Approved list in Git</span><span class="bs">Approved and denied</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pol" id="b-pipeline" href="#n-pipeline" data-node="pipeline" style="grid-area:2/4/3/5"><span class="bt">Sync pipeline</span><span class="bs">Writes the list to targets</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pol" id="b-ghe" href="#n-ghe" data-node="ghe" style="grid-area:4/2/5/3"><span class="bt">GitHub Enterprise</span><span class="bs">Managed settings file</span><span class="bf" aria-live="off"></span></a>
+<a class="bx call" id="b-vs" href="#n-vs" data-node="vs" style="grid-area:4/4/5/5"><span class="bt">VS Code, GitHub Copilot</span><span class="bc view-safe">7 controls</span><span class="bc view-preview">8 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx call" id="b-device" href="#n-device" data-node="device" style="grid-area:4/6/5/7"><span class="bt">Managed Windows device</span><span class="bs">Intune</span><span class="bc view-safe">1 control</span><span class="bc view-preview">2 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pol" id="b-m365admin" href="#n-m365admin" data-node="m365admin" style="grid-area:5/2/6/3"><span class="bt">Microsoft 365 admin center</span><span class="bs">Set by hand</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+<a class="bx call" id="b-m365" href="#n-m365" data-node="m365" style="grid-area:5/4/6/5"><span class="bt">Microsoft 365 Copilot</span><span class="bc">2 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pol" id="b-fypolicy" href="#n-fypolicy" data-node="fypolicy" style="grid-area:6/2/7/3"><span class="bt">Microsoft Foundry</span><span class="bs">Allowed tool lists</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+<a class="bx call" id="b-fy" href="#n-fy" data-node="fy" style="grid-area:6/4/7/5"><span class="bt">Foundry agents</span><span class="bc view-safe">3 controls</span><span class="bc view-preview">5 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pv view-preview" id="b-defender" href="#n-defender" data-node="defender" style="grid-area:6/6/8/7"><span class="bp">Preview</span><span class="bt">Microsoft Defender</span><span class="bs">Checks tool calls</span><span class="bc">3 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pol" id="b-pp" href="#n-pp" data-node="pp" style="grid-area:7/2/8/3"><span class="bt">Power Platform</span><span class="bs">MCP connector policy</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+<a class="bx call" id="b-cs" href="#n-cs" data-node="cs" style="grid-area:7/4/8/5"><span class="bt">Copilot Studio</span><span class="bc view-safe">2 controls</span><span class="bc view-preview">3 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx log" id="b-log" href="#n-log" data-node="log" style="grid-area:9/2/10/3"><span class="bt">Logging, checks and Purview</span><span class="bs">All clients</span><span class="bc">2 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx gw" id="b-gw" href="#n-gw" data-node="gw" style="grid-area:9/4/11/7"><span class="bt">Gateway</span><span class="bs view-safe">Azure API Management</span><span class="bs view-preview">AI Gateway, preview</span><span class="bc view-safe">2 controls</span><span class="bc view-preview">9 controls</span><span class="bf" aria-live="off"></span></a>
+<a class="bx pv view-preview" id="b-byo" href="#n-byo" data-node="byo" style="grid-area:10/2/11/3"><span class="bp">Preview</span><span class="bt">Agent 365 BYO route</span><span class="bs">Not through the gateway</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+<a class="bx be" id="b-be" href="#n-be" data-node="be" style="grid-area:11/2/12/8"><span class="bt">Company MCP server</span><span class="bs">Gateway-only access</span><span class="bc">1 control</span><span class="bf" aria-live="off"></span></a>
+</div>
+        <ul class="key" aria-label="Line key"><li><i class="k-pol"></i>Approved list</li><li><i class="k-hand"></i>Set by hand</li><li><i class="k-call"></i>Call to the company server</li><li><i class="k-red"></i>Blocked or preview route</li><li><i class="k-log"></i>Logging</li></ul>
+        <figcaption class="view-preview">Hatched boxes and the lines that touch them are what preview adds. Everything else is the released design.</figcaption>
+        <div class="vh" id="figDesc"><p>A Git repository holds the approved and denied MCP servers. A pipeline writes the list to four policy targets: GitHub Enterprise for VS Code and GitHub Copilot, the Microsoft 365 admin center for Microsoft 365 Copilot (set by hand), Microsoft Foundry for Foundry agents, and Power Platform for Copilot Studio.</p><p>Every client reaches the company MCP server only through the gateway, which then calls the server. VS Code and GitHub Copilot pass a managed Windows device first. Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses.</p><p>A direct call from a client to the server is blocked. Logging and checks cover the gateway and the clients, and Purview audits agent activity.</p><p>In the preview design the gateway is the separate AI Gateway product, Microsoft Defender checks Foundry and Copilot Studio tool calls before they run, and a separate Agent 365 route reaches the server without the gateway.</p></div>
+      </figure>
+      <div class="panels" id="details">
+        <div class="pnav"><button type="button" data-step-by="-1">Previous</button><span class="pos" id="pPos"></span><button type="button" data-step-by="1">Next</button><a class="back" href="#map">Back to diagram</a></div>
+<article class="np" id="n-git" data-node="git" data-role="pol"><header><span class="kind">Source of truth</span><h3><a class="sec-link" href="#n-git">Approved list in Git</a></h3></header><div class="part" id="part-approved-list-in-git"><h4>Approved list in Git</h4><dl><dt>What it does</dt><dd>Reviewed record of approved and denied MCP servers.</dd><dt>Where it is set or run</dt><dd>A Git repository, changed by reviewed pull request.</dd></dl></div><div class="ctl" id="ctrl-inventory" data-obj="A B" data-layer="0"><h4>Approved inventory <span class="rt">Objectives A and B · whole path</span></h4><dl><dt>Applies to</dt><dd>All clients</dd><dt>Design requirement</dt><dd>Keep one list of approved MCP servers in a repository, with address, owner, permitted tools and risk class. Change it only by reviewed pull request. Review a server again when its address, sign-in, permissions or tools change. Set client policy from managed settings, not user-editable files. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>GitHub managed settings apply the allow and deny lists to servers in user and repository settings <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V20">V20</a>. The proposed pipeline must configure Foundry and Copilot Studio separately. <span class="tg r">recommendation</span></dd></dl></div></article><article class="np" id="n-pipeline" data-node="pipeline" data-role="pol"><header><span class="kind">Source of truth</span><h3><a class="sec-link" href="#n-pipeline">Sync pipeline</a></h3></header><div class="part" id="part-sync-pipeline"><h4>Sync pipeline</h4><dl><dt>What it does</dt><dd>On merge, writes the list to each policy target.</dd><dt>Where it is set or run</dt><dd>A pipeline the company builds. Proposed work; not built yet.</dd></dl></div><div class="ctl" id="ctrl-pipeline" data-obj="B" data-layer="0"><h4>Policy sync, pipeline <span class="rt">Objective B · whole path</span></h4><dl><dt>Applies to</dt><dd>GitHub, Power Platform, Foundry</dd><dt>Design requirement</dt><dd>On merge of a reviewed change, a pipeline applies the list to each target. Each target gets its own credential, limited to writing that target. The pipeline reports any target it could not update. Manual edits in a target are overwritten or flagged on the next run. Nothing is built yet. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>GitHub managed settings can be hosted on GitHub as a server-managed deployment <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V70">V70</a>. They are a file in the .github-private repository, changed by commit and push <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V82">V82</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V83">V83</a>. Settings refresh within about an hour <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V90">V90</a>. Verify propagation. <span class="tg r">recommendation</span></dd></dl></div></article><article class="np" id="n-ghe" data-node="ghe" data-role="pol"><header><span class="kind">Policy target</span><h3><a class="sec-link" href="#n-ghe">GitHub Enterprise</a></h3></header><div class="part" id="part-github-enterprise"><h4>GitHub Enterprise</h4><dl><dt>What it does</dt><dd>Allows or blocks the MCP servers that VS Code and GitHub Copilot may use.</dd><dt>Where it is set or run</dt><dd>Managed settings file in the .github-private repository <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V82">V82</a>.</dd><dt>Use in this design</dt><dd><a href="#ctrl-client">Client allowlist</a>; <a href="#ctrl-pipeline">Policy sync, pipeline</a></dd></dl></div></article><article class="np" id="n-vs" data-node="vs" data-role="call"><header><span class="kind">Client</span><h3><a class="sec-link" href="#n-vs">VS Code, GitHub Copilot</a></h3></header><div class="ctl" id="ctrl-client" data-obj="B" data-layer="1"><h4>Client allowlist <span class="rt">Objective B · layer 1</span></h4><dl><dt>Design requirement</dt><dd>Managed clients may use only the MCP addresses on the approved list, which the pipeline writes to GitHub managed settings. Users cannot add their own. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>VS Code policies set an allowlist, a denylist and a managed-only mode <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V14">V14</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V15">V15</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V16">V16</a>. GitHub settings match a remote server by URL wildcards <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V17">V17</a>, block unmatched servers <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V19">V19</a>, and a deny entry wins <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V131">V131</a>. Not covered: servers in custom agent profiles and the built-in GitHub server <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V20">V20</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V21">V21</a>. Coverage varies by environment <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V22">V22</a>.</dd></dl></div><div class="ctl" id="ctrl-g-server-trust-prompt" data-obj="-" data-layer="1"><h4>Server trust prompt <span class="rt">Product guardrail · layer 1</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>Servers that do not come from the workspace MCP files can need a separate trust decision by the person. VS Code asks again after a configuration change. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V158">V158</a></dd></dl></div><div class="ctl" id="ctrl-stdio" data-obj="B" data-layer="1"><h4>Local stdio servers <span class="rt">Objective B · layer 1</span></h4><dl><dt>Design requirement</dt><dd>Limit which local server commands can start, through managed client policy. Add application control, least-privilege accounts and limits on sensitive files and credentials. Treat local administrators, other MCP clients and unmanaged devices as separate bypass risks. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>The client launches a local server as a subprocess <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V28">V28</a>. The stdio transport communicates over standard input and standard output <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V89">V89</a>. GitHub managed settings match the exact command and each argument <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V18">V18</a>.</dd></dl></div><div class="ctl" id="ctrl-g-confirmation-dialog" data-obj="-" data-layer="2"><h4>Confirmation dialog <span class="rt">Product guardrail · layer 2</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>By default, actions that are not auto-approved need the person's confirmation, and the dialog shows the input parameters <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V115">V115</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V151">V151</a>. The Allow all level runs all tool calls without confirmation <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V152">V152</a>. Assisted permissions lets an LLM judge assess each call <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V153">V153</a>. Documented for VS Code only.</dd></dl></div><div class="ctl" id="ctrl-g-approval-lock" data-obj="-" data-layer="2"><h4>Approval lock <span class="rt">Product guardrail · layer 2</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>A company can limit the levels above. A policy that turns off global auto-approval leaves only one-time approval and ignores saved approvals <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V156">V156</a>. A managed setting can disable Allow all <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V157">V157</a>. <span class="tg u">unverified</span> Not tested on a managed device.</dd></dl></div><div class="ctl" id="ctrl-g-tool-call-hook" data-obj="-" data-layer="3"><h4>Tool call hook <span class="rt">Product guardrail · layer 3</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>A preToolUse hook can inspect a supported tool's arguments and deny the call. A filter that misses a tool does not check that call <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V159">V159</a>. VS Code says hooks are not a substitute for enforced permissions or enterprise controls <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V160">V160</a>. <span class="tg u">unverified</span> Not checked whether a hook sees MCP tool calls.</dd></dl></div><div class="ctl" id="ctrl-g-result-review" data-obj="-" data-layer="6"><h4>Result review <span class="rt">Product guardrail · layer 6</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>Tool approval covers confirmation before or after a tool runs <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V155">V155</a>. Post-approval adds a tool result to the chat context without review, and VS Code warns about prompt injection in external data <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V154">V154</a>. <span class="tg u">unverified</span> Not checked which tools ask for a result review by default.</dd></dl></div><div class="ctl view-preview" id="ctrl-g-defender-for-endpoint-runtime-protection" data-obj="-" data-layer="-"><h4>Defender for Endpoint runtime protection <span class="tg pv">preview</span> <span class="rt">Product guardrail · layer not stated</span></h4><dl><dt>What Microsoft documents</dt><dd>Local agents are covered by Defender for Endpoint, not by the rules above <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V146">V146</a>. The article is prerelease <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V148">V148</a>. It can block an action before it runs when the inspection method allows it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V147">V147</a>. The Windows (preview) support table lists the VS Code GitHub Copilot extension <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V149">V149</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V150">V150</a>. The layer for this client is not stated.</dd></dl></div></article><article class="np" id="n-device" data-node="device" data-role="call"><header><span class="kind">Device</span><h3><a class="sec-link" href="#n-device">Managed Windows device</a></h3></header><div class="part" id="part-client-and-device-controls"><h4>Client and device controls</h4><dl><dt>What it does</dt><dd>Managed URL policies and, on Windows, outbound firewall rules where applicable.</dd><dt>Where it is set or run</dt><dd>Intune and VS Code policy <span class="tg i">inference</span>. They sit on the device, so they do not cover Microsoft 365 Copilot.</dd><dt>Use in this design</dt><dd><a href="#ctrl-client">Client allowlist</a>; <a href="#ctrl-stdio">Local stdio servers</a></dd></dl></div><div class="ctl" id="ctrl-windows" data-obj="B" data-layer="4"><h4>Windows outbound limits <span class="rt">Objective B · layer 4</span></h4><dl><dt>Design requirement</dt><dd>Block direct outbound calls from managed Windows devices to MCP servers that are not approved. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>Intune can set Windows Firewall to block all outbound traffic that matches no rule <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V32">V32</a>, a setting Microsoft says can be considered for certain highly secure environments <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V33">V33</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-outbound-filter" data-obj="B" data-layer="4"><h4>Outbound filter, optional <span class="tg pv">preview</span> <span class="rt">Objective B · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Add it only if the preview label is acceptable. Do not rely on it for local servers.</dd><dt>What Microsoft documents</dt><dd>The Global Secure Access MCP firewall filters by URL pattern <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V30">V30</a>. It carries the preview label <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V29">V29</a> and inspects remote servers only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V31">V31</a>.</dd></dl></div><p class="q-note"><span class="tg i">inference</span> Interpretation by AI: a device rule sees only calls that leave the device. Microsoft 365 Copilot, Copilot Studio and Foundry calls leave from Microsoft cloud services, so these controls do not cover them. Not tested.</p></article><article class="np" id="n-m365admin" data-node="m365admin" data-role="pol"><header><span class="kind">Policy target</span><h3><a class="sec-link" href="#n-m365admin">Microsoft 365 admin center</a></h3></header><div class="part" id="part-microsoft-365-admin-center"><h4>Microsoft 365 admin center</h4><dl><dt>What it does</dt><dd>Offers MCP servers to Microsoft 365 Copilot as federated connectors.</dd><dt>Where it is set or run</dt><dd>Microsoft 365 admin center <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V163">V163</a>. Set by hand; there is no pipeline.</dd><dt>Use in this design</dt><dd><a href="#ctrl-m365-network">Microsoft 365 Copilot network path</a></dd></dl></div><div class="ctl" id="ctrl-m365" data-obj="B" data-layer="1"><h4>Policy sync, Microsoft 365 Copilot <span class="rt">Objective B · layer 1</span></h4><dl><dt>Design requirement</dt><dd><span id="gap-m365-by-hand"></span>Add each approved company MCP server by hand as a custom federated connector that points at the gateway address. Clear the external publisher type unless a server is on the list. Stage each connector to named groups. Record every manual change in the repository. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>Federated connectors use MCP <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V162">V162</a>. A custom one starts with an MCP server <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V166">V166</a> and needs an admin role <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V167">V167</a>. Admins control availability <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V163">V163</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V168">V168</a>; every setting must allow the user <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V169">V169</a>. Tools can be blocked <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V172">V172</a>. Agent and plugin access has no PowerShell or API option <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V171">V171</a>.</dd></dl></div></article><article class="np" id="n-m365" data-node="m365" data-role="call"><header><span class="kind">Client</span><h3><a class="sec-link" href="#n-m365">Microsoft 365 Copilot</a></h3></header><div class="ctl" id="ctrl-g-write-approval" data-obj="-" data-layer="2"><h4>Write approval <span class="rt">Product guardrail · layer 2</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>For federated connectors, tools that write need user approval <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V164">V164</a>.</dd></dl></div><div class="ctl" id="ctrl-m365-network" data-obj="A" data-layer="4"><h4>Microsoft 365 Copilot network path <span class="rt">Objective A · layer 4</span></h4><dl><dt>Design requirement</dt><dd>Let the gateway accept the Microsoft 365 Copilot outbound addresses, and still require sign-in. Review the address list on a schedule. Do not count on device controls for this client. <span class="tg i">inference</span> Interpretation by AI: calls leave from the Microsoft cloud, so device URL policy and Windows firewall rules do not see them. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>MCP calls from declarative agents and federated connectors use a fixed set of outbound addresses <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V173">V173</a>. A server that filters by source address must allow them <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V170">V170</a>. Allow listing does not replace sign-in or authorization <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V174">V174</a>. The list can change with seven days' notice <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V175">V175</a>.</dd></dl></div></article><article class="np" id="n-fypolicy" data-node="fypolicy" data-role="pol"><header><span class="kind">Policy target</span><h3><a class="sec-link" href="#n-fypolicy">Microsoft Foundry</a></h3></header><div class="part" id="part-microsoft-foundry"><h4>Microsoft Foundry</h4><dl><dt>What it does</dt><dd>Limits the tools each Foundry agent may call on an MCP server.</dd><dt>Where it is set or run</dt><dd>Foundry portal <span class="tg u">unverified</span>. An allowed tool list on each MCP tool; the pipeline for it is not tested.</dd></dl></div><div class="ctl" id="ctrl-foundry" data-obj="B" data-layer="1"><h4>Policy sync, Foundry <span class="rt">Objective B · layer 1</span></h4><dl><dt>Design requirement</dt><dd>Configure each approved MCP connection with a nonempty allowed tool list. Remove or disable the connection when no tools should be allowed. Validate the pipeline separately. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>An MCP tool restricts access with a nonempty allowed tool list. An empty list allows every tool <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V69">V69</a>.</dd></dl></div></article><article class="np" id="n-fy" data-node="fy" data-role="call"><header><span class="kind">Client</span><h3><a class="sec-link" href="#n-fy">Foundry agents</a></h3></header><div class="ctl" id="ctrl-g-approval" data-obj="-" data-layer="2"><h4>Approval <span class="rt">Product guardrail · layer 2</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>require_approval defaults to always, which means a developer approves every call <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V106">V106</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V129">V129</a>. It can be set to never, or to a list of tools that skip approval <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V136">V136</a>. Microsoft advises approval for high-risk tools that write data <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V108">V108</a>.</dd></dl></div><div class="ctl" id="ctrl-g-untrusted-results" data-obj="-" data-layer="6"><h4>Untrusted results <span class="rt">Product guardrail · layer 6</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>Microsoft says to treat tool descriptions, annotations and results from remote MCP servers as untrusted input. This is advice, not a control. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V107">V107</a></dd></dl></div><div class="ctl" id="ctrl-foundry-network" data-obj="B" data-layer="4"><h4>Foundry network and sandbox <span class="rt">Objective B · layer 4</span></h4><dl><dt>Design requirement</dt><dd>For toolboxes, configure project networking and downstream egress rules. A tool allowlist alone does not restrict which server URLs an agent can use. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>For a Foundry toolbox, its hosting project governs network access <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V24">V24</a>. Tool connectivity depends on where the downstream service is hosted <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V26">V26</a>. The Network control limits outbound traffic for hosted agents and prompt agents on the Copilot harness only. Hosted agents also run in per-session VM sandboxes. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V101">V101</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V109">V109</a></dd></dl></div><div class="ctl view-preview" id="ctrl-foundry-routing" data-obj="-" data-layer="4"><h4>Foundry gateway routing <span class="tg pv">preview</span> <span class="rt">Separate route · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Create new tools in the Foundry portal without managed OAuth. Check the endpoint, sign-in and logs. Do not assume old tools are covered.</dd><dt>What Microsoft documents</dt><dd>Only new MCP tools created in the Foundry portal without managed OAuth are routed through an AI gateway <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V60">V60</a>. Routing is applied only at tool creation, and existing tools are not mediated automatically <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V61">V61</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-g-tool-call-and-tool-response-guardrails" data-obj="-" data-layer="3 6"><h4>Tool call and tool response guardrails <span class="tg pv">preview</span> <span class="rt">Product guardrail · layer 3 and 6</span></h4><dl><dt>What Microsoft documents</dt><dd>Both are in preview <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V102">V102</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V103">V103</a>. The response control scans for indirect prompt injection <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V133">V133</a>. Controls take no effect for tools outside the supported list <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V104">V104</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V105">V105</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V132">V132</a>. <span class="tg i">inference</span> Interpretation by AI: the list does not name MCP, so do not rely on them for MCP.</dd></dl></div><p class="q-note">No released guardrail checks call content (layer 3) or tool responses (layer 6). The pages read on 2026-11-11 describe only preview controls at both layers.</p></article><article class="np view-preview" id="n-defender" data-node="defender" data-role="pv"><header><span class="kind">Preview guardrail product</span><h3><a class="sec-link" href="#n-defender">Microsoft Defender</a></h3></header><div class="ctl view-preview" id="ctrl-g-defender-real-time-protection" data-obj="-" data-layer="3 6"><h4>Defender real-time protection <span class="tg pv">preview</span> <span class="rt">Product guardrail · layers: Foundry 3 and 6, plus user input and final answer. Copilot Studio 3</span></h4><dl><dt>Applies to</dt><dd>Foundry, Copilot Studio</dd><dt>What Microsoft documents</dt><dd>Checks agent activity and can block a risky action before it runs <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V116">V116</a>. Foundry (Preview): user requests, agent responses, tool calls and tool responses <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V117">V117</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V118">V118</a>. Copilot Studio (Preview): tool calls <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V119">V119</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V120">V120</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-g-defender-on-the-agent-365-path" data-obj="-" data-layer="3"><h4>Defender on the Agent 365 path <span class="tg pv">preview</span> <span class="rt">Product guardrail · layer 3</span></h4><dl><dt>Applies to</dt><dd>Agent 365</dd><dt>What Microsoft documents</dt><dd>Covers tool calls to customer MCP tools onboarded to Agent 365, but not agents that use unsupported tools or skip Work IQ MCP <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V121">V121</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V122">V122</a>. <span class="tg i">inference</span> Interpretation by AI: the line is not labelled preview on the page, but it needs a customer MCP server onboarded to Agent 365, and the sources call that path preview <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V43">V43</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-g-defender-rules-and-scope" data-obj="-" data-layer="3 6"><h4>Defender rules and scope <span class="tg pv">preview</span> <span class="rt">Product guardrail · layers as the other Defender controls</span></h4><dl><dt>Applies to</dt><dd>Foundry, Copilot Studio, Agent 365</dd><dt>What Microsoft documents</dt><dd>The default rule only audits <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V123">V123</a>. A custom rule blocks <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V124">V124</a>. Blocking covers malicious content, secret exfiltration, evasion techniques and email to an unsafe domain <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V125">V125</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V141">V141</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V142">V142</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V143">V143</a>. The email scenario is checked only at the tool request <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V144">V144</a>. A rule can be scoped only to agents with a Microsoft Entra agent ID <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V145">V145</a>.</dd></dl></div><p class="q-note"><span class="tg i">inference</span> Interpretation by AI: Defender is drawn between the agents and the gateway because the sources say it checks tool calls before they run. They do not say where it runs.</p></article><article class="np" id="n-pp" data-node="pp" data-role="pol"><header><span class="kind">Policy target</span><h3><a class="sec-link" href="#n-pp">Power Platform</a></h3></header><div class="part" id="part-power-platform"><h4>Power Platform</h4><dl><dt>What it does</dt><dd>Controls which MCP connectors Copilot Studio agents may use.</dd><dt>Where it is set or run</dt><dd>Power Platform admin center <span class="tg u">unverified</span>. The pipeline would use the Power Platform API, not verified for MCP.</dd></dl></div><div class="ctl" id="ctrl-power-platform" data-obj="B" data-layer="1"><h4>Policy sync, Power Platform <span class="rt">Objective B · layer 1</span></h4><dl><dt>Design requirement</dt><dd><span id="gap-unverified-url-block"></span>Configure an advanced connector policy for MCP connectors listed in the target environment. Keep classic data policies for custom and HTTP connectors. Use manual configuration until API automation for the actual MCP entry is verified. Do not assume an arbitrary MCP URL is a supported policy entry. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>ACP supports deployment-pipeline automation <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V67">V67</a>, MCP server-level blocking but not per-tool blocks <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V65">V65</a>, and connector blocking also blocks dependent MCP tools <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V27">V27</a>. Custom and HTTP connectors aren't supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V78">V78</a>. The API tutorial lacks an MCP-specific example; verify this path in the target tenant <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V66">V66</a>. <span class="tg r">recommendation</span></dd></dl></div></article><article class="np" id="n-cs" data-node="cs" data-role="call"><header><span class="kind">Client</span><h3><a class="sec-link" href="#n-cs">Copilot Studio</a></h3></header><div class="ctl" id="ctrl-g-ask-before-running" data-obj="-" data-layer="2"><h4>Ask before running <span class="rt">Product guardrail · layer 2</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>A maker can set a tool to ask the end user for confirmation in the chat before it runs. The option is off by default. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V137">V137</a> <span class="tg u">unverified</span> The page describes tools in general. Not checked whether the option is offered for MCP tools.</dd></dl></div><div class="ctl" id="ctrl-g-prompt-attack-block" data-obj="-" data-layer="6"><h4>Prompt attack block <span class="rt">Product guardrail · layer 6</span></h4><dl><dt>What Microsoft and GitHub document</dt><dd>Built-in protection against user prompt injection (UPIA) and cross-domain prompt injection (XPIA). At runtime the agent blocks attacks of these types. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V110">V110</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V130">V130</a> <span class="tg i">inference</span> Interpretation by AI: the source does not say at which layer. It is listed here because cross-domain attacks can arrive in tool results.</dd></dl></div><div class="ctl view-preview" id="ctrl-g-threat-detection" data-obj="-" data-layer="3"><h4>Threat detection <span class="tg pv">preview</span> <span class="rt">Product guardrail · layer 3</span></h4><dl><dt>What Microsoft documents</dt><dd>An external service allows or blocks a tool call. The page is prerelease <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V112">V112</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V113">V113</a>. By default the call goes ahead if the service is silent for one second. This can be changed to block <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V114">V114</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V139">V139</a>. It runs only with generative orchestration <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V138">V138</a>. The agent shares data with the provider <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V140">V140</a>.</dd></dl></div><p class="q-note">No released guardrail checks call content (layer 3). The pages read on 2026-11-11 describe only a preview control there.</p></article><article class="np" id="n-log" data-node="log" data-role="log"><header><span class="kind">Monitoring</span><h3><a class="sec-link" href="#n-log">Logging, checks and Purview</a></h3></header><div class="ctl" id="ctrl-logging" data-obj="A B" data-layer="0"><h4>Logging and checks <span class="rt">Objectives A and B · whole path</span></h4><dl><dt>Applies to</dt><dd>All clients</dd><dt>Design requirement</dt><dd>Collect gateway logs and endpoint or client telemetry. Look for unapproved server connections, unexpected MCP processes, failed sign-ins and unusual tool use. Review the approved list on a schedule. Run the acceptance tests. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>Gateway policies can log every request <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V3">V3</a>. Microsoft 365 Copilot connector activity can be audited in Purview <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V165">V165</a>.</dd></dl></div><div class="ctl" id="ctrl-purview-audit" data-obj="A B" data-layer="0"><h4>Purview audit of agent tool calls <span class="rt">Objectives A and B · whole path</span></h4><dl><dt>Applies to</dt><dd>Agent 365 agent instances</dd><dt>Design requirement</dt><dd>Add the Purview audit log for Agent 365 activities to the log review. Look for tool calls to servers that are not on the approved list. <span class="tg r">recommendation</span> <span class="tg i">inference</span> Interpretation by AI: MCP tool calls count as agent-to-tools interactions. The Purview pages do not name MCP.</dd><dt>What Microsoft and GitHub document</dt><dd>Agent 365 agent instances are audited from creation <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V203">V203</a>, including agent-to-tools interactions <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V204">V204</a>, in a searchable audit log <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V205">V205</a>. Agent 365 DLP lists only agent-to-human and human-to-agent traffic <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V206">V206</a>. DSPM lists agents active in the last 30 days <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V207">V207</a>. For Foundry, Purview audits prompts and responses <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V208">V208</a>; its page does not mention tool calls.</dd></dl></div></article><article class="np" id="n-gw" data-node="gw" data-role="gw"><header><span class="kind">Control point</span><h3><a class="sec-link" href="#n-gw">Gateway</a></h3></header><div class="part" id="part-azure-api-management"><h4>Azure API Management</h4><dl><dt>What it does</dt><dd>The one door to the company MCP server, for every client. Its AI gateway capabilities extend the service and are not a separate offering <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V196">V196</a>.</dd><dt>Where it is set or run</dt><dd>Azure <span class="tg i">inference</span>. MCP server management is listed for classic and v2 tiers <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V71">V71</a>.</dd><dt>Use in this design</dt><dd><a href="#ctrl-backend">Backend isolation</a>. Choose a v2 tier <span class="tg r">recommendation</span>: the Foundry integration lists only v2 instances <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V199">V199</a>. A classic tier works for MCP but rules that integration out.</dd></dl></div><div class="part" id="part-ai-gateway-integrated-with-foundry"><h4>AI Gateway integrated with Foundry</h4><dl><dt>What it does</dt><dd>The AI Gateway option in the Foundry portal. It is also an API Management service <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V197">V197</a>.</dd><dt>Where it is set or run</dt><dd>Create new makes a Basic v2 instance <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V198">V198</a>. Use existing lists only v2 instances in the same tenant and subscription as the Foundry resource <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V199">V199</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V200">V200</a>.</dd><dt>Use in this design</dt><dd>Not used for MCP tools: routing them through it is a preview feature. If Foundry is connected, use the company's existing v2 instance, so there is one gateway and one set of policies <span class="tg r">recommendation</span>. Microsoft suggests Standard v2 or Premium v2 for production <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V201">V201</a>. <span class="tg i">inference</span> Interpretation by AI: one instance can serve both roles. Not tested.</dd></dl></div><div class="ctl" id="ctrl-gateway" data-obj="A" data-layer="4"><h4>Gateway <span class="rt">Objective A · layer 4</span></h4><dl><dt>Applies to</dt><dd>All clients</dd><dt>Design requirement</dt><dd>Publish each approved remote MCP endpoint through API Management. Check identity, authorize, rate-limit and log. Scope access by app or workload identity. Confirm the release status of each feature before relying on it. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>For a remote Azure MCP Server, Microsoft suggests API Management as a gateway <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V1">V1</a>: a single choke point <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V4">V4</a>. Policies limit rates, restrict tool paths and log requests <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V3">V3</a>. Clients go through it so the backend is not silently redirected <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V5">V5</a>. It can expose REST APIs as MCP servers or pass MCP servers through <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V63">V63</a>.</dd></dl></div><div class="ctl" id="ctrl-identity" data-obj="A" data-layer="4"><h4>Identity <span class="rt">Objective A · layer 4</span></h4><dl><dt>Applies to</dt><dd>All clients, gateway and backend</dd><dt>Design requirement</dt><dd>Only the gateway holds a credential or workload identity the backend accepts. Require the backend to validate token audience and the authorized gateway identity; verify that other identities are rejected. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>The gateway can check an Entra ID token <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V6">V6</a> or a subscription key <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V7">V7</a> before the request goes on <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V2">V2</a>. It can sign in to the backend with its managed identity <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V8">V8</a>. Checking the token again at the backend is a design choice. <span class="tg r">recommendation</span></dd></dl></div><div class="ctl view-preview" id="ctrl-a365" data-obj="-" data-layer="4"><h4>Agent 365 gateway integration <span class="tg pv">preview</span> <span class="rt">Visibility, not the boundary · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Connect the API Management gateway so admins can see registered servers and block one. Treat blocking as additional gateway enforcement. It does not replace backend isolation. This is separate from the Agent 365 BYO server route below.</dd><dt>What Microsoft documents</dt><dd>Agent 365 discovers servers in connected gateways <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V36">V36</a>. The preview integration lists inventory and server block/unblock for API Management v2 and AI Gateway; tool blocking, activity observability and threat protection only for AI Gateway <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V42">V42</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V194">V194</a>. Tool blocking needs a static allowed-tools list <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V38">V38</a>. v1 tiers are not supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V41">V41</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-a365-consent" data-obj="-" data-layer="4"><h4>Agent 365 consent <span class="tg pv">preview</span> <span class="rt">Tenant level · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Before anyone grants it, name who approves the consent, who reviews the policy changes it allows, and how it is withdrawn.</dd><dt>What Microsoft documents</dt><dd>An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V39">V39</a>. It lets the service read and write API-scoped policies <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V40">V40</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-ai-resource" data-obj="A" data-layer="4"><h4>AI Gateway product and resource <span class="tg pv">preview</span> <span class="rt">Objective A · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Do not confuse AI gateway capabilities in the API Management service with the separate AI Gateway product and resource type <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V196">V196</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V195">V195</a>. Evaluate the current AI Gateway resource rather than following examples written for the earlier resource type.</dd><dt>What Microsoft documents</dt><dd>The separate AI Gateway product uses resource type Microsoft.ApiManagement/aigateways <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V45">V45</a>. Migrate the earlier Microsoft.ApiManagement/service AIGateway SKU before 15 Jan 2027 <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V46">V46</a>. The new runtime URL uses ai.gateway.azure.com <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V50">V50</a>; keys go in an Authorization header with a Bearer scheme <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V51">V51</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-ai-limits" data-obj="A" data-layer="4"><h4>AI Gateway limits <span class="tg pv">preview</span> <span class="rt">Objective A · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Check the network design first. Confirm that a public gateway frontend, fixed virtual network and subnet, supported region and alternative content safety control meet the pilot requirements.</dd><dt>What Microsoft documents</dt><dd>Gateway frontend private endpoints are not supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V47">V47</a>. The virtual network and subnet cannot be changed after creation <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V48">V48</a>. The content safety policy is not supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V49">V49</a>. During public preview the regions are East US 2 and Sweden Central <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V52">V52</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-ai-publish" data-obj="A" data-layer="4"><h4>Gateway publishing <span class="tg pv">preview</span> <span class="rt">Objective A · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Publish approved tools through the gateway. Give the gateway its own backend credential, scoped to what the tools need.</dd><dt>What Microsoft documents</dt><dd>The gateway can combine tools from remote MCP servers, OpenAPI APIs and connectors behind gateway MCP endpoints <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V62">V62</a>. With a shared backend connection, callers use that connection's permissions <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V79">V79</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-ttp-users" data-obj="-" data-layer="4"><h4>Tool threat protection: who can use it <span class="tg pv">preview</span> <span class="rt">Extra defence · layer 4</span></h4><dl><dt>Design requirement</dt><dd>Use it only in flows that carry a user token. Keep least privilege and human approval for destructive tools. Do not rely on it alone.</dd><dt>What Microsoft documents</dt><dd>It requires a delegated Entra user token <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V53">V53</a>. App-only service-to-service calls are not supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V54">V54</a>. A Defender or Purview license is required <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V57">V57</a>.</dd></dl></div><div class="ctl view-preview" id="ctrl-ttp-modes" data-obj="-" data-layer="4"><h4>Tool threat protection: modes and scope <span class="tg pv">preview</span> <span class="rt">Extra defence · layer 4</span></h4><dl><dt>Design requirement</dt><dd>Configure the evaluation mode in Microsoft Defender. Test Audit, Block and failure handling. Enable pre-invocation checks to stop calls and post-invocation checks to withhold results. Plan for tools that already ran.</dd><dt>What Microsoft documents</dt><dd>Audit mode fails open <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V55">V55</a>. Block mode fails closed <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V56">V56</a>. One policy applies to every tool and caller of a server, not to one tool <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V58">V58</a>. A denial after the call cannot undo it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V59">V59</a>.</dd></dl></div></article><article class="np view-preview" id="n-byo" data-node="byo" data-role="pv"><header><span class="kind">Separate preview route</span><h3><a class="sec-link" href="#n-byo">Agent 365 BYO route</a></h3></header><div class="ctl view-preview" id="ctrl-byo" data-obj="-" data-layer="4"><h4>Agent 365 BYO server route <span class="tg pv">preview</span> <span class="rt">Separate route · layer 4, AI estimate</span></h4><dl><dt>Design requirement</dt><dd>Treat this as a separate registration route, not as the API Management gateway integration. Require developer registration and admin approval. Confirm its public endpoint fits the backend isolation target. Test each listed client surface before relying on it.</dd><dt>What Microsoft documents</dt><dd>BYO servers route through the Agent 365 Tooling Gateway <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V85">V85</a>. Preview clients: Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI; not Foundry or declarative agents <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V43">V43</a>. An IT admin approves or rejects requests in the Microsoft 365 admin center <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V87">V87</a>. Servers need a publicly accessible endpoint <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V88">V88</a>. BYO tool-level blocking is planned <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V86">V86</a>.</dd></dl></div></article><article class="np" id="n-be" data-node="be" data-role="be"><header><span class="kind">Backend</span><h3><a class="sec-link" href="#n-be">Company MCP server</a></h3></header><div class="part" id="part-company-mcp-server"><h4>Company MCP server</h4><dl><dt>What it does</dt><dd>Only the gateway may reach it.</dd><dt>Where it is set or run</dt><dd>The server's own network and identity settings.</dd><dt>Use in this design</dt><dd><a href="#ctrl-identity">Identity</a></dd></dl></div><div class="ctl" id="ctrl-backend" data-obj="A" data-layer="5"><h4>Backend isolation <span class="rt">Objective A · layer 5</span></h4><dl><dt>Design requirement</dt><dd>Switch off public access to the backend. Accept inbound calls from the gateway only, over a private path. <span class="tg r">recommendation</span></dd><dt>What Microsoft and GitHub document</dt><dd>Restrict MCP server connectivity so the gateway is the only permitted caller, or use private networking where supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V9">V9</a>. Azure Functions offers inbound access restrictions and private endpoints <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V11">V11</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V12">V12</a>. The classic Consumption plan has no private endpoints <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V13">V13</a>. The API Management integration does not automatically route agents through a customer-hosted gateway <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V10">V10</a>.</dd></dl></div></article>
+      </div>
+    </div>
+    <p class="q-note"><span class="tg u">unverified</span> marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. <span class="tg i">inference</span> marks interpretation by AI. Agent approval and lifecycle are separate from this page's MCP server workflow.</p>
+  </section>
+
+  <section class="sec" id="rollout" aria-labelledby="h-rollout">
+    <header class="sh"><h2 id="h-rollout"><a class="sec-link" href="#rollout">Rollout and tests</a></h2>
+    <p class="goal"><b>Goal</b>API Management alone does not guarantee objectives A and B.&nbsp;<span class="tg r">recommendation</span></p></header>
+    <div class="sub3" id="order">
+      <h3 id="h-order"><a class="sec-link" href="#h-order">Order of work</a></h3>
+    <ol class="steps">
+      <li><strong>First.</strong> Inventory MCP use, put the approved list in a repository and build the pipeline that applies it.</li>
+      <li><strong>Next.</strong> Isolate the company MCP backends and require access through API Management.</li>
+      <li><strong>Then.</strong> Add endpoint application control, local server limits and outbound policy.</li>
+      <li><strong>Finally.</strong> Add monitoring, review exceptions and run the bypass tests on a schedule.</li>
+    </ol>
+    </div>
+    <div class="sub3" id="tests">
+      <h3 id="h-tests"><a class="sec-link" href="#h-tests">Acceptance tests</a></h3>
+    <p class="q-note">No test has been run.</p>
+    <div class="tbl-wrap"><table class="tbl">
+<thead><tr><th>Test</th><th>Expected result</th><th>Objective</th></tr></thead>
+<tbody>
+<tr><td data-label="Test">Call an approved MCP server through API Management</td><td data-label="Expected result">Allowed</td><td data-label="Objective">A</td></tr>
+<tr><td data-label="Test">Call the protected backend directly</td><td data-label="Expected result">Blocked</td><td data-label="Objective">A</td></tr>
+<tr><td data-label="Test">Call API Management without valid authorization</td><td data-label="Expected result">Rejected</td><td data-label="Objective">A</td></tr>
+<tr><td data-label="Test">Add an unapproved remote MCP server in a managed client</td><td data-label="Expected result">Blocked</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Change the MCP URL in VS Code to a different server</td><td data-label="Expected result">Blocked</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Start an unauthorized local MCP server</td><td data-label="Expected result">Blocked or contained by endpoint controls</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Merge a pull request that denies a server</td><td data-label="Expected result">Blocked in each supported target after policy propagation and client refresh</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Edit a target by hand, then run the pipeline</td><td data-label="Expected result">The edit is overwritten or flagged</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Call an approved connector from Microsoft 365 Copilot</td><td data-label="Expected result">Allowed, through API Management</td><td data-label="Objective">A</td></tr>
+<tr><td data-label="Test">Add a custom connector for an unapproved server without an admin role</td><td data-label="Expected result">Blocked</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Block a connector in the Microsoft 365 admin center</td><td data-label="Expected result">Unavailable to users after the change takes effect</td><td data-label="Objective">B</td></tr>
+<tr><td data-label="Test">Repeat the direct call by IP address, from an unmanaged client, by another network path and from a cloud-hosted agent</td><td data-label="Expected result">Blocked</td><td data-label="Objective">A</td></tr>
+</tbody>
+</table></div>
+    </div>
+  </section>
+
+  <section class="sec" id="gaps" aria-labelledby="h-gaps">
+    <header class="sh"><h2 id="h-gaps"><a class="sec-link" href="#gaps">Gaps</a></h2>
+    </header>
+    <ol>
+<li><strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.</li>
+<li><p><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V21">V21</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V92">V92</a>.</p><p>Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP servers <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V93">V93</a>, and Registry only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V94">V94</a>, a public preview with weaker enforcement <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V95">V95</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V96">V96</a>. The design has no control for it. Test both switches in a pilot, or limit it through GitHub account permissions.</p></li>
+<li><strong id="gap-m365-manual">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V171">V171</a>, so the pipeline cannot keep this target in step. <span class="tg u">unverified</span> No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.</li>
+<li><strong id="gap-one-gateway">One gateway for Foundry and the other clients.</strong> <span class="tg i">inference</span> Interpretation by AI: the same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.</li>
+<li><strong id="gap-m365-status">Microsoft 365 Copilot connector status.</strong> <span class="tg i">inference</span> Interpretation by AI: the federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.</li>
+<li><strong id="gap-github-cloud-agent">GitHub Copilot cloud agent.</strong> Its firewall does not directly filter MCP server processes, so it is not their egress boundary. Only the client allowlist applies. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V23">V23</a></li>
+<li><strong id="gap-windows-outbound">Windows outbound block.</strong> It can block non-MCP traffic too, and name-based rules have limits with proxies and some VPN tunnels. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V32">V32</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V34">V34</a></li>
+<li><strong id="gap-tier-availability">API Management tier availability.</strong> MCP features vary by tier. Confirm the target tier and release status before relying on a feature. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V64">V64</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V80">V80</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V81">V81</a></li>
+    </ol>
+    
+  </section>
+
+  <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
+    <header class="sh"><h2 id="h-preview"><a class="sec-link" href="#preview">With preview&nbsp;<span class="tg pv">preview</span></a></h2>
+    <p class="goal"><b>In short</b>Use the separate AI Gateway product and the Agent 365 integration in place of the API Management service gateway. AI Gateway is in public preview. Use this design only in a sandbox. If a preview feature changes, switch it off and fall back to the released-only design. <span class="tg r">recommendation</span></p>
+    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type.</p></header>
+    <p class="q-note">Dedicated AI Gateway is a separate product that replaces the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V42">V42</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V194">V194</a>. Moving to it is a migration: a new resource and a new runtime address <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V50">V50</a>. See <a href="#ctrl-ai-resource">AI Gateway product and resource</a>.</p><p class="q-note">Microsoft says preview features are not meant for production use and may have restricted functionality. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V35">V35</a> Every preview control in the diagram is a preview feature and its requirement is a recommendation. <span class="tg pv">preview</span> <span class="tg r">recommendation</span></p>
+    <div class="sub3" id="approval-workflow">
+      <h3 id="approval-and-denial-workflow"><a class="sec-link" href="#approval-and-denial-workflow">Approval and denial workflow</a></h3>
+      <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other. <span class="tg r">recommendation</span></p>
+      <div class="wf-lane" data-wf="gov"><h4>Company governance</h4><div class="wf-steps"><button type="button" data-step="g1" aria-pressed="false">1 Requester adds the server to Git</button><button type="button" data-step="g2" aria-pressed="false">2 Security review</button><button type="button" data-step="g3" aria-pressed="false">3a Approve and merge</button><button type="button" data-step="g4" aria-pressed="false">3b Deny and stop</button></div><div class="wf-detail" data-step="g1"><p>A requester adds the server, owner, sign-in, tools and risk class to the reviewed inventory in Git.</p></div><div class="wf-detail" data-step="g2"><p>Security reviews the server and each of its tools.</p></div><div class="wf-detail" data-step="g3"><p>Approval merges the change into the inventory. The pipeline then applies it to the policy targets.</p></div><div class="wf-detail" data-step="g4"><p>Denial records the reason in Git and stops the request.</p></div></div><div class="wf-lane" data-wf="a365"><h4>Agent 365 route, preview</h4><div class="wf-steps"><button type="button" data-step="a1" aria-pressed="false">4 Developer registers the server</button><button type="button" data-step="a2" aria-pressed="false">5 Admin reviews the request</button><button type="button" data-step="a3" aria-pressed="false">6a Approve, consent, available</button><button type="button" data-step="a4" aria-pressed="false">6b Reject</button><button type="button" data-step="a5" aria-pressed="false">7 Later deny</button></div><div class="wf-detail" data-step="a1"><p>The developer registers the server after the internal pull request merges.</p></div><div class="wf-detail" data-step="a2"><p>An AI Administrator or Global Administrator reviews the requester, address, sign-in, tools and permissions under Agents &gt; Tools &gt; Requests (preview). <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V186">V186</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V187">V187</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V87">V87</a> Individual tool controls are rolling out for supported Agent 365 servers. BYO server tool-level blocking is planned. Until then, block at server level and authorize at the gateway and backend. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V188">V188</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V37">V37</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V44">V44</a></p></div><div class="wf-detail" data-step="a3"><p>Approval is followed by Microsoft Entra tenant consent. Only then is the server Available in the registry. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V184">V184</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V185">V185</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V87">V87</a> Then apply target policies and backend authorization.</p></div><div class="wf-detail" data-step="a4"><p>Rejection leaves the server unavailable. Record the reason in Git.</p></div><div class="wf-detail" data-step="a5"><p>Block the server in the registry, mark it denied in Git, remove it from the target allowlists and verify that calls are denied. Microsoft 365 admin actions do not update the other policy targets. <span class="tg r">recommendation</span></p></div></div>
+      <p class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. This is the MCP server request queue <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V181">V181</a>. </p><p class="q-note">Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V190">V190</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V191">V191</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V192">V192</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V193">V193</a> The view combines distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V182">V182</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V183">V183</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V189">V189</a></p>
+    </div>
+    <div class="sub3" id="preview-tests">
+      
+      <h3 id="tests-added-with-preview"><a class="sec-link" href="#tests-added-with-preview">Tests added with preview</a></h3>
+      <p class="q-note">No test has been run.</p>
+      <div class="tbl-wrap"><table class="tbl">
+<thead><tr><th>Test</th><th>Expected result</th><th>What establishes the guarantee</th></tr></thead>
+<tbody>
+<tr><td data-label="Test">Approved client calls the approved gateway MCP endpoint</td><td data-label="Expected result">Allowed</td><td data-label="What establishes the guarantee">Gateway sign-in and the published tool policy</td></tr>
+<tr><td data-label="Test">Admin blocks a whole MCP server in the API Management integration</td><td data-label="Expected result">Denied at the gateway</td><td data-label="What establishes the guarantee">A verified integration and a runtime block</td></tr>
+<tr><td data-label="Test">Admin blocks a single tool in the API Management integration</td><td data-label="Expected result">Denied, only on a supported gateway with a static tool list</td><td data-label="What establishes the guarantee">An explicit tool-level policy test</td></tr>
+<tr><td data-label="Test">Pre-invocation evaluation denies a tool argument</td><td data-label="Expected result">Tool not run</td><td data-label="What establishes the guarantee">Block mode before the call</td></tr>
+<tr><td data-label="Test">Post-invocation evaluation denies a tool result</td><td data-label="Expected result">Result withheld; the tool may already have run</td><td data-label="What establishes the guarantee">Block mode after the call</td></tr>
+<tr><td data-label="Test">Microsoft admin rejects a registered MCP server request</td><td data-label="Expected result">Server remains unavailable</td><td data-label="What establishes the guarantee">Requests preview decision</td></tr>
+<tr><td data-label="Test">Microsoft admin approves without granting Entra consent</td><td data-label="Expected result">Server remains unavailable to agent-building surfaces</td><td data-label="What establishes the guarantee">Approval plus required tenant consent</td></tr>
+<tr><td data-label="Test">Admin blocks an Available MCP server</td><td data-label="Expected result">Tool calls are denied at runtime</td><td data-label="What establishes the guarantee">Registry block and the connected Agent 365 enforcement path</td></tr>
+<tr><td data-label="Test">Review the Agent registry, Tools registry and Requests queue</td><td data-label="Expected result">Agent inventory, Available or Blocked server states, and pending preview requests are visible in their respective views</td><td data-label="What establishes the guarantee">Microsoft 365 admin center</td></tr>
+<tr><td data-label="Test">An app-only caller reaches a tool with the delegated-token protection</td><td data-label="Expected result">Unsupported, or the protected call fails</td><td data-label="What establishes the guarantee">An explicit sign-in compatibility test</td></tr>
+<tr><td data-label="Test">The gateway is down, or a preview feature is withdrawn</td><td data-label="Expected result">Safe stop, or a rollback to the released-only design</td><td data-label="What establishes the guarantee">Backend and client controls of the released-only design</td></tr>
+</tbody>
+</table></div>
+    </div>
+    
+    <div class="sub3" id="pilot">
+      
+      <h3 id="preview-pilot-after-the-baseline"><a class="sec-link" href="#preview-pilot-after-the-baseline">Preview pilot, after the baseline</a></h3>
+      <ol class="steps">
+        <li><strong>Scope.</strong> Pick a low-risk server with two read-only tools and one controlled write tool. Record owner, data class, sign-in and expected clients.</li>
+        <li><strong>Resource type.</strong> Create the separate AI Gateway product on the current resource type in a supported public preview region <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V45">V45</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V52">V52</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V195">V195</a>. Confirm eligibility, the public front door, networking, policy features and licensing.</li>
+        <li><strong>Lock the backend.</strong> Make direct calls fail. Check the supported backend network design, because the new gateway has no private endpoints <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V47">V47</a>.</li>
+        <li><strong>Connect Agent 365.</strong> For the API Management integration, after named tenant-admin consent, connect the gateway and check that the server shows up. Review the permissions granted <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V40">V40</a>.</li>
+        <li><strong>Test blocking.</strong> For the preview Agent 365 integration, test server block/unblock on a supported API Management v2 tier. Test tool blocking and threat protection only on the separate AI Gateway product, with a static tool list and a delegated user-token flow <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V38">V38</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V53">V53</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V194">V194</a>. Test Audit, Block and failure handling. App-only workloads are not supported <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V54">V54</a>.</li>
+        <li><strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V35">V35</a>.</li>
+      </ol>
+    </div>
+    
+  </section>
+
+  </main>
+
+  <footer>
+    <p>The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+    <p id="evidence">Sources and review notes: <a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md">fact check</a>.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var body = document.body;
+  body.classList.add('js');
+  var h0 = location.hash;
+  if(/^#ev-V\d+$/.test(h0)){ location.replace('https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md' + h0); return; }
+  var D = {"order": ["git", "pipeline", "ghe", "vs", "device", "m365admin", "m365", "fypolicy", "fy", "defender", "pp", "cs", "log", "gw", "byo", "be"], "preview": ["defender", "byo"], "edges": [{"id": "git-pipeline", "a": "git", "b": "pipeline", "k": "pol", "r": "h", "paths": ["policy"], "view": ""}, {"id": "trunk", "a": "pipeline", "b": "pp", "k": "pol", "r": "trunk", "paths": ["policy"], "view": ""}, {"id": "to-ghe", "a": "pipeline", "b": "ghe", "k": "pol", "r": "branch", "paths": ["policy"], "view": ""}, {"id": "to-m365admin", "a": "pipeline", "b": "m365admin", "k": "pol dash", "r": "branch", "paths": ["policy"], "view": ""}, {"id": "to-fypolicy", "a": "pipeline", "b": "fypolicy", "k": "pol", "r": "branch", "paths": ["policy"], "view": ""}, {"id": "to-pp", "a": "pipeline", "b": "pp", "k": "pol", "r": "branch", "paths": ["policy"], "view": ""}, {"id": "ghe-vs", "a": "ghe", "b": "vs", "k": "pol", "r": "h", "paths": ["policy"], "view": ""}, {"id": "m365admin-m365", "a": "m365admin", "b": "m365", "k": "pol", "r": "h", "paths": ["policy"], "view": ""}, {"id": "fypolicy-fy", "a": "fypolicy", "b": "fy", "k": "pol", "r": "h", "paths": ["policy"], "view": ""}, {"id": "pp-cs", "a": "pp", "b": "cs", "k": "pol", "r": "h", "paths": ["policy"], "view": ""}, {"id": "vs-device", "a": "vs", "b": "device", "k": "call", "r": "h", "paths": ["vs"], "view": ""}, {"id": "device-gw", "a": "device", "b": "gw", "k": "call", "r": "rail", "paths": ["vs"], "view": ""}, {"id": "m365-gw", "a": "m365", "b": "gw", "k": "call", "r": "rail", "paths": ["m365"], "view": ""}, {"id": "fy-gw", "a": "fy", "b": "gw", "k": "call", "r": "rail", "paths": ["fy"], "view": "safe"}, {"id": "cs-gw", "a": "cs", "b": "gw", "k": "call", "r": "rail", "paths": ["cs"], "view": "safe"}, {"id": "fy-defender", "a": "fy", "b": "defender", "k": "call", "r": "h", "paths": ["fy"], "view": "preview"}, {"id": "cs-defender", "a": "cs", "b": "defender", "k": "call", "r": "h", "paths": ["cs"], "view": "preview"}, {"id": "defender-gw", "a": "defender", "b": "gw", "k": "call", "r": "rail", "paths": ["fy", "cs"], "view": "preview"}, {"id": "gw-be", "a": "gw", "b": "be", "k": "call", "r": "v", "paths": ["vs", "m365", "fy", "cs"], "view": ""}, {"id": "log-gw", "a": "log", "b": "gw", "k": "log", "r": "h", "paths": [], "view": ""}, {"id": "direct", "a": "vs", "b": "be", "k": "red", "r": "blocked", "paths": ["direct"], "view": ""}, {"id": "byo-be", "a": "byo", "b": "be", "k": "red", "r": "v", "paths": ["byo"], "view": "preview"}], "paths": {"policy": {"nodes": ["git", "pipeline", "ghe", "m365admin", "fypolicy", "pp", "vs", "m365", "fy", "cs"], "nodes_pv": [], "note": "A pipeline writes the approved list from Git to GitHub Enterprise, Microsoft Foundry and Power Platform. The Microsoft 365 admin center is set by hand. Each policy target governs one client.", "note_pv": "A pipeline writes the approved list from Git to GitHub Enterprise, Microsoft Foundry and Power Platform. The Microsoft 365 admin center is set by hand. Each policy target governs one client.", "preview": false}, "vs": {"nodes": ["vs", "device", "gw", "be"], "nodes_pv": [], "note": "VS Code and GitHub Copilot pass a managed Windows device first, then reach the gateway, which calls the company MCP server.", "note_pv": "VS Code and GitHub Copilot pass a managed Windows device first, then reach the gateway, which calls the company MCP server.", "preview": false}, "m365": {"nodes": ["m365", "gw", "be"], "nodes_pv": [], "note": "Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses. No device is on this path.", "note_pv": "Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses. No device is on this path.", "preview": false}, "fy": {"nodes": ["fy", "gw", "be"], "nodes_pv": ["defender"], "note": "Foundry agents call the gateway, which calls the company MCP server.", "note_pv": "Foundry agents call the gateway, which calls the company MCP server. Microsoft Defender checks the tool call before it runs. <span class=\"tg i\">inference<\/span> Interpretation by AI: the sources do not say where Defender runs.", "preview": false}, "cs": {"nodes": ["cs", "gw", "be"], "nodes_pv": ["defender"], "note": "Copilot Studio calls the gateway, which calls the company MCP server.", "note_pv": "Copilot Studio calls the gateway, which calls the company MCP server. Microsoft Defender checks the tool call before it runs. <span class=\"tg i\">inference<\/span> Interpretation by AI: the sources do not say where Defender runs.", "preview": false}, "direct": {"nodes": ["vs", "m365", "fy", "cs", "be"], "nodes_pv": [], "note": "A direct call from a client to the company MCP server is blocked. The server accepts calls from the gateway only.", "note_pv": "A direct call from a client to the company MCP server is blocked. The server accepts calls from the gateway only.", "preview": false}, "byo": {"nodes": ["byo", "be"], "nodes_pv": [], "note": "The separate Agent 365 route reaches the company MCP server without the gateway. It is a preview route.", "note_pv": "The separate Agent 365 route reaches the company MCP server without the gateway. It is a preview route.", "preview": true}}};
+  var btns = document.querySelectorAll('[data-view-btn]');
+  var grid = document.getElementById('mapGrid');
+  var wide = window.matchMedia('(min-width:1000px)');
+  var seg = document.querySelector('.seg-wrap');
+  function segH(){ if(seg){ document.documentElement.style.setProperty('--segh', seg.offsetHeight + 'px'); } }
+  segH();
+  window.addEventListener('resize', segH);
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var cur = null, hover = null, path = null;
+  var objSel = {}, laySel = {};
+  function view(){ return body.getAttribute('data-view'); }
+  function urlFor(o, hash){
+    var u = new URL(location.href);
+    if(o === 'safe'){ u.searchParams.delete('path'); } else { u.searchParams.set('path', o); }
+    return u.pathname + u.search + (hash === undefined ? u.hash : hash);
+  }
+  function visibleOrder(){
+    return D.order.filter(function(id){ return view() === 'preview' || D.preview.indexOf(id) < 0; });
+  }
+
+  /* lines between boxes, drawn from where the boxes are */
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'wires');
+  svg.setAttribute('aria-hidden', 'true');
+  var marks = {pol:'var(--pol-line)', call:'var(--call-line)', red:'var(--red)'};
+  var defs = '<defs>';
+  Object.keys(marks).forEach(function(k){
+    defs += '<marker id="mk-' + k + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse">'
+         + '<path d="M0 0 L10 5 L0 10 z" style="fill:' + marks[k] + '"/></marker>';
+  });
+  defs += '<marker id="mk-x" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="11" markerHeight="11" orient="0" markerUnits="userSpaceOnUse">'
+       + '<path d="M1 1 L11 11 M11 1 L1 11" style="stroke:var(--red);stroke-width:2.4;fill:none"/></marker></defs>';
+  svg.innerHTML = defs + '<g></g>';
+  var layer = svg.lastChild;
+  grid.insertBefore(svg, grid.firstChild);
+  var lines = [];
+  function R(el){
+    if(!el || !el.offsetParent) return null;
+    var r = el.getBoundingClientRect(), g = grid.getBoundingClientRect();
+    var o = {l:r.left - g.left, r:r.right - g.left, t:r.top - g.top, b:r.bottom - g.top};
+    o.cx = (o.l + o.r) / 2; o.cy = (o.t + o.b) / 2;
+    return o;
+  }
+  function box(id){ return R(document.getElementById('b-' + id)); }
+  function f(n){ return Math.round(n * 10) / 10; }
+  function route(e){
+    var a = box(e.a), b = box(e.b);
+    if(!a || !b) return null;
+    var tr = R(grid.querySelector('.g-trunk')), rl = R(grid.querySelector('.g-rail'));
+    var tx = tr ? tr.cx : a.l - 8, rx = rl ? rl.l + 12 : a.r + 12, zx = rl ? rl.r - 8 : a.r + 24;
+    switch(e.r){
+      case 'h': return 'M' + f(a.r) + ' ' + f(a.cy) + ' H' + f(b.l - 1);
+      case 'v':
+        var x = (Math.max(a.l, b.l) + Math.min(a.r, b.r)) / 2;
+        return 'M' + f(x) + ' ' + f(a.b) + ' V' + f(b.t - 1);
+      case 'trunk':
+        var yb = a.b + 10;
+        return 'M' + f(a.l + 18) + ' ' + f(a.b) + ' V' + f(yb) + ' H' + f(tx) + ' V' + f(b.cy);
+      case 'branch': return 'M' + f(tx) + ' ' + f(b.cy) + ' H' + f(b.l - 1);
+      case 'rail': return 'M' + f(a.r) + ' ' + f(a.cy) + ' H' + f(rx) + ' V' + f(b.cy) + ' H' + f(b.r + 1);
+      case 'blocked': return 'M' + f(rx) + ' ' + f(a.cy) + ' H' + f(zx) + ' V' + f(b.t - 7);
+    }
+    return null;
+  }
+  function draw(){
+    layer.textContent = '';
+    lines = [];
+    D.edges.forEach(function(e){
+      if(e.view && e.view !== view()) return;
+      var d = route(e);
+      if(!d) return;
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d);
+      p.setAttribute('class', 'w ' + e.k + (e.view === 'preview' ? ' pv' : ''));
+      var k = e.k.split(' ')[0];
+      if(e.r === 'blocked'){ p.setAttribute('marker-end', 'url(#mk-x)'); }
+      else if(k !== 'log' && e.r !== 'trunk'){ p.setAttribute('marker-end', 'url(#mk-' + k + ')'); }
+      p.__e = e;
+      layer.appendChild(p);
+      lines.push(p);
+    });
+    paint();
+  }
+  function pathNodes(){
+    if(!path) return null;
+    var p = D.paths[path];
+    return p.nodes.concat(view() === 'preview' ? p.nodes_pv : []);
+  }
+  function paint(){
+    var hot = hover || cur, pn = pathNodes();
+    var top = [];
+    lines.forEach(function(p){
+      var e = p.__e;
+      var lit = !!path && e.paths.indexOf(path) >= 0;
+      var h = !path && !!hot && (e.a === hot || e.b === hot);
+      p.classList.toggle('lit', lit);
+      p.classList.toggle('hot', h);
+      p.classList.toggle('fade', !!path && !lit);
+      if(lit || h) top.push(p);
+    });
+    top.forEach(function(p){ layer.appendChild(p); });
+    grid.querySelectorAll('.bx').forEach(function(b){
+      var id = b.getAttribute('data-node');
+      b.classList.toggle('on', !!pn && pn.indexOf(id) >= 0);
+      b.classList.toggle('fade', !!pn && pn.indexOf(id) < 0);
+    });
+  }
+  var queued = false;
+  function redraw(){ if(queued) return; queued = true; requestAnimationFrame(function(){ queued = false; draw(); }); }
+  if('ResizeObserver' in window){ new ResizeObserver(redraw).observe(grid); } else { window.addEventListener('resize', redraw); }
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(redraw); }
+
+  /* selecting a box shows its panel */
+  var pos = document.getElementById('pPos');
+  function select(id, how){
+    var p = document.getElementById('n-' + id);
+    if(!p) return;
+    cur = id;
+    document.querySelectorAll('.np').forEach(function(x){ x.classList.toggle('sel', x === p); });
+    grid.querySelectorAll('.bx').forEach(function(x){
+      if(x.getAttribute('data-node') === id){ x.setAttribute('aria-current', 'true'); } else { x.removeAttribute('aria-current'); }
+    });
+    var ord = visibleOrder();
+    if(pos){ pos.textContent = (ord.indexOf(id) + 1) + ' of ' + ord.length; }
+    var panels = document.getElementById('details');
+    if(panels && wide.matches){ panels.scrollTop = 0; }
+    if(how === 'tap' && !wide.matches){
+      document.getElementById('details').scrollIntoView({behavior: still.matches ? 'auto' : 'smooth', block:'start'});
+    }
+    if(how === 'tap' || how === 'step'){ try{ history.replaceState(null, '', urlFor(view(), '#n-' + id)); }catch(e){} }
+    paint();
+  }
+  function step(d){
+    var ord = visibleOrder(), i = ord.indexOf(cur);
+    var id = ord[(i + d + ord.length) % ord.length];
+    select(id, 'step');
+    if(!wide.matches){
+      var nav = document.getElementById('details');
+      if(nav.getBoundingClientRect().top < 0){ nav.scrollIntoView({block:'start'}); }
+    }
+  }
+  document.querySelectorAll('[data-step-by]').forEach(function(b){
+    b.addEventListener('click', function(){ step(+b.getAttribute('data-step-by')); });
+  });
+  grid.querySelectorAll('.bx').forEach(function(b){
+    var id = b.getAttribute('data-node');
+    b.addEventListener('click', function(e){ e.preventDefault(); select(id, 'tap'); });
+    b.addEventListener('mouseenter', function(){ hover = id; paint(); });
+    b.addEventListener('mouseleave', function(){ hover = null; paint(); });
+    b.addEventListener('focus', function(){ hover = id; paint(); });
+    b.addEventListener('blur', function(){ hover = null; paint(); });
+  });
+
+  /* follow a path */
+  var note = document.getElementById('pathNote');
+  function setPath(id){
+    path = id;
+    document.querySelectorAll('.chip.pk').forEach(function(c){ c.setAttribute('aria-pressed', c.getAttribute('data-path') === id ? 'true' : 'false'); });
+    if(note){ note.innerHTML = id ? (view() === 'preview' ? D.paths[id].note_pv : D.paths[id].note) : ''; }
+    paint();
+  }
+  document.querySelectorAll('.chip.pk').forEach(function(c){
+    c.addEventListener('click', function(){ var id = c.getAttribute('data-path'); setPath(path === id ? null : id); });
+  });
+
+  /* filters */
+  function anySel(s){ return Object.keys(s).some(function(k){ return s[k]; }); }
+  function hit(el){
+    var ok = true;
+    if(anySel(objSel)){ ok = ok && (el.getAttribute('data-obj') || '').split(' ').some(function(v){ return objSel[v]; }); }
+    if(anySel(laySel)){ ok = ok && (el.getAttribute('data-layer') || '').split(' ').some(function(v){ return laySel[v]; }); }
+    return ok;
+  }
+  function filter(){
+    var active = anySel(objSel) || anySel(laySel);
+    var safe = view() === 'safe';
+    var shown = 0, total = 0, nb = 0;
+    grid.classList.toggle('filtering', active);
+    document.querySelectorAll('.np').forEach(function(p){
+      if(safe && p.classList.contains('view-preview')) return;
+      nb++;
+      var k = 0, n = 0;
+      p.querySelectorAll('.ctl').forEach(function(c){
+        var vis = !(safe && c.classList.contains('view-preview'));
+        var m = !active || hit(c);
+        c.classList.toggle('off', active && !m);
+        if(vis){ n++; total++; if(m){ k++; shown++; } }
+      });
+      var b = document.getElementById('b-' + p.getAttribute('data-node'));
+      if(b){
+        b.classList.toggle('dim', active && k === 0);
+        b.querySelector('.bf').textContent = n ? (k + ' of ' + n + ' match') : 'No controls';
+      }
+    });
+    var fn = document.getElementById('fltN');
+    if(fn){
+      var on = document.querySelectorAll('.chip[data-grp][aria-pressed="true"]').length;
+      fn.textContent = on ? ('(' + on + ' on)') : '';
+    }
+    var s = document.getElementById('dgSum');
+    var gaps = {'3': 'Layer 3: Foundry and Copilot Studio have no released control here. Theirs are in With preview.',
+                '6': 'Layer 6: Foundry has a preview control only, in With preview.'};
+    var gapTxt = Object.keys(gaps).filter(function(k){ return laySel[k]; }).map(function(k){ return ' ' + gaps[k]; }).join('');
+    if(s){ s.textContent = active ? (shown + ' of ' + total + ' controls match. Boxes without a match are dimmed.' + gapTxt) : (total + ' controls in ' + nb + ' boxes.'); }
+  }
+  /* on phones the filters start folded so the map follows the path chips */
+  var flt = document.querySelector('.flt');
+  if(flt && window.matchMedia('(max-width:640px)').matches){ flt.open = false; }
+  document.querySelectorAll('.chip[data-grp]').forEach(function(ch){
+    ch.addEventListener('click', function(){
+      var g = ch.getAttribute('data-grp'), v = ch.getAttribute('data-val');
+      var s = g === 'obj' ? objSel : laySel;
+      s[v] = !s[v];
+      ch.setAttribute('aria-pressed', s[v] ? 'true' : 'false');
+      filter();
+    });
+  });
+
+  /* design switch */
+  function setView(o, keepUrl){
+    body.setAttribute('data-view', o);
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-view-btn') === o ? 'true' : 'false'); });
+    if(!keepUrl){ try{ history.replaceState(null, '', urlFor(o)); }catch(e){} }
+    if(o === 'safe' && cur && D.preview.indexOf(cur) >= 0){ select('gw'); }
+    if(path && D.paths[path].preview && o === 'safe'){ setPath(null); } else if(path){ setPath(path); }
+    if(cur){ select(cur); }
+    filter();
+    draw();
+  }
+
+  /* workflow steps */
+  document.querySelectorAll('[data-wf]').forEach(function(wrap){
+    var bs = wrap.querySelectorAll('.wf-steps button');
+    var ds = wrap.querySelectorAll('.wf-detail');
+    function pick(id){
+      bs.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-step') === id ? 'true' : 'false'); });
+      ds.forEach(function(d){ d.classList.toggle('sel', d.getAttribute('data-step') === id); });
+    }
+    bs.forEach(function(b){ b.addEventListener('click', function(){ pick(b.getAttribute('data-step')); }); });
+    pick(bs[0].getAttribute('data-step'));
+  });
+  function followHash(){
+    var id = location.hash.slice(1);
+    if(!id) return;
+    try{ id = decodeURIComponent(id); }catch(e){}
+    var el = document.getElementById(id);
+    if(!el) return;
+    var other = view() === 'safe' ? 'preview' : 'safe';
+    if(el.closest('.view-' + other)){ setView(other); }
+    var np = el.closest('.np');
+    if(np){ select(np.getAttribute('data-node')); }
+    if(np && el === np){
+      document.getElementById(wide.matches ? 'map' : 'details').scrollIntoView({behavior:'instant'});
+      return;
+    }
+    el.scrollIntoView({behavior:'instant'});
+  }
+  btns.forEach(function(b){ b.addEventListener('click', function(){ setView(b.getAttribute('data-view-btn')); }); });
+  document.querySelectorAll('[data-view-go]').forEach(function(a){ a.addEventListener('click', function(){ setView(a.getAttribute('data-view-go')); }); });
+  var m = /[?&]path=(safe|preview)(?:&|$)/.exec(location.search);
+  select('gw');
+  setView(m ? m[1] : 'safe', true);
+  followHash();
+  window.addEventListener('hashchange', followHash);
+  window.addEventListener('load', function(){ draw(); if(location.hash) followHash(); });
+  if('IntersectionObserver' in window){
+    var links = {};
+    document.querySelectorAll('.toc a').forEach(function(a){ links[a.getAttribute('href').slice(1)] = a; });
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        Object.keys(links).forEach(function(k){ links[k].classList.remove('on'); links[k].removeAttribute('aria-current'); });
+        var a = links[e.target.id];
+        if(a){ a.classList.add('on'); a.setAttribute('aria-current','location'); }
+      });
+    }, {rootMargin:'-20% 0px -70% 0px'});
+    Object.keys(links).forEach(function(k){ var t = document.getElementById(k); if(t) io.observe(t); });
+  }
+})();
+</script>
+</body>
+</html>
