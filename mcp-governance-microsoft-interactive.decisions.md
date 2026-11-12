@@ -87,3 +87,11 @@ Edited the page file directly; the builder script was behind the page at the tim
 - The wording edits made by hand to shared content are listed in `scripts/mcp_governance_interactive_edits.py` and applied after the page is built. Each must match exactly once or the build stops. **Why:** that text comes from the first page's builder, which this page must not change. Move an edit into the source when its wording is next touched.
 - V102 and V103 are labelled Preview in their source, so the quote table now marks them preview and the header counts are 132 released and 76 preview (the committed table already marked them preview but still said 134 and 74).
 - **Removed** the Rollout "Goal" sentence ("API Management alone does not guarantee objectives A and B") and the closing note under the design panels ("Agent approval and lifecycle are separate from this page's MCP server workflow"). **Why:** the owner found them wrong or unneeded. The first page keeps them.
+
+## Second logic audit (2026-11-12)
+
+- **Superseded** the gateway lead in "ways to build the gateway as options" ("Choose one to front the company MCP server"). **Now:** Option 1 fronts the server, Option 3 (preview) can replace it, and Option 2 is the gateway Foundry uses for its model deployments, which can be the same instance. **Why:** Option 2's own text says it is not used for MCP tools in the released design (V60), so it was not a choice for fronting the server. The two and three options structure stays.
+- **Added** a new gap, `gap-foundry-prompt-agents`, instead of a new control. **Why:** V101 says the Foundry Network control does not affect prompt agents outside the Copilot harness, and no released control found closes that. The Foundry policy sync sentence links to it.
+- **Chose** to fix "7 Later deny" in the builder source and the shared wording through edit pairs, as before. **Why:** the first page must not change.
+- **Kept** the acceptance test order. **Why:** the threat model cites acceptance test 12 by number.
+- **Left** the device "Managed URL policies" wording as is. The VS Code allowlist set through Intune is a device policy that the pipeline does not write; whether it conflicts with the GitHub managed settings file was not checked, and the page does not claim either way.

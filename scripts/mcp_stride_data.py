@@ -259,8 +259,8 @@ THREATS = [
     # F5 Bypass
     ("F5", "T", "A client directly reaches a backend that lacks equivalent action authorization and performs an unauthorized write that gateway policy would have blocked.",
      ["ctrl-backend", "ctrl-windows"], ["PE", "NSG", "FW"], (9, 5, 5, 6, 5), "AI inference, acceptance test 12"),
-    ("F5", "I", "A compromised client sends company data directly to an unapproved MCP server over an allowed egress path, bypassing gateway inspection and its audit trail.",
-     ["ctrl-backend", "ctrl-logging"], ["PE", "SENCONN"], (8, 5, 5, 5, 5), "AI inference"),
+    ("F5", "I", "A compromised client or cloud agent sends company data directly to an unapproved MCP server over an allowed or unrestricted egress path, bypassing gateway inspection and its audit trail.",
+     ["ctrl-windows", "ctrl-foundry-network", "gap-foundry-prompt-agents", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101: the Foundry Network control does not affect prompt agents outside the Copilot harness. Data theft over that path is AI inference"),
     ("F5", "D", "A direct flood skips gateway rate limits.",
      ["ctrl-backend", "ctrl-gateway"], ["PE", "WAF", "FW"], (6, 5, 4, 6, 4), "AI inference"),
 ]

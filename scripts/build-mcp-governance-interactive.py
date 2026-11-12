@@ -1090,7 +1090,7 @@ WF_STEPS = [
                f"{ev('a365-tools-role-ai', 'a365-tools-role-global')} {evp('pv-byo-approval')} Individual tool controls are rolling out for supported Agent 365 servers. BYO server tool-level blocking is planned. Until then, block at server level and authorize at the gateway and backend. {ev('a365-tools-granular')} {evp('pv-byo-roll', 'pv-a365-ctrl')}"),
         ("a3", "6a Approve, consent, available", f"Approval is followed by Microsoft Entra tenant consent. Only then is the server Available in the registry. {ev('a365-tools-approve', 'a365-tools-consent')} {evp('pv-byo-approval')} Then apply target policies and backend authorization."),
         ("a4", "6b Reject", "Rejection leaves the server unavailable. Record the reason in Git."),
-        ("a5", "7 Later deny", f"Block the server in the registry, mark it denied in Git, remove it from the target allowlists and verify that calls are denied. Microsoft 365 admin actions do not update the other policy targets. {REC}"),
+        ("a5", "7 Later deny", f"Mark the server denied in Git; the pipeline removes it from its targets. In the Microsoft 365 admin center, block it in the registry and remove its connector by hand. Verify that calls are denied. {REC}"),
     ]),
 ]
 
