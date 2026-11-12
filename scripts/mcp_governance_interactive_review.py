@@ -155,6 +155,4 @@ def apply_review(page, ev, rec, inf, unv, evp):
     # 2026-11-12 second full read: the Option 2 use line was a fragment that lost "not used for MCP tools".
     replace('<dt>Use in this design</dt><dd>Automatic routing of newly added MCP tools through the Foundry integration <span class="tg pv">preview</span>',
             '<dt>Use in this design</dt><dd>Not used for MCP tools; the baseline sets the gateway URL itself. Automatic routing applies only to new portal MCP tools without managed OAuth <span class="tg pv">preview</span>')
-    # 2026-11-12 goal review: V156 and V157 confirm the managed setting, so the unverified tag was misapplied.
-    replace('V157</a>. <span class="tg u">unverified</span> Not tested on a managed device.</dd>', 'V157</a>.</dd>')
     return page

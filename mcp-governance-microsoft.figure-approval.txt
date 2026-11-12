@@ -23,10 +23,11 @@ COMPANY GOVERNANCE                                   AGENT 365, PREVIEW
          |                                             APPROVE                  REJECT
          |                                                 |                       |
          |                                                 v                       v
-         |                                       Grant Entra consent      Keep unavailable;
+         |                                      Registry: AVAILABLE       Keep unavailable;
          |                                                 |              record reason in Git
          |                                                 v
-         |                                      Registry: AVAILABLE
+         |                                       Grant Entra consent
+         |                                      Agent builders can use it
          |                                      Apply target policies
          |                                      and backend authorization
          |                                                 |

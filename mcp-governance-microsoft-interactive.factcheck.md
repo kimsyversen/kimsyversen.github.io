@@ -620,4 +620,4 @@ No tenant, adapter or attack test was run.
 | Quote checker against the 2026-11-12 cache | 216 quotes, 0 problems |
 | Label check, section anchors `--check`, `check-mcp-stride.py` | passed |
 
-The first page (`mcp-governance-microsoft.html`) still has the Available-after-consent caption and the Approval lock tag; it was outside this review. No browser check: only wording changed.
+The first page (`mcp-governance-microsoft.html`) had the same two errors; fixed later the same day at the owner's request (see its fact check). No browser check: only wording changed.
