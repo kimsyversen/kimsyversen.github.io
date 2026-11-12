@@ -244,6 +244,35 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 .d-block li{margin:4px 0}
 .d-sib{display:flex;flex-wrap:wrap;gap:6px}
 .d-link{margin-top:22px;font-size:0.86rem}
+.d-id.el{border-color:var(--ink);background:var(--node);color:var(--ink)}
+.d-back,.d-elbtn{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+.d-back{display:block;font-size:0.86rem;margin-top:12px;padding:4px 0}
+.d-back::before{content:"\2190  "}
+.d-back:hover,.d-elbtn:hover{color:var(--red)}
+.d-back[hidden]{display:none}
+.e-ratio{max-width:none;margin-top:12px}
+.e-stride{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.e-stride span{border:1px solid var(--ink);text-align:center;padding:6px 0 5px;font:600 0.9rem/1.2 var(--mono);border-radius:3px}
+.e-stride small{display:block;font:400 0.74rem var(--body);color:var(--muted)}
+.e-stride .na{border:1px dashed var(--line);color:var(--muted)}
+.e-list{display:grid;gap:8px}
+.ecard{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--node);border:1px solid var(--line);border-radius:4px;padding:12px 14px;cursor:pointer;transition:border-color .12s}
+.ecard:hover{border-color:var(--ink)}
+.ecard > span{display:block}
+.ec-top{display:flex !important;align-items:center;gap:8px}
+.ec-top .chip-b{pointer-events:none}
+.ec-cat{font-size:0.8rem;color:var(--muted)}
+.ec-s{margin-left:auto;font:750 1.1rem/1 var(--display);font-variant-numeric:tabular-nums}
+.ec-s .rt{display:inline;margin-left:5px;font:600 0.75rem var(--body)}
+.ec-tx{margin-top:8px;font-size:0.9rem;line-height:1.45}
+.mini{display:grid !important;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
+.mini > span{display:block;font:500 0.72rem var(--mono);color:var(--muted)}
+.mini b{color:var(--ink);font-weight:600;margin-left:4px}
+.mini i{display:flex;height:4px;margin-top:4px;background:var(--line)}
+.mini u{display:block;background:var(--c)}
+.mini s{display:block;background:repeating-linear-gradient(135deg,var(--c) 0 2px,transparent 2px 4px)}
+.ec-ev{margin-top:10px;font-size:0.76rem;color:var(--muted)}
+.ec-ev .lv{margin-right:6px}
 
 /* footer */
 footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;font-size:0.85rem;color:var(--muted)}
@@ -290,7 +319,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="sec" id="model">
       <div class="sec-head">
         <h2 id="h-model"><a class="sec-link" href="#model">Data flow diagram</a></h2>
-        <p>Each chip is one threat. Select a box or flow name to show only its threats.</p>
+        <p>Each chip is one threat. Select a box or flow name to see all of its threats.</p>
       </div>
       <div class="filters" role="group" aria-label="Filter threats in the diagram and the register">
         <div class="fgroup" role="group" aria-label="STRIDE category"><span class="lbl" aria-hidden="true">STRIDE</span>
@@ -384,15 +413,24 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <button type="button" id="d-close" aria-label="Close detail" title="Close (Esc)">&times;</button>
     </div>
   </div>
+  <button type="button" class="d-back" id="d-back" hidden></button>
   <p class="d-title" id="d-title" tabindex="-1"></p>
   <p class="d-el" id="d-el"></p>
-  <div class="d-score"><b id="d-score"></b><span class="rt" id="d-rating"></span><span class="tg i">inference</span></div>
-  <ol class="d-bars" id="d-bars"></ol>
-  <p class="d-lift" id="d-lift" hidden></p>
-  <div class="d-block"><p class="lbl">Evidence</p><div id="d-ev"></div></div>
-  <div class="d-block"><p class="lbl">Controls on the design page</p><ul id="d-ctrl"></ul></div>
-  <div class="d-block"><p class="lbl">Basis</p><p id="d-basis"></p></div>
-  <div class="d-block"><p class="lbl" id="d-sib-l"></p><div class="d-sib" id="d-sib"></div></div>
+  <div id="d-tview">
+    <div class="d-score"><b id="d-score"></b><span class="rt" id="d-rating"></span><span class="tg i">inference</span></div>
+    <ol class="d-bars" id="d-bars"></ol>
+    <p class="d-lift" id="d-lift" hidden></p>
+    <div class="d-block"><p class="lbl">Evidence</p><div id="d-ev"></div></div>
+    <div class="d-block"><p class="lbl">Controls on the design page</p><ul id="d-ctrl"></ul></div>
+    <div class="d-block"><p class="lbl">Basis</p><p id="d-basis"></p></div>
+    <div class="d-block"><p class="lbl" id="d-sib-l"></p><div class="d-sib" id="d-sib"></div></div>
+  </div>
+  <div id="d-eview" hidden>
+    <div class="d-score"><b id="e-max"></b><span>highest score</span><span class="tg i">inference</span></div>
+    <span class="ratio e-ratio" id="e-ratio" aria-hidden="true"></span>
+    <div class="d-block"><p class="lbl" id="e-stride-l"></p><div class="e-stride" id="e-stride"></div></div>
+    <div class="d-block"><p class="lbl">Threats, highest score first</p><div class="e-list" id="e-list"></div></div>
+  </div>
   <p class="d-link"><a id="d-link" href="#">Link to this threat</a></p>
 </aside>
 
@@ -455,10 +493,86 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     return '<button type="button" class="chip-b ' + rcls(t) + '" data-t="' + t.id + '" aria-label="Open ' + t.id + '">' + t.id + '</button>';
   }
 
+  // The panel has two views: one threat, or every threat on one element.
+  // Opening an element also filters the diagram and register to it until the panel closes.
+  const ELS = Object.keys(D.elements);
+  let mode = null, back = null, elPanel = null;
+
+  function reveal(hash, linkText, kindWord, opts) {
+    const wasHidden = drawer.hidden;
+    drawer.hidden = false;
+    if (wasHidden) drawer.classList.add('in');
+    drawer.scrollTop = 0;
+    $('#d-tview').hidden = mode !== 'threat';
+    $('#d-eview').hidden = mode !== 'element';
+    $('#d-link').href = hash;
+    $('#d-link').textContent = linkText;
+    $('#d-prev').setAttribute('aria-label', 'Previous ' + kindWord); $('#d-prev').title = 'Previous ' + kindWord;
+    $('#d-next').setAttribute('aria-label', 'Next ' + kindWord); $('#d-next').title = 'Next ' + kindWord;
+    if (location.hash !== hash) history.replaceState(null, '', hash);
+    if (opts.focus !== false) $('#d-title').focus({ preventScroll: true });
+  }
+
+  function mark(el, tid) {
+    $$('[data-t]').forEach(x => x.classList.toggle('sel', x.dataset.t === tid));
+    $$('.node, .flab').forEach(g => g.classList.toggle('focus', g.dataset.el === el));
+    $$('.edge').forEach(p => p.classList.toggle('focus', p.dataset.el === el));
+  }
+
+  function card(t) {
+    const mini = D.factors.map((f, i) => {
+      const v = t.dr[i], r = t.raw[i];
+      return '<span title="' + f + ' ' + v + (v !== r ? ', raised from ' + r : '') + '">' + ['D', 'R', 'E', 'A', 'Di'][i] + '<b>' + v + '</b>' +
+        '<i><u style="width:' + r * 10 + '%"></u><s style="width:' + (v - r) * 10 + '%"></s></i></span>';
+    }).join('');
+    const ev = t.refs.length ? '<span class="lv lv-' + t.level + '">' + t.level + '</span>' + t.refs.length + (t.refs.length === 1 ? ' record' : ' records')
+      : '<span class="lv lv-theoretical">theoretical</span>';
+    return '<button type="button" class="ecard ' + rcls(t) + '" data-t="' + t.id + '" aria-label="Open ' + t.id + ': ' + esc(t.text) + '">' +
+      '<span class="ec-top"><span class="chip-b ' + rcls(t) + '">' + t.id + '</span><span class="ec-cat">' + D.stride[t.cat] + '</span>' +
+      '<span class="ec-s">' + t.score.toFixed(1) + '<span class="rt">' + t.rating + '</span></span></span>' +
+      '<span class="ec-tx">' + esc(t.text) + '</span><span class="mini">' + mini + '</span><span class="ec-ev">' + ev + '</span></button>';
+  }
+
+  function openEl(el, opts = {}) {
+    const e = D.elements[el];
+    if (!e) return;
+    if (drawer.hidden) trigger = opts.from || document.activeElement;
+    mode = 'element'; back = null; st.sel = null;
+    st.el = elPanel = el;
+    apply();
+    const ts = D.threats.filter(t => t.el === el).sort((a, b) => b.score - a.score || ORDER(a.id) - ORDER(b.id));
+    const kind = D.kind[e[0]];
+    const n = r => ts.filter(t => t.rating === r).length;
+    const pub = ts.filter(t => t.level !== 'theoretical').length;
+    drawer.className = 'drawer';
+    $('#d-id').textContent = el;
+    $('#d-id').className = 'd-id el';
+    $('#d-cat').textContent = kind;
+    $('#d-back').hidden = true;
+    $('#d-title').textContent = e[1];
+    $('#d-el').textContent = ts.length + (ts.length === 1 ? ' threat: ' : ' threats: ') +
+      ['High', 'Medium', 'Low'].filter(n).map(r => n(r) + ' ' + r).join(', ') + '. ' +
+      (pub ? pub + ' of them ' + (pub === 1 ? 'matches' : 'match') + ' a public record.' : 'None matches a public record.');
+    $('#e-max').textContent = ts.length ? ts[0].score.toFixed(1) : '';
+    $('#e-ratio').innerHTML = ['High', 'Medium', 'Low'].map(r => '<i class="r-' + r.toLowerCase() + '" style="flex:' + n(r) + '"></i>').join('');
+    $('#e-stride-l').textContent = 'STRIDE checks for a ' + kind.toLowerCase();
+    $('#e-stride').innerHTML = [...'STRIDE'].map(c => {
+      const on = D.applies[e[0]].includes(c);
+      const k = ts.filter(t => t.cat === c).length;
+      return '<span class="' + (on ? '' : 'na') + '" title="' + D.stride[c] + (on ? ': ' + k : ': not checked for this kind') + '">' + c +
+        '<small>' + (on ? k : 'n/a') + '</small></span>';
+    }).join('');
+    $('#e-list').innerHTML = ts.map(card).join('');
+    mark(el, null);
+    reveal('#el-' + el, 'Link to this element', 'element', opts);
+  }
+
   function open(id, opts = {}) {
     const t = T[id];
     if (!t) return;
+    back = drawer.hidden ? null : mode === 'element' ? elPanel : (back === t.el ? back : null);
     if (drawer.hidden) trigger = opts.from || document.activeElement;
+    mode = 'threat';
     st.sel = id;
     const el = D.elements[t.el];
     drawer.className = 'drawer ' + 'r-' + t.rating.toLowerCase();
@@ -466,8 +580,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     idEl.textContent = t.id;
     idEl.className = 'd-id' + (t.level !== 'theoretical' ? ' pub' : '');
     $('#d-cat').textContent = D.stride[t.cat];
+    const bk = $('#d-back');
+    bk.hidden = !back;
+    if (back) bk.textContent = 'All threats on ' + back + ' ' + D.elements[back][2];
     $('#d-title').textContent = t.text;
-    $('#d-el').innerHTML = '<b>' + esc(t.el) + '</b> ' + esc(el[1]) + ' · ' + esc(D.kind[el[0]]);
+    $('#d-el').innerHTML = '<button type="button" class="d-elbtn" data-open-el="' + t.el + '"><b>' + esc(t.el) + '</b> ' + esc(el[1]) + '</button> · ' + esc(D.kind[el[0]]);
     $('#d-score').textContent = t.score.toFixed(1);
     $('#d-rating').textContent = t.rating;
     $('#d-bars').innerHTML = D.factors.map((f, i) => {
@@ -492,23 +609,16 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     const sib = D.threats.filter(x => x.el === t.el && x.id !== t.id);
     $('#d-sib-l').textContent = sib.length ? 'Other threats on ' + t.el : 'No other threats on ' + t.el;
     $('#d-sib').innerHTML = sib.map(chipBtn).join('');
-    $('#d-link').href = '#t-' + t.id;
-
-    $$('[data-t]').forEach(x => x.classList.toggle('sel', x.dataset.t === id));
-    $$('.node, .flab').forEach(g => g.classList.toggle('focus', g.dataset.el === t.el));
-    $$('.edge').forEach(p => p.classList.toggle('focus', p.dataset.el === t.el));
-    const wasHidden = drawer.hidden;
-    drawer.hidden = false;
-    if (wasHidden) { drawer.classList.add('in'); }
-    drawer.scrollTop = 0;
-    if (location.hash !== '#t-' + id) history.replaceState(null, '', '#t-' + id);
-    if (opts.focus !== false) $('#d-title').focus({ preventScroll: true });
+    mark(t.el, id);
+    reveal('#t-' + id, 'Link to this threat', 'threat', opts);
   }
 
   function close() {
     if (drawer.hidden) return;
     drawer.hidden = true;
     st.sel = null;
+    if (elPanel && st.el === elPanel) { st.el = null; apply(); }
+    elPanel = null; mode = null; back = null;
     $$('.sel').forEach(x => x.classList.remove('sel'));
     $$('.focus').forEach(x => x.classList.remove('focus'));
     history.replaceState(null, '', location.pathname + location.search);
@@ -517,6 +627,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   }
 
   function step(d) {
+    if (mode === 'element') {
+      openEl(ELS[(ELS.indexOf(elPanel) + d + ELS.length) % ELS.length]);
+      return;
+    }
     const order = visibleOrder();
     if (!order.length) return;
     const i = order.indexOf(st.sel);
@@ -524,11 +638,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     open(next);
     const row = document.getElementById('t-' + next);
     if (row && row.getBoundingClientRect().top > innerHeight) row.scrollIntoView({ block: 'nearest' });
-  }
-
-  function setEl(el) {
-    st.el = st.el === el ? null : el;
-    apply();
   }
 
   document.addEventListener('click', e => {
@@ -550,19 +659,27 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     }
     const t = e.target.closest('[data-t]');
     if (t) { open(t.dataset.t, { from: t.matches('tr') ? t.querySelector('button') : t }); return; }
+    const oe = e.target.closest('[data-open-el]');
+    if (oe) { openEl(oe.dataset.openEl); return; }
     const h = e.target.closest('.el-hit');
-    if (h) { setEl(h.dataset.el); return; }
+    if (h) {
+      if (!drawer.hidden && mode === 'element' && elPanel === h.dataset.el) close();
+      else openEl(h.dataset.el, { from: h });
+      return;
+    }
   });
-  $('#el-pill-x').addEventListener('click', () => { st.el = null; apply(); });
-  $('#fclear').addEventListener('click', () => { st.cat.clear(); st.rating.clear(); st.pub = false; st.el = null; apply(); });
+  $('#d-back').addEventListener('click', () => { if (back) openEl(back); });
+  $('#el-pill-x').addEventListener('click', () => { st.el = null; elPanel = null; apply(); });
+  $('#fclear').addEventListener('click', () => { st.cat.clear(); st.rating.clear(); st.pub = false; st.el = null; elPanel = null; apply(); });
   $('#d-close').addEventListener('click', close);
   $('#d-prev').addEventListener('click', () => step(-1));
   $('#d-next').addEventListener('click', () => step(1));
   $('#d-link').addEventListener('click', e => {
     e.preventDefault();
-    const url = location.href.split('#')[0] + '#t-' + st.sel;
+    const a = $('#d-link'), label = a.textContent;
+    const url = location.href.split('#')[0] + a.getAttribute('href');
     if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => {
-      const a = $('#d-link'); a.textContent = 'Link copied'; setTimeout(() => { a.textContent = 'Link to this threat'; }, 1600);
+      a.textContent = 'Link copied'; setTimeout(() => { if (a.textContent === 'Link copied') a.textContent = label; }, 1600);
     }).catch(() => {});
   });
   document.addEventListener('keydown', e => {
@@ -576,7 +693,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   });
   const fromHash = () => {
     const m = location.hash.match(/^#t-([A-Z]\d+)$/);
-    if (m && T[m[1]]) open(m[1], { focus: false });
+    if (m && T[m[1]]) { open(m[1], { focus: false }); return; }
+    const k = location.hash.match(/^#el-([A-Z]+\d+)$/);
+    if (k && D.elements[k[1]]) openEl(k[1], { focus: false });
   };
   addEventListener('hashchange', fromHash);
   apply();

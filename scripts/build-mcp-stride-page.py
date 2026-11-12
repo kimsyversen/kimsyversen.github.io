@@ -17,7 +17,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from mcp_stride_data import (ELEMENTS, LEVELS, OBSERVED, STRIDE, dread_score, level_of, rating)  # noqa: E402
+from mcp_stride_data import (APPLIES, ELEMENTS, LEVELS, OBSERVED, STRIDE, dread_score, level_of, rating)  # noqa: E402
 from section_anchors import add_anchors  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location("mcp_stride_build", HERE / "build-mcp-stride.py")
@@ -373,7 +373,7 @@ def main():
     data = {
         "threats": ts,
         "elements": {k: [v[0], v[1], SHORT.get(k, v[1])] for k, v in ELEMENTS.items()},
-        "stride": STRIDE, "kind": KIND, "factors": FACTORS, "ctrl": labels, "design": DESIGN,
+        "stride": STRIDE, "kind": KIND, "factors": FACTORS, "ctrl": labels, "design": DESIGN, "applies": APPLIES,
         "fc": REPO + "mcp-governance-microsoft-interactive.factcheck.md#ev-",
     }
     blob = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
