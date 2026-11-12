@@ -1009,6 +1009,7 @@ MAST = f"""
   <header class="mast">
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked {CHECKED}</span></div>
     <h1>A proposed design for MCP Governance in a Microsoft ecosystem</h1>
+    <p class="lead"><a href="mcp-governance-stride.html">Read the threat model for this design</a></p>
   </header>
 
   <nav class="toc" aria-label="Contents">
