@@ -60,3 +60,22 @@ The Foundry agents and Copilot Studio boxes now say which layers have no release
 ## 2026-11-12, intro labels in their own column
 
 The In short, Scope, Objectives and Baseline labels now sit in a small caps column beside their text on wide screens, and above it on phones, with more line height and space between lines. Reason: the owner found the labels ran into the text and were hard to read.
+
+## 2026-11-12, ways to build the gateway as options
+
+The Gateway panel opens with one sentence saying there are two ways to build the gateway (three in With preview), then one section per way: Option 1 API Management with AI gateway capabilities, Option 2 AI Gateway integrated with Foundry, Option 3 dedicated AI Gateway (preview, With preview only). Reason: the panel listed two and left out the dedicated resource, the Foundry entry did not say that routing MCP tools through it is preview, and a table of the same facts scrolled sideways inside the panel and repeated the sections below it. The resource type column was dropped with the table; the AI Gateway product and resource control still states it. The SKU of the dedicated resource is stated as not found because no source read names it.
+
+## 2026-11-12, logic and consistency audit
+
+Edited the page file directly; the builder script is already behind the page (it lacks earlier hand edits), so rebuilding would undo them. Fixes:
+
+- The figure description said a pipeline writes to four targets, one "set by hand". Now three by pipeline, the Microsoft 365 admin center by hand, as the Sync pipeline box and the path notes already said.
+- With preview said AI Gateway replaces the API Management gateway, yet the Agent 365 integration, the server-block test and the pilot all use API Management v2. Now AI Gateway is an option that can replace it, and the Agent 365 integration is the addition. The single-tool block test now names the AI Gateway product, the only gateway with tool blocking (V42).
+- "Untrusted results" was tagged as a layer 6 product guardrail while the Foundry box says no released guardrail covers layer 6. It is advice, so it is now labelled guidance. The control count is unchanged.
+- Result review: V154 describes granting post-approval (no review), not post-approval as a check. Reworded.
+- Agent 365 BYO tool level: "authorize at the gateway" contradicted a route that skips the gateway. Now "at the server".
+- Policy sync, Foundry: added that a tool list does not stop a developer adding another server, matching the Foundry network box.
+- Acceptance tests: the merge and hand-edit tests now name pipeline targets only, since the Microsoft 365 admin center is changed by hand.
+- Tag key: the unverified row claimed the tag marks names from a control plane list; it is also used for untested behavior. Now "Not confirmed in a quoted source."
+- Smaller: "covers them" in the first gap; the Defender for Endpoint row no longer points at "rules above".
+- Second pass, claim by claim against the cited quotes: the request queue sentence now cites V182 (Requests tab), not V181 (Registry tab). The cloud agent gap sentence "Only the client allowlist applies" is not in V23, so it is tagged inference. The backend lock step says "frontend private endpoints", matching V47. The fact check rows for V102 and V103 say preview, as the quotes do. The label ledger was repaired (4 stale rows removed, 6 added).

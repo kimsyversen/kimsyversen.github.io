@@ -19,6 +19,7 @@ The text of controls, parts, gaps, tests and the preview section is shared with 
 - 2026-11-12: second comparison, this time including the first page's two ASCII figures, which the earlier script skipped. The approval path figure is fully covered by the workflow steps: the security review, denial recorded in Git, the admin review in Requests (preview), consent before Available, and a later deny that blocks, marks denied, syncs the targets and tests that calls fail. The guardrails figure is covered by the guardrail controls on the client boxes, with one loss: the statements that Foundry and Copilot Studio have no released control at layer 3, and Foundry only a preview control at layer 6. Restored as notes in the filter result when layer 3 or 6 is selected, worded as on the first page. The first page's "None found" and "Microsoft 365 Copilot is not a column" notes describe its figure only and are not carried over.
 - 2026-11-12: layer tags on preview controls. The first page's added-controls table has no layer column. It says that layer 4 gains tool threat protection, so that tag is sourced. The layer 4 tag on the other added controls (AI Gateway product and limits, gateway publishing, Agent 365 integration, consent and BYO route, Foundry gateway routing, outbound filter) is interpretation by AI: each sits on the network and gateway path. The guardrail layers come from the first page's Layer column.
 - 2026-11-12: full side-by-side read of both pages' complete visible text (538 lines on the first page, 452 on this one), not a script match. One loss found: the first page's "Client and device controls" part row (what it does, where it is set, and that device controls do not cover Microsoft 365 Copilot). Restored on the Managed Windows device box, with links to the client allowlist and local stdio controls on the VS Code box. Parts on other boxes now also keep links to controls that sit in another box, as the first page's "Use in this design" column does. Everything else on the first page is present, reworded only where its table or figure labels became box panels, filters or workflow steps.
+- 2026-11-12: Gateway panel "Ways to build the gateway" options. Options checked against V196, V198, V199, V45, V46 and V84: API Management and the Foundry option use Microsoft.ApiManagement/service, the dedicated AI Gateway (preview) uses Microsoft.ApiManagement/aigateways. Added V60 (Foundry MCP routing is preview) and V81 (self-hosted gateway) to the panel. Gap: no source read names the SKU of the new aigateways resource, so option 3 says so. Not re-fetched from Microsoft Learn on this date.
 - 2026-11-12: the eight layer 4 tags that are an AI estimate now say "layer 4, AI estimate" on the page itself, as the first page marks its own layer guess for the prompt attack block. Tool threat protection keeps a plain layer 4 tag because the first page states it.
 - 2026-11-12: added the Purview audit control on the Logging and checks box, the one control this page has that the first page lacks. Quotes V203 to V207 were checked against the live pages the same day: each appears once in the page text. Neither Purview page names MCP; reading an MCP tool call as an agent-to-tools interaction is interpretation by AI and labelled on the page. Purview DLP does not list tool calls. `scripts/check-evidence-quotes.py` reads the shared quote list only, so it does not recheck V203 to V207.
 - 2026-11-12: added V208 from the Purview page for Microsoft Foundry (`purview/ai-azure-foundry`, checked live the same day, the quote appears once). It audits prompts and responses; the page does not mention tools or MCP, and the panel says so. The shared quote checker does not recheck V208 either.
@@ -26,6 +27,9 @@ The text of controls, parts, gaps, tests and the preview section is shared with 
 - 2026-11-12: all 208 quotes, V203 to V208 included, re-checked live with `scripts/check-evidence-quotes.py`, 208 ok and 0 problems. The run used a scratch module that adds this page's six quotes to the shared list, read from the builder text, so the checker also compared each one with its row below and every V link on the page with a row. The shared checker run on its own still covers V1 to V202 only.
 - 2026-11-12: third comparison with the first page, by text chunk and by key fact. No V link is lost: the first page links 175 quote ids, this page those 175 plus V203 to V208. The layer 3 and layer 6 gaps for Foundry and Copilot Studio showed only when a layer filter was on, so a reader who never filters missed them. They are now also stated on the Foundry agents and Copilot Studio boxes; the filter result line stays as a view of the same fact. The other unmatched text is the first page's ASCII figure lines and table headers, whose facts were each found on this page.
 - 2026-11-12: the fact check links point to this file on `master` on GitHub, the same pattern as the first page. That pattern works for the first page today (its file on `master` returns 200 and has 202 `ev-V` anchors). For this page the links return 404 until this file is merged to `master`.
+- 2026-11-12: logic and consistency audit. Every sourced sentence in the controls, gaps, tests and workflow was compared with its cited quote (about 280 paragraphs). All cited quotes exist in the table below. The quote checker was not rerun (no quote text changed). Three citation fixes: the request queue sentence now cites V182 (Requests tab), not V181 (Registry tab); the V102 and V103 status is preview, as the quotes say; V47 is a frontend private endpoint limit, so the backend lock step now says "frontend private endpoints". The cloud agent gap sentence "Only the client allowlist applies" is not in V23, so it is tagged inference. The checks did not cover whether each source page still says the same today.
+- 2026-11-12: live quote recheck after the audit edits. `check-evidence-quotes.py` on the shared list: 196 of 202 ok; the 6 reported problems are V203 to V208, which live only in this page's builder and are not in the shared module (known, see the Purview entry above). Those six were checked live separately by a script: each appears in its source page (ai-agent-365, data-security-posture-management-learn-about, ai-azure-foundry). Layer decisions kept: tool threat protection modes at layer 4 (the first page's added-controls text puts tool threat protection at layer 4); Server trust prompt at layer 1 ("which server" is the layer 1 definition on the first page, and the prompt decides whether a server is trusted); Purview audit scoped to Agent 365 agent instances on the page itself, with the MCP reading tagged inference. These are reasoned from the first page and the quotes, not tested in a tenant.
+- 2026-11-12: holistic read of all text without a V link (about 310 lines, read in full, not sampled). Four wording fixes: "Choose one" now says Option 2 can share the Option 1 instance (the page elsewhere advises one shared instance); the no-released-guardrail notes now say Foundry agents and Copilot Studio agents (the VS Code result review and the Copilot Studio prompt attack block are released layer 6 controls, so an unscoped note contradicted them); the preview note no longer restates that a preview control is preview. Layer 1 for Server trust prompt: kept, interpretation by AI (it decides which server is trusted).
 
 ## Review of statements new on this page
 
@@ -44,6 +48,15 @@ Checked 2026-11-12 against the first page's quotes and the design text. Verdicts
 | Purview audit of agent tool calls: audit from creation, agent-to-tools interactions, audit log search, DLP scope, DSPM inventory, Foundry prompt and response audit | sourced | V203 to V208. |
 | MCP tool calls count as agent-to-tools interactions | interpretation by AI | The Purview pages do not name MCP. Labelled on the page. |
 | Review Purview audit for tool calls to unapproved servers | design | Recommendation, labelled. |
+| Pipeline writes to three targets; Microsoft 365 admin center set by hand | sourced | V171 (no PowerShell or API option) and V163. |
+| AI Gateway product can replace the API Management service gateway; Agent 365 integration is the addition | sourced | V196, V45, V42, V194, V36. API Management v2 supports server block only (V42). |
+| Only the AI Gateway product has tool blocking and threat protection in the Agent 365 integration | sourced | V42, V194. |
+| Untrusted results is guidance, not a product control | sourced | V107 is advice. No quote describes a layer 6 control. |
+| A tool granted post-approval adds its result to the chat without review | sourced | V154. |
+| Agent 365 BYO: block at server level, authorize at the server | sourced and design | V44, V86 say tool blocking for BYO is planned. The BYO route skips the gateway (V85). |
+| Foundry tool list limits one connection and does not stop another server | interpretation by AI | V69 and V101 describe the list and the Network control. No quote states the second half. |
+| Cloud agent: the client allowlist is the main control left | interpretation by AI | Tagged inference. V23 only says the firewall does not apply to MCP server processes. |
+| Tests for merge and hand edit name pipeline targets only | design | Follows from V171. |
 | Control counts per box | derived | Counted by the builder from the control mapping. |
 | Objective and layer filters | derived | Taken from each control's stated objective and layer. Guardrails have no objective, so the Objective filter hides them. |
 
@@ -157,8 +170,8 @@ Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote
 | <a id="ev-V99"></a>V99 | Action: Annotate only When this control is specified, the final content meant to be displayed to the user is scanned for certain types of copyrighted text. | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Action%3A%20Annotate%20only%20When%20this%20control,for%20certain%20types%20of%20copyrighted%20text.) | 2026-03-02 | released |
 | <a id="ev-V100"></a>V100 | For agents, the agent's guardrail overrides the model's guardrail. | [Microsoft Learn, create a Foundry guardrail](https://learn.microsoft.com/en-us/azure/foundry/guardrails/how-to-create-guardrails#:~:text=For%20agents%2C%20the,guardrail.) | 2026-10-15 | released |
 | <a id="ev-V101"></a>V101 | The Network control configures network egress controls for hosted agents and prompt agents that use the Microsoft Copilot harness. It doesn't affect other prompt agents or model deployments. | [Microsoft Learn, create a Foundry guardrail](https://learn.microsoft.com/en-us/azure/foundry/guardrails/how-to-create-guardrails#:~:text=The%20Network%20control%20configures%20network%20egress,other%20prompt%20agents%20or%20model%20deployments.) | 2026-10-15 | released |
-| <a id="ev-V102"></a>V102 | Tool call (Preview) The next action the agent is proposing to take, as generated by its underlying model. | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Tool%20call%20%28Preview%29%20The%20next%20action,as%20generated%20by%20its%20underlying%20model.) | 2026-03-02 | released |
-| <a id="ev-V103"></a>V103 | Tool response (Preview) The content sent back by a tool, internal to an agent's orchestration | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Tool%20response%20%28Preview%29%20The%20content%20sent,orchestration) | 2026-03-02 | released |
+| <a id="ev-V102"></a>V102 | Tool call (Preview) The next action the agent is proposing to take, as generated by its underlying model. | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Tool%20call%20%28Preview%29%20The%20next%20action,as%20generated%20by%20its%20underlying%20model.) | 2026-03-02 | preview |
+| <a id="ev-V103"></a>V103 | Tool response (Preview) The content sent back by a tool, internal to an agent's orchestration | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Tool%20response%20%28Preview%29%20The%20content%20sent,orchestration) | 2026-03-02 | preview |
 | <a id="ev-V104"></a>V104 | Tool call and tool response intervention points require moderation support from the tool itself. | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Tool%20call%20and%20tool%20response%20intervention,moderation%20support%20from%20the%20tool%20itself.) | 2026-03-02 | preview |
 | <a id="ev-V105"></a>V105 | Currently, the following tools support moderation: Azure AI Search, Azure Functions, OpenAPI, Sharepoint Grounding, Fabric Data Agent, Bing Grounding, Bing Custom Search, and Browser Automation. | [Microsoft Learn, Foundry guardrail intervention points](https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points#:~:text=Currently%2C%20the%20following%20tools%20support%20moderation%3A,Bing%20Custom%20Search%2C%20and%20Browser%20Automation.) | 2026-03-02 | preview |
 | <a id="ev-V106"></a>V106 | The default value is always | [Microsoft Learn, Foundry MCP tool](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol#:~:text=The%20default%20value%20is%20always) | 2026-10-28 | released |
@@ -270,8 +283,6 @@ Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote
 
 <!-- Begin reviewed presentation text -->
 ```text
-label	MCP Governance in a Microsoft ecosystem, interactive
-requirement	A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.
 label	The design
 label	recommendation
 requirement	Approved list
@@ -310,7 +321,7 @@ label	Microsoft Foundry
 label	Policy sync, Foundry Objective B · layer 1
 label	Foundry agents
 label	Approval Product guardrail · layer 2
-label	Untrusted results Product guardrail · layer 6
+label	Untrusted results Guidance, not a product control · layer 6
 label	Foundry network and sandbox Objective B · layer 4
 label	Foundry gateway routing preview Separate route · layer 4, AI estimate
 label	Tool call and tool response guardrails preview Product guardrail · layer 3 and 6
@@ -328,8 +339,6 @@ label	Logging, checks and Purview
 label	Logging and checks Objectives A and B · whole path
 label	Purview audit of agent tool calls Objectives A and B · whole path
 label	Gateway
-label	Azure API Management
-label	AI Gateway integrated with Foundry
 label	Gateway Objective A · layer 4
 label	Identity Objective A · layer 4
 label	Agent 365 gateway integration preview Visibility, not the boundary · layer 4, AI estimate
@@ -353,5 +362,11 @@ label	Company governance
 label	Agent 365 route, preview
 label	Tests added with preview
 label	Preview pilot, after the baseline
+label	A proposed design for MCP Governance in a Microsoft ecosystem
+label	Ways to build the gateway
+label	Option 1: API Management with AI gateway capabilities
+label	Option 2: AI Gateway integrated with Foundry
+label	Option 3: Dedicated AI Gateway preview
+label	Tags on this page
 ```
 <!-- End reviewed presentation text -->
