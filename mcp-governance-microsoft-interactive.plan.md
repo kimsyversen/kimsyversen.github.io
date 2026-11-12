@@ -69,3 +69,21 @@ Completion pass: added mixed-mode connector enforcement and preview discovery/re
 Final completion pass: source and logic review complete, including workload-specific ACP availability (V216) and remaining automation wording. Static, source-snapshot and reproducible-build checks pass. Browser QA was retried and remains environment-blocked; no tenant acceptance test is claimed.
 
 Commit attempted on `dev`; the workspace denied creation of `.git/index.lock` because git metadata is read-only. Reviewed changes remain uncommitted. Nothing was published.
+
+## Gateway migration follow-up (2026-11-12)
+
+- [x] Correct the preview explanation and test expectation: replacing the API Management service gateway with the separate AI Gateway resource requires a tested migration and rollback. Preserve baseline controls.
+- [x] Recheck STRIDE gateway outage and private-path scenarios; their existing conditional bases cover this finding, so no STRIDE row or diagram change is needed.
+- [x] Open the updated page in Firefox on desktop and exercise the preview switch, a cloud-client path and a call-layer filter.
+- [x] Complete narrow-viewport and console checks for this revision (2026-11-12, local server, 375 px and desktop).
+- [ ] Validate the proposed flows in a tenant before describing them as implemented controls.
+
+This workspace again denied a local branch switch because `.git/index.lock` cannot be created. Edits are in the working tree on `master`; move them to `dev` before committing or publishing.
+
+## Second holistic review (2026-11-12)
+
+- [x] Restore V195 as verified and cite it for the separate AI Gateway product.
+- [x] Fix the order of work, Purview "Applies to" and the GitHub built-in server gap wording.
+- [x] Recheck the STRIDE page for the same issues; no change needed.
+- [x] Second full read of every page line, logged per paragraph; fixed the Option 2 fragment and the blanket lead disclaimer (2026-11-12).
+- [x] Move the working-tree changes from `master` to `dev` and commit (2026-11-12).

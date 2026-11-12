@@ -128,13 +128,31 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('Confirm its public endpoint fits the backend isolation target.', 'Keep its public endpoint separate from the private backend.') if 'Confirm its public endpoint fits the backend isolation target.' in page else None
     replace('Dedicated AI Gateway is a separate product that can replace the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection', 'Dedicated AI Gateway is a separate product that can replace the API Management service gateway. In the Agent 365 integration capability matrix, only AI Gateway lists tool blocking, tool activity and tool threat protection')
     replace('Blocked or preview route</li>', 'Rejected route or preview alternative</li>')
+    # 2026-11-12 holistic review: cite the overview for the separate product, fix ownership and scope wording.
+    replace('A separate AI Gateway product, not the API Management service ' + ev('apim-ai-not-separate'),
+            'A separate AI Gateway product ' + evp('pv-aig-separate') + ', not the AI gateway capabilities built into the API Management service ' + ev('apim-ai-not-separate'))
+    replace('Configure Microsoft 365 access and Power Platform MCP policy manually until their respective automation is verified.',
+            'Configure Microsoft 365 agent access by hand; it has no API option. Configure Power Platform MCP policy by hand until its API path is verified.')
+    replace('separate AI Gateway product and resource type ' + ev('apim-ai-not-separate') + ' ' + evp('pv-aig-separate'),
+            'separate AI Gateway product and resource type ' + ev('apim-ai-not-separate') + ' ' + evp('pv-aig-separate', 'pv-res-change'))
+    replace('<dt>Applies to</dt><dd>Agent 365 agent instances</dd>', '<dt>Applies to</dt><dd>Agent 365 agent instances and Foundry AI interactions</dd>')
+    replace('No design control covers them. Pilot both, or limit it through GitHub account permissions.',
+            f'No design control covers them. Pilot both switches, or limit the built-in server through GitHub account permissions. {rec}')
     replace('Hatched boxes and the lines that touch them are what preview adds. Everything else is the released design.', 'Hatching marks preview-only boxes; preview controls also live on shared boxes. The BYO line is a rejected alternative for this private backend.')
-    # An inaccessible historical overview quote remains anchored in the fact check,
-    # but active claims use the accessible resource-type and feature documentation.
-    page = page.replace('interactive.factcheck.md#ev-V195">V195', 'interactive.factcheck.md#ev-V45">V45')
-    replace(evp('pv-res-change', 'pv-regions') + ' ' + evp('pv-res-change'),
-            evp('pv-res-change', 'pv-regions'))
     assert page.count('What establishes the guarantee') == 14
     page = page.replace('What establishes the guarantee', 'Required control or validation')
     replace('The federated connector pages read on 2026-11-11', 'The federated connector pages reviewed on 2026-11-12')
+    replace('The released-only design stays underneath. Details and limits',
+            'Keep the baseline controls; replacing the gateway requires a tested migration and rollback. Details and limits')
+    replace('If a preview feature changes, switch it off and fall back to the released-only design.',
+            'Plan a safe stop and test migration back to the released gateway before replacing it.')
+    replace('The released-only design stays underneath. Build it first.',
+            'Build the released gateway first. Preserve its controls and test rollback before a preview gateway pilot.')
+    replace('Safe stop, or a rollback to the released-only design</td>',
+            'Safe stop or a tested migration back to the released gateway</td>')
+    replace('Automatic routing of newly added MCP tools through the Foundry integration is a preview feature <span class="tg pv">preview</span>',
+            'Automatic routing of newly added MCP tools through the Foundry integration <span class="tg pv">preview</span>')
+    # 2026-11-12 second full read: the Option 2 use line was a fragment that lost "not used for MCP tools".
+    replace('<dt>Use in this design</dt><dd>Automatic routing of newly added MCP tools through the Foundry integration <span class="tg pv">preview</span>',
+            '<dt>Use in this design</dt><dd>Not used for MCP tools; the baseline sets the gateway URL itself. Automatic routing applies only to new portal MCP tools without managed OAuth <span class="tg pv">preview</span>')
     return page

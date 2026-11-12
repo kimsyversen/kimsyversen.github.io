@@ -5,7 +5,7 @@ python3 -I scripts/check-evidence-quotes.py <cache> mcp_governance_interactive_e
 from mcp_governance_evidence import SOURCES as SHARED_SOURCES, QUOTES as SHARED_QUOTES, PREVIEW_ONLY as SHARED_PREVIEW
 
 CHECKED = "2026-11-12"
-UNAVAILABLE = {"pv-aig-separate": "Overview URL could not be retrieved on 2026-11-12; retained for anchor history, not used by active claims."}
+UNAVAILABLE = {}
 SOURCES = dict(SHARED_SOURCES)
 QUOTES = list(SHARED_QUOTES)
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
@@ -57,6 +57,7 @@ VERIFIED_SOURCE_DATES = {
     "intune-fw": "2026-04-15",
     "win-dk": "2025-04-07",
     "aig-ov": "2026-10-28",
+    "ai-gw-ov": "2026-10-28",
     "aig-res": "2026-10-28",
     "aig-con": "2026-10-28",
     "aig-ttp": "2026-10-28",

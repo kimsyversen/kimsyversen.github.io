@@ -101,9 +101,17 @@ Edited the page file directly; the builder script was behind the page at the tim
 - Supersedes the earlier baseline placement of Foundry's Network guardrail: it is preview. Keep released toolbox networking and preview guardrails separate, preserving the original anchor and adding `ctrl-foundry-egress`.
 - Supersedes direct Agent 365 BYO access to the private backend. Retain the public path/node IDs as an excluded alternative, with a rejected line. Gateway-fronted composition needs its own compatibility test.
 - Use manual Power Platform MCP policy until the actual API adapter is verified; Git review and policy sync do not imply interchangeable policy targets.
-- Preserve the shared original page. Isolate interactive evidence and review corrections in two small modules, with exact-match checks so rebuilds cannot silently undo the corrections. V195 remains an explicitly unverified historical anchor, unused by current claims.
+- Preserve the shared original page. Isolate interactive evidence and review corrections in two small modules, with exact-match checks so rebuilds cannot silently undo the corrections. V195 remains an explicitly unverified historical anchor, unused by current claims. **Superseded** 2026-11-12 below.
 
 - Require Power Platform mixed mode while classic policies protect connector types unsupported by ACP; ACP-only mode would discard those protections.
 - Document preview tool threat protection's discovery/session exclusions and avoid automatic retries after a result is withheld; neither post-call inspection nor a successful HTTP response proves a write did not execute.
 
 - Qualify ACP inclusion in the released-only deployment by workload-specific general availability (V216); keep classic connector policies until coverage is established. Do not present unrun acceptance tests as guarantees.
+
+## Second holistic review (2026-11-12)
+
+- **Restored** V195 as a verified quote and cited it wherever the page calls AI Gateway a separate product. **Why:** its source was reachable on 2026-11-12, and V196 alone describes the built-in API Management capabilities, not the separate product.
+- **Kept** "separate AI Gateway product" wording even though Agent 365 pages call it "the AI Gateway tier in Azure API Management". **Why:** the overview (V195) and the resource type change (V45) are the primary sources for what it is; the Agent 365 pages name it but do not describe its resource.
+- **Split** the Microsoft 365 and Power Platform manual steps in the order of work. **Why:** Microsoft 365 agent access has no API option (V171), so it is manual by design, while Power Platform is manual only until its API path is verified.
+
+- 2026-11-12: removed "This is a proposed architecture. Neither objective is proven in a tenant." from the lead and relabelled the line Coverage. The owner asked for no blanket untested disclaimers on design pages; test status stays on the tests and on single gap items.
