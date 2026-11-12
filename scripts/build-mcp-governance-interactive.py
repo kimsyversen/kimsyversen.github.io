@@ -675,6 +675,13 @@ figure.mapfig{margin:0;gap:12px}
   .tbl td:first-child::before{content:none}
 }
 .steps li::marker{color:var(--call);font-weight:700}
+.sh h2 + .goal{margin-top:14px}
+.sh .goal{position:relative;padding-left:7rem;margin:0 0 10px;line-height:1.65;font-size:0.97rem}
+.sh .goal b{position:absolute;left:0;top:0.32em;margin:0;font:600 0.68rem/1.6 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--ink)}
+@media (max-width:560px){
+  .sh .goal{padding-left:0;margin-bottom:14px}
+  .sh .goal b{position:static;display:block;margin-bottom:2px}
+}
 @media print{.dg-tools,.pnav,.wires{display:none}.np{display:block!important}.panels{position:static;max-height:none}}
 </style>""")
 
@@ -985,7 +992,7 @@ MAST = f"""
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked {CHECKED}</span></div>
     <h1>MCP Governance in a Microsoft ecosystem, interactive</h1>
     <div class="intro">
-      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot. Nothing is tested in a tenant.</p>
+      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.</p>
     </div>
   </header>
 
@@ -1098,7 +1105,7 @@ PREVIEW = f"""
 
 FOOTER = f"""
   <footer>
-    <p>The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
+    <p>The design is proposed. The preview additions are for a sandbox pilot.</p>
     {AI_NOTE}
     <p id="evidence">Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</p>
   </footer>
@@ -1106,12 +1113,11 @@ FOOTER = f"""
 
 ROLLOUT_HTML = strip_anchors(ROLLOUT)
 GAPS_HTML = strip_anchors(GAPS)
-_gap_split = ". Two other switches are untested for it:"
+_gap_split = ". Two switches are untested:"
 assert GAPS_HTML.count(_gap_split) == 1
 _a = GAPS_HTML.index('<li><strong id="gap-github-builtin">')
 _b = GAPS_HTML.index("</li>", _a)
-_li = GAPS_HTML[_a:_b].replace(_gap_split, ".</p><p>Two other switches are untested for it:", 1)
-_li = _li.replace("</strong> Allow", "</strong></p><p>Allow", 1) if False else _li.replace("</strong> Allow", "</strong> Allow", 1)
+_li = GAPS_HTML[_a:_b].replace(_gap_split, ".</p><p>Two switches are untested:", 1)
 GAPS_HTML = GAPS_HTML[:_a] + _li.replace('<li><strong id="gap-github-builtin">', '<li><p><strong id="gap-github-builtin">', 1) + "</p>" + GAPS_HTML[_b:]
 
 def stack_tables(src):

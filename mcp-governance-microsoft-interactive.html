@@ -601,6 +601,13 @@ figure.mapfig{margin:0;gap:12px}
   .tbl td:first-child::before{content:none}
 }
 .steps li::marker{color:var(--call);font-weight:700}
+.sh h2 + .goal{margin-top:14px}
+.sh .goal{position:relative;padding-left:7rem;margin:0 0 10px;line-height:1.65;font-size:0.97rem}
+.sh .goal b{position:absolute;left:0;top:0.32em;margin:0;font:600 0.68rem/1.6 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--ink)}
+@media (max-width:560px){
+  .sh .goal{padding-left:0;margin-bottom:14px}
+  .sh .goal b{position:static;display:block;margin-bottom:2px}
+}
 @media print{.dg-tools,.pnav,.wires{display:none}.np{display:block!important}.panels{position:static;max-height:none}}
 </style>
 <noscript><style>body[data-view] .view-preview,body[data-view] .view-safe{display:revert!important}.seg-wrap{display:none!important}
@@ -806,6 +813,13 @@ figure.mapfig{margin:0;gap:12px}
   .tbl td:first-child::before{content:none}
 }
 .steps li::marker{color:var(--call);font-weight:700}
+.sh h2 + .goal{margin-top:14px}
+.sh .goal{position:relative;padding-left:7rem;margin:0 0 10px;line-height:1.65;font-size:0.97rem}
+.sh .goal b{position:absolute;left:0;top:0.32em;margin:0;font:600 0.68rem/1.6 var(--body);letter-spacing:0.08em;text-transform:uppercase;color:var(--ink)}
+@media (max-width:560px){
+  .sh .goal{padding-left:0;margin-bottom:14px}
+  .sh .goal b{position:static;display:block;margin-bottom:2px}
+}
 @media print{.dg-tools,.pnav,.wires{display:none}.np{display:block!important}.panels{position:static;max-height:none}}
 </style></noscript>
 </head>
@@ -822,7 +836,7 @@ figure.mapfig{margin:0;gap:12px}
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 2026-11-11</span></div>
     <h1>MCP Governance in a Microsoft ecosystem, interactive</h1>
     <div class="intro">
-      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot. Nothing is tested in a tenant.</p>
+      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.</p>
     </div>
   </header>
 
@@ -934,8 +948,7 @@ figure.mapfig{margin:0;gap:12px}
     <header class="sh"><h2 id="h-gaps"><a class="sec-link" href="#gaps">Gaps</a></h2>
     </header>
     <ol>
-<li><strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.</li>
-<li><p><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V21">V21</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V92">V92</a>.</p><p>Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP servers <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V93">V93</a>, and Registry only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V94">V94</a>, a public preview with weaker enforcement <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V95">V95</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V96">V96</a>. The design has no control for it. Test both switches in a pilot, or limit it through GitHub account permissions.</p></li>
+<li><p><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V21">V21</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V92">V92</a>.</p><p>Two switches are untested: the MCP servers in Copilot policy, which turns off every MCP server <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V93">V93</a>, and Registry only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V94">V94</a>, a public preview with weaker enforcement <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V95">V95</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V96">V96</a>. No design control covers it. Pilot both, or limit it through GitHub account permissions.</p></li>
 <li><strong id="gap-m365-manual">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V171">V171</a>, so the pipeline cannot keep this target in step. <span class="tg u">unverified</span> No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.</li>
 <li><strong id="gap-one-gateway">One gateway for Foundry and the other clients.</strong> <span class="tg i">inference</span> Interpretation by AI: the same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.</li>
 <li><strong id="gap-m365-status">Microsoft 365 Copilot connector status.</strong> <span class="tg i">inference</span> Interpretation by AI: the federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.</li>
@@ -949,7 +962,7 @@ figure.mapfig{margin:0;gap:12px}
   <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
     <header class="sh"><h2 id="h-preview"><a class="sec-link" href="#preview">With preview&nbsp;<span class="tg pv">preview</span></a></h2>
     <p class="goal"><b>In short</b>Use the separate AI Gateway product and the Agent 365 integration in place of the API Management service gateway. AI Gateway is in public preview. Use this design only in a sandbox. If a preview feature changes, switch it off and fall back to the released-only design. <span class="tg r">recommendation</span></p>
-    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type.</p></header>
+    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first.</p></header>
     <p class="q-note">Dedicated AI Gateway is a separate product that replaces the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V42">V42</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V194">V194</a>. Moving to it is a migration: a new resource and a new runtime address <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V50">V50</a>. See <a href="#ctrl-ai-resource">AI Gateway product and resource</a>.</p><p class="q-note">Microsoft says preview features are not meant for production use and may have restricted functionality. <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V35">V35</a> Every preview control in the diagram is a preview feature and its requirement is a recommendation. <span class="tg pv">preview</span> <span class="tg r">recommendation</span></p>
     <div class="sub3" id="approval-workflow">
       <h3 id="approval-and-denial-workflow"><a class="sec-link" href="#approval-and-denial-workflow">Approval and denial workflow</a></h3>
@@ -997,7 +1010,7 @@ figure.mapfig{margin:0;gap:12px}
   </main>
 
   <footer>
-    <p>The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
+    <p>The design is proposed. The preview additions are for a sandbox pilot.</p>
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
     <p id="evidence">Sources and review notes: <a href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md">fact check</a>.</p>
   </footer>

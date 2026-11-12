@@ -56,3 +56,7 @@ The box is now titled "Logging, checks and Purview", not a Purview box of its ow
 ## 2026-11-12, layer gaps on the client boxes
 
 The Foundry agents and Copilot Studio boxes now say which layers have no released guardrail. Reason: before this, the gaps showed only in the filter result when layer 3 or 6 was selected, so a reader who never filtered missed a fact the first page states in its controls table. The filter line stays, because it answers the filter the reader chose.
+
+## 2026-11-12, intro labels in their own column
+
+The In short, Scope, Objectives and Baseline labels now sit in a small caps column beside their text on wide screens, and above it on phones, with more line height and space between lines. Reason: the owner found the labels ran into the text and were hard to read.

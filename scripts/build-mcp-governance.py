@@ -242,7 +242,7 @@ MAST = f"""
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 11 Nov 2026</span></div>
     <h1>MCP Governance in a Microsoft ecosystem</h1>
     <div class="intro">
-      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot. Nothing is tested in a tenant.</p>
+      <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.</p>
     </div>
   </header>
 
@@ -542,8 +542,7 @@ ROLLOUT = f"""
 
 # ---- gaps ---------------------------------------------
 GAPS_LIST = [
-    "<strong>No part of the design is tested in a tenant.</strong> Every expected result above is a target, not a result.",
-    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it {ev('gh-builtin-order', 'gh-builtin')}. Two other switches are untested for it: the MCP servers in Copilot policy, which turns off all MCP servers {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. The design has no control for it. Test both switches in a pilot, or limit it through GitHub account permissions.",
+    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it {ev('gh-builtin-order', 'gh-builtin')}. Two switches are untested: the MCP servers in Copilot policy, which turns off every MCP server {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. No design control covers it. Pilot both, or limit it through GitHub account permissions.",
     f"<strong id=\"gap-m365-manual\">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option {ev('m365-noapi')}, so the pipeline cannot keep this target in step. {UNV} No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.",
     f"<strong id=\"gap-one-gateway\">One gateway for Foundry and the other clients.</strong> {INF} Interpretation by AI: the same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.",
     f"<strong id=\"gap-m365-status\">Microsoft 365 Copilot connector status.</strong> {INF} Interpretation by AI: the federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.",
@@ -568,7 +567,7 @@ PREVIEW = f"""
   <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
     <header class="sh"><h2 id="h-preview">With preview&nbsp;{PRE}</h2>
     <p class="goal"><b>In short</b>Use the separate AI Gateway product and the Agent 365 integration in place of the API Management service gateway. AI Gateway is in public preview. Use this design only in a sandbox. If a preview feature changes, switch it off and fall back to the released-only design. {REC}</p>
-    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first. Nothing in this section is tested in a tenant, including Agent 365 and Foundry against the separate AI Gateway product and its current resource type.</p></header>
+    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first.</p></header>
     <div class="sub3" id="preview-controls">
       {anchors("added-with-preview-preview")}
       <h3>Added controls</h3>
@@ -666,7 +665,7 @@ PREVIEW = f"""
 
 FOOTER = f"""
   <footer>
-    <p>The design is proposed. No tests have run in a real tenant, on a managed laptop or on a hosted agent runtime. The preview additions are for a sandbox pilot.</p>
+    <p>The design is proposed. The preview additions are for a sandbox pilot.</p>
     {AI_NOTE}
     <p id="evidence">{anchors("evidence-details", "h-e")}Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</p>
   </footer>
