@@ -17,7 +17,8 @@ For pages with multiple sections or tables, define each section's job and scope.
 ## 3. Evidence
 
 - Verify factual claims against primary sources and record the date and verdict in the fact check. Cut unsupported claims or label them `[unverified]` or `[inference]`. Record gaps in testing.
-- Write `[inference]` as interpretation by AI, not stated in a source. Never write it as the owner's or a person's own view: no "my", "our" or "mine" (not "my judgement", "my estimate", "our reading", "these definitions are mine"). Use "interpretation by AI" or "AI estimate" in sentences, headings and generated text on every page, and in the fact check.
+- Write `[inference]` as interpretation by AI, not stated in a source. Never write it as the owner's or a person's own view: no "my", "our" or "mine" (not "my judgement", "my estimate", "our reading", "these definitions are mine"). Use "interpretation by AI" or "AI estimate" in sentences, headings and generated text on every page, and in the fact check. A tag that already says it, such as the `inference` tag on a page, needs no such wording after it.
+- Tags (`inference`, `unverified`, `recommendation`, `preview`) stand alone in the text: do not add "Interpretation by AI:" or any repeat of the tag's meaning after them. Each page that uses tags ends with a "Tags on this page" key under the Made with AI note. The key lists only the tags that page uses, with one sentence each: `inference` is interpretation by AI that is not stated in a source, `unverified` is not confirmed in a quoted source, `recommendation` is a design choice proposed on the page, and `preview` is a feature in preview. Add or remove a key row in the same edit that adds or removes the last use of a tag.
 - Put the exact quote and a link to its passage beside each sourced diagram claim. Reserve diagram text without evidence for requirements and labels.
 - Run the page's quote and label checks when evidence or wording changes. Recheck sources and update the fact check before moving the page's "Current as of" date.
 
@@ -29,7 +30,7 @@ Make every section linkable. Each `<section>` and each `<article>` that holds a 
 
 ## 5. Style and checks
 
-- Follow [threatmodelling.html](threatmodelling.html) for content page style and copy its Made with AI note word for word. Write in English, let body text fill its column, and avoid em and en dashes.
+
 - Keep static flow and architecture figures in plain text ASCII files beside the page. Give each figure a text description of the flow.
 - Run `python3 -I scripts/section_anchors.py --check` before finishing. It fails if a section has no id or link.
 - Write only sentences the reader would miss if you deleted them; never restate a heading or label, say where something is on the page, or state the obvious.
