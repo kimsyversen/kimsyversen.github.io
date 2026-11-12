@@ -2,181 +2,403 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>DevSecOps · Kim Syversen</title>
-<meta name="description" content="A one-page view of governance checkpoints and secure development activities across the software lifecycle.">
-<meta name="theme-color" content="#09151a">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevSecOps</title>
+<meta name="description" content="Governance decisions and secure development activities across the software lifecycle.">
+<meta name="theme-color" content="#171b1e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Source+Sans+3:wght@400;600&amp;display=swap">
 <style>
-:root{
-  color-scheme:dark;
-  --bg:#09151a; --panel:#102127; --panel-hi:#142a30; --ink:#f1f5ef;
-  --muted:#a8b9b5; --soft:#7d9692; --line:rgba(202,231,218,.15);
-  --lime:#c5f36d; --mint:#69dbc2; --lilac:#d5a7f5; --amber:#f1bd75;
-  --sans:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --display:"Manrope",var(--sans); --mono:"DM Mono",monospace;
+:root {
+  color-scheme: dark;
+  --paper: #171b1e;
+  --ink: #f4ede1;
+  --muted: #babbb6;
+  --line: #41474a;
+  --trace: #697571;
+  --accent: #f3ab76;
+  --engineering: #b6ccc2;
+  --risk: #efb6a5;
+  --risk-border: #9b7063;
+  --serif: "Newsreader", Georgia, serif;
+  --sans: "Source Sans 3", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", monospace;
+  --lanes: minmax(0, 1fr) minmax(176px, .6fr) minmax(0, 1fr);
+  --node-top: 19px;
+  --node-size: 32px;
+  --junction: calc(var(--node-top) + var(--node-size) / 2);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:92px}
-body{margin:0;background:radial-gradient(ellipse at 82% 4%,rgba(60,123,106,.18),transparent 38rem),var(--bg);color:var(--ink);font:400 1rem/1.55 var(--sans);-webkit-font-smoothing:antialiased}
-::selection{background:var(--lime);color:#102127}
-a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em}
-a:focus-visible{outline:2px solid var(--lime);outline-offset:4px;border-radius:2px}
-h1,h2,h3,p{margin:0;font-size:inherit;font-weight:inherit}
-.skip{position:absolute;z-index:5;top:12px;left:20px;transform:translateY(-200%);padding:10px 14px;background:var(--lime);color:#09151a}
-.skip:focus{transform:none}
-.shell{width:min(1500px,100% - 64px);margin:0 auto;padding:26px 0 54px}
-.mast{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 0 16px;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:12px;font:500 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.brand-mark{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--mint);border-radius:9px;color:var(--mint);font:700 .8rem/1 var(--display)}
-.back{font-size:.78rem;color:var(--muted);text-decoration:none}
-.back:hover{color:var(--lime)}
-.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);align-items:end;gap:60px;padding:64px 0 44px}
-.eyebrow,.micro{font:500 .66rem/1.5 var(--mono);letter-spacing:.11em;text-transform:uppercase}
-.hero .eyebrow{color:var(--mint);margin-bottom:18px}
-h1{font:600 clamp(4.3rem,10vw,9rem)/.88 var(--display);letter-spacing:-.075em}
-h1 span{color:var(--lime)}
-.hero-copy{max-width:38rem;padding-bottom:5px}
-.hero-copy p{color:#d6e2dc;font-size:clamp(1.05rem,1.7vw,1.35rem);line-height:1.5;text-wrap:pretty}
-.summary{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.summary span{padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:400 .67rem/1.2 var(--mono);letter-spacing:.02em}
-.summary b{color:var(--lime);font-weight:500}
-.map-title{display:flex;justify-content:space-between;align-items:end;gap:24px;margin:8px 0 14px}
-.map-title h2{font:600 1.25rem/1.2 var(--display);letter-spacing:-.025em}
-.map-title p{max-width:36rem;color:var(--muted);font-size:.78rem;text-align:right}
-.lanes{position:relative;isolation:isolate}
-.lane-head,.phase-row{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(190px,.75fr) minmax(0,1.7fr);column-gap:14px}
-.lane-head{position:sticky;top:0;z-index:3;padding:9px 0;background:rgba(9,21,26,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.lane-name{padding:0 15px;color:var(--muted);font:500 .64rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase}
-.lane-name:first-child{color:var(--lilac)}
-.lane-name:nth-child(2){color:var(--lime)}
-.lane-name:last-child{color:var(--mint)}
-.phase-row{position:relative;align-items:stretch;min-height:126px;border-bottom:1px solid var(--line);scroll-margin-top:72px}
-.phase-row::before{content:"";position:absolute;z-index:-1;left:calc((100% - 28px) * .32 + 14px);top:0;bottom:0;width:1px;background:linear-gradient(var(--line),rgba(197,243,109,.3),var(--line))}
-.cell{min-width:0;padding:17px 15px 18px}
-.gov-cell{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px}
-.governance{display:inline-flex;align-items:center;gap:7px;color:var(--lilac);font:500 .62rem/1.3 var(--mono);letter-spacing:.04em;text-transform:uppercase}
-.governance::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
-.gov-cell p{max-width:29rem;color:#c7d3cf;font-size:.79rem;line-height:1.48}
-.source-ref{color:#e2c6f5;font:500 .62rem/1 var(--mono);text-decoration:none;border-bottom:1px solid rgba(213,167,245,.4)}
-.source-ref:hover{border-color:var(--lilac)}
-.phase-cell{display:flex;align-items:center;gap:13px;padding-left:18px;padding-right:12px}
-.phase-num{display:grid;flex:none;place-items:center;width:29px;height:29px;border:1px solid rgba(197,243,109,.42);border-radius:50%;background:var(--bg);color:var(--lime);font:400 .66rem/1 var(--mono)}
-.phase-text{min-width:0}
-.phase-text h3{font:700 1.08rem/1.2 var(--display);letter-spacing:-.025em}
-.phase-text p{margin-top:5px;color:var(--soft);font-size:.7rem;line-height:1.4}
-.work-cell{display:flex;align-items:center;gap:13px;border-left:1px solid var(--line)}
-.work-icon{display:grid;flex:none;place-items:center;width:30px;height:30px;border-radius:9px;background:rgba(105,219,194,.09);color:var(--mint);font:500 .72rem/1 var(--mono)}
-.work-cell p{max-width:57rem;color:#d5e1db;font-size:.82rem;line-height:1.52}
-.phase-row:nth-child(even) .cell{background:linear-gradient(90deg,rgba(255,255,255,.014),rgba(255,255,255,.025))}
-.phase-row:target{outline:1px solid var(--lime);outline-offset:-1px;background:rgba(197,243,109,.035)}
-.go-live .governance,.handover .governance{color:var(--amber)}
-.loop-note{display:flex;align-items:center;gap:12px;margin:24px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(16,33,39,.7);color:var(--muted);font-size:.77rem}
-.loop-note .loop{color:var(--lime);font:500 1.1rem/1 var(--mono)}
-.evidence{margin-top:50px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.evidence summary{display:flex;justify-content:space-between;gap:20px;align-items:center;min-height:64px;cursor:pointer;list-style:none;color:var(--muted);font:500 .7rem/1.4 var(--mono);letter-spacing:.07em;text-transform:uppercase}
-.evidence summary::-webkit-details-marker{display:none}
-.evidence summary::after{content:"+";color:var(--lime);font-size:1.15rem}
-.evidence[open] summary::after{content:"−"}
-.evidence-intro{max-width:50rem;padding:4px 0 18px;color:var(--soft);font-size:.78rem}
-.quote-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:0 0 18px}
-.quote{min-width:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:rgba(16,33,39,.55);scroll-margin-top:90px}
-.quote h3{margin-bottom:9px;color:var(--lilac);font:500 .61rem/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase}
-.quote blockquote{margin:0;color:#d4dfd9;font-size:.72rem;line-height:1.5}
-.quote cite{display:block;margin-top:11px;color:var(--soft);font:400 .6rem/1.4 var(--mono);font-style:normal}
-footer{display:grid;grid-template-columns:1fr minmax(280px,.85fr);gap:42px;margin-top:32px;color:var(--soft);font-size:.7rem;line-height:1.6}
-.ai-note{max-width:38rem;justify-self:end}
-.ai-note b{display:block;margin-bottom:5px;color:var(--ink);font-weight:600}
-.ai-note .interpretation{display:block;margin-top:10px;color:#c3d1cc}
-/* Section links */
-h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
-h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.4em;font-weight:400;opacity:0;transition:opacity .12s}
-h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.55}
-a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:4px;border-radius:2px}
-@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
-@media (max-width:900px){
-  .shell{width:min(100% - 40px,760px)}
-  .hero{grid-template-columns:1fr;gap:25px;padding:48px 0 38px}
-  .hero-copy{max-width:42rem}
-  .lane-head,.phase-row{grid-template-columns:minmax(0,1fr) minmax(178px,.68fr) minmax(0,1.45fr);column-gap:7px}
-  .lane-name{padding-left:10px;padding-right:8px;font-size:.58rem}
-  .phase-row::before{left:calc((100% - 14px) * .348 + 7px)}
-  .cell{padding-left:10px;padding-right:10px}
-  .phase-cell{gap:9px;padding-left:10px}
-  .phase-text h3{font-size:.98rem}
-  .gov-cell p,.work-cell p{font-size:.74rem}
-  .work-cell{gap:9px}
-  .quote-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 70px; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1rem/1.48 var(--sans);
 }
-@media (max-width:620px){
-  html{scroll-padding-top:16px}
-  .shell{width:calc(100% - 32px);padding-top:16px}
-  .mast{padding-bottom:12px}
-  .brand{font-size:.6rem}
-  .brand-mark{width:25px;height:25px}
-  .hero{gap:20px;padding:40px 0 31px}
-  h1{font-size:clamp(4.2rem,18vw,6rem)}
-  .hero-copy p{font-size:1rem}
-  .summary{margin-top:16px}
-  .map-title{display:block;margin-bottom:13px}
-  .map-title p{margin-top:8px;text-align:left;font-size:.73rem}
-  .lane-head{display:none}
-  .phase-row{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:13px 0 15px}
-  .phase-row::before{left:13.5px;top:0;bottom:0;height:auto;width:1px;background:linear-gradient(var(--lime),var(--line))}
-  .cell{padding:0;background:none!important}
-  .phase-cell{order:0;min-height:48px;padding:0 0 10px;gap:11px}
-  .phase-num{width:28px;height:28px;background:var(--bg)}
-  .phase-text h3{font-size:1.08rem}
-  .phase-text p{margin-top:2px;font-size:.68rem}
-  .gov-cell{order:1;display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start;gap:5px 10px;padding:8px 0 9px 39px}
-  .governance{font-size:.56rem}
-  .gov-cell p{font-size:.73rem}
-  .source-ref{grid-column:2;justify-self:start}
-  .work-cell{order:2;display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;padding:10px 0 0 39px;border-left:0;border-top:1px solid var(--line)}
-  .work-icon{width:20px;height:20px;border-radius:6px;font-size:.6rem}
-  .work-cell p{font-size:.76rem}
-  .loop-note{align-items:flex-start;margin-top:19px;padding:12px;font-size:.72rem}
-  .evidence{margin-top:36px}
-  .evidence summary{min-height:58px;font-size:.62rem}
-  .quote-grid{grid-template-columns:1fr 1fr;gap:7px}
-  .quote{padding:10px}
-  .quote blockquote{font-size:.68rem}
-  footer{grid-template-columns:1fr;gap:18px;margin-top:25px}
-  .ai-note{justify-self:start}
+h1, h2, h3, p, blockquote { margin: 0; }
+a { color: inherit; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+::selection { background: var(--accent); color: var(--paper); }
+
+.shell { width: min(74rem, 100% - 72px); margin-inline: auto; }
+.skip {
+  position: fixed;
+  z-index: 5;
+  top: 8px;
+  left: 8px;
+  padding: 8px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(calc(-100% - 8px));
 }
-@media (max-width:390px){
-  .gov-cell{grid-template-columns:1fr;gap:4px;padding-left:39px}
-  .source-ref{grid-column:1}
-  .quote-grid{grid-template-columns:1fr}
-  .summary span{font-size:.6rem}
+.skip:focus { transform: none; }
+.mast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  min-height: 60px;
+  border-bottom: 1px solid var(--line);
 }
-@media (forced-colors:active){
-  .phase-row:target{outline:2px solid Highlight}
-  a:focus-visible{outline-color:Highlight}
+.mast p, .lane-name, .phase-num, .feedback-mark, .mobile-lane {
+  font: 500 .69rem/1.3 var(--mono);
 }
-@media print{
-  :root{color-scheme:light;--bg:#fff;--ink:#111;--muted:#444;--soft:#555;--panel:#fff;--line:#aaa}
-  body{background:#fff;color:#111}
-  .shell{width:100%;padding:0}
-  .mast{border-color:#555}
-  .back,.skip{display:none}
-  .lane-head{position:static;background:#fff;backdrop-filter:none}
-  .phase-row,.quote,.loop-note{break-inside:avoid}
-  .cell,.phase-row:nth-child(even) .cell{background:none!important}
-  .gov-cell p,.work-cell p,.phase-text p,.evidence-intro,.quote blockquote,footer{color:#333}
-  .evidence:not([open]) > *:not(summary){display:block}
-  .evidence summary::after{display:none}
-  footer{grid-template-columns:1fr 1fr}
+.mast p { color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
+.mast a { font-size: .875rem; color: var(--muted); }
+.mast a:hover { color: var(--ink); }
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 28px;
+  padding: clamp(38px, 6vw, 84px) 0 clamp(36px, 5vw, 68px);
 }
+h1 {
+  font: 500 clamp(4rem, 10.5vw, 9rem)/.82 var(--serif);
+  letter-spacing: -.062em;
+}
+.hero p {
+  max-width: 26ch;
+  padding-bottom: .2em;
+  color: var(--muted);
+  font: 400 clamp(1.3rem, 2.35vw, 2rem)/1.17 var(--serif);
+  text-wrap: pretty;
+}
+
+.map-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 5px 24px;
+  padding: 10px 0 11px;
+  border-top: 2px solid var(--ink);
+}
+.map-title h2 { font: 600 1.15rem/1.2 var(--sans); }
+.map-title p { color: var(--muted); font-size: .875rem; }
+.lane-head, .phase-row { display: grid; grid-template-columns: var(--lanes); }
+.lane-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 12px 0;
+  border-block: 1px solid var(--line);
+  background: var(--paper);
+}
+.lane-name { letter-spacing: .075em; text-transform: uppercase; }
+.lane-name:first-child { color: var(--accent); padding-left: 20px; }
+.lane-name:nth-child(2) { text-align: center; }
+.lane-name:last-child { color: var(--engineering); padding-left: 20px; }
+
+.phase-row {
+  grid-template-areas: "governance phase engineering";
+  min-height: 128px;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 6px;
+}
+.phase-row:target, .phase-row:has(h3:target) { outline: 1px solid var(--accent); outline-offset: -1px; }
+.cell { min-width: 0; }
+.phase-cell {
+  grid-area: phase;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--node-top) 8px 19px;
+  text-align: center;
+}
+.phase-cell::before, .phase-cell::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+.phase-cell::before {
+  inset: 0 auto 0 50%;
+  border-left: 1px solid var(--trace);
+}
+.phase-cell::after {
+  inset: var(--junction) 0 auto;
+  border-top: 1px solid var(--trace);
+}
+#phase-plan .phase-cell::before { top: var(--junction); }
+#phase-retire .phase-cell::before { bottom: auto; height: var(--junction); }
+.phase-num {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--node-size);
+  height: var(--node-size);
+  border: 1px solid var(--trace);
+  border-radius: 50%;
+  background: var(--paper);
+}
+#phase-plan .phase-num, #phase-retire .phase-num {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+}
+.phase-text {
+  position: relative;
+  padding: 9px 4px 5px;
+  background: var(--paper);
+}
+.phase-text h3 { font: 500 clamp(1.65rem, 2.7vw, 2.35rem)/.95 var(--serif); }
+.phase-text p { margin-top: 4px; color: var(--muted); font-size: .8125rem; }
+
+.gov-cell, .work-cell { position: relative; padding: 25px 20px 20px; }
+.gov-title, .work-title { min-height: 2.5em; }
+.cell-copy { min-height: 4.44em; }
+.gov-cell { grid-area: governance; }
+.work-cell { grid-area: engineering; }
+.gov-cell::after, .work-cell::before {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--junction) - 3px);
+  width: 7px;
+  height: 7px;
+  content: "";
+}
+.gov-cell::after {
+  right: -3px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.checkpoint .gov-cell::after {
+  border-radius: 0;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+.work-cell::before { left: -3px; background: var(--engineering); }
+.gov-title, .work-title { color: var(--ink); font: 600 1.04rem/1.25 var(--sans); }
+.work-title { color: var(--engineering); }
+.cell-copy { margin-top: 5px; color: var(--muted); }
+.mobile-lane { display: none; }
+
+.risk { min-width: 0; max-width: 100%; }
+.risk-register { padding-top: 46px; }
+.risk-table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.phase-col { width: 14%; }
+.governance-col, .engineering-col { width: 43%; }
+.risk-table caption {
+  padding: 0 0 10px;
+  color: var(--muted);
+  font-size: .875rem;
+  text-align: left;
+}
+.risk-table th, .risk-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.risk-table thead th {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: 500 .68rem/1.35 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.risk-table thead th:nth-child(2) { color: var(--accent); }
+.risk-table thead th:nth-child(3) { color: var(--engineering); }
+.risk-table .phase-name {
+  color: var(--ink);
+  font: 500 1.25rem/1.2 var(--serif);
+}
+.phase-name a { text-decoration: none; }
+.phase-name a:hover { text-decoration: underline; }
+.phase-index {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font: 500 .65rem/1.2 var(--mono);
+}
+.risk-table-list { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.risk-table .gov-risks { --risk: var(--accent); --risk-border: #a57957; }
+.risk-table .engineering-risks { --risk: var(--engineering); --risk-border: #617a70; }
+.risk-table .risk summary {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  padding: 3px 18px 3px 9px;
+  border: 0;
+  border-left: 2px solid var(--risk-border);
+  border-radius: 0;
+  color: var(--ink);
+  font: 400 .9rem/1.4 var(--sans);
+  overflow-wrap: anywhere;
+}
+.risk-table .risk summary::after { position: absolute; top: .7em; right: 3px; }
+.risk-table .risk[open] summary { color: var(--risk); }
+.risk-table .risk summary:hover { border-color: var(--risk); }
+.risk-table .risk-evidence { margin-left: 9px; }
+.risk summary {
+  display: flex;
+  align-items: center;
+  gap: .55em;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 34px;
+  padding: 4px 11px;
+  border: 1px solid var(--risk-border);
+  border-radius: 999px;
+  color: var(--risk);
+  font: 600 .875rem/1.25 var(--sans);
+  list-style: none;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.risk summary::-webkit-details-marker { display: none; }
+.risk summary::after {
+  content: "";
+  flex: none;
+  width: .36em;
+  height: .36em;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+}
+.risk summary:hover, .risk[open] summary { border-color: var(--risk); }
+.risk[open] summary::after { transform: rotate(225deg); }
+.risk-evidence {
+  margin: 9px 0 3px;
+  padding-left: 11px;
+  border-left: 1px solid var(--risk-border);
+  color: var(--muted);
+  font-size: .875rem;
+  overflow-wrap: anywhere;
+}
+.risk-evidence a { display: inline-block; margin-top: 5px; color: var(--risk); }
+
+.loop-note {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px 0 0;
+  color: var(--muted);
+}
+.feedback-mark { flex: none; color: var(--accent); font-size: 1.25rem; }
+.loop-note a { color: var(--accent); }
+
+footer { padding: 22px 0 42px; color: var(--muted); font-size: .8125rem; }
+.ai-note { max-width: 72ch; }
+.ai-note b { margin-right: .55em; color: var(--ink); }
+.interpretation { display: block; margin-top: 5px; }
 /* section links */
-h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
-h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
-h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
-a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
-@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
-@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+a.sec-link { position: relative; text-decoration: none; }
+a.sec-link:hover { text-decoration: underline; }
+a.sec-link::after {
+  position: absolute;
+  left: 100%;
+  margin-left: .25em;
+  color: var(--accent);
+  font: 400 .58em/1.25 var(--mono);
+  content: "#";
+  opacity: 0;
+}
+a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
+
+@media (max-width: 760px) {
+  html { scroll-padding-top: 14px; }
+  .shell { width: calc(100% - 36px); }
+  .hero { grid-template-columns: 1fr; gap: 14px; }
+  h1 { font-size: clamp(3.3rem, 13vw, 6.5rem); }
+  .hero p { max-width: 32ch; }
+  .lane-head { display: none; }
+  .phase-row {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "phase" "governance" "engineering";
+    gap: 13px;
+    min-height: 0;
+    padding-bottom: 19px;
+    background: linear-gradient(var(--trace), var(--trace)) 15px 0 / 1px 100% no-repeat;
+  }
+  #phase-plan { background-position-y: var(--junction); }
+  #phase-retire { background-size: 1px var(--junction); }
+  .phase-cell {
+    flex-direction: row;
+    gap: 12px;
+    padding: var(--node-top) 0 0;
+    text-align: left;
+  }
+  .phase-cell::before, .phase-cell::after { display: none; }
+  .phase-text { padding: 0; }
+  .phase-text h3 { font-size: 1.9rem; }
+  .gov-cell, .work-cell { display: block; padding: 0 0 0 44px; }
+  .gov-title, .work-title, .cell-copy { min-height: 0; }
+  .gov-cell::after, .work-cell::before {
+    top: 4px;
+    right: auto;
+    left: 12px;
+  }
+  .mobile-lane {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .work-cell .mobile-lane { color: var(--engineering); }
+  .phase-col { width: 17%; }
+  .governance-col, .engineering-col { width: 41.5%; }
+  .risk-table th, .risk-table td { padding: 9px 7px; }
+  .risk-table .phase-name { font-size: 1.05rem; }
+  .risk-table .risk summary { padding-left: 7px; font-size: .8125rem; }
+  .risk-table-list { gap: 7px; }
+}
+
+@media (forced-colors: active) {
+  .phase-num { border-color: CanvasText; }
+  .gov-cell::after, .work-cell::before { border: 1px solid CanvasText; }
+}
+@media print {
+  :root {
+    color-scheme: light;
+    --paper: #fff; --ink: #111; --muted: #333; --accent: #813509;
+    --engineering: #183d31; --line: #aaa; --trace: #666;
+    --risk: #7c392a; --risk-border: #9b7063;
+  }
+  .shell { width: 100%; }
+  .skip, .mast a { display: none; }
+  .hero { padding-block: 20px; }
+  h1 { font-size: 48pt; }
+  .lane-head { position: static; }
+  .phase-row { break-inside: avoid; min-height: 0; }
+  a.sec-link::after { display: none; }
+}
 </style>
 </head>
 <body>
@@ -184,187 +406,528 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <div class="shell">
   <header>
     <div class="mast">
-      <p class="brand"><span class="brand-mark" aria-hidden="true">S</span> Security in the delivery lifecycle</p>
-      <a class="back" href="index.html">← All pages</a>
+      <p>Software delivery / Security</p>
     </div>
     <div class="hero">
-      <div>
-        <p class="eyebrow">Governance × delivery × security</p>
-        <h1>DevSecOps<span>.</span></h1>
-      </div>
-      <div class="hero-copy">
-        <p>Security moves with the work, from the first decision to the last credential revoked. Follow the checkpoints, the delivery phases and the practices that keep them connected.</p>
-        <div class="summary" aria-label="Map overview">
-          <span><b>10</b> lifecycle phases</span>
-          <span><b>5</b> decision points</span>
-          <span><b>1</b> continuous loop</span>
-        </div>
-      </div>
+      <h1>DevSecOps</h1>
+      <p>Governance and secure development from planning to retirement.</p>
     </div>
   </header>
 
   <main>
     <section class="map" id="lifecycle" aria-labelledby="map-heading">
       <div class="map-title">
-        <h2 id="map-heading"><a class="sec-link" href="#map-heading">One connected lifecycle</a></h2>
-        <p>BP marks a project decision point. Governance sets direction and checks evidence; engineering turns security goals into working controls.</p>
+        <h2 id="map-heading"><a class="sec-link" href="#map-heading">The delivery lifecycle</a></h2>
+        <p>This working lifecycle connects governance with secure development. The idea that activities can overlap and repeat, and this phase mapping, are interpretations by AI, not a prescribed or universal sequence. Risks are grouped in the table below.</p>
       </div>
 
       <div class="lanes">
-        <div class="lane-head" aria-hidden="true">
+        <div class="lane-head">
           <p class="lane-name">Governance activities</p>
           <p class="lane-name">Delivery phase</p>
           <p class="lane-name">Secure development activities</p>
         </div>
 
-        <section class="phase-row" id="phase-plan" aria-labelledby="plan">
-          <div class="cell gov-cell">
-            <span class="governance">BP1 · Classify</span>
-            <p>Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks.</p>
-            <a class="source-ref" href="#evidence-bp1">Source note ↘</a>
-          </div>
+        <section class="phase-row checkpoint" id="phase-plan" aria-labelledby="plan">
           <div class="cell phase-cell">
-            <span class="phase-num">01</span><div class="phase-text"><h3 id="plan"><a class="sec-link" href="#plan">Plan</a></h3><p>Set the direction</p></div>
+            <span class="phase-num" aria-hidden="true">01</span>
+            <div class="phase-text">
+              <h3 id="plan"><a class="sec-link" href="#plan">Plan</a></h3>
+              <p>Set the direction</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">01</span><p>Set scope, acceptance criteria, security and privacy requirements, and likely threats.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Classify</p>
+            <p class="cell-copy">Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Security requirements</p>
+            <p class="cell-copy">Set scope, acceptance criteria, security and privacy requirements, and likely threats.</p>
+          </div>
         </section>
 
-        <section class="phase-row" id="phase-design" aria-labelledby="design">
-          <div class="cell gov-cell">
-            <span class="governance">BP2 · Choose concept</span>
-            <p>Compare options for architecture and supplier risk; record the security case, expected residual risk, plan and budget.</p>
-            <a class="source-ref" href="#evidence-bp2">Source note ↘</a>
-          </div>
+        <section class="phase-row checkpoint" id="phase-design" aria-labelledby="design">
           <div class="cell phase-cell">
-            <span class="phase-num">02</span><div class="phase-text"><h3 id="design"><a class="sec-link" href="#design">Design</a></h3><p>Shape the solution</p></div>
+            <span class="phase-num" aria-hidden="true">02</span>
+            <div class="phase-text">
+              <h3 id="design"><a class="sec-link" href="#design">Design</a></h3>
+              <p>Shape the solution</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">02</span><p>Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Choose concept</p>
+            <p class="cell-copy">Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Threat modeling</p>
+            <p class="cell-copy">Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</p>
+          </div>
         </section>
 
-        <section class="phase-row" id="phase-code" aria-labelledby="code">
-          <div class="cell gov-cell">
-            <span class="governance">BP3 · Ready to build</span>
-            <p>Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</p>
-            <a class="source-ref" href="#evidence-bp3">Source note ↘</a>
-          </div>
+        <section class="phase-row checkpoint" id="phase-code" aria-labelledby="code">
           <div class="cell phase-cell">
-            <span class="phase-num">03</span><div class="phase-text"><h3 id="code"><a class="sec-link" href="#code">Code</a></h3><p>Build to the standard</p></div>
+            <span class="phase-num" aria-hidden="true">03</span>
+            <div class="phase-text">
+              <h3 id="code"><a class="sec-link" href="#code">Code</a></h3>
+              <p>Build to the standard</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">03</span><p>Use secure coding standards, review changes, protect secrets and assess dependencies.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Ready to build</p>
+            <p class="cell-copy">Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Secure coding and review</p>
+            <p class="cell-copy">Use secure coding standards, review changes, protect secrets and assess dependencies.</p>
+          </div>
         </section>
 
         <section class="phase-row" id="phase-build" aria-labelledby="build">
-          <div class="cell gov-cell">
-            <span class="governance">Assurance · Evidence</span>
-            <p>Track whether security activities are complete; keep findings, owners and due dates visible.</p>
-          </div>
           <div class="cell phase-cell">
-            <span class="phase-num">04</span><div class="phase-text"><h3 id="build"><a class="sec-link" href="#build">Build</a></h3><p>Package trusted inputs</p></div>
+            <span class="phase-num" aria-hidden="true">04</span>
+            <div class="phase-text">
+              <h3 id="build"><a class="sec-link" href="#build">Build</a></h3>
+              <p>Package trusted inputs</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">04</span><p>Package from trusted inputs and keep the artifact traceable to its source and dependencies.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Track evidence</p>
+            <p class="cell-copy">Track whether security activities are complete. Keep findings, owners and due dates visible.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Build traceability</p>
+            <p class="cell-copy">Package from trusted inputs and keep the artifact traceable to its source and dependencies.</p>
+          </div>
         </section>
 
         <section class="phase-row" id="phase-test" aria-labelledby="test">
-          <div class="cell gov-cell">
-            <span class="governance">Assurance · Verify</span>
-            <p>Review test evidence against the agreed security requirements and follow unresolved findings to closure.</p>
-          </div>
           <div class="cell phase-cell">
-            <span class="phase-num">05</span><div class="phase-text"><h3 id="test"><a class="sec-link" href="#test">Test</a></h3><p>Verify the controls</p></div>
+            <span class="phase-num" aria-hidden="true">05</span>
+            <div class="phase-text">
+              <h3 id="test"><a class="sec-link" href="#test">Test</a></h3>
+              <p>Verify the controls</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">05</span><p>Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Review test evidence</p>
+            <p class="cell-copy">Review test evidence against the agreed security requirements and follow unresolved findings to closure.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Security testing</p>
+            <p class="cell-copy">Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</p>
+          </div>
         </section>
 
-        <section class="phase-row go-live" id="phase-release" aria-labelledby="release">
-          <div class="cell gov-cell">
-            <span class="governance">BP4 · Production go / no-go</span>
-            <p>Require verified controls, tested recovery and monitoring. Close critical and high findings or get the system owner’s explicit risk acceptance.</p>
-            <a class="source-ref" href="#evidence-bp4">Source note ↘</a>
-          </div>
+        <section class="phase-row checkpoint" id="phase-release" aria-labelledby="release">
           <div class="cell phase-cell">
-            <span class="phase-num">06</span><div class="phase-text"><h3 id="release"><a class="sec-link" href="#release">Release</a></h3><p>Approve the version</p></div>
+            <span class="phase-num" aria-hidden="true">06</span>
+            <div class="phase-text">
+              <h3 id="release"><a class="sec-link" href="#release">Release</a></h3>
+              <p>Approve the version</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">06</span><p>Approve a verified, traceable software version after required checks pass.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Production go / no-go</p>
+            <p class="cell-copy">Check required controls, recovery and monitoring. Resolve critical and high findings before release, or use a time-limited exception approved by the authorized risk owner, with compensating controls where appropriate.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Release verification</p>
+            <p class="cell-copy">Approve a verified, traceable software version after required checks pass.</p>
+          </div>
         </section>
 
         <section class="phase-row" id="phase-deploy" aria-labelledby="deploy">
-          <div class="cell gov-cell">
-            <span class="governance">Controlled promotion</span>
-            <p>Promote only the approved release and confirm the rollout is understood and reversible.</p>
-          </div>
           <div class="cell phase-cell">
-            <span class="phase-num">07</span><div class="phase-text"><h3 id="deploy"><a class="sec-link" href="#deploy">Deploy</a></h3><p>Deliver with guardrails</p></div>
+            <span class="phase-num" aria-hidden="true">07</span>
+            <div class="phase-text">
+              <h3 id="deploy"><a class="sec-link" href="#deploy">Deploy</a></h3>
+              <p>Deliver with guardrails</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">07</span><p>Use hardened settings and least-privilege access; verify the rollout and support rollback.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Controlled promotion</p>
+            <p class="cell-copy">Promote only the approved release and confirm the rollout is understood and reversible.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Rollout and rollback</p>
+            <p class="cell-copy">Use hardened settings and least-privilege access. Verify the rollout and support rollback.</p>
+          </div>
         </section>
 
-        <section class="phase-row handover" id="phase-operate" aria-labelledby="operate">
-          <div class="cell gov-cell">
-            <span class="governance">BP5 · Handover</span>
-            <p>Transfer operations and open actions with named owners, dates and the evidence needed to continue.</p>
-            <a class="source-ref" href="#evidence-bp5">Source note ↘</a>
-          </div>
+        <section class="phase-row checkpoint" id="phase-operate" aria-labelledby="operate">
           <div class="cell phase-cell">
-            <span class="phase-num">08</span><div class="phase-text"><h3 id="operate"><a class="sec-link" href="#operate">Operate</a></h3><p>Run the service</p></div>
+            <span class="phase-num" aria-hidden="true">08</span>
+            <div class="phase-text">
+              <h3 id="operate"><a class="sec-link" href="#operate">Operate</a></h3>
+              <p>Run the service</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">08</span><p>Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Handover</p>
+            <p class="cell-copy">Transfer operations and open actions with named owners, dates and the evidence needed to continue.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Service maintenance</p>
+            <p class="cell-copy">Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents.</p>
+          </div>
         </section>
 
         <section class="phase-row" id="phase-monitor" aria-labelledby="monitor">
-          <div class="cell gov-cell">
-            <span class="governance">Measure · Improve</span>
-            <p>Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</p>
-          </div>
           <div class="cell phase-cell">
-            <span class="phase-num">09</span><div class="phase-text"><h3 id="monitor"><a class="sec-link" href="#monitor">Monitor</a></h3><p>Learn from live signals</p></div>
+            <span class="phase-num" aria-hidden="true">09</span>
+            <div class="phase-text">
+              <h3 id="monitor"><a class="sec-link" href="#monitor">Monitor</a></h3>
+              <p>Learn from live signals</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">09</span><p>Track service health, performance, user experience and security events; alert on suspicious activity or change.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Measure: Improve</p>
+            <p class="cell-copy">Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Detection and alerting</p>
+            <p class="cell-copy">Track service health, performance, user experience and security events. Alert on suspicious activity or change.</p>
+          </div>
         </section>
 
         <section class="phase-row" id="phase-retire" aria-labelledby="retire">
-          <div class="cell gov-cell">
-            <span class="governance">Closeout · Confirm</span>
-            <p>Assign closure ownership and confirm remaining access and data obligations are addressed.</p>
-          </div>
           <div class="cell phase-cell">
-            <span class="phase-num">10</span><div class="phase-text"><h3 id="retire"><a class="sec-link" href="#retire">Retire</a></h3><p>Close the lifecycle</p></div>
+            <span class="phase-num" aria-hidden="true">10</span>
+            <div class="phase-text">
+              <h3 id="retire"><a class="sec-link" href="#retire">Retire</a></h3>
+              <p>Close the lifecycle</p>
+            </div>
           </div>
-          <div class="cell work-cell"><span class="work-icon" aria-hidden="true">10</span><p>Decommission the service, revoke credentials and access, and handle data under retention requirements.</p></div>
+          <div class="cell gov-cell">
+            <p class="mobile-lane">Governance</p>
+            <p class="gov-title">Closeout: Confirm</p>
+            <p class="cell-copy">Assign closure ownership and confirm remaining access and data obligations are addressed.</p>
+          </div>
+          <div class="cell work-cell">
+            <p class="mobile-lane">Secure development</p>
+            <p class="work-title">Secure decommissioning</p>
+            <p class="cell-copy">Decommission the service, revoke credentials and access, and handle data under retention requirements.</p>
+          </div>
         </section>
       </div>
 
-      <p class="loop-note"><span class="loop" aria-hidden="true">↺</span><span>Security is continuous: monitoring, incidents, changes and new vulnerabilities can send work back to planning.</span></p>
+      <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Monitoring, incidents, changes and new vulnerabilities can send work <a href="#plan">back to planning</a>.</span></p>
     </section>
 
-    <details class="evidence" id="case-evidence">
-      <summary>Case presentation · decision-point evidence</summary>
-      <p class="evidence-intro">The governance checkpoints above condense the supplied case presentation. These short Norwegian excerpts show the source criteria for BP1-BP5. Other lifecycle guidance follows the supplied phase descriptions; the organization should set its own owners and thresholds.</p>
-      <div class="quote-grid">
-        <article class="quote" id="evidence-bp1"><h3><a class="sec-link" href="#evidence-bp1">BP1 · Classification</a></h3><blockquote lang="no">“Sikkerhetskriterier for go/no-go: Risikoeier er utpekt, og systemeier har godkjent sikkerhetsnivået. DPIA-behovet er avklart, og risikoer er dokumentert.”</blockquote><cite>Casepresentasjon.pdf, p. 3</cite></article>
-        <article class="quote" id="evidence-bp2"><h3><a class="sec-link" href="#evidence-bp2">BP2 · Concept choice</a></h3><blockquote lang="no">“Sikkerhetsbegrunnelsen for anbefalt konsept er dokumentert, og forventet restrisiko er innenfor det systemeier kan akseptere.”</blockquote><cite>Casepresentasjon.pdf, p. 4</cite></article>
-        <article class="quote" id="evidence-bp3"><h3><a class="sec-link" href="#evidence-bp3">BP3 · Design and development</a></h3><blockquote lang="no">“Trusselmodellen er gjennomført, og risikoregisteret er oppdatert. Sikkerhetskravene i backlog.”</blockquote><cite>Casepresentasjon.pdf, p. 5</cite></article>
-        <article class="quote" id="evidence-bp4"><h3><a class="sec-link" href="#evidence-bp4">BP4 · Production readiness</a></h3><blockquote lang="no">“Sikkerhetskravene er implementert og testet, og landing zone er gjennomgått.”</blockquote><cite>Casepresentasjon.pdf, p. 6</cite></article>
-        <article class="quote" id="evidence-bp5"><h3><a class="sec-link" href="#evidence-bp5">BP5 · Operations handover</a></h3><blockquote lang="no">“Forvaltning har tatt over driftsansvaret, og alle åpne tiltak har eier og frist.”</blockquote><cite>Casepresentasjon.pdf, p. 7</cite></article>
+
+    <section class="risk-register" aria-labelledby="risks-by-phase">
+      <div class="map-title">
+        <h2 id="risks-by-phase"><a class="sec-link" href="#risks-by-phase">Risks by phase</a></h2>
+        <p>Select a risk to expand its source evidence.</p>
       </div>
-    </details>
+      <table class="risk-table">
+        <caption>Possible consequences when governance or secure development activities are missed.</caption>
+        <colgroup><col class="phase-col"><col class="governance-col"><col class="engineering-col"></colgroup>
+        <thead>
+          <tr><th scope="col">Phase</th><th scope="col">Governance risks</th><th scope="col">Secure development risks</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-plan"><span class="phase-index">01</span>Plan</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>No named risk owner, delaying decisions and leaving business exposure unresolved.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
+                <summary>Critical service goes unclassified, leaving resilience planning and investment out of step with its business importance.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Assets are prioritized based on classification, criticality, resources, and impact on the mission.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=23">NIST CSF 2.0 · ID.AM-05 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
+                <summary>Applicable legal and regulatory obligations are not identified or reviewed, increasing the risk of non-compliance.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Identify compliance obligations related to the organization's products, services, or activities, and evaluate compliance risks”</blockquote>
+                  <a href="https://committee.iso.org/files/live/sites/tc309/files/FAQ%2037301/ISO%2037301%20FAQs%2C%20May%202022.pdf">ISO 37301 · ISO/TC 309 FAQ, question 12 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Legal, regulatory, and contractual requirements regarding cybersecurity”</blockquote>
+                  <a href="https://csrc.nist.gov/projects/cybersecurity-framework/filters">NIST CSF 2.0 · GV.OC-03 <span aria-hidden="true">↗</span></a>
+                  <p>For example, where GDPR applies:</p>
+                  <blockquote>“a description of the categories of data subjects and of the categories of personal data”</blockquote>
+                  <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_30">GDPR · Article 30 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“likely to result in a high risk to the rights and freedoms of natural persons”</blockquote>
+                  <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_35">GDPR · Article 35 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“to ensure and to be able to demonstrate that processing is performed in accordance with this Regulation.”</blockquote>
+                  <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_24">GDPR · Article 24 <span aria-hidden="true">↗</span></a>
+                  <p>These are examples, not a complete list of laws that may apply.</p>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Sensitive data left out of scope, leaving it without the intended security controls.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“protection requirements concerning confidentiality, integrity, availability, and authenticity of all data assets”</blockquote>
+                  <a href="https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets">OWASP A06 · Requirements and Resource Management <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-design"><span class="phase-index">02</span>Design</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Risk response left undefined, leaving the business exposed to losses beyond its agreed tolerance.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Strategic direction that describes appropriate risk response options is established and communicated.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Abuse paths left open, allowing unauthorized access or actions.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Threat modeling is a structured activity for identifying, evaluating, and managing system threats, architectural design flaws, and recommended security mitigations.”</blockquote>
+                  <a href="https://owaspsamm.org/model/design/threat-assessment/stream-b/#:~:text=Threat%20modeling%20is%20a%20structured%20activity%20for%20identifying%2C%20evaluating%2C%20and%20managing%20system%20threats%2C%20architectural%20design%20flaws%2C%20and%20recommended%20security%20mitigations.">OWASP SAMM · Threat Modeling <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-code"><span class="phase-index">03</span>Code</a></th>
+            <td class="gov-risks"></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Development starts without security requirements, leading to non-compliance and possibly exploitable vulnerabilities.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PO.1.2 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
+                <summary>Credentials exposed in code, allowing account compromise and unauthorized access.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“The product contains hard-coded credentials, such as a password or cryptographic key.”</blockquote>
+                  <a href="https://cwe.mitre.org/data/definitions/798.html#:~:text=The%20product%20contains%20hard%2Dcoded%20credentials%2C%20such%20as%20a%20password%20or%20cryptographic%20key.">MITRE CWE-798 · Hard-coded Credentials <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
+                <summary>A compromised or vulnerable dependency enters the product, exposing downstream users to malicious behavior or known flaws.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“An SSC attack is when a malicious party tampers with the steps, artifacts, or actors within the chain to compromise the consumers of a software artifact down the line.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204D.pdf#page=15">NIST SP 800-204D · Software supply chain attacks <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Build into the toolchain automatic detection of known vulnerabilities in software components.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=22">NIST SSDF 1.1 · PW.4.4 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
+                <summary>Unnoticed first-party code vulnerabilities, enabling unauthorized access or data theft.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Help identify vulnerabilities so that they can be corrected before the software is released to prevent exploitation.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=23">NIST SSDF 1.1 · PW.7 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-build"><span class="phase-index">04</span>Build</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Security findings go untracked, allowing unresolved issues to accumulate and increase delivery delays or incident costs.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Record and track all security defects in a defined location.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=Record%20and%20track%20all%20security%20defects%20in%20a%20defined%20location.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Build output tampered with, allowing malicious code to reach deployment.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“An adversary introduces an unauthorized change to a build output through tampering of the build process”</blockquote>
+                  <a href="https://slsa.dev/spec/v1.2/threats#:~:text=An%20adversary%20introduces%20an%20unauthorized%20change%20to%20a%20build%20output%20through%20tampering%20of%20the%20build%20process">SLSA 1.2 · Build Process Threats <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-test"><span class="phase-index">05</span>Test</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Security sign-off lacks test evidence, increasing the chance of a release decision that disrupts the business.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“consider the passing of security tests as part of merge requirements before allowing new code to enter the main code base.”</blockquote>
+                  <a href="https://owaspsamm.org/model/verification/requirements-driven-testing/stream-a/#:~:text=consider%20the%20passing%20of%20security%20tests%20as%20part%20of%20merge%20requirements%20before%20allowing%20new%20code%20to%20enter%20the%20main%20code%20base.">OWASP SAMM · Control Verification <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Broken controls go unnoticed, leaving exploitable flaws in the release.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“ensure that the implemented security controls operate as expected and satisfy the project’s stated security requirements”</blockquote>
+                  <a href="https://owaspsamm.org/model/verification/requirements-driven-testing/#:~:text=ensure%20that%20the%20implemented%20security%20controls%20operate%20as%20expected%20and%20satisfy%20the%20project%E2%80%99s%20stated%20security%20requirements">OWASP SAMM · Requirements-driven Testing <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-release"><span class="phase-index">06</span>Release</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Accepted risk lacks stakeholder review, exposing the business to losses it did not knowingly accept.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“all relevant stakeholders have a solid understanding of the imposed risk.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>A substituted artifact ships, deploying unverified or malicious code.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“SLSA Build L2 covers tampering of the artifact or provenance after the build.”</blockquote>
+                  <a href="https://slsa.dev/spec/v1.2/verifying-artifacts#:~:text=SLSA%20Build%20L2%20covers%20tampering%20of%20the%20artifact%20or%20provenance%20after%20the%20build.">SLSA 1.2 · Verifying Artifacts <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-deploy"><span class="phase-index">07</span>Deploy</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Unapproved changes reach production, risking service disruption, data loss, and recovery costs.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Implement approved configuration-controlled changes to the system”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r5.pdf#page=125">NIST SP 800-53 Rev. 5 · CM-3 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Insecure settings go live, exposing services through excessive permissions or weakened defenses.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services”</blockquote>
+                  <a href="https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration/#:~:text=missing%20appropriate%20security%20hardening%20across%20any%20part%20of%20the%20application%20stack%20or%20improperly%20configured%20permissions%20on%20cloud%20services">OWASP A02 · Security Misconfiguration <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-operate"><span class="phase-index">08</span>Operate</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Open actions lose ownership at handover, delaying fixes and increasing incident response costs.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Known flaws stay exploitable, allowing attackers to compromise systems or data.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Help ensure that vulnerabilities are remediated in accordance with risk to reduce the window of opportunity for attackers.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=26">NIST SSDF 1.1 · RV.2 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-monitor"><span class="phase-index">09</span>Monitor</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Overdue fixes go unreported, allowing manageable issues to grow into costly incidents.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“centrally monitor and regularly report on SLA breaches.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=centrally%20monitor%20and%20regularly%20report%20on%20SLA%20breaches.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Attacks go undetected, allowing intrusions to persist and spread.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Without logging and monitoring, attacks and breaches cannot be detected”</blockquote>
+                  <a href="https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/#:~:text=Without%20logging%20and%20monitoring%2C%20attacks%20and%20breaches%20cannot%20be%20detected">OWASP A09 · Security Logging and Alerting Failures <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+          <tr>
+            <th scope="row" class="phase-name"><a href="#phase-retire"><span class="phase-index">10</span>Retire</a></th>
+            <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Retention obligations remain unresolved, creating unnecessary storage costs and privacy or legal exposure.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“You have retention requirements for data, and you destroy backups in a timely manner after the relevant retention period ends”</blockquote>
+                  <a href="https://owaspsamm.org/model/operations/operational-management/stream-a/#:~:text=You%20have%20retention%20requirements%20for%20data%2C%20and%20you%20destroy%20backups%20in%20a%20timely%20manner%20after%20the%20relevant%20retention%20period%20ends">OWASP SAMM · Data Protection <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+            <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk">
+                <summary>Old credentials still work, allowing access to retired services.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“When secrets are no longer required or potentially compromised, you must securely revoke them to restrict access.”</blockquote>
+                  <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet#273-revocation">OWASP · Secrets Revocation <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
+                <summary>Data-bearing media is disposed of without suitable sanitization, leaving data recoverable after the service is shut down.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Media sanitization refers to a process that renders access to target data on the media infeasible for a given level of effort.”</blockquote>
+                  <a href="https://csrc.nist.gov/pubs/sp/800/88/r2/final#:~:text=Media%20sanitization%20refers%20to%20a%20process%20that%20renders%20access%20to%20target%20data%20on%20the%20media%20infeasible%20for%20a%20given%20level%20of%20effort.">NIST SP 800-88 Rev. 2 · Media Sanitization <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+
+              </ul></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </main>
 
   <footer>
-    <p>Use the checkpoints as prompts for evidence and ownership. They are a high-level view, not a substitute for the organization’s own policies, risk criteria or release authority.</p>
-    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">Interpretation by AI: This map organizes the supplied lifecycle outline and case presentation into a single view. Adapt the activities and decision criteria to the service and its owners.</span></p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risks are an interpretation by AI. Each risk describes a possible consequence when the activity above it is skipped.</span></p>
   </footer>
 </div>
-<script>
-(function(){
-  var evidence = document.getElementById('case-evidence');
-  function openEvidenceForHash(){
-    if (location.hash.indexOf('#evidence-') === 0) evidence.open = true;
-  }
-  openEvidenceForHash();
-  document.querySelectorAll('.source-ref').forEach(function(link){
-    link.addEventListener('click', function(){ evidence.open = true; });
-  });
-})();
-</script>
 </body>
 </html>
