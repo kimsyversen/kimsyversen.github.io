@@ -10,7 +10,7 @@ SOURCES = dict(SHARED_SOURCES)
 QUOTES = list(SHARED_QUOTES)
 # Source wording changed after the shared list was written; the page-only list follows the live text.
 _LIVE = {
-    "gh-fw": "The firewall does not apply directly to other MCP servers, including repository-configured replacements for the built-in Playwright server, or to processes started in configured Copilot setup steps.",
+    "gh-fw": "In cloud sandboxes, it also applies to the built-in Playwright Model Context Protocol (MCP) server and its browser processes, so browser network requests are subject to the configured firewall rules. The firewall does not apply directly to other MCP servers, including repository-configured replacements for the built-in Playwright server, or to processes started in configured Copilot setup steps.",
     "a365-ga": "Microsoft Agent 365 is generally available for the Commercial segment on a per user basis.",
 }
 QUOTES = [(k, s, _LIVE.get(k, q)) for k, s, q in QUOTES]
@@ -105,3 +105,24 @@ PREVIEW_ONLY |= {"review-ttp-discovery", "review-ttp-retry"}
 QUOTES.append(("review-acp-rollout", "pp-acp", "Each maker portal's release of design-time enforcement for ACP marks the general availability of ACP for that workload."))
 IDS["review-acp-rollout"] = f"V{len(QUOTES)}"
 
+QUOTES.append(("review-def-local-sep", "def-rt", "Local agents are onboarded separately from cloud agents."))
+IDS["review-def-local-sep"] = f"V{len(QUOTES)}"
+
+QUOTES.append(("review-obo-token", "review-obo", "For the middle-tier service to make authenticated requests to the downstream service, it needs to secure an access token from the Microsoft identity platform."))
+IDS["review-obo-token"] = f"V{len(QUOTES)}"
+
+for _key, _skey, _q in [
+    ("review-ttp-example", "aig-ttp", "For example, MCP initialize , tools/list , and notifications don't trigger an evaluation."),
+    ("review-req-fields", "a365-admin-tools", "Review the server name, publisher, requester, and request date."),
+    ("review-req-info", "a365-admin-tools", "Review the server information and declared tools for accuracy and compliance."),
+]:
+    QUOTES.append((_key, _skey, _q))
+    IDS[_key] = f"V{len(QUOTES)}"
+PREVIEW_ONLY |= {"review-ttp-example"}
+
+QUOTES.append(("review-gh-private", "gh-deploy", "Server-managed (.github-private repository)"))
+IDS["review-gh-private"] = f"V{len(QUOTES)}"
+QUOTES.append(("review-req-queue", "a365-admin-tools", "To review and approve MCP server registration requests, follow these steps:"))
+IDS["review-req-queue"] = f"V{len(QUOTES)}"
+QUOTES.append(("review-custom-classic", "pp-acp", "For governing custom connectors and HTTP connectors today, continue using classic data policies"))
+IDS["review-custom-classic"] = f"V{len(QUOTES)}"

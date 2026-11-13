@@ -571,7 +571,7 @@ PREVIEW = f"""
     <div class="sub3" id="preview-controls">
       {anchors("added-with-preview-preview")}
       <h3>Added controls</h3>
-      <p class="q-note">Dedicated AI Gateway is a separate product that replaces the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection {evp('pv-a365-matrix', 'pv-a365-v2')}. Moving to it is a migration: a new resource and a new runtime address {evp('pv-domain')}. See <a href="#ctrl-ai-resource">AI Gateway product and resource</a>.</p>
+      <p class="q-note">Dedicated AI Gateway is a separate product that replaces the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection {evp('pv-a365-matrix', 'pv-a365-v2')}. Moving to it is a migration: a new resource and a new runtime address {evp('pv-res-change', 'pv-domain')}. See <a href="#ctrl-ai-resource">AI Gateway product and resource</a>.</p>
       <p class="q-note">Microsoft says preview features are not meant for production use and may have restricted functionality. {evp('pv-notprod')} Every row below is a preview feature and its requirement is a recommendation. {PRE} {REC}</p>
       {table(["Control", "Design requirement", "What Microsoft documents"], [
         [control_label("a365", "Agent 365 gateway integration", "Visibility, not the boundary"),
@@ -597,7 +597,7 @@ PREVIEW = f"""
          f"Audit mode fails open {evp('pv-ttp-audit')}. Block mode fails closed {evp('pv-ttp-block')}. One policy applies to every tool and caller of a server, not to one tool {evp('pv-ttp-scope')}. A denial after the call cannot undo it {evp('pv-ttp-post')}."],
         [control_label("byo", "Agent 365 BYO server route", "Separate route"),
          "Treat this as a separate registration route, not as the API Management gateway integration. Require developer registration and admin approval. Confirm its public endpoint fits the backend isolation target. Test each listed client surface before relying on it.",
-         f"BYO servers route through the Agent 365 Tooling Gateway {evp('pv-byo-route')}. Preview clients: Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI; not Foundry or declarative agents {evp('pv-byo-surf')}. An IT admin approves or rejects requests in the Microsoft 365 admin center {evp('pv-byo-approval')}. Servers need a publicly accessible endpoint {evp('pv-byo-endpoint')}. BYO tool-level blocking is planned {evp('pv-byo-tool-plan')}."],
+         f"BYO servers route through the Agent 365 Tooling Gateway {evp('pv-byo-route')}. Preview clients: Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI; not Foundry or declarative agents {evp('pv-byo-surf')}. An IT admin approves or rejects requests in the Microsoft 365 admin center {evp('pv-byo-approval')}. Servers need a publicly accessible endpoint {evp('pv-byo-endpoint')}. BYO tool-level blocking is planned {evp('pv-byo-tool-plan', 'pv-byo-roll')}."],
         [control_label("foundry-routing", "Foundry gateway routing", "Separate route"),
          "Create new tools in the Foundry portal without managed OAuth. Check the endpoint, sign-in and logs. Do not assume old tools are covered.",
          f"Only new MCP tools created in the Foundry portal without managed OAuth are routed through an AI gateway {evp('pv-fy-prev')}. Routing is applied only at tool creation, and existing tools are not mediated automatically {evp('pv-fy-new')}."],

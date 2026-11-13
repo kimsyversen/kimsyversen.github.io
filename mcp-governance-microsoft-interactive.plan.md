@@ -92,3 +92,17 @@ This workspace again denied a local branch switch because `.git/index.lock` cann
 
 - [x] Re-read every claim against its quote; fixed the cloud agent firewall gap (V23) and the V176 quote text; dates moved to 2026-11-13.
 - [x] STRIDE page: no statement depends on the firewall wording; no change needed.
+
+## Fourth review (2026-11-13)
+
+- [x] Re-read every claim against its quote; V23 extended so the Playwright coverage statement is quoted. STRIDE I3 now cites V142 (secret exfiltration) with V125.
+
+- 2026-11-13 sixth review: added V45 to the migration claim in the dedicated AI Gateway note. Repeat round follows.
+
+- 2026-11-13 seventh review: added V217 for the local agents sentence. Per-statement round of all 168 claim and quote pairs repeated with written verdicts.
+
+- 2026-11-13 eighth review: added V218 to V221, V44 on the BYO tool claim, and reworded the admin review sentence to match its source. Per-statement round repeated on all 169 pairs: pairs 110, 134, 141 and 158 compared against their printed quotes, all others identical to the reviewed text by diff. No findings.
+
+- 2026-11-13 ninth review: added V222 and V39 on the connect step. Finding: the clause "AI Gateway can replace the API Management service gateway" had no quote (V36 only says Agent 365 can connect Azure AI Gateway). Reworded to V195, V36 and V194, and the Scope and Option 3 "replace" wording now says it is a design choice. Second finding in the same round: "This is the MCP server request queue" was cited only to V182 ("select the Requests (preview) tab"), which does not say MCP server. Added V223 ("To review and approve MCP server registration requests"). Third change: the two design-only sentences ("Until then, block at server level and authorize at the server" and "Gate promotion") now carry the recommendation tag, since their quotes (V188, V37, V44, V35) support only the premise. Fourth change: removed "This is advice only" (V107 does not say no control exists). Fixed, checks rerun, a fresh round follows.
+- Ninth review, late finding: 'Custom and HTTP connectors need classic policies' cited V78, which only says they are not yet supported. Added V224 (source: 'continue using classic data policies') and reworded the sentence to match both quotes.
+- Ninth review, second late finding: 'It is also an API Management service' was stronger than V197 ('uses Azure API Management behind the scenes'). Reworded to the quote. A final full round follows.

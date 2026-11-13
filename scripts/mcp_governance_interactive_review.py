@@ -24,6 +24,12 @@ def apply_review(page, ev, rec, inf, unv, evp):
         page, count = re.subn(pattern, edit, page, flags=re.S)
         assert count == 1, (cid, count)
 
+    replace(f"Agent 365 {evp('pv-gr-def-local')}. The article is prerelease",
+            f"Agent 365 {evp('pv-gr-def-local', 'review-def-local-sep')}. The article is prerelease")
+    replace(f"Managed settings file in the .github-private repository {ev('gh-file')}.",
+            f"Managed settings file in the .github-private repository {ev('gh-file', 'review-gh-private')}.")
+    replace(f"They are a file in the .github-private repository, changed by commit and push {ev('gh-file', 'gh-commit')}.",
+            f"They are a file in the .github-private repository, changed by commit and push {ev('gh-file', 'review-gh-private', 'gh-commit')}.")
     control('inventory', requirement=(
         'Keep approved and denied servers in reviewed Git changes, with endpoint, owner, authentication, permitted tools and risk class. '
         'Use the company gateway URL for company backends. Review address, identity, permissions, tool and version changes. '
@@ -61,7 +67,7 @@ def apply_review(page, ev, rec, inf, unv, evp):
         f'Authorize each upstream caller before using that shared identity; do not trust caller-supplied identity headers. {rec}'),
         documented=(
         f'API Management validates Entra tokens or subscription keys {ev("in-entra", "in-key")}; its managed identity can authenticate to a backend {ev("out-mi")}. '
-        f'OBO preserves user delegation and requires a downstream token {ev("review-obo")}. '
+        f'OBO preserves user delegation and requires a downstream token {ev("review-obo", "review-obo-token")}. '
         f'{rec} For a delegated variant, keep gateway-only networking, acquire the correct backend audience token and retain user authorization. '
         f'{unv} No OBO implementation or cross-client sign-in flow has been tested. A subscription key alone does not identify an individual user. {inf}'))
     control('backend', requirement=(
@@ -93,7 +99,7 @@ def apply_review(page, ev, rec, inf, unv, evp):
         documented=(
         f'ACP supports deployment-pipeline automation {ev("pp-pipe")}, MCP server-level blocking but not per-tool blocks {ev("pp-block")}, '
         f'and connector blocking also blocks dependent MCP tools {ev("studio")}. '
-        f'Custom and HTTP connectors need classic policies {ev("pp-custom")}; mixed mode enforces both policy types {ev("review-acp-mixed")}. '
+        f'Custom and HTTP connectors are not yet supported by ACP and stay on classic data policies {ev("pp-custom", "review-custom-classic")}; mixed mode enforces both policy types {ev("review-acp-mixed")}. '
         f'ACP general availability depends on design-time enforcement reaching each workload {ev("review-acp-rollout")}. '
         f'{rec} Confirm Copilot Studio rollout before including ACP in a released-only deployment. Retain classic policies and record any remaining MCP coverage gap until then. '
         f'{unv} The API tutorial does not establish the actual MCP-specific policy payload.'))
@@ -104,7 +110,7 @@ def apply_review(page, ev, rec, inf, unv, evp):
         documented=(
         f'Audit mode fails open; Block mode fails closed {evp("pv-ttp-audit", "pv-ttp-block")}. '
         f'One policy covers every tool and caller of a server {evp("pv-ttp-scope")}. '
-        f'Discovery and session management are not evaluated {evp("review-ttp-discovery")}; initialize, tools/list and notifications are excluded. '
+        f'Discovery and session management are not evaluated {evp("review-ttp-discovery")}; initialize, tools/list and notifications are excluded {evp("review-ttp-example")}. '
         f'A post-call denial cannot undo execution {evp("pv-ttp-post")}; automatic retry is discouraged {evp("review-ttp-retry")}.'))
     control('foundry-routing', requirement=(
         'Pilot automatic routing only for newly created portal MCP tools without managed OAuth. '
@@ -126,7 +132,11 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('Choose a v2 tier', 'Choose a suitable v2 tier if the Foundry integration is required')
     replace('The API Management integration does not automatically route agents through a customer-hosted gateway', 'Agent 365 does not automatically route agents through a customer-hosted gateway')
     replace('Confirm its public endpoint fits the backend isolation target.', 'Keep its public endpoint separate from the private backend.') if 'Confirm its public endpoint fits the backend isolation target.' in page else None
-    replace('Dedicated AI Gateway is a separate product that can replace the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection', 'Dedicated AI Gateway is a separate product that can replace the API Management service gateway. In the Agent 365 integration capability matrix, only AI Gateway lists tool blocking, tool activity and tool threat protection')
+    replace('<strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox', '<strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox <span class="tg r">recommendation</span>')
+    replace('It is also an API Management service', 'It uses Azure API Management behind the scenes')
+    replace('Until then, block at server level and authorize at the server.', 'Until then, block at server level and authorize at the server. <span class="tg r">recommendation</span>')
+    replace('Dedicated AI Gateway is a separate product that can replace the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection', f"Dedicated AI Gateway is a separate product {evp('pv-aig-separate')}. Agent 365 can connect Azure AI Gateway to discover and govern MCP servers {evp('pv-disc')}. In the Agent 365 integration capability matrix, only AI Gateway lists tool blocking, tool activity and tool threat protection")
+    replace(f"Review the permissions granted {evp('pv-a365-rw')}.", f"Review the permissions granted {evp('pv-a365-role', 'pv-a365-rw')}.")
     replace('Blocked or preview route</li>', 'Rejected route or preview alternative</li>')
     # 2026-11-12 holistic review: cite the overview for the separate product, fix ownership and scope wording.
     replace('A separate AI Gateway product, not the API Management service ' + ev('apim-ai-not-separate'),

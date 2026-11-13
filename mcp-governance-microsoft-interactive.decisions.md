@@ -118,3 +118,23 @@ Edited the page file directly; the builder script was behind the page at the tim
 - ~~2026-11-12: removed the Approval lock's `unverified` tag through the review module, not the shared builder.~~ Superseded the same day: the owner approved fixing the first page, so the tag is now removed in the shared builder and the review-module replacement is gone.
 
 - 2026-11-13: the cloud agent gap now names the built-in Playwright server as the one MCP server the firewall covers, because the source changed. **Why:** the old sentence said the firewall does not filter MCP server processes, which is now too broad. The page-only evidence module overrides V23 and V176 so the first page and the shared module stay as they were.
+
+- 2026-11-13: V23 now holds two source sentences (Playwright covered, other servers not). **Why:** the gap states both, and the quote held only the second.
+
+- 2026-11-13: The claim "a new resource and a new runtime address" now cites V45 (resource type change) as well as V50 (new runtime URL). V50 alone covered only the address. Chosen over cutting the claim because V45 supports it directly.
+
+- 2026-11-13: The negative half of "Local agents are covered by Defender for Endpoint, not by the Defender real-time protection rules" was not in V146. Added V217 ("Local agents are onboarded separately from cloud agents.") from the Defender real-time protection article and cited it with V146. Kept the claim because the article also says the two rule types are "for cloud agents".
+
+- 2026-11-13: Four more evidence gaps closed. (1) OBO "requires a downstream token" had only a generic quote, so V218 (the token requirement) was added next to V211. (2) The named MCP methods excluded from evaluation (initialize, tools/list, notifications) had no quote, so V219 was added and the claim is tagged preview. (3) The BYO tool-level blocking claim cites V44 as well as V86. (4) The admin review sentence listed "address, sign-in, permissions", which the source does not say. It now reads "server name, publisher, requester, request date, server information and declared tools", cited with V220 and V221. Chosen over keeping the old list because the old items were unsupported.
+
+- 2026-11-13: Three more citation gaps closed in a full per-pair read. (1) V82 does not name the .github-private repository, so V222 ("Server-managed (.github-private repository)") was added to both statements that name it. (2) "can replace the API Management service gateway" was backed only by the product and matrix quotes, so V36 (Agent 365 connects AI Gateway to govern MCP servers) now sits on that clause. (3) "after named tenant-admin consent" in the connect step now cites V39 next to V40.
+
+- 2026-11-13: dropped the sourced claim that Dedicated AI Gateway "can replace" the API Management service gateway. No source says it. The page now states only what V195, V36 and V194 say. "Take the place of" in the Scope line and Option 3 is the page's own design choice, listed as such in the fact check.
+
+- 2026-11-13: added V223 to the MCP server request queue sentence. V182 alone names only the Requests (preview) tab.
+
+- 2026-11-13: tagged the "block at server level" fallback and the "Gate promotion" step as recommendation. The quotes only support the premise.
+
+- 2026-11-13: removed "This is advice only" from the untrusted-results row. V107 is an instruction to treat results as untrusted input. It does not say no product control exists, so the claim had no quote.
+- 2026-11-13: Split the custom/HTTP connector claim into what V78 says (ACP does not yet support them) and what V224 says (use classic data policies today), so each half has its own quote.
+- 2026-11-13: Option 2 now says the Foundry AI Gateway uses API Management behind the scenes, matching V197, instead of claiming it is an API Management service.
