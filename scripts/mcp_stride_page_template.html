@@ -98,8 +98,6 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 /* the diagram */
 .fig{margin:14px 0 0}
 .fig-scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
-.fig-hint{display:none;font-size:0.84rem;color:var(--muted);margin-top:8px}
-@media (max-width:1080px){.fig-hint{display:block}}
 .dfd{display:block;width:100%;min-width:1080px;height:auto;font-family:var(--body)}
 .tb rect{fill:none;stroke:var(--red);stroke-width:1.3;stroke-dasharray:7 5}
 .tb text{font:600 12.5px var(--body);fill:var(--red)}
@@ -282,7 +280,7 @@ footer{margin-top:64px;border-top:2px solid var(--rule);padding-top:14px;display
 .tag-key dt,.tag-key dd{margin:0}
 @media (max-width:560px){.ai-note,.tag-key{grid-template-columns:1fr}.tag-key dl{grid-template-columns:1fr;gap:2px 0}}
 @media print{
-  .filters,.drawer,.skip,.fig-hint{display:none}
+  .filters,.drawer,.skip{display:none}
   .page{max-width:none}
   .dfd{min-width:0}
 }
@@ -302,7 +300,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <div class="meta"><span>Threat model · STRIDE and DREAD · MCP</span><span>Current as of <time datetime="{{ASOF}}">{{ASOFT}}</time></span></div>
     <h1>MCP governance threat model</h1>
     <div class="intro">
-      <p class="lead">STRIDE per element and DREAD scores for the <a href="{{DESIGN}}">proposed design for MCP governance in a Microsoft ecosystem</a>. Select a threat id to read the threat, its five scores and any public record behind it.</p>
+      <p class="lead">STRIDE per element and DREAD scores for the <a href="{{DESIGN}}">proposed design for MCP governance in a Microsoft ecosystem</a>.</p>
       <dl class="spec">
         <dt>Threats</dt><dd>{{N}}: {{HIGH}} High, {{MED}} Medium, {{LOW}} Low
           <span class="ratio" aria-hidden="true"><i class="r-high" style="flex:{{HIGH}}"></i><i class="r-medium" style="flex:{{MED}}"></i><i class="r-low" style="flex:{{LOW}}"></i></span></dd>
@@ -317,7 +315,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="sec" id="model">
       <div class="sec-head">
         <h2 id="h-model"><a class="sec-link" href="#model">Data flow diagram</a></h2>
-        <p>Each chip is one threat. Select a box or flow name to see all of its threats.</p>
       </div>
       <div class="filters" role="group" aria-label="Filter threats in the diagram and the register">
         <div class="fgroup" role="group" aria-label="STRIDE category"><span class="lbl" aria-hidden="true">STRIDE</span>
@@ -340,7 +337,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       </div>
       <figure class="fig">
         <div class="fig-scroll" tabindex="0" role="region" aria-label="Data flow diagram">{{SVG}}</div>
-        <p class="fig-hint">The diagram scrolls sideways.</p>
         <figcaption>
           <p>Policy approvals feed Git, a sync pipeline and policy targets. Clients and agents call the gateway, which calls the backend and exports logs; F5 represents attempted bypasses. F4 draws only the backend-to-gateway response leg.</p>
           <ul class="legend">
@@ -356,14 +352,14 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="sec" id="register">
       <div class="sec-head">
         <h2 id="h-register"><a class="sec-link" href="#register">DREAD register</a></h2>
-        <p>Threats and scores <span class="tg i">inference</span> Select a row for the detail.</p>
+        <p>Threats and scores <span class="tg i">inference</span></p>
       </div>
       <figure class="spread-fig">
         {{SPREAD}}
-        <figcaption>One dot per threat by DREAD score. Solid dots match a public record.</figcaption>
+        <figcaption>Threats by DREAD score.</figcaption>
       </figure>
       <table class="reg" id="reg">
-        <caption class="vh">DREAD register. Sort with the column buttons.</caption>
+        <caption class="vh">DREAD register</caption>
         <thead><tr>
           <th scope="col" aria-sort="none" data-k="id"><button type="button" class="sort" data-k="id">ID</button></th>
           <th scope="col" class="th-tx">Threat</th>
@@ -383,11 +379,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="sec" id="method">
       <div class="sec-head"><h2 id="h-method"><a class="sec-link" href="#method">Method</a></h2></div>
       <dl class="method">
-        <dt>Scope and assets</dt><dd>This is a design-stage review of the proposed governance architecture. Protected assets are credentials, company data, tool and policy integrity, attribution records and service availability. The boxes aggregate products with different enforcement paths; they do not establish a deployed topology or an effective security boundary.</dd>
+        <dt>Scope and assets</dt><dd>This is a design-stage review of the proposed governance architecture. Protected assets are credentials, company data, tool and policy integrity, attribution records and service availability. The boxes aggregate products with different enforcement paths.</dd>
         <dt>STRIDE per element</dt><dd>External entities are checked for spoofing and repudiation, processes for all six categories, data stores for tampering, repudiation, information disclosure and denial of service, and data flows for tampering, information disclosure and denial of service. Store repudiation covers approval and change history in DS1 and DS2, and audit evidence in DS3. The 71 selected cells have threats; this checks enumeration, not completeness or correct mitigation. Related rows can describe stages or consequences of the same attack; their scores are not additive.</dd>
-        <dt>DREAD</dt><dd>Damage, Reproducibility, Exploitability, Affected users and Discoverability, each 1 to 10. The score is the mean of the five. High is 6 or above, Medium 4 to 5.9, Low below 4. These bands are local choices. Scores are uncalibrated AI estimates for the stated scenarios, not measured likelihood, CVSS or residual risk. No tenant attack or mitigation was tested.</dd>
-        <dt>Evidence</dt><dd><b>Exploited</b>: the linked failure class was used in attacks, shown by a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident. <b>Disclosed</b>: a public CVE, vendor advisory or researcher demo; exploitation was not confirmed by the sources checked. <b>Theoretical</b>: no matching public record is attached. Records from other products do not establish that this design, its Microsoft services or their current versions are affected. Record matching is <span class="tg i">inference</span></dd>
-        <dt>Evidence and scores</dt><dd>Public records are tracked separately from scores. An exploit in another product does not establish reproducibility or ease of exploitation here. No automatic score increase is applied.</dd>
+        <dt>DREAD</dt><dd>Damage, Reproducibility, Exploitability, Affected users and Discoverability, each 1 to 10. The score is the mean of the five. High is 6 or above, Medium 4 to 5.9, Low below 4. These bands are local choices. Scores are uncalibrated AI estimates for the stated scenarios, not measured likelihood, CVSS or residual risk.</dd>
+        <dt>Evidence</dt><dd><b>Exploited</b>: the linked failure class was used in attacks, shown by a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident. <b>Disclosed</b>: a public CVE, vendor advisory or researcher demo; exploitation was not confirmed by the sources checked. <b>Theoretical</b>: no matching public record is attached. Records from other products do not establish that this design, its Microsoft services or their current versions are affected. Record matching is <span class="tg i">inference</span> Records do not change scores.</dd>
         <dt>Related controls</dt><dd>Control links locate relevant design choices, not verified fixes. Server-side input validation, per-caller tool authorization, TLS validation and local process isolation still need implementation-specific review. Preview detection is an optional layer; authentication, authorization and network restrictions must work without it.</dd>
         <dt>Unmodeled detail</dt><dd>OAuth authorization servers and consent exchanges, downstream APIs and data stores, package distribution, individual product boundaries, full response routes and non-gateway audit feeds are not drawn. Microsoft 365 access is manual; Power Platform MCP policy remains manual until its API adapter is validated. Foundry Network guardrails are preview, separate from released toolbox networking. The direct Agent 365 BYO route is excluded from this private backend; a gateway-fronted BYO composition is untested. OAuth confused-deputy, token-passthrough, state-handle and protocol-version-specific session attacks in the <a href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices">MCP security guidance</a> need a separate detailed review. A gateway does not inspect local stdio traffic.</dd>
         <dt>Basis and verification</dt><dd>V numbers point to quoted claims in the design page's <a href="{{REPO}}mcp-governance-microsoft-interactive.factcheck.md">fact check</a>. Ids starting with ctrl- or gap- link to that design. The <a href="{{REPO}}mcp-governance-stride.factcheck.md#row-by-row-review-2026-11-12">row-by-row review</a> records corrections, evidence exclusions and unresolved validation work.</dd>
@@ -597,8 +592,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     }).join('');
     $('#d-ev').innerHTML = t.refs.length
       ? '<p><span class="lv lv-' + t.level + '">' + t.level + '</span></p><ul>' +
-        t.refs.map(r => '<li><a href="' + esc(r[2]) + '" rel="noopener">' + esc(r[1]) + '</a>' + (r[0] !== t.level ? ' <span class="lv lv-' + r[0] + '">' + r[0] + '</span>' : '') + '</li>').join('') + '</ul><p>Failure-class match <span class="tg i">inference</span> Product, version and deployment applicability require separate confirmation.</p>'
-      : '<p><span class="lv lv-theoretical">theoretical</span> No matching public record found.</p>';
+        t.refs.map(r => '<li><a href="' + esc(r[2]) + '" rel="noopener">' + esc(r[1]) + '</a>' + (r[0] !== t.level ? ' <span class="lv lv-' + r[0] + '">' + r[0] + '</span>' : '') + '</li>').join('') + '</ul><p>Failure-class match <span class="tg i">inference</span></p>'
+      : '<p><span class="lv lv-theoretical">theoretical</span></p>';
     $('#d-ctrl').innerHTML = t.ctrls.map(c => '<li><a href="' + D.design + '#' + c + '">' + esc(D.ctrl[c] || c) + '</a></li>').join('');
     const basis = esc(t.basis.charAt(0).toUpperCase() + t.basis.slice(1));
     $('#d-basis').innerHTML = basis

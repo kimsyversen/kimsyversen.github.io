@@ -108,7 +108,7 @@ def check(cache=None):
         assert verdict in {"label", "requirement"}, f"invalid diagram verdict: {line}"
         reviewed_labels.add(text)
     assert labels.labels == reviewed_labels, f"DFD label review drift: {labels.labels ^ reviewed_labels}"
-    for term in ("local choices", "uncalibrated AI estimates", "No tenant attack", "not completeness"):
+    for term in ("local choices", "uncalibrated AI estimates", "not completeness"):
         assert term in page, f"model limit missing: {term}"
     ids = re.findall(r'\bid="([^"]+)"', page)
     assert not [k for k, n in Counter(ids).items() if n > 1], "duplicate HTML IDs"
