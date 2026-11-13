@@ -126,3 +126,16 @@ QUOTES.append(("review-req-queue", "a365-admin-tools", "To review and approve MC
 IDS["review-req-queue"] = f"V{len(QUOTES)}"
 QUOTES.append(("review-custom-classic", "pp-acp", "For governing custom connectors and HTTP connectors today, continue using classic data policies"))
 IDS["review-custom-classic"] = f"V{len(QUOTES)}"
+
+# Use canonical pages: the older firewall URL can serve an inconsistent snapshot.
+SOURCES["gh-fw"] = (SOURCES["gh-fw"][0], "https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall", None)
+SOURCES["a365-agent-registry"] = (SOURCES["a365-agent-registry"][0], "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-registry-overview", None)
+for _key, _source, _quote in [
+    ("review-gateway-admin", "a365-gw", "You must have the Global Administrator role to connect Azure AI Gateway. The AI Administrator role doesn't support this operation."),
+    ("review-connector-override", "m365-manage", "A setting you make on an individual connector takes precedence over the bulk Agent and plugin access setting. User access always applies."),
+    ("review-write-approval-scope", "m365-fed", "Always allow and Allow for conversation apply to the individual tool, not to the whole connector."),
+    ("review-defender-scope", "def-rt", "Scope: Choose whether the rule applies to All agents or to specific agents."),
+]:
+    QUOTES.append((_key, _source, _quote))
+    IDS[_key] = f"V{len(QUOTES)}"
+PREVIEW_ONLY.add("review-gateway-admin")

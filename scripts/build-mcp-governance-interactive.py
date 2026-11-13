@@ -1163,6 +1163,8 @@ def stack_tables(src):
 
 
 _extra_tests = [
+    ("Clear publisher defaults, enable one approved Microsoft 365 connector and check an unapproved connector", "Only the individually approved connector is available within User access; review existing overrides", "B"),
+    ("Repeat a Microsoft 365 write tool after one-time, conversation and saved approval", "Confirmation follows the selected approval scope; backend authorization still applies to every action", "A and B"),
     ("Use a valid token with the wrong audience, tenant or caller permission", "Rejected before backend execution", "A"),
     ("A read-only caller requests a write tool through the shared gateway identity", "Denied by caller-specific authorization", "A"),
     ("Switch accounts or start a client without cached server policy", "Required device policy remains enforced; verify each supported client", "B"),

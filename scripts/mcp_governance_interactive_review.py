@@ -165,4 +165,26 @@ def apply_review(page, ev, rec, inf, unv, evp):
     # 2026-11-12 second full read: the Option 2 use line was a fragment that lost "not used for MCP tools".
     replace('<dt>Use in this design</dt><dd>Automatic routing of newly added MCP tools through the Foundry integration <span class="tg pv">preview</span>',
             '<dt>Use in this design</dt><dd>Not used for MCP tools; the baseline sets the gateway URL itself. Automatic routing applies only to new portal MCP tools without managed OAuth <span class="tg pv">preview</span>')
+    # Context review: approval scope, publisher overrides and administrator roles.
+    replace('Clear the external publisher type unless a server is on the list. Stage each connector to named groups.',
+            'Clear all publisher types for a default-deny starting point, then individually enable only approved connectors for named groups within User access. Review existing individual overrides and future connector changes.')
+    replace(f'Admins control availability {ev("m365-admin", "m365-org")}; every setting must allow the user {ev("m365-all")}.',
+            f'Admins control availability {ev("m365-admin", "m365-org")}. Individual connector settings override publisher-wide defaults; User access remains the population ceiling {ev("review-connector-override")}.')
+    replace(f'For federated connectors, tools that write need user approval {ev("m365-write")}.',
+            f'Federated connector write tools initially require user approval {ev("m365-write")}. Users can save approval for the conversation or choose Always allow for that tool {ev("review-write-approval-scope")}.')
+    replace(f'A rule can be scoped only to agents with a Microsoft Entra agent ID {evp("pv-gr-def-entra")}.',
+            f'Rules can cover All agents or specific agents {evp("review-defender-scope")}. Only agents with a Microsoft Entra agent ID appear in the selection list {evp("pv-gr-def-entra")}.')
+    replace(f'An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent {evp("pv-a365-role")}.',
+            f'Connecting the Azure gateway requires Global Administrator; AI Administrator cannot perform this operation {evp("review-gateway-admin")}. The one-time tenant consent grants the A365 MCP Gateway Policy Operator role {evp("pv-a365-role")}.')
+    replace('after named tenant-admin consent, connect the gateway',
+            'have a Global Administrator grant tenant consent and connect the gateway')
+    replace(f'Review the permissions granted {evp("pv-a365-role", "pv-a365-rw")}.',
+            f'Review the permissions granted {evp("pv-a365-role", "pv-a365-rw", "review-gateway-admin")}.')
+    replace('Configure Microsoft 365 agent access by hand; it has no API option.',
+            'Configure Microsoft 365 Agent and plugin access by hand; this setting has no API option.')
+    assert page.count('it can be the same instance as Option 1.') == 2
+    page = page.replace('it can be the same instance as Option 1.',
+                        'see the <a href="#gap-one-gateway">combined-use assumption</a> before reusing Option 1.')
+    replace('It carries the preview label ' + evp('fw-preview') + ' and inspects remote servers only ' + evp('fw-remote') + '.',
+            'It carries the preview label ' + evp('fw-preview') + '; local servers and JSON-RPC batches are not inspected ' + evp('fw-remote') + '.')
     return page
