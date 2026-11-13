@@ -137,7 +137,7 @@ Asked: are the statements in "Guardrails by layer" correct, and is important inf
   - VS Code: Manual permissions is the default and asks for confirmation (V151), Allow all skips confirmation (V152), Assisted permissions uses an LLM judge (V153), post-approval and result review (V154, V155), policy and managed setting that lock approval (V156, V157), server trust decision (V158), preToolUse hook (V159) and its stated limit (V160).
   - GitHub Copilot Chat: a content filter "may" scan prompts and responses (V161). The page marks this as weak wording, interpretation by AI.
 - **Interpretation by AI.** Which layer each new control sits at (the sources name no layer numbers). That the GitHub content filter is not a control to count on. That on the released-only path the Foundry controls should sit on the model deployment. That the Foundry supported-tool list not naming MCP means the tool call and tool response controls should not be relied on for MCP (unchanged).
-- **Unverified, not tested.** Whether Copilot Studio offers "Ask the end user before running" for MCP tools. Whether a VS Code preToolUse hook sees MCP tool calls. Which VS Code tools ask for a result review by default. The VS Code approval policy on a managed device. Nothing in this section was tested in a tenant or on a device.
+- **Unverified, not tested.** Whether Copilot Studio offers "Ask the end user before running" for MCP tools. Whether a VS Code preToolUse hook sees MCP tool calls. Which VS Code tools ask for a result review by default. Nothing in this section was tested in a tenant or on a device.
 - **None found.** Now only Copilot Studio at layer 7 (tool response). Defender for Copilot Studio covers tool invocations only (V119, V120). Not proof that no guardrail exists.
 - **Result.** Table: 25 rows, 20 on the released-only path. Label checker: 151 distinct texts, 0 missing, 0 stale. Ledger rows for the 18 new or changed figure texts are in the table of the next section. Three texts were removed from the figure ("if a call needs approval", "(documented for VS Code)", and the old descriptions).
 - **Superseded in the section below.** The counts (16 rows, 131 quotes, 135 texts, 53 ledger texts) and the list of None found cells are history.
@@ -227,7 +227,7 @@ Asked: are the statements in "Guardrails by layer" correct, and is important inf
 | (for MCP: unverified) | label | Marks a gap. V137 covers tools in general, V159 names supported tools. Not checked for MCP tools. |
 | (default: Manual) | label | V151: Manual permissions is the default level and asks for confirmation. |
 | Allow all skips it | label | V152: Allow all runs all tool calls without confirmation. |
-| Policy can lock it | label | V156 (policy turns off global auto-approval), V157 (managed setting disables Allow all). Not tested on a managed device. |
+| Policy can lock it | label | V156 (policy turns off global auto-approval), V157 (managed setting disables Allow all). |
 | preToolUse hook can deny | label | V159. V160: hooks are not a substitute for enforced permissions or enterprise controls. |
 | Result review before it | label | First half of a two-line cell. V154, V155. |
 | enters the chat context | label | Second half. V154: post-approval adds the result to the chat context without review. |
@@ -723,7 +723,7 @@ label	Gateway link (preview)
 requirement	Shaded boxes and lines are what preview adds. Everything else is the released design. With preview, connect the gateway to Agent 365 and test tool threat protection in a sandbox. The view combines distinct admin pages: Agents > All agents > Registry, and Agents > Tools > Registry or Requests (preview). V182 V183 V189 The BYO server route is separate; its limits are in the controls below.
 label	Added controls
 label	Approval and denial workflow
-requirement	A developer proposes a server in the reviewed Git inventory. A security reviewer approves or rejects the pull request. Rejection stops the request and is recorded as denied. After approval and merge, the developer registers the server through the Agent 365 preview flow. An administrator reviews the request in Microsoft 365 admin center Requests preview and approves or rejects it. Rejection leaves the server unavailable and the reason is recorded. Approval is followed by Microsoft Entra tenant consent; only then does the server become Available in the tools registry. The admin records the approved server and consent in the inventory, applies target-specific access controls, and monitors calls. A later deny blocks the server in the tools registry and updates the inventory and other policy targets.
+requirement	A developer proposes a server in the reviewed Git inventory. A security reviewer approves or rejects the pull request. Rejection stops the request and is recorded as denied. After approval and merge, the developer registers the server through the Agent 365 preview flow. An administrator reviews the request in Microsoft 365 admin center Requests preview and approves or rejects it. Rejection leaves the server unavailable and the reason is recorded. Approval makes the server Available in the tools registry. Agent-building surfaces can use it only after Microsoft Entra tenant consent. The admin records the approved server and consent in the inventory, applies target-specific access controls, and monitors calls. A later deny blocks the server in the tools registry and updates the inventory and other policy targets.
 label	COMPANY GOVERNANCE
 label	AGENT 365, PREVIEW
 label	Requester adds server, owner,
@@ -749,12 +749,13 @@ label	Grant Entra consent
 label	Keep unavailable;
 label	record reason in Git
 label	Registry: AVAILABLE
+label	Agent builders can use it
 label	Apply target policies
 label	and backend authorization
 label	LATER DENY: BLOCK SERVER NOW,
 label	MARK DENIED IN GIT, SYNC TARGETS,
 label	TEST THAT CALLS FAIL
-requirement	The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. The registry status is Available only after admin approval and required Microsoft Entra consent. V184 V185 V87
+requirement	The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. Admin approval makes the registry status Available; agent-building surfaces can use the server only after Microsoft Entra consent. V184 V185 V87
 label	Guardrails added with preview
 label	Tests added with preview
 label	Preview pilot, after the baseline
@@ -846,3 +847,8 @@ No factual claim changed; the preview figure and its caption moved to The design
 - Removed the five main open questions and renamed the section Gaps. No source was reread and no quote changed. The ledger lost 13 texts and gained the heading "Gaps".
 - The only sourced statement in them, that no source says whether the Copilot policy or Registry covers only the built-in GitHub server, stays in the gap for that server, which says the two switches are untested.
 - Not checked: the quote check against the live sources was not rerun.
+
+## 2026-11-12: approval order and Approval lock tag
+
+- The approval figure, its text description and its caption said consent made the server Available. Wrong: V184 says approval makes it available in the organizational registry; V185 says agent-building surfaces can use it only after consent. Figure now shows Available, then consent, then use by agent builders.
+- The Approval lock carried `unverified` and "Not tested on a managed device". V157 quotes the managed setting `permissions.disableBypassPermissionsMode`, re-read in the VS Code enterprise AI settings page on 2026-11-12. Tag and sentence removed; `unverified` is still used on the page.

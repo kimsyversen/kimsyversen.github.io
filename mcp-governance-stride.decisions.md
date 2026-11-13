@@ -60,3 +60,5 @@ Chose a height computed from the text in each row over a fixed 30 px per row, be
 Preserve all threat and element IDs, scenarios and scores. Correct related controls and bases for E5, I15 and T9 and the F1 scope instead of inventing new incidents or inferring lower residual risk from design edits. Explicitly exclude direct BYO access to the private backend; a gateway-fronted variant is untested.
 
 - Completion pass: retain T9/T14 scenarios and scores while linking the actual Power Platform mixed-mode requirement and preview tool-evaluation scope. Discovery metadata is excluded from tool-invocation evaluation; no new attack coverage is claimed.
+
+- 2026-11-13: I3 basis changed from V125 to V142 with V125. **Why:** V125 covers email to an unsafe domain, V142 covers secret exfiltration, which is what the row models.

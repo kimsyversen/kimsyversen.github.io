@@ -34,6 +34,7 @@ Make every section linkable. Each `<section>` and each `<article>` that holds a 
 - Keep static flow and architecture figures in plain text ASCII files beside the page. Give each figure a text description of the flow.
 - Run `python3 -I scripts/section_anchors.py --check` before finishing. It fails if a section has no id or link.
 - Write only sentences the reader would miss if you deleted them; never restate a heading or label, say where something is on the page, or state the obvious.
+- Do not explain how a control works when its look and label already say it: no "Select a row for the detail", "Each chip is one threat", "Sort with the column buttons", "The diagram scrolls sideways". Do not repeat a definition, caveat or legend entry that another part of the page already gives, and do not add "not tested" disclaimers that restate what the page already says. This covers script-built text, screen-reader-only text and generated diagram subtitles.
 - Check layout changes on desktop and a narrow viewport for sideways page scroll and console errors. Test affected controls and shared links when behavior changes. Keep detailed diagram checks with the relevant page.
 
 ## 6. Recommendations

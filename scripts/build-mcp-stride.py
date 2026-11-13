@@ -153,7 +153,7 @@ def dfd_page(rows):
           "text;fontSize=22;fontStyle=1;align=left;fontColor=#1F2937;")
     p.box(20, 40, 1300, 22,
           f"{len(rows)} threats: {counts['High']} High, {counts['Medium']} Medium, {counts['Low']} Low by DREAD (AI estimates). "
-          f"{public} match a public record. Each chip is one threat id; the register on page 2 has the detail.",
+          f"{public} match a public record.",
           "text;fontSize=12;align=left;fontColor=#5A626E;")
 
     bnd = ("rounded=1;arcSize=2;dashed=1;dashPattern=6 4;fillColor=#FBFBFC;strokeColor=#D9534F;strokeWidth=1.5;"

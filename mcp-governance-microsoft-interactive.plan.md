@@ -69,3 +69,40 @@ Completion pass: added mixed-mode connector enforcement and preview discovery/re
 Final completion pass: source and logic review complete, including workload-specific ACP availability (V216) and remaining automation wording. Static, source-snapshot and reproducible-build checks pass. Browser QA was retried and remains environment-blocked; no tenant acceptance test is claimed.
 
 Commit attempted on `dev`; the workspace denied creation of `.git/index.lock` because git metadata is read-only. Reviewed changes remain uncommitted. Nothing was published.
+
+## Gateway migration follow-up (2026-11-12)
+
+- [x] Correct the preview explanation and test expectation: replacing the API Management service gateway with the separate AI Gateway resource requires a tested migration and rollback. Preserve baseline controls.
+- [x] Recheck STRIDE gateway outage and private-path scenarios; their existing conditional bases cover this finding, so no STRIDE row or diagram change is needed.
+- [x] Open the updated page in Firefox on desktop and exercise the preview switch, a cloud-client path and a call-layer filter.
+- [x] Complete narrow-viewport and console checks for this revision (2026-11-12, local server, 375 px and desktop).
+- [ ] Validate the proposed flows in a tenant before describing them as implemented controls.
+
+This workspace again denied a local branch switch because `.git/index.lock` cannot be created. Edits are in the working tree on `master`; move them to `dev` before committing or publishing.
+
+## Second holistic review (2026-11-12)
+
+- [x] Restore V195 as verified and cite it for the separate AI Gateway product.
+- [x] Fix the order of work, Purview "Applies to" and the GitHub built-in server gap wording.
+- [x] Recheck the STRIDE page for the same issues; no change needed.
+- [x] Second full read of every page line, logged per paragraph; fixed the Option 2 fragment and the blanket lead disclaimer (2026-11-12).
+- [x] Move the working-tree changes from `master` to `dev` and commit (2026-11-12).
+
+## Third review (2026-11-13)
+
+- [x] Re-read every claim against its quote; fixed the cloud agent firewall gap (V23) and the V176 quote text; dates moved to 2026-11-13.
+- [x] STRIDE page: no statement depends on the firewall wording; no change needed.
+
+## Fourth review (2026-11-13)
+
+- [x] Re-read every claim against its quote; V23 extended so the Playwright coverage statement is quoted. STRIDE I3 now cites V142 (secret exfiltration) with V125.
+
+- 2026-11-13 sixth review: added V45 to the migration claim in the dedicated AI Gateway note. Repeat round follows.
+
+- 2026-11-13 seventh review: added V217 for the local agents sentence. Per-statement round of all 168 claim and quote pairs repeated with written verdicts.
+
+- 2026-11-13 eighth review: added V218 to V221, V44 on the BYO tool claim, and reworded the admin review sentence to match its source. Per-statement round repeated on all 169 pairs: pairs 110, 134, 141 and 158 compared against their printed quotes, all others identical to the reviewed text by diff. No findings.
+
+- 2026-11-13 ninth review: added V222 and V39 on the connect step. Finding: the clause "AI Gateway can replace the API Management service gateway" had no quote (V36 only says Agent 365 can connect Azure AI Gateway). Reworded to V195, V36 and V194, and the Scope and Option 3 "replace" wording now says it is a design choice. Second finding in the same round: "This is the MCP server request queue" was cited only to V182 ("select the Requests (preview) tab"), which does not say MCP server. Added V223 ("To review and approve MCP server registration requests"). Third change: the two design-only sentences ("Until then, block at server level and authorize at the server" and "Gate promotion") now carry the recommendation tag, since their quotes (V188, V37, V44, V35) support only the premise. Fourth change: removed "This is advice only" (V107 does not say no control exists). Fixed, checks rerun, a fresh round follows.
+- Ninth review, late finding: 'Custom and HTTP connectors need classic policies' cited V78, which only says they are not yet supported. Added V224 (source: 'continue using classic data policies') and reworded the sentence to match both quotes.
+- Ninth review, second late finding: 'It is also an API Management service' was stronger than V197 ('uses Azure API Management behind the scenes'). Reworded to the quote. A final full round follows.

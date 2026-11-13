@@ -2,11 +2,11 @@ Belongs to: [MCP Governance in a Microsoft ecosystem, interactive](mcp-governanc
 
 # Fact check: MCP Governance in a Microsoft ecosystem, interactive
 
-Documentation reviewed: 2026-11-12. One historical source quote, V195, could not be reverified; see the holistic review below.
+Documentation reviewed: 2026-11-13. The latest review checks 228 quotes against primary-source passages retrieved through web access. See the context-review log below for findings, retrieval limits and the final repeat review.
 
 ## Method
 
-The interactive builder reuses the original page's content and applies scoped corrections. Its independent evidence module, `scripts/mcp_governance_interactive_evidence.py`, preserves V1-V208 and appends V209-V216. The shared original page and its evidence module are unchanged. The source-quote and presentation-label checks verify recorded text and coverage; they do not prove the architecture works in a tenant. Earlier log entries below describe historical reviews and can be superseded by the holistic review.
+The interactive builder reuses the original page's content and applies scoped corrections. Its independent evidence module, `scripts/mcp_governance_interactive_evidence.py`, preserves the published evidence IDs and appends page-specific review evidence. The shared original page and its evidence module are unchanged. The source-quote and presentation-label checks verify recorded text and coverage; they do not prove the architecture works in a tenant. Earlier log entries below describe historical reviews and can be superseded by the holistic review.
 
 ## Log
 
@@ -32,6 +32,7 @@ The interactive builder reuses the original page's content and applies scoped co
 - 2026-11-12: holistic read of all text without a V link (about 310 lines, read in full, not sampled). Four wording fixes: "Choose one" now says Option 2 can share the Option 1 instance (the page elsewhere advises one shared instance); the no-released-guardrail notes now say Foundry agents and Copilot Studio agents (the VS Code result review and the Copilot Studio prompt attack block are released layer 6 controls, so an unscoped note contradicted them); the preview note no longer restates that a preview control is preview. Layer 1 for Server trust prompt: kept, interpretation by AI (it decides which server is trusted).
 
 - 2026-11-12: second logic audit of the whole page, read against the cited quotes. Eight fixes, each found by reading the page text against a quote or against another part of the page (no tenant test). (1) The gateway lead said to choose one of the options to front the company MCP server, but Option 2 says it is not used for MCP tools (V60) and V197 says the Foundry AI Gateway governs model deployments. The lead now says Option 1 fronts the server, Option 3 (preview) can replace it, and Option 2 is the Foundry gateway that can be the same instance. (2) Nothing said how clients reach the gateway; the approved inventory now lists a company server at its gateway address (recommendation). (3) The device box said device controls do not cover Microsoft 365 Copilot; it now names all three cloud clients, as its own review row already said. (4) Workflow step "7 Later deny" told the reader to remove the server from target allowlists by hand, which the pipeline would overwrite (acceptance test 8); it now marks the server denied in Git for the pipeline and changes only the Microsoft 365 admin center by hand. (5) The pilot step "Lock the backend" cited V47, a frontend private endpoint limit that does not concern the backend; it now cites V48 (the virtual network and subnet cannot change after creation). (6) The first rollout step now includes the Microsoft 365 admin center, the target set by hand. (7) "The line is not labelled preview on the page" read as false, since this page labels it preview; it now says the Defender page does not label it. (8) The Foundry policy sync said Foundry network and sandbox covers a developer adding another server; V101 says the Network control does not affect prompt agents outside the Copilot harness, so the sentence is narrowed and a new gap, Foundry prompt agents outside the Copilot harness, states it. Also added the missing label verdict for "Read the threat model for this design", which made the label check fail before this audit. Label check and section anchor check pass. The quote checker was not rerun: no quote text changed.
+- 2026-11-13: fourth review. All 216 quotes matched live sources again; every cited quote was read against the sentence that cites it. One finding: the cloud agent gap says the firewall covers the built-in Playwright MCP server, but V23 held only the sentence about other servers. V23 now includes the source sentence "In cloud sandboxes, it also applies to the built-in Playwright Model Context Protocol (MCP) server ...". Also read in the source text: API Management MCP server management lists classic and v2 tiers (V71), and tool discovery and session operations such as initialize, tools/list and notifications are not evaluated (V213). Not tested in a tenant.
 
 ## Review of statements new on this page
 
@@ -51,18 +52,18 @@ Checked 2026-11-12 against the first page's quotes and the design text. Verdicts
 | MCP tool calls count as agent-to-tools interactions | interpretation by AI | The Purview pages do not name MCP. Labelled on the page. |
 | Review Purview audit for tool calls to unapproved servers | design | Recommendation, labelled. |
 | Pipeline writes to three targets; Microsoft 365 admin center set by hand | sourced | V171 (no PowerShell or API option) and V163. |
-| AI Gateway product can replace the API Management service gateway; Agent 365 integration is the addition | sourced | V196, V45, V42, V194, V36. API Management v2 supports server block only (V42). |
+| AI Gateway is a separate product; Agent 365 can connect it; only it lists tool-level controls in the matrix | sourced | V195 (dedicated product), V36 (Agent 365 connects Azure AI Gateway), V194 and V42 (matrix; API Management v2 supports server block only). That the preview design takes the place of the API Management service gateway is this page's design choice, not a sourced claim. |
 | Only the AI Gateway product has tool blocking and threat protection in the Agent 365 integration | sourced | V42, V194. |
 | Untrusted results is guidance, not a product control | sourced | V107 is advice. No quote describes a layer 6 control. |
 | A tool granted post-approval adds its result to the chat without review | sourced | V154. |
 | Agent 365 BYO: block at server level, authorize at the server | sourced and design | V44, V86 say tool blocking for BYO is planned. The BYO route skips the gateway (V85). |
 | Foundry tool list limits one connection and does not stop another server | interpretation by AI | V69 and V101 describe the list and the Network control. No quote states the second half. 2026-11-12: the sentence now says the Network control limits this only for hosted agents and prompt agents on the Copilot harness (V101). |
 | Gap: Foundry prompt agents outside the Copilot harness | sourced and interpretation by AI | V101: the Network control does not affect other prompt agents. That nothing else in the design stops such an agent reaching an unapproved server outside a toolbox is tagged inference. Not tested. |
-| Gateway lead: Option 1 fronts the server, Option 3 can replace it, Option 2 is the Foundry gateway and can be the same instance | sourced and interpretation by AI | V60 (MCP routing through Foundry is preview), V197 (model deployments), V196. One shared instance is the existing inference on Option 2 and in the one-gateway gap. |
+| Gateway lead: Option 1 fronts the server, Option 3 is the separate AI Gateway product that can stand in for it (design choice), Option 2 is the Foundry gateway and can be the same instance | sourced and interpretation by AI | V60 (MCP routing through Foundry is preview), V197 (model deployments), V196. One shared instance is the existing inference on Option 2 and in the one-gateway gap. |
 | A company server is listed at its gateway address | design | Recommendation, labelled. Makes the figure's "only through the gateway" a stated requirement. |
 | Later deny: Git and pipeline for pipeline targets, Microsoft 365 admin center by hand | design | Follows from V171 and acceptance test 8. Recommendation, labelled. |
 | Pilot: choose the AI Gateway network before creating it | sourced | V48. |
-| Cloud agent: the client allowlist is the main control left | interpretation by AI | Tagged inference. V23 only says the firewall does not apply to MCP server processes. |
+| Cloud agent: the client allowlist is the main control left | interpretation by AI | Tagged inference. V23 says the firewall covers the built-in Playwright server in cloud sandboxes but does not apply directly to other MCP servers. That the client allowlist is then the main control is not stated. |
 | Tests for merge and hand edit name pipeline targets only | design | Follows from V171. |
 | Windows outbound limits: Intune firewall blocks unmatched outbound traffic; Microsoft says it fits highly secure environments | sourced | V32, V33 match the live pages. Layer 4 is interpretation by AI (traffic leaving the device). Not tested on a device. |
 | Windows outbound block can miss traffic via proxies, secure DNS, some VPN tunnels | sourced | V34. |
@@ -116,7 +117,7 @@ Direct shell source fetching failed because that runtime could not resolve exter
 - No tenant, API-adapter, private-network, MCP-client, OBO, policy-propagation or adversarial test was run. Both objectives remain proposed requirements; Objective B has explicitly documented exclusions.
 
 <!-- Begin source quotes -->
-Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote list. Do not edit by hand. 216 quotes, checked 2026-11-12: 137 back the released-only design and 78 back the preview additions; one historical quote is unverified because its source was unavailable. Links request the quoted passage with browser text fragments. Page date is the date the source page shows.
+Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote list. Do not edit by hand. 228 quotes, checked 2026-11-13: 147 back the released-only design and 81 back the preview additions. Links request the quoted passage with browser text fragments. Page date is the date the source page shows.
 
 | Id | Quote | Source | Page date | Design |
 |---|---|---|---|---|
@@ -142,7 +143,7 @@ Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote
 | <a id="ev-V20"></a>V20 | allowedMcpServers and deniedMcpServers apply to MCP servers defined in user settings and repository settings, but don't apply to MCP servers defined in repository custom agent profiles. | [GitHub Docs, enterprise managed settings reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings#:~:text=allowedMcpServers%20and%20deniedMcpServers%20apply%20to%20MCP,defined%20in%20repository%20custom%20agent%20profiles.) | not captured in review | released |
 | <a id="ev-V21"></a>V21 | First-party Copilot servers, such as the built-in GitHub MCP server, are exempt from deny rules and cannot be blocked. | [GitHub Docs, enterprise managed settings reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings#:~:text=First%2Dparty%20Copilot%20servers%2C%20such%20as%20the,deny%20rules%20and%20cannot%20be%20blocked.) | not captured in review | released |
 | <a id="ev-V22"></a>V22 | Coverage of policies and enterprise managed settings currently varies between environments. | [GitHub Docs, enterprise managed settings reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings#:~:text=Coverage%20of%20policies%20and%20enterprise%20managed,managed%20settings%20currently%20varies%20between%20environments.) | not captured in review | released |
-| <a id="ev-V23"></a>V23 | It does not apply directly to Model Context Protocol (MCP) server processes or processes started in configured Copilot setup steps. | [GitHub Docs, customize the Copilot cloud agent firewall](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-firewall#:~:text=It%20does%20not%20apply%20directly%20to,started%20in%20configured%20Copilot%20setup%20steps.) | not captured in review | released |
+| <a id="ev-V23"></a>V23 | In cloud sandboxes, it also applies to the built-in Playwright Model Context Protocol (MCP) server and its browser processes, so browser network requests are subject to the configured firewall rules. The firewall does not apply directly to other MCP servers, including repository-configured replacements for the built-in Playwright server, or to processes started in configured Copilot setup steps. | [GitHub Docs, customize the Copilot cloud agent firewall](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall#:~:text=In%20cloud%20sandboxes%2C%20it%20also%20applies,started%20in%20configured%20Copilot%20setup%20steps.) | not captured in review | released |
 | <a id="ev-V24"></a>V24 | The networking configuration of the Microsoft Foundry project that hosts the toolbox governs all network access. | [Microsoft Learn, network isolation for a Foundry toolbox](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/toolbox-network-isolation#:~:text=The%20networking%20configuration%20of%20the%20Microsoft,the%20toolbox%20governs%20all%20network%20access.) | 2026-10-26 | released |
 | <a id="ev-V25"></a>V25 | agents reach the toolbox MCP endpoint through the project's private endpoint. | [Microsoft Learn, network isolation for a Foundry toolbox](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/toolbox-network-isolation#:~:text=agents%20reach%20the%20toolbox%20MCP%20endpoint,private%20endpoint.) | 2026-10-26 | released |
 | <a id="ev-V26"></a>V26 | Tool connectivity depends on where the downstream service is hosted. | [Microsoft Learn, network isolation for a Foundry toolbox](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/toolbox-network-isolation#:~:text=Tool%20connectivity%20depends%20on%20where%20the%20downstream%20service%20is%20hosted.) | 2026-10-26 | released |
@@ -295,7 +296,7 @@ Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote
 | <a id="ev-V173"></a>V173 | Microsoft 365 Copilot Chat uses a fixed, known set of outbound (egress) IP addresses for Model Context Protocol (MCP) tool and API calls from declarative agents and federated connectors. | [Microsoft Learn, static IP addresses for MCP and federated connectors](https://learn.microsoft.com/en-us/microsoft-365/copilot/connectors/federated-connectors-network-requirements#:~:text=Microsoft%20365%20Copilot%20Chat%20uses%20a,from%20declarative%20agents%20and%20federated%20connectors.) | 2026-10-28 | released |
 | <a id="ev-V174"></a>V174 | IP allow listing doesn't replace authentication or authorization. | [Microsoft Learn, static IP addresses for MCP and federated connectors](https://learn.microsoft.com/en-us/microsoft-365/copilot/connectors/federated-connectors-network-requirements#:~:text=IP%20allow%20listing,replace%20authentication%20or%20authorization.) | 2026-10-28 | released |
 | <a id="ev-V175"></a>V175 | This IP address list can change with seven days' notice. | [Microsoft Learn, static IP addresses for MCP and federated connectors](https://learn.microsoft.com/en-us/microsoft-365/copilot/connectors/federated-connectors-network-requirements#:~:text=This%20IP%20address%20list%20can%20change,notice.) | 2026-10-28 | released |
-| <a id="ev-V176"></a>V176 | As of May 1, 2026, Microsoft Agent 365 is generally available for the Commercial segment on a per user basis. | [Microsoft Learn, Microsoft Agent 365 overview](https://learn.microsoft.com/en-us/microsoft-agent-365/overview#:~:text=As%20of%20May%201%2C%202026%2C%20Microsoft,segment%20on%20a%20per%20user%20basis.) | 2026-08-20 | released |
+| <a id="ev-V176"></a>V176 | Microsoft Agent 365 is generally available for the Commercial segment on a per user basis. | [Microsoft Learn, Microsoft Agent 365 overview](https://learn.microsoft.com/en-us/microsoft-agent-365/overview#:~:text=Microsoft%20Agent%20365%20is%20generally%20available%20for%20the%20Commercial%20segment%20on%20a%20per%20user%20basis.) | 2026-11-13 | released |
 | <a id="ev-V177"></a>V177 | The Tools registry in the Microsoft 365 admin center is the source of truth for the MCP servers currently available in your tenant. | [Microsoft Learn, MCP server options in Agent 365](https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview#:~:text=The%20Tools%20registry%20in%20the%20Microsoft,servers%20currently%20available%20in%20your%20tenant.) | 2026-10-13 | released |
 | <a id="ev-V178"></a>V178 | Registration through the bring-your-own (BYO) process enables centralized review and governance. | [Microsoft Learn, MCP server options in Agent 365](https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview#:~:text=Registration%20through%20the%20bring%2Dyour%2Down%20%28BYO%29%20process,process%20enables%20centralized%20review%20and%20governance.) | 2026-10-13 | released |
 | <a id="ev-V179"></a>V179 | This feature is in preview. | [Microsoft Learn, Agent 365 bring-your-own MCP server](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server#:~:text=This%20feature%20is%20in%20preview.) | 2026-11-05 | released |
@@ -308,13 +309,13 @@ Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote
 | <a id="ev-V186"></a>V186 | Two roles meet both requirements: AI Administrator | [Microsoft Learn, manage plugins, skills, and MCP servers](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Two%20roles%20meet%20both%20requirements%3A%20AI%20Administrator) | 2026-10-23 | released |
 | <a id="ev-V187"></a>V187 | Global Administrator | [Microsoft Learn, manage plugins, skills, and MCP servers](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Global%20Administrator) | 2026-10-23 | released |
 | <a id="ev-V188"></a>V188 | Tool-level granular control is rolling out to tenants and supports only specific types of MCP servers registered on Agent 365. | [Microsoft Learn, manage plugins, skills, and MCP servers](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Tool%2Dlevel%20granular%20control%20is%20rolling%20out,MCP%20servers%20registered%20on%20Agent%20365.) | 2026-10-23 | released |
-| <a id="ev-V189"></a>V189 | The agent registry in Microsoft 365 admin center provides a centralized view of all agents available for your organization. | [Microsoft Learn, Agent Registry in Microsoft 365 admin center](https://learn.microsoft.com/en-us/entra/agent-id/agent-metadata-discoverability#:~:text=The%20agent%20registry%20in%20Microsoft%20365,all%20agents%20available%20for%20your%20organization.) | 2026-10-23 | released |
+| <a id="ev-V189"></a>V189 | The agent registry in Microsoft 365 admin center provides a centralized view of all agents available for your organization. | [Microsoft Learn, Agent Registry in Microsoft 365 admin center](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-registry-overview#:~:text=The%20agent%20registry%20in%20Microsoft%20365,all%20agents%20available%20for%20your%20organization.) | not captured in review | released |
 | <a id="ev-V190"></a>V190 | The Data &amp; tools tab is read-only and shows metadata reported by the agent platform. | [Microsoft Learn, understand agent details in Microsoft 365 admin center](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-details#:~:text=The%20Data%20%26%20tools%20tab%20is%20read%2Donly%20and%20shows%20metadata%20reported%20by%20the%20agent%20platform.) | not captured in review | released |
 | <a id="ev-V191"></a>V191 | Currently, Microsoft 365 admin center doesn't have data and tools information for all agents. | [Microsoft Learn, understand agent details in Microsoft 365 admin center](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-details#:~:text=Currently%2C%20Microsoft%20365%20admin%20center,and%20tools%20information%20for%20all%20agents.) | not captured in review | released |
 | <a id="ev-V192"></a>V192 | When a member of your organization publishes an agent to your tenant, the agent requires administrator approval before becoming available tenant-wide. | [Microsoft Learn, manage agent requests in Microsoft 365 admin center](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-requests#:~:text=When%20a%20member%20of%20your%20organization,administrator%20approval%20before%20becoming%20available%20tenant%2Dwide.) | 2026-10-23 | released |
 | <a id="ev-V193"></a>V193 | Administrators can review the agent's details, such as the description, owner, data, and tools, and then publish or reject it. | [Microsoft Learn, manage agent requests in Microsoft 365 admin center](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-requests#:~:text=Administrators%20can%20review%20the,and%20then%20publish%20or%20reject%20it.) | 2026-10-23 | released |
 | <a id="ev-V194"></a>V194 | Centralized MCP server inventory ✔️ ✔️ Block or unblock MCP servers ✔️ ✔️ Tool-level blocking ✔️ Tool activity observability ✔️ Tool threat protection ✔️ | [Microsoft Learn, API Management with Agent 365](https://learn.microsoft.com/en-us/azure/api-management/agent-365#:~:text=Centralized%20MCP%20server%20inventory%20%E2%9C%94%EF%B8%8F%20%E2%9C%94%EF%B8%8F,observability%20%E2%9C%94%EF%B8%8F%20Tool%20threat%20protection%20%E2%9C%94%EF%B8%8F) | 2026-10-06 | preview |
-| <a id="ev-V195"></a>V195 | AI Gateway is a dedicated product for AI traffic. | [Microsoft Learn, What is AI Gateway?](https://learn.microsoft.com/en-us/azure/ai-gateway/overview#:~:text=AI%20Gateway%20is%20a%20dedicated%20product%20for%20AI%20traffic.) | not captured in review | unverified: source unavailable 2026-11-12 |
+| <a id="ev-V195"></a>V195 | AI Gateway is a dedicated product for AI traffic. | [Microsoft Learn, What is AI Gateway?](https://learn.microsoft.com/en-us/azure/ai-gateway/overview#:~:text=AI%20Gateway%20is%20a%20dedicated%20product%20for%20AI%20traffic.) | 2026-10-28 | preview |
 | <a id="ev-V196"></a>V196 | it's not a separate offering. | [Microsoft Learn, API Management AI gateway capabilities](https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities#:~:text=it%27s%20not%20a%20separate%20offering.) | not captured in review | released |
 | <a id="ev-V197"></a>V197 | AI Gateway uses Azure API Management behind the scenes to provide token limits, quotas, and governance for model deployments. | [Microsoft Learn, Configure AI Gateway in your Foundry resources](https://learn.microsoft.com/en-us/azure/foundry/configuration/enable-ai-api-management-gateway-portal#:~:text=AI%20Gateway%20uses%20Azure%20API%20Management,quotas%2C%20and%20governance%20for%20model%20deployments.) | 2026-08-06 | released |
 | <a id="ev-V198"></a>V198 | Creates a Basic v2 SKU instance. | [Microsoft Learn, Configure AI Gateway in your Foundry resources](https://learn.microsoft.com/en-us/azure/foundry/configuration/enable-ai-api-management-gateway-portal#:~:text=Creates%20a%20Basic%20v2%20SKU%20instance.) | 2026-08-06 | released |
@@ -336,6 +337,18 @@ Generated by `scripts/build-mcp-governance-interactive.py` from the shared quote
 | <a id="ev-V214"></a>V214 | ACP runs alongside classic data policies, and the most restrictive settings from both are enforced. | [Microsoft Learn, Power Platform advanced connector policies](https://learn.microsoft.com/en-us/power-platform/admin/advanced-connector-policies#:~:text=ACP%20runs%20alongside%20classic%20data%20policies%2C,restrictive%20settings%20from%20both%20are%20enforced.) | not captured in review | released |
 | <a id="ev-V215"></a>V215 | Don't automatically retry a tool call when the response says that the tool ran but its result was withheld. | [Microsoft Learn, Protect tool calls with tool threat protection in AI Gateway (preview)](https://learn.microsoft.com/en-us/azure/api-management/ai-gateway-policy-tool-threat#:~:text=Don%27t%20automatically%20retry%20a%20tool%20call%20when%20the%20response%20says%20that%20the%20tool%20ran%20but%20its%20result%20was%20withheld.) | 2026-10-28 | preview |
 | <a id="ev-V216"></a>V216 | Each maker portal's release of design-time enforcement for ACP marks the general availability of ACP for that workload. | [Microsoft Learn, Power Platform advanced connector policies](https://learn.microsoft.com/en-us/power-platform/admin/advanced-connector-policies#:~:text=Each%20maker,availability%20of%20ACP%20for%20that%20workload.) | not captured in review | released |
+| <a id="ev-V217"></a>V217 | Local agents are onboarded separately from cloud agents. | [Microsoft Learn, Protect AI agents in real time using Microsoft Defender](https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime#:~:text=Local%20agents%20are%20onboarded%20separately%20from%20cloud%20agents.) | 2026-10-15 | released |
+| <a id="ev-V218"></a>V218 | For the middle-tier service to make authenticated requests to the downstream service, it needs to secure an access token from the Microsoft identity platform. | [Microsoft Learn, OAuth 2.0 on-behalf-of flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-on-behalf-of-flow#:~:text=For%20the%20middle%2Dtier%20service%20to%20make,token%20from%20the%20Microsoft%20identity%20platform.) | not captured in review | released |
+| <a id="ev-V219"></a>V219 | For example, MCP initialize , tools/list , and notifications don't trigger an evaluation. | [Microsoft Learn, Protect tool calls with tool threat protection in AI Gateway (preview)](https://learn.microsoft.com/en-us/azure/api-management/ai-gateway-policy-tool-threat#:~:text=For%20example%2C%20MCP%20initialize%20%2C%20tools%2Flist,trigger%20an%20evaluation.) | 2026-10-28 | preview |
+| <a id="ev-V220"></a>V220 | Review the server name, publisher, requester, and request date. | [Microsoft Learn, manage plugins, skills, and MCP servers](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Review%20the%20server%20name%2C%20publisher%2C%20requester%2C%20and%20request%20date.) | 2026-10-23 | released |
+| <a id="ev-V221"></a>V221 | Review the server information and declared tools for accuracy and compliance. | [Microsoft Learn, manage plugins, skills, and MCP servers](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=Review%20the%20server%20information%20and%20declared%20tools%20for%20accuracy%20and%20compliance.) | 2026-10-23 | released |
+| <a id="ev-V222"></a>V222 | Server-managed (.github-private repository) | [GitHub Docs, deploy enterprise managed settings](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings#:~:text=Server%2Dmanaged%20%28.github%2Dprivate%20repository%29) | not captured in review | released |
+| <a id="ev-V223"></a>V223 | To review and approve MCP server registration requests, follow these steps: | [Microsoft Learn, manage plugins, skills, and MCP servers](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-plugins-skills-mcp-servers#:~:text=To%20review%20and%20approve%20MCP%20server%20registration%20requests%2C%20follow%20these%20steps%3A) | 2026-10-23 | released |
+| <a id="ev-V224"></a>V224 | For governing custom connectors and HTTP connectors today, continue using classic data policies | [Microsoft Learn, Power Platform advanced connector policies](https://learn.microsoft.com/en-us/power-platform/admin/advanced-connector-policies#:~:text=For%20governing%20custom%20connectors%20and%20HTTP,today%2C%20continue%20using%20classic%20data%20policies) | not captured in review | released |
+| <a id="ev-V225"></a>V225 | You must have the Global Administrator role to connect Azure AI Gateway. The AI Administrator role doesn't support this operation. | [Microsoft Learn, Agent 365 tools gateway](https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway#:~:text=You%20must%20have%20the%20Global%20Administrator,support%20this%20operation.) | 2026-11-06 | preview |
+| <a id="ev-V226"></a>V226 | A setting you make on an individual connector takes precedence over the bulk Agent and plugin access setting. User access always applies. | [Microsoft Learn, manage federated Copilot connectors](https://learn.microsoft.com/en-us/microsoft-365/copilot/connectors/manage-federated-connectors#:~:text=A%20setting%20you%20make%20on%20an,access%20setting.%20User%20access%20always%20applies.) | 2026-10-16 | released |
+| <a id="ev-V227"></a>V227 | Always allow and Allow for conversation apply to the individual tool, not to the whole connector. | [Microsoft Learn, federated Microsoft 365 Copilot connectors](https://learn.microsoft.com/en-us/microsoft-365/copilot/connectors/federated-connectors-overview#:~:text=Always%20allow%20and%20Allow%20for%20conversation,tool%2C%20not%20to%20the%20whole%20connector.) | not captured in review | released |
+| <a id="ev-V228"></a>V228 | Scope: Choose whether the rule applies to All agents or to specific agents. | [Microsoft Learn, Protect AI agents in real time using Microsoft Defender](https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime#:~:text=Scope%3A%20Choose%20whether%20the%20rule%20applies%20to%20All%20agents%20or%20to%20specific%20agents.) | 2026-10-15 | released |
 <!-- End source quotes -->
 
 ## Reviewed presentation text
@@ -466,3 +479,183 @@ Completion validation passed: 215 quote rows checked against the 2026-11-12 sour
 - Corrected evidence category arithmetic so the unavailable preview quote is excluded from both verified categories: 137 baseline, 78 preview, one unverified; 216 total.
 - Final checks passed: 216 quote rows (215 snapshot matches and one explicit unavailable quote), 87 presentation labels, 74 STRIDE threats and 33 diagram labels, repository section anchors, 87 local links, preserved public IDs, JavaScript/JSON syntax and deterministic regeneration of seven outputs. No tenant, attack or adapter tests were run.
 - Browser QA was retried: the headless Chrome endpoint was unavailable, and opening the local preview through the in-app browser failed with a browser-session error. This pass did not establish desktop/narrow rendering, console or interaction behavior. Earlier browser results do not validate this revision.
+
+### Gateway migration correction (2026-11-12)
+
+- Rechecked the current primary documentation for API Management MCP enforcement, the separate `Microsoft.ApiManagement/aigateways` resource, Agent 365 gateway integration, BYO server routing, delegated-token threat protection, Entra MCP authorization and Power Platform workload-specific ACP rollout. The sources support separate gateway resources and runtime endpoints; the old preview wording that the released gateway "stays underneath" and that preview can simply be switched off was a design inference without an implementation basis. Replaced it with a tested migration and rollback requirement. This does not claim a migration has been tested.
+- Removed a redundant "preview feature" phrase beside the preview tag on the Foundry integration. The cited preview status is unchanged.
+- Reviewed the STRIDE model against this correction. D4 already describes gateway capacity/failover as a deployment condition, D12 covers private backend path failure, and the preview remains a design variant rather than an additional guaranteed gateway. No scenario, score or export needed changing.
+- The previously documented 215 quote matches are a same-day source-snapshot check, not a new live fetch of every source in this pass. V195 remains unavailable and explicitly unverified. Firefox displayed the updated preview wording, and the preview switch, Microsoft 365 Copilot path and layer-3 filter changed state as expected on desktop. A narrow viewport, console inspection and tenant tests were not completed in this pass.
+
+### Second holistic review (2026-11-12)
+
+Earlier entries that call V195 unavailable are superseded by this one.
+
+- **V195 restored, verified.** The overview page (https://learn.microsoft.com/en-us/azure/ai-gateway/overview) returned the quote on a live fetch on 2026-11-12. The page shows ms.date 2026-10-23 and an update date of 2026-10-28. V195 is no longer listed as unavailable, and the quote table shows its page date.
+- **Option 3 citation corrected.** "A separate AI Gateway product" cited only V196, which says the AI gateway capabilities in API Management are "not a separate offering", the opposite topic. Verdict: claim true, citation incomplete. Now cites V195 for the separate product and V196 for the built-in capabilities, and the sentence names the built-in capabilities instead of "the API Management service".
+- **Resource type step.** The interactive build had swapped V195 for a duplicate V45 while V195 was unavailable. The swap is removed, so the step cites V45, V52 and V195 again, and the AI Gateway resource control sentence that warns against confusing the two now cites V196, V45 and V195.
+- **Order of work, Microsoft 365.** "Configure Microsoft 365 access ... manually until their respective automation is verified" implied an automation path may exist. V171 says agent and plugin access has no PowerShell or API option. Verdict: misleading. Now says Microsoft 365 agent access is set by hand because it has no API option, and Power Platform MCP policy is set by hand until its API path is verified.
+- **Purview audit, Applies to.** Listed only Agent 365 agent instances while the documented text also covers Foundry (V208, V212). The Purview Foundry page scopes this to "AI interactions that use Microsoft Foundry". Now reads "Agent 365 agent instances and Foundry AI interactions".
+- **Built-in GitHub MCP server gap.** "Pilot both, or limit it" had an unclear "it" after a sentence about two switches. Now names the switches and the built-in server, and carries the `recommendation` tag because the account-permission limit is a design choice without a source.
+- **Checked and unchanged.** Microsoft calls AI Gateway both "a dedicated product" (V195) and "the AI Gateway tier in Azure API Management" (Agent 365 pages). The page's claims follow V194 and V195 and do not depend on either name, so no wording change was made. Context was re-read for V47, V71, V92, V95, V96, V204 and V211; each supports its claim.
+- **STRIDE page.** Reviewed for the same issues. It already says Microsoft 365 access is manual and Power Platform MCP policy stays manual until its adapter is validated, it does not cite V195 or V196, and all 39 links into the design page resolve. Rebuilding it produced no change.
+
+| Check | Result |
+|---|---|
+| Source quotes, live fetch 2026-11-12 | 216 of 216 present, 0 unverified, 0 unexpected problems |
+| Reviewed presentation text | 87 distinct texts match |
+| STRIDE check with source cache | 74 rows, 33 DFD labels, 216 quotes across 63 source URLs |
+| Section anchors | passed |
+| Browser, local server | Design page at desktop width and both pages at 375 px: no sideways scroll, no console errors |
+
+No tenant, adapter or attack test was run.
+
+### Second full read (2026-11-12)
+
+Both passes below were run on the final build. The rendered page text (537 lines) was regenerated, every line that cites a V number was printed beside the quotes it cites, and each pair was read. Every line without a V number (465 lines) was read for logic against the rest of the page.
+
+**Sourced paragraphs.** 71 lines cite quotes. One was fixed; the rest match their quotes. Two uncited details were checked in the cached source text.
+
+| Section id | Starts with | Cites | Verdict |
+|---|---|---|---|
+| `ctrl-inventory` | GitHub managed settings apply the allow and deny | V20 | matches |
+| `ctrl-pipeline` | GitHub managed settings can be hosted on GitHub | V70 V82 V83 V90 | matches |
+| `part-github-enterprise` | Managed settings file in the .github-private repository . | V82 | matches |
+| `ctrl-client` | VS Code documents allow, deny and managed-only policies | V14 V15 V16 V17 V19 V131 V20 V21 V22 V209 V210 | matches |
+| `ctrl-g-server-trust-prompt` | Servers that do not come from the workspace | V158 | matches |
+| `ctrl-stdio` | The client launches a local server as a | V28 V89 V18 | matches |
+| `ctrl-g-confirmation-dialog` | By default, actions that are not auto-approved need | V115 V151 V152 V153 | matches |
+| `ctrl-g-approval-lock` | A company can limit the levels above. A | V156 V157 | matches |
+| `ctrl-g-tool-call-hook` | A preToolUse hook can inspect a supported tool's | V159 V160 | matches |
+| `ctrl-g-result-review` | Tool approval covers confirmation before or after a | V155 V154 | matches |
+| `ctrl-g-defender-for-endpoint-runtime-protection` | Local agents are covered by Defender for Endpoint, | V146 V148 V147 V149 V150 | matches |
+| `ctrl-windows` | Intune can set Windows Firewall to block all | V32 V33 | matches |
+| `ctrl-outbound-filter` | The Global Secure Access MCP firewall filters by | V30 V29 V31 | matches |
+| `part-microsoft-365-admin-center` | Microsoft 365 admin center . Set by hand; | V163 | matches |
+| `ctrl-m365` | Federated connectors use MCP . A custom one | V162 V166 V167 V163 V168 V169 V172 V171 | matches |
+| `ctrl-g-write-approval` | For federated connectors, tools that write need user | V164 | matches |
+| `ctrl-m365-network` | MCP calls from declarative agents and federated connectors | V173 V170 V174 V175 | matches |
+| `ctrl-foundry` | An MCP tool restricts access with a nonempty | V69 | matches |
+| `ctrl-g-approval` | require_approval defaults to always, which means a developer | V106 V129 V136 V108 | matches; "never" confirmed in the V106 source passage |
+| `ctrl-g-untrusted-results` | Microsoft says to treat tool descriptions, annotations and | V107 | matches |
+| `ctrl-foundry-network` | For a Foundry toolbox, its hosting project governs | V24 V26 | matches |
+| `ctrl-foundry-routing` | Only new MCP tools created in the Foundry | V60 V61 | matches |
+| `ctrl-g-tool-call-and-tool-response-guardrails` | Both are in preview . The response control | V102 V103 V133 V104 V105 V132 | matches |
+| `ctrl-foundry-egress` | The Network control covers hosted agents and prompt | V101 V134 V109 | matches |
+| `ctrl-g-defender-real-time-protection` | Checks agent activity and can block a risky | V116 V117 V118 V119 V120 | matches |
+| `ctrl-g-defender-on-the-agent-365-path` | Covers tool calls to customer MCP tools onboarded | V121 V122 V43 | matches |
+| `ctrl-g-defender-rules-and-scope` | The default rule only audits . A custom | V123 V124 V125 V141 V142 V143 V144 V145 | matches |
+| `ctrl-power-platform` | ACP supports deployment-pipeline automation , MCP server-level blocking | V67 V65 V27 V78 V214 V216 | matches |
+| `ctrl-g-ask-before-running` | A maker can set a tool to ask | V137 | matches |
+| `ctrl-g-prompt-attack-block` | Built-in protection against user prompt injection (UPIA) and | V110 V130 | matches |
+| `ctrl-g-threat-detection` | An external service allows or blocks a tool | V112 V113 V114 V139 V138 V140 | matches |
+| `ctrl-logging` | Gateway policies can log every request . Microsoft | V3 V165 | matches |
+| `ctrl-purview-audit` | Agent 365 instances are audited from creation, including | V203 V204 V205 V206 V207 V208 V212 | matches |
+| `part-azure-api-management` | The one door to the company MCP server, | V196 | matches |
+| `part-azure-api-management` | Azure inference. MCP server management is listed for | V71 V64 | matches |
+| `part-azure-api-management` | Backend isolation. Choose a suitable v2 tier if | V199 V81 | matches |
+| `part-ai-gateway-integrated-with-foundry` | The AI Gateway option in the Foundry portal. | V197 | matches |
+| `part-ai-gateway-integrated-with-foundry` | Create new makes a Basic v2 instance . | V198 V199 V200 | matches |
+| `part-ai-gateway-integrated-with-foundry` | Not used for MCP tools; the baseline sets | V60 V201 | fixed in this pass (was a fragment), now matches |
+| `part-dedicated-ai-gateway` | A separate AI Gateway product , not the | V195 V196 V45 | matches |
+| `part-dedicated-ai-gateway` | The SKU is not stated in the sources | V46 V84 | matches |
+| `ctrl-gateway` | For a remote Azure MCP Server, Microsoft suggests | V1 V4 V3 V5 V63 | matches |
+| `ctrl-identity` | API Management validates Entra tokens or subscription keys | V6 V7 V8 V211 | matches |
+| `ctrl-a365` | Agent 365 discovers servers in connected gateways . | V36 V42 V194 V38 V41 | matches |
+| `ctrl-a365-consent` | An administrator grants the A365 MCP Gateway Policy | V39 V40 | matches |
+| `ctrl-ai-resource` | Do not confuse AI gateway capabilities in the | V196 V45 V195 | matches |
+| `ctrl-ai-resource` | The separate AI Gateway product uses resource type | V45 V46 V50 V51 | matches |
+| `ctrl-ai-limits` | Gateway frontend private endpoints are not supported . | V47 V48 V49 V52 | matches |
+| `ctrl-ai-publish` | The gateway can combine tools from remote MCP | V62 V79 | matches |
+| `ctrl-ttp-users` | It requires a delegated Entra user token . | V53 V54 V57 | matches |
+| `ctrl-ttp-modes` | Audit mode fails open; Block mode fails closed | V55 V56 V58 V213 V59 V215 | matches; uncited example list confirmed in the V213 source passage |
+| `ctrl-byo` | BYO servers route through the Agent 365 Tooling | V85 V43 V87 V88 V86 | matches |
+| `ctrl-backend` | Restrict MCP server connectivity so the gateway is | V9 V11 V12 V13 V10 | matches |
+| `gaps` | Built-in GitHub MCP server. Allow and deny lists | V21 V92 | matches |
+| `gaps` | Two switches are untested: the MCP servers in | V93 V94 V95 V96 | matches |
+| `gaps` | Microsoft 365 Copilot is set by hand. Agent | V171 | matches |
+| `gaps` | GitHub Copilot cloud agent. Its firewall does not | V23 | matches |
+| `gaps` | Foundry prompt agents outside the Copilot harness. The | V101 | matches |
+| `gaps` | Windows outbound block. It can block non-MCP traffic | V32 V34 | matches |
+| `gaps` | API Management tier availability. MCP features vary by | V64 V80 V81 | matches |
+| `preview` | Dedicated AI Gateway is a separate product that | V42 V194 V45 V50 | matches |
+| `preview` | Microsoft says preview features are not meant for | V35 | matches |
+| `approval-workflow` | An AI Administrator or Global Administrator reviews the | V186 V187 V87 V188 V37 V44 | matches |
+| `approval-workflow` | Approval is followed by Microsoft Entra tenant consent. | V184 V185 V87 | matches |
+| `approval-workflow` | The Git pull request is the internal source-of-truth | V182 | matches |
+| `approval-workflow` | Approval of an agent publication is a separate | V190 V191 V192 V193 V182 V183 V189 | matches |
+| `pilot` | Resource type. Create the separate AI Gateway product | V45 V52 V195 | matches |
+| `pilot` | Lock the backend. Make direct calls fail. Choose | V48 | matches |
+| `pilot` | Connect Agent 365. For the API Management integration, | V40 | matches |
+| `pilot` | Test blocking. For the preview Agent 365 integration, | V38 V53 V194 V54 | matches |
+| `pilot` | Gate promotion. Require accepted support terms, released features, | V35 | matches |
+
+**Unsourced text, by section.**
+
+| Section | Verdict |
+|---|---|
+| Header, tabs, design switch | Correct. |
+| In short, Coverage, Scope, Objectives | Fixed: the lead said "This is a proposed architecture. Neither objective is proven in a tenant." That is a blanket disclaimer the owner asked to drop from leads; the line is now labelled Coverage and keeps only the gaps sentence. Rest correct. |
+| Map boxes, legend, figure description | Correct. Box counts and labels agree with the controls; Power Platform shows manual until API verified, Microsoft 365 set by hand. |
+| Design requirements of all 42 controls | Consistent with each other and with the cited facts. The Foundry routing requirement and the Option 2 use line now say the same thing. |
+| Device box and cloud-client note | Correct: device controls do not cover the three cloud clients. |
+| Layer notes for Foundry and Copilot Studio | Correct: the only controls at layers 3 and 6 are preview. |
+| Gateway options lead and Options 1 to 3 | Correct after the Option 2 fix. "Where it is set or run: Azure" carries an inference tag that is not needed; harmless, left. |
+| Order of work | Correct after the earlier Microsoft 365 and Power Platform split. |
+| Acceptance tests and preview tests | Expected results agree with the controls. "No test has been run." kept: test status belongs on tests. |
+| Gaps | Correct. The "Not tested." notes on single inference items are specific, so kept. |
+| With preview lead, approval workflow, pilot | Correct. Later deny matches the manual Microsoft 365 and Power Platform targets. |
+| Made with AI note and tags key | Correct. The key lists the four tags the page uses. |
+
+**STRIDE page.** Neither fix affects it: it links to the Option 2 control by id and has no blanket disclaimer of this kind. Rebuilding it gave no change.
+
+| Check after both fixes | Result |
+|---|---|
+| Source quotes, cached live fetch 2026-11-12 | 216 of 216, 0 unverified, 0 unexpected problems |
+| Reviewed presentation text | 87 distinct texts checked |
+| STRIDE check with source cache | 216 quotes across 63 source URLs, 0 unverified |
+| Quote pairs regenerated after the lead fix | identical to the pairs read |
+| Section anchors, `git diff --check`, rebuild reproducible | passed |
+| Browser, local server | 375 px and desktop: no sideways scroll, no console errors |
+
+No tenant, adapter or attack test was run.
+
+### Goal review, two passes (2026-11-12)
+
+| Item | Verdict |
+|---|---|
+| Step 6a said consent made the server Available in the registry | wrong. V184: approval makes it available in the organizational registry. V185: it reaches agent-building surfaces only after consent. Reworded |
+| Deny test said "manually reconcile all other targets" | conflicted with the automated pipeline and step 7. Now: automated targets update after refresh; manual targets need recorded administrator changes |
+| Preview note "The view combines distinct admin pages" | dangling; reworded to "These are distinct admin pages" |
+| Approval lock carried `unverified` with "Not tested on a managed device" | misapplied. V157 quotes the managed setting `permissions.disableBypassPermissionsMode`; source text re-read in the 2026-11-12 cache. Tag and sentence removed. `unverified` is still used elsewhere, so the key row stays |
+| Uncited details: ACP-only mode, design-time GA, tool threat protection exclusions and Defender mode, AI Gateway public frontend, MCP tiers, publisher types, OBO downstream token, VS Code trust scope | confirmed in source text |
+| STRIDE page, threats TSV and data | none repeat the corrected wording; I2 cites V152 V157. Rebuild gave no diff |
+| Quote checker against the 2026-11-12 cache | 216 quotes, 0 problems |
+| Label check, section anchors `--check`, `check-mcp-stride.py` | passed |
+
+The first page (`mcp-governance-microsoft.html`) had the same two errors; fixed later the same day at the owner's request (see its fact check). No browser check: only wording changed.
+
+- 2026-11-13: full re-read of the page against every quote. Two source texts had changed since 2026-11-12. V23 (GitHub cloud agent firewall) now says the firewall also covers the built-in Playwright MCP server in cloud sandboxes, so the gap no longer says it does not filter MCP server processes; it says the firewall covers only the built-in Playwright server and does not apply directly to other MCP servers. V176 (Agent 365 overview) now says generally available for the Commercial segment on a per user basis; the page text already matched. Both quotes were replaced with the live wording through the page-only evidence module; the first page is unchanged. All 216 quotes re-checked live, 0 problems. The "no preview label" check on the federated connector pages was repeated on 2026-11-13.
+
+
+### Context review and fresh repeat round (2026-11-13)
+
+This review read the generated page, both design variants, all 42 controls, component descriptions, path annotations, gaps, rollout steps and acceptance expectations. It compared the assertions with primary-source passages and checked their consistency with the STRIDE scenarios. Quote presence was checked separately from claim meaning.
+
+| Finding | Correction and evidence |
+|---|---|
+| Publisher-wide connector defaults were described as an unconditional gate; the recommendation could leave unapproved Microsoft connectors available | Individual connector settings can override publisher defaults; User access remains the ceiling (V226). Start with all publisher types cleared and enable approved connectors individually. Review existing overrides. Added an acceptance test. |
+| Write approval omitted saved approval scopes | Clarified initial approval and conversation/persistent per-tool approval (V164, V227). Added a scope test and aligned STRIDE R2. |
+| Azure gateway connection role was underspecified | Named Global Administrator and distinguished it from AI Administrator (V225). Updated the consent control and pilot step. BYO request-review roles are a separate operation. |
+| Defender scope overgeneralized the agent-picker restriction | All agents and specific-agent scopes are available (V228); the Entra agent ID limitation applies to the selection list (V145). |
+| GSA limitation omitted JSON-RPC batches | Included batch noninspection with local-server noninspection (V31). |
+| Gateway introduction stated shared-instance reuse without its evidence qualification | Replaced the assertion with a link to the existing combined-use assumption. |
+| Rollout generalized the absence of an API to Microsoft 365 agent access | Restricted the statement to the named Agent and plugin access setting (V171). |
+
+Retrieval: the local Python live-fetch run failed because DNS/network access was unavailable. The web tool retrieved primary-source passages for all 228 quotes across 63 source URLs; normalized excerpts were used for the quote check. These are retrieved excerpts, not a full-page HTTP cache. The legacy GitHub firewall URL produced an older snapshot without the Playwright exception; the current canonical page confirmed the existing V23 wording. Updated that source URL and the redirected Agent registry URL. The AI Gateway overview required search followed by opening the result, which confirmed V195. No unavailable quote is presented as confirmed on the strength of the failed local fetch.
+
+Repeat round: re-read the regenerated page and all 74 STRIDE scenarios and control mappings. The first repeat caught the rollout scope and unqualified gateway introduction noted above. After those corrections, the final repeat checked the complete content against the same retrieved evidence, then checked the final changes and cross-references again; no additional content correction was identified. Explicit inference, unverified integration details and unrun acceptance tests remain labeled; this verdict does not establish deployment efficacy.
+
+Checks: 228 quote matches, 87 presentation-text checks, 74 STRIDE rows and 33 diagram labels; section anchors and JavaScript syntax checked. Existing public IDs preserved. Index entries and footer already have 2026-11-13 dates, so no index text change was needed. Headless Chrome did not expose its debugging endpoint; current desktop/narrow rendering and interactive browser behavior could not be revalidated. No tenant, adapter or attack test was run.
+
+Commit attempt: `git add` on `dev` failed because the workspace denied creation of `.git/index.lock`. Changes remain uncommitted; nothing was published.
