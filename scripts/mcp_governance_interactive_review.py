@@ -141,7 +141,7 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('Hatched boxes and the lines that touch them are what preview adds. Everything else is the released design.', 'Hatching marks preview-only boxes; preview controls also live on shared boxes. The BYO line is a rejected alternative for this private backend.')
     assert page.count('What establishes the guarantee') == 14
     page = page.replace('What establishes the guarantee', 'Required control or validation')
-    replace('The federated connector pages read on 2026-11-11', 'The federated connector pages reviewed on 2026-11-12')
+    replace('The federated connector pages read on 2026-11-11', 'The federated connector pages reviewed on 2026-11-13')
     replace('The released-only design stays underneath. Details and limits',
             'Keep the baseline controls; replacing the gateway requires a tested migration and rollback. Details and limits')
     replace('If a preview feature changes, switch it off and fall back to the released-only design.',

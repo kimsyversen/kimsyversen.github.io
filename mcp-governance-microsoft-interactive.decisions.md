@@ -116,3 +116,5 @@ Edited the page file directly; the builder script was behind the page at the tim
 
 - 2026-11-12: removed "This is a proposed architecture. Neither objective is proven in a tenant." from the lead and relabelled the line Coverage. The owner asked for no blanket untested disclaimers on design pages; test status stays on the tests and on single gap items.
 - ~~2026-11-12: removed the Approval lock's `unverified` tag through the review module, not the shared builder.~~ Superseded the same day: the owner approved fixing the first page, so the tag is now removed in the shared builder and the review-module replacement is gone.
+
+- 2026-11-13: the cloud agent gap now names the built-in Playwright server as the one MCP server the firewall covers, because the source changed. **Why:** the old sentence said the firewall does not filter MCP server processes, which is now too broad. The page-only evidence module overrides V23 and V176 so the first page and the shared module stay as they were.

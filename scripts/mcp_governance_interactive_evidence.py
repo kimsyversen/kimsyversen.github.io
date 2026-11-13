@@ -4,10 +4,16 @@ python3 -I scripts/check-evidence-quotes.py <cache> mcp_governance_interactive_e
 """
 from mcp_governance_evidence import SOURCES as SHARED_SOURCES, QUOTES as SHARED_QUOTES, PREVIEW_ONLY as SHARED_PREVIEW
 
-CHECKED = "2026-11-12"
+CHECKED = "2026-11-13"
 UNAVAILABLE = {}
 SOURCES = dict(SHARED_SOURCES)
 QUOTES = list(SHARED_QUOTES)
+# Source wording changed after the shared list was written; the page-only list follows the live text.
+_LIVE = {
+    "gh-fw": "The firewall does not apply directly to other MCP servers, including repository-configured replacements for the built-in Playwright server, or to processes started in configured Copilot setup steps.",
+    "a365-ga": "Microsoft Agent 365 is generally available for the Commercial segment on a per user basis.",
+}
+QUOTES = [(k, s, _LIVE.get(k, q)) for k, s, q in QUOTES]
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
 PREVIEW_ONLY = set(SHARED_PREVIEW) | {"gr-fy-call", "gr-fy-resp"}
 # Page-only quotes append to the shared list to preserve published V ids.
@@ -75,7 +81,8 @@ VERIFIED_SOURCE_DATES = {
     "m365-manage": "2026-10-16",
     "m365-custom": "2026-10-19",
     "m365-net": "2026-10-28",
-    "a365-ov": "2026-08-20",
+    "a365-ov": "2026-11-13",
+    "gh-fw": "2026-11-13",
     "a365-tools": "2026-10-13",
     "a365-admin-tools": "2026-10-23",
     "a365-agent-registry": "2026-10-23",

@@ -99,6 +99,8 @@ EDITS = [
      'build the pipeline that applies it. Set the Microsoft 365 admin center by hand.</li>'),
     ('i">inference</span> The line is not labelled preview on the page, but',
      'i">inference</span> The Defender page does not label this line preview, but'),
+    ('Its firewall does not directly filter MCP server processes, so it is not their egress boundary.',
+     'Its firewall covers the built-in Playwright MCP server in cloud sandboxes but does not apply directly to other MCP servers, so it is not their egress boundary.'),
     ('<li><strong id="gap-windows-outbound">',
      '<li><strong id="gap-foundry-prompt-agents">Foundry prompt agents outside the Copilot harness.</strong> The Network control does not affect them <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft-interactive.factcheck.md#ev-V101">V101</a>. <span class="tg i">inference</span> A connection tool list does not prevent another server connection. The released-only design needs verified project egress restrictions; the preview Network guardrail covers only the documented agent types. Backend isolation still keeps the company MCP server behind the gateway.</li>\n<li><strong id="gap-windows-outbound">'),
 ]

@@ -87,3 +87,8 @@ This workspace again denied a local branch switch because `.git/index.lock` cann
 - [x] Recheck the STRIDE page for the same issues; no change needed.
 - [x] Second full read of every page line, logged per paragraph; fixed the Option 2 fragment and the blanket lead disclaimer (2026-11-12).
 - [x] Move the working-tree changes from `master` to `dev` and commit (2026-11-12).
+
+## Third review (2026-11-13)
+
+- [x] Re-read every claim against its quote; fixed the cloud agent firewall gap (V23) and the V176 quote text; dates moved to 2026-11-13.
+- [x] STRIDE page: no statement depends on the firewall wording; no change needed.
