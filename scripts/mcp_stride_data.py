@@ -144,7 +144,7 @@ THREATS = [
     ("P3", "R", "An agent owner denies a tool action, and the deployment has not retained correlated agent, gateway and backend events that identify the initiating user and tool arguments.",
      ["ctrl-purview-audit", "ctrl-logging"], ["PURVAUDIT", "DSPM"], (5, 7, 3, 5, 6), "V208 covers prompts and responses; omission of MCP tool calls from that page does not establish absence of tool audit. Missing correlation is AI inference"),
     ("P3", "I", "A compromised agent sends secrets out through an MCP tool argument.",
-     ["ctrl-g-defender-rules-and-scope", "ctrl-g-defender-real-time-protection"], ["RTP", "DSPM", "SHAREPOINT"], (8, 5, 5, 5, 5), "V125"),
+     ["ctrl-g-defender-rules-and-scope", "ctrl-g-defender-real-time-protection"], ["RTP", "DSPM", "SHAREPOINT"], (8, 5, 5, 5, 5), "V142 V125: Defender blocks interactions identified as secret exfiltration; V125 is the unsafe-domain email case"),
     ("P3", "D", "An agent loop calls a tool without limit and uses up the gateway rate limit and the backend.",
      ["ctrl-gateway"], ["APIM"], (5, 6, 5, 6, 6), "V3"),
     ("P3", "E", "A read-only agent is configured with an empty allowed_tools list by mistake; an attacker then induces a write call that the server permits under the connection's credentials.",
