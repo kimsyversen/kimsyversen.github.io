@@ -409,6 +409,48 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .tag-key dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: baseline; }
 .tag-key dt, .tag-key dd { margin: 0; }
 @media (max-width: 560px) { .tag-key { grid-template-columns: 1fr; } }
+.flow { list-style: none; margin: 0; padding: 16px 0 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 22px; }
+.flow li { position: relative; display: flex; }
+.flow li + li::before { content: "\2192"; position: absolute; left: -18px; top: 50%; transform: translateY(-50%); color: var(--trace); font: 400 .9rem/1 var(--mono); }
+.flow a { flex: 1; min-width: 0; padding: 10px 10px 12px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); text-decoration: none; }
+.flow .gated a { border-color: var(--accent); }
+.flow a:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.flow a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.flow a[aria-current] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.flow-num { display: block; color: var(--muted); font: 500 .69rem/1.3 var(--mono); }
+.flow-name { display: block; margin-top: 3px; font: 500 1.35rem/1.1 var(--serif); }
+.flow-out { display: block; margin-top: 5px; color: var(--muted); font-size: .8125rem; line-height: 1.3; }
+.flow-gate { display: block; margin-top: 7px; color: var(--accent); font: 500 .62rem/1.3 var(--mono); letter-spacing: .075em; text-transform: uppercase; }
+.flow a[aria-current] .flow-num, .flow a[aria-current] .flow-out, .flow a[aria-current] .flow-gate { color: inherit; }
+.phase-panel { display: grid; grid-template-columns: minmax(176px, .45fr) minmax(0, 1fr); gap: 10px 36px; margin-top: 20px; padding: 18px 0 20px; border-block: 1px solid var(--line); scroll-margin-top: 6px; }
+.js .phase-panel:not(.is-on) { display: none; }
+.panel-head h3 { margin-top: 4px; font: 500 clamp(1.65rem, 2.7vw, 2.35rem)/.95 var(--serif); }
+.panel-head p { margin-top: 6px; color: var(--muted); }
+.panel-facts { margin: 0; display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 10px 20px; align-items: baseline; }
+.panel-facts dt { color: var(--accent); font: 500 .69rem/1.5 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.panel-facts dt .tag { text-transform: none; letter-spacing: 0; }
+.panel-facts dd { margin: 0; }
+.panel-facts ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.panel-facts a { color: var(--accent); margin-right: .35em; }
+.risk-table tr { scroll-margin-top: 6px; }
+.risk-table tr:target th { color: var(--accent); }
+@media (max-width: 1100px) {
+  .flow { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .flow li:nth-child(5)::before { content: none; }
+}
+@media (max-width: 760px) {
+  .flow { grid-template-columns: minmax(0, 1fr); }
+  .flow li + li::before, .flow li:nth-child(5)::before { content: "\2193"; left: 14px; top: -18px; transform: none; }
+  .phase-panel { grid-template-columns: minmax(0, 1fr); }
+  .panel-facts { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .panel-facts dd { margin-bottom: 10px; }
+}
+@media print { .js .phase-panel:not(.is-on) { display: grid; } }
+@media (max-width: 560px) {
+  .phase-col { width: 26%; }
+  .governance-col, .engineering-col { width: 37%; }
+  .risk-table .phase-name { font-size: .95rem; overflow-wrap: normal; }
+}
 </style>
 </head>
 <body>
@@ -431,177 +473,148 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
         <p>An AI agent does the work in each phase, and the output of one phase is the input of the next. <span class="tag">[inference]</span> The same phases with people doing the work are on the <a href="devsecops.html">DevSecOps</a> page.</p>
       </div>
 
-      <div class="lanes">
-        <div class="lane-head">
-          <p class="lane-name">Input</p>
-          <p class="lane-name">Phase and agent task</p>
-          <p class="lane-name">Output</p>
-        </div>
+      <ol class="flow">
+          <li class="gated"><a href="#plan"><span class="flow-num">01</span><span class="flow-name">Plan</span><span class="flow-out">Task spec</span><span class="flow-gate">Human gate</span></a></li>
+          <li><a href="#code"><span class="flow-num">02</span><span class="flow-name">Code</span><span class="flow-out">Pull request</span></a></li>
+          <li class="gated"><a href="#review"><span class="flow-num">03</span><span class="flow-name">Review</span><span class="flow-out">Verdict</span><span class="flow-gate">Human gate</span></a></li>
+          <li><a href="#build"><span class="flow-num">04</span><span class="flow-name">Build</span><span class="flow-out">Signed artifact</span></a></li>
+          <li><a href="#test"><span class="flow-num">05</span><span class="flow-name">Test</span><span class="flow-out">Test evidence</span></a></li>
+          <li class="gated"><a href="#release"><span class="flow-num">06</span><span class="flow-name">Release</span><span class="flow-out">Go or no go</span><span class="flow-gate">Human gate</span></a></li>
+          <li><a href="#deploy"><span class="flow-num">07</span><span class="flow-name">Deploy</span><span class="flow-out">Running service</span></a></li>
+          <li><a href="#operate"><span class="flow-num">08</span><span class="flow-name">Operate</span><span class="flow-out">New work</span></a></li>
+      </ol>
 
-        <section class="phase-row" id="phase-plan" aria-labelledby="plan">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">01</span>
-            <div class="phase-text">
-              <h3 id="plan"><a class="sec-link" href="#plan">Plan</a></h3>
-              <p>Turn a request into a spec</p>
-            </div>
+        <section class="phase-panel" id="phase-plan" aria-labelledby="plan">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">01</span>
+            <h3 id="plan"><a class="sec-link" href="#plan">Plan</a></h3>
+            <p>Turn a request into a spec</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Request and context</p>
-            <p class="cell-copy">Issue or change request, security policies and past incidents.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Task spec</p>
-            <p class="cell-copy">Task spec, security requirements and a threat list.</p>
-            <p class="gate"><span class="gate-label">Human gate</span>A person approves the spec. <span class="tag">[recommendation]</span></p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>Issue or change request, security policies and past incidents.</dd>
+            <dt>Output</dt><dd>Task spec, security requirements and a threat list.</dd>
+            <dt>Human gate</dt><dd>A person approves the spec. <span class="tag">[recommendation]</span></dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-untrusted-input">Untrusted input</a> The request text can carry hidden instructions.</li>
+              <li><a href="#risk-human-approval">Human approval</a> A wrong spec steers every later phase.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-code" aria-labelledby="code">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">02</span>
-            <div class="phase-text">
-              <h3 id="code"><a class="sec-link" href="#code">Code</a></h3>
-              <p>Write the change</p>
-            </div>
+        <section class="phase-panel" id="phase-code" aria-labelledby="code">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">02</span>
+            <h3 id="code"><a class="sec-link" href="#code">Code</a></h3>
+            <p>Write the change</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Spec and repository</p>
-            <p class="cell-copy">Approved task spec, the repository and the security requirements.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Pull request</p>
-            <p class="cell-copy">A branch with code and tests, opened as a pull request.</p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>Approved task spec, the repository and the security requirements.</dd>
+            <dt>Output</dt><dd>A branch with code and tests, opened as a pull request.</dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-untrusted-input">Untrusted input</a> Repository files and web pages the agent reads can carry instructions.</li>
+              <li><a href="#risk-agent-access">Agent access</a> The agent can write to the repository.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-review" aria-labelledby="review">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">03</span>
-            <div class="phase-text">
-              <h3 id="review"><a class="sec-link" href="#review">Review</a></h3>
-              <p>Check the change</p>
-            </div>
+        <section class="phase-panel" id="phase-review" aria-labelledby="review">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">03</span>
+            <h3 id="review"><a class="sec-link" href="#review">Review</a></h3>
+            <p>Check the change</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Pull request and threats</p>
-            <p class="cell-copy">The pull request and the threat list from planning.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Verdict</p>
-            <p class="cell-copy">Findings, fixes and a verdict to approve or reject.</p>
-            <p class="gate"><span class="gate-label">Human gate</span>A person approves the merge. <span class="tag">[recommendation]</span></p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>The pull request and the threat list from planning.</dd>
+            <dt>Output</dt><dd>Findings, fixes and a verdict to approve or reject.</dd>
+            <dt>Human gate</dt><dd>A person approves the merge. <span class="tag">[recommendation]</span></dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-untrusted-input">Untrusted input</a> The pull request under review can carry instructions for the reviewing agent.</li>
+              <li><a href="#risk-human-approval">Human approval</a> An agent approving another agent’s change is not an independent check.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-build" aria-labelledby="build">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">04</span>
-            <div class="phase-text">
-              <h3 id="build"><a class="sec-link" href="#build">Build</a></h3>
-              <p>Produce the artifact</p>
-            </div>
+        <section class="phase-panel" id="phase-build" aria-labelledby="build">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">04</span>
+            <h3 id="build"><a class="sec-link" href="#build">Build</a></h3>
+            <p>Produce the artifact</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Approved code</p>
-            <p class="cell-copy">The merged code and its dependencies.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Signed artifact</p>
-            <p class="cell-copy">Signed artifact, SBOM and provenance.</p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>The merged code and its dependencies.</dd>
+            <dt>Output</dt><dd>Signed artifact, SBOM and provenance.</dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-agent-access">Agent access</a> The build holds signing keys and pulls in dependencies.</li>
+              <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> Without provenance, nobody can tell what produced the artifact.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-test" aria-labelledby="test">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">05</span>
-            <div class="phase-text">
-              <h3 id="test"><a class="sec-link" href="#test">Test</a></h3>
-              <p>Try to break it</p>
-            </div>
+        <section class="phase-panel" id="phase-test" aria-labelledby="test">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">05</span>
+            <h3 id="test"><a class="sec-link" href="#test">Test</a></h3>
+            <p>Try to break it</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Artifact and environment</p>
-            <p class="cell-copy">The signed artifact and a test environment.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Test evidence</p>
-            <p class="cell-copy">Test results and a risk verdict.</p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>The signed artifact and a test environment.</dd>
+            <dt>Output</dt><dd>Test results and a risk verdict.</dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-agent-access">Agent access</a> The agent runs attacks, so the test environment must be cut off from production.</li>
+              <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> A verdict without the test results cannot be checked.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-release" aria-labelledby="release">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">06</span>
-            <div class="phase-text">
-              <h3 id="release"><a class="sec-link" href="#release">Release</a></h3>
-              <p>Check against policy</p>
-            </div>
+        <section class="phase-panel" id="phase-release" aria-labelledby="release">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">06</span>
+            <h3 id="release"><a class="sec-link" href="#release">Release</a></h3>
+            <p>Check against policy</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Evidence and policy</p>
-            <p class="cell-copy">Test results, SBOM, provenance and the release policy.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Go or no go</p>
-            <p class="cell-copy">A go or no go recommendation with the evidence pack.</p>
-            <p class="gate"><span class="gate-label">Human gate</span>A person decides on production. <span class="tag">[recommendation]</span></p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>Test results, SBOM, provenance and the release policy.</dd>
+            <dt>Output</dt><dd>A go or no go recommendation with the evidence pack.</dd>
+            <dt>Human gate</dt><dd>A person decides on production. <span class="tag">[recommendation]</span></dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-human-approval">Human approval</a> Going to production is the high-impact action.</li>
+              <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> The decision is only as good as the evidence pack.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-deploy" aria-labelledby="deploy">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">07</span>
-            <div class="phase-text">
-              <h3 id="deploy"><a class="sec-link" href="#deploy">Deploy</a></h3>
-              <p>Roll out the artifact</p>
-            </div>
+        <section class="phase-panel" id="phase-deploy" aria-labelledby="deploy">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">07</span>
+            <h3 id="deploy"><a class="sec-link" href="#deploy">Deploy</a></h3>
+            <p>Roll out the artifact</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Approved artifact</p>
-            <p class="cell-copy">The approved artifact and the infrastructure code.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">Running service</p>
-            <p class="cell-copy">The running service and a deploy record.</p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>The approved artifact and the infrastructure code.</dd>
+            <dt>Output</dt><dd>The running service and a deploy record.</dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-agent-access">Agent access</a> The agent holds production credentials.</li>
+              <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> The deploy record ties the running service to the approved artifact.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-        <section class="phase-row" id="phase-operate" aria-labelledby="operate">
-          <div class="cell phase-cell">
-            <span class="phase-num" aria-hidden="true">08</span>
-            <div class="phase-text">
-              <h3 id="operate"><a class="sec-link" href="#operate">Operate</a></h3>
-              <p>Watch and respond</p>
-            </div>
+        <section class="phase-panel" id="phase-operate" aria-labelledby="operate">
+          <div class="panel-head">
+            <span class="flow-num" aria-hidden="true">08</span>
+            <h3 id="operate"><a class="sec-link" href="#operate">Operate</a></h3>
+            <p>Watch and respond</p>
           </div>
-          <div class="cell gov-cell">
-            <p class="mobile-lane">Input</p>
-            <p class="gov-title">Signals</p>
-            <p class="cell-copy">Logs, alerts and new vulnerability reports.</p>
-          </div>
-          <div class="cell work-cell">
-            <p class="mobile-lane">Output</p>
-            <p class="work-title">New work</p>
-            <p class="cell-copy">Incident tickets, patches and new issues.</p>
-          </div>
+          <dl class="panel-facts">
+            <dt>Input</dt><dd>Logs, alerts and new vulnerability reports.</dd>
+            <dt>Output</dt><dd>Incident tickets, patches and new issues.</dd>
+            <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
+              <li><a href="#risk-untrusted-input">Untrusted input</a> Logs and vulnerability reports are outside text.</li>
+              <li><a href="#risk-agent-access">Agent access</a> A responding agent can change production.</li>
+            </ul></dd>
+          </dl>
         </section>
 
-      </div>
 
       <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Incident tickets, patches and new issues go <a href="#plan">back to planning</a> as new requests.</span></p>
     </section>
@@ -618,7 +631,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           <tr><th scope="col">Change</th><th scope="col">Risk</th><th scope="col">Control</th></tr>
         </thead>
         <tbody>
-          <tr>
+          <tr id="risk-untrusted-input">
             <th scope="row" class="phase-name"><span class="phase-index">01</span>Untrusted input</th>
             <td class="gov-risks"><ul class="risk-table-list">
               <li><details class="risk">
@@ -626,6 +639,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“Indirect prompt injections occur when an LLM accepts input from external sources, such as websites or files.”</blockquote>
                   <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/#:~:text=Indirect%20prompt%20injections%20occur,websites%20or%20files">OWASP Top 10 for LLM Applications 2025 · LLM01 Prompt Injection <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Due to inherent weaknesses in how natural-language instructions and related content are processed, agents and the underlying model cannot reliably distinguish instructions from related content.”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI01 Agent Goal Hijack, page 9 <span aria-hidden="true">↗</span></a>
                   <p>One vendor’s implementation:</p>
                   <blockquote>“Users can include hidden messages in issues assigned to Copilot cloud agent or comments left for Copilot cloud agent as a form of prompt injection”</blockquote>
                   <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#:~:text=Users%20can%20include%20hidden%20messages">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
@@ -638,6 +653,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“Separate and clearly denote untrusted content to limit its influence on user prompts.”</blockquote>
                   <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/#:~:text=Separate%20and%20clearly%20denote%20untrusted%20content">OWASP Top 10 for LLM Applications 2025 · LLM01 Prompt Injection, mitigation 6 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Treat all natural-language inputs (e.g., user-provided text, uploaded documents, retrieved content) as untrusted.”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI01 Agent Goal Hijack, mitigation 1, page 10 <span aria-hidden="true">↗</span></a>
                   <p>One vendor’s implementation:</p>
                   <blockquote>“Comments from users without write access are never presented to the agent.”</blockquote>
                   <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#:~:text=Comments%20from%20users%20without%20write%20access">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
@@ -645,7 +662,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               </details></li>
             </ul></td>
           </tr>
-          <tr>
+          <tr id="risk-agent-access">
             <th scope="row" class="phase-name"><span class="phase-index">02</span>Agent access</th>
             <td class="gov-risks"><ul class="risk-table-list">
               <li><details class="risk">
@@ -653,6 +670,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“Excessive Agency is the vulnerability that enables damaging actions to be performed in response to unexpected, ambiguous or manipulated outputs from an LLM, regardless of what is causing the LLM to malfunction.”</blockquote>
                   <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/#:~:text=Excessive%20Agency%20is%20the%20vulnerability,causing%20the%20LLM%20to%20malfunction">OWASP Top 10 for LLM Applications 2025 · LLM06 Excessive Agency <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Without a distinct, governed identity of its own, an agent operates in an attribution gap that makes enforcing true least privilege impossible.”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI03 Identity and Privilege Abuse, page 15 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
             </ul></td>
@@ -662,6 +681,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“Limit the permissions that LLM extensions are granted to other systems to the minimum necessary in order to limit the scope of undesirable actions.”</blockquote>
                   <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/#:~:text=Limit%20the%20permissions%20that%20LLM%20extensions">OWASP Top 10 for LLM Applications 2025 · LLM06 Excessive Agency, mitigation 4 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Issue short-lived, narrowly scoped tokens per task and cap rights with permission boundaries”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI03 Identity and Privilege Abuse, mitigation 1, page 17 <span aria-hidden="true">↗</span></a>
                   <p>One vendor’s implementation:</p>
                   <blockquote>“Copilot cloud agent only has the ability to push to a single branch.”</blockquote>
                   <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#:~:text=only%20has%20the%20ability%20to%20push%20to%20a%20single%20branch">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
@@ -669,7 +690,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               </details></li>
             </ul></td>
           </tr>
-          <tr>
+          <tr id="risk-human-approval">
             <th scope="row" class="phase-name"><span class="phase-index">03</span>Human approval</th>
             <td class="gov-risks"><ul class="risk-table-list">
               <li><details class="risk">
@@ -677,6 +698,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“The root cause of Excessive Agency is typically one or more of: excessive functionality; excessive permissions; excessive autonomy.”</blockquote>
                   <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/#:~:text=The%20root%20cause%20of%20Excessive%20Agency">OWASP Top 10 for LLM Applications 2025 · LLM06 Excessive Agency <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Because agents plan, persist, and delegate autonomously, a single error can bypass stepwise human checks and persist in a saved state.”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI08 Cascading Failures, page 30 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
             </ul></td>
@@ -686,6 +709,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“Utilise human-in-the-loop control to require a human to approve high-impact actions before they are taken.”</blockquote>
                   <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/#:~:text=Utilise%20human%2Din%2Dthe%2Dloop%20control">OWASP Top 10 for LLM Applications 2025 · LLM06 Excessive Agency, mitigation 6 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Require explicit authentication for each tool invocation and human confirmation for high-impact or destructive actions (delete, transfer, publish).”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI02 Tool Misuse and Exploitation, mitigation 2, page 14 <span aria-hidden="true">↗</span></a>
                   <p>One vendor’s implementation:</p>
                   <blockquote>“Draft pull requests created by Copilot cloud agent must be reviewed and merged by a human.”</blockquote>
                   <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#:~:text=must%20be%20reviewed%20and%20merged%20by%20a%20human">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
@@ -693,12 +718,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               </details></li>
             </ul></td>
           </tr>
-          <tr>
+          <tr id="risk-traceable-handoffs">
             <th scope="row" class="phase-name"><span class="phase-index">04</span>Traceable handoffs</th>
             <td class="gov-risks"><ul class="risk-table-list">
               <li><details class="risk">
                 <summary>People lose track of what the agents did.</summary>
                 <div class="risk-evidence">
+                  <blockquote>“without clear visibility into what agents are doing, why they are doing it, and which tools they are invoking, unnecessary autonomy can quietly expand the attack surface and turn minor issues into system-wide failures.”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · Letter from the Agentic Top 10 Leaders, page 7 <span aria-hidden="true">↗</span></a>
+                  <p>One vendor’s implementation:</p>
                   <blockquote>“Administrators can lose sight of agents’ work”</blockquote>
                   <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#administrators-can-lose-sight-of-agents-work">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
                 </div>
@@ -710,6 +738,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <div class="risk-evidence">
                   <blockquote>“It’s the verifiable information about software artifacts describing where, when, and how something was produced.”</blockquote>
                   <a href="https://slsa.dev/spec/v1.2/provenance#:~:text=the%20verifiable%20information%20about%20software%20artifacts">SLSA 1.2 · Provenance <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Record all inter-agent messages, policy decisions, and execution outcomes in tamper-evident, time-stamped logs bound to cryptographic agent identities.”</blockquote>
+                  <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI08 Cascading Failures, mitigation 10, page 32 <span aria-hidden="true">↗</span></a>
                   <p>One vendor’s implementation:</p>
                   <blockquote>“Copilot cloud agent’s commits are authored by Copilot, with the developer who assigned the issue or requested the change to the pull request marked as the co-author.”</blockquote>
                   <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#:~:text=commits%20are%20authored%20by%20Copilot">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
@@ -732,5 +762,37 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     </section>
   </footer>
 </div>
+<script>
+(function () {
+  var root = document.getElementById("lifecycle");
+  var links = [].slice.call(root.querySelectorAll(".flow a"));
+  var panels = [].slice.call(root.querySelectorAll(".phase-panel"));
+  function show(id) {
+    links.forEach(function (a) {
+      if (a.hash === "#" + id) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+    });
+    panels.forEach(function (p) { p.classList.toggle("is-on", p.id === "phase-" + id); });
+  }
+  function fromHash(scroll) {
+    var raw = location.hash.slice(1), id = raw.replace(/^phase-/, "");
+    if (!links.some(function (a) { return a.hash === "#" + id; })) return false;
+    show(id);
+    if (scroll) document.getElementById(raw).scrollIntoView();
+    return true;
+  }
+  root.classList.add("js");
+  if (!fromHash(true)) show("plan");
+  links.forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      show(a.hash.slice(1));
+      history.replaceState(null, "", a.hash);
+      var panel = document.getElementById("phase-" + a.hash.slice(1));
+      if (panel.getBoundingClientRect().top > innerHeight - 80) panel.scrollIntoView({ block: "start" });
+    });
+  });
+  window.addEventListener("hashchange", function () { fromHash(true); });
+})();
+</script>
 </body>
 </html>
