@@ -1,14 +1,15 @@
 # Fact check: Threat modeling
 
-Belongs to [threatmodelling.html](threatmodelling.html). Other notes for the same page: [plan](threatmodelling.plan.md), [decisions](threatmodelling.decisions.md).
+Belongs to [threatmodelling.html](threatmodelling.html). Other notes for the same page: [decisions](threatmodelling.decisions.md).
 
-Checked 3 November 2026. Sources were opened that day. Not run: nothing here was tested in a real system; the claims portal is fictional.
+Checked 3 November 2026 and again 15 November 2026. Sources were opened on those days. Not run: nothing here was tested in a real system; the claims portal is fictional.
 
 ## Sources
 
 - **ASVS** = OWASP ASVS v4.0.3, raw chapter files V3, V4, V7, V12 on GitHub (tag v4.0.3).
 - **MS** = learn.microsoft.com, Threat Modeling Tool threats page (STRIDE categories).
 - **TMM** = threatmodelingmanifesto.org.
+- **DREAD** = learn.microsoft.com, "Threat modeling for drivers" (section "The DREAD approach to threat assessment").
 
 ## Statements
 
@@ -21,7 +22,7 @@ Checked 3 November 2026. Sources were opened that day. Not run: nothing here was
 | 5 | The four questions are worded as on the manifesto page | TMM | Question 3 was "What do we do about it?"; the manifesto says "What are we going to do about it?". Fixed in a second pass on 3 Nov 2026 (curl of the page) |
 | 6 | The six STRIDE names and meanings | MS | OK |
 | 7 | STRIDE per element table (entity S R; process all; store T I D, R if log; flow T I D) | Larry Osterman, Microsoft blog archive (2007) | OK. The post "What does STRIDE have to do with threat modeling?" (7 Sep 2007) states all four rows: entity S R; process all six; store T I D plus R, because logs live in stores; flow T I D. It also says EoP does not apply to stores. The footer now cites it |
-| 8 | DREAD = damage, reproducibility, exploitability, affected users, discoverability | general knowledge | OK |
+| 8 | DREAD = damage, reproducibility, exploitability, affected users, discoverability | Microsoft Learn, "Threat modeling for drivers" | OK since 15 Nov 2026: "DREAD stands for: Damage, Reproducibility, Exploitability, Affected users, Discoverability". Before that it rested on general knowledge only |
 | 9 | Scores: 4x5=20, 3x4=12, 2x5=10, 3x3=9, 2x4=8, 2x3=6; matrix positions and band colors match; residual 1x5=5 is low | page arithmetic | OK |
 | 10 | Footer links all return HTTP 200 | curl | OK |
 | 11 | ASVS 5.0.0 is the current release and renumbers requirements | web search, one result set | OK. Footer now says the IDs match 4.0.3 only |
@@ -49,7 +50,25 @@ Re-checked from the sources, not from the first pass: raw ASVS 4.0.3 text for al
 - **"Numbers are made up":** a statement about our own choices, so the check is provenance, not a source. The plan, the decisions log ("Case and numbers are fictional") and git history (commit 227bd2c onward) show the likelihood, impact and scores were picked by the author to show the method. No data or source exists for them. The arithmetic of the numbers is verified separately (statement 9). The footer says so. No external source can confirm this, and none is claimed. Confirmed by the page owner (Kim Syversen) in chat on 3 Nov 2026: the portal and all likelihood and impact numbers are invented for illustration.
 - **Browser check:** page opened in the built-in browser at 394 px and at an emulated 1280 px. No console errors, no horizontal overflow, no clipped cards or tables. At 1280 px the question row and the four-response row are four columns and the panels use the 7/5 and 8/4 splits. The pane is too small to show 1280 px readably, so I also rendered the page with headless Chrome at 1280 px and looked at the screenshot: four-column question row, 7/5 and 8/4 panels, matrix and register all render without overlap or clipping.
 
+## Fourth pass, 15 Nov 2026
+
+Sources fetched again with curl before moving "Last updated" to 15 Nov 2026.
+
+- **ASVS 4.0.3:** raw chapter files V3, V4, V7 and V12 at tag v4.0.3. All 12 cited IDs still read as in statements 1 to 4.
+- **Manifesto:** all four questions appear on the page with the wording the page uses.
+- **Osterman post:** all four element rows match statement 7.
+- **NIST Question 3:** eliminate, disrupt, transfer responsibility, accept. Transfer needs documentation and agreements; accepted threats are documented and periodically reviewed.
+- **MS STRIDE page:** the six category names are present. Definitions not re-read word for word this pass.
+- **DREAD:** now has a primary source (statement 8). Linked in the footer.
+- **Footer links:** all six external links return HTTP 200.
+- **Fig. 1 and the Move card:** the drawing now has a customer-to-provider flow labelled "password" and a provider-to-portal flow labelled "identity". This matches the OpenID Connect reading in the third pass. The old drawing lacked the first flow, so the third-pass line "which is what the diagram shows" was wrong until today.
+- **Not sourced, tagged `[recommendation]`:** the score levels (15, 8, 7), two numbers instead of DREAD, and the alert on many denials.
+- **Cut as unsupported:** "Five numbers give more to argue about than two".
+- **Threat S:** the weakness (no expiry, logout does not end the session) matches ASVS 3.3.1 and 3.3.2.
+- **Arithmetic:** no score, matrix position or band changed.
+
 ## Limits
 
 - ASVS may change after 3 November 2026.
 - Likelihood and impact numbers are made up to show the method.
+- The markers have not been tested with a screen reader.

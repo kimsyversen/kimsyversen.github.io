@@ -1,6 +1,6 @@
 # Decisions: threatmodelling (threatmodelling.html)
 
-Belongs to [threatmodelling.html](threatmodelling.html). Plan: [threatmodelling.plan.md](threatmodelling.plan.md).
+Belongs to [threatmodelling.html](threatmodelling.html). Other notes for the same page: [fact check](threatmodelling.factcheck.md). Entries marked "Superseded" are kept for history.
 
 ## 3 Nov 2026
 
@@ -8,22 +8,22 @@ Belongs to [threatmodelling.html](threatmodelling.html). Plan: [threatmodelling.
 - **Likelihood x impact (1 to 5 each) instead of DREAD.** DREAD has five scores that are hard to set consistently. Two numbers give 1 to 25 and fit a matrix. DREAD is kept as a collapsed note in step 3 C so readers of the slides can see why it was dropped.
 - **Bands: high 15 or more, middle 8 to 14, low 7 or less.** Simple cut-offs, each tied to an action (fix before launch, plan, accept or watch).
 - **STRIDE per element.** The page applies STRIDE per element type (entity: S R, process: all six, store: T I D, flow: T I D) instead of asking all six everywhere. It cuts the work and the table shows which letters apply where.
-- **Four ways to respond: Fjern, Reduser, Flytt, Godta.** The slides only show controls. Naming the choice makes "accept" a visible decision.
+- **Four ways to respond: Fjern, Reduser, Flytt, Godta.** (Names superseded by Remove, Reduce, Move, Accept in the redesign.) The slides only show controls. Naming the choice makes "accept" a visible decision.
 - **Every control gets an owner and a test.** Added to the slides' method so step 4 can check that controls work.
 - **Threat E handled with "Fjern", threat R with "Godta".** Gives the response cards a real example each, and shows residual risk (I goes from 20 to 5).
 - **ASVS IDs checked against v4.0.3** on GitHub on 3 Nov 2026. The sources section names the version so the IDs stay valid.
 - **Inline SVG instead of raster images.** Follows light and dark mode through CSS variables, scales on a phone, and the figures are clickable (shared `data-t` highlights the threat row).
 - **Case and numbers are fictional.** The footer says so.
 - **No storage and no keys.** The page is static. The click highlight lives only in memory.
-- **File name and style follow the other pages.** `threatmodelling.html` in the repo root, same CSS tokens, fonts, 48rem column and sticky tab bar as MCP-Risk-Map.html.
-- **Not committed.** Left for the user.
+- **Superseded by the redesign (1200px board, no tab bar). File name and style follow the other pages.** `threatmodelling.html` in the repo root, same CSS tokens, fonts, 48rem column and sticky tab bar as MCP-Risk-Map.html.
+- **Superseded (the page was committed later). Not committed.** Left for the user.
 
 ## 3 Nov 2026, redesign
 
 - **English, one sheet.** The user asked for English and no separate sections. The page is now a single board of panels with no tab bar and no section headings in a long column. The four questions sit at the top as a strip, and each panel carries the number of the step it belongs to.
 - **Merged the two data flow figures.** One diagram now shows the drawing and the threat markers together. Clicking a letter highlights the same threat in the register and the matrix.
 - **One register instead of two tables.** The threat table and the score table are merged: threat sentence, likelihood, impact, score, response and first control.
-- **Step colors.** Blue, red, amber and green for steps 1 to 4, with dark mode variants, so panels map to steps at a glance.
+- **Superseded by the visual pass (one red only). Step colors.** Blue, red, amber and green for steps 1 to 4, with dark mode variants, so panels map to steps at a glance.
 - **Case renamed to "claims portal"** (was "skadeportalen"). Same threats, scores and ASVS IDs as before.
 - **Four responses renamed Remove, Reduce, Move, Accept**, each with an example from the case.
 - **Wider layout (1200px)** instead of the 48rem reading column, because everything has to fit on one board. Fonts and color tokens still match the other pages.
@@ -50,7 +50,7 @@ Belongs to [threatmodelling.html](threatmodelling.html). Plan: [threatmodelling.
 - **Move example no longer uses letter S**, because the register rates S as Reduce.
 - **Threat R reworded**: the threat I log only records denied requests, so it does not give an upload trail. Added a six-month review date.
 - **Footer now says** ASVS 5.0 renumbers requirements, and that the alert on many denials is our addition.
-- **STRIDE-per-element table sourced.** Larry Osterman (Microsoft blog archive, 2007) lists all four element rows. The footer now cites it instead of calling the table a rule of thumb.
+- **STRIDE-per-element table sourced.** Larry Osterman (Microsoft blog archive, 2007) lists all four element rows. The footer now cites it instead of calling the table a rule of thumb. (Partly superseded: the "rule of thumb" note came back under the table in commit 3531c82, and on 15 Nov 2026 the footer copy of that caveat was cut.)
 
 ## 3 Nov 2026, second fact check
 
@@ -68,6 +68,22 @@ Belongs to [threatmodelling.html](threatmodelling.html). Plan: [threatmodelling.
 - **Wording:** "This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human." Same text on all five pages.
 - **Layout:** label and text in two columns on desktop, stacked under 560 px.
 
-## 3 Nov 2026, "Made with AI" note
+## 3 Nov 2026, "Made with AI" note on index.html
 
 index.html has no decisions file. Same note as the other pages, centred in the footer with a faint cyan hairline to fit the dark theme.
+
+## 15 Nov 2026, review fixes
+
+- **Fig. 1 now shows the password going from the customer to the sign-in provider.** The Move card says the portal never receives passwords. The old drawing had no flow between customer and provider, so it did not show that. The provider-to-portal flow is relabelled "identity".
+- **Threat D lives in the document store only.** The register said "Portal and store" while the marker sat on the store. The store is what fills up; the control still runs in the portal.
+- **Threat S names a weakness.** "A session token is stolen" was the attack. The weakness is that sessions do not expire and logout does not end them, which is what ASVS 3.3.1 and 3.3.2 address.
+- **`[recommendation]` tags and a tag key added.** Tagged: the three score levels, the choice of two numbers over DREAD, and the alert on many denials. These are design choices of the page, not from a source. "Our addition" is gone from the footer.
+- **DREAD opinion cut.** "Five numbers give more to argue about than two" had no source.
+- **Clicking a figure scrolls the register row into view when it is off screen.** On a phone the highlight happened out of sight. Clicking a register row does not scroll.
+- **One click hint kept, in the Fig. 1 caption.** The markers do not look like buttons, so the hint earns its place. It now says what the click does (marks the threat in the register and the matrix). The repeat under Fig. 2 is cut.
+- **Register headers spell out Likelihood and Impact.** "L" and "I" were explained only by a hover tooltip, and "I" clashed with threat I.
+- **SVGs lose `role="img"`, markers get `aria-pressed`.** `role="img"` hides child buttons from assistive tech. Not tested with a screen reader.
+- **Fig. 1 as text** in [threatmodelling.dfd.txt](threatmodelling.dfd.txt), linked from the footer, as the other pages do.
+- **Duplicate caveats cut from the footer** ("not measurements", "a working method, not a requirement").
+- **Plan file deleted.** No open work, and it described the first layout.
+- **Still on ASVS 4.0.3.** Moving to 5.0 IDs is the owner's call and was not done.

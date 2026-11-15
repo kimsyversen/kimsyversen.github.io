@@ -1,3 +1,29 @@
+# 14 November 2026: full statement recheck
+
+This review supersedes earlier rows for the texts listed under "Changed". Every source in the page's source list was retrieved again on 14 November 2026, and the VS Code documentation pages behind the VS Code tab were read again (page dates 11 November 2026). Each page statement was compared with its quote and the surrounding passage: static prose, 14 cards, both mappings, General and Microsoft placements, start rows, product rows and callouts. A second full pass found one more error (the tool approval row, listed under "Changed"). A third full pass after that fix found nothing further.
+
+## Changed
+
+| Text | Verdict on 14 November 2026 | Evidence / reason |
+|---|---|---|
+| Quote `mi1` (Mitiga title) | CORRECTED | Mitiga retitled the article (updated 12 November 2026). New quote: "Stealing MCP Tokens in Claude Code: A Man-in-the-Middle Attack Chain via ~/.claude.json". |
+| "Mitiga disagrees." (Current box, General view) | CORRECTED | Not supported. Mitiga writes "Anthropic classified the report as an out-of-scope determination", "The determination is defensible on those terms", "Anthropic claims this is by design" and "However, your CISO won't." The page now reports those points. Supersedes ledger rows that say "Mitiga disagrees". |
+| M03: "The results it names are ..." | CORRECTED | The specification lists five risks for local server compromise (also command obfuscation and data loss). The page now says "The risks it names include". |
+| M09 and M11: "This map assigns it a separate CoSAI home; see the mapping rules below." | REMOVED | Unclear, and the card header already lists the entries. |
+| VS Code row "Ways a server gets added" | CORRECTED | "The default browse flow opens Find MCP Servers in Customizations; the legacy gallery depends on the marketplace setting" is not in the current docs. Docs: "MCP: Browse MCP Servers Open MCP discovery", "Customization Marketplace (Preview)", Dev Container config is "editor-managed", and `code --add-mcp` targets "editor-managed configuration, not the portable Copilot files". |
+| VS Code row "Configuration destinations" | CORRECTED | "labelled deprecated in the guided flow" is not in the docs. Docs: "For new Copilot configurations, use these native destinations, not .vscode/mcp.json or profile mcp.json. Those files use the deprecated Local harness's editor-managed servers format." |
+| VS Code row "Sandbox for local servers" | CORRECTED | Auto-approval is scoped: "In Local harness sessions, editor-sandboxed MCP tools are auto-approved. This does not describe the Copilot harness's approval behavior." |
+| VS Code row "What servers can ask of the model" | CORRECTED | `chat.mcp.serverSampling`: "Configure model access for editor-managed sampling. Copilot runtime sampling has a separate approval flow." |
+| VS Code row "Tool approval" and the M09 device policy placement (Microsoft view) | CORRECTED | "always presents a confirmation" was stated as fact for every session. The policy reference says it (`vp2`), but "Manage AI settings in enterprise environments" says of Copilot harness sessions: "a tool marked false removes Allow all from the permissions picker for the whole session. It does not require confirmation for each call to that tool, so Assisted permissions and saved session approvals can still approve it." Both texts now carry that limit. New source `vai`, new quote `vp3`. Supersedes the 10 November M09 device policy line. |
+| Limits | ADDED | "The Local harness is deprecated and will be removed in February 2027." |
+| Review dates (header, Current box, VS Code and Microsoft table intros, source notes for cc, codex, vconf) | UPDATED | Moved to 14 November 2026 after the full recheck. Heading ids keep their old text. |
+| Footer | ADDED | "Tags on this page" key for `[inference]` and `[unverified]`, replacing the footer sentence that defined `[inference]`. Repeated "Nothing here was tested" lines removed from the two table intros and Limits; the footer still says it. |
+
+## Gaps
+
+- `cxcmd` and `studio3` match their sources only when whitespace is ignored.
+- No setting, policy or attack path was run.
+
 # 10 November 2026: risk-by-zone table scope and controls
 
 This review supersedes the 9 November check for the risk-by-zone table. The page now shows each mapped component with its related finding, requirement, or control, exposes an exact quote and source link where the claim has a registered quote, and links each risk to its full checklist. “No mapped component” means this reference scenario assigns no component to that zone. It does not claim that no control exists.
@@ -161,6 +187,7 @@ Keys ARCH, TOOLS, STDIO, HTTP, SEC, VER, OWASP, CC, CODEX, MITIGA, VADD, VMAN, V
 - **mit**: [Mitiga: MCP token theft in Claude Code](https://www.mitiga.io/blog/claude-code-mcp-token-theft-mitm), retrieved 9 November 2026.
 - **cc**: [Claude Code: managed MCP](https://code.claude.com/docs/en/managed-mcp), retrieved 9 November 2026.
 - **codex**: [Codex managed configuration](https://learn.chatgpt.com/docs/enterprise/managed-configuration), retrieved 9 November 2026.
+- **vai**: [Manage AI settings in enterprise environments](https://code.visualstudio.com/docs/enterprise/manage-ai-settings), retrieved 14 November 2026.
 - **vconf**: [VS Code: MCP configuration reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration), retrieved 9 November 2026.
 
 ## Historical statement inventory (see final audit above)
@@ -1045,6 +1072,7 @@ Verdict VERIFIED 8 Nov 2026 means the quote was found in the source. Each quote 
 | vc5 | vscm | This mechanism isn't available on Windows. | M03.body[1]; place[11] M03/local | VERIFIED 8 Nov 2026 |
 | vp1 | vspol | Servers matching any entry are blocked from being installed or run, even if they also match the allow list; deny rules always take precedence. | M01.how[2] | VERIFIED 8 Nov 2026 |
 | vp2 | vspol | Tools set to 'false' will always present a confirmation and will never offer the option to auto-approve. | place[29] M09/policy | VERIFIED 10 Nov 2026 |
+| vp3 | vai | It does not require confirmation for each call to that tool, so Assisted permissions and saved session approvals can still approve it. | place[29] M09/policy | VERIFIED 14 Nov 2026 |
 | vt1 | vstel | Copilot Chat in VS Code can export traces, metrics, and events via OpenTelemetry (OTel) to give you real-time visibility into agent interactions, LLM calls, tool execution, and token usage. | M08.body[0]; M08.checks[0]; place[31] M08/tele | VERIFIED 8 Nov 2026 |
 | sp1 | sphttp | Servers MUST validate the Origin header on all incoming connections to prevent DNS rebinding attacks. | M07.checks[0]; place[24] M07/lhttp | VERIFIED 8 Nov 2026 |
 | sp2 | sphttp | servers SHOULD bind only to localhost (127.0.0.1) rather than all network interfaces (0.0.0.0). | M07.checks[0]; place[24] M07/lhttp | VERIFIED 8 Nov 2026 |
@@ -1056,7 +1084,7 @@ Verdict VERIFIED 8 Nov 2026 means the quote was found in the source. Each quote 
 | ow2 | owasp | MCP03:2025 - Tool Poisoning | place[7] M02/agent | VERIFIED 8 Nov 2026 |
 | ow3 | owasp | MCP10:2025 - Context Injection & Over-Sharing | place[29] M08/agent | VERIFIED 8 Nov 2026 |
 | ow5 | owasp | We are here right now - release a "beta" version of MCP Top 10. | callout[0] | VERIFIED 8 Nov 2026 |
-| mi1 | mit | MCP Token Theft in Claude Code: A Man-in-the-Middle Attack Chain | M05.body[0]; callout[4] | VERIFIED 8 Nov 2026 |
+| mi1 | mit | Stealing MCP Tokens in Claude Code: A Man-in-the-Middle Attack Chain via ~/.claude.json | M05.body[0]; callout[4] | VERIFIED 14 Nov 2026 (article retitled; old quote "MCP Token Theft in Claude Code: A Man-in-the-Middle Attack Chain" no longer on the page) |
 
 ### Statements tagged as inference
 
@@ -1072,14 +1100,14 @@ label	MCP Risk Map
 label	Risk map · MCP servers and AI agents · Microsoft ecosystem
 requirement	Where the main risks sit when developers connect AI agents to MCP servers through Microsoft products: VS Code, Visual Studio, GitHub Copilot, Copilot Studio, Windows, Azure and Microsoft Entra. Third-party servers used inside these clients still apply. The detail is kept low on purpose. Exceptions exist.
 label	Vendor sources Microsoft Learn, VS Code, GitHub Docs, MCP specification, CVE records, Invariant Labs
-label	Facts checked 9 Nov 2026
+label	Facts checked 14 Nov 2026
 label	View
 label	General
 label	Microsoft ecosystem
-label	Current as of 9 November 2026
+label	Current as of 14 November 2026
 requirement	None of them needs a preview feature.
 label	Other Microsoft surfaces
-label	What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Earlier rows were checked on 9 November 2026; new governance claims were checked on 10 November. Nothing here was tested.
+label	What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 14 November 2026.
 label	Gallery, GitHub, registries
 label	VS Code, Visual Studio, Copilot
 code token	mcp.json, .mcp.json
@@ -1152,7 +1180,7 @@ label	OWASP. Beta (phase 3). MCP01 to MCP10.
 label	Mitiga: MCP token theft in Claude Code
 label	Mitiga. Third-party research on Claude Code, not on a Microsoft product.
 label	Claude Code: managed MCP
-label	Primary documentation, checked 9 November 2026.
+label	Primary documentation, checked 14 November 2026.
 label	Codex managed configuration
 label	VS Code: MCP configuration reference
 label	Also check
@@ -1166,5 +1194,6 @@ label	Coalition for Secure AI, Workstream 4. Marked Draft. Threat names, numbers
 label	MCP specification: tools
 label	Model Context Protocol, version 2026-07-28. Human in the loop and rate limiting.
 label	All
+label	VS Code: manage AI settings in enterprise environments
 ```
 <!-- End reviewed presentation text (Microsoft view) -->

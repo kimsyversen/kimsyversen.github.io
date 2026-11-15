@@ -104,3 +104,12 @@ Removed the reader-facing Evidence and Sources tabs and summary data at the owne
 ## Risks tab hidden, 9 November 2026
 
 Hid the Risks tab in navigation at the owner's request. Kept its panel available for map marker checklists and deep links, preserved the tab and risk IDs, and made tab keyboard navigation skip hidden tabs.
+
+## 14 November 2026: full correctness recheck (/goal)
+
+1. Read the page and notes. Done.
+2. Fetch every source again and compare each statement with its quote and context. Done.
+3. Fix wrong, stale or unclear text. Done (list in the fact check, 14 November section).
+4. Update fact check, decisions, index dates. Done.
+5. Run the quote checker, anchor check and browser check. Done.
+6. Second full pass that finds nothing. Done.

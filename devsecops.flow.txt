@@ -1,32 +1,33 @@
-DEVSECOPS LIFECYCLE MAP
+DEVSECOPS LIFECYCLE MAP, TWO VIEWS
 
-Flow description: Read the phase spine from top to bottom. A branch on the left
-joins each phase to its governance activity, and a branch on the right joins it
-to its engineering activity. Diamond markers indicate governance checkpoints.
-On narrow screens, each phase is followed by its two labeled activities.
-A risk table below the process groups governance and secure development
-risks by phase. Select a risk to expand its source evidence.
+Flow description: A switch at the top selects one of two views. Each view is a
+row of numbered phase boxes. Selecting a box shows the detail of that phase
+below the row. A table under the boxes lists risks with their evidence.
+Boxes with an accent border mark a checkpoint (DevSecOps) or a human gate
+(Agentic). Work from the last phase returns to Plan.
 
-GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
----------------------           --------------       -----------------------------
-Classify service                o-- 01 Plan    --+ Set scope and security goals
-                                |
-Choose concept                  o-- 02 Design  --+ Model threats and requirements
-                                |
-Ready to build                  o-- 03 Code    --+ Secure coding and review
-                                |
-Track evidence and owners       o-- 04 Build   --+ Package traceable artifact
-                                |
-Review test evidence            o-- 05 Test    --+ Verify function, quality, security
-                                |
-Production go / no-go           o-- 06 Release --+ Approve verified version
-                                |
-Control promotion               o-- 07 Deploy  --+ Harden settings and access
-                                |
-Operations handover             o-- 08 Operate --+ Patch, back up, respond
-                                |
-Measure and improve             o-- 09 Monitor --+ Track service and security signals
-                                |
-Closeout                        o-- 10 Retire  --+ Revoke access and handle data
+VIEW 1: DEVSECOPS (ten phases, two rows of five)
+Detail panel: governance activity, secure development activity, risk count.
+Table: governance and secure development risks by phase.
 
-Monitoring, incidents, changes and vulnerabilities can return work to Plan.
+[01 Plan *] -> [02 Design *] -> [03 Code *] -> [04 Build] -> [05 Test]
+[06 Release *] -> [07 Deploy] -> [08 Operate *] -> [09 Monitor] -> [10 Retire]
+* checkpoint
+
+Monitoring, incidents, changes and new vulnerabilities can return work to Plan.
+
+VIEW 2: AGENTIC DEVSECOPS (ten phases, two rows of five)
+Detail panel: input, output, human gate, risks.
+Table: four changes agents bring, each with a risk and a control.
+Example table: one made-up fix followed through the ten phases, with what the
+agent does, what it hands on and the person at each human gate.
+
+[01 Plan G] -> [02 Code] -> [03 Review G] -> [04 Build] -> [05 Test]
+[06 Release G] -> [07 Deploy] -> [08 Operate] -> [09 Monitor] -> [10 Retire G]
+G human gate. The output of one phase is the input of the next.
+
+Monitor sends alerts to Operate. Incident tickets and new issues from Monitor go
+back to Plan as new requests. Retire starts from a decision to retire and ends
+the flow.
+
+On narrow screens the boxes stack in one column.

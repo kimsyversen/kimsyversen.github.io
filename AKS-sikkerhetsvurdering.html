@@ -183,6 +183,11 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 .ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
 .ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
 @media (max-width:560px){.ai-note{grid-template-columns:1fr}}
+.tag-key{margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;font-size:0.78rem;line-height:1.5}
+.tag-key h2{margin:0;font:600 0.68rem/1.5 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
+.tag-key dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;align-items:baseline}
+.tag-key dt,.tag-key dd{margin:0}
+@media (max-width:560px){.tag-key{grid-template-columns:1fr}.tag-key dl{grid-template-columns:1fr;gap:2px 0}}
 
 /* risk map */
 .rchips{display:flex;flex-wrap:wrap;gap:6px}
@@ -287,7 +292,7 @@ figcaption{display:grid;gap:8px}
     <div class="meta">
       <span><b>Framework</b> OWASP Kubernetes Top 10 (2025)</span>
       <span><b>AKS sources</b> Microsoft Learn, the AKS blog</span>
-      <span><b>Facts checked</b> 1 Nov 2026</span>
+      <span><b>Facts checked</b> 13 Nov 2026</span>
     </div>
   </header>
 
@@ -415,15 +420,15 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
   <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
     <section id="ten-prioritised-kubernetes-risks">
       <h2><a class="sec-link" href="#ten-prioritised-kubernetes-risks">Ten prioritised Kubernetes risks</a></h2>
-      <p class="sub">The items follow OWASP's prioritised list from 2025. The checks are adapted to AKS. Status is saved locally if the browser allows it.</p>
+      <p class="sub">The items follow OWASP's prioritised list from 2025, plus one extra item on the supply chain. The checks are adapted to AKS. Status is saved locally if the browser allows it.</p>
     </section>
 
     <aside class="callout" id="current">
-      <h3 id="current-as-of-1-november-2026"><a class="sec-link" href="#current-as-of-1-november-2026">Current as of 1 November 2026</a></h3>
+      <h3 id="current-as-of-1-november-2026"><a class="sec-link" href="#current-as-of-1-november-2026">Current as of 13 November 2026</a></h3>
       <ul>
-        <li><b>Versions:</b> Check the <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">support deadline</a> and whether LTS is enabled on the cluster. Limited “platform support” after regular support does not give security fixes for Kubernetes.</li>
-        <li><b>Ingress NGINX:</b> The project's maintenance ended in March 2026. Microsoft supports critical security fixes for NGINX in the application routing add-on until the end of November 2026. Plan a migration.</li>
-        <li><b>Azure Linux 2.0:</b> Security support ended on 30 November 2025. <a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Microsoft removes node images from 31 October 2026</a>. This prevents scaling of affected node pools.</li>
+        <li><b>Versions:</b> Check the <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">support deadline</a> and whether LTS is enabled on the cluster. Limited “platform support” after regular support does not give security fixes for Kubernetes. It lasts 60 days. From 1 June 2027, AKS itself upgrades a cluster that is still on an unsupported version after that, without waiting for your maintenance window.</li>
+        <li><b>Ingress NGINX:</b> The project's maintenance ended in March 2026. Microsoft supports critical security fixes for NGINX in the application routing add-on until the end of November 2026. Migrate before then.</li>
+        <li><b>Azure Linux 2.0:</b> Security support ended on 30 November 2025. <a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Node image removal was set to begin on 31 October 2026</a>. Affected node pools can then no longer scale.</li>
         <li><b>Pod-managed identity:</b> The deprecation was announced in 2022. Support for the AKS add-on ran out in September 2025. Migrate to Workload ID.</li>
       </ul>
     </aside>
@@ -453,7 +458,7 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <button type="button" class="chip" data-path="workload" aria-pressed="false">Compromised workload</button>
         <button type="button" class="chip" data-path="supply" aria-pressed="false">Supply chain</button>
       </div>
-      <p class="path-desc" id="pathDesc">Showing all items. The link between attack path and item is interpretation by AI. <span class="tag">[inference]</span></p>
+      <p class="path-desc" id="pathDesc">Showing all items. Each item is linked to one or more attack paths. <span class="tag">[inference]</span></p>
     </section>
 
     <div class="risks" id="risks">
@@ -675,7 +680,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
     <section id="before-you-use-the-map">
       <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
       <p class="sub">This is a typical reference architecture, not the platform team's actual setup. Common deviations are GitOps, where an agent in the cluster pulls from git instead of the pipeline deploying, Application Gateway for Containers with the data plane outside the cluster, and separate clusters per environment. Ask for their architecture sketch and draw the risks in where they belong in their setup.</p>
-      <p class="sub">The placement of the risks and the ownership per zone are interpretation by AI based on OWASP and Microsoft. <span class="tag">[inference]</span></p>
+      <p class="sub">The placement of the risks and the ownership per zone build on OWASP and Microsoft. <span class="tag">[inference]</span></p>
     </section>
   </div>
 
@@ -702,10 +707,10 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="col no">
           <h3 id="less-relevant-for-now"><a class="sec-link" href="#less-relevant-for-now">Less relevant for now</a></h3>
           <ul>
-            <li><b>Hardening and patching the control plane</b> (API server, etcd, scheduler): Microsoft runs it.</li>
+            <li><b>Operating the control plane components</b> (API server, etcd, scheduler): Microsoft manages and maintains them.</li>
             <li><b>CIS checks of control plane nodes and files:</b> not visible to the customer in AKS. <span class="tag">[inference]</span></li>
             <li><b>Physical security and hypervisor:</b> Microsoft.</li>
-            <li><b>FIPS node pools:</b> consider when the requirements call for validated cryptographic modules.</li>
+            <li><b>FIPS node pools:</b> consider when the requirements call for FIPS 140-3 cryptographic modules.</li>
             <li><b>Pod Sandboxing:</b> pods with the Kata runtime get their own kernel. For <a href="https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview#limitations" target="_blank" rel="noopener">Confidential Containers (preview)</a> Microsoft lists only Azure Linux 2.0, which is retired in AKS.</li>
             <li><b>Service mesh and mTLS:</b> consider if this is used as a security control. <span class="tag">[inference]</span></li>
             <li><b>Windows node pools:</b> only if they exist.</li>
@@ -767,7 +772,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
     <section id="check-the-static-part-first">
       <h2><a class="sec-link" href="#check-the-static-part-first">Check the static part first</a></h2>
-      <p class="sub">The command checks existing pod specifications. It needs <code>jq</code> and permission to list pods in all namespaces. It has not been run against a cluster here. <span class="tag">[unverified]</span></p>
+      <p class="sub">The command checks existing pod specifications. It needs <code>jq</code> and permission to list pods in all namespaces. <span class="tag">[unverified]</span></p>
       <div class="cmd"><pre><code><span class="c"># Pods with hostNetwork, hostPID, a privileged container or hostPath</span>
 kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or any((.spec.containers[]?, .spec.initContainers[]?, .spec.ephemeralContainers[]?); .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Copy</button></div>
       <p class="note">For Defender, see <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction" target="_blank" rel="noopener">Introduction to Microsoft Defender for Containers</a> before you choose a tool.</p>
@@ -778,7 +783,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
     <section id="sources-2">
       <h2><a class="sec-link" href="#sources-2">Sources</a></h2>
-      <p class="sub">Checked against primary sources on 1 November 2026. Recommendations and examples are not findings from an examined cluster.</p>
+      <p class="sub">Checked against primary sources on 13 November 2026. Recommendations and examples are not findings from an examined cluster.</p>
       <ol class="sources">
         <li><a href="https://kubernetes-top10.owasp.org/" target="_blank" rel="noopener">OWASP Kubernetes Top Ten</a><span>The 2025 and 2022 lists, with descriptions of K01-K10.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/secure-aks" target="_blank" rel="noopener">Secure your Azure Kubernetes Service (AKS) deployment</a><span>Microsoft's security recommendations for AKS.</span></li>
@@ -804,12 +809,16 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster" target="_blank" rel="noopener">Automatically upgrade an AKS cluster</a><span>Upgrade channels.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/image-cleaner" target="_blank" rel="noopener">Image Cleaner</a><span>Clean-up and supported node types.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest" target="_blank" rel="noopener">Azure CLI: az aks</a><span>Reference for show and get-upgrades.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/rest/api/aks/managed-clusters/get" target="_blank" rel="noopener">AKS REST API: Managed Clusters Get</a><span>Field names in the az aks show output.</span></li>
         <li><a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/" target="_blank" rel="noopener">Admission Control</a><span>Scope and the exception for reads.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/governance/policy/concepts/policy-for-kubernetes" target="_blank" rel="noopener">Azure Policy for Kubernetes</a><span>Gatekeeper components and enforcement.</span></li>
         <li><a href="https://kubernetes.io/docs/concepts/security/rbac-good-practices/" target="_blank" rel="noopener">RBAC Good Practices</a><span>Access through pod creation and ServiceAccounts.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/support-matrix-defender-for-containers" target="_blank" rel="noopener">Defender for Containers: support matrix</a><span>Coverage per OS, feature and installation.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers" target="_blank" rel="noopener">Defender for Containers: alerts</a><span>Detections and documented test simulations.</span></li>
         <li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/" target="_blank" rel="noopener">kubectl get</a><span>Reference for the read commands.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/intro-aks-automatic" target="_blank" rel="noopener">Introduction to AKS Automatic</a><span>Microsoft Learn. Pre-configured controls.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/enable-fips-nodes" target="_blank" rel="noopener">Enable FIPS for AKS node pools</a><span>Microsoft Learn. FIPS 140-3.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/application-gateway/for-containers/overview" target="_blank" rel="noopener">What is Application Gateway for Containers?</a><span>Microsoft Learn. Data plane outside the cluster.</span></li>
       </ol>
     </section>
   </div>
@@ -819,6 +828,12 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     <p>The commands have been checked against the documentation. The pod filter has been tested on sample data.</p>
     <p>Dates and versions change. Check the “Current” box against the sources before you use it in a report.</p>
   <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+  <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
+    <dl>
+      <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
+      <dt><span class="tag">[unverified]</span></dt><dd>Not confirmed in a quoted source.</dd>
+    </dl>
+  </section>
   </footer>
 </div>
 
@@ -864,7 +879,9 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   function openSection(id){
     if (!id) return false;
     try { id = decodeURIComponent(id); } catch(e){}
-    var el = document.getElementById(id); if (!el) return false;
+    var el = document.getElementById(id);
+    if (!el && layers) layers.forEach(function(L, i){ if (slug(L.t) === id){ pick(i); el = document.getElementById(id); } });
+    if (!el) return false;
     var p = el.closest('[id^="p-"]');
     var tab = p ? p.id.slice(2) : null;
     if (tab && ids.indexOf(tab) >= 0 && p.hidden) show(tab);
@@ -891,20 +908,23 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     { t: 'Platform services in the cluster', d: 'Shared components the platform team looks after: ingress or gateway, Azure Policy, logging, Secrets Store CSI Driver, GitOps agent.', s: 'Look for: outdated components such as ingress-nginx, policies in audit mode only, no owner.' },
     { t: 'Nodes', d: 'Microsoft supplies supported node images. In Standard the customer chooses the upgrade setup; Automatic handles more of the operations.', s: 'Look for: node OS upgrade channel off, Azure Linux 2.0, SSH access that is not needed.' },
     { t: 'Cluster configuration', d: 'Check identity, API access, network, upgrades and add-ons. Which choices the platform team controls depends on the AKS mode.', s: 'Look for: unnecessary API exposure, local accounts, and gaps in updates, detection or policy enforcement.' },
-    { t: 'Control plane', d: 'Microsoft operates, hardens and patches the API server, etcd and scheduler. Each cluster has its own control plane.', s: 'Assess the customer-controlled parts: configuration, version, access, policy and logging. Microsoft runs the infrastructure.' }
+    { t: 'Control plane', d: 'Microsoft provides, manages and maintains the API server, etcd and scheduler. Each cluster has its own control plane.', s: 'Assess the customer-controlled parts: configuration, version, access, policy and logging. Microsoft runs the infrastructure.' }
   ];
+  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
   var layerBtns = $$('.layer');
   var detail = $('#layerDetail');
   function pick(i){
     layerBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-layer') === String(i) ? 'true' : 'false'); });
     var L = layers[i];
     detail.innerHTML = '';
-    var h = document.createElement('h3'); h.textContent = L.t;
+    var h = document.createElement('h3'); h.id = slug(L.t);
+    var a = document.createElement('a'); a.className = 'sec-link'; a.href = '#' + h.id; a.textContent = L.t; h.appendChild(a);
     var p = document.createElement('p'); p.textContent = L.d;
     var n = document.createElement('p'); n.className = 'note'; n.textContent = L.s;
     detail.appendChild(h); detail.appendChild(p); detail.appendChild(n);
   }
   layerBtns.forEach(function(b){ b.addEventListener('click', function(){ pick(Number(b.getAttribute('data-layer'))); }); });
+  if (start && !document.getElementById(start)) openSection(start);
 
   /* Questions */
   var qs = $$('#qlist input');
@@ -1012,10 +1032,10 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
 
   /* Filter */
   var DESC = {
-    all: 'Showing all items. The link between attack path and item is interpretation by AI.',
-    credentials: 'Stolen credentials: An attacker can misuse stolen sign-in data if the API server is reachable and the identity has access.',
+    all: 'Showing all items. Each item is linked to one or more attack paths.',
+    credentials: 'Stolen credentials: an attacker can misuse stolen sign-in data if the API server is reachable and the identity has access.',
     workload: 'Compromised workload: an attacker exploits a flaw in an app and gets to run code in a pod. The question is how far they get from there.',
-    supply: 'Supply chain: A tampered image or a compromised pipeline can bring malicious code into the cluster.'
+    supply: 'Supply chain: a tampered image or a compromised pipeline can bring malicious code into the cluster.'
   };
   var chips = $$('.chip');
   var desc = $('#pathDesc');
