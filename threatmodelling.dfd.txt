@@ -1,0 +1,28 @@
+Threat modeling: Fig. 1, data flow diagram of the fictional claims portal
+
+  INTERNET                         :  OUR CLOUD (inside the trust boundary)
+                                   :
+  [Sign-in, external provider] <---:--- identity ---> (Portal)
+        ^                          :                   ^    ^
+        | password                 :                   |    |
+        v                          :                   |    +--- files ---> =Document store=
+  [Customer, web browser] <--------:------ HTTPS ------+
+                                   :
+
+  [ ] external entity   ( ) process   = = data store   <--> data flow   : trust boundary
+
+Flow description: the customer's browser sends the password to the external
+sign-in provider. The provider tells the portal who the customer is, so the
+portal never receives the password. The customer then uses the portal over
+HTTPS to report damage and to upload and view documents. The portal writes
+files to the document store and reads them back. The customer and the sign-in
+provider are outside the trust boundary; the portal and the document store are
+inside it.
+
+Threat markers (one per STRIDE letter, see the register on the page):
+  S  Customer
+  R  Portal
+  I  Portal
+  E  Portal
+  T  Document store
+  D  Document store
