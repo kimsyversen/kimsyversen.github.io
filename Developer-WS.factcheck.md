@@ -6,6 +6,19 @@ Checked 30 October to 1 November 2026. Every statement on the page, one row each
 
 Page checked: `Developer-WS.html` (then named `Developer Workstation Risk Map.html`), MD5 `c20d450b532e5615bef1db0dcf6e9a7c`.
 
+## Focused recheck, 15 November 2026
+
+D03 was checked against Cursor's 13 November incident update and its 29 October security notice, updated 30 October. This was a focused check of the extension incident, not a full review of the page. The general "Current as of 1 November 2026" date remains unchanged.
+
+| Claim | Verdict | Evidence checked 15 November 2026 |
+| --- | --- | --- |
+| A stolen credential was used to place unauthorized Claude Code extension copies in Cursor's marketplace cache; Open VSX did not contain the malware. | OK | Cursor's update says "The marketplace source, Open VSX, never had the malware." [Update, What happened](https://cursor.com/blog/security-incident-update#what-happened). Cursor says Anthropic did not publish the copies. |
+| Versions 2.1.312 and 2.1.313 were available for about 11 hours; at most 5,000 users who requested the cached builds potentially received them. | OK | Cursor's update, [What happened](https://cursor.com/blog/security-incident-update#what-happened). |
+| The affected builds attempted SSH backdoor persistence; uninstalling alone may not be enough. | OK | Cursor's [security notice](https://cursor.com/blog/claude-code-extension-security-notice#what-you-should-do) says "Uninstalling the extension alone may not be enough." |
+
+The two Cursor sources were added to the page's source list. The index entry date changed to 15 November; the index footer already showed 15 November.
+The source statements were checked manually against the live posts; this page has no dedicated automated quote checker.
+
 ## What was found
 
 - 965 statements: 403 OK, 35 FIXED, 18 CUT, 147 JUDGEMENT, 104 RECORD, 53 QUESTION, 205 UI.

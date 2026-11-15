@@ -134,3 +134,11 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - **Plain label and one sentence at the end of the footer**, under a hairline rule, in the page's own muted and ink colours. Chose this over a pill or badge to keep it quiet and avoid the template look. Colours use the page tokens, so dark mode follows.
 - **Wording:** "This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human." Same text on all five pages.
 - **Layout:** label and text in two columns on desktop, stacked under 560 px.
+
+
+## Pass 10, 15 Nov 2026: extension marketplace incident
+
+- Added Cursor's November 13 update and October 29 security notice to D03. The page distinguishes Cursor's marketplace cache from Open VSX, which Cursor says never contained the malware.
+- Added the affected versions and vendor response link so readers can check the exposure and remediation steps.
+- Kept "Current as of 1 November 2026" because this was a focused D03 check, not a full recheck of the page.
+- Added the required tag key under the Made with AI note. The index entry date is 15 November 2026.
