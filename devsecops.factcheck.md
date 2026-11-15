@@ -188,3 +188,31 @@ The merge on 15 November 2026 moved the text without changing quotes or links. N
 Monitor and Retire were added to the agentic view on 15 November 2026. Their tasks, inputs, outputs and risk lines are interpretation by AI and carry the `inference` tag. No quote or link was added or changed, so no source was fetched again.
 
 Gap: no source was read on retiring a service that agents run. The Retire risk line on revoking credentials held by agents is interpretation by AI and has no quote of its own.
+
+## Risk audit, round 1, 15 November 2026
+
+Scope: the phase risk table (all ten phases) and the four agent changes.
+
+- Phase coverage: every phase has at least one risk. The governance cells for Code, Test and Operate are blank. The page says a blank cell means no documented case was found. Risk counts in the lifecycle map match the table.
+- Agent changes had no case, only standards. Three cases were added on 15 November 2026:
+  - Untrusted input: Embrace The Red write-up of CVE-2025-53773 (GitHub Copilot in VS Code), 12 August 2025. Quote read on the live page. A researcher demonstration, not an attack seen in the wild. NVD lists Visual Studio 2022 17.14 before 17.14.12 as affected. The NVD description says "command injection" and does not mention prompt injection, so the researcher's post is the source for the mechanism.
+  - Human approval: same post, quote about the setting `chat.tools.autoApprove` disabling confirmations.
+  - Agent access: The Register, 22 July 2025, read the same day. A press report of the SaaStr founder's account of a Replit agent. No Replit primary document was found; Replit's own blog post is quoted only second-hand. Figures on deleted records differ between outlets, so none is used.
+- Traceable handoffs: no documented case read. Replit "invented data" was considered and left out because it concerns false output, not a missing handoff record.
+- Considered and left out: Amazon Q Developer extension 1.84.0 (AWS-2025-015, CVE-2025-8217). AWS says the malicious code came in through an inappropriately scoped GitHub token and did not run because of a syntax error. It supports a Build supply-chain risk, not a harm done by an agent.
+- Per-phase agent risk lines remain `[inference]`. Only the four change-level risks carry cases.
+
+## Risk audit, round 2, 15 November 2026
+
+- Quote check: 73 quotes on the page were compared with their sources by script on 15 November 2026. 58 matched the downloaded page or PDF, including the OWASP agentic top 10 PDF (all 8 quotes). The FTC, SEC and DOJ quotes were read on the live pages in a browser. The FCA page returned 503 on the live site; its quote matched the Internet Archive copy of 31 October 2026. EUR-Lex returned no page to scripts, so the three GDPR quotes keep the earlier archive and Official Journal check.
+- Traceable handoffs: searched again. Press and vendor blog accounts describe agents deleting data where the agent's own account was the only record, but no source with logs or a postmortem was found. The page now says no case with a primary source was found.
+- Per-phase agent risk lines: no case found for any single phase. The page now calls them theoretical.
+- Not claimed: the 48,000-file Claude Code report is unverified and was left out.
+
+## Risk audit, round 3, 15 November 2026
+
+No page edits in this round. Page text unchanged since round 2.
+
+- GDPR Articles 30, 24 and 35 quotes: EUR-Lex returns a bot wall (about 1.5k characters) live, so those reads were not valid. Matched exactly, all three, in the Official Journal text (CELEX 32016R0679, HTML, 350k characters) in the Internet Archive copy of 2 January 2026, read in a browser. Verdict: match to the official source. A live read of gdpr-info.eu (unofficial mirror) also matched.
+- Quote script re-run in round 3: 73 quotes, 58 matched. The 15 misses were each re-read fresh in round 3: 3 GDPR (above), FTC, SEC and DOJ (live pages, browser, match), FCA (live site 503, Internet Archive copy of 31 October 2026, match), and 8 OWASP (text of the linked agentic PDF, match).
+- Result: every quote matches its source. No findings.

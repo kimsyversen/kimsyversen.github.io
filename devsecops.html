@@ -806,7 +806,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
       <section class="map" id="agentic-lifecycle" data-prefix="agentic-" aria-labelledby="agentic-map-heading">
         <div class="map-title">
           <h2 id="agentic-map-heading"><a class="sec-link" href="#agentic-map-heading">The agent handoffs</a></h2>
-          <p>An AI agent does the work in each phase, and the output of one phase is the input of the next. <span class="tag">[inference]</span> The same phases with people doing the work are on the <a href="#view-devsecops">DevSecOps</a> page.</p>
+          <p>An AI agent does the work in each phase, and the output of one phase is the input of the next. <span class="tag">[inference]</span> The same phases with people doing the work are on the <a href="#view-devsecops">DevSecOps</a> page. The risk lines in each phase are theoretical: no case was found for a single phase. Cases for the four changes are in the table below the phases.</p>
         </div>
 
         <ol class="flow flow-10">
@@ -1015,6 +1015,9 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p>One vendor’s implementation:</p>
                     <blockquote>“Users can include hidden messages in issues assigned to Copilot cloud agent or comments left for Copilot cloud agent as a form of prompt injection”</blockquote>
                     <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#:~:text=Users%20can%20include%20hidden%20messages">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
+                    <p>Researcher demonstration, fixed by the vendor:</p>
+                    <blockquote>“The attack starts with a prompt injection planted in a source code file, web page, GitHub issue, tool call response, or other content”</blockquote>
+                    <a href="https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/">Embrace The Red · GitHub Copilot, CVE-2025-53773, 2025 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
               </ul></td>
@@ -1043,6 +1046,9 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/#:~:text=Excessive%20Agency%20is%20the%20vulnerability,causing%20the%20LLM%20to%20malfunction">OWASP Top 10 for LLM Applications 2025 · LLM06 Excessive Agency <span aria-hidden="true">↗</span></a>
                     <blockquote>“Without a distinct, governed identity of its own, an agent operates in an attribution gap that makes enforcing true least privilege impossible.”</blockquote>
                     <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI03 Identity and Privilege Abuse, page 15 <span aria-hidden="true">↗</span></a>
+                    <p>Documented case, press report of a user’s account:</p>
+                    <blockquote>“deleted a production database, ignored instructions to freeze code, and invented data.”</blockquote>
+                    <a href="https://www.theregister.com/2025/07/22/replit_saastr_response/">The Register · Replit agent and a production database, 2025 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
               </ul></td>
@@ -1071,6 +1077,9 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/#:~:text=The%20root%20cause%20of%20Excessive%20Agency">OWASP Top 10 for LLM Applications 2025 · LLM06 Excessive Agency <span aria-hidden="true">↗</span></a>
                     <blockquote>“Because agents plan, persist, and delegate autonomously, a single error can bypass stepwise human checks and persist in a saved state.”</blockquote>
                     <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications 2026 · ASI08 Cascading Failures, page 30 <span aria-hidden="true">↗</span></a>
+                    <p>Researcher demonstration, fixed by the vendor:</p>
+                    <blockquote>“And it disables all user confirmations, and we can run shell commands, browse the web, and more!”</blockquote>
+                    <a href="https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/">Embrace The Red · GitHub Copilot, CVE-2025-53773, 2025 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
               </ul></td>
@@ -1100,6 +1109,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p>One vendor’s implementation:</p>
                     <blockquote>“Administrators can lose sight of agents’ work”</blockquote>
                     <a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations#administrators-can-lose-sight-of-agents-work">GitHub Docs · Risks and mitigations for Copilot cloud agent <span aria-hidden="true">↗</span></a>
+                    <p>No case with a primary source was found. Press reports describe agents whose only record was their own account.</p>
                   </div>
                 </details></li>
               </ul></td>
