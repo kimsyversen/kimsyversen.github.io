@@ -5,7 +5,8 @@ joins each phase to its governance activity, and a branch on the right joins it
 to its secure development activity. Diamond markers indicate governance checkpoints.
 On narrow screens, each phase is followed by its two labeled activities.
 A risk table below the process groups governance and secure development
-risks by phase. Select a risk to expand its source evidence.
+risks by phase. Each risk expands to a standard and a documented case
+or statistic. Blank cells have no documented case.
 
 GOVERNANCE ACTIVITIES           DELIVERY PHASE       SECURE DEVELOPMENT ACTIVITIES
 ---------------------           --------------       -----------------------------
