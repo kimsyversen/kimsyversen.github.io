@@ -216,3 +216,7 @@ No page edits in this round. Page text unchanged since round 2.
 - GDPR Articles 30, 24 and 35 quotes: EUR-Lex returns a bot wall (about 1.5k characters) live, so those reads were not valid. Matched exactly, all three, in the Official Journal text (CELEX 32016R0679, HTML, 350k characters) in the Internet Archive copy of 2 January 2026, read in a browser. Verdict: match to the official source. A live read of gdpr-info.eu (unofficial mirror) also matched.
 - Quote script re-run in round 3: 73 quotes, 58 matched. The 15 misses were each re-read fresh in round 3: 3 GDPR (above), FTC, SEC and DOJ (live pages, browser, match), FCA (live site 503, Internet Archive copy of 31 October 2026, match), and 8 OWASP (text of the linked agentic PDF, match).
 - Result: every quote matches its source. No findings.
+
+## Worked example added, 15 November 2026
+
+The table "Example: fixing one bug with agents" in the agentic view is made up: the issue and pull request numbers, the 200 test requests and the 50 refusals in ten minutes come from no source. It is interpretation by AI and carries the `inference` tag. The ownership check, the two tests and the alert on 50 refusals repeat the controls for threat I on `threatmodelling.html`. No quote or link to an outside source was added, so no source was fetched.

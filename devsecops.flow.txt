@@ -19,6 +19,8 @@ Monitoring, incidents, changes and new vulnerabilities can return work to Plan.
 VIEW 2: AGENTIC DEVSECOPS (ten phases, two rows of five)
 Detail panel: input, output, human gate, risks.
 Table: four changes agents bring, each with a risk and a control.
+Example table: one made-up fix followed through the ten phases, with what the
+agent does, what it hands on and the person at each human gate.
 
 [01 Plan G] -> [02 Code] -> [03 Review G] -> [04 Build] -> [05 Test]
 [06 Release G] -> [07 Deploy] -> [08 Operate] -> [09 Monitor] -> [10 Retire G]

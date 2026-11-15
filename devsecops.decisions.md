@@ -64,3 +64,11 @@
 - Operate's second risk line is now Traceable handoffs. The Untrusted input line about logs and vulnerability reports moved to Monitor, where those inputs now arrive.
 - The agentic flow uses the `flow-10` layout. The `flow-8` styles are removed.
 - New ids: `agentic-monitor`, `agentic-phase-monitor`, `agentic-retire`, `agentic-phase-retire`. No existing id changed.
+
+### 15 November 2026: worked example in the agentic view
+
+- A table "Example: fixing one bug with agents" (`#agentic-example`, heading `#example-fixing-one-bug-with-agents`) sits between the phases and the four changes. It follows one made-up fix through the ten phases: what the agent does, what it hands on, and the person at each gate. Reason: the owner asked for a simple, concrete example like the one on `threatmodelling.html`, because development with agents is new to most readers.
+- The example is threat I from `threatmodelling.html` (a customer reads other customers' documents). Reason: the reader may already know the claims portal, and the tests and the 50-refusals alert match the controls listed there.
+- It reuses the risk table styles. One new style, `.walk-gate`, marks the human gate lines.
+- The whole example carries one `inference` tag. It adds no risk, control or quote. The four-changes table stays the one home for those.
+- Retire is shown as "not part of this change", with what would happen when the portal is replaced. Reason: one fix does not retire a service, but leaving the row out would break the match with the ten phases.
