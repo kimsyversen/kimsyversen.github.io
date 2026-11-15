@@ -769,7 +769,18 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </tr>
           <tr>
             <th scope="row" class="phase-name"><a href="#phase-build"><span class="phase-index">04</span>Build</a></th>
-            <td class="gov-risks"></td>
+            <td class="gov-risks"><ul class="risk-table-list">
+              <li><details class="risk">
+                <summary>Findings are not collected in one place, so nobody sees which weaknesses keep coming back and training and awareness are aimed at guesses.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“The type or category of the defect, which suggests areas where the development team needs further training.”</blockquote>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-b/#:~:text=The%20type%20or%20category%20of%20the%20defect%2C%20which%20suggests%20areas%20where%20the%20development%20team%20needs%20further%20training.">OWASP SAMM · Defect Management Metrics and Feedback <span aria-hidden="true">↗</span></a>
+                  <p>Documented case, on missing tracking only; the report does not link it to training:</p>
+                  <blockquote>“Vulnerabilities were not adequately tracked, prioritized, and monitored to ensure timely remediation.”</blockquote>
+                  <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=69">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+              </ul></td>
             <td class="engineering-risks"><ul class="risk-table-list">
               <li><details class="risk">
                 <summary>The build system is tampered with, and malicious code ships to customers inside an official update.</summary>
