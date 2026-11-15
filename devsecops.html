@@ -418,7 +418,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     <section class="map" id="lifecycle" aria-labelledby="map-heading">
       <div class="map-title">
         <h2 id="map-heading"><a class="sec-link" href="#map-heading">The delivery lifecycle</a></h2>
-        <p>This working lifecycle connects governance with secure development. The idea that activities can overlap and repeat, and this phase mapping, are interpretations by AI, not a prescribed or universal sequence. Risks are grouped in the table below.</p>
+        <p>This working lifecycle connects governance with secure development. The phase mapping is an interpretation by AI, not a prescribed or universal sequence, and activities can overlap and repeat. Risks are grouped in the table below.</p>
       </div>
 
       <div class="lanes">
@@ -493,7 +493,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <span class="phase-num" aria-hidden="true">04</span>
             <div class="phase-text">
               <h3 id="build"><a class="sec-link" href="#build">Build</a></h3>
-              <p>Package trusted inputs</p>
+              <p>Package from trusted inputs</p>
             </div>
           </div>
           <div class="cell gov-cell">
@@ -598,7 +598,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title">Measure: Improve</p>
+            <p class="gov-title">Measure and improve</p>
             <p class="cell-copy">Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</p>
           </div>
           <div class="cell work-cell">
@@ -618,7 +618,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           </div>
           <div class="cell gov-cell">
             <p class="mobile-lane">Governance</p>
-            <p class="gov-title">Closeout: Confirm</p>
+            <p class="gov-title">Closeout</p>
             <p class="cell-copy">Assign closure ownership and confirm remaining access and data obligations are addressed.</p>
           </div>
           <div class="cell work-cell">
@@ -651,14 +651,14 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <li><details class="risk">
                 <summary>No named risk owner, delaying decisions and leaving business exposure unresolved.</summary>
                 <div class="risk-evidence">
-                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
+                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced”</blockquote>
                   <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
                 <summary>Critical service goes unclassified, leaving resilience planning and investment out of step with its business importance.</summary>
                 <div class="risk-evidence">
-                  <blockquote>“Assets are prioritized based on classification, criticality, resources, and impact on the mission.”</blockquote>
+                  <blockquote>“Assets are prioritized based on classification, criticality, resources, and impact on the mission”</blockquote>
                   <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=23">NIST CSF 2.0 · ID.AM-05 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
@@ -668,7 +668,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                   <blockquote>“Identify compliance obligations related to the organization's products, services, or activities, and evaluate compliance risks”</blockquote>
                   <a href="https://committee.iso.org/files/live/sites/tc309/files/FAQ%2037301/ISO%2037301%20FAQs%2C%20May%202022.pdf">ISO 37301 · ISO/TC 309 FAQ, question 12 <span aria-hidden="true">↗</span></a>
                   <blockquote>“Legal, regulatory, and contractual requirements regarding cybersecurity”</blockquote>
-                  <a href="https://csrc.nist.gov/projects/cybersecurity-framework/filters">NIST CSF 2.0 · GV.OC-03 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=21">NIST CSF 2.0 · GV.OC-03 <span aria-hidden="true">↗</span></a>
                   <p>For example, where GDPR applies:</p>
                   <blockquote>“a description of the categories of data subjects and of the categories of personal data”</blockquote>
                   <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_30">GDPR · Article 30 <span aria-hidden="true">↗</span></a>
@@ -683,10 +683,17 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               </ul></td>
             <td class="engineering-risks"><ul class="risk-table-list">
                 <li><details class="risk">
+                <summary>Development starts without security requirements, leading to non-compliance and possibly exploitable vulnerabilities.</summary>
+                <div class="risk-evidence">
+                  <blockquote>“Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PO.1.2 <span aria-hidden="true">↗</span></a>
+                </div>
+              </details></li>
+                <li><details class="risk">
                 <summary>Sensitive data left out of scope, leaving it without the intended security controls.</summary>
                 <div class="risk-evidence">
                   <blockquote>“protection requirements concerning confidentiality, integrity, availability, and authenticity of all data assets”</blockquote>
-                  <a href="https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets">OWASP A06 · Requirements and Resource Management <span aria-hidden="true">↗</span></a>
+                  <a href="https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets">OWASP Top 10:2025 A06 · Requirements and Resource Management <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -698,8 +705,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <li><details class="risk">
                 <summary>Risk response left undefined, leaving the business exposed to losses beyond its agreed tolerance.</summary>
                 <div class="risk-evidence">
-                  <blockquote>“Strategic direction that describes appropriate risk response options is established and communicated.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
+                  <blockquote>“Strategic direction that describes appropriate risk response options is established and communicated”</blockquote>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=21">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -720,26 +727,19 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <td class="gov-risks"></td>
             <td class="engineering-risks"><ul class="risk-table-list">
                 <li><details class="risk">
-                <summary>Development starts without security requirements, leading to non-compliance and possibly exploitable vulnerabilities.</summary>
-                <div class="risk-evidence">
-                  <blockquote>“Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PO.1.2 <span aria-hidden="true">↗</span></a>
-                </div>
-              </details></li>
-                <li><details class="risk">
                 <summary>Credentials exposed in code, allowing account compromise and unauthorized access.</summary>
                 <div class="risk-evidence">
                   <blockquote>“The product contains hard-coded credentials, such as a password or cryptographic key.”</blockquote>
-                  <a href="https://cwe.mitre.org/data/definitions/798.html#:~:text=The%20product%20contains%20hard%2Dcoded%20credentials%2C%20such%20as%20a%20password%20or%20cryptographic%20key.">MITRE CWE-798 · Hard-coded Credentials <span aria-hidden="true">↗</span></a>
+                  <a href="https://cwe.mitre.org/data/definitions/798.html#:~:text=The%20product%20contains%20hard%2Dcoded%20credentials%2C%20such%20as%20a%20password%20or%20cryptographic%20key.">MITRE CWE-798 · Use of Hard-coded Credentials <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
                 <summary>A compromised or vulnerable dependency enters the product, exposing downstream users to malicious behavior or known flaws.</summary>
                 <div class="risk-evidence">
-                  <blockquote>“An SSC attack is when a malicious party tampers with the steps, artifacts, or actors within the chain to compromise the consumers of a software artifact down the line.”</blockquote>
+                  <blockquote>“an SSC attack is when a malicious party tampers with the steps, artifacts, or actors within the chain to compromise the consumers of a software artifact down the line.”</blockquote>
                   <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204D.pdf#page=15">NIST SP 800-204D · Software supply chain attacks <span aria-hidden="true">↗</span></a>
                   <blockquote>“Build into the toolchain automatic detection of known vulnerabilities in software components.”</blockquote>
-                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=22">NIST SSDF 1.1 · PW.4.4 <span aria-hidden="true">↗</span></a>
+                  <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=22">NIST SSDF 1.1 · PW.4.4, example 2 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
@@ -769,7 +769,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Build output tampered with, allowing malicious code to reach deployment.</summary>
                 <div class="risk-evidence">
                   <blockquote>“An adversary introduces an unauthorized change to a build output through tampering of the build process”</blockquote>
-                  <a href="https://slsa.dev/spec/v1.2/threats#:~:text=An%20adversary%20introduces%20an%20unauthorized%20change%20to%20a%20build%20output%20through%20tampering%20of%20the%20build%20process">SLSA 1.2 · Build Process Threats <span aria-hidden="true">↗</span></a>
+                  <a href="https://slsa.dev/spec/v1.2/threats#:~:text=An%20adversary%20introduces%20an%20unauthorized%20change%20to%20a%20build%20output%20through%20tampering%20of%20the%20build%20process">SLSA 1.2 · (E) Build process <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -805,7 +805,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Accepted risk lacks stakeholder review, exposing the business to losses it did not knowingly accept.</summary>
                 <div class="risk-evidence">
                   <blockquote>“all relevant stakeholders have a solid understanding of the imposed risk.”</blockquote>
-                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
+                  <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=all%20relevant%20stakeholders%20have%20a%20solid%20understanding%20of%20the%20imposed%20risk.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -838,7 +838,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Insecure settings go live, exposing services through excessive permissions or weakened defenses.</summary>
                 <div class="risk-evidence">
                   <blockquote>“missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services”</blockquote>
-                  <a href="https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration/#:~:text=missing%20appropriate%20security%20hardening%20across%20any%20part%20of%20the%20application%20stack%20or%20improperly%20configured%20permissions%20on%20cloud%20services">OWASP A02 · Security Misconfiguration <span aria-hidden="true">↗</span></a>
+                  <a href="https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration/#:~:text=missing%20appropriate%20security%20hardening%20across%20any%20part%20of%20the%20application%20stack%20or%20improperly%20configured%20permissions%20on%20cloud%20services">OWASP Top 10:2025 A02 · Security Misconfiguration <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -850,7 +850,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <li><details class="risk">
                 <summary>Open actions lose ownership at handover, delaying fixes and increasing incident response costs.</summary>
                 <div class="risk-evidence">
-                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced.”</blockquote>
+                  <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced”</blockquote>
                   <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
@@ -884,7 +884,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Attacks go undetected, allowing intrusions to persist and spread.</summary>
                 <div class="risk-evidence">
                   <blockquote>“Without logging and monitoring, attacks and breaches cannot be detected”</blockquote>
-                  <a href="https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/#:~:text=Without%20logging%20and%20monitoring%2C%20attacks%20and%20breaches%20cannot%20be%20detected">OWASP A09 · Security Logging and Alerting Failures <span aria-hidden="true">↗</span></a>
+                  <a href="https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/#:~:text=Without%20logging%20and%20monitoring%2C%20attacks%20and%20breaches%20cannot%20be%20detected">OWASP Top 10:2025 A09 · Security Logging and Alerting Failures <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
 
@@ -907,7 +907,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                 <summary>Old credentials still work, allowing access to retired services.</summary>
                 <div class="risk-evidence">
                   <blockquote>“When secrets are no longer required or potentially compromised, you must securely revoke them to restrict access.”</blockquote>
-                  <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet#273-revocation">OWASP · Secrets Revocation <span aria-hidden="true">↗</span></a>
+                  <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet#273-revocation">OWASP Secrets Management Cheat Sheet · 2.7.3 Revocation <span aria-hidden="true">↗</span></a>
                 </div>
               </details></li>
                 <li><details class="risk">
@@ -926,7 +926,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   </main>
 
   <footer>
-    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risks are an interpretation by AI. Each risk describes a possible consequence when the activity above it is skipped.</span></p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation">The lifecycle mapping and risks are an interpretation by AI. Each risk describes a possible consequence when the activity in the same phase and lane is skipped.</span></p>
   </footer>
 </div>
 </body>
