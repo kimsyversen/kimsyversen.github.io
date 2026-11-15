@@ -149,3 +149,11 @@ Working notes.
 - Added governance coverage for M09: the General view states a recommendation as interpretation by AI [inference]. The Microsoft view records the VS Code policy that makes selected tools require confirmation.
 - The table is a summarized control and evidence index, not an exhaustive inventory of every control available in every client. The risk card remains the authoritative checklist.
 - Rechecked the new Microsoft policy claims on 10 November 2026 and updated the index entry date. Kept the page-wide current-as-of date at 9 November because the older sources were not all rechecked.
+
+## 14 November 2026: full recheck
+
+- **Page-wide date moved to 14 November 2026** because every source was fetched and read again that day. The two "Current as of" heading ids keep "9-november-2026" (ids never change).
+- **Mitiga line reports, not judges.** "Mitiga disagrees" overstated the article, which calls Anthropic's determination defensible. The page now gives Mitiga's own points.
+- **M09 and M11 mapping sentence removed** instead of reworded: the card header already shows that the entries are CoSAI only.
+- **Local harness deprecation goes in Limits**, not in each row, so each row keeps one job. Rows only name the harness where the docs scope a behaviour to it.
+- **Tag key added to the footer** (AGENTS.md rule). The older footer sentence that defined `[inference]` was removed so the definition has one home.
