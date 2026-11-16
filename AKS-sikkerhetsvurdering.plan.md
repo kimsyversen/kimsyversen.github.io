@@ -1,13 +1,15 @@
-# AKS-sikkerhetsvurdering: translate to English
+# Plan: AKS-sikkerhetsvurdering.html
 
-Belongs to [AKS-sikkerhetsvurdering.html](AKS-sikkerhetsvurdering.html). Decisions: [AKS-sikkerhetsvurdering.decisions.md](AKS-sikkerhetsvurdering.decisions.md).
+## 16 Nov 2026: plain language and request-flow figure
 
-Goal: every HTML page on the site is in English. Only this page was Norwegian (checked: no Norwegian letters in index.html, Developer-WS.html, MCP-Risk-Map.html).
+Goal: the page reads in plain words, and it shows how a request gets into AKS and where each check is applied.
 
-Steps:
-1. Translate CSS comments, `<title>`, body text, and all strings and comments in the script. Set `<html lang="en-GB">` to match the other pages.
-2. Rename internal ids that show up in the URL (tab hash, filter keys) to English.
-3. Output dates with `en-GB` instead of `nb-NO`.
-4. Check that no Norwegian words or letters remain, and run the page in a browser (tabs, filter, diagram, copy buttons, no console errors).
+1. Request-flow figure, first section of the Architecture tab.
+   - Two lanes: a change to the cluster (Kubernetes API path) and a user's request to an app (network path).
+   - Each step: component, owner, the check applied there, linked risks, exact source quote with link.
+   - ASCII copy with a flow description in `AKS-sikkerhetsvurdering.flow.txt`.
+2. Plain-language pass over page text and script-built strings. No change to facts, ids, storage keys or tags.
+3. Notes: decisions, fact check (new quotes, dated 16 Nov 2026), Sources list, index entry date and footer date.
+4. Checks: `scripts/section_anchors.py`, then `--check`. Browser check on desktop and narrow width: no sideways scroll, no console errors, tabs, filters, risk map, new figure links, link into a hidden tab.
 
-Out of scope: file name (changing it would break any existing link to the page).
+Not in scope: rechecking the claims verified on 13 Nov 2026. The "Current as of" date stays unless those are rechecked.

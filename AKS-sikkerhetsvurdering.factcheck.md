@@ -50,9 +50,34 @@ Checked 13 Nov 2026. Each source page was fetched that day and the claim was com
 | `az aks get-upgrades`, `az aks show`, `kubectl get -L` exist as used. | [az aks](https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest), [kubectl get](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/) | Confirmed |
 | Field names read from `az aks show`: `disableLocalAccounts`, `aadProfile`, `apiServerAccessProfile`, `networkProfile`, `securityProfile`. | [Managed Clusters Get](https://learn.microsoft.com/en-us/rest/api/aks/managed-clusters/get) | Confirmed |
 
+## Request-flow figure, checked 16 Nov 2026
+
+Scope: only the quotes in the figure "How a request gets into AKS". Each source page was fetched on 16 Nov 2026. A script compared all 22 quotes, and the words in each link, with the fetched page text. Result: 22 of 22 match. The claims from 13 Nov 2026 were not rechecked, so the "Current as of" date did not move.
+
+| Claim in the figure | Source | Verdict |
+|---|---|---|
+| A change must reach the API server over the network. AKS gives it a public address by default. | [API server authorized IP ranges](https://learn.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges) | Confirmed |
+| Authentication comes first after TLS. A request that fails it gets 401. | [Controlling Access to the Kubernetes API](https://kubernetes.io/docs/concepts/security/controlling-access/) | Confirmed |
+| Local accounts use an admin certificate that bypasses Entra ID. | [Access and identity options for AKS](https://learn.microsoft.com/en-us/azure/aks/concepts-identity) | Confirmed |
+| Authorization follows. A request no module allows gets 403. AKS can pass the decision to Entra ID with Azure role assignments. | Controlling Access, and Access and identity options for AKS | Confirmed |
+| Admission runs mutating controllers first, then validating ones. Reads skip admission. | [Admission Control](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) and Controlling Access | Confirmed |
+| Azure Policy extends Gatekeeper v3 as an admission webhook. Pod Security Admission is built in. | [Azure Policy for Kubernetes](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/policy-for-kubernetes), [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/) | Confirmed |
+| Deployment safeguards enforce through Azure Policy controls. | [Deployment safeguards](https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards). Not quoted in the figure, the step only names it. | Confirmed |
+| After admission the object is validated and written to the object store. KMS is an optional layer for secrets in etcd. | Controlling Access, [Data encryption at rest](https://learn.microsoft.com/en-us/azure/aks/kms-data-encryption-concepts) | Confirmed |
+| The scheduler assigns pods to nodes. The kubelet makes sure they run. | [Kubernetes Components](https://kubernetes.io/docs/concepts/overview/components/) | Confirmed |
+| Resource logs are not collected until a diagnostic setting routes them. | [Monitor AKS](https://learn.microsoft.com/en-us/azure/aks/monitor-aks) | Confirmed |
+| A LoadBalancer Service creates an Azure load balancer with an external IP. An internal one has only a private IP. | [Kubernetes Services in AKS](https://learn.microsoft.com/en-us/azure/aks/concepts-network-services) | Confirmed |
+| Ingress controllers can route HTTP traffic by inbound URL. | [Ingress in AKS](https://learn.microsoft.com/en-us/azure/aks/concepts-network-ingress) | Confirmed |
+| A Service exposes an app that runs as one or more pods. | [Service](https://kubernetes.io/docs/concepts/services-networking/service/) | Confirmed |
+| Pods are non-isolated for ingress and egress by default. | [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/) | Confirmed |
+| The outbound type affects only egress traffic of the cluster. | [Outbound types](https://learn.microsoft.com/en-us/azure/aks/egress-outboundtype) | Confirmed |
+| Workload identity uses a Kubernetes token and OIDC federation to reach Azure resources with Entra ID. | [Microsoft Entra Workload ID](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) | Confirmed |
+
+The plain-language pass on 16 Nov 2026 changed wording only. One explanation was added: IMDS as "the Azure service on each node that can hand out identity tokens". It rests on the IMDS claims already checked above. `[inference]`
+
 ## Interpretation by AI
 
-These are tagged `[inference]` on the page and are not stated in a source: the main question in the short version, the platform and app team split, the manual review advice next to tools, the link between attack paths and items, the placement of risks and owners in the risk map, CIS checks of control plane nodes not being visible, service mesh as a security control, and IMDS calls as a false positive.
+These are tagged `[inference]` on the page and are not stated in a source: the main question in the short version, the platform and app team split, the manual review advice next to tools, the link between attack paths and items, the placement of risks and owners in the risk map, CIS checks of control plane nodes not being visible, service mesh as a security control, IMDS calls as a false positive, and the owner shown per step in the request-flow figure.
 
 ## Gaps
 
@@ -60,3 +85,5 @@ These are tagged `[inference]` on the page and are not stated in a source: the m
 - **The jq pod filter** was run on seven sample pods on 13 Nov 2026. It listed the five with hostNetwork, hostPID, a privileged container, a privileged init container or hostPath, and skipped the two plain ones. It has not been run against a live cluster. Tagged `[unverified]` on the page.
 - **Source conflict on Pod Sandboxing.** Its own page has no preview label. [concepts-security](https://learn.microsoft.com/en-us/azure/aks/concepts-security) still says "(preview)". The page follows the feature's own page.
 - **Azure Linux 2.0 image removal.** The source says removal begins on 31 Oct 2026. Whether images are already gone in a given region is not stated.
+- **Request-flow figure.** The order of the network steps for a user's request (load balancer, ingress, Service, NetworkPolicy, pod) is the common setup and is not stated as one sequence in a single source. Each step has its own quote. The risk ids per step are interpretation by AI. The text-fragment links were not opened in a browser one by one.
+- **TLS at the ingress controller** is left out of the figure. No clean source sentence was found on 16 Nov 2026.
