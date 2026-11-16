@@ -34,7 +34,7 @@ Fact check: [AKS-sikkerhetsvurdering.factcheck.md](AKS-sikkerhetsvurdering.factc
 
 Fact check: [AKS-sikkerhetsvurdering.factcheck.md](AKS-sikkerhetsvurdering.factcheck.md). Text copy of the figure: [AKS-sikkerhetsvurdering.flow.txt](AKS-sikkerhetsvurdering.flow.txt).
 
-- **New first section of the Architecture tab: "How a request gets into AKS"**, id `how-a-request-gets-into-aks`. It comes before the risk map because it explains the order of the checks, and the map then shows where the risks sit.
+- **"How a request gets into AKS"** (id `how-a-request-gets-into-aks`) has its own tab, 5 Data flow (`dataflow`), after Architecture. It first sat in the Architecture tab (2026-11-16 moved). The Relevance tab (id `relevance`, so old links work) became 6 "Focus and skip", its section heading "Where to focus, and what to skip" (id unchanged). Runtime is now 7.
 - **Two flows, not one.** A change to the cluster goes through the Kubernetes API (network path, authentication, authorization, admission, etcd, scheduler and kubelet). A user's request goes over the network (load balancer, ingress or Gateway, Service, NetworkPolicy, pod, outbound, Azure service). One combined flow would mix two different sets of checks. Lane ids: `a-change-to-the-cluster`, `a-users-request-to-an-app`.
 - **Built in HTML, not SVG.** Numbered steps on a rail. Two columns on wide screens, one on narrow, so it never scrolls sideways. A filled number marks a step that can stop the request.
 - **Each step with a source claim has the exact quote and a link to the passage** beside it. Steps without a quote are labels only (person or pipeline, user, pod).

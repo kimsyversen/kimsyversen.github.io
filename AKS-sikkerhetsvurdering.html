@@ -294,6 +294,14 @@ figcaption{display:grid;gap:8px}
 .fl-h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;min-height:26px}
 .fl-h strong{font:700 1rem/1.3 var(--display)}
 .fl-r{display:flex;flex-wrap:wrap;gap:6px}
+.rdlg{width:min(560px,calc(100vw - 32px));max-height:min(80vh,680px);overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,0.3);padding:16px 18px;font-size:0.92rem;line-height:1.55}
+.rdlg::backdrop{background:rgba(0,0,0,0.45)}
+.rdlg .risk-head{align-items:flex-start}
+.rdlg .risk-head h3{margin:0}
+.rdlg .rd-x{margin-left:auto;flex:none;font:500 0.75rem/1 var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:4px;padding:6px 8px;cursor:pointer}
+.rdlg .rd-b{display:grid;gap:10px;margin-top:10px}
+.rdlg .rd-b p{margin:0}
+.rdlg .rd-go{justify-self:start;font:500 0.8rem/1 var(--mono);color:var(--accent);background:none;border:1px solid var(--accent);border-radius:4px;padding:7px 10px;cursor:pointer}
 .fl-r .idtag{cursor:pointer}
 .fl-r .idtag:hover,.fl-r .idtag:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .flow .fl-q,.fl-side .fl-q{font-size:0.8rem;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
@@ -320,8 +328,9 @@ figcaption{display:grid;gap:8px}
     <button type="button" role="tab" id="t-method" data-tab="method" aria-controls="p-method" aria-selected="false" tabindex="-1">2 · Method</button>
     <button type="button" role="tab" id="t-top10" data-tab="top10" aria-controls="p-top10" aria-selected="false" tabindex="-1">3 · Top 10</button>
     <button type="button" role="tab" id="t-architecture" data-tab="architecture" aria-controls="p-architecture" aria-selected="false" tabindex="-1">4 · Architecture</button>
-    <button type="button" role="tab" id="t-relevance" data-tab="relevance" aria-controls="p-relevance" aria-selected="false" tabindex="-1">5 · Relevant or not</button>
-    <button type="button" role="tab" id="t-runtime" data-tab="runtime" aria-controls="p-runtime" aria-selected="false" tabindex="-1">6 · Runtime</button>
+    <button type="button" role="tab" id="t-dataflow" data-tab="dataflow" aria-controls="p-dataflow" aria-selected="false" tabindex="-1">5 · Data flow</button>
+    <button type="button" role="tab" id="t-relevance" data-tab="relevance" aria-controls="p-relevance" aria-selected="false" tabindex="-1">6 · Focus and skip</button>
+    <button type="button" role="tab" id="t-runtime" data-tab="runtime" aria-controls="p-runtime" aria-selected="false" tabindex="-1">7 · Runtime</button>
     <button type="button" role="tab" id="t-sources" data-tab="sources" aria-controls="p-sources" aria-selected="false" tabindex="-1">Sources</button>
   </nav>
 
@@ -657,6 +666,54 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
   <!-- 4 ARCHITECTURE -->
   <div class="panel" role="tabpanel" id="p-architecture" aria-labelledby="t-architecture" hidden>
+    <section id="risk-map-of-the-architecture" class="wide">
+      <h2><a class="sec-link" href="#risk-map-of-the-architecture">Risk map of the architecture</a></h2>
+      <p class="sub">A typical AKS platform with several app teams, from code to operations. Each marker shows where a risk arises or must be checked. The colour follows the status you set under Top 10.</p>
+      <div class="rchips" id="dgChips" role="group" aria-label="Show risk in the diagram"></div>
+      <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
+    </section>
+
+    <figure class="fig-wide wide" id="dgFig">
+      <div class="dg-scroll" id="dgScroll">
+        <svg class="dg" id="dg" viewBox="0 52 1240 700" role="group" aria-labelledby="dgCap"></svg>
+        <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
+      </div>
+      <figcaption id="dgCap">
+        <span class="cap">The client sends the Entra token to the API server. On writes, the API server can call webhooks before it stores the object in etcd. Azure Policy uses Gatekeeper pods, among other things. Monitoring covers all layers.</span>
+        <span class="legend">
+          <span><i class="lg-mk">K01</i>Not assessed</span>
+          <span><i class="lg-mk st-ok">K01</i>OK</span>
+          <span><i class="lg-mk st-part">K01</i>Partial</span>
+          <span><i class="lg-mk st-miss">K01</i>Missing</span>
+          <span><i class="lg-mk st-unk">K01</i>Unknown</span>
+          <span><i class="lg-ms"></i>Run by Microsoft</span>
+          <span><i class="lg-ew"></i>Traffic between namespaces</span>
+          <span>SC = supply chain (extra item)</span>
+        </span>
+      </figcaption>
+    </figure>
+    <p class="note hint">The diagram is wide. Drag it sideways, or use the table below.</p>
+
+    <section id="risk-per-part-of-the-value-chain" class="wide">
+      <h2><a class="sec-link" href="#risk-per-part-of-the-value-chain">Risk per step, from code to monitoring</a></h2>
+      <p class="sub">Same placement as in the diagram.</p>
+      <div class="mx-wrap">
+        <table class="mx">
+          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Code and build</th><th scope="col">2 · Access and control</th><th scope="col">3 · Runtime</th><th scope="col">4 · Azure and internet</th><th scope="col">5 · Monitoring</th></tr></thead>
+          <tbody id="dgMatrix"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="before-you-use-the-map">
+      <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
+      <p class="sub">This is a typical setup, not the platform team's real one. Common differences are GitOps, where an agent in the cluster pulls from git instead of the pipeline deploying, Application Gateway for Containers, where the traffic handling (data plane) runs outside the cluster, and separate clusters per environment. Ask for their architecture sketch and place the risks where they belong in their setup.</p>
+      <p class="sub">The placement of the risks and the ownership per zone build on OWASP and Microsoft. <span class="tag">[inference]</span></p>
+    </section>
+  </div>
+
+  <!-- 5 DATA FLOW -->
+  <div class="panel" role="tabpanel" id="p-dataflow" aria-labelledby="t-dataflow" hidden>
     <section id="how-a-request-gets-into-aks" class="wide">
       <h2><a class="sec-link" href="#how-a-request-gets-into-aks">How a request gets into AKS</a></h2>
       <p class="sub">Two kinds of request reach a cluster. A change goes to the Kubernetes API. A user's request goes over the network to an app. Each passes its own row of checks. The owner shown per step is typical. <span class="tag">[inference]</span></p>
@@ -784,57 +841,12 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         </figcaption>
       </figure>
     </section>
-
-    <section id="risk-map-of-the-architecture" class="wide">
-      <h2><a class="sec-link" href="#risk-map-of-the-architecture">Risk map of the architecture</a></h2>
-      <p class="sub">A typical AKS platform with several app teams, from code to operations. Each marker shows where a risk arises or must be checked. The colour follows the status you set under Top 10.</p>
-      <div class="rchips" id="dgChips" role="group" aria-label="Show risk in the diagram"></div>
-      <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
-    </section>
-
-    <figure class="fig-wide wide" id="dgFig">
-      <div class="dg-scroll" id="dgScroll">
-        <svg class="dg" id="dg" viewBox="0 52 1240 700" role="group" aria-labelledby="dgCap"></svg>
-        <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
-      </div>
-      <figcaption id="dgCap">
-        <span class="cap">The client sends the Entra token to the API server. On writes, the API server can call webhooks before it stores the object in etcd. Azure Policy uses Gatekeeper pods, among other things. Monitoring covers all layers.</span>
-        <span class="legend">
-          <span><i class="lg-mk">K01</i>Not assessed</span>
-          <span><i class="lg-mk st-ok">K01</i>OK</span>
-          <span><i class="lg-mk st-part">K01</i>Partial</span>
-          <span><i class="lg-mk st-miss">K01</i>Missing</span>
-          <span><i class="lg-mk st-unk">K01</i>Unknown</span>
-          <span><i class="lg-ms"></i>Run by Microsoft</span>
-          <span><i class="lg-ew"></i>Traffic between namespaces</span>
-          <span>SC = supply chain (extra item)</span>
-        </span>
-      </figcaption>
-    </figure>
-    <p class="note hint">The diagram is wide. Drag it sideways, or use the table below.</p>
-
-    <section id="risk-per-part-of-the-value-chain" class="wide">
-      <h2><a class="sec-link" href="#risk-per-part-of-the-value-chain">Risk per step, from code to monitoring</a></h2>
-      <p class="sub">Same placement as in the diagram.</p>
-      <div class="mx-wrap">
-        <table class="mx">
-          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Code and build</th><th scope="col">2 · Access and control</th><th scope="col">3 · Runtime</th><th scope="col">4 · Azure and internet</th><th scope="col">5 · Monitoring</th></tr></thead>
-          <tbody id="dgMatrix"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="before-you-use-the-map">
-      <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
-      <p class="sub">This is a typical setup, not the platform team's real one. Common differences are GitOps, where an agent in the cluster pulls from git instead of the pipeline deploying, Application Gateway for Containers, where the traffic handling (data plane) runs outside the cluster, and separate clusters per environment. Ask for their architecture sketch and place the risks where they belong in their setup.</p>
-      <p class="sub">The placement of the risks and the ownership per zone build on OWASP and Microsoft. <span class="tag">[inference]</span></p>
-    </section>
   </div>
 
-  <!-- 5 RELEVANCE -->
+  <!-- 6 RELEVANCE -->
   <div class="panel" role="tabpanel" id="p-relevance" aria-labelledby="t-relevance" hidden>
     <section id="what-is-relevant-and-what-is-not">
-      <h2><a class="sec-link" href="#what-is-relevant-and-what-is-not">What is relevant, and what is not?</a></h2>
+      <h2><a class="sec-link" href="#what-is-relevant-and-what-is-not">Where to focus, and what to skip</a></h2>
       <p class="sub">Microsoft runs the control plane. The customer controls their own workloads, access and data. Responsibility for nodes and network depends on the AKS mode.</p>
       <div class="cols">
         <div class="col yes">
@@ -868,7 +880,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
     </section>
   </div>
 
-  <!-- 6 RUNTIME -->
+  <!-- 7 RUNTIME -->
   <div class="panel" role="tabpanel" id="p-runtime" aria-labelledby="t-runtime" hidden>
     <section id="runtime-detection-in-brief">
       <h2><a class="sec-link" href="#runtime-detection-in-brief">Runtime detection in brief</a></h2>
@@ -991,6 +1003,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   </footer>
 </div>
 
+<dialog class="rdlg" id="riskDlg" aria-labelledby="riskDlgTitle"></dialog>
 <script>
 (function(){
   "use strict";
@@ -1540,8 +1553,36 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     var r = b.getAttribute('data-risk');
     b.title = r + ' ' + riskTitle(r);
     b.setAttribute('aria-label', r + ' ' + riskTitle(r));
-    b.addEventListener('click', function(){ openChecklist(r); });
+    b.addEventListener('click', function(){ openRiskDialog(r, b); });
   });
+  var rdlg = document.getElementById('riskDlg');
+  function openRiskDialog(r, opener){
+    var card = document.querySelector('.risk[data-id="' + r + '"]');
+    if (!card || !rdlg || !rdlg.showModal){ openChecklist(r); return; }
+    var c = card.cloneNode(true);
+    $$('.cmd, .seg, .paths, .copy', c).forEach(function(n){ n.remove(); });
+    $$('[id]', c).forEach(function(n){ n.removeAttribute('id'); });
+    var head = c.querySelector('.risk-head');
+    var h3 = head.querySelector('h3'); h3.id = 'riskDlgTitle'; h3.textContent = r + ' ' + riskTitle(r);
+    var rid = head.querySelector('.rid'); if (rid) rid.remove();
+    var x = htmlEl('button', 'rd-x', 'Close'); x.type = 'button';
+    x.addEventListener('click', function(){ rdlg.close(); });
+    head.appendChild(x);
+    var body = htmlEl('div', 'rd-b');
+    Array.prototype.slice.call(c.children).forEach(function(n){ if (n !== head) body.appendChild(n); });
+    var go = htmlEl('button', 'rd-go', 'Open in Top 10'); go.type = 'button';
+    go.addEventListener('click', function(){ rdlg.close(); openChecklist(r); });
+    body.appendChild(go);
+    rdlg.innerHTML = '';
+    rdlg.appendChild(head); rdlg.appendChild(body);
+    rdlg._opener = opener;
+    rdlg.showModal();
+    rdlg.scrollTop = 0;
+  }
+  if (rdlg){
+    rdlg.addEventListener('click', function(e){ if (e.target === rdlg) rdlg.close(); });
+    rdlg.addEventListener('close', function(){ var o = rdlg._opener; if (o){ try { o.focus({ preventScroll: true }); } catch(e){} } });
+  }
 
   if (dgSvg && pop){
     buildDiagram();
