@@ -1,0 +1,84 @@
+TITLE: How a request gets into AKS
+
+Flow description:
+Two kinds of request reach a cluster. A change to the cluster goes to the
+Kubernetes API server. It must reach the server over the network, prove who it
+is, be allowed to do what it asks, and pass the admission rules. Then it is
+stored in etcd, and the scheduler and kubelet start the pod on a node. The
+audit log is written along the way. A user's request to an app goes over the
+network: Azure load balancer, ingress controller or Gateway, Service, the
+NetworkPolicy for the pod, and then the pod. Traffic out of the pod passes the
+outbound rules. Calls to Azure services use workload identity.
+
+[stop] marks a step where the request can be stopped.
+Owners in brackets are typical. [inference]
+
+A change to the cluster                    A user's request to an app
+(kubectl apply, or a pipeline)             (a browser opens a web app)
+
++--------------------------------------+   +--------------------------------------+
+| 1 Person or pipeline        [SHARED] |   | 1 User                               |
++--------------------------------------+   +--------------------------------------+
+                  |                                          |
+                  v                                          v
++--------------------------------------+   +--------------------------------------+
+| 2 Network path to the API server     |   | 2 Azure load balancer                |
+|   [stop] [PLATFORM]                  |   |   [stop] [PLATFORM]                  |
+|   public address, allowed IP ranges  |   |   public or private address          |
+|   or private cluster                 |   |   K06                                |
+|   K06                                |   +--------------------------------------+
++--------------------------------------+                     |
+                  |                                          v
+                  v                        +--------------------------------------+
++--------------------------------------+   | 3 Ingress controller or Gateway      |
+| 3 Authentication: who are you?       |   |   [stop] [PLATFORM]                  |
+|   [stop] [PLATFORM]                  |   |   routing rules                      |
+|   Entra ID or local accounts         |   |   K06 K07                            |
+|   fails with 401                     |   +--------------------------------------+
+|   K09                                |                     |
++--------------------------------------+                     v
+                  |                        +--------------------------------------+
+                  v                        | 4 Service                 [APP TEAM] |
++--------------------------------------+   |   passes the request to a pod        |
+| 4 Authorization: are you allowed?    |   +--------------------------------------+
+|   [stop] [PLATFORM]                  |                     |
+|   Kubernetes RBAC, Azure roles       |                     v
+|   fails with 403                     |   +--------------------------------------+
+|   K02                                |   | 5 NetworkPolicy, traffic into the pod|
++--------------------------------------+   |   [stop] [SHARED]                    |
+                  |                        |   all allowed by default             |
+                  v                        |   K05                                |
++--------------------------------------+   +--------------------------------------+
+| 5 Admission: follows the rules?      |                     |
+|   [stop] [PLATFORM]                  |                     v
+|   Pod Security Admission             |   +--------------------------------------+
+|   Azure Policy (Gatekeeper)          |   | 6 Pod: the app answers    [APP TEAM] |
+|   deployment safeguards              |   |   settings checked at admission,     |
+|   first adjust, then accept or reject|   |   step 5 of the other flow           |
+|   reads skip this step               |   |   K01                                |
+|   K01 K04                            |   +--------------------------------------+
++--------------------------------------+                     |
+                  |                                          v
+                  v                        +--------------------------------------+
++--------------------------------------+   | 7 Traffic out of the pod             |
+| 6 etcd: the change is stored         |   |   [stop] [PLATFORM]                  |
+|   [MICROSOFT]                        |   |   NetworkPolicy for outbound traffic |
+|   secrets too, KMS is optional       |   |   and the cluster's outbound type    |
+|   K03                                |   |   K05                                |
++--------------------------------------+   +--------------------------------------+
+                  |                                          |
+                  v                                          v
++--------------------------------------+   +--------------------------------------+
+| 7 Scheduler and kubelet: the pod     |   | 8 Azure service, such as Key Vault   |
+|   starts on a node          [SHARED] |   |   or a database                      |
+|   K07                                |   |   [stop] [SHARED]                    |
++--------------------------------------+   |   workload identity                  |
+                                           |   K08 K03                            |
+Along the way:                             +--------------------------------------+
++--------------------------------------+
+| Audit log                 [PLATFORM] |
+|   needs a diagnostic setting         |
+|   K10                                |
++--------------------------------------+
+
+On narrow screens the two flows stack in one column.

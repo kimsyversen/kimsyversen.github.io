@@ -29,3 +29,20 @@ Fact check: [AKS-sikkerhetsvurdering.factcheck.md](AKS-sikkerhetsvurdering.factc
 - **Control plane wording follows the source.** "Operates, hardens and patches" became "provides, manages and maintains", the words Microsoft uses. The "Less relevant for now" item no longer says Microsoft patches the control plane, because Kubernetes patches reach it through cluster upgrades, which the customer controls.
 - **REST reference added to Sources** for the field names used with `az aks show`. The CLI page does not list them.
 - **Pod Sandboxing left without a preview tag.** Its own Microsoft page has no preview label. The older concepts-security page still says "(preview)". Recorded as a source conflict in the fact check.
+
+## 16 Nov 2026, plain language and request-flow figure
+
+Fact check: [AKS-sikkerhetsvurdering.factcheck.md](AKS-sikkerhetsvurdering.factcheck.md). Text copy of the figure: [AKS-sikkerhetsvurdering.flow.txt](AKS-sikkerhetsvurdering.flow.txt).
+
+- **"How a request gets into AKS"** (id `how-a-request-gets-into-aks`) has its own tab, 5 Data flow (`dataflow`), after Architecture. It first sat in the Architecture tab (2026-11-16 moved). The Relevance tab (id `relevance`, so old links work) became 6 "Focus and skip", its section heading "Where to focus, and what to skip" (id unchanged). Runtime is now 7.
+- **Two flows, not one.** A change to the cluster goes through the Kubernetes API (network path, authentication, authorization, admission, etcd, scheduler and kubelet). A user's request goes over the network (load balancer, ingress or Gateway, Service, NetworkPolicy, pod, outbound, Azure service). One combined flow would mix two different sets of checks. Lane ids: `a-change-to-the-cluster`, `a-users-request-to-an-app`.
+- **Built in HTML, not SVG.** Numbered steps on a rail. Two columns on wide screens, one on narrow, so it never scrolls sideways. A filled number marks a step that can stop the request.
+- **Each step with a source claim has the exact quote and a link to the passage** beside it. Steps without a quote are labels only (person or pipeline, user, pod).
+- **Risk ids in the figure are buttons** that open the risk under Top 10. They take the status colour like the other risk tags.
+- **Owner per step is tagged `[inference]`** once, in the section intro.
+- **No TLS claim at the ingress step.** No clean source sentence was found.
+- **Plain-language pass: wording only.** Ids, storage keys, risk titles, tags and facts are unchanged. Jargon was replaced or explained on first use (control plane, kubeconfig, default-deny, ingress and egress, IMDS, cluster-admin). "East-west" became "between namespaces". "Egress control" became "Outbound control".
+- **Heading "Risk per part of the value chain" became "Risk per step, from code to monitoring"**, id kept as `risk-per-part-of-the-value-chain`.
+- **Removed sentences that explain how a control works** ("Tap a layer", "Tap a marker or box", "Tap a risk", "Tick them off as you go").
+- **"Current as of" and "Facts checked" stay at 13 Nov 2026.** Only the figure quotes were checked on 16 Nov. The Sources intro says so.
+- **Seven sources added at the end of the list** so the existing numbers stay the same.
