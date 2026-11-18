@@ -175,3 +175,37 @@ for _key, _source, _quote in [
     QUOTES.append((_key, _source, _quote))
     IDS[_key] = f"V{len(QUOTES)}"
 PREVIEW_ONLY.add("review-gateway-admin")
+
+# Keep the earlier migration guidance addressable for readers following published V links.
+HISTORICAL = {"pv-pe", "pv-vnet", "pv-cs", "pv-domain", "pv-regions", "pv-gr-mde-pre", "pv-gr-mde-win"}
+SOURCES.update({
+    "ignite-gateway": ("Microsoft Azure, Azure AI Gateway general availability", "https://techcommunity.microsoft.com/blog/IntegrationsonAzureBlog/azure-ai-gateway-is-now-generally-available-ship-faster-stay-in-control/4572644", "2026-11-17"),
+    "ignite-apim": ("Microsoft Azure, API Management at Ignite", "https://techcommunity.microsoft.com/blog/integrationsonazureblog/whats-new-in-azure-api-management-at-microsoft-ignite-2026/4574194", "2026-11-17"),
+    "ignite-a365": ("Microsoft Agent 365, Ignite announcements", "https://techcommunity.microsoft.com/blog/agent-365-blog/whats-new-in-microsoft-agent-365-ignite-2026/4571753", "2026-11-17"),
+    "apim-vnet-out": ("Microsoft Learn, outbound virtual network integration", "https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound", None),
+    "vs-hooks": ("Visual Studio Code, configure agent hooks", "https://code.visualstudio.com/docs/agent-customization/hooks", None),
+    "studio-ga": ("Microsoft Copilot Studio, MCP general availability", "https://www.microsoft.com/en-us/copilot/blog/copilot-studio/model-context-protocol-mcp-is-now-generally-available-in-microsoft-copilot-studio/", "2025-05-29"),
+    "studio-standard": ("Microsoft Learn, extend your agent with MCP", "https://learn.microsoft.com/en-us/microsoft-copilot-studio/agent-extend-action-mcp", None),
+    "studio-copilot": ("Microsoft Learn, add an MCP server with the Microsoft Copilot harness", "https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server", None),
+})
+for _key, _source, _quote in [
+    ("gateway-ga", "ignite-gateway", "general availability of Azure AI Gateway"),
+    ("gateway-regions", "ignite-gateway", "available today in 17 Azure regions"),
+    ("gateway-network", "ignite-gateway", "Private Link (preview) for inbound calls, VNet integration (preview) for private backends"),
+    ("gateway-content", "ignite-gateway", "Screen prompts and responses with Azure AI Content Safety."),
+    ("gateway-threat", "ignite-gateway", "Protection from poisoned tools (preview)"),
+    ("apim-integration-ga", "ignite-apim", "The Microsoft Agent 365 integration with Azure API Management and Azure AI Gateway is now generally available"),
+    ("a365-gateway-preview", "ignite-a365", "Azure AI Gateway and LiteLLM gateway support is in preview"),
+    ("defender-windows-ga", "ignite-a365", "Now generally available on Windows, Defender inspects critical points in the agent loop"),
+    ("apim-private", "apim-vnet-out", "The API Management instance can reach both public and network-isolated backend services."),
+    ("apim-private-tiers", "apim-vnet-out", "APPLIES TO: Standard v2 | Premium v2"),
+    ("vs-hook-preview", "vs-hooks", "Agent hooks is in preview"),
+    ("studio-mcp-ga", "studio-ga", "general availability of MCP integration in Copilot Studio"),
+    ("studio-standard", "studio-standard", "This article describes features used in agents or agent flows powered by the standard harness"),
+    ("studio-copilot-preview", "studio-copilot", "Add a Model Context Protocol (MCP) server to your agent as a tool (Microsoft Copilot) (preview)"),
+]:
+    QUOTES.append((_key, _source, _quote))
+    IDS[_key] = f"V{len(QUOTES)}"
+PREVIEW_ONLY.difference_update(HISTORICAL | {"pv-aig-separate", "pv-res-change", "pv-res-date", "pv-res-removed", "pv-bearer",
+                                            "pv-shared-cred", "pv-aig-comb", "pv-gr-mde-how", "pv-gr-mde-vs", "pv-gr-def-local", "review-def-local-sep"})
+PREVIEW_ONLY.update({"gr-vs-hook", "gr-vs-hook-not", "vs-hook-preview", "gateway-network", "gateway-threat", "a365-gateway-preview", "studio-copilot-preview"})

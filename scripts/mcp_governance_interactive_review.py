@@ -24,8 +24,6 @@ def apply_review(page, ev, rec, inf, unv, evp):
         page, count = re.subn(pattern, edit, page, flags=re.S)
         assert count == 1, (cid, count)
 
-    replace(f"Agent 365 {evp('pv-gr-def-local')}. The article is prerelease",
-            f"Agent 365 {evp('pv-gr-def-local', 'review-def-local-sep')}. The article is prerelease")
     replace(f"Managed settings file in the .github-private repository {ev('gh-file')}.",
             f"Managed settings file in the .github-private repository {ev('gh-file', 'review-gh-private')}.")
     replace(f"They are a file in the .github-private repository, changed by commit and push {ev('gh-file', 'gh-commit')}.",
@@ -125,16 +123,11 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('The pages read on 2026-11-11 describe only a preview control there.', 'The reviewed external detection control at that layer is preview.')
     replace('The API Management integration does not automatically route agents through a customer-hosted gateway', 'Agent 365 does not automatically route agents through a customer-hosted gateway')
     replace('Confirm its public endpoint fits the backend isolation target.', 'Keep its public endpoint separate from the private backend.') if 'Confirm its public endpoint fits the backend isolation target.' in page else None
-    replace('<strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox', '<strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox <span class="tg r">recommendation</span>')
     replace('Until then, block at server level and authorize at the server.', 'Until then, block at server level and authorize at the server. <span class="tg r">recommendation</span>')
-    replace('Dedicated AI Gateway is a separate product that can replace the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection', f"Dedicated AI Gateway is a separate product {evp('pv-aig-separate')}. Agent 365 can connect Azure AI Gateway to discover and govern MCP servers {evp('pv-disc')}. In the Agent 365 integration capability matrix, only AI Gateway lists tool blocking, tool activity and tool threat protection")
-    replace(f"Review the permissions granted {evp('pv-a365-rw')}.", f"Review the permissions granted {evp('pv-a365-role', 'pv-a365-rw')}.")
     replace('Blocked or preview route</li>', 'Rejected route or preview alternative</li>')
     # 2026-11-12 holistic review: cite the overview for the separate product, fix ownership and scope wording.
     replace('Configure Microsoft 365 access and Power Platform MCP policy manually until their respective automation is verified.',
             'Configure Microsoft 365 agent access by hand; it has no API option. Configure Power Platform MCP policy by hand until its API path is verified.')
-    replace('separate AI Gateway product and resource type ' + ev('apim-ai-not-separate') + ' ' + evp('pv-aig-separate'),
-            'separate AI Gateway product and resource type ' + ev('apim-ai-not-separate') + ' ' + evp('pv-aig-separate', 'pv-res-change'))
     replace('<dt>Applies to</dt><dd>Agent 365 agent instances</dd>', '<dt>Applies to</dt><dd>Agent 365 agent instances and Foundry AI interactions</dd>')
     replace('No design control covers them. Pilot both, or limit it through GitHub account permissions.',
             f'No design control covers them. Pilot both switches, or limit the built-in server through GitHub account permissions. {rec}')
@@ -147,14 +140,6 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace(f'{unv} The page describes tools in general. Not checked whether the option is offered for MCP tools.',
             f'Microsoft documents this setting for the Kusto Query MCP Server {ev("studio-kusto-confirm")}.')
     replace('VS Code asks again after a configuration change.', 'VS Code can prompt again after a configuration change.')
-    replace('Test tool blocking and threat protection only on the separate AI Gateway product, with a static tool list and a delegated user-token flow',
-            'On the dedicated AI Gateway, use a static tool list to test Agent 365 tool blocking. Use a delegated user token to test threat protection')
-    replace('The released-only design stays underneath. Details and limits',
-            'Keep the baseline controls; replacing the gateway requires a tested migration and rollback. Details and limits')
-    replace('If a preview feature changes, switch it off and fall back to the released-only design.',
-            'Plan a safe stop and test migration back to the released gateway before replacing it.')
-    replace('The released-only design stays underneath. Build it first.',
-            'Build the released gateway first. Preserve its controls and test rollback before a preview gateway pilot.')
     replace('Safe stop, or a rollback to the released-only design</td>',
             'Safe stop or a tested migration back to the released gateway</td>')
     # Context review: approval scope, publisher overrides and administrator roles.
@@ -168,10 +153,6 @@ def apply_review(page, ev, rec, inf, unv, evp):
             f'Rules can cover All agents or specific agents {evp("review-defender-scope")}. Only agents with a Microsoft Entra agent ID appear in the selection list {evp("pv-gr-def-entra")}.')
     replace(f'An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent {evp("pv-a365-role")}.',
             f'Connecting the Azure gateway requires Global Administrator; AI Administrator cannot perform this operation {evp("review-gateway-admin")}. The one-time tenant consent grants the A365 MCP Gateway Policy Operator role {evp("pv-a365-role")}.')
-    replace('after named tenant-admin consent, connect the gateway',
-            'have a Global Administrator grant tenant consent and connect the gateway')
-    replace(f'Review the permissions granted {evp("pv-a365-role", "pv-a365-rw")}.',
-            f'Review the permissions granted {evp("pv-a365-role", "pv-a365-rw", "review-gateway-admin")}.')
     replace('Configure Microsoft 365 agent access by hand; it has no API option.',
             'Configure Microsoft 365 Agent and plugin access by hand; this setting has no API option.')
     replace('It carries the preview label ' + evp('fw-preview') + ' and inspects remote servers only ' + evp('fw-remote') + '.',

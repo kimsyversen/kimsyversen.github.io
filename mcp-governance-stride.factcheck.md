@@ -2,6 +2,10 @@
 
 Checked 2026-11-12. This review supersedes the earlier same-day verification narrative.
 
+## Architecture release update on 2026-11-18
+
+D4 now cites the released regional footprint and preview private networking on Azure AI Gateway (V238 and V239). E5 retains the shared-credential condition (V79). I15 distinguishes released hosted-agent egress from its preview exceptions (V101 and V229 to V231). These verdicts use the [interactive design evidence](mcp-governance-microsoft-interactive.factcheck.md#ev-V229). The scenario scores and earlier public-record review keep their original basis.
+
 ## Verdict and scope
 
 The original model was a useful scenario inventory, but was not correct enough to call a verified deployment threat model. This review checked all 74 scenarios against STRIDE definitions, their stated preconditions, the quoted architecture sources and the public records. It corrected 54 scenario/basis entries while preserving every threat and element ID.
