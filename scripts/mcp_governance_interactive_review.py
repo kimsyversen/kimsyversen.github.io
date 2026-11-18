@@ -91,16 +91,14 @@ def apply_review(page, ev, rec, inf, unv, evp):
         'Use a separate pilot endpoint for delegated user-token flows. Keep app-only workloads on an appropriately authenticated baseline endpoint. '
         f'One server policy covers every caller, so mixing incompatible callers can reject legitimate calls. {rec}'))
     control('power-platform', requirement=(
-        '<span id="gap-unverified-url-block"></span>Configure ACP for listed MCP connectors; arbitrary URL entries are unverified. '
-        'Retain mixed mode while classic data policies protect custom and HTTP connectors; ACP-only mode ignores those policies. '
-        f'Keep configuration manual until the actual MCP API adapter is verified. {rec}'),
+        '<span id="gap-unverified-url-block"></span>Use advanced connector policies (ACP) for listed MCP servers once Copilot Studio design-time enforcement reaches the target workload. '
+        f'Keep classic policies for custom, HTTP and Copilot Studio virtual connectors. Use mixed mode when adding ACP {ev("pp-custom", "review-custom-classic", "review-acp-mixed", "acp-virtual")}. '
+        f'Configure MCP policy manually until the API adapter is validated. {rec}'),
         documented=(
-        f'ACP supports deployment-pipeline automation {ev("pp-pipe")}, MCP server-level blocking but not per-tool blocks {ev("pp-block")}, '
-        f'and connector blocking also blocks dependent MCP tools {ev("studio")}. '
-        f'Custom and HTTP connectors are not yet supported by ACP and stay on classic data policies {ev("pp-custom", "review-custom-classic")}; mixed mode enforces both policy types {ev("review-acp-mixed")}. '
-        f'ACP general availability depends on design-time enforcement reaching each workload {ev("review-acp-rollout")}. '
-        f'{rec} Confirm Copilot Studio rollout before including ACP in a released-only deployment. Retain classic policies and record any remaining MCP coverage gap until then. '
-        f'{unv} The API tutorial does not establish the actual MCP-specific policy payload.'))
+        f'ACP blocks whole MCP servers. A connector block covers its dependent tools {ev("pp-block", "studio")}. '
+        f'Before design-time enforcement reaches a workload, ACP enforces at runtime only. Microsoft ties general availability to design-time rollout {ev("review-acp-rollout", "acp-runtime")}. '
+        f'Some connectors remain nonblockable in unmanaged environments {ev("acp-environment")}. '
+        f'The API supports policy automation {ev("pp-pipe")}. {unv} The tutorial does not establish an MCP-specific payload or support for blocking arbitrary URLs.'))
     control('ttp-modes', requirement=(
         'Configure evaluation mode in Microsoft Defender. Test Audit, Block and evaluator failures. '
         'Use pre-invocation checks to stop calls and post-invocation checks to withhold results. '

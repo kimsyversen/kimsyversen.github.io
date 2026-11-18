@@ -203,6 +203,9 @@ for _key, _source, _quote in [
     ("studio-mcp-ga", "studio-ga", "general availability of MCP integration in Copilot Studio"),
     ("studio-standard", "studio-standard", "This article describes features used in agents or agent flows powered by the standard harness"),
     ("studio-copilot-preview", "studio-copilot", "Add a Model Context Protocol (MCP) server to your agent as a tool (Microsoft Copilot) (preview)"),
+    ("acp-runtime", "pp-acp", "ACP operates as a runtime-only enforcement for that workload"),
+    ("acp-virtual", "pp-acp", "continue using classic data policies for Copilot Studio virtual connector governance"),
+    ("acp-environment", "pp-acp", "on non-managed environments, the nonblockable connectors remain nonblockable"),
 ]:
     QUOTES.append((_key, _source, _quote))
     IDS[_key] = f"V{len(QUOTES)}"
