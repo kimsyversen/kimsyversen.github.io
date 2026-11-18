@@ -353,7 +353,7 @@ The figure aggregates product variants. OAuth exchanges, downstream APIs and
 stores, package distribution, external detector boundaries and non-gateway audit
 feeds need more detailed models. A gateway does not inspect local stdio traffic. The direct Agent 365 BYO route is
 excluded from this private backend; a gateway-fronted BYO composition is untested.
-Foundry Network guardrails are preview; toolbox networking is a separate control.
+Hosted-agent egress rules are generally available. See I15 for preview exceptions and toolbox scope.
 ACP must retain mixed mode where classic policies protect custom/HTTP connectors.
 Preview tool threat protection excludes discovery and session-management operations.
 """

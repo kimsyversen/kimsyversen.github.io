@@ -160,9 +160,9 @@ THREATS = [
     ("P4", "I", "A gateway caches a sensitive tool result without binding the cache key to the authorized caller and tenant, and returns it to another caller.",
      ["ctrl-identity", "ctrl-gateway"], ["APIM", "DSPM"], (6, 5, 4, 5, 4), "AI inference; requires a configured result cache. Log disclosure is covered by I10; shared-identity authorization by E5"),
     ("P4", "D", "An attacker exhausts gateway capacity or request quotas, denying legitimate calls when clients depend on that deployment and no adequate isolation or failover is configured.",
-     ["ctrl-gateway", "ctrl-ai-limits"], ["APIM", "WAF"], (7, 5, 5, 8, 6), "AI inference; V47 V52 document private-endpoint and regional limits for AI Gateway preview, not an Azure region pair or an APIM-wide limitation"),
+     ["ctrl-gateway", "ctrl-ai-limits"], ["APIM", "WAF"], (7, 5, 5, 8, 6), "V238 documents 17 Azure AI Gateway regions. V239 labels inbound Private Link and private backend VNet integration preview. Capacity exhaustion and failover are interpretation by AI."),
     ("P4", "E", "A gateway fails to enforce caller-specific tool authorization, allowing a low-privilege caller to invoke privileged operations through a more powerful shared backend connection.",
-     ["ctrl-gateway", "ctrl-identity", "ctrl-ai-publish"], ["MI", "RBAC"], (7, 5, 4, 5, 3), "The shared managed-identity baseline also requires upstream caller authorization. V79 illustrates shared connection permissions in the preview gateway; missing authorization is AI inference, not inherent to a shared identity"),
+     ["ctrl-gateway", "ctrl-identity", "ctrl-ai-publish"], ["MI", "RBAC"], (7, 5, 4, 5, 3), "The shared managed-identity baseline also requires upstream caller authorization. V79 documents shared connection permissions on Azure AI Gateway. Missing caller authorization is interpretation by AI."),
 
     # P5 Company MCP server
     ("P5", "S", "A backend with missing authentication or incomplete token validation accepts an unauthenticated request or a token issued for another resource as an approved caller.",
@@ -260,7 +260,7 @@ THREATS = [
     ("F5", "T", "A client directly reaches a backend that lacks equivalent action authorization and performs an unauthorized write that gateway policy would have blocked.",
      ["ctrl-backend", "ctrl-windows"], ["PE", "NSG", "FW"], (9, 5, 5, 6, 5), "AI inference, acceptance test 12"),
     ("F5", "I", "A compromised client or cloud agent sends company data directly to an unapproved MCP server over an allowed or unrestricted egress path, bypassing gateway inspection and its audit trail.",
-     ["ctrl-client", "ctrl-windows", "ctrl-foundry-network", "ctrl-foundry-egress", "gap-foundry-prompt-agents", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101 V134: the Network guardrail is preview and limited to documented agent types. Released toolbox networking requires configured downstream egress; connection tool lists and inbound private endpoints alone do not restrict server destinations. Data theft is AI inference"),
+     ["ctrl-client", "ctrl-windows", "ctrl-foundry-network", "ctrl-foundry-egress", "gap-foundry-prompt-agents", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101 and V229 to V231 distinguish generally available hosted-agent egress controls from preview exceptions and prompt-agent coverage. Verify toolbox downstream egress separately. Data theft through an allowed destination is interpretation by AI."),
     ("F5", "D", "A direct flood skips gateway rate limits.",
      ["ctrl-backend", "ctrl-gateway"], ["PE", "WAF", "FW"], (6, 5, 4, 6, 4), "AI inference"),
 ]

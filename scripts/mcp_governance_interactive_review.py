@@ -24,8 +24,6 @@ def apply_review(page, ev, rec, inf, unv, evp):
         page, count = re.subn(pattern, edit, page, flags=re.S)
         assert count == 1, (cid, count)
 
-    replace(f"Agent 365 {evp('pv-gr-def-local')}. The article is prerelease",
-            f"Agent 365 {evp('pv-gr-def-local', 'review-def-local-sep')}. The article is prerelease")
     replace(f"Managed settings file in the .github-private repository {ev('gh-file')}.",
             f"Managed settings file in the .github-private repository {ev('gh-file', 'review-gh-private')}.")
     replace(f"They are a file in the .github-private repository, changed by commit and push {ev('gh-file', 'gh-commit')}.",
@@ -62,9 +60,9 @@ def apply_review(page, ev, rec, inf, unv, evp):
         'Authenticate, authorize each caller and tool, rate-limit and log. Enforce tool arguments and object permissions at the server. '
         f'Do not treat an HTTP path filter as an MCP tool-name policy without verifying JSON-RPC handling. {rec}'))
     control('identity', requirement=(
-        'Choose inbound and backend authentication separately. Validate issuer, tenant, audience, expiry and caller permissions at the gateway. '
-        'For the shared managed-identity baseline, only the gateway identity may authenticate to the private backend. '
-        f'Authorize each upstream caller before using that shared identity; do not trust caller-supplied identity headers. {rec}'),
+        'At the gateway, validate token issuer, tenant, audience, expiry and caller permissions. '
+        'Allow only the gateway identity to authenticate to the private backend. '
+        f'Strip caller-supplied identity headers. For user-specific object permissions, send verified caller context over the gateway-only path or use the delegated variant below. {rec}'),
         documented=(
         f'API Management validates Entra tokens or subscription keys {ev("in-entra", "in-key")}; its managed identity can authenticate to a backend {ev("out-mi")}. '
         f'OBO preserves user delegation and requires a downstream token {ev("review-obo", "review-obo-token")}. '
@@ -93,16 +91,14 @@ def apply_review(page, ev, rec, inf, unv, evp):
         'Use a separate pilot endpoint for delegated user-token flows. Keep app-only workloads on an appropriately authenticated baseline endpoint. '
         f'One server policy covers every caller, so mixing incompatible callers can reject legitimate calls. {rec}'))
     control('power-platform', requirement=(
-        '<span id="gap-unverified-url-block"></span>Configure ACP for listed MCP connectors; arbitrary URL entries are unverified. '
-        'Retain mixed mode while classic data policies protect custom and HTTP connectors; ACP-only mode ignores those policies. '
-        f'Keep configuration manual until the actual MCP API adapter is verified. {rec}'),
+        '<span id="gap-unverified-url-block"></span>Use advanced connector policies (ACP) for listed MCP servers once Copilot Studio design-time enforcement reaches the target workload. '
+        f'Keep classic policies for custom, HTTP and Copilot Studio virtual connectors. Use mixed mode when adding ACP {ev("pp-custom", "review-custom-classic", "review-acp-mixed", "acp-virtual")}. '
+        f'Configure MCP policy manually until the API adapter is validated. {rec}'),
         documented=(
-        f'ACP supports deployment-pipeline automation {ev("pp-pipe")}, MCP server-level blocking but not per-tool blocks {ev("pp-block")}, '
-        f'and connector blocking also blocks dependent MCP tools {ev("studio")}. '
-        f'Custom and HTTP connectors are not yet supported by ACP and stay on classic data policies {ev("pp-custom", "review-custom-classic")}; mixed mode enforces both policy types {ev("review-acp-mixed")}. '
-        f'ACP general availability depends on design-time enforcement reaching each workload {ev("review-acp-rollout")}. '
-        f'{rec} Confirm Copilot Studio rollout before including ACP in a released-only deployment. Retain classic policies and record any remaining MCP coverage gap until then. '
-        f'{unv} The API tutorial does not establish the actual MCP-specific policy payload.'))
+        f'ACP blocks whole MCP servers. A connector block covers its dependent tools {ev("pp-block", "studio")}. '
+        f'Before design-time enforcement reaches a workload, ACP enforces at runtime only. Microsoft ties general availability to design-time rollout {ev("review-acp-rollout", "acp-runtime")}. '
+        f'Some connectors remain nonblockable in unmanaged environments {ev("acp-environment")}. '
+        f'The API supports policy automation {ev("pp-pipe")}. {unv} The tutorial does not establish an MCP-specific payload or support for blocking arbitrary URLs.'))
     control('ttp-modes', requirement=(
         'Configure evaluation mode in Microsoft Defender. Test Audit, Block and evaluator failures. '
         'Use pre-invocation checks to stop calls and post-invocation checks to withhold results. '
@@ -112,11 +108,6 @@ def apply_review(page, ev, rec, inf, unv, evp):
         f'One policy covers every tool and caller of a server {evp("pv-ttp-scope")}. '
         f'Discovery and session management are not evaluated {evp("review-ttp-discovery")}; initialize, tools/list and notifications are excluded {evp("review-ttp-example")}. '
         f'A post-call denial cannot undo execution {evp("pv-ttp-post")}; automatic retry is discouraged {evp("review-ttp-retry")}.'))
-    control('foundry-routing', requirement=(
-        'Pilot automatic routing only for newly created portal MCP tools without managed OAuth. '
-        'The baseline instead configures the company gateway URL explicitly; it does not depend on automatic Foundry mediation. '
-        f'Check the endpoint, authentication and request logs for each connection. {rec}'))
-
     replace('On merge, writes the list to each policy target.', 'Proposed adapters map reviewed Git decisions to the targets with validated automation.')
     replace('GitHub, Power Platform, Foundry</dd>', 'GitHub and Foundry; Power Platform pending API validation</dd>')
     replace('build the pipeline that applies it. Set the Microsoft 365 admin center by hand.', 'build and validate its target adapters. Configure Microsoft 365 access and Power Platform MCP policy manually until their respective automation is verified.')
@@ -128,63 +119,45 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('For Copilot Studio agents, no released guardrail checks call content (layer 3).', 'No released guardrail was established by this review for Copilot Studio call content (layer 3).')
     replace('The pages read on 2026-11-11 describe only preview controls at both layers.', 'The reviewed controls at both layers are preview; the supported-tool list does not establish MCP coverage.')
     replace('The pages read on 2026-11-11 describe only a preview control there.', 'The reviewed external detection control at that layer is preview.')
-    replace('Not used for MCP tools: routing them through it is a preview feature', 'Automatic routing of newly added MCP tools through the Foundry integration is a preview feature')
-    replace('Choose a v2 tier', 'Choose a suitable v2 tier if the Foundry integration is required')
     replace('The API Management integration does not automatically route agents through a customer-hosted gateway', 'Agent 365 does not automatically route agents through a customer-hosted gateway')
     replace('Confirm its public endpoint fits the backend isolation target.', 'Keep its public endpoint separate from the private backend.') if 'Confirm its public endpoint fits the backend isolation target.' in page else None
-    replace('<strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox', '<strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox <span class="tg r">recommendation</span>')
-    replace('It is also an API Management service', 'It uses Azure API Management behind the scenes')
     replace('Until then, block at server level and authorize at the server.', 'Until then, block at server level and authorize at the server. <span class="tg r">recommendation</span>')
-    replace('Dedicated AI Gateway is a separate product that can replace the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection', f"Dedicated AI Gateway is a separate product {evp('pv-aig-separate')}. Agent 365 can connect Azure AI Gateway to discover and govern MCP servers {evp('pv-disc')}. In the Agent 365 integration capability matrix, only AI Gateway lists tool blocking, tool activity and tool threat protection")
-    replace(f"Review the permissions granted {evp('pv-a365-rw')}.", f"Review the permissions granted {evp('pv-a365-role', 'pv-a365-rw')}.")
     replace('Blocked or preview route</li>', 'Rejected route or preview alternative</li>')
     # 2026-11-12 holistic review: cite the overview for the separate product, fix ownership and scope wording.
-    replace('A separate AI Gateway product, not the API Management service ' + ev('apim-ai-not-separate'),
-            'A separate AI Gateway product ' + evp('pv-aig-separate') + ', not the AI gateway capabilities built into the API Management service ' + ev('apim-ai-not-separate'))
     replace('Configure Microsoft 365 access and Power Platform MCP policy manually until their respective automation is verified.',
             'Configure Microsoft 365 agent access by hand; it has no API option. Configure Power Platform MCP policy by hand until its API path is verified.')
-    replace('separate AI Gateway product and resource type ' + ev('apim-ai-not-separate') + ' ' + evp('pv-aig-separate'),
-            'separate AI Gateway product and resource type ' + ev('apim-ai-not-separate') + ' ' + evp('pv-aig-separate', 'pv-res-change'))
     replace('<dt>Applies to</dt><dd>Agent 365 agent instances</dd>', '<dt>Applies to</dt><dd>Agent 365 agent instances and Foundry AI interactions</dd>')
     replace('No design control covers them. Pilot both, or limit it through GitHub account permissions.',
             f'No design control covers them. Pilot both switches, or limit the built-in server through GitHub account permissions. {rec}')
     replace('Hatched boxes and the lines that touch them are what preview adds. Everything else is the released design.', 'Hatching marks preview-only boxes; preview controls also live on shared boxes. The BYO line is a rejected alternative for this private backend.')
     assert page.count('What establishes the guarantee') == 14
     page = page.replace('What establishes the guarantee', 'Required control or validation')
-    replace('The federated connector pages read on 2026-11-11', 'The federated connector pages reviewed on 2026-11-13')
-    replace('The released-only design stays underneath. Details and limits',
-            'Keep the baseline controls; replacing the gateway requires a tested migration and rollback. Details and limits')
-    replace('If a preview feature changes, switch it off and fall back to the released-only design.',
-            'Plan a safe stop and test migration back to the released gateway before replacing it.')
-    replace('The released-only design stays underneath. Build it first.',
-            'Build the released gateway first. Preserve its controls and test rollback before a preview gateway pilot.')
+    replace(f'{inf} The federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.',
+            f'Microsoft lists federated connectors for Microsoft 365 Copilot as generally available {ev("m365-fed-ga")}. '
+            f'{rec} Confirm that the intended users and Copilot experience can access the approved connector.')
+    replace(f'{unv} The page describes tools in general. Not checked whether the option is offered for MCP tools.',
+            f'Microsoft documents this setting for the Kusto Query MCP Server {ev("studio-kusto-confirm")}.')
+    replace('VS Code asks again after a configuration change.', 'VS Code can prompt again after a configuration change.')
     replace('Safe stop, or a rollback to the released-only design</td>',
             'Safe stop or a tested migration back to the released gateway</td>')
-    replace('Automatic routing of newly added MCP tools through the Foundry integration is a preview feature <span class="tg pv">preview</span>',
-            'Automatic routing of newly added MCP tools through the Foundry integration <span class="tg pv">preview</span>')
-    # 2026-11-12 second full read: the Option 2 use line was a fragment that lost "not used for MCP tools".
-    replace('<dt>Use in this design</dt><dd>Automatic routing of newly added MCP tools through the Foundry integration <span class="tg pv">preview</span>',
-            '<dt>Use in this design</dt><dd>Not used for MCP tools; the baseline sets the gateway URL itself. Automatic routing applies only to new portal MCP tools without managed OAuth <span class="tg pv">preview</span>')
     # Context review: approval scope, publisher overrides and administrator roles.
     replace('Clear the external publisher type unless a server is on the list. Stage each connector to named groups.',
             'Clear all publisher types for a default-deny starting point, then individually enable only approved connectors for named groups within User access. Review existing individual overrides and future connector changes.')
     replace(f'Admins control availability {ev("m365-admin", "m365-org")}; every setting must allow the user {ev("m365-all")}.',
             f'Admins control availability {ev("m365-admin", "m365-org")}. Individual connector settings override publisher-wide defaults; User access remains the population ceiling {ev("review-connector-override")}.')
     replace(f'For federated connectors, tools that write need user approval {ev("m365-write")}.',
-            f'Federated connector write tools initially require user approval {ev("m365-write")}. Users can save approval for the conversation or choose Always allow for that tool {ev("review-write-approval-scope")}.')
+            f'Federated connector write tools initially require user approval {ev("m365-write")}. Users can save approval for the conversation or choose Always allow for that tool {ev("review-write-approval-scope")}. Researcher can only read through federated connectors {ev("m365-researcher")}.')
     replace(f'A rule can be scoped only to agents with a Microsoft Entra agent ID {evp("pv-gr-def-entra")}.',
             f'Rules can cover All agents or specific agents {evp("review-defender-scope")}. Only agents with a Microsoft Entra agent ID appear in the selection list {evp("pv-gr-def-entra")}.')
     replace(f'An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent {evp("pv-a365-role")}.',
             f'Connecting the Azure gateway requires Global Administrator; AI Administrator cannot perform this operation {evp("review-gateway-admin")}. The one-time tenant consent grants the A365 MCP Gateway Policy Operator role {evp("pv-a365-role")}.')
-    replace('after named tenant-admin consent, connect the gateway',
-            'have a Global Administrator grant tenant consent and connect the gateway')
-    replace(f'Review the permissions granted {evp("pv-a365-role", "pv-a365-rw")}.',
-            f'Review the permissions granted {evp("pv-a365-role", "pv-a365-rw", "review-gateway-admin")}.')
     replace('Configure Microsoft 365 agent access by hand; it has no API option.',
             'Configure Microsoft 365 Agent and plugin access by hand; this setting has no API option.')
-    assert page.count('it can be the same instance as Option 1.') == 2
-    page = page.replace('it can be the same instance as Option 1.',
-                        'see the <a href="#gap-one-gateway">combined-use assumption</a> before reusing Option 1.')
     replace('It carries the preview label ' + evp('fw-preview') + ' and inspects remote servers only ' + evp('fw-remote') + '.',
             'It carries the preview label ' + evp('fw-preview') + '; local servers and JSON-RPC batches are not inspected ' + evp('fw-remote') + '.')
+    replace(f'Only the client allowlist applies. {ev("gh-fw")}',
+            f'{ev("gh-fw")} Cloud sessions run in sandboxes or on GitHub Actions {ev("gh-cloud-settings")}. '
+            f'{rec} Verify managed-setting support for the actual runtime and profile before relying on the allowlist.')
+    replace('The same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.',
+            'One API Management instance could serve both the model and MCP routes in this design. Verify tier capabilities, connectivity and policy isolation for each route before sharing the instance.')
     return page

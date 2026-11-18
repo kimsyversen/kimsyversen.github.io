@@ -1,6 +1,18 @@
 # VS Code agent guardrails: fact check
 
-Checked on 15 November 2026. Sources are the VS Code docs, each marked `DateApproved: 11/11/2026`. The raw markdown was read from the `microsoft/vscode-docs` repository on GitHub, which the public pages under `https://code.visualstudio.com/docs/` are built from.
+Original check on 15 November 2026. Sources are the VS Code docs, each marked `DateApproved: 11/11/2026`. The raw markdown was read from the `microsoft/vscode-docs` repository on GitHub, which the public pages under `https://code.visualstudio.com/docs/` are built from.
+
+## Rechecked on 18 November 2026
+
+Retrieved the seven linked Microsoft documentation articles as Markdown from the published site and the three implementation files at the pinned VS Code revision. All 52 current excerpts matched after removing Markdown formatting, including the eight static excerpts and five excerpts on the cited code lines. Implementation claims refer to that revision. The simulator checks cover a first web fetch, refusal, and sandbox retries after initial approval. Chrome checks at 360 and 1280 pixels passed for the controls and section links with no page overflow or console errors. No Copilot session or platform sandbox was run.
+
+| Claim reviewed | Verdict and primary source |
+|---|---|
+| A Copilot web fetch asks separately about the request and the response | Corrected. The two-stage flow is documented for Local. Copilot Manual permissions offers a host-scoped request with Allow Once. The simulation assumes no saved grant. [Copilot approval scopes](https://code.visualstudio.com/docs/agents/run/approvals#scope-approvals-in-copilot-sessions) |
+| Allow all removes the prompt for an unsandboxed retry | False for the pinned code. The initial tool approval and sandbox bypass are separate. A blocked retry also preserves any earlier approval in the simulation. [Permission check order](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L253-L289) |
+| Passing the controls proves an operation succeeded, or makes its effects irreversible | Unsupported. Outcomes now describe permission to attempt the action. File review can revert supported edits, while restoring workspace files does not reverse completed tool calls to external services. [Review and revert](https://code.visualstudio.com/docs/agents/run/review-code-edits#undo-changes-at-the-right-scope) |
+| Linux packages and Windows minimum builds | Corrected the shortened historical entries below using the execution host prerequisites, including both Windows update branches. [Platform availability](https://code.visualstudio.com/docs/agents/run/agent-sandboxing#check-platform-availability) |
+| MCP sandbox coverage | Confirmed for locally managed servers with the server sandbox setting enabled. Independent servers and per-server sandboxing have separate scope. [Managed servers](https://code.visualstudio.com/docs/agents/run/agent-sandboxing#configure-managed-servers-and-credentials) |
 
 ## How the quotes were checked
 
@@ -19,11 +31,10 @@ A script took every quote from the `Q` table in `vscode-guardrails.html` and loo
 | termdefault | By default, common read-only commands run automatically, while risky commands such as rm and del require approval. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word |
 | runtime | In Copilot harness sessions, the runtime can approve read-only commands or sandboxed commands before terminal approval rules are evaluated. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word |
 | besteffort | Terminal auto-approval is a best-effort convenience, not a security boundary. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word |
-| urlreq | Prevents data from being sent to an untrusted site. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word |
-| urlres | Helps prevent prompt injection from untrusted content. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word |
+| fetchonce | Allow Once is the default action for terminal commands, web fetches, and file access requests. | [Copilot approval scopes](https://code.visualstudio.com/docs/agents/run/approvals#scope-approvals-in-copilot-sessions) | Word for word |
 | sensitive | Sensitive-file approval happens before the agent saves an edit, rather than during review. | [agents/run/review-code-edits](https://code.visualstudio.com/docs/agents/run/review-code-edits) | Word for word |
 | editauto | File edits might be auto-approved. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Word for word |
-| builtin | Built-in agent tools can only read and write files within the current workspace folder. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security) | Word for word |
+| assistedwrite | `return attributePermissionResult({ kind: 'approve-once' }, 'assisted_approval');` | [copilotAgentSession.ts](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8743-L8772) | Word for word. Applying this branch to the sensitive edit is interpretation by AI. |
 | privs | The agent can execute terminal commands and shell scripts with your user privileges | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security) | Word for word |
 | cwd | The sandbox automatically grants read and write access to the current working directory. | [agents/run/agent-sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing) | Word for word |
 | ssh | It protects sensitive locations, such as SSH keys and shell configuration, and applies to child processes such as package managers and build scripts. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Word for word |
@@ -56,7 +67,7 @@ A script took every quote from the `Q` table in `vscode-guardrails.html` and loo
 | mcpown | They don't cover servers you start independently. | [agents/run/agent-sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing) | Word for word |
 | bypass | Sandbox bypass requires confirmation | [sessionPermissions.ts, lines 253 to 256](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L253-L256) | Word for word |
 
-## Claims that are not quotes
+## Claims reviewed on 15 November 2026
 
 | Claim on the page | Verdict | Basis |
 |-------------------|---------|-------|
