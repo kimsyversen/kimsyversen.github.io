@@ -78,7 +78,7 @@ if STYLE.count(_AI_NOTE_CSS) != 1:
 STYLE = STYLE.replace(_AI_NOTE_CSS, _AI_NOTE_CSS + _TAG_KEY_CSS)
 
 
-TITLE = "A proposed design for MCP Governance in a Microsoft ecosystem"
+TITLE = ns["TITLE"]
 DESC = ("The MCP governance design as one interactive diagram: select a box to see its controls, "
         "and filter by objective or call layer.")
 HEAD = re.sub(r"<title>.*?</title>", f"<title>{TITLE}</title>", HEAD, flags=re.S)
@@ -137,8 +137,15 @@ PV_LAYER = {"a365": [4], "a365-consent": [4], "ai-resource": [4], "ai-limits": [
 # and say so on the page, the way the first page marks its own layer guess for the prompt attack block.
 PV_LAYER_EST = {"a365", "a365-consent", "ai-resource", "ai-limits", "ai-publish", "byo", "foundry-routing", "outbound-filter"}
 for cid, title, meta, req, doc in PV_ROW.findall(pv_block):
+    preview = cid != "foundry-routing"
+    if cid == "foundry-routing":
+        meta = "Objective A"
+        req = (f"Configure the company gateway route first. Set its full URL on each new or existing Foundry MCP tool "
+               f"and on any project connection that supplies the endpoint. Verify a tool call in gateway telemetry. {REC}")
+        doc = (f"Foundry no longer registers MCP servers or rewrites tool endpoints automatically {ev('pv-fy-prev', 'pv-fy-new')}. "
+               f"A project connection endpoint takes precedence over the tool's <code>server_url</code> {ev('pv-fy-aig-only-mcp')}.")
     CONTROLS.append(dict(id=cid, title=title, meta=meta, applies=None, req=req, doc=doc,
-                         layers=PV_LAYER[cid], objs=objs_of(meta), preview=True, guardrail=False))
+                         layers=PV_LAYER[cid], objs=objs_of(meta), preview=preview, guardrail=False))
 
 PV_GR_LAYERS = {"Tool call and tool response guardrails": [3, 6], "Threat detection": [3],
                 "Defender real-time protection": [3, 6], "Defender on the Agent 365 path": [3],
@@ -148,7 +155,7 @@ for name, product, layer, text in [GR_PREV_FY] + [r[1] for r in GR_PREV_RAW]:
                          doc=text, layers=PV_GR_LAYERS[name], objs=[], preview=True, guardrail=True,
                          layer_text=layer))
 
-# The Network guardrail is preview (guardrails overview); toolbox network isolation is separate.
+# Keep hosted-agent egress separate from toolbox networking.
 for _c in CONTROLS:
     if _c["id"] == "foundry-network":
         _c["doc"] = (f"For a Foundry toolbox, its hosting project governs network access {ev('fy-gov')}. "
@@ -156,11 +163,13 @@ for _c in CONTROLS:
                      f"Configure egress separately from inbound private access. {REC}")
 CONTROLS.append(dict(
     id="foundry-egress", title="Foundry Network guardrail", meta="Objective B",
-    applies="Hosted agents and prompt agents on the Copilot harness", layers=[4], objs=["B"],
-    preview=True, guardrail=False,
-    req=f"Pilot explicit destination rules; do not count this guardrail as part of the released-only baseline. {REC}",
-    doc=(f"The Network control covers hosted agents and prompt agents on the Copilot harness, not other prompt agents {ev('gr-fy-net')}. "
-         f"Agent guardrails are preview {evp('gr-fy-agprev')}; hosted agents use per-session VM sandboxes {ev('gr-fy-sandbox')}.")))
+    applies="Foundry hosted agents", layers=[4], objs=["B"], preview=False, guardrail=False,
+    req=f"Allow approved destinations and deny unmatched outbound connections from the hosted agent sandbox. "
+        f"Check downstream connections separately when a toolbox runs the tool. {REC}",
+    doc=(f"Hosted-agent network egress controls are generally available {ev('fy-egress-ga')}. "
+         f"The Copilot harness for prompt agents, Transform rules, secret-backed header values and Azure Policy governance "
+         f"for hosted-agent egress remain in preview {PRE} {ev('fy-egress-ga', 'fy-egress-harness', 'fy-egress-exceptions')}. "
+         f"Other prompt agents are outside the Network control's scope {ev('gr-fy-net')}.")))
 
 # Page-only control. The first page has no Purview row; this one adds what Purview records about agent tool calls.
 CONTROLS.append(dict(
@@ -184,6 +193,22 @@ for name_html, does, where, use in DESIGN_ROWS:
     name = re.sub(r"<span class=\"rt\">.*?</span>", "", name_html)
     PART[name] = (does, where, use)
 
+
+PART["Azure API Management"] = (
+    f"The company gateway exposes MCP tools. API Management does not support MCP resources or prompts {ev('apim-mcp-scope')}.",
+    f"Supported classic and v2 tiers can host MCP routes. Check individual capabilities by tier {ev('mcp-tiers', 'pv-apim-tier')}. "
+    f"The self-hosted gateway can also manage MCP servers {ev('apim-ga-tiers')}.",
+    f'Choose a tier that can reach the <a href="#ctrl-backend">private backend</a> and enforce the required policies. {REC}',
+)
+PART["AI Gateway integrated with Foundry"] = (
+    f"Foundry projects can consume models through a shared gateway and use its MCP endpoints {ev('fy-aig-apim')}.",
+    f"Manage API Management in Azure or through code. Use connected models in Foundry. "
+    f"The legacy Foundry interface no longer creates API Management links. Existing configurations continue to work "
+    f"{ev('fy-aig-new', 'fy-aig-same', 'fy-aig-prod')}.",
+    f'Both v1 and v2 tiers can serve as the hub {ev("fy-aig-v2")}. '
+    f'Configure <a href="#ctrl-foundry-routing">MCP tool routing</a> separately. '
+    f'See the <a href="#gap-one-gateway">shared gateway assumption</a> before using the same instance for both.',
+)
 
 def clean_use(use, here=()):
     """The control links in the shared rows are replaced by the controls on the box itself.
@@ -447,9 +472,17 @@ def panel(n):
     parts = []
     for pn in n["parts"]:
         does, where, use = PART[pn]
-        parts.append(f'<div class="part" id="part-{slug(pn)}"><h4>{pn}</h4>'
+        part_title = "Foundry model access through API Management" if pn == "AI Gateway integrated with Foundry" else pn
+        parts.append(f'<div class="part" id="part-{slug(pn)}"><h4>{part_title}</h4>'
                      + dl([("What it does", does), ("Where it is set or run", where),
                            ("Use in this design", clean_use(use, n["ctl"]))]) + "</div>")
+    if n["id"] == "gw":
+        parts.insert(0, '<div class="part" id="part-ways-to-build-the-gateway"><h4>Ways to build the gateway</h4>'
+                     '<p>API Management fronts the company MCP server. Foundry can also use the gateway for models.</p></div>')
+        parts.append(f'<div class="part view-preview" id="part-dedicated-ai-gateway"><h4>Dedicated AI Gateway {PRE}</h4>'
+                     + dl([("What it does", f"A separate gateway product with resource type Microsoft.ApiManagement/aigateways {evp('pv-aig-separate', 'pv-res-change')}."),
+                           ("Migration", f"The January 15, 2027 deadline applies to the earlier AIGateway SKU of Microsoft.ApiManagement/service {evp('pv-res-date', 'pv-res-removed')}."),
+                           ("Use in this design", '<a href="#ctrl-ai-limits">Check the preview networking and policy limits</a> before piloting it.')]) + "</div>")
     ctls = "".join(control_html(n, cid) for cid in n["ctl"])
     cls = "np" + (" view-preview" if n["preview"] else "")
     extra = ""
@@ -1014,7 +1047,7 @@ MAST = f"""
   <a class="skip" href="#main-content">Skip to content</a>
   <header class="mast">
     <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked {CHECKED}</span></div>
-    <h1>A proposed design for MCP Governance in a Microsoft ecosystem</h1>
+    <h1>{TITLE}</h1>
     <p class="lead"><a href="mcp-governance-stride.html">Read the threat model for this design</a></p>
   </header>
 
@@ -1164,11 +1197,12 @@ def stack_tables(src):
 
 _extra_tests = [
     ("Clear publisher defaults, enable one approved Microsoft 365 connector and check an unapproved connector", "Only the individually approved connector is available within User access; review existing overrides", "B"),
-    ("Repeat a Microsoft 365 write tool after one-time, conversation and saved approval", "Confirmation follows the selected approval scope; backend authorization still applies to every action", "A and B"),
+    ("In a write-capable Microsoft 365 experience, repeat a write tool after one-time, conversation and saved approval", "Confirmation follows the selected approval scope; backend authorization still applies to every action", "A and B"),
     ("Use a valid token with the wrong audience, tenant or caller permission", "Rejected before backend execution", "A"),
     ("A read-only caller requests a write tool through the shared gateway identity", "Denied by caller-specific authorization", "A"),
     ("Switch accounts or start a client without cached server policy", "Required device policy remains enforced; verify each supported client", "B"),
     ("Change custom agent profiles, use a cloud session or call through a shell tool", "Document exclusions; prove separate client and egress controls before claiming coverage", "B"),
+    ("Invoke a Foundry MCP tool with a project connection", "The effective connection endpoint is the company gateway and the tool request appears in gateway telemetry", "A"),
     ("Try an unapproved MCP destination from each Foundry and Copilot Studio path", "Blocked by the configured network or connector policy, or recorded as an unresolved gap", "B"),
     ("Deny a company MCP server while a client has stale policy or an active session", "Company gateway and backend reject new calls; automated targets update after refresh, and manual targets need recorded administrator changes", "A and B"),
     ("Check custom and HTTP connector restrictions while ACP is enabled", "Mixed mode retains the required classic policy blocks", "B"),
