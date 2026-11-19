@@ -267,7 +267,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
   <!-- 1 MAP -->
   <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
     <section id="risk-map-of-the-workstation" aria-label="Workstation risk map">
-      <div class="rchips" id="dgChips" role="group" aria-label="Show a checklist risk on the map"></div>
+      <div class="rchips" id="dgChips" role="group" aria-label="Show all risks or select a Top 10 risk"></div>
       <div class="rchips" id="dgChipsX" role="group" aria-label="Show a further risk, D11 to D17, in the diagram"><span class="chip-lbl">Further risks</span></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
 
@@ -1279,7 +1279,9 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePop(true); });
 
     var chipBox = document.getElementById('dgChips');
-    ['all'].concat(RISKS).forEach(function(r){ makeChip(r, chipBox); });
+    makeChip('all', chipBox);
+    chipBox.appendChild(htmlEl('span', 'chip-lbl', 'Top 10'));
+    RISKS.forEach(function(r){ makeChip(r, chipBox); });
     var chipBoxX = document.getElementById('dgChipsX');
     XIDS.forEach(function(r){ makeChip(r, chipBoxX); });
 
