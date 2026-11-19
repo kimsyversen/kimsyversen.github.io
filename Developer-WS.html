@@ -76,7 +76,7 @@ section{display:grid;gap:14px;min-width:0}
 .short{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
 .short li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:baseline}
 .short li::before{counter-increment:s;content:counter(s);font:700 1.3rem/1 var(--display);color:var(--accent)}
-.short li span{min-width:0}
+.short li > span{min-width:0}
 
 /* code */
 
@@ -291,8 +291,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       <h2><a class="sec-link" href="#in-short">In short</a></h2>
       <ol class="short">
         <li><span>Review what runs when a folder is trusted and what Copilot can do after it starts. Assess tasks, extensions, instructions and tool access separately.</span></li>
-        <li><span>Record the harness used by the session. Microsoft distinguishes the Copilot harness, which runs in Agent Host, from the legacy harness named Local. Their approval, sandbox and MCP controls differ.</span> <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise AI settings</a></li>
-        <li><span>Check the identity, data and network paths for each tool. A terminal sandbox, a GitHub account policy and a restriction on browser access govern different actions.</span> <span class="tag">[inference]</span></li>
+        <li><span>Record the harness used by the session. Microsoft distinguishes the Copilot harness, which runs in Agent Host, from the legacy harness named Local. Their approval, sandbox and MCP controls differ. <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise AI settings</a></span></li>
+        <li><span>Check the identity, data and network paths for each tool. A terminal sandbox, a GitHub account policy and a restriction on browser access govern different actions. <span class="tag">[inference]</span></span></li>
       </ol>
     </section>
 
