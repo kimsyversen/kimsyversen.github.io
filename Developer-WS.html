@@ -73,13 +73,6 @@ section{display:grid;gap:14px;min-width:0}
 .sub{color:var(--muted)}
 .note{font-size:0.88rem;color:var(--muted)}
 
-.short{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
-.short li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:baseline}
-.short li::before{counter-increment:s;content:counter(s);font:700 1.3rem/1 var(--display);color:var(--accent)}
-.short li > span{min-width:0}
-
-/* code */
-
 /* callout and tally */
 .callout{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px 16px;display:grid;gap:8px}
 .callout h3{color:var(--flag);font-size:1rem}
@@ -273,39 +266,29 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 
   <!-- 1 MAP -->
   <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
-    <section id="in-short">
-      <h2><a class="sec-link" href="#in-short">In short</a></h2>
-      <ol class="short">
-        <li><span>Review what can run when you trust a folder. Check tasks, extensions, instructions and the tools Copilot can use.</span></li>
-        <li><span>Record which harness runs the session. The Copilot harness runs in Agent Host. The older Local harness applies different rules for approvals, sandboxing and MCP. <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise AI settings</a></span></li>
-        <li><span>Check which accounts, files and websites each tool can reach. The terminal sandbox, GitHub account policy and browser restrictions cover different actions. <span class="tag">[inference]</span></span></li>
-      </ol>
-    </section>
-
-    <section id="risk-map-of-the-workstation">
-      <h2 id="workstation-risk-map"><a class="sec-link" href="#risk-map-of-the-workstation">Workstation risk map</a></h2>
+    <section id="risk-map-of-the-workstation" aria-label="Workstation risk map">
       <div class="rchips" id="dgChips" role="group" aria-label="Show a checklist risk on the map"></div>
       <div class="rchips" id="dgChipsX" role="group" aria-label="Show a further risk, D11 to D17, in the diagram"><span class="chip-lbl">Further risks</span></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
-    </section>
 
-    <figure class="risk-figure" id="dgFig">
-      <div class="dg-scroll" id="dgScroll">
-        <svg class="dg" id="dg" viewBox="0 52 1240 712" role="group" aria-labelledby="workstation-risk-map"></svg>
-        <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
-      </div>
-      <figcaption id="dgCap">
-        <span class="legend">
-          <span><i class="lg-mk">D01</i>Not assessed</span>
-          <span><i class="lg-mk st-ok">D01</i>OK</span>
-          <span><i class="lg-mk st-part">D01</i>Partial</span>
-          <span><i class="lg-mk st-miss">D01</i>Missing</span>
-          <span><i class="lg-mk st-unk">D01</i>Unknown</span>
-          <span><i class="lg-mk x">D11</i>Further risk</span>
-          <span><i class="lg-sb"></i>Terminal sandbox review</span>
-        </span>
-      </figcaption>
-    </figure>
+      <figure class="risk-figure" id="dgFig">
+        <div class="dg-scroll" id="dgScroll">
+          <svg class="dg" id="dg" viewBox="0 52 1240 712" role="group" aria-label="Workstation risk diagram"></svg>
+          <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
+        </div>
+        <figcaption id="dgCap">
+          <span class="legend">
+            <span><i class="lg-mk">D01</i>Not assessed</span>
+            <span><i class="lg-mk st-ok">D01</i>OK</span>
+            <span><i class="lg-mk st-part">D01</i>Partial</span>
+            <span><i class="lg-mk st-miss">D01</i>Missing</span>
+            <span><i class="lg-mk st-unk">D01</i>Unknown</span>
+            <span><i class="lg-mk x">D11</i>Further risk</span>
+            <span><i class="lg-sb"></i>Terminal sandbox review</span>
+          </span>
+        </figcaption>
+      </figure>
+    </section>
 
     <section id="risk-by-zone">
       <h2><a class="sec-link" href="#risk-by-zone">Risk by zone</a></h2>
@@ -655,6 +638,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     try { id = decodeURIComponent(id); } catch(e){}
     var target = id;
     if (id === 'moreRows') target = 'more';
+    if (id === 'in-short' || id === 'workstation-risk-map') target = 'risk-map-of-the-workstation';
     if (reviewAnchors.indexOf(id) >= 0) target = 'fact-check-notes';
     var el = document.getElementById(target);
     if (!el) return false;
