@@ -13,7 +13,7 @@ TARGETS      v                            v                            v        
 | Power Platform admin   |   | Managed settings       |   | Foundry portal         |   | Microsoft 365 admin    |
 | center                 |   | repository             |   |                        |   | center                 |
 | Approved list          |   | Approved list          |   | Approved tools         |   | Approved connectors    |
-| By pipeline            |   | By pipeline            |   | By pipeline            |   | [red]By hand[/red]                |
+| [red]By hand[/red]                |   | By pipeline            |   | By pipeline            |   | [red]By hand[/red]                |
 +------------------------+   +------------------------+   +------------------------+   +------------------------+
              |                            |                            |                            |
 MCP CLIENTS  v                            v                            v                            v
@@ -26,9 +26,9 @@ MCP CLIENTS  v                            v                            v        
              |                                                                                      |
              v                                                                                      |
 +------------------------+   +------------------------+   +------------------------+                |
-| [b]CLIENT CONTROLS[/b]        |   | [new][b]AI GATEWAY[/b][/new]             |   | [b]COMPANY MCP SERVER[/b]     |                |
-| URL allowlist: VS Code |   | [new]Separate product[/new]       |   | Accepts calls from     |                |
-| and GitHub Copilot     |   | [new]Public preview[/new]         |   | Gateway only           |                |
+| [b]CLIENT CONTROLS[/b]        |   | [b]AI GATEWAY[/b]             |   | [b]COMPANY MCP SERVER[/b]     |                |
+| URL allowlist: VS Code |   | Standalone GA         |   | Accepts calls from     |                |
+| and GitHub Copilot     |   | [new]Private VNet (preview)[/new] |   | Gateway only           |                |
 | Windows egress (Intune)|-->| Check identity         |-->|                        |                |
 | Client signed in       |   | Authorize requests     |   |                        |                |
 | [new]Global Secure Access[/new]   |   | Log usage              |   |                        |                |
@@ -48,8 +48,6 @@ MCP CLIENTS  v                            v                            v        
                              | [new]Gateway link (preview)[/new]   |      +----------------------------+
                              +--------------------------+
 
-Unlisted server denied
+Design target: approved servers only for managed clients
 
-[new]Shaded[/new] = added by preview. AI Gateway takes the place of API Management.
-Everything else is the released design.
-Foundry gateway routing and the Defender checks are in the tables below.
+[new]Shaded[/new] = optional pilot controls.

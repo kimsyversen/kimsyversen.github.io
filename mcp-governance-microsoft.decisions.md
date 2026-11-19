@@ -2,6 +2,12 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 # Decisions: MCP Governance in a Microsoft ecosystem
 
+## 2026-11-19, gateway release and integration boundaries
+
+- Supersedes the preview product and the v2-only Foundry routing assumptions below. Keep API Management Standard v2 or Premium v2 as the baseline for a private MCP backend. List standalone Azure AI Gateway in Released only and pilot its private networking separately.
+- Use explicitly configured Foundry MCP endpoints for both gateway options. Validate the effective endpoint on every tool and on its project connection where applicable.
+- Keep Agent 365 onboarding optional while Azure and the Microsoft 365 admin sources disagree on release status. Keep BYO registration and tool threat protection scoped to their documented preview flows.
+
 ## 2026-11-11, Agent admin view and approval workflow
 
 - **Show the Microsoft 365 admin views separately.** Agents > All agents > Registry inventories agents. Agents > Tools > Registry shows MCP server availability, and Requests (preview) handles MCP registration requests. They are not one screen and visibility does not enforce access. Agent details can show read-only, incomplete tool metadata.

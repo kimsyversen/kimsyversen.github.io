@@ -14,15 +14,15 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
 | [b]2 PERSON APPROVES[/b]          |   | [b]2 PERSON APPROVES[/b]          |   | [b]2 PERSON APPROVES[/b]          |
 | require_approval           |   | Ask user before running    |   | Confirmation dialog        |
 | (default: always)          |   | [red]Off by default[/red]             |   | (default: Manual)          |
-| Can be set to never        |   | (for MCP: unverified)      |   | [red]Allow all skips it[/red]         |
+| Can be set to never        |   | (Kusto MCP example)        |   | [red]Allow all skips it[/red]         |
 |                            |   |                            |   | Policy can lock it         |
 +----------------------------+   +----------------------------+   +----------------------------+
                |                                |                                |              
                v                                v                                v              
 +----------------------------+   +----------------------------+   +----------------------------+
 | [b]3 CALL CONTENT[/b]             |   | [b]3 CALL CONTENT[/b]             |   | [b]3 CALL CONTENT[/b]             |
-| [red]Preview only[/red]               |   | [red]Preview only[/red]               |   | preToolUse hook can deny   |
-|                            |   |                            |   | (for MCP: unverified)      |
+| [red]Preview only[/red]               |   | [red]Preview only[/red]               |   | Agent hooks (preview)      |
+|                            |   |                            |   |                            |
 +----------------------------+   +----------------------------+   +----------------------------+
                |                                |                                |              
                v                                v                                v              
@@ -43,7 +43,7 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
                                                 v                                               
 +----------------------------+   +----------------------------+   +----------------------------+
 | [b]6 TOOL RESPONSE[/b]            |   | [b]6 TOOL RESPONSE[/b]            |   | [b]6 TOOL RESPONSE[/b]            |
-| [red]Preview only[/red]               |   | Prompt attack block (XPIA) |   | Result review before it    |
-|                            |   | (layer: AI estimate)       |   | enters the chat context    |
-|                            |   |                            |   | [red]Can be switched off[/red]        |
+| [red]Preview only[/red]               |   | Prompt attack block (XPIA) |   | Post-tool confirmation     |
+|                            |   | (layer: AI estimate)       |   | per approval settings      |
+|                            |   |                            |   |                            |
 +----------------------------+   +----------------------------+   +----------------------------+

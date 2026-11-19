@@ -13,7 +13,7 @@ TARGETS      v                            v                            v        
 | Power Platform admin   |   | Managed settings       |   | Foundry portal         |   | Microsoft 365 admin    |
 | center                 |   | repository             |   |                        |   | center                 |
 | Approved list          |   | Approved list          |   | Approved tools         |   | Approved connectors    |
-| By pipeline            |   | By pipeline            |   | By pipeline            |   | [red]By hand[/red]                |
+| [red]By hand[/red]                |   | By pipeline            |   | By pipeline            |   | [red]By hand[/red]                |
 +------------------------+   +------------------------+   +------------------------+   +------------------------+
              |                            |                            |                            |
 MCP CLIENTS  v                            v                            v                            v
@@ -27,7 +27,7 @@ MCP CLIENTS  v                            v                            v        
              v                                                                                      |
 +------------------------+   +------------------------+   +------------------------+                |
 | [b]CLIENT CONTROLS[/b]        |   | [b]API MANAGEMENT[/b]         |   | [b]COMPANY MCP SERVER[/b]     |                |
-| URL allowlist: VS Code |   | MCP: supported tiers   |   | Accepts calls from     |                |
+| URL allowlist: VS Code |   | Standard or Premium v2 |   | Accepts calls from     |                |
 | and GitHub Copilot     |   |                        |   | Gateway only           |                |
 | Windows egress (Intune)|-->| Check identity         |-->|                        |                |
 | Client signed in       |   | Authorize requests     |   |                        |                |
@@ -38,5 +38,4 @@ MCP CLIENTS  v                            v                            v        
                                           +---------------------------------------------------------+
                                             Microsoft cloud, fixed outbound addresses
 
-Unlisted server denied
-Agent 365 not drawn: company servers join it through preview features
+Design target: approved servers only for managed clients

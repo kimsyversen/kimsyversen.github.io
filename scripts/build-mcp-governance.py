@@ -49,7 +49,7 @@ MARKERS = SRC[SRC.index("<body>") + 6:SRC.index('<div class="page" id="top">')]
 AI_NOTE = cut('<p class="ai-note">', "</p>")
 
 TITLE = "MCP Governance in a Microsoft ecosystem"
-DESC = "A short design to make a gateway the only way to reach a company MCP server, comparing API Management's supported MCP capabilities with the separate AI Gateway public preview product and its preview integrations."
+DESC = "A short design to make a gateway the only way to reach a company MCP server, using API Management for a private backend, with Azure AI Gateway as a generally available alternative and optional preview controls."
 HEAD = re.sub(r"<title>.*?</title>", f"<title>{TITLE}</title>", HEAD, flags=re.S)
 HEAD = re.sub(r'(<meta name="description" content=")[^"]*(")', rf"\g<1>{DESC}\2", HEAD)
 
@@ -239,7 +239,7 @@ def anchors(*ids):
 MAST = f"""
   <a class="skip" href="#main-content">Skip to content</a>
   <header class="mast">
-    <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Documentation checked 11 Nov 2026</span></div>
+    <div class="meta"><span>Design · Microsoft stack · MCP</span><span>Gateway documentation checked 19 Nov 2026</span></div>
     <h1>MCP Governance in a Microsoft ecosystem</h1>
     <div class="intro">
       <p class="lead">A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.</p>
@@ -269,7 +269,7 @@ DESIGN_ROWS = [
      "A Git repository, changed by reviewed pull request.",
      control_link("inventory", "Approved inventory")],
     [pname("Sync pipeline", "Source of truth"),
-     "On merge, writes the list to each policy target.",
+     "Proposed adapters apply reviewed Git changes to targets with validated automation.",
      "A pipeline the company builds. Proposed work; not built yet.",
      control_link("pipeline", "Policy sync, pipeline")],
     [pname("GitHub Enterprise", "Policy target"),
@@ -278,7 +278,7 @@ DESIGN_ROWS = [
      f"{control_link('client', 'Client allowlist')}; {control_link('pipeline', 'Policy sync, pipeline')}"],
     [pname("Power Platform", "Policy target"),
      "Controls which MCP connectors Copilot Studio agents may use.",
-     f"Power Platform admin center {UNV}. The pipeline would use the Power Platform API, not verified for MCP.",
+     f"Configure by hand in the Power Platform admin center until the MCP API adapter is verified. {REC}",
      control_link("power-platform", "Policy sync, Power Platform")],
     [pname("Microsoft Foundry", "Policy target"),
      "Limits the tools each Foundry agent may call on an MCP server.",
@@ -293,13 +293,17 @@ DESIGN_ROWS = [
      f"Intune and VS Code policy {INF}. They sit on the device, so they do not cover Microsoft 365 Copilot.",
      f"{control_link('client', 'Client allowlist')}; {control_link('windows', 'Windows outbound limits')}; {control_link('stdio', 'Local stdio servers')}"],
     [pname("Azure API Management", "Gateway"),
-     f"The one door to the company MCP server, for every client. Its AI gateway capabilities extend the service and are not a separate offering {ev('apim-ai-not-separate')}.",
+     f"The company MCP gateway for every client. AI gateway capabilities extend the API Management service {ev('apim-ai-not-separate')}.",
      f"Azure {INF}. MCP server management is listed for classic and v2 tiers {ev('mcp-tiers')}.",
-     f"{control_link('gateway', 'Gateway')}; {control_link('backend', 'Backend isolation')}; {control_link('identity', 'Identity')}. Choose a v2 tier {REC}: the Foundry integration lists only v2 instances {ev('fy-aig-v2')}. A classic tier works for MCP but rules that integration out."],
-    [pname("AI Gateway integrated with Foundry", "Gateway option"),
-     f"The AI Gateway option in the Foundry portal. It is also an API Management service {ev('fy-aig-apim')}.",
-     f"Create new makes a Basic v2 instance {ev('fy-aig-new')}. Use existing lists only v2 instances in the same tenant and subscription as the Foundry resource {ev('fy-aig-v2', 'fy-aig-same')}.",
-     f"Not used for MCP tools: routing them through it is a preview feature. If Foundry is connected, use the company's existing v2 instance, so there is one gateway and one set of policies {REC}. Microsoft suggests Standard v2 or Premium v2 for production {ev('fy-aig-prod')}. {INF} Interpretation by AI: one instance can serve both roles. Not tested."],
+     f"{control_link('gateway', 'Gateway')}; {control_link('backend', 'Backend isolation')}; {control_link('identity', 'Identity')}. Use Standard v2 or Premium v2 for the private backend {ev('rel-apim-network')}. {REC}"],
+    [pname("AI Gateway integrated with Foundry", "Model and tool connections"),
+     f"Foundry can consume models via Azure AI Gateway or API Management {ev('rel-fy-model')}.",
+     f"The legacy Foundry UI no longer creates API Management links {ev('rel-fy-apim')}. Configure the gateway separately.",
+     f"{control_link('foundry-routing', 'Foundry MCP routing')}. The model connection for Foundry prompt agents is in preview {evp('rel-fy-model-preview')}. {PRE}"],
+    [pname("Azure AI Gateway", "Gateway option"),
+     f"Standalone service, generally available in 17 regions {ev('rel-gateway', 'rel-regions')}.",
+     f"Use the Azure AI Gateway portal for the Microsoft.ApiManagement/aigateways resource {ev('rel-resource')}.",
+     f"{control_link('ai-publish', 'Publishing tools')}; {control_link('ai-resource', 'Migration from the earlier SKU')}. The pilot tests its private backend path."],
     [pname("Company MCP server", "Backend"),
      "Only the gateway may reach it.",
      "The server's own network and identity settings.",
@@ -312,7 +316,6 @@ DESIGN = f"""
       <h3>Parts and control planes</h3>
       <p class="q-note">Map the approved inventory into each policy target. Visibility alone does not enforce access. {REC}</p>
       {table(["Part", "What it does", "Where it is set or run", "Use in this design"], DESIGN_ROWS)}
-      <p class="q-note">{UNV} marks an admin surface name taken from the control plane list this page was checked against, not from a quoted source. {INF} marks interpretation by AI. Agent approval and lifecycle are separate from this page's MCP server workflow.</p>
     </div>
 """
 
@@ -321,38 +324,39 @@ DESIGN = f"""
 # [red]...[/red] marks text that means caution, unverified or denied. [b]...[/b] marks a box title.
 
 DESC_SAFE = ("Design target: a Git repository holds the approved and denied MCP servers. A reviewed pull request changes it. "
-             "After merge, a pipeline applies the list to three targets: Power Platform policy for Copilot Studio, "
-             "GitHub Enterprise managed settings, and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: "
+             "After merge, the proposed pipeline applies the list to "
+             "GitHub Enterprise managed settings and Foundry. Power Platform and Microsoft 365 admin settings are manual. Each target names where it is administered and points to the clients it governs: "
              "Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. The released-only design uses the Azure API Management service and its existing AI gateway capabilities; MCP server management is listed for supported classic and v2 tiers, with capability availability varying by tier. "
-             "The separate AI Gateway product is not used in this design. The first three clients pass through client sign-in, Windows outbound firewall rules administered by Intune on managed Windows devices where applicable, API Management identity checks and authorization, and the company MCP server, which accepts calls only from the gateway. "
+             "Azure AI Gateway is a released alternative. This diagram uses API Management for the private backend. Managed Windows clients can use Intune-administered outbound firewall rules. Every client calls the gateway, which checks identity and authorization. The backend accepts calls only from the gateway. "
              "The remote MCP URL allowlist applies to managed VS Code and GitHub Copilot clients; it is separate from device egress rules. "
-             "Microsoft 365 Copilot calls API Management from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. A direct call from a client to the server is blocked. "
-             "Agent 365 is not drawn: company servers join it through preview features.")
-DESC_PREVIEW = ("Design target: the figure shows the released-only design with the preview additions shaded. The preview design uses the separate AI Gateway product, which is in public preview, in place of the Azure API Management service gateway in the released-only design. A Git repository holds the approved and denied MCP servers. "
-                "After a reviewed merge, a pipeline applies the list to Power Platform policy for Copilot Studio, "
-                "GitHub Enterprise managed settings and Foundry. A fourth target, the Microsoft 365 admin center, is set by hand. Each target names where it is administered and points to the clients it governs: "
+             "Microsoft 365 Copilot calls API Management from documented Microsoft cloud outbound addresses. A direct call from a client to the server is blocked. "
+             "The baseline works without Agent 365 gateway onboarding.")
+DESC_PREVIEW = ("Design target: the pilot uses the released Azure AI Gateway with preview private networking. Shading marks optional pilot controls. A Git repository holds the approved and denied MCP servers. "
+                "After a reviewed merge, the proposed pipeline updates "
+                "GitHub Enterprise managed settings and Foundry. Power Platform and Microsoft 365 admin settings are manual. Each target names where it is administered and points to the clients it governs: "
                 "Copilot Studio, VS Code with GitHub Copilot, Foundry agents and Microsoft 365 Copilot. "
-                "The first three pass through client sign-in, Windows outbound firewall rules administered by Intune on managed Windows devices where applicable, AI Gateway identity checks and authorization with tool threat protection. With the Agent 365 integration, server inventory and blocking are listed for API Management v2 and AI Gateway; tool blocking, activity observability and threat protection are listed only for AI Gateway. "
+                "Managed Windows clients can use Intune-administered outbound rules. Every client reaches the backend through AI Gateway. The pilot tests tool threat protection for delegated user calls. With the Agent 365 integration, server inventory and blocking are listed for API Management v2 and AI Gateway; tool blocking, activity observability and threat protection are listed only for AI Gateway. "
                 "The remote MCP URL allowlist applies to managed VS Code and GitHub Copilot clients; it is separate from device egress rules. "
-                "Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses, and skips the client controls. "
-                "A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue. Shaded in the client controls box: the Global Secure Access MCP firewall. Shaded in the gateway box: the separate product, its public preview status, the Agent 365 tool block and tool threat protection. A separate shaded BYO server route box shows the Agent 365 Tooling Gateway, which is not for Foundry agents. Foundry gateway routing and the Defender checks are in the tables below.")
+                "Microsoft 365 Copilot calls the gateway from documented Microsoft cloud outbound addresses. "
+                "A direct call from a client to the server is blocked. Below the gateway, the Microsoft 365 admin view shows the all-agents registry, MCP server status, and the preview requests queue. Shaded in the client controls box: the Global Secure Access MCP firewall. Shaded in the gateway box: preview private networking, Agent 365 tool blocking and tool threat protection. A separate shaded BYO server route box shows the Agent 365 Tooling Gateway, which is not for Foundry agents. Foundry gateway routing and the Defender checks are in the tables below.")
 
 FIGURE = f"""
   <section class="sec" id="design" aria-labelledby="h-design">
     <header class="sh"><h2 id="h-design">The design</h2>
     <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers.&nbsp;{REC}</p>
-    <p class="goal view-safe"><b>Scope</b>This is the released-only design. It uses supported MCP capabilities in the API Management service, subject to tier availability. Preview features are in the other design: select With preview above, or read <a href="#preview">With preview</a>.</p>
-    <p class="goal view-preview"><b>Scope</b>This design replaces the API Management service gateway with the separate AI Gateway product, which is in public preview, and adds the Agent 365 integration. Use it only in a sandbox. The released-only design stays underneath. Details and limits are in <a href="#preview">With preview</a>.</p></header>
+    <p class="goal view-safe"><b>Scope</b>Use API Management Standard v2 or Premium v2 to reach the private backend {ev('rel-apim-network')}. Standalone Azure AI Gateway is a released option for publishing MCP tools {ev('rel-gateway')}.</p>
+    <p class="goal view-preview"><b>Scope</b>Pilot Azure AI Gateway private networking and optional Agent 365 controls in a sandbox. Keep the API Management route available for rollback. {REC}</p></header>
     <figure class="view-safe">
       <div class="fig-scroll" tabindex="0" role="region" aria-label="MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="{DESC_SAFE}">{ascii_fig("safe")}</pre>
       </div>
+      <figcaption class="q-note">Microsoft limits <a href="https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound#availability">outbound VNet integration</a> to &ldquo;Standard v2 and Premium v2 tiers&rdquo; {ev('rel-apim-network')}.</figcaption>
     </figure>
     <figure class="view-preview">
       <div class="fig-scroll" tabindex="0" role="region" aria-label="With-preview MCP gateway design diagram, horizontally scrollable">
 <pre class="ascii" role="img" aria-label="{DESC_PREVIEW}">{ascii_fig("preview")}</pre>
       </div>
-      <figcaption class="q-note">Shaded boxes and lines are what preview adds. Everything else is the released design. With preview, connect the gateway to Agent 365 and test tool threat protection in a sandbox. The view combines distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')} The BYO server route is separate; its limits are in the controls below.</figcaption>
+      <figcaption class="q-note">Microsoft lists <a href="https://techcommunity.microsoft.com/blog/integrationsonazureblog/azure-ai-gateway-is-now-generally-available-ship-faster-stay-in-control/4572644#:~:text=VNet%20integration">VNet integration for private backends</a> as &ldquo;VNet integration (preview)&rdquo; {evp('rel-network')}. The view combines distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')} The BYO route uses the Agent 365 Tooling Gateway {evp('pv-byo-route')}.</figcaption>
     </figure>
 {DESIGN}  </section>
 """
@@ -367,21 +371,20 @@ GR_PREV_RAW = [
     ("opt-preview", ["Defender real-time protection", "Foundry, Copilot Studio", "Foundry 3 and 6, plus user input and final answer. Copilot Studio 3",
      f"Checks agent activity and can block a risky action before it runs {evp('pv-gr-def-how')}. Foundry (Preview): user requests, agent responses, tool calls and tool responses {evp('pv-gr-def-fy', 'pv-gr-def-fy2')}. Copilot Studio (Preview): tool calls {evp('pv-gr-def-cs', 'pv-gr-def-cs2')}."]),
     ("opt-preview", ["Defender on the Agent 365 path", "Agent 365", "3",
-     f"Covers tool calls to customer MCP tools onboarded to Agent 365, but not agents that use unsupported tools or skip Work IQ MCP {evp('pv-gr-def-a365', 'pv-gr-def-unsup')}. {INF} Interpretation by AI: the line is not labelled preview on the page, but it needs a customer MCP server onboarded to Agent 365, and the sources call that path preview {evp('pv-byo-surf')}."]),
+     f"Defender evaluates tool calls and responses through Work IQ MCP, including customer tools onboarded to Agent 365 {evp('pv-gr-def-a365', 'pv-gr-def-unsup')}. The pilot's BYO registration is a preview feature {evp('pv-byo-surf')}."]),
     ("opt-preview", ["Defender rules and scope", "Foundry, Copilot Studio, Agent 365", "Same as the two rows above",
-     f"The default rule only audits {evp('pv-gr-def-audit')}. A custom rule blocks {evp('pv-gr-def-block')}. Blocking covers malicious content, secret exfiltration, evasion techniques and email to an unsafe domain {evp('pv-gr-def-mal', 'pv-gr-def-secret', 'pv-gr-def-evasion', 'pv-gr-def-mail')}. The email scenario is checked only at the tool request {evp('pv-gr-def-mailonly')}. A rule can be scoped only to agents with a Microsoft Entra agent ID {evp('pv-gr-def-entra')}."]),
-    ("opt-preview", ["Defender for Endpoint runtime protection", "VS Code, GitHub Copilot", "Not stated",
-     f"Local agents are covered by Defender for Endpoint, not by the rules above {evp('pv-gr-def-local')}. The article is prerelease {evp('pv-gr-mde-pre')}. It can block an action before it runs when the inspection method allows it {evp('pv-gr-mde-how')}. The Windows (preview) support table lists the VS Code GitHub Copilot extension {evp('pv-gr-mde-win', 'pv-gr-mde-vs')}. The layer for this client is not stated."]),
+     f"The default rule only audits {evp('pv-gr-def-audit')}. A custom rule blocks {evp('pv-gr-def-block')}. Blocking covers malicious content, secret exfiltration, evasion techniques and email to an unsafe domain {evp('pv-gr-def-mal', 'pv-gr-def-secret', 'pv-gr-def-evasion', 'pv-gr-def-mail')}. The email scenario is checked only at the tool request {evp('pv-gr-def-mailonly')}. Rules can cover all agents or selected agents {ev('rel-def-scope')}. Only agents with a Microsoft Entra agent ID appear in the selection list {evp('pv-gr-def-entra')}."]),
+
 ]
 GR_PREV += [r[1] for r in GR_PREV_RAW]
 
 DESC_GR_SAFE = ("Guardrails by layer for one MCP tool call, in three columns: Foundry agent, Copilot Studio, and VS Code with GitHub Copilot. "
                 "Layer 1 which server: Foundry allowed_tools, Copilot Studio data policy, VS Code and GitHub allow and deny lists plus a server trust prompt in VS Code. "
-                "Layer 2 person approves: Foundry require_approval, default always, which can be set to never. Copilot Studio can ask the user before running a tool, off by default and unverified for MCP tools. "
+                "Layer 2 person approves: Foundry require_approval, default always, which can be set to never. Copilot Studio can ask before running a tool. Microsoft documents the setting for the Kusto Query MCP Server. "
                 "VS Code shows a confirmation dialog by default, the Allow all level skips it, and a company policy can lock it. "
-                "Layer 3 call content: preview only for Foundry and Copilot Studio. In VS Code a preToolUse hook can deny a call, unverified for MCP tools. "
+                "Layer 3 call content: preview only for Foundry and Copilot Studio. VS Code has preview hooks. "
                 "Layer 4 network and gateway: the table lists what applies to every client, plus two lines that apply to Foundry only. Layer 5 company MCP server: the design target is that only the gateway can call it. "
-                "Layer 6 tool response: preview only for Foundry. Copilot Studio has a built-in prompt attack block, whose layer is an AI estimate. VS Code can ask for a review of the result before it enters the chat context, and this can be switched off.")
+                "Layer 6 tool response: preview only for Foundry. Copilot Studio has a built-in prompt attack block, whose layer is an AI estimate. VS Code supports confirmation after a tool runs, depending on approval settings.")
 
 def gname(name):
     return pname(name, "Guardrail")
@@ -394,21 +397,23 @@ LAYER_ROWS = [
     [control_label("inventory", "Approved inventory", "Objectives A and B"),
      "All clients",
      f"Keep one list of approved MCP servers in a repository, with address, owner, permitted tools and risk class. Change it only by reviewed pull request. Review a server again when its address, sign-in, permissions or tools change. Set client policy from managed settings, not user-editable files. {REC}",
-     f"GitHub managed settings apply the allow and deny lists to servers in user and repository settings {ev('gh-profiles')}. The proposed pipeline must configure Foundry and Copilot Studio separately. {REC}"],
+     f"GitHub managed settings apply the allow and deny lists to servers in user and repository settings {ev('gh-profiles')}. Configure Foundry connections separately. Keep Copilot Studio policy manual until the MCP adapter is verified. {REC}"],
     [control_label("pipeline", "Policy sync, pipeline", "Objective B"),
-     "GitHub, Power Platform, Foundry",
-     f"On merge of a reviewed change, a pipeline applies the list to each target. Each target gets its own credential, limited to writing that target. The pipeline reports any target it could not update. Manual edits in a target are overwritten or flagged on the next run. Nothing is built yet. {REC}",
+     "GitHub and Foundry",
+     f"On merge, apply the list through validated GitHub and Foundry adapters. Give each adapter its own least-privilege credential. Record target results, flag drift and reconcile manual changes. {REC}",
      f"GitHub managed settings can be hosted on GitHub as a server-managed deployment {ev('gh-deploy')}. They are a file in the .github-private repository, changed by commit and push {ev('gh-file', 'gh-commit')}. Settings refresh within about an hour {ev('gh-refresh')}. Verify propagation. {REC}"],
     [control_label("logging", "Logging and checks", "Objectives A and B"),
      "All clients",
      f"Collect gateway logs and endpoint or client telemetry. Look for unapproved server connections, unexpected MCP processes, failed sign-ins and unusual tool use. Review the approved list on a schedule. Run the acceptance tests. {REC}",
      f"Gateway policies can log every request {ev('gw-policy')}. Microsoft 365 Copilot connector activity can be audited in Purview {ev('m365-audit')}."],
 
+    [gname("Defender for Endpoint runtime protection"), "VS Code, GitHub Copilot on Windows", NONE_ADDED,
+     f"Microsoft announced GA for supported local Windows agents {ev('rel-endpoint-ga')}. Set up endpoint runtime protection separately {evp('pv-gr-def-local')}. The support matrix still labels Windows preview and lists the VS Code GitHub Copilot extension {evp('pv-gr-mde-win', 'pv-gr-mde-vs')}. Verify inspection and blocking on the target extension. {REC}"],
     ("grp", ["Layer 1, which server"]),
     [control_label("power-platform", "Policy sync, Power Platform", "Objective B"),
      "Copilot Studio",
-     f"<span id=\"gap-unverified-url-block\"></span>Configure an advanced connector policy for MCP connectors listed in the target environment. Keep classic data policies for custom and HTTP connectors. Use manual configuration until API automation for the actual MCP entry is verified. Do not assume an arbitrary MCP URL is a supported policy entry. {REC}",
-     f"ACP supports deployment-pipeline automation {ev('pp-pipe')}, MCP server-level blocking but not per-tool blocks {ev('pp-block')}, and connector blocking also blocks dependent MCP tools {ev('studio')}. Custom and HTTP connectors aren't supported {ev('pp-custom')}. The API tutorial lacks an MCP-specific example; verify this path in the target tenant {ev('pp-api')}. {REC}"],
+     f"<span id=\"gap-unverified-url-block\"></span>Use advanced connector policies (ACP) for listed MCP servers once design-time enforcement reaches the workload. Keep classic policies in mixed mode for custom, HTTP and Copilot Studio virtual connectors. Verify the MCP API adapter before automating. {REC}",
+     f"ACP supports deployment-pipeline automation {ev('pp-pipe')}, MCP server-level blocking but not per-tool blocks {ev('pp-block')}, and connector blocking also blocks dependent MCP tools {ev('studio')}. Microsoft ties ACP general availability to each workload's design-time rollout {ev('rel-acp-rollout')}. Mixed mode preserves classic policies {ev('rel-acp-mixed', 'rel-acp-virtual', 'pp-custom')}. The API tutorial lacks an MCP-specific example; verify this path in the target tenant {ev('pp-api')}. {REC}"],
     [control_label("foundry", "Policy sync, Foundry", "Objective B"),
      "Foundry",
      f"Configure each approved MCP connection with a nonempty allowed tool list. Remove or disable the connection when no tools should be allowed. Validate the pipeline separately. {REC}",
@@ -422,7 +427,7 @@ LAYER_ROWS = [
      f"Managed clients may use only the MCP addresses on the approved list, which the pipeline writes to GitHub managed settings. Users cannot add their own. {REC}",
      f"VS Code policies set an allowlist, a denylist and a managed-only mode {ev('vs-allow', 'vs-deny', 'vs-managed')}. GitHub settings match a remote server by URL wildcards {ev('gh-url')}, block unmatched servers {ev('gh-block')}, and a deny entry wins {ev('gh-deny')}. Not covered: servers in custom agent profiles and the built-in GitHub server {ev('gh-profiles', 'gh-builtin')}. Coverage varies by environment {ev('gh-vary')}."],
     [gname("Server trust prompt"), "VS Code", NONE_ADDED,
-     f"Servers that do not come from the workspace MCP files can need a separate trust decision by the person. VS Code asks again after a configuration change. {ev('gr-vs-trust')}"],
+     f"Servers that do not come from the workspace MCP files can need a separate trust decision by the person. VS Code can prompt again after a configuration change. {ev('gr-vs-trust')}"],
     [control_label("stdio", "Local stdio servers", "Objective B"),
      "VS Code, GitHub Copilot",
      f"Limit which local server commands can start, through managed client policy. Add application control, least-privilege accounts and limits on sensitive files and credentials. Treat local administrators, other MCP clients and unmanaged devices as separate bypass risks. {REC}",
@@ -432,27 +437,39 @@ LAYER_ROWS = [
     [gname("Approval"), "Foundry", NONE_ADDED,
      f"require_approval defaults to always, which means a developer approves every call {ev('gr-fy-appr', 'gr-fy-always')}. It can be set to never, or to a list of tools that skip approval {ev('gr-fy-never')}. Microsoft advises approval for high-risk tools that write data {ev('gr-fy-high')}."],
     [gname("Ask before running"), "Copilot Studio", NONE_ADDED,
-     f"A maker can set a tool to ask the end user for confirmation in the chat before it runs. The option is off by default. {ev('gr-cs-ask')} {UNV} The page describes tools in general. Not checked whether the option is offered for MCP tools."],
+     f"A maker can set a tool to ask the end user for confirmation in the chat before it runs. The option is off by default. {ev('gr-cs-ask')} Microsoft documents this setting for the Kusto Query MCP Server {ev('rel-cs-confirm')}."],
     [gname("Confirmation dialog"), "VS Code", NONE_ADDED,
      f"By default, actions that are not auto-approved need the person's confirmation, and the dialog shows the input parameters {ev('gr-vs-appr', 'gr-vs-manual')}. The Allow all level runs all tool calls without confirmation {ev('gr-vs-allowall')}. Assisted permissions lets an LLM judge assess each call {ev('gr-vs-assist')}. Documented for VS Code only."],
     [gname("Approval lock"), "VS Code", NONE_ADDED,
      f"A company can limit the levels above. A policy that turns off global auto-approval leaves only one-time approval and ignores saved approvals {ev('gr-vs-pol-auto')}. A managed setting can disable Allow all {ev('gr-vs-pol-bypass')}."],
     [gname("Write approval"), "Microsoft 365 Copilot", NONE_ADDED,
-     f"For federated connectors, tools that write need user approval {ev('m365-write')}."],
+     f"Federated connector write tools initially require user approval {ev('m365-write')}. Users can save approval for a conversation or choose Always allow for an individual tool {ev('rel-write-approval')}. Researcher is read-only through federated connectors {ev('rel-researcher')}."],
 
     ("grp", [f"Layer 3, call content. Foundry and Copilot Studio have no released control here. Theirs are in <a href=\"#guardrails-preview\">With preview</a>."]),
-    [gname("Tool call hook"), "VS Code, GitHub Copilot", NONE_ADDED,
-     f"A preToolUse hook can inspect a supported tool's arguments and deny the call. A filter that misses a tool does not check that call {ev('gr-vs-hook')}. VS Code says hooks are not a substitute for enforced permissions or enterprise controls {ev('gr-vs-hook-not')}. {UNV} Not checked whether a hook sees MCP tool calls."],
+    ("view-preview", [gname("Tool call hook"), "VS Code, GitHub Copilot", NONE_ADDED,
+     f"VS Code labels agent hooks preview {evp('rel-vs-hooks')}. A preToolUse hook can inspect a supported tool's arguments and deny the call. A filter that misses a tool does not check that call {ev('gr-vs-hook')}. VS Code says hooks are not a substitute for enforced permissions or enterprise controls {ev('gr-vs-hook-not')}. {UNV} MCP call coverage is unverified."]),
 
     ("grp", ["Layer 4, network and gateway"]),
     [control_label("gateway", "Gateway", "Objective A"),
      "All clients",
      f"Publish each approved remote MCP endpoint through API Management. Check identity, authorize, rate-limit and log. Scope access by app or workload identity. Confirm the release status of each feature before relying on it. {REC}",
      f"For a remote Azure MCP Server, Microsoft suggests API Management as a gateway {ev('gw-consider')}: a single choke point {ev('gw-choke')}. Policies limit rates, restrict tool paths and log requests {ev('gw-policy')}. Clients go through it so the backend is not silently redirected {ev('gw-redirect')}. It can expose REST APIs as MCP servers or pass MCP servers through {ev('pv-apim-mcp')}."],
+    [control_label("ai-publish", "Publishing tools on Azure AI Gateway", "Objective A"),
+     "All clients",
+     f"Publish approved tools at the gateway and scope the backend credential to the tools it serves. {REC}",
+     f"Azure AI Gateway can publish remote MCP tools and apply native tool restrictions, request limits and telemetry {ev('rel-native-policy', 'rel-request-limit', 'rel-metrics')}. Caller and backend credentials are separate {ev('rel-credentials')}. With a shared connection the caller uses that connection's backend permissions {ev('pv-shared-cred')}."],
+    [control_label("ai-resource", "Migration from the earlier AI Gateway SKU", "Objective A"),
+     "Azure administrators",
+     f"Update client endpoints and credentials when moving the earlier AIGateway SKU to the standalone service. {REC}",
+     f"Complete migration before 15 Jan 2027 {ev('rel-migration')}. The standalone service uses Microsoft.ApiManagement/aigateways {ev('rel-resource')}."],
+    [control_label("foundry-routing", "Foundry MCP routing", "Objective A"),
+     "Foundry",
+     f"Create the gateway route first. Set its full URL on each new or existing MCP tool and any project connection that supplies the endpoint. Verify the call in gateway telemetry. {REC}",
+     f"Foundry uses the configured URL for either gateway {ev('rel-fy-endpoint', 'rel-fy-tiers')}. Automatic registration and endpoint rewrites were removed {ev('pv-fy-prev')}. A project connection endpoint takes precedence over <code>server_url</code> {ev('rel-fy-connection')}."],
     [control_label("identity", "Identity", "Objective A"),
      "All clients, gateway and backend",
      f"Only the gateway holds a credential or workload identity the backend accepts. Require the backend to validate token audience and the authorized gateway identity; verify that other identities are rejected. {REC}",
-     f"The gateway can check an Entra ID token {ev('in-entra')} or a subscription key {ev('in-key')} before the request goes on {ev('gw-token')}. It can sign in to the backend with its managed identity {ev('out-mi')}. Checking the token again at the backend is a design choice. {REC}"],
+     f"API Management can check an Entra ID token {ev('in-entra')} or a subscription key {ev('in-key')} before the request goes on {ev('gw-token')}. It can sign in to the backend with its managed identity {ev('out-mi')}. Checking the token again at the backend is a design choice. {REC}"],
     [control_label("m365-network", "Microsoft 365 Copilot network path", "Objective A"),
      "Microsoft 365 Copilot",
      f"Let the gateway accept the Microsoft 365 Copilot outbound addresses, and still require sign-in. Review the address list on a schedule. Do not count on device controls for this client. {INF} Interpretation by AI: calls leave from the Microsoft cloud, so device URL policy and Windows firewall rules do not see them. {REC}",
@@ -478,7 +495,7 @@ LAYER_ROWS = [
     [gname("Prompt attack block"), "Copilot Studio", NONE_ADDED,
      f"Built-in protection against user prompt injection (UPIA) and cross-domain prompt injection (XPIA). At runtime the agent blocks attacks of these types. {ev('gr-cs-upia', 'gr-cs-block')} {INF} Interpretation by AI: the source does not say at which layer. It is listed here because cross-domain attacks can arrive in tool results."],
     [gname("Result review"), "VS Code", NONE_ADDED,
-     f"Tool approval covers confirmation before or after a tool runs {ev('gr-vs-after')}. Post-approval adds a tool result to the chat context without review, and VS Code warns about prompt injection in external data {ev('gr-vs-post')}. {UNV} Not checked which tools ask for a result review by default."],
+     f"Tool approval covers confirmation before or after a tool runs {ev('gr-vs-after')}. A tool granted post-approval adds its result to the chat context. VS Code warns about prompt injection in external data {ev('gr-vs-post')}. {UNV} Not checked which tools ask for a result review by default."],
 ]
 
 GUARDRAILS = f"""
@@ -492,7 +509,7 @@ GUARDRAILS = f"""
         </div>
       </figure>
       {table(["Control", "Applies to", "Design requirement", "What Microsoft and GitHub document"], LAYER_ROWS)}
-      <p class="q-note">None found means the pages read on 2026-11-11 do not describe a guardrail at that layer. {UNV} Microsoft 365 Copilot is not a column in the figure; its rows are in layers 1, 2 and 4. Microsoft Defender real-time protection and Defender for Endpoint runtime protection are in <a href="#guardrails-preview">With preview</a>.</p>
+      <p class="q-note">Preview protections are in <a href="#guardrails-preview">With preview</a>.</p>
     </div>
 """
 
@@ -524,12 +541,13 @@ ROLLOUT = f"""
     <p class="q-note">No test has been run.</p>
     {table(["Test", "Expected result", "Objective"], [
         ["Call an approved MCP server through API Management", "Allowed", "A"],
+        ["Call from each configured Foundry tool through its effective gateway endpoint", "Allowed and confirmed in the gateway telemetry", "A"],
         ["Call the protected backend directly", "Blocked", "A"],
         ["Call API Management without valid authorization", "Rejected", "A"],
-        ["Add an unapproved remote MCP server in a managed client", "Blocked", "B"],
+        ["Add an unapproved remote MCP server in a managed client", "Blocked within verified client-policy scope", "B"],
         ["Change the MCP URL in VS Code to a different server", "Blocked", "B"],
         ["Start an unauthorized local MCP server", "Blocked or contained by endpoint controls", "B"],
-        ["Merge a pull request that denies a server", "Blocked in each supported target after policy propagation and client refresh", "B"],
+        ["Merge a pull request that denies a server", "Denied after automated policy propagation and manual policy updates", "B"],
         ["Edit a target by hand, then run the pipeline", "The edit is overwritten or flagged", "B"],
         ["Call an approved connector from Microsoft 365 Copilot", "Allowed, through API Management", "A"],
         ["Add a custom connector for an unapproved server without an admin role", "Blocked", "B"],
@@ -544,9 +562,9 @@ ROLLOUT = f"""
 GAPS_LIST = [
     f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it {ev('gh-builtin-order', 'gh-builtin')}. Two switches are untested: the MCP servers in Copilot policy, which turns off every MCP server {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. No design control covers it. Pilot both, or limit it through GitHub account permissions.",
     f"<strong id=\"gap-m365-manual\">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option {ev('m365-noapi')}, so the pipeline cannot keep this target in step. {UNV} No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.",
-    f"<strong id=\"gap-one-gateway\">One gateway for Foundry and the other clients.</strong> {INF} Interpretation by AI: the same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.",
-    f"<strong id=\"gap-m365-status\">Microsoft 365 Copilot connector status.</strong> {INF} Interpretation by AI: the federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.",
-    f"<strong id=\"gap-github-cloud-agent\">GitHub Copilot cloud agent.</strong> Its firewall does not directly filter MCP server processes, so it is not their egress boundary. Only the client allowlist applies. {ev('gh-fw')}",
+    f"<strong id=\"gap-one-gateway\">One gateway for Foundry and the other clients.</strong> Foundry accepts a gateway-routed MCP URL on either gateway {ev('rel-fy-endpoint', 'rel-fy-tiers')}. Verify that each Foundry tool and project connection uses the company route and that other clients still reach it. {REC}",
+    f"<strong id=\"gap-m365-status\">Microsoft 365 Copilot connector status.</strong> Microsoft lists federated connectors as generally available {ev('rel-fed')}. Confirm the connector in the target tenant and Copilot experience. {REC}",
+    f"<strong id=\"gap-github-cloud-agent\">GitHub Copilot cloud agent.</strong> The cloud sandbox firewall covers the built-in Playwright MCP server. Other MCP servers are outside its direct process coverage. Verify managed-policy support for the actual runtime. {ev('gh-fw')} {REC}",
     f"<strong id=\"gap-windows-outbound\">Windows outbound block.</strong> It can block non-MCP traffic too, and name-based rules have limits with proxies and some VPN tunnels. {ev('ifw-block', 'dk-limits')}",
     f"<strong id=\"gap-tier-availability\">API Management tier availability.</strong> MCP features vary by tier. Confirm the target tier and release status before relying on a feature. {ev('apim-ga', 'apim-ga-tiers', 'pv-apim-tier')}",
 ]
@@ -566,41 +584,29 @@ GAPS = f"""
 PREVIEW = f"""
   <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
     <header class="sh"><h2 id="h-preview">With preview&nbsp;{PRE}</h2>
-    <p class="goal"><b>In short</b>Use the separate AI Gateway product and the Agent 365 integration in place of the API Management service gateway. AI Gateway is in public preview. Use this design only in a sandbox. If a preview feature changes, switch it off and fall back to the released-only design. {REC}</p>
-    <p class="goal"><b>Baseline</b>The released-only design stays underneath. Build it first.</p></header>
+    <p class="goal">Test optional controls in a sandbox after verifying the API Management baseline. {REC}</p></header>
     <div class="sub3" id="preview-controls">
       {anchors("added-with-preview-preview")}
       <h3>Added controls</h3>
-      <p class="q-note">Dedicated AI Gateway is a separate product that replaces the API Management service gateway. It is the only gateway listed with tool blocking, tool activity and tool threat protection {evp('pv-a365-matrix', 'pv-a365-v2')}. Moving to it is a migration: a new resource and a new runtime address {evp('pv-res-change', 'pv-domain')}. See <a href="#ctrl-ai-resource">AI Gateway product and resource</a>.</p>
-      <p class="q-note">Microsoft says preview features are not meant for production use and may have restricted functionality. {evp('pv-notprod')} Every row below is a preview feature and its requirement is a recommendation. {PRE} {REC}</p>
       {table(["Control", "Design requirement", "What Microsoft documents"], [
         [control_label("a365", "Agent 365 gateway integration", "Visibility, not the boundary"),
-         "Connect the API Management gateway so admins can see registered servers and block one. Treat blocking as additional gateway enforcement. It does not replace backend isolation. This is separate from the Agent 365 BYO server route below.",
-         f"Agent 365 discovers servers in connected gateways {evp('pv-disc')}. The preview integration lists inventory and server block/unblock for API Management v2 and AI Gateway; tool blocking, activity observability and threat protection only for AI Gateway {evp('pv-a365-matrix', 'pv-a365-v2')}. Tool blocking needs a static allowed-tools list {evp('pv-a365-static')}. v1 tiers are not supported {evp('pv-a365-v1')}."],
+         "Pilot discovery and blocking separately from backend isolation. Verify the supported gateway, tenant and enforcement before relying on them.",
+         f"Azure announced the integration as GA {evp('rel-agent-az')}. Agent 365 and its admin guide label Azure AI Gateway onboarding preview {evp('rel-agent-admin', 'a365-gw-pre')}. The tier matrix lists discovery and server blocking on API Management v2 and AI Gateway, with per-tool blocking on AI Gateway for static tool lists {evp('pv-a365-matrix', 'pv-a365-static')}."],
         [control_label("a365-consent", "Agent 365 consent", "Tenant level"),
          "Before anyone grants it, name who approves the consent, who reviews the policy changes it allows, and how it is withdrawn.",
          f"An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent {evp('pv-a365-role')}. It lets the service read and write API-scoped policies {evp('pv-a365-rw')}."],
-        [control_label("ai-resource", "AI Gateway product and resource", "Objective A"),
-         f"Do not confuse AI gateway capabilities in the API Management service with the separate AI Gateway product and resource type {ev('apim-ai-not-separate')} {evp('pv-aig-separate')}. Evaluate the current AI Gateway resource rather than following examples written for the earlier resource type.",
-         f"The separate AI Gateway product uses resource type Microsoft.ApiManagement/aigateways {evp('pv-res-change')}. Migrate the earlier Microsoft.ApiManagement/service AIGateway SKU before 15 Jan 2027 {evp('pv-res-date')}. The new runtime URL uses ai.gateway.azure.com {evp('pv-domain')}; keys go in an Authorization header with a Bearer scheme {evp('pv-bearer')}."],
-        [control_label("ai-limits", "AI Gateway limits", "Objective A"),
-         "Check the network design first. Confirm that a public gateway frontend, fixed virtual network and subnet, supported region and alternative content safety control meet the pilot requirements.",
-         f"Gateway frontend private endpoints are not supported {evp('pv-pe')}. The virtual network and subnet cannot be changed after creation {evp('pv-vnet')}. The content safety policy is not supported {evp('pv-cs')}. During public preview the regions are East US 2 and Sweden Central {evp('pv-regions')}."],
-        [control_label("ai-publish", "Gateway publishing", "Objective A"),
-         "Publish approved tools through the gateway. Give the gateway its own backend credential, scoped to what the tools need.",
-         f"The gateway can combine tools from remote MCP servers, OpenAPI APIs and connectors behind gateway MCP endpoints {evp('pv-aig-comb')}. With a shared backend connection, callers use that connection's permissions {evp('pv-shared-cred')}."],
+        [control_label("ai-limits", "Private networking on Azure AI Gateway", "Objective A"),
+         "Test outbound connectivity to the private backend. Keep the API Management route available for rollback.",
+         f"Inbound Private Link and outbound VNet integration for private backends are both in preview {evp('rel-network')}. Private endpoints require approval {evp('rel-update-pe')}."],
         [control_label("ttp-users", "Tool threat protection: who can use it", "Extra defence"),
          "Use it only in flows that carry a user token. Keep least privilege and human approval for destructive tools. Do not rely on it alone.",
-         f"It requires a delegated Entra user token {evp('pv-ttp-token')}. App-only service-to-service calls are not supported {evp('pv-ttp-app')}. A Defender or Purview license is required {evp('pv-ttp-lic')}."],
+         f"The launch lists threat protection as preview {evp('rel-tool-threat')}. It requires a delegated Entra user token {evp('pv-ttp-token')}. App-only service-to-service calls are not supported {evp('pv-ttp-app')}. A Defender or Purview license is required {evp('pv-ttp-lic')}."],
         [control_label("ttp-modes", "Tool threat protection: modes and scope", "Extra defence"),
          "Configure the evaluation mode in Microsoft Defender. Test Audit, Block and failure handling. Enable pre-invocation checks to stop calls and post-invocation checks to withhold results. Plan for tools that already ran.",
          f"Audit mode fails open {evp('pv-ttp-audit')}. Block mode fails closed {evp('pv-ttp-block')}. One policy applies to every tool and caller of a server, not to one tool {evp('pv-ttp-scope')}. A denial after the call cannot undo it {evp('pv-ttp-post')}."],
         [control_label("byo", "Agent 365 BYO server route", "Separate route"),
-         "Treat this as a separate registration route, not as the API Management gateway integration. Require developer registration and admin approval. Confirm its public endpoint fits the backend isolation target. Test each listed client surface before relying on it.",
+         "Require developer registration and admin approval for this separate route. Use a separate test endpoint and preserve the gateway-only boundary of the private company backend.",
          f"BYO servers route through the Agent 365 Tooling Gateway {evp('pv-byo-route')}. Preview clients: Copilot Studio, VS Code, Claude Code and GitHub Copilot CLI; not Foundry or declarative agents {evp('pv-byo-surf')}. An IT admin approves or rejects requests in the Microsoft 365 admin center {evp('pv-byo-approval')}. Servers need a publicly accessible endpoint {evp('pv-byo-endpoint')}. BYO tool-level blocking is planned {evp('pv-byo-tool-plan', 'pv-byo-roll')}."],
-        [control_label("foundry-routing", "Foundry gateway routing", "Separate route"),
-         "Create new tools in the Foundry portal without managed OAuth. Check the endpoint, sign-in and logs. Do not assume old tools are covered.",
-         f"Only new MCP tools created in the Foundry portal without managed OAuth are routed through an AI gateway {evp('pv-fy-prev')}. Routing is applied only at tool creation, and existing tools are not mediated automatically {evp('pv-fy-new')}."],
         [control_label("outbound-filter", "Outbound filter, optional", "Objective B"),
          "Add it only if the preview label is acceptable. Do not rely on it for local servers.",
          f"The Global Secure Access MCP firewall filters by URL pattern {evp('fw-urls')}. It carries the preview label {evp('fw-preview')} and inspects remote servers only {evp('fw-remote')}."],
@@ -652,10 +658,10 @@ PREVIEW = f"""
       <h3>Preview pilot, after the baseline</h3>
       <ol class="steps">
         <li><strong>Scope.</strong> Pick a low-risk server with two read-only tools and one controlled write tool. Record owner, data class, sign-in and expected clients.</li>
-        <li><strong>Resource type.</strong> Create the separate AI Gateway product on the current resource type in a supported public preview region {evp('pv-aig-separate', 'pv-res-change', 'pv-regions')}. Confirm eligibility, the public front door, networking, policy features and licensing.</li>
-        <li><strong>Lock the backend.</strong> Make direct calls fail. Check the supported backend network design, because the new gateway has no private endpoints {evp('pv-pe')}.</li>
+        <li><strong>Resource type.</strong> Create Azure AI Gateway in a supported region {ev('rel-resource', 'rel-regions')}. Confirm eligibility for the preview features being tested.</li>
+        <li><strong>Lock the backend.</strong> Test the preview outbound VNet connection and require the backend to reject direct requests {evp('rel-network')}.</li>
         <li><strong>Connect Agent 365.</strong> For the API Management integration, after named tenant-admin consent, connect the gateway and check that the server shows up. Review the permissions granted {evp('pv-a365-rw')}.</li>
-        <li><strong>Test blocking.</strong> For the preview Agent 365 integration, test server block/unblock on a supported API Management v2 tier. Test tool blocking and threat protection only on the separate AI Gateway product, with a static tool list and a delegated user-token flow {evp('pv-a365-matrix', 'pv-a365-static', 'pv-ttp-token')}. Test Audit, Block and failure handling. App-only workloads are not supported {evp('pv-ttp-app')}.</li>
+        <li><strong>Test blocking.</strong> Test Agent 365 server block and unblock on the selected gateway. On Azure AI Gateway, test per-tool blocking with a static list {evp('pv-a365-matrix', 'pv-a365-static')}. Test threat protection separately with a delegated user token in Audit and Block modes {evp('pv-ttp-token', 'pv-ttp-audit', 'pv-ttp-block')}.</li>
         <li><strong>Gate promotion.</strong> Require accepted support terms, released features, incident playbooks and a rollback plan before leaving the sandbox {evp('pv-notprod')}.</li>
       </ol>
     </div>
@@ -667,6 +673,13 @@ FOOTER = f"""
   <footer>
     <p>The design is proposed. The preview additions are for a sandbox pilot.</p>
     {AI_NOTE}
+    <h2 id="tags-on-this-page">Tags on this page</h2>
+    <dl>
+      <dt>{INF}</dt><dd>Interpretation by AI that is not stated in a source.</dd>
+      <dt>{UNV}</dt><dd>Not confirmed in a quoted source.</dd>
+      <dt>{REC}</dt><dd>A design choice proposed on the page.</dd>
+      <dt>{PRE}</dt><dd>A feature in preview.</dd>
+    </dl>
     <p id="evidence">{anchors("evidence-details", "h-e")}Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</p>
   </footer>
 """
