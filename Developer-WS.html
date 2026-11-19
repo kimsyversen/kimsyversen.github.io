@@ -47,7 +47,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:1rem/1.6 var(--body)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:11;background:var(--bg)}
-.wrap{max-width:48rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
+.wrap{max-width:1292px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
 a{color:var(--accent);text-underline-offset:2px}
 a:focus-visible,button:focus-visible,input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
@@ -65,10 +65,10 @@ header.top{display:grid;gap:14px;padding-bottom:20px}
 .tag{display:inline-block;font:500 0.7rem/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 5px;white-space:nowrap;vertical-align:1px}
 
 .tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:26px;scrollbar-width:thin}
-.tabs button{font:600 0.95rem/1 var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px 10px 11px;white-space:nowrap;cursor:pointer}
+.tabs button{font:600 0.95rem/1 var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px clamp(5px,2vw,10px) 11px;white-space:nowrap;cursor:pointer}
 .tabs button:hover{color:var(--ink)}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
-.panel{display:grid;gap:34px;container-type:inline-size}
+.panel{display:grid;gap:34px;min-width:0}
 section{display:grid;gap:14px;min-width:0}
 .sub{color:var(--muted)}
 .note{font-size:0.88rem;color:var(--muted)}
@@ -99,7 +99,6 @@ textarea.out-text{width:100%;min-height:10rem;font:0.8rem/1.5 var(--mono);backgr
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:600 0.85rem/1 var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.path-desc{font-size:0.93rem;color:var(--muted);min-height:1.5em}
 
 /* risk cards */
 .risks{display:grid;gap:14px}
@@ -162,16 +161,6 @@ input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-col
 .lvl.l{color:var(--unk);background:var(--unk-soft)}
 
 /* verification */
-.personas{display:grid;grid-template-columns:1fr;gap:14px}
-.persona{border-top:2px solid var(--accent);padding-top:10px;display:grid;gap:8px;min-width:0}
-.persona h3{font-size:1.05rem}
-.persona .role{font:0.8rem/1.4 var(--mono);color:var(--muted)}
-.persona ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.93rem}
-.cols{display:grid;grid-template-columns:1fr;gap:18px}
-@media (min-width:680px){.cols{grid-template-columns:1fr 1fr 1fr}}
-.col{min-width:0;display:grid;gap:8px;align-content:start}
-.col h3{font-size:1rem}
-.col ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;font-size:0.9rem}
 
 .sources{margin:0;padding-left:1.2rem;display:grid;gap:9px;font-size:0.93rem}
 .sources span{display:block;color:var(--muted);font-size:0.85rem}
@@ -187,8 +176,9 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 .rchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .dotst{width:0.6rem;height:0.6rem;border-radius:50%;background:var(--accent);flex:none}
 .dotst.st-ok{background:var(--ok)} .dotst.st-part{background:var(--part)} .dotst.st-miss{background:var(--miss)} .dotst.st-unk{background:var(--unk)}
-.dg-sum{font-size:0.95rem;min-height:3.2em}
-.fig-wide{width:min(1260px,calc(100vw - 32px));margin:0 0 0 calc((100% - min(1260px,calc(100vw - 32px))) / 2);display:grid;gap:10px;scroll-margin-top:64px}
+.dg-sum{font-size:0.95rem}
+.dg-sum:empty{position:absolute}
+.risk-figure{min-width:0;margin:0;display:grid;gap:10px;scroll-margin-top:64px}
 .dg-scroll{position:relative;overflow-x:auto;background:var(--fig);border:1px solid var(--line);border-radius:10px}
 .dg{display:block;width:100%;min-width:980px;height:auto;user-select:none;-webkit-user-select:none}
 .dg .zn{fill:var(--zone);stroke:var(--line)}
@@ -222,10 +212,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 .dg.dim .mk.on{opacity:1}
 .dg .mk.on rect{stroke:var(--ink);stroke-width:2}
 .dg .mk.cur rect{stroke:var(--ink);stroke-width:3}
-figcaption{display:grid;gap:8px}
 /* caption and legend sit in the reading column, though the figure is wider */
-figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw) / 2))}
-.cap{font-size:0.9rem;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:0.82rem;color:var(--muted);align-items:center}
 .legend>span{display:inline-flex;align-items:center;gap:6px}
 .lg-mk{font:600 0.68rem/1.5 var(--mono);font-style:normal;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 4px}
@@ -261,7 +248,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 .rchip.x{color:var(--muted)}
 .rchip.x .dotst{background:transparent;border:1.5px dashed var(--unk)}
 .chip-lbl{font:500 0.72rem/1 var(--mono);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:4px}
-#more{scroll-margin-top:64px}
+#more,#before-you-use-the-map,#fact-check-notes,#pathDesc{scroll-margin-top:64px}
 .mx-btn{display:flex;gap:8px;align-items:baseline;text-align:left;font:600 0.85rem/1.35 var(--body);color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
 .mx-btn:hover .nm{text-decoration:underline;text-underline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -271,7 +258,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   <header class="top">
     <p class="eyebrow">Risk map · VS Code and GitHub Copilot</p>
     <h1>Developer workstation risk map</h1>
-    <p class="lead">Assess GitHub Copilot in VS Code on a managed developer workstation. The map follows Copilot from the workspace and extension host through its tools, credentials, GitHub, and external services.</p>
+    <p class="lead">Assess GitHub Copilot in VS Code on a managed developer workstation.</p>
     <div class="meta">
       <span><b>Frameworks</b> OWASP Agentic Top 10 and MCP Top 10</span>
       <span><b>Sources checked</b> 19 November 2026</span>
@@ -279,9 +266,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Parts of the risk map">
-    <button type="button" role="tab" id="t-map" data-tab="map" aria-controls="p-map" aria-selected="true">1 · Risk map</button>
-    <button type="button" role="tab" id="t-top10" data-tab="top10" aria-controls="p-top10" aria-selected="false" tabindex="-1">2 · Top 10</button>
-    <button type="button" role="tab" id="t-review" data-tab="review" aria-controls="p-review" aria-selected="false" tabindex="-1">3 · Review</button>
+    <button type="button" role="tab" id="t-map" data-tab="map" aria-controls="p-map" aria-selected="true">Risk map</button>
+    <button type="button" role="tab" id="t-top10" data-tab="top10" aria-controls="p-top10" aria-selected="false" tabindex="-1">Workstation checklist</button>
     <button type="button" role="tab" id="t-sources" data-tab="sources" aria-controls="p-sources" aria-selected="false" tabindex="-1">Sources</button>
   </nav>
 
@@ -290,27 +276,25 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     <section id="in-short">
       <h2><a class="sec-link" href="#in-short">In short</a></h2>
       <ol class="short">
-        <li><span>Review what runs when a folder is trusted and what Copilot can do after it starts. Assess tasks, extensions, instructions and tool access separately.</span></li>
-        <li><span>Record the harness used by the session. Microsoft distinguishes the Copilot harness, which runs in Agent Host, from the legacy harness named Local. Their approval, sandbox and MCP controls differ. <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise AI settings</a></span></li>
-        <li><span>Check the identity, data and network paths for each tool. A terminal sandbox, a GitHub account policy and a restriction on browser access govern different actions. <span class="tag">[inference]</span></span></li>
+        <li><span>Review what can run when you trust a folder. Check tasks, extensions, instructions and the tools Copilot can use.</span></li>
+        <li><span>Record which harness runs the session. The Copilot harness runs in Agent Host. The older Local harness applies different rules for approvals, sandboxing and MCP. <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise AI settings</a></span></li>
+        <li><span>Check which accounts, files and websites each tool can reach. The terminal sandbox, GitHub account policy and browser restrictions cover different actions. <span class="tag">[inference]</span></span></li>
       </ol>
     </section>
 
     <section id="risk-map-of-the-workstation">
-      <h2><a class="sec-link" href="#risk-map-of-the-workstation">Risk map of the workstation</a></h2>
-      <p class="sub">Reference layout for VS Code and a Copilot session running on the workstation.</p>
-      <div class="rchips" id="dgChips" role="group" aria-label="Show a top 10 risk in the diagram"></div>
-      <div class="rchips" id="dgChipsX" role="group" aria-label="Show a further risk, D11 to D17, in the diagram"><span class="chip-lbl">More risks</span></div>
+      <h2 id="workstation-risk-map"><a class="sec-link" href="#risk-map-of-the-workstation">Workstation risk map</a></h2>
+      <div class="rchips" id="dgChips" role="group" aria-label="Show a checklist risk on the map"></div>
+      <div class="rchips" id="dgChipsX" role="group" aria-label="Show a further risk, D11 to D17, in the diagram"><span class="chip-lbl">Further risks</span></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
     </section>
 
-    <figure class="fig-wide" id="dgFig">
+    <figure class="risk-figure" id="dgFig">
       <div class="dg-scroll" id="dgScroll">
-        <svg class="dg" id="dg" viewBox="0 52 1240 712" role="group" aria-labelledby="dgCap"></svg>
+        <svg class="dg" id="dg" viewBox="0 52 1240 712" role="group" aria-labelledby="workstation-risk-map"></svg>
         <div class="pop" id="dgPop" role="dialog" aria-labelledby="dgPopTitle" tabindex="-1" hidden></div>
       </div>
       <figcaption id="dgCap">
-        <span class="cap">Trace untrusted inputs through VS Code and Copilot to the services they can reach. Assess editor and extension paths separately from Copilot tools. The dashed route represents remote tunnel traffic.</span>
         <span class="legend">
           <span><i class="lg-mk">D01</i>Not assessed</span>
           <span><i class="lg-mk st-ok">D01</i>OK</span>
@@ -318,7 +302,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
           <span><i class="lg-mk st-miss">D01</i>Missing</span>
           <span><i class="lg-mk st-unk">D01</i>Unknown</span>
           <span><i class="lg-mk x">D11</i>Further risk</span>
-          <span><i class="lg-sb"></i>Copilot sandbox review area · verify coverage of each command and local server</span>
+          <span><i class="lg-sb"></i>Terminal sandbox review</span>
         </span>
       </figcaption>
     </figure>
@@ -334,35 +318,19 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       </div>
     </section>
 
-    <section id="more">
-      <h2><a class="sec-link" href="#more">More risks</a></h2>
-      <p class="sub">Assess these paths where the corresponding VS Code, Copilot or GitHub feature is enabled.</p>
-      <div class="tbl-wrap" tabindex="0" role="region" aria-label="More risks table">
-        <table class="mx">
-          <colgroup><col class="c-rk"><col class="c-in"><col class="c-z"><col class="c-z"><col class="c-z"></colgroup>
-          <thead><tr><th scope="col">Risk</th><th scope="col">1 · Inputs</th><th scope="col">2 · Workstation</th><th scope="col">3 · Outbound</th><th scope="col">4 · Governance</th></tr></thead>
-          <tbody id="moreRows"></tbody>
-        </table>
-      </div>
-    </section>
-
     <section id="first">
-      <h2><a class="sec-link" href="#first">Relevance and first control</a></h2>
-      <p class="sub">Friction and relevance estimates assume a centrally managed VS Code fleet. <span class="tag">[inference]</span></p>
+      <h2><a class="sec-link" href="#first"><span id="before-you-use-the-map">Risks and mitigations</span></a></h2>
+      <p class="sub">Effort and relevance are estimated for a managed VS Code fleet. <span class="tag">[inference]</span></p>
       <div class="more-list" id="moreDetails"></div>
     </section>
 
-    <section id="before-you-use-the-map">
-      <h3><a class="sec-link" href="#before-you-use-the-map">Before you use the map</a></h3>
-      <p class="sub">Capture the VS Code and Copilot versions, OS, harness, signed-in account and where tools execute. For WSL, remote hosts and Dev Containers, inventory credentials, mounted files and network access at the execution host. GitHub-hosted agents, standalone CLIs and other editors need their own assessment. <span class="tag">[recommendation]</span></p>
-    </section>
   </div>
 
-  <!-- 2 TOP 10 -->
+  <!-- Workstation checklist -->
   <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
     <section id="the-ten-risks">
-      <h2><a class="sec-link" href="#the-ten-risks">The ten risks</a></h2>
-      <p class="sub">Use the ten checks as a workstation baseline. The OWASP mappings are interpretations. <span class="tag">[inference]</span></p>
+      <h2><a class="sec-link" href="#the-ten-risks">Workstation checklist</a></h2>
+      <p class="sub">The OWASP mappings are interpretations. <span class="tag">[inference]</span></p>
     </section>
 
     <aside class="callout" id="current">
@@ -376,11 +344,10 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
     <section id="where-to-start">
       <h3><a class="sec-link" href="#where-to-start">Where to start</a></h3>
-      <p class="sub">Start with the control that can be checked across the managed VS Code fleet. <span class="tag">[recommendation]</span></p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
           <colgroup><col class="c-id"><col><col class="c-fr"></colgroup>
-          <thead><tr><th scope="col">Risk</th><th scope="col">First control</th><th scope="col">Friction</th></tr></thead>
+          <thead><tr><th scope="col">Risk</th><th scope="col">First control</th><th scope="col">Effort</th></tr></thead>
           <tbody id="startRows"></tbody>
         </table>
       </div>
@@ -416,21 +383,20 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
 
     <section id="filter-by-attack-path">
       <h3><a class="sec-link" href="#filter-by-attack-path">Filter by attack path</a></h3>
-      <div class="chips" role="group" aria-label="Attack path">
+      <div class="chips" id="pathDesc" role="group" aria-label="Attack path">
         <button type="button" class="chip" data-path="all" aria-pressed="true">All</button>
-        <button type="button" class="chip" data-path="content" aria-pressed="false">Poisoned content</button>
-        <button type="button" class="chip" data-path="repo" aria-pressed="false">Booby-trapped project</button>
+        <button type="button" class="chip" data-path="content" aria-pressed="false">Malicious content</button>
+        <button type="button" class="chip" data-path="repo" aria-pressed="false">Unsafe project files</button>
         <button type="button" class="chip" data-path="supply" aria-pressed="false">Supply chain</button>
-        <button type="button" class="chip" data-path="creds" aria-pressed="false">Stolen tokens</button>
+        <button type="button" class="chip" data-path="creds" aria-pressed="false">Credential theft</button>
       </div>
-      <p class="path-desc" id="pathDesc">Attack paths show how a risk can be reached. <span class="tag">[inference]</span></p>
     </section>
 
     <div class="risks" id="risks">
 
       <article id="risk-d01" class="risk" data-id="D01" data-title="Malicious packages and install scripts" data-paths="supply creds">
         <div class="risk-head"><span class="rid">D01</span><div><h3><a class="sec-link" href="#risk-d01">Malicious packages and install scripts</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
-        <p>A dependency install run through Copilot’s terminal tool can execute package or project code. Microsoft documented credential theft and package republishing through npm install scripts in ChainDrop. This exposure applies to installs run by developers and by Copilot.</p>
+        <p>A dependency install run through Copilot’s terminal tool can execute package or project code. Microsoft documented credential theft and package republishing through npm install scripts in ChainDrop.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Can Copilot install dependencies from public registries? Use an approved registry or proxy where policy requires package blocks or a release cooldown. A managed <code>.npmrc</code> sets defaults that a project, environment variable or command line can override.</li>
@@ -439,7 +405,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Direct public registry access, broad script grants, repository-controlled install settings and unreviewed root extensions.</p>
         <p class="note"><a href="https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/">Microsoft ChainDrop analysis</a> · <a href="https://docs.npmjs.com/cli/v12/using-npm/config">npm v12 configuration</a> · <a href="https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/">npm project extensions</a></p>
-        <div class="paths"><span>Supply chain</span><span>Stolen tokens</span></div>
+        <div class="paths"><span>Supply chain</span><span>Credential theft</span></div>
         <div class="seg" data-id="D01"></div>
       </article>
 
@@ -455,13 +421,13 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Broad trusted roots, automatic tasks enabled, downloaded Git metadata and unreviewed workspace configuration.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a> · <a href="https://code.visualstudio.com/docs/debugtest/tasks">VS Code tasks</a> · <a href="https://github.com/devcontainers/spec/blob/main/docs/specs/devcontainerjson-reference.md">Dev Container metadata</a> · <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners">GitHub code ownership</a></p>
-        <div class="paths"><span>Booby-trapped project</span></div>
+        <div class="paths"><span>Unsafe project files</span></div>
         <div class="seg" data-id="D02"></div>
       </article>
 
       <article id="risk-d03" class="risk" data-id="D03" data-title="Malicious or hijacked extensions" data-paths="supply">
         <div class="risk-head"><span class="rid">D03</span><div><h3><a class="sec-link" href="#risk-d03">Malicious or hijacked extensions</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
-        <p>VS Code extensions can execute code in the extension host with the developer’s permissions. AWS confirmed that a compromised release of the Amazon Q Developer extension reached the VS Code Marketplace in 2025. It is an extension distribution example for the editor that also hosts Copilot.</p>
+        <p>VS Code extensions can execute code in the extension host with the developer’s permissions. AWS confirmed that a compromised release of the Amazon Q Developer extension reached the VS Code Marketplace in 2025.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Deploy <code>AllowedExtensions</code> with approved extension IDs, including the required GitHub Copilot extensions. Inventory installed versions and publishers across the profiles and remote extension hosts in use.</li>
@@ -486,7 +452,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Production tokens in local files, broad forwarded credentials, and a secret path excluded from one tool but readable through another.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing">Copilot sandbox credentials</a> · <a href="https://code.visualstudio.com/docs/remote/advancedcontainers/sharing-git-credentials">Dev Container credentials</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed settings</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/security-governance-and-network-settings/content-exclusion">GitHub content exclusion</a> · <a href="https://git-scm.com/docs/git-credential-store">Git credential store</a></p>
-        <div class="paths"><span>Stolen tokens</span><span>Supply chain</span><span>Booby-trapped project</span></div>
+        <div class="paths"><span>Credential theft</span><span>Supply chain</span><span>Unsafe project files</span></div>
         <div class="seg" data-id="D04"></div>
       </article>
 
@@ -501,7 +467,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Instruction changes with no owner, unexpected instruction sources and sensitive tool actions available without review.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/reference/custom-instructions-reference">VS Code custom instructions</a> · <a href="https://code.visualstudio.com/docs/agents/run/security">VS Code AI security</a> · <a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a></p>
-        <div class="paths"><span>Poisoned content</span><span>Booby-trapped project</span></div>
+        <div class="paths"><span>Malicious content</span><span>Unsafe project files</span></div>
         <div class="seg" data-id="D05"></div>
       </article>
 
@@ -516,7 +482,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>A registry treated as the only enforcement layer, unreviewed local executables and remote tools with broad write scopes.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise MCP controls</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed MCP settings</a> · <a href="https://code.visualstudio.com/docs/enterprise/policies">VS Code plugin and MCP policies</a> · <a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP authorization specification</a></p>
-        <div class="paths"><span>Supply chain</span><span>Poisoned content</span><span>Stolen tokens</span></div>
+        <div class="paths"><span>Supply chain</span><span>Malicious content</span><span>Credential theft</span></div>
         <div class="seg" data-id="D06"></div>
       </article>
 
@@ -532,7 +498,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>A sandbox toggle treated as fleet enforcement, untested fallback prompts and an allowed service that also accepts personal accounts.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing">Copilot sandbox scope and defaults</a> · <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">Harness-specific policy scope</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed sandbox</a> · <a href="https://code.visualstudio.com/docs/remote/advancedcontainers/sharing-git-credentials">Dev Container credentials</a></p>
-        <div class="paths"><span>Poisoned content</span><span>Supply chain</span><span>Stolen tokens</span></div>
+        <div class="paths"><span>Malicious content</span><span>Supply chain</span><span>Credential theft</span></div>
         <div class="seg" data-id="D07"></div>
       </article>
 
@@ -548,7 +514,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Autonomous permission levels in routine sessions, durable grants for state-changing tools and prompts that obscure the destination.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/run/approvals">VS Code tool approvals</a> · <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">Enterprise approval policies</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed permissions</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-53773">CVE record with Microsoft CNA data</a></p>
-        <div class="paths"><span>Poisoned content</span><span>Booby-trapped project</span></div>
+        <div class="paths"><span>Malicious content</span><span>Unsafe project files</span></div>
         <div class="seg" data-id="D08"></div>
       </article>
 
@@ -563,7 +529,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Configured policy with no enforcement test, missing harness inventory and endpoint events treated as a complete session history.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/enterprise/policies">VS Code Policy Diagnostics</a> · <a href="https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table">Defender process event schema</a> · <a href="https://code.visualstudio.com/docs/agents/guides/monitoring-agents">Copilot OpenTelemetry</a></p>
-        <div class="paths"><span>Poisoned content</span><span>Booby-trapped project</span><span>Supply chain</span><span>Stolen tokens</span></div>
+        <div class="paths"><span>Malicious content</span><span>Unsafe project files</span><span>Supply chain</span><span>Credential theft</span></div>
         <div class="seg" data-id="D09"></div>
       </article>
 
@@ -584,7 +550,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </div>
 
     <section id="respond">
-      <h2><a class="sec-link" href="#respond">If something got in</a></h2>
+      <h2><a class="sec-link" href="#respond">Incident response</a></h2>
       <ol class="ir">
         <li><b>Contain the workstation and affected remote hosts.</b> End active Copilot sessions and remote connections through your response process. Assess the GitHub identity’s access from other devices.</li>
         <li><b>Preserve evidence before cleanup.</b> Collect available Copilot logs and session data, VS Code and Agent Host configuration, extensions, tool definitions, and GitHub and endpoint events. Limit access to the collected data.</li>
@@ -596,69 +562,13 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     </section>
   </div>
 
-<!-- 3 REVIEW -->
-  <div class="panel" role="tabpanel" id="p-review" aria-labelledby="t-review" hidden>
-    <section id="how-the-analysis-was-checked">
-      <h2><a class="sec-link" href="#how-the-analysis-was-checked">How the analysis was checked</a></h2>
-      <p class="sub" id="reviewIntro">The 19 November document review used three lenses to check the VS Code and GitHub Copilot scope. The dated notes below describe earlier reviews of the broader map.</p>
-      <div class="personas" id="personas"></div>
-    </section>
-    <section id="merge-check-29-october-2026">
-      <h2><a class="sec-link" href="#merge-check-29-october-2026">Merge check, 29 October 2026</a></h2>
-      <p>Earlier merge and navigation review. The original findings cover risk IDs, placement and interaction checks. <a href="Developer-WS.factcheck.md">Historical fact check</a></p>
-      <span id="content-integrity-auditor"></span>
-      <span id="security-architect"></span>
-      <span id="qa-and-accessibility-engineer"></span>
-    </section>
-
-    <section id="review-round-29-october-2026">
-      <h2><a class="sec-link" href="#review-round-29-october-2026">Review round, 29 October 2026</a></h2>
-      <p>Earlier checks covered trust boundaries, Git metadata, execution controls, incident response and accessibility. <a href="Developer-WS.factcheck.md">Historical fact check</a></p>
-      <span id="security-architect-2"></span>
-      <span id="offensive-security-researcher"></span>
-      <span id="developer-platform-engineer"></span>
-      <span id="incident-responder-and-data-governance"></span>
-      <span id="assurance-and-qa"></span>
-    </section>
-
-    <section id="audit-round-29-october-2026">
-      <h2><a class="sec-link" href="#audit-round-29-october-2026">Audit round, 29 October 2026</a></h2>
-      <p>Earlier audit findings covered permissions, diagram flows, endpoint event fields and response evidence. <a href="Developer-WS.factcheck.md">Historical fact check</a></p>
-      <span id="controls-and-checks"></span>
-      <span id="diagram"></span>
-      <span id="wording-and-assurance"></span>
-    </section>
-
-    <section id="verification-round-29-october-2026">
-      <h2><a class="sec-link" href="#verification-round-29-october-2026">Verification round, 29 October 2026</a></h2>
-      <p>Earlier verification covered npm, credentials, MCP, risk mapping and keyboard access. <a href="Developer-WS.factcheck.md">Historical fact check</a></p>
-      <span id="controls-and-checks-2"></span>
-      <span id="diagram-2"></span>
-      <span id="mapping-output-quality-and-accessibility"></span>
-      <span id="found-while-checking"></span>
-    </section>
-
-    <section id="source-corrections-30-october-2026">
-      <h2><a class="sec-link" href="#source-corrections-30-october-2026">Source corrections, 30 October 2026</a></h2>
-      <p>The older corrections covered account membership, managed configurations and approval scope. <a href="Developer-WS.factcheck.md">Historical fact check</a></p>
-    </section>
-
-    <section id="fact-check-1-november-2026">
-      <h2><a class="sec-link" href="#fact-check-1-november-2026">Fact check, 1 November 2026</a></h2>
-      <p>The earlier statement ledger records the broader multi-agent scope and the Git behaviour checks. <a href="Developer-WS.factcheck.md">Historical fact check</a></p>
-    </section>
-
-    <section id="evidence-status">
-      <h2><a class="sec-link" href="#evidence-status">Evidence status</a></h2>
-      <div class="cols" id="evidence"></div>
-    </section>
-  </div>
-
   <!-- SOURCES -->
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
     <section id="sources-2">
       <h2><a class="sec-link" href="#sources-2">Sources</a></h2>
-      <p class="sub">Sources for the VS Code and GitHub Copilot scope, reviewed on 19 November 2026. <a href="Developer-WS.factcheck.md">Fact check and earlier source history</a></p>
+      <p class="sub" id="fact-check-notes">
+        <a href="Developer-WS.factcheck.md">Fact check and review notes</a>
+      </p>
       <ol class="sources" id="sourceList"></ol>
     </section>
   </div>
@@ -724,12 +634,30 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       if (n !== null){ e.preventDefault(); show(tabs[n].getAttribute('data-tab'), true); }
     });
   });
-  function toMore(){ show('map'); var m = document.getElementById('more'); if (m) setTimeout(function(){ m.scrollIntoView({ block: 'start' }); }, 0); }
+  /* Old Review links lead to the fact-check link under Sources. */
+  var reviewAnchors = [
+    'review', 't-review', 'p-review',
+    'how-the-analysis-was-checked', 'reviewIntro', 'personas',
+    'merge-check-29-october-2026', 'content-integrity-auditor', 'security-architect',
+    'qa-and-accessibility-engineer', 'review-round-29-october-2026', 'security-architect-2',
+    'offensive-security-researcher', 'developer-platform-engineer', 'incident-responder-and-data-governance',
+    'assurance-and-qa', 'audit-round-29-october-2026', 'controls-and-checks',
+    'diagram', 'wording-and-assurance', 'verification-round-29-october-2026',
+    'controls-and-checks-2', 'diagram-2', 'mapping-output-quality-and-accessibility',
+    'found-while-checking', 'source-corrections-30-october-2026', 'fact-check-1-november-2026',
+    'evidence-status', 'evidence', 'persona-offensive-security-lead',
+    'persona-endpoint-and-developer-platform-engineer', 'persona-auditor-and-fact-checker', 'evidence-verified-here',
+    'evidence-interpretation-by-ai', 'evidence-still-open'
+  ];
   /* Links to a section inside a tab: open that tab, then scroll to the section */
   function openSection(id){
     if (!id) return false;
     try { id = decodeURIComponent(id); } catch(e){}
-    var el = document.getElementById(id); if (!el) return false;
+    var target = id;
+    if (id === 'moreRows') target = 'more';
+    if (reviewAnchors.indexOf(id) >= 0) target = 'fact-check-notes';
+    var el = document.getElementById(target);
+    if (!el) return false;
     var p = el.closest('[id^="p-"]');
     var tab = p ? p.id.slice(2) : null;
     if (tab && ids.indexOf(tab) >= 0 && p.hidden) show(tab);
@@ -740,10 +668,13 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     return true;
   }
   var start = (location.hash || '').replace('#', '');
-  if (start === 'more') toMore();
-  else show(ids.indexOf(start) >= 0 ? start : store.get('dev-tab', 'map'));
-  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
-  window.addEventListener('hashchange', function(){ var h = (location.hash || '').replace('#', ''); if (h === 'more') toMore(); else if (ids.indexOf(h) >= 0) show(h); else openSection(h); });
+  show(ids.indexOf(start) >= 0 ? start : store.get('dev-tab', 'map'));
+  if (start && ids.indexOf(start) < 0) openSection(start);
+  window.addEventListener('hashchange', function(){
+    var h = (location.hash || '').replace('#', '');
+    if (ids.indexOf(h) >= 0) show(h);
+    else openSection(h);
+  });
 
   /* Copy */
   function copyText(text, onOk, onFail){
@@ -814,15 +745,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   });
 
   /* Filter */
-  var DESC = {
-    all: 'All priority risks, including governance controls.',
-    content: 'Poisoned content can redirect Copilot through a page, issue, workspace file or tool result.',
-    repo: 'A project can carry task settings, local Git metadata or Copilot instructions that need review before trust.',
-    supply: 'Supply-chain exposure includes packages, extensions, MCP servers, plugins and skills that Copilot or the editor can use.',
-    creds: 'A compromised workstation or tool can expose credentials used for GitHub, registries and cloud services.'
-  };
   var chips = $$('.chip');
-  var desc = $('#pathDesc');
   chips.forEach(function(ch){
     ch.addEventListener('click', function(){
       var p = ch.getAttribute('data-path');
@@ -830,12 +753,10 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       $$('.risk').forEach(function(r){
         r.hidden = !(p === 'all' || (' ' + r.getAttribute('data-paths') + ' ').indexOf(' ' + p + ' ') >= 0);
       });
-      desc.textContent = DESC[p] + ' ';
-      desc.appendChild(htmlEl('span', 'tag', '[inference]'));
     });
   });
 
-  /* More risks, review and sources (data) */
+  /* Further risks and sources (data) */
   var MORE = [
     {"id": "D11", "t": "Copilot changes reach GitHub and CI unchecked", "d": "Copilot can write plausible but faulty code and can change tests in the same edit. With authorised tools it can also push, open a pull request or trigger a workflow. A workflow can run before a protected branch accepts a merge.", "l": "m", "c": "Require independent review and security checks. Use least-privilege workflow permissions, environment approvals where needed, and isolated runners for untrusted changes. Review edits to tests and workflow files.", "refs": [["https://docs.github.com/en/actions/reference/security/secure-use", "GitHub Actions secure use"], ["https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners", "GitHub code ownership"], ["https://code.visualstudio.com/docs/agents/run/security", "VS Code AI security"]]},
     {"id": "D12", "t": "Accidental destructive actions by Copilot", "d": "Copilot can edit or delete files, change infrastructure or trigger a deployment without malicious input when its tools have the required access.", "l": "m", "c": "Keep production credentials out of ordinary VS Code sessions. Use an isolated environment for high-impact work, review changes before applying them, and confirm that backups can restore affected files.", "refs": [["https://code.visualstudio.com/docs/agents/run/security", "VS Code AI security"]]},
@@ -844,16 +765,6 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     {"id": "D15", "t": "Copilot history sync and remote access", "d": "Session sync makes recorded history available through GitHub. GitHub environments [preview] can share a running agent host with supported Copilot clients. SSH and Remote Tunnels are separate access paths.", "l": "m", "c": "Set CopilotSessionSync to match data rules. Disable GitHub environment registration through ChatAgentHostGitHubEnvironments where live remote access is outside policy. Review SSH and Remote Tunnels separately.", "refs": [["https://code.visualstudio.com/docs/agents/run/remote-agent-sessions", "VS Code remote agent sessions"], ["https://code.visualstudio.com/docs/agents/agent-troubleshooting/faq", "VS Code Copilot FAQ"], ["https://code.visualstudio.com/docs/enterprise/manage-ai-settings", "GitHub environments policy"]]},
     {"id": "D16", "t": "Copilot browsing and signed-in sessions", "d": "Agent-opened integrated browser pages use a private session by default. A user can also share a browser tab with Copilot. Sharing a signed-in tab can expose the application to agent actions within that session.", "l": "m", "c": "Check BrowserChatTools for editor browser tools and GitHub-managed features.browserUse for Copilot runtime browser use. Test allowed domains in the deployed harness. Keep sensitive signed-in tabs out of agent scope and verify which browser implementation and identity each session uses.", "refs": [["https://code.visualstudio.com/docs/agents/run/browser-tools", "VS Code browser tools"], ["https://code.visualstudio.com/docs/enterprise/manage-ai-settings", "VS Code enterprise AI settings"], ["https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings", "GitHub managed features"]]},
     {"id": "D17", "t": "Copilot telemetry stores sensitive content", "d": "Copilot OpenTelemetry content capture can include prompts, responses, tool arguments and output. Those fields can contain code or credentials and can be exported to a collector.", "l": "l", "c": "Export metadata by default. Approve the destination, access and retention before enabling content capture. Verify effective settings and inspect records from a harmless test session.", "refs": [["https://code.visualstudio.com/docs/agents/guides/monitoring-agents", "Copilot OpenTelemetry capture controls"], ["https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings", "GitHub managed telemetry"]]}
-  ];
-  var PERSONAS = [
-    {"n": "Offensive security lead", "r": "Execution paths and trust boundaries", "f": ["Reviewed project trust, package installation, extension execution, local Git data and untrusted content as different entry points.", "Traced which Copilot tools could change local files or reach GitHub, remote MCP and other services."]},
-    {"n": "Endpoint and developer-platform engineer", "r": "Enforcement scope", "f": ["Compared VS Code device policies, GitHub enterprise-managed settings and account policy for each Copilot workflow.", "Checked session harness, execution host and tool implementation wherever these affect control coverage."]},
-    {"n": "Auditor and fact-checker", "r": "Evidence and verification limits", "f": ["Checked active factual claims against the linked documentation and attributed incident reports.", "Recorded deployment questions and kept the earlier statement ledger as historical evidence."]}
-  ];
-  var EVIDENCE = [
-    {"h": "Verified here", "i": ["Primary documentation reviewed on 19 November 2026 for all active risk cards, further risks and checklists.", "Historical Git tests and their scope are recorded in the earlier fact check."]},
-    {"h": "Interpretation by AI", "i": ["OWASP mappings, diagram placements and estimated friction and relevance."]},
-    {"h": "Still open", "i": ["Device policy, enterprise-managed settings and account policy must be tested in the deployed environment.", "Coverage depends on the deployed VS Code version, operating system, harness, tool and execution host."]}
   ];
   var SOURCES = [
     {"t": "VS Code AI security", "u": "https://code.visualstudio.com/docs/agents/run/security", "n": "Microsoft. Risks, trust boundaries and tool permissions."},
@@ -905,28 +816,6 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     ["D10", "Require approved GitHub organisation membership and verify the active model provider.", "Low"]
   ];
 
-  /* Headings built by script get an id and a link too */
-  function slug(t){ return t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48).replace(/-$/, ''); }
-  function linkHead(h, id){ var a = htmlEl('a', 'sec-link', h.textContent); a.href = '#' + id; h.id = id; h.textContent = ''; h.appendChild(a); return h; }
-  var pw = $('#personas');
-  PERSONAS.forEach(function(p){
-    var d = htmlEl('div', 'persona');
-    d.appendChild(linkHead(htmlEl('h3', null, p.n), 'persona-' + slug(p.n)));
-    d.appendChild(htmlEl('p', 'role', p.r));
-    var ul = htmlEl('ul');
-    p.f.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
-    d.appendChild(ul);
-    pw.appendChild(d);
-  });
-  var ev = $('#evidence');
-  EVIDENCE.forEach(function(c){
-    var d = htmlEl('div', 'col');
-    d.appendChild(linkHead(htmlEl('h3', null, c.h), 'evidence-' + slug(c.h)));
-    var ul = htmlEl('ul');
-    c.i.forEach(function(x){ ul.appendChild(htmlEl('li', null, x)); });
-    d.appendChild(ul);
-    ev.appendChild(d);
-  });
   var sl = $('#sourceList');
   SOURCES.forEach(function(s){
     var li = htmlEl('li');
@@ -1176,7 +1065,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       }
       var ps = placesAt(id);
       var nt = ps.filter(function(p){ return !isX(p[0]); }).length, nx = ps.length - nt;
-      g.setAttribute('aria-label', c.t + ': ' + nt + (nt === 1 ? ' top 10 risk' : ' top 10 risks') + (nx ? ', ' + nx + ' more' : ''));
+      g.setAttribute('aria-label', c.t + ': ' + nt + (nt === 1 ? ' checklist risk' : ' checklist risks') + (nx ? ', ' + nx + ' more' : ''));
       boxEls[id] = g;
     });
 
@@ -1216,20 +1105,14 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     var el = document.getElementById('dgSummary');
     if (!el) return;
     if (selRisk){
-      var ps = placesOf(selRisk);
-      el.textContent = selRisk + ': ' + riskTitle(selRisk) + '. Sits in ' + ps.length + (ps.length === 1 ? ' part' : ' parts') + ' of the map: ' +
-        ps.map(function(p){ return COMP[p[1]].t; }).join(', ') + '. ' +
-        (isX(selRisk) ? 'Further risk.' : 'Status: ' + stText(selRisk) + '.');
+      var locations = placesOf(selRisk).map(function(p){ return COMP[p[1]].t; });
+      el.textContent = selRisk + ' ' + riskTitle(selRisk) + ' · ' + locations.join(', ') +
+        (isX(selRisk) ? '' : ' · ' + stText(selRisk));
     } else if (selComp){
       var pc = placesAt(selComp);
       el.textContent = COMP[selComp].t + ': ' + (pc.length ? pc.map(function(p){ return p[0]; }).join(', ') : 'no risks placed here') + '.';
     } else {
-      var counts = Object.keys(boxEls).map(function(id){ return [id, placesAt(id).length]; })
-        .filter(function(c){ return c[1] > 0; })
-        .sort(function(a, b){ return b[1] - a[1]; });
-      var cut = counts.length ? counts[Math.min(3, counts.length - 1)][1] : 0;
-      var top = counts.filter(function(c){ return c[1] >= cut; });
-      el.textContent = 'Most risks meet in: ' + top.map(function(c){ return COMP[c[0]].t + ' (' + c[1] + ')'; }).join(', ') + '.';
+      el.textContent = '';
     }
   }
 
@@ -1246,7 +1129,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       var r = ch.getAttribute('data-r');
       ch.setAttribute('aria-pressed', (r === 'all' ? !selRisk : r === selRisk) ? 'true' : 'false');
     });
-    $$('#dgMatrix tr, #moreRows tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-r') === selRisk); });
+    $$('#dgMatrix tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-r') === selRisk); });
     writeSummary();
   }
 
@@ -1313,8 +1196,8 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     var go;
     if (isX(r)){
       pop.appendChild(htmlEl('p', 'pop-st', 'Estimated relevance · ' + { h:'High', m:'Medium', l:'Low' }[MOREBY[r].l] + '.'));
-      go = htmlEl('button', 'btn', 'Show ' + r + ' in the More risks table'); go.type = 'button';
-      go.addEventListener('click', function(){ openMoreRow(r); });
+      go = htmlEl('button', 'btn', 'Show ' + r + ' by zone'); go.type = 'button';
+      go.addEventListener('click', function(){ openZoneRow(r); });
     } else {
       pop.appendChild(htmlEl('p', 'pop-st', 'Status: ' + stText(r)));
       go = htmlEl('button', 'btn', 'Open the checklist for ' + r); go.type = 'button';
@@ -1347,9 +1230,9 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     showPop(anchor);
   }
 
-  function openMoreRow(r){
+  function openZoneRow(r){
     closePop(false);
-    var row = document.querySelector('#moreRows tr[data-x="' + r + '"]');
+    var row = document.querySelector('#dgMatrix tr[data-r="' + r + '"]');
     if (!row) return;
     row.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
     var bb = row.querySelector('.mx-btn');
@@ -1416,16 +1299,6 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
     var chipBoxX = document.getElementById('dgChipsX');
     XIDS.forEach(function(r){ makeChip(r, chipBoxX); });
 
-    var SHORT = {
-      "D11": "Protect GitHub merges and the workflows that run before merge.",
-      "D12": "Remove production credentials from ordinary Copilot sessions.",
-      "D13": "Disable unneeded Remote Tunnels and monitor unexpected tunnel processes.",
-      "D14": "Set the GitHub Copilot Memory policy and review stored facts.",
-      "D15": "Set history sync and live access controls independently.",
-      "D16": "Limit browser tools, destinations and signed-in tabs.",
-      "D17": "Export metadata and keep content capture off by default."
-    };
-    /* One row builder, so Risk by zone and More risks share the same structure */
     function zoneRow(r){
       var tr = htmlEl('tr'); tr.setAttribute('data-r', r);
       var th = htmlEl('th'); th.scope = 'row';
@@ -1445,8 +1318,11 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       return tr;
     }
     var tb = document.getElementById('dgMatrix');
-    RISKS.forEach(function(r){ tb.appendChild(zoneRow(r)); });
-    var mr = document.getElementById('moreRows');
+    ALL.forEach(function(r){
+      var row = zoneRow(r);
+      if (r === XIDS[0]) row.id = 'more';
+      tb.appendChild(row);
+    });
     var md = document.getElementById('moreDetails');
     var STARTBY = {}; START.forEach(function(x){ STARTBY[x[0]] = x; });
     RISKS.forEach(function(r){
@@ -1454,13 +1330,13 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       var sm = htmlEl('summary');
       sm.appendChild(idTag(r));
       sm.appendChild(htmlEl('span', null, riskTitle(r)));
-      sm.appendChild(htmlEl('span', 'lvl t', 'Top 10'));
+      sm.appendChild(htmlEl('span', 'lvl t', 'Checklist'));
       det.appendChild(sm);
       var st = STARTBY[r];
       if (st){
         var pc = htmlEl('p', 'ctl'); pc.appendChild(htmlEl('b', null, 'First control · ')); pc.appendChild(document.createTextNode(st[1]));
         det.appendChild(pc);
-        var pf = htmlEl('p', 'why'); pf.appendChild(htmlEl('b', null, 'Friction · ')); pf.appendChild(document.createTextNode(st[2] + ' '));
+        var pf = htmlEl('p', 'why'); pf.appendChild(htmlEl('b', null, 'Effort · ')); pf.appendChild(document.createTextNode(st[2] + ' '));
         pf.appendChild(htmlEl('span', 'tag', '[inference]'));
         det.appendChild(pf);
       }
@@ -1472,18 +1348,17 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
       md.appendChild(det);
     });
     MORE.forEach(function(m){
-      var tr = zoneRow(m.id); tr.setAttribute('data-x', m.id); mr.appendChild(tr);
       var det = htmlEl('details', 'more-d'); det.id = 'more-' + m.id;
       var sm = htmlEl('summary');
       sm.appendChild(idTag(m.id));
       sm.appendChild(htmlEl('span', null, m.t));
       sm.appendChild(htmlEl('span', 'lvl ' + m.l, { h:'High', m:'Medium', l:'Low' }[m.l]));
       det.appendChild(sm);
-      var pc = htmlEl('p', 'ctl'); pc.appendChild(htmlEl('b', null, 'First control · ')); pc.appendChild(document.createTextNode(SHORT[m.id] || m.c));
-      det.appendChild(pc);
-      if (m.d) det.appendChild(htmlEl('p', 'why', m.d));
-      var pf = htmlEl('p', 'why'); pf.appendChild(htmlEl('b', null, 'Checks · ')); pf.appendChild(document.createTextNode(m.c));
-      det.appendChild(pf);
+      det.appendChild(htmlEl('p', 'why', m.d));
+      var mitigation = htmlEl('p', 'ctl');
+      mitigation.appendChild(htmlEl('b', null, 'Mitigation · '));
+      mitigation.appendChild(document.createTextNode(m.c));
+      det.appendChild(mitigation);
       var links = htmlEl('p', 'note');
       m.refs.forEach(function(ref, index){
         if (index) links.appendChild(document.createTextNode(' · '));
@@ -1511,7 +1386,7 @@ figcaption>*{width:100cqw;max-width:100%;margin-left:max(0px,calc((100% - 100cqw
   tally();
   applySel();
   /* A shared link to a section built by script: the section now exists */
-  if (start && start !== 'more' && ids.indexOf(start) < 0) openSection(start);
+  if (start && ids.indexOf(start) < 0) openSection(start);
 })();
 </script>
 

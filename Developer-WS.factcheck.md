@@ -10,6 +10,27 @@ Page checked: `Developer-WS.html` (then named `Developer Workstation Risk Map.ht
 
 The active page now covers Copilot in managed VS Code, with the legacy VS Code Local harness mentioned where an enforcement boundary differs. Review baseline: `e51e24b`. The original statement ledger below records the previous scope. Product statements were checked against the listed primary sources. Questions and proposed controls were reviewed for scope and placement. Deployment results require testing on the actual fleet.
 
+### Review notes
+
+The 19 November review used three lenses:
+
+- **Execution paths and trust boundaries.** Reviewed Workspace Trust, package installation, extension execution, local Git data and untrusted content as distinct entry points. Traced which Copilot tools could change files or reach GitHub, remote MCP servers and other services.
+- **Policy enforcement.** Compared VS Code device policy, GitHub enterprise-managed settings and GitHub account policy. Checked where the harness, execution host and tool implementation affect coverage.
+- **Evidence and verification.** Compared factual claims with primary documentation and attributed incident reports. Kept the earlier statement ledger and recorded checks that still require managed devices.
+
+The OWASP mappings, diagram placements, effort estimates and relevance estimates are interpretations by AI. Test device, Copilot and account controls on the VS Code builds, operating systems, harnesses and execution hosts in use.
+
+#### Earlier reviews
+
+| Date | Review | Scope |
+| --- | --- | --- |
+| 29 October 2026 | Merge check | Risk IDs, diagram placement, navigation and page controls. |
+| 29 October 2026 | Review round | Trust boundaries, Git metadata, how execution controls apply, incident response and accessibility. |
+| 29 October 2026 | Audit round | Permissions, diagram flows, endpoint event fields and incident-response evidence. |
+| 29 October 2026 | Verification round | npm, credentials, MCP, risk mapping and keyboard access. |
+| 30 October 2026 | Source corrections | Account membership, managed configurations and approval scope. |
+| 1 November 2026 | Statement review | The earlier multi-agent map and Git behaviour tests. See the historical statement ledger below. |
+
 ### Verdicts for active factual statements
 
 | Location | Statement assessed | Verdict and source checked on 19 November 2026 |
@@ -67,7 +88,9 @@ The active page now covers Copilot in managed VS Code, with the legacy VS Code L
 
 ### Validation and limits
 
-Chrome rendered all four tabs at 1280 and 390 px with no document-level horizontal overflow or JavaScript errors. Verified all 17 risk rows, 77 markers, 35 distinct external source URLs in the rendered DOM, old fragment IDs, direct links to a risk and hidden Review sections, the MCP popover and Escape, filtering, status persistence and reset. Checked that the diagram box labels fit. Source links were checked as documentation references. No managed VS Code or Copilot enforcement tests were run.
+Chrome rendered the original four-tab version at 1280 and 390 px with no document-level horizontal overflow or JavaScript errors. Verified all 17 risk rows, 77 markers, 35 distinct external source URLs in the rendered DOM, old fragment IDs, direct links, the MCP popover and Escape, filtering, status persistence and reset. Checked that the diagram box labels fit. Source links were checked as documentation references. No managed VS Code or Copilot enforcement tests were run.
+
+The layout update merged all 17 rows into Risk by zone, renamed the checklist and mitigations sections, and moved Review into this fact check. Sources stay on the page so readers can reach the references from a risk or browse the full list. Old Review links lead to the fact-check link in Sources. Chrome checks at 320, 390, 870 and 1440 px covered section alignment, page overflow, the merged table, keyboard tab navigation, old links and saved statuses.
 
 ## Focused recheck, 15 November 2026
 
