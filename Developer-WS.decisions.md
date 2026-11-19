@@ -142,3 +142,10 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - Added the affected versions and vendor response link so readers can check the exposure and remediation steps.
 - Kept "Current as of 1 November 2026" because this was a focused D03 check, not a full recheck of the page.
 - Added the required tag key under the Made with AI note. The index entry date is 15 November 2026.
+
+## 19 November 2026, VS Code and GitHub Copilot scope
+
+- The primary scenario is a managed VS Code workstation using the Copilot harness in Agent Host. The legacy VS Code Local harness appears where coverage differs. Standalone agents and editor forks belong in separate assessments.
+- Keep the 17 published risk IDs, interactive placements and saved status keys. Tell readers to reassess their saved statuses because the controls now evaluate a narrower scenario.
+- Replace the multi-agent release snapshot with durable control boundaries. Keep applicable incidents as attributed workstation examples. Use the historical fact-check ledger for the broader source and review history.
+- Treat device policy, Copilot enterprise-managed settings and account policy as separate enforcement paths. The page gives checks by tool and execution host. The fact check records documentation verdicts and browser validation.
