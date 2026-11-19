@@ -36,8 +36,6 @@ def apply_review(page, ev, rec, inf, unv, evp):
         'Build adapters for GitHub managed settings and Foundry connection tool lists; validate each before deployment. '
         'Keep Power Platform MCP policy manual until its API path is verified. Microsoft 365 connector access stays manual. '
         f'Use separate least-privilege credentials, record the reviewed commit and target result, and reconcile drift. {rec}'))
-    replace('The proposed pipeline must configure Foundry and Copilot Studio separately.',
-            'Configure Foundry connections separately; keep Copilot Studio policy manual until its MCP adapter is verified.')
     control('client', requirement=(
         'Set a managed allowlist of approved endpoints and reject unmatched servers on each supported client. '
         'For restrictions that must survive account switching or unavailable server policy, use protected device policy. '
@@ -108,11 +106,7 @@ def apply_review(page, ev, rec, inf, unv, evp):
         f'One policy covers every tool and caller of a server {evp("pv-ttp-scope")}. '
         f'Discovery and session management are not evaluated {evp("review-ttp-discovery")}; initialize, tools/list and notifications are excluded {evp("review-ttp-example")}. '
         f'A post-call denial cannot undo execution {evp("pv-ttp-post")}; automatic retry is discouraged {evp("review-ttp-retry")}.'))
-    replace('On merge, writes the list to each policy target.', 'Proposed adapters map reviewed Git decisions to the targets with validated automation.')
-    replace('GitHub, Power Platform, Foundry</dd>', 'GitHub and Foundry; Power Platform pending API validation</dd>')
     replace('build the pipeline that applies it. Set the Microsoft 365 admin center by hand.', 'build and validate its target adapters. Configure Microsoft 365 access and Power Platform MCP policy manually until their respective automation is verified.')
-    replace('Add an unapproved remote MCP server in a managed client</td><td data-label="Expected result">Blocked', 'Add an unapproved remote MCP server in a managed client</td><td data-label="Expected result">Blocked within verified policy scope; record documented exceptions')
-    replace('Blocked in each target the pipeline writes to, after policy propagation and client refresh', 'Denied at automated targets after refresh; manual targets require recorded administrator changes')
     replace('Mark the server denied in Git; the pipeline removes it from its targets. In the Microsoft 365 admin center, block it in the registry and remove its connector by hand. Verify that calls are denied.',
             'Record the denial in Git and apply an urgent company-gateway block before waiting for client refresh. Reconcile automated targets, manually deny Power Platform and Microsoft 365 access, and block the separate BYO registration if used. Verify runtime denial and active-session behavior.')
     replace('Approval merges the change into the inventory. The pipeline then applies it to the policy targets.', 'Approval merges the inventory decision. Validated pipeline adapters update their targets; administrators apply and record the remaining manual policy changes.')
@@ -129,15 +123,8 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('<dt>Applies to</dt><dd>Agent 365 agent instances</dd>', '<dt>Applies to</dt><dd>Agent 365 agent instances and Foundry AI interactions</dd>')
     replace('No design control covers them. Pilot both, or limit it through GitHub account permissions.',
             f'No design control covers them. Pilot both switches, or limit the built-in server through GitHub account permissions. {rec}')
-    replace('Hatched boxes and the lines that touch them are what preview adds. Everything else is the released design.', 'Hatching marks preview-only boxes; preview controls also live on shared boxes. The BYO line is a rejected alternative for this private backend.')
     assert page.count('What establishes the guarantee') == 14
     page = page.replace('What establishes the guarantee', 'Required control or validation')
-    replace(f'{inf} The federated connector pages read on 2026-11-11 carry no preview label for the connectors, so the page treats them as released. Confirm in the target tenant.',
-            f'Microsoft lists federated connectors for Microsoft 365 Copilot as generally available {ev("m365-fed-ga")}. '
-            f'{rec} Confirm that the intended users and Copilot experience can access the approved connector.')
-    replace(f'{unv} The page describes tools in general. Not checked whether the option is offered for MCP tools.',
-            f'Microsoft documents this setting for the Kusto Query MCP Server {ev("studio-kusto-confirm")}.')
-    replace('VS Code asks again after a configuration change.', 'VS Code can prompt again after a configuration change.')
     replace('Safe stop, or a rollback to the released-only design</td>',
             'Safe stop or a tested migration back to the released gateway</td>')
     # Context review: approval scope, publisher overrides and administrator roles.
@@ -145,19 +132,10 @@ def apply_review(page, ev, rec, inf, unv, evp):
             'Clear all publisher types for a default-deny starting point, then individually enable only approved connectors for named groups within User access. Review existing individual overrides and future connector changes.')
     replace(f'Admins control availability {ev("m365-admin", "m365-org")}; every setting must allow the user {ev("m365-all")}.',
             f'Admins control availability {ev("m365-admin", "m365-org")}. Individual connector settings override publisher-wide defaults; User access remains the population ceiling {ev("review-connector-override")}.')
-    replace(f'For federated connectors, tools that write need user approval {ev("m365-write")}.',
-            f'Federated connector write tools initially require user approval {ev("m365-write")}. Users can save approval for the conversation or choose Always allow for that tool {ev("review-write-approval-scope")}. Researcher can only read through federated connectors {ev("m365-researcher")}.')
-    replace(f'A rule can be scoped only to agents with a Microsoft Entra agent ID {evp("pv-gr-def-entra")}.',
-            f'Rules can cover All agents or specific agents {evp("review-defender-scope")}. Only agents with a Microsoft Entra agent ID appear in the selection list {evp("pv-gr-def-entra")}.')
     replace(f'An administrator grants the A365 MCP Gateway Policy Operator role at tenant level with a one-time consent {evp("pv-a365-role")}.',
             f'Connecting the Azure gateway requires Global Administrator; AI Administrator cannot perform this operation {evp("review-gateway-admin")}. The one-time tenant consent grants the A365 MCP Gateway Policy Operator role {evp("pv-a365-role")}.')
     replace('Configure Microsoft 365 agent access by hand; it has no API option.',
             'Configure Microsoft 365 Agent and plugin access by hand; this setting has no API option.')
     replace('It carries the preview label ' + evp('fw-preview') + ' and inspects remote servers only ' + evp('fw-remote') + '.',
             'It carries the preview label ' + evp('fw-preview') + '; local servers and JSON-RPC batches are not inspected ' + evp('fw-remote') + '.')
-    replace(f'Only the client allowlist applies. {ev("gh-fw")}',
-            f'{ev("gh-fw")} Cloud sessions run in sandboxes or on GitHub Actions {ev("gh-cloud-settings")}. '
-            f'{rec} Verify managed-setting support for the actual runtime and profile before relying on the allowlist.')
-    replace('The same v2 API Management instance can be the Foundry AI Gateway and the gateway for the company MCP server. The source lists the requirements for an existing instance but not this combined use. Not tested.',
-            'One API Management instance could serve both the model and MCP routes in this design. Verify tier capabilities, connectivity and policy isolation for each route before sharing the instance.')
     return page

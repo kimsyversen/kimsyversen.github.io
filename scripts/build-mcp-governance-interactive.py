@@ -114,9 +114,12 @@ def objs_of(meta):
 
 layer_no = -1
 for row in LAYER_ROWS:
+    status = ""
     if isinstance(row, tuple):
-        layer_no += 1
-        continue
+        status, row = row
+        if status == "grp":
+            layer_no += 1
+            continue
     label, applies, req, doc = row
     m = LABEL.fullmatch(label)
     if not m:
@@ -127,47 +130,21 @@ for row in LAYER_ROWS:
     CONTROLS.append(dict(
         id=cid or ("g-" + slug(title)), title=title, meta=meta, applies=applies,
         req=None if req == ns["NONE_ADDED"] else req, doc=doc, layers=[layer_no],
-        objs=objs_of(meta), preview=False, guardrail=guardrail))
+        objs=objs_of(meta), preview=status == "view-preview", guardrail=guardrail))
 
 pv_block = PREVIEW_HTML[PREVIEW_HTML.index('<div class="sub3" id="preview-controls">'):PREVIEW_HTML.index('<span id="preview-env">')]
 PV_ROW = re.compile(r'<tr><td><span id="ctrl-([^"]+)">(.*?)</span><span class="rt">(.*?)</span></td><td>(.*?)</td><td>(.*?)</td></tr>', re.S)
-PV_LAYER = {"a365": [4], "a365-consent": [4], "ai-resource": [4], "ai-limits": [4], "ai-publish": [4],
-            "ttp-users": [4], "ttp-modes": [4], "byo": [4], "foundry-routing": [4], "outbound-filter": [4]}
-# The first page names layer 4 only for tool threat protection. The other layer 4 tags are an AI estimate
-# and say so on the page, the way the first page marks its own layer guess for the prompt attack block.
-PV_LAYER_EST = {"a365", "a365-consent", "ai-resource", "ai-limits", "ai-publish", "byo", "foundry-routing", "outbound-filter"}
+PV_LAYER = {cid: [4] for cid in ("a365", "a365-consent", "ai-limits", "ttp-users",
+                                 "ttp-modes", "byo", "outbound-filter")}
+# Layer assignments outside tool threat protection are estimates in the diagram.
+PV_LAYER_EST = set(PV_LAYER) - {"ttp-users", "ttp-modes"}
 for cid, title, meta, req, doc in PV_ROW.findall(pv_block):
-    preview = cid not in {"foundry-routing", "ai-resource", "ai-publish"}
-    if cid == "foundry-routing":
-        meta = "Objective A"
-        req = (f"Configure the company gateway route first. Set its full URL on each new or existing Foundry MCP tool "
-               f"and on any project connection that supplies the endpoint. Verify a tool call in gateway telemetry. {REC}")
-        doc = (f"Foundry no longer registers MCP servers or rewrites tool endpoints automatically {ev('pv-fy-prev', 'pv-fy-new')}. "
-               f"A project connection endpoint takes precedence over the tool's <code>server_url</code> {ev('pv-fy-aig-only-mcp')}.")
-    elif cid == "ai-resource":
-        req = f"Use the gateway endpoint issued for your deployment. Check clients and credentials when migrating the earlier AIGateway SKU. {REC}"
-        doc = (f"Azure AI Gateway is generally available in 17 regions {ev('gateway-ga', 'gateway-regions')}. "
-               f"Its resource type is Microsoft.ApiManagement/aigateways {ev('pv-res-change')}. "
-               f"Model traffic supports prompt and response screening with Azure AI Content Safety {ev('gateway-content')}.")
-    elif cid == "ai-publish":
-        title = "Publishing tools on Azure AI Gateway"
-    elif cid == "ai-limits":
-        title = "Private networking on Azure AI Gateway"
-        req = f"Test outbound connectivity to the private MCP backend before moving traffic. Keep the API Management route available for rollback. {REC}"
-        doc = (f"Inbound Private Link and outbound VNet integration for private backends are both in preview "
-               f"{evp('gateway-network')}. Configure and test each direction independently.")
-    elif cid == "a365":
-        req = f"Pilot gateway discovery and blocking separately from backend isolation. Verify support for the gateway and tenant before relying on enforcement. {REC}"
-        doc = (f"The API Management team announced general availability for both gateway integrations {evp('apim-integration-ga')}. "
-               f"The Agent 365 team still lists Azure AI Gateway support as preview {evp('a365-gateway-preview')}. "
-               f"Both gateways support server blocking. Only the dedicated gateway lists per-tool blocking, which requires a static tool list "
-               f"{evp('pv-a365-matrix', 'pv-a365-v2', 'pv-a365-static')}. API Management v1 is excluded {evp('pv-a365-v1')}.")
     CONTROLS.append(dict(id=cid, title=title, meta=meta, applies=None, req=req, doc=doc,
-                         layers=PV_LAYER[cid], objs=objs_of(meta), preview=preview, guardrail=False))
+                         layers=PV_LAYER[cid], objs=objs_of(meta), preview=True, guardrail=False))
 
 PV_GR_LAYERS = {"Tool call and tool response guardrails": [3, 6], "Threat detection": [3],
                 "Defender real-time protection": [3, 6], "Defender on the Agent 365 path": [3],
-                "Defender rules and scope": [3, 6], "Defender for Endpoint runtime protection": []}
+                "Defender rules and scope": [3, 6]}
 for name, product, layer, text in [GR_PREV_FY] + [r[1] for r in GR_PREV_RAW]:
     CONTROLS.append(dict(id="g-" + slug(name), title=name, meta="Guardrail", applies=product, req=None,
                          doc=text, layers=PV_GR_LAYERS[name], objs=[], preview=True, guardrail=True,
@@ -202,21 +179,8 @@ CONTROLS.append(dict(
          f"For Foundry, Purview audits prompts and responses {ev('purview-foundry-audit')}; its page does not mention tool calls.")))
 
 CTRL = {c["id"]: c for c in CONTROLS}
-hook = CTRL["g-tool-call-hook"]
-hook["preview"] = True
-hook["doc"] = f"VS Code labels agent hooks preview {evp('vs-hook-preview')}. " + hook["doc"]
-endpoint = CTRL["g-defender-for-endpoint-runtime-protection"]
-endpoint["preview"] = False
-endpoint["doc"] = (f"Defender runtime protection is generally available for supported local Windows agents {ev('defender-windows-ga')}. "
-                   f"Local agents require separate onboarding {ev('pv-gr-def-local', 'review-def-local-sep')}. "
-                   f"The support matrix still labels Windows preview and lists the VS Code GitHub Copilot extension {evp('pv-gr-mde-win', 'pv-gr-mde-vs')}. "
-                   f"Blocking depends on the inspection method {ev('pv-gr-mde-how')}. {REC} Verify the target extension and action.")
 byo_defender = CTRL["g-defender-on-the-agent-365-path"]
 byo_defender["title"] = "Defender on the Agent 365 BYO path"
-byo_defender["doc"] = (f"Defender covers tool calls to customer MCP tools onboarded to Agent 365. "
-                       f"Agents using unsupported tools or skipping Work IQ MCP fall outside that coverage "
-                       f"{evp('pv-gr-def-a365', 'pv-gr-def-unsup')}. "
-                       f"The BYO registration used for this pilot is in preview {evp('pv-byo-surf')}.")
 CTRL["a365"]["status_tag"] = UNV
 CTRL["a365-consent"]["status_tag"] = ""
 if len(CTRL) != len(CONTROLS):
@@ -234,15 +198,6 @@ PART["Azure API Management"] = (
     f"Supported classic and v2 tiers can host MCP routes. Check individual capabilities by tier {ev('mcp-tiers', 'pv-apim-tier')}. "
     f"The self-hosted gateway can also manage MCP servers {ev('apim-ga-tiers')}.",
     f'Choose a tier that can reach the <a href="#ctrl-backend">private backend</a> and enforce the required policies. {REC}',
-)
-PART["AI Gateway integrated with Foundry"] = (
-    f"Foundry projects can consume models through a shared gateway and use its MCP endpoints {ev('fy-aig-apim')}.",
-    f"Manage API Management in Azure or through code. Use connected models in Foundry. "
-    f"The legacy Foundry interface no longer creates API Management links. Existing configurations continue to work "
-    f"{ev('fy-aig-new', 'fy-aig-same', 'fy-aig-prod')}.",
-    f'Both v1 and v2 tiers can serve as the hub {ev("fy-aig-v2")}. '
-    f'Configure <a href="#ctrl-foundry-routing">MCP tool routing</a> separately. '
-    f'See the <a href="#gap-one-gateway">shared gateway assumption</a> before using the same instance for both.',
 )
 
 def clean_use(use, here=()):
@@ -292,7 +247,7 @@ NODES = [
     dict(id="log", kind="Monitoring", role="log", place=(2, 3, 9, 10), title=["Logging, checks", "and Purview"], sub="All clients",
          parts=[], ctl=["logging", "purview-audit"], applies=True),
     dict(id="gw", kind="Control point", role="gw", place=(4, 7, 9, 11), title=["Gateway"], sub="",
-         parts=["Azure API Management", "AI Gateway integrated with Foundry"],
+         parts=["Azure API Management", "AI Gateway integrated with Foundry", "Azure AI Gateway"],
          ctl=["gateway", "identity", "a365", "a365-consent", "ai-resource", "ai-limits", "ai-publish", "ttp-users", "ttp-modes"],
          applies=True),
     dict(id="byo", kind="Separate preview route", role="pv", place=(2, 3, 10, 11), title=["Agent 365 BYO route"], sub="Alternative; excluded",
@@ -308,8 +263,8 @@ dupes = sorted({c for c in used if used.count(c) > 1})
 unknown = [c for c in used if c not in CTRL]
 if missing or dupes or unknown:
     sys.exit(f"control mapping broken: missing={missing} duplicate={dupes} unknown={unknown}")
-if len(PART) != 10:
-    sys.exit("expected 10 shared parts")
+if len(PART) != 11:
+    sys.exit("expected 11 shared parts")
 used_parts = [p for n in NODES for p in n["parts"]]
 for p in PART:
     if p not in used_parts:
@@ -507,8 +462,9 @@ def panel(n):
     parts = []
     for pn in n["parts"]:
         does, where, use = PART[pn]
-        part_title = "Foundry model access through API Management" if pn == "AI Gateway integrated with Foundry" else pn
-        parts.append(f'<div class="part" id="part-{slug(pn)}"><h4>{part_title}</h4>'
+        part_title = "Foundry gateway connections" if pn == "AI Gateway integrated with Foundry" else pn
+        part_id = "dedicated-ai-gateway" if pn == "Azure AI Gateway" else slug(pn)
+        parts.append(f'<div class="part" id="part-{part_id}"><h4>{part_title}</h4>'
                      + dl([("What it does", does), ("Where it is set or run", where),
                            ("Use in this design", clean_use(use, n["ctl"]))]) + "</div>")
     if n["id"] == "cs":
@@ -518,10 +474,6 @@ def panel(n):
     if n["id"] == "gw":
         parts.insert(0, '<div class="part" id="part-ways-to-build-the-gateway"><h4>Ways to build the gateway</h4>'
                      '<p>API Management fronts the company MCP server. Foundry can also use the gateway for models.</p></div>')
-        parts.append(f'<div class="part" id="part-dedicated-ai-gateway"><h4>Dedicated AI Gateway</h4>'
-                     + dl([("What it does", f"A generally available alternative for publishing MCP tools {ev('gateway-ga', 'pv-aig-comb')}."),
-                           ("Migration", f"The January 15, 2027 deadline applies to the earlier AIGateway SKU of Microsoft.ApiManagement/service {evp('pv-res-date', 'pv-res-removed')}."),
-                           ("Use in this design", '<a href="#ctrl-ai-limits">Check the private networking requirements</a> before piloting it.')]) + "</div>")
     ctls = "".join(control_html(n, cid) for cid in n["ctl"])
     cls = "np" + (" view-preview" if n["preview"] else "")
     extra = ""
@@ -1130,7 +1082,7 @@ DESIGN = f"""
       <figure class="mapfig" id="map" aria-describedby="figDesc">
 {map_html()}
         {KEY}
-        <figcaption class="view-preview">Hatched boxes and the lines that touch them are what preview adds. Everything else is the released design.</figcaption>
+        <figcaption class="view-preview">Hatching marks preview-only boxes; preview controls also live on shared boxes. The BYO line is a rejected alternative for this private backend.</figcaption>
         <div class="vh" id="figDesc">{"".join(f"<p>{esc(s)}</p>" for s in re.split(r"(?<=[.]) (?=Every client|A direct call|In the preview)", DESC_FIG))}</div>
       </figure>
       <div class="panels" id="details">
@@ -1245,7 +1197,6 @@ _extra_tests = [
     ("A read-only caller requests a write tool through the shared gateway identity", "Denied by caller-specific authorization", "A"),
     ("Switch accounts or start a client without cached server policy", "Required device policy remains enforced; verify each supported client", "B"),
     ("Change custom agent profiles, use a cloud session or call through a shell tool", "Document exclusions; prove separate client and egress controls before claiming coverage", "B"),
-    ("Invoke a Foundry MCP tool with a project connection", "The effective connection endpoint is the company gateway and the tool request appears in gateway telemetry", "A"),
     ("In Copilot Studio, try adding a blocked MCP server and invoking it from an existing agent. Repeat with an allowed server.",
      "Record the authoring and runtime results separately. Require both denials and a successful allowed call before counting ACP toward the released design.",
      "B"),
