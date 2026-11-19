@@ -24,7 +24,7 @@ from urllib.parse import urldefrag
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
-from mcp_stride_data import ELEMENTS, OBSERVED, THREATS, adjust  # noqa: E402
+from mcp_stride_data import ELEMENTS, OBSERVED, STRIDE, THREATS, adjust, dread_score, level_of, rating  # noqa: E402
 
 
 def norm(text):
@@ -78,15 +78,27 @@ def check(cache=None):
     with (ROOT / "mcp-governance-stride.threats.tsv").open() as stream:
         exported = {t["id"]: t for t in csv.DictReader(stream, delimiter="\t")}
     assert set(indexed) == set(exported) == {r[0] for r in rows}, "exported threat IDs differ"
-    for tid, el, cat, text, controls, _skills, scores, _basis in rows:
+    source_notes = (ROOT / "mcp-governance-microsoft-interactive.factcheck.md").read_text()
+    quotes = re.findall(r'^\| <a id="ev-(V\d+)"></a>V\d+ \| (.*?) \| \[[^\]]+\]\((https://.*?)\) \|', source_notes, re.M)
+    quote_ids = {qid for qid, _, _ in quotes}
+    for tid, el, cat, text, controls, _skills, scores, basis in rows:
+        web, tsv = indexed[tid], exported[tid]
+        score = dread_score(scores)
         assert f"| {tid} | {el} | {text} |" in notes, f"{tid}: wording has no review verdict"
-        assert indexed[tid]["text"] == exported[tid]["threat"] == text, f"{tid}: stale export"
-        assert indexed[tid]["el"] == exported[tid]["element"] == el, f"{tid}: element drift"
-        assert indexed[tid]["cat"] == cat, f"{tid}: category drift"
-        assert indexed[tid]["dr"] == list(scores), f"{tid}: score drift"
+        assert web["text"] == tsv["threat"] == text, f"{tid}: stale export"
+        assert web["el"] == tsv["element"] == el, f"{tid}: element drift"
+        assert web["cat"] == cat and tsv["stride"] == STRIDE[cat], f"{tid}: category drift"
+        assert web["dr"] == [int(tsv[k]) for k in ("D", "R", "E", "A", "Di")] == list(scores), f"{tid}: factor drift"
+        assert web["score"] == float(tsv["dread"]) == score, f"{tid}: score drift"
+        assert web["rating"] == tsv["rating"] == rating(score), f"{tid}: rating drift"
         assert f'id="t-{tid}"' in page, f"{tid}: public anchor missing"
-        assert indexed[tid]["ctrls"] == controls, f"{tid}: controls differ"
-        assert indexed[tid]["refs"] == [list(r) for r in OBSERVED.get(tid, [])], f"{tid}: evidence drift"
+        assert web["ctrls"] == tsv["page_controls"].split() == controls, f"{tid}: controls differ"
+        assert web["basis"] == basis.replace("AI inference", "interpretation by AI") and tsv["basis"] == basis, f"{tid}: basis drift"
+        assert set(re.findall(r"\bV\d+\b", basis)) <= quote_ids, f"{tid}: missing architecture evidence"
+        records = OBSERVED.get(tid, [])
+        assert web["refs"] == [list(r) for r in records], f"{tid}: page evidence drift"
+        assert tsv["evidence_refs"] == " | ".join(f"{title} <{url}>" for _, title, url in records), f"{tid}: TSV evidence drift"
+        assert web["level"] == tsv["evidence"] == level_of(tid), f"{tid}: evidence level drift"
     for tid, t in zip((r[0] for r in rows), THREATS):
         assert adjust(tid, t[5]) == t[5], f"{tid}: evidence changed scenario score"
     assert set(model["elements"]) == set(ELEMENTS), "element IDs differ"
@@ -115,8 +127,6 @@ def check(cache=None):
     print(f"{len(rows)} reviewed rows, matching page/TSV scores and evidence; stable public anchors")
     print(f"{len(labels.labels)} reviewed DFD labels and design requirements")
     if cache:
-        source_notes = (ROOT / "mcp-governance-microsoft-interactive.factcheck.md").read_text()
-        quotes = re.findall(r'^\| <a id="ev-(V\d+)"></a>V\d+ \| (.*?) \| \[[^\]]+\]\((https://.*?)\) \|', source_notes, re.M)
         from mcp_governance_interactive_evidence import QUOTES, IDS, UNAVAILABLE
         assert len(quotes) == len(QUOTES), "source quote inventory differs from the interactive evidence module"
         unavailable_ids = {IDS[key] for key in UNAVAILABLE}

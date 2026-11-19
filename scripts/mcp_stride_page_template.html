@@ -297,7 +297,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <a class="skip" href="#register">Skip to the register</a>
 <div class="page">
   <header class="mast">
-    <div class="meta"><span>Threat model · STRIDE and DREAD · MCP</span><span>Threat evidence reviewed <time datetime="{{ASOF}}">{{ASOFT}}</time> · Architecture updated <time datetime="2026-11-18">18 Nov 2026</time></span></div>
+    <div class="meta"><span>Threat model · STRIDE and DREAD · MCP</span><span>Threat evidence reviewed <time datetime="{{ASOF}}">{{ASOFT}}</time> · Architecture updated <time datetime="2026-11-19">19 Nov 2026</time></span></div>
     <h1>MCP governance threat model</h1>
     <div class="intro">
       <p class="lead">STRIDE per element and DREAD scores for the <a href="{{DESIGN}}">proposed design for MCP governance in a Microsoft ecosystem</a>.</p>
@@ -338,7 +338,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <figure class="fig">
         <div class="fig-scroll" tabindex="0" role="region" aria-label="Data flow diagram">{{SVG}}</div>
         <figcaption>
-          <p>Policy approvals feed Git, a sync pipeline and policy targets. Clients and agents call the gateway, which calls the backend and exports logs; F5 represents attempted bypasses. F4 draws only the backend-to-gateway response leg.</p>
+          <p>F5 covers attempted direct backend and unapproved-server calls, including cloud-agent paths omitted from the drawing. F4 shows the backend-to-gateway response.</p>
+          <p>P4 represents API Management or standalone Azure AI Gateway. The released private-backend design uses API Management. Microsoft describes &ldquo;VNet integration (preview) for private backends&rdquo; for Azure AI Gateway and documents outbound VNet integration on &ldquo;Standard v2 and Premium v2 tiers&rdquo; for API Management. <a href="https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound#:~:text=Standard%20v2%20and%20Premium%20v2%20tiers">API Management networking</a> · <a href="https://techcommunity.microsoft.com/blog/integrationsonazureblog/azure-ai-gateway-is-now-generally-available-ship-faster-stay-in-control/4572644#:~:text=VNet%20integration%20%28preview%29%20for%20private%20backends">Azure AI Gateway release</a></p>
           <ul class="legend">
             <li><span class="sw r-high">E4</span><span class="sw r-medium">S1</span><span class="sw r-low">R2</span> DREAD rating</li>
             <li><span class="sw pub r-medium">S8</span> Solid: matches a public record</li>

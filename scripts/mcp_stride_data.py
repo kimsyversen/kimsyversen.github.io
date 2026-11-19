@@ -146,23 +146,23 @@ THREATS = [
     ("P3", "I", "A compromised agent sends secrets out through an MCP tool argument.",
      ["ctrl-g-defender-rules-and-scope", "ctrl-g-defender-real-time-protection"], ["RTP", "DSPM", "SHAREPOINT"], (8, 5, 5, 5, 5), "V142 V125: Defender blocks interactions identified as secret exfiltration; V125 is the unsafe-domain email case"),
     ("P3", "D", "An agent loop calls a tool without limit and uses up the gateway rate limit and the backend.",
-     ["ctrl-gateway"], ["APIM"], (5, 6, 5, 6, 6), "V3"),
+     ["ctrl-gateway", "ctrl-ai-publish"], ["APIM"], (5, 6, 5, 6, 6), "V3 and V316 document rate controls. Confirm which limit the deployment applies to MCP requests."),
     ("P3", "E", "A read-only agent is configured with an empty allowed_tools list by mistake; an attacker then induces a write call that the server permits under the connection's credentials.",
      ["ctrl-foundry", "ctrl-g-approval"], ["GUARD", "AGENTACC"], (8, 7, 6, 5, 6), "V69"),
 
     # P4 Gateway
     ("P4", "S", "A gateway with missing or defective authentication accepts an unauthenticated caller as trusted, for example by relying only on source IP or accepting a fabricated bearer token.",
      ["ctrl-identity", "ctrl-m365-network"], ["CA", "APIM"], (8, 4, 5, 6, 5), "V174"),
-    ("P4", "T", "An attacker with gateway policy write access, including a compromised service granted the Agent 365 policy role, removes authentication or tool restrictions from an API policy.",
-     ["ctrl-a365-consent", "ctrl-a365"], ["PIM", "OAUTH", "POLICY"], (8, 3, 4, 7, 3), "V39 V40"),
+    ("P4", "T", "An attacker abuses gateway policy write access to remove an authentication or tool restriction within the scope of the compromised grant.",
+     ["ctrl-a365-consent", "ctrl-a365"], ["PIM", "OAUTH", "POLICY"], (8, 3, 4, 7, 3), "V39 and V40 document the Agent 365 grant for API-scoped policies. V304 and V305 report conflicting release status. Include this write path when consent is granted. Unauthorized modification is interpretation by AI."),
     ("P4", "R", "Gateway logs miss fields or expire early, so a tool call cannot be shown later.",
-     ["ctrl-logging", "ctrl-gateway"], ["SENCONN", "SENRET"], (5, 5, 3, 5, 5), "V3"),
+     ["ctrl-logging", "ctrl-gateway", "ctrl-ai-publish"], ["SENCONN", "SENRET"], (5, 5, 3, 5, 5), "V3 and V318 document gateway logging and tool telemetry. Validate caller and request correlation with backend records, export coverage and retention."),
     ("P4", "I", "A gateway caches a sensitive tool result without binding the cache key to the authorized caller and tenant, and returns it to another caller.",
      ["ctrl-identity", "ctrl-gateway"], ["APIM", "DSPM"], (6, 5, 4, 5, 4), "AI inference; requires a configured result cache. Log disclosure is covered by I10; shared-identity authorization by E5"),
     ("P4", "D", "An attacker exhausts gateway capacity or request quotas, denying legitimate calls when clients depend on that deployment and no adequate isolation or failover is configured.",
-     ["ctrl-gateway", "ctrl-ai-limits"], ["APIM", "WAF"], (7, 5, 5, 8, 6), "V238 documents 17 Azure AI Gateway regions. V239 labels inbound Private Link and private backend VNet integration preview. Capacity exhaustion and failover are interpretation by AI."),
+     ["ctrl-gateway", "ctrl-ai-publish"], ["APIM", "WAF"], (7, 5, 5, 8, 6), "V301 documents 17 regions. V316 documents request limits. Check MCP limit scope, capacity isolation and recovery for the deployed endpoint. Capacity exhaustion is interpretation by AI."),
     ("P4", "E", "A gateway fails to enforce caller-specific tool authorization, allowing a low-privilege caller to invoke privileged operations through a more powerful shared backend connection.",
-     ["ctrl-gateway", "ctrl-identity", "ctrl-ai-publish"], ["MI", "RBAC"], (7, 5, 4, 5, 3), "The shared managed-identity baseline also requires upstream caller authorization. V79 documents shared connection permissions on Azure AI Gateway. Missing caller authorization is interpretation by AI."),
+     ["ctrl-gateway", "ctrl-identity", "ctrl-ai-publish"], ["MI", "RBAC"], (7, 5, 4, 5, 3), "V79 and V317 distinguish shared backend permissions from caller credentials. Test allowed reads and denied writes for a low-privilege caller. Cross-caller privilege gain is interpretation by AI."),
 
     # P5 Company MCP server
     ("P5", "S", "A backend with missing authentication or incomplete token validation accepts an unauthenticated request or a token issued for another resource as an approved caller.",
@@ -192,7 +192,7 @@ THREATS = [
     ("P6", "D", "An attacker overloads the Copilot Studio detection provider so it cannot return verdicts in time; under the documented default, a response taking more than one second permits the tool to run.",
      ["ctrl-g-threat-detection"], ["RTP"], (7, 6, 4, 5, 5), "V114"),
     ("P6", "E", "An attacker induces a privileged tool action while the deployment mistakenly relies on Audit mode or only a post-invocation check to prevent it; required authorization or pre-invocation enforcement is missing.",
-     ["ctrl-ttp-modes", "ctrl-ttp-users"], ["AIGW", "GUARD"], (7, 6, 4, 4, 4), "V55 V59: Audit mode does not block; a post-invocation denial cannot undo completed actions. Block mode is documented as fail-closed. Privilege gain requires the stated authorization gap"),
+     ["ctrl-ttp-modes", "ctrl-ttp-users"], ["AIGW", "GUARD"], (7, 6, 4, 4, 4), "V55, V56 and V59 describe Audit, fail-closed Block mode and the limit of post-invocation checks. The Azure AI Gateway protection is preview (V303). Privilege gain requires the stated authorization gap."),
 
     # DS1 Approved list
     ("DS1", "T", "An attacker with repository write access bypasses required review through a direct push or unreviewed merge and changes the approved list.",
@@ -245,12 +245,12 @@ THREATS = [
      ["ctrl-backend", "ctrl-identity"], ["PE", "NSG"], (7, 3, 3, 6, 3), "AI inference; V9 supports restricting direct access, not the claim that public-network traffic defeats correctly validated TLS"),
     ("F3", "I", "An attacker reads backend request data on an unencrypted link or at a compromised TLS terminator; use of a public route alone does not reveal TLS-protected payloads.",
      ["ctrl-backend", "ctrl-identity"], ["PE", "ENTRAPA"], (7, 3, 3, 6, 3), "AI inference; V9 supports network restrictions, not passive decryption of HTTPS"),
-    ("F3", "D", "The private path to the backend fails, and every approved call fails with it.",
-     ["ctrl-backend"], ["PE", "NSG"], (6, 4, 2, 8, 5), "AI inference"),
+    ("F3", "D", "The only working private path from the gateway to the MCP backend fails, interrupting calls that depend on it.",
+     ["ctrl-backend", "ctrl-ai-limits"], ["PE", "NSG"], (6, 4, 2, 8, 5), "V307 documents API Management Standard v2 and Premium v2 outbound VNet integration. V302 labels Azure AI Gateway outbound VNet integration preview. Loss of the sole working path is interpretation by AI."),
 
     # F4 Tool response
     ("F4", "T", "A tool result carries instructions that the agent follows (indirect prompt injection).",
-     ["ctrl-g-untrusted-results", "ctrl-g-tool-call-and-tool-response-guardrails", "ctrl-g-result-review", "ctrl-ttp-modes"], ["GUARD", "RTP"], (9, 7, 6, 6, 8), "V107 V133 V154; preview tool threat protection can evaluate results but excludes discovery/session operations (V213). Hostile tool descriptions need separate review; this row models result injection"),
+     ["ctrl-g-untrusted-results", "ctrl-g-tool-call-and-tool-response-guardrails", "ctrl-g-result-review", "ctrl-ttp-modes"], ["GUARD", "RTP"], (9, 7, 6, 6, 8), "V107, V133 and V154 describe risks or controls for untrusted results. Preview Azure AI Gateway tool threat protection requires delegated user tokens (V53, V54 and V303). Post-invocation blocking can withhold tool results. Discovery and session operations are outside its evaluation scope (V213)."),
     ("F4", "I", "A response with data for one user is returned to another user's agent session.",
      ["ctrl-identity", "ctrl-ttp-users"], ["APPID", "DSPM"], (7, 3, 3, 4, 3), "AI inference"),
     ("F4", "D", "A very large or endless response fills the agent's context or the gateway buffer.",
@@ -258,9 +258,9 @@ THREATS = [
 
     # F5 Bypass
     ("F5", "T", "A client directly reaches a backend that lacks equivalent action authorization and performs an unauthorized write that gateway policy would have blocked.",
-     ["ctrl-backend", "ctrl-windows"], ["PE", "NSG", "FW"], (9, 5, 5, 6, 5), "AI inference, acceptance test 12"),
+     ["ctrl-backend", "ctrl-identity", "ctrl-foundry-routing", "ctrl-windows"], ["PE", "NSG", "FW"], (9, 5, 5, 6, 5), "V308 and V309 document explicit Foundry routing and project-connection URL precedence. A stale direct URL is one route to this condition if the backend accepts it. Verify gateway telemetry and direct access denial."),
     ("F5", "I", "A compromised client or cloud agent sends company data directly to an unapproved MCP server over an allowed or unrestricted egress path, bypassing gateway inspection and its audit trail.",
-     ["ctrl-client", "ctrl-windows", "ctrl-foundry-network", "ctrl-foundry-egress", "gap-foundry-prompt-agents", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101 and V229 to V231 distinguish generally available hosted-agent egress controls from preview exceptions and prompt-agent coverage. Verify toolbox downstream egress separately. Data theft through an allowed destination is interpretation by AI."),
+     ["ctrl-client", "ctrl-windows", "ctrl-foundry-network", "ctrl-foundry-egress", "gap-foundry-prompt-agents", "ctrl-foundry-routing", "ctrl-logging"], ["FW", "SENCONN"], (8, 5, 5, 5, 5), "V101 and V229 to V231 describe hosted-agent egress and its scope. An effective Foundry URL pointing at an unapproved server can skip gateway inspection if egress allows it (V308 and V309). Check toolbox egress separately. Disclosure is interpretation by AI."),
     ("F5", "D", "A direct flood skips gateway rate limits.",
      ["ctrl-backend", "ctrl-gateway"], ["PE", "WAF", "FW"], (6, 5, 4, 6, 4), "AI inference"),
 ]

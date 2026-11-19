@@ -338,6 +338,8 @@ automation is supported. Clients and cloud agents request tools through a gatewa
 the gateway calls the backend and exports audit data. F5 covers direct backend
 access and unapproved external servers. F4 draws the backend response leg only;
 gateway-to-client response legs and cloud-agent bypass legs are not drawn.
+A Foundry tool uses its configured endpoint or project connection. Verify that
+its effective URL points to the gateway. See T15 and I15.
 
 Logical zones (not proof of effective security boundaries):
   TB0 Internet: EE4
@@ -349,7 +351,9 @@ Logical zones (not proof of effective security boundaries):
   TB6 Private backend network (design requirement): P5
   TB7 Monitoring: DS3
 
-The figure aggregates product variants. OAuth exchanges, downstream APIs and
+P4 shows either API Management or standalone Azure AI Gateway. See D12 for
+the released private-backend path and preview networking alternative.
+OAuth exchanges, downstream APIs and
 stores, package distribution, external detector boundaries and non-gateway audit
 feeds need more detailed models. A gateway does not inspect local stdio traffic. The direct Agent 365 BYO route is
 excluded from this private backend; a gateway-fronted BYO composition is untested.
