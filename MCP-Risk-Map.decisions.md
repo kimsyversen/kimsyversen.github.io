@@ -50,7 +50,7 @@ Working notes.
 - **Per-claim evidence for the Microsoft view.** Each Microsoft placement and each new table row carries the exact quote and a link that opens the page at that passage (text fragment). Reason: the repo rule says a diagram claim must be verifiable from the diagram itself. The check script fetches each source and confirms the quote word for word.
 - **Known gap.** The General popups still list sources per box, not per claim. Not changed in this task. Logged here so it is not forgotten.
 - **Mitiga in the Microsoft view.** The Mitiga research targets Claude Code, which is outside this scope. The Microsoft M05 text describes the same mechanism (a changed config redirecting a server) only where a Microsoft source supports it (Visual Studio re-trust on a changed URL or command, VS Code trusted-workspace behaviour). It says no demonstration against a Microsoft product was found. "Not observed."
-- **CVEs.** CVE-2026-26118 and CVE-2026-32211 are shown as vendor advisories from the CVE record, not as observed incidents. CVE-2026-32211 lists "Azure Web Apps" as the affected product with the tag exclusively-hosted-service; the page says so. Invariant Labs is labelled third-party research.
+- **CVEs.** CVE-2026-26118 and CVE-2026-32211 are shown as vendor advisories from the CVE record, not as observed incidents. CVE-2026-32211 lists "Azure Web Apps" as the affected product; the page says so. Invariant Labs is labelled third-party research.
 - **Preview features are labelled preview** where the source says so (Windows ODR, Entra MCP firewall and logging, Agent 365 gateway and BYO, GitHub registry enforcement).
 - **Not claimed:** a Copilot Studio per-tool approval flow. No such statement was found in the sources read.
 - **Per-item evidence (mechanism).** Each Microsoft card item, table row, diagram placement and callout carries quote ids. `qBlock` renders them as a collapsed list with a text-fragment link. Reason: AGENTS.md rule 3, the reader checks each claim from the diagram itself.
@@ -98,7 +98,7 @@ Working notes.
 - **M03 and OWASP MCP05 is a partial match.** MCP05 is about commands built from untrusted input. M03 is about a local server's start command. Both are arbitrary command execution. The mapping table says "partial" and tags it [inference].
 - **Mapping is interpretation by AI.** Tagged [inference]. The framework titles and ids are quoted from the sources.
 - **CoSAI paper quirks recorded.** Threat 4 cites "Prompt Injection (#12)" but the list numbers it #11. The page uses the list number. The paper is a draft.
-- **Microsoft view and M09 to M12.** The cards and placements are product neutral (CoSAI and the MCP specification). No Microsoft source was reviewed for them, so the Microsoft view says "not assessed" on each card.
+- **Microsoft view and M09 to M12.** The cards and placements are product neutral (CoSAI and the MCP specification). Microsoft sources were not assessed against them (21 Nov 2026: the old wording "no Microsoft source was reviewed" was false, because the Azure MCP Server and Entra MCP firewall pages touch M10 to M12), so each card says "Not assessed in this view".
 - **Placement fixes (general view).** M05 reuse of the stolen token moved from the local HTTP server to remote MCP servers, and a localhost-proxy row added at the local HTTP server. M06 confused-deputy row moved from "SaaS and cloud APIs" to "Remote MCP servers" and merged with the token row. M07 agent row no longer points to itself. M04 gets a row at the AI agent from the CoSAI definition. Reason: each row must sit where the quoted source says the control or the failure happens.
 - **"top 10 risks" wording removed** from diagram box labels. The page now has twelve risks, not a top 10.
 - **Counts are computed**, not typed, so the selector cannot leave a wrong number on the page.
@@ -157,3 +157,35 @@ Working notes.
 - **M09 and M11 mapping sentence removed** instead of reworded: the card header already shows that the entries are CoSAI only.
 - **Local harness deprecation goes in Limits**, not in each row, so each row keeps one job. Rows only name the harness where the docs scope a behaviour to it.
 - **Tag key added to the footer** (AGENTS.md rule). The older footer sentence that defined `[inference]` was removed so the definition has one home.
+
+## 21 November 2026
+
+- **Only verified findings changed.** Each candidate from a reviewer was checked by a second reviewer with different competence before an edit. Four candidates were rejected and the page kept.
+- **Prerelease qualifier kept in two places, not on every claim.** The source says only that "some information" on the Windows page relates to prereleased product, so the qualifier sits in the source label and the Preview callout, and the registry claims lose the label.
+- **START rows follow the risk boundaries**: lifetime in M05, scope in M06, localhost binding in M07, transport integrity in M12.
+
+- Iteration 3: config-file watch stays in M05 only, because M08 does not mention it and the control detects the Mitiga credential-theft chain.
+
+- Iteration 4: Microsoft cards for M10 to M12 now say "Not assessed in this view" because the old "no source reviewed" text was false. General view now says it uses parts of the spec guidance.
+
+- Iteration 6: Windows 11 Experimental sandbox claim removed instead of refetching, because it was the only claim on that source and cannot be quoted from cache. Gateway coverage now uses Microsoft's own caution (gw4) instead of our own "does not cover".
+
+- Iteration 7: Invariant example kept out of the general M04 card to avoid a second home and a new vendor source. CoSAI #24 gets M13 only.
+
+- Iteration 8: CVE tag exclusively-hosted-service dropped because no source explains it. Coverage-only suggestions (Azure monitoring, sandbox, GitHub connector blocking, OTel hashing) rejected to keep cards short.
+
+- Iteration 9: sandbox platform claim restored because the agent-sandboxing page was refetched. CVE tag restored with a quote, since the cached record carries it.
+- Iteration 10 (21 Nov 2026): accepted 6 of 7 findings (M05 Mitiga chain, M04 direct-injection scope note, M14 state-handle check, M14 legacy auth examples, VS Code registry fetch failure, VS Code sandbox scope). Rejected M07 CoSAI #26 widening. Left "session identifiers" as CoSAI wording. Clean-iteration count stays 0.
+- Iteration 11 (21 Nov 2026): 0 findings in both views, no edits. Clean count 1.
+- Iteration 12 (21 Nov 2026): 1 evidence-display finding (CVE-2026-26118 PR:L and ranges), fixed with quotes c1c to c1e. Clean count 0.
+- Iteration 13 (21 Nov 2026): 5 of 8 findings accepted (Copilot Studio row mapping, vs13, GitHub row title, ccname quote, Mitiga prerequisite). Clean count 0.
+- Iteration 14 (21 Nov 2026): 1 of 2 Microsoft findings accepted (1.145 rule attribution). General view clean. Clean count 0.
+- Iteration 15 (21 Nov 2026): 0 findings in both views, no edits. Clean count 1.
+- Iteration 16 (21 Nov 2026): 6 findings, 5 edited, 1 placement kept with new wording. Clean count 0.
+- Iteration 17 (21 Nov 2026): 0 findings in both views, no edits. Clean count 1.
+- Iteration 18 (21 Nov 2026): 3 findings, all edited (M08 identity capture and GSA TLS prerequisite, M05 lifetime check). Clean count 0.
+- Iteration 19 (21 Nov 2026): 0 findings in both views, no edits. Clean count 1.
+- Iteration 20 (22 Nov 2026): 4 findings, all edited (M01 gateway quote list, Copilot Studio GSA wording and quote, M03 agent-cell quote, M03 approval quote). Clean count 0.
+- Iteration 21 (22 Nov 2026): 0 accepted findings (3 coverage suggestions rejected). Clean count 1.
+- Iteration 22 (22 Nov 2026): 3 findings edited (Visual Studio 2026 scope of allow list, M02 env wording, M01 inference tag), 1 rejected. Clean count 0.
+- Iteration 23 (22 Nov 2026): 0 findings in both views. Clean count 1.

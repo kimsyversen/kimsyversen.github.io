@@ -71,7 +71,7 @@ Steps
 7. Browser checks, desktop and 375 px, both scopes, three framework choices.
 8. Update the fact check, the index dates and run the anchor and quote checks.
 
-Not done and not claimed: no Microsoft source was reviewed for M09 to M12, so the Microsoft view says "not assessed" for them.
+Not done and not claimed: the Microsoft view was not assessed against M10 to M12, so it says "not assessed" for them.
 
 ## Status, 9 November 2026 (framework selector)
 All eight steps done. Not committed. Browser checks: desktop and 375 px, light and dark, both scopes, all three choices, link priority, saved choice, deep link to a hidden card. Not tested: a real mouse click on every marker (scripted for all, real for a sample), any CoSAI threat reproduced, any product setting run. Microsoft view is "not assessed" for M09 to M12.
