@@ -2,7 +2,7 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 
 # Statement review, 5 November 2026
 
-Scope: the interactive HTML, all 106 boxes, their titles, summaries, descriptions, checks, chips, steps, four design-choice explanations, five flow summaries, and surrounding text. Primary sources were opened or searched on this date. The earlier drawings and their 4 November review are historical, not revalidated here.
+Scope: the interactive HTML, all 108 boxes, their titles, summaries, descriptions, checks, chips, steps, four design-choice explanations, five flow summaries, and surrounding text. Primary sources were opened or searched on this date. The earlier drawings and their 4 November review are historical, not revalidated here.
 
 Nothing was tested on a real GitHub tenant. No classification, accreditation, device isolation, provisioning, security scan, token policy, deployment trust, transfer service, backup or recovery drill was tested. Proposed checks describe acceptance criteria, not observed results. Product documentation proves capability, not implementation or accreditation.
 
@@ -1230,7 +1230,7 @@ Mostly correct. No sourced sentence was found to be false. Two sentences leave o
 ### How it was checked
 
 - Ran `node github/verify-evidence.mjs` on 10 November 2026. It fetched all 33 sources live. All 90 quotes still appear word for word. Exit code 1 because of finding 5.
-- Read all 106 boxes, the 4 design-choice notes, the 5 flow summaries and the static page text.
+- Read all 108 boxes, the 4 design-choice notes, the 5 flow summaries and the static page text.
 - Fetched 25 GitHub docs pages and the npm trusted publishing page again and read the passages behind the sourced sentences for meaning, not only wording. Also looked for docs that contradict a sentence, including pages the page does not cite.
 
 ### Findings
@@ -1301,3 +1301,33 @@ Checks run on 10 November 2026 after the fixes:
 - "Facts checked", "quotes checked" and "Primary sources" dates on the page moved to 10 Nov 2026. The index entry date moved to 10 Nov 2026.
 
 Still open: the two `[unverified]` items in the assessment above (A.p4 remediation deadline, A.p8 Git over SSH) were not looked up.
+
+
+## Statement review, 22 November 2026
+
+Scope: every statement on the page, reviewed by independent reviewer personas in twelve passes (the last two found nothing). Each finding was ruled on by a separate verifier persona before any edit. Final evidence run: 81 sourced (D), 12 inference (I), 267 design requirement or label (R), 113 quotes against 39 pages. Moved "Facts checked" to 22 Nov 2026.
+
+Changed after review:
+- A.p13, B.p13: firewall text matches the current Copilot cloud agent doc; cloud sandbox sessions cannot use self-hosted runners.
+- A.scim: deprovisioning suspends, hard deprovisioning deletes and cannot be undone; SCIM DELETE trigger.
+- g2: Copilot data and logs are outside the region by default; secret scanning validity checks and telemetry may also be outside; no notice of transfers.
+- A.p4: transferred-in repos do not get the default configuration; secret scanning campaigns are in public preview.
+- A.p8: proxy header sentence; header does not cover Git over SSH; Conditional Access needs OIDC.
+- A.v2, B.v2: streaming region and deduplication.
+- A.p15: Dependabot proposes updates only from the approved mirror, after intake.
+- A.p16, B.p16: pinning rules for consumers and reusable workflows; public CI reuses only public workflows.
+- B.p7, B.idp, B.people, B.o2, B.p1, B.p15: source IP disclosure off by default; org SCIM limits; outside collaborators and SAML; 2FA removes outside collaborators; dependency review needs Code Security.
+- B.o2.pr: workflows from outside collaborators wait for approval (enterprise page, "Require approval for all outside collaborators").
+- ops.5 relation added for B.people; related links no longer capped at 8; repeated hints, legend and "no source" disclaimers removed.
+
+- A.scim: removed the absolute "never deletes"; B.p2: public repositories "by rule", owners can still create them; c.bound and B.idp agree that no person holds admin in both; popup label "Proposed check" and footer, hint and legend repeats removed.
+
+Rejected or left as is: B.p4 transferred-in caveat (B does not allow repo transfers in), acc.1 extra relations, control filter note for ops and acc boxes, SOC log wording (consistent).
+
+Not rechecked: the earlier draw.io drawings.
+
+B.e3 wording (B targets trust only the B repository or environment subject) and the A.scim hard deprovisioning wording were ruled correct by a separate verifier on 22 November 2026 against the OIDC and SCIM deprovisioning docs.
+
+Pass 14 finding, ruled real by a separate verifier (22 November 2026): GitHub Pages was not mentioned. Unless an enterprise uses Enterprise Managed Users, Pages sites are public by default even from private repositories. A is EMU and always private, so no change there. B.p2 now says to allow private Pages sites only in other organizations, with a test. [unverified]: whether organization owners are restricted by the Pages creation setting, so the test records the owner case. Existing public sites stay published after the setting changes, so the test lists them.
+
+Pass 15 findings, both ruled real by a separate verifier (22 November 2026): (1) rulesets and security configurations never required status checks or code scanning results, though L.a requires "required checks". A.p3, B.p3, A.p4 and B.p4 now say so, with a test in A.p3 (source: Available rules for rulesets). Not checked in a tenant: that both rules can be picked in an enterprise ruleset. (2) B.idp: the quote beside the supported identity providers sentence was the OAuth authorizer quote. Split into two rows, and "works only with" became "supports" because the docs say "compatible with".

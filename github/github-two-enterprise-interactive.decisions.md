@@ -121,3 +121,14 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 - B.o1.tools and note 3: removed the guest collaborator exception instead of marking it "EMU only". It cannot apply in B, so it only added noise there.
 - B.p7: say that the event itself can be missing, to match the source and B.v3.
 - Reviewed list: the two section-link script fragments from 9 November got verdict N. Verdicts for the new sentences were set by the AI. Sign-off by a person stays NONE.
+
+## 22 November 2026: statement-by-statement review
+
+- Seven review passes with a separate verifier persona per finding. Borderline items were applied only when the page was misleading as written (Dependabot mirror, fork PR approval, hidden related links). Nice-to-haves were rejected.
+- Related links in the popup are no longer capped at 8, because the cap hid real cross-links.
+- The popup no longer says "None needed" for boxes without sources. It said the same as the evidence note and contradicted the source list on ops.1 and ops.10.
+- Full results are in the fact check.
+
+22 November 2026: added a GitHub Pages sentence and test to B.p2, because B uses personal accounts and Pages sites are public by default there. A needs nothing, since EMU Pages sites are always private.
+
+22 November 2026: A.p3, B.p3, A.p4, B.p4 now require status checks and code scanning results, because L.a depended on required checks that no box defined. B.idp says "supports" instead of "works only with", matching the docs wording.
