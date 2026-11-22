@@ -6,7 +6,7 @@ L	g1 title	1  Enterprise Cloud on github.com
 L	g2 title	2  Cloud with data residency (GHE.com)
 L	g3 title	3  Self-hosted or accredited platform
 L	c.bound title	Logical boundary
-R	c.bound proposed check	List every admin and app that can see both enterprises. The list should be empty or justified.
+R	c.bound proposed check	List every person, IdP admin, PAM identity and app that can administer or see both enterprises. No person or account may hold admin in both enterprises. Any other entry needs a justification.
 L	c.ident title	Keep identities apart
 R	c.ident summary	Dedicated IdP integration for A; separate SAML and SCIM integration for each B organization. No shared admin or service accounts across domains.
 R	c.ident proposed check	A sensitive workstation cannot upload through an unapproved GitHub account or app.
@@ -32,7 +32,7 @@ L	B.people title	Workforce and partners
 R	B.people summary	Assigned by IdP group. Separate device zone from A. No corporate SSO for public contributions.
 R	B.people proposed check	Confirm a partner has access only to the repos approved for them, with an expiry date.
 R	B.idp summary	Separate integration per organization in B. Reconcile membership and team grants separately.
-R	B.idp proposed check	Compare the admin lists of A and B. They share no accounts.
+R	B.idp proposed check	Compare the people behind the admin accounts of A and B, including IdP admins and PAM identities. No person holds admin in both.
 L	B.scim title	SAML + SCIM per org
 R	B.scim summary	SAML enforced and SCIM configured in every org. Use per-org SAML, not enterprise SAML. Keep personal accounts.
 R	B.scim proposed check	Remove a person and check every org, outside-collaborator grants, deploy keys, app installs, webhooks and cloud identities.
@@ -41,7 +41,7 @@ R	A.p1 proposed check	Create a repo in each org, then try to make it public or f
 L	A.p2 title	Limit repo create, delete, transfer
 R	A.p2 proposed check	Try each action as a normal member.
 L	A.p3 title	Enterprise rulesets, signed commits
-R	A.p3 proposed check	Negative tests: push to main, force push, and bypass by an actor who is not on the list.
+R	A.p3 proposed check	Negative tests: push to main, force push, and bypass by an actor who is not on the list. Open a PR with a failing required check or a new high-severity code scanning alert. Expected: it will not merge.
 L	A.p4 title	Security configs on all repos
 R	A.p4 proposed check	Create a new repo and confirm the baseline appears with no manual steps.
 L	A.p5 title	Approved Actions, read-only token
@@ -67,11 +67,11 @@ R	A.p14 proposed check	List users with Admin on any repo. Each one should have a
 L	A.p15 title	Dependency and provenance controls
 R	A.p15 proposed check	Add a dependency with a known advisory in a PR. The check should block it.
 L	A.p16 title	Shared workflow platform
-R	A.p16 proposed check	Change a shared workflow without a code-owner review. Expected: it is blocked. Record the result. Check that a consumer repo pins a version.
+R	A.p16 proposed check	Change a shared workflow without a code-owner review. Expected: it is blocked. Record the result. Check that a consumer repo pins actions by SHA.
 L	B.p1 title	2FA, owner-added orgs
 R	B.p1 proposed check	Try to add an org to the enterprise as a normal member and record the result. Monitor for orgs outside the enterprise.
 L	B.p2 title	Public repos only in publishing org
-R	B.p2 proposed check	Set a repo to public in internal-engineering as a member. Expected: it is blocked. Repeat as an organization owner and record both results.
+R	B.p2 proposed check	Set a repo to public in internal-engineering as a member. Expected: it is blocked. Repeat as an organization owner and record both results. In internal-engineering, publish a Pages site from a private repo as a member. Expected: public visibility is not offered. Repeat as an organization owner and list existing public sites.
 L	B.p3 title	Enterprise rulesets baseline
 R	B.p3 proposed check	Negative tests as in A: push to main, force push, bypass.
 R	B.p4 proposed check	Create a repo in each org and confirm the baseline appears.
@@ -128,14 +128,14 @@ R	B.o1.tools summary	Private only. GitHub internal visibility not used.
 R	B.o1.tools proposed check	Confirm no repo in B uses the internal visibility value.
 L	B.o2 title	public-open-source
 R	B.o2 proposed check	List repos with public visibility. All of them belong to this org.
-L	B.o2 chip	Only place public repos live
+L	B.o2 chip	Intended home of public repos
 L	B.o2 chip	Named release approvers
 L	B.o2.proj title	public-project
 R	B.o2.proj summary	Release review. History and artifacts checked before publishing.
 R	B.o2.proj proposed check	Run a secret and metadata scan over the full history before the first public release.
 L	B.o2.pr title	untrusted pull requests
 R	B.o2.pr summary	Treated as hostile. No secrets, no internal runners.
-R	B.o2.pr proposed check	Open a fork PR that tries to print a secret. Expected: it will get none. Record the result.
+R	B.o2.pr proposed check	Open a fork PR that tries to print a secret. Expected: it will get none. Record the result. Open a fork PR from an outside account. Expected: the workflow waits for approval.
 L	B.o3 title	sandbox-lab
 R	B.o3 proposed check	Search the org for secrets and internal data. There should be none.
 L	B.o3 chip	Private only, no public repos
@@ -254,8 +254,8 @@ R	g1 description[0]	Standard GitHub Enterprise Cloud on github.com.
 R	g1 description[1]	This is the baseline shown for A and B.
 R	g1 description[2]	A requires explicit hosting approval before any classified content is loaded.
 R	g2 description[0]	Alternative for A only.
-R	g2 description[3]	B stays on github.com.
-R	g2 description[4]	Reassess feature availability, endpoints and integrations; residency alone is not accreditation.
+R	g2 description[5]	B stays on github.com.
+R	g2 description[6]	Reassess feature availability, endpoints and integrations; residency alone is not accreditation.
 R	g3 description[0]	Alternative for A if Cloud is unsuitable.
 R	g3 description[1]	An assessed self-hosted or accredited platform needs a separate identity, feature and operations design.
 R	g3 description[2]	The Cloud controls below do not automatically apply; B remains on github.com for public work.
@@ -281,7 +281,9 @@ R	A.idp description[1]	Phishing-resistant MFA, privileged access through PAM, a 
 R	A.idp description[2]	This design chooses SAML.
 R	B.people description[0]	Employees and approved partners are assigned through the relevant organization IdP integrations.
 R	B.people description[1]	Require a separate device zone from A.
-R	B.people description[2]	Do not require corporate SSO for public contributions; contributors may also hold separately approved private access, so review grants rather than assuming identity categories are exclusive.
+L	B.people description[2]	Partners added as outside collaborators are not covered by SAML or the drift check; review them under ops.5.
+L	B.people description[3]	Do not require corporate SSO for external contributors to public repositories; members still authenticate through SAML.
+L	B.people description[4]	Contributors may also hold separately approved private access, so review grants rather than assuming identity categories are exclusive.
 R	B.idp description[0]	Use a separate SAML and SCIM integration for each B organization, with credentials separate from A.
 R	B.idp description[3]	Configure supported team synchronization or separate automation and reconcile it.
 R	B.scim description[1]	Enforce SAML and configure SCIM separately in each organization.
@@ -291,13 +293,13 @@ R	A.p2 description[0]	Restrict repository creation, deletion and transfer to app
 R	A.p2 description[2]	Review allow lists and member-privilege settings.
 R	A.p3 description[0]	Use enterprise branch and tag rulesets targeting all in-scope repositories or custom-property selections.
 R	A.p3 description[1]	For protected branches require two approvals, code-owner review, stale-review dismissal, latest-push approval and signed commits.
-R	A.p3 description[2]	Restrict force pushes and deletions.
-R	A.p3 description[3]	Review bypass lists and uses.
-R	A.p3 description[5]	Keep existing protection active until the replacement is Active.
-R	A.p4 description[0]	A security configuration is attached to every repo and set as the default for new ones.
-R	A.p4 description[2]	Approved equivalents may replace them.
-R	A.p4 description[3]	Configure delegated push-protection bypass; review who can bypass.
-R	A.p4 description[4]	Set a remediation deadline per alert severity.
+R	A.p3 description[3]	Restrict force pushes and deletions.
+R	A.p3 description[4]	Review bypass lists and uses.
+R	A.p3 description[6]	Keep existing protection active until the replacement is Active.
+R	A.p4 description[0]	Attach a security configuration to every repo and set it as the default for new ones.
+R	A.p4 description[3]	Approved equivalents may replace them.
+R	A.p4 description[4]	Configure delegated push-protection bypass; review who can bypass.
+R	A.p4 description[6]	Set a remediation deadline per alert severity.
 R	A.p5 description[0]	Allow approved actions and reusable workflows.
 R	A.p5 description[1]	Require action references to use full commit SHAs.
 R	A.p5 description[3]	Check the SHA pinning of reusable workflows separately.
@@ -312,7 +314,8 @@ R	A.p7 description[3]	Correlate with proxy and endpoint evidence.
 R	A.p7 description[5]	The stream must run from day one.
 R	A.p8 description[0]	Access only through a mandatory corporate proxy plus network allow lists.
 R	A.p8 description[1]	Block Git over SSH and unsupported upload paths.
-R	A.p8 description[6]	Choose per accreditation.
+L	A.p8 description[8]	Conditional Access needs OIDC, which this design does not choose.
+L	A.p8 description[9]	Use the GitHub IP allow list unless accreditation requires switching A to OIDC.
 R	A.p9 description[0]	Every repo carries properties such as system, class and owner.
 R	A.p9 description[2]	Those baselines follow the data, not the repo name.
 R	A.p10 description[1]	This design decides membership in one place.
@@ -333,25 +336,27 @@ R	A.p14 description[5]	This design requires two owners per organization, no Admi
 R	A.p15 description[0]	Dependency review is a required check.
 R	A.p15 description[1]	Lockfiles are mandatory, and install-time lifecycle scripts are off in builds.
 R	A.p15 description[2]	Builds produce signed artifacts with provenance, and deploys verify them.
-R	A.p15 description[3]	Dependabot keeps actions and packages current.
+L	A.p15 description[3]	Dependabot proposes updates only from the approved mirror, after intake.
 R	A.p16 description[0]	Approved workflows and actions live in one dedicated organization in A, owned by a platform team.
-R	A.p16 description[1]	They are versioned (major tags, changelog, migration notes), protected by code owners and required reviews, and pinned by consumers.
-R	A.p16 description[2]	Teams consume them with no copy-paste.
-R	A.p16 description[3]	A and B never share workflows, because the enterprises stay apart.
-R	A.p16 description[4]	Each has its own copy.
+L	A.p16 description[1]	They are released with tags, a changelog and migration notes, and protected by code owners and required reviews.
+L	A.p16 description[2]	Consumers pin actions to a full commit SHA; reusable workflows pinned by tag need a separate check.
+R	A.p16 description[3]	Teams consume them with no copy-paste.
+R	A.p16 description[4]	A and B never share workflows, because the enterprises stay apart.
+R	A.p16 description[5]	Each has its own copy.
 R	B.p1 description[0]	Two-factor is required for every organization in the enterprise.
-R	B.p1 description[2]	Watch for organizations that appear outside the enterprise.
-R	B.p2 description[0]	Public visibility is allowed only in public-open-source.
-R	B.p2 description[1]	In every other organization, members may create private repositories only and may not change repository visibility, so the aim is that no private repo is made public by mistake.
-R	B.p2 description[3]	Keep the owner list short and review every other organization for public repositories on a schedule.
+R	B.p1 description[3]	Watch for organizations that appear outside the enterprise.
+L	B.p2 description[0]	Public repositories belong only in public-open-source by rule.
+L	B.p2 description[1]	Members cannot create them elsewhere, but organization owners can.
+R	B.p2 description[2]	In every other organization, members may create private repositories only and may not change repository visibility, so the aim is that no private repo is made public by mistake.
+R	B.p2 description[5]	Keep the owner list short and review every other organization for public repositories on a schedule.
 R	B.p3 description[0]	Apply enterprise branch and tag rulesets to all in-scope repositories or custom-property selections.
-R	B.p3 description[1]	Allow no bypass by default; document any emergency exception and review its use.
+R	B.p3 description[2]	Allow no bypass by default; document any emergency exception and review its use.
 R	B.p4 description[0]	Apply security configurations to existing repositories and set defaults for new ones.
 R	B.p4 description[1]	Enable Code Security and Secret Protection for private repositories as the baseline requires.
-R	B.p4 description[3]	Verify coverage and entitlements per feature.
+R	B.p4 description[4]	Verify coverage and entitlements per feature.
 R	B.p6 description[3]	Review administrator accounts and test their effects.
 R	B.p7 description[0]	Audit and Git events stream to B's own archive.
-R	B.p7 description[2]	Correlate with endpoint and network evidence.
+R	B.p7 description[3]	Correlate with endpoint and network evidence.
 R	B.p8 description[0]	A scheduled job compares IdP groups with the members and linked identities of every organization.
 R	B.p8 description[1]	It reports drift, and any org without SAML enforced.
 R	B.p10 description[0]	Organizations follow classification and need-to-know.
@@ -368,8 +373,8 @@ R	B.p15 description[0]	Require dependency review checks, lockfiles and disabled 
 R	B.p15 description[1]	Use OIDC trusted publishing where supported.
 R	B.p15 description[4]	Verify release provenance separately.
 R	B.p15 description[5]	Use Dependabot for supported package and action updates.
-R	B.p16 description[0]	Approved workflows and actions live in one dedicated organization in B, owned by a platform team, with versions, changelog, code owners and required reviews.
-R	B.p16 description[1]	Public CI reuses only workflows without deployment grants.
+L	B.p16 description[0]	Approved workflows and actions live in a platform repository in internal-engineering, owned by a platform team, with versions, changelog, code owners and required reviews.
+L	B.p16 description[1]	Public CI reuses only workflows kept in public repositories in public-open-source, without deployment grants.
 R	B.p16 description[2]	B has its own copy and never reads A.
 R	A.o1 description[0]	One organization per critical system.
 R	A.o1 description[1]	Teams come from IdP groups and base access is none, so the aim is that private repositories are visible only to people who are granted access.
@@ -398,7 +403,8 @@ R	B.o1.tools description[0]	Use private visibility with explicit grants.
 R	B.o1.tools description[3]	Private visibility is the design choice here.
 R	B.o2 description[0]	The only organization where this design permits public repositories.
 R	B.o2 description[1]	Name release approvers.
-R	B.o2 description[2]	Do not require corporate SSO for public contributions; access to non-public resources requires separate approved grants.
+L	B.o2 description[2]	Do not require corporate SSO for external contributors; members still authenticate through SAML.
+L	B.o2 description[3]	Access to non-public resources requires separate approved grants.
 R	B.o2.proj description[0]	Check history, artifacts, metadata and logs before publishing.
 R	B.o2.proj description[1]	Content from A requires approved transfer.
 R	B.o2.proj description[4]	Verify provenance for each release.
@@ -422,16 +428,16 @@ R	A.e3 description[2]	Provenance attestations are verified before a deploy, and 
 R	B.e1 description[0]	Self-hosted runners for internal work, with their own credentials, separate from A and from public CI.
 R	B.e2 description[0]	Run public fork PRs on separate GitHub-hosted workers with a read-only job token, no deployment secrets and no private-network connection.
 R	B.e3 description[0]	Short-lived OIDC identity for B targets only.
-R	B.e3 description[1]	B targets reject identities from A.
+L	B.e3 description[1]	B targets trust only the B repository or environment subject, so tokens from A fail.
 R	A.v1 description[0]	Audit and Git events, security alerts through supported APIs or webhooks, IdP and privileged-access logs, proxy, endpoint and runner telemetry.
 R	A.v1 description[1]	Webhook receivers validate signatures and handle replays and duplicates.
 R	A.v2 description[0]	Events go to an immutable archive in the sensitive zone.
 R	A.v2 description[1]	Ingestion lag and stream health are monitored, expected sources are reconciled, and events are deduplicated.
-R	A.v2 description[2]	Keep Git events in the archive, not only in GitHub.
+R	A.v2 description[3]	Keep Git events in the archive, not only in GitHub.
 R	A.v3 description[0]	Detailed sensitive logs stay in the sensitive zone, with cleared analysts only.
 R	B.v1 description[0]	Audit and Git events, security alerts, IdP and proxy logs, CI and registry telemetry.
 R	B.v2 description[0]	Events go to B's own immutable archive.
-R	B.v2 description[1]	Lag and stream health are monitored, and expected sources are reconciled.
+L	B.v2 description[1]	Lag and stream health are monitored, expected sources are reconciled, and events are deduplicated.
 R	B.v3 description[0]	A SIEM and SOC for domain B.
 R	B.v3 description[2]	State the gaps in what the SIEM sees.
 R	L.a description[0]	Code reaches a classified target only through an approved PR, an isolated ephemeral runner, required checks, a signed artifact, an approval on a protected environment and a short-lived OIDC identity.
@@ -474,8 +480,9 @@ R	ops.15 description[0]	New engineers get a short path: tools, review rules, how
 R	ops.15 description[1]	One knowledge repository holds the standards and how-tos.
 R	ops.15 description[2]	Discussions are on for questions, so answers stay next to the code.
 R	ops.15 description[3]	A champion in each team keeps the practice alive.
-R	ops.15 description[4]	A and B keep separate copies, and the A copy never lists classified detail in B.
-R	acc.1 description[0]	Decides classification, approves the hosting service, and owns export decisions.
+R	ops.15 description[4]	A and B keep separate copies.
+R	ops.15 description[5]	The B copy never lists classified detail from A.
+L	acc.1 description[0]	Decides classification, approves the hosting service, and names the release authority that owns export decisions.
 R	acc.2 description[0]	Own the enterprise baseline and make sure audit data is delivered.
 R	acc.2 description[1]	Keep a short named owner list.
 R	acc.2 description[2]	Delegate through suitable enterprise roles.
@@ -656,10 +663,10 @@ L	script	OIDC issuer, audience and subject
 L	script	Enterprise rulesets
 L	script	npm trusted publishing
 L	script	PyPI trusted publishing
+L	script	Fork PR workflow approval
 L	script	Safe fork PR workflow context
 L	script	Hosted runner OS privileges
 L	script	Secure workflow use
-L	script	Organization archiving
 L	script	Azure private networking
 L	script	Audit coverage and retention
 L	script	Audit streaming
@@ -667,9 +674,9 @@ L	script	Source IP limitations
 L	script	Webhook verification and delivery IDs
 L	script	Artifact attestations
 L	script	Custom properties
-L	script	Repository policies (preview)
+L	script	Organization archiving
 L	script	Enterprise roles
-L	script	Copilot cloud policies
+L	script	Repository policies (preview)
 L	script	Ruleset layering
 L	script	Security configurations
 L	script	Advanced Security products
@@ -680,12 +687,14 @@ L	script	PAT policies
 L	script	IP allow list exclusions
 L	script	Corporate proxy restrictions
 L	script	Entra Conditional Access limits
+L	script	Copilot cloud policies
 L	script	Copilot firewall exclusions
-L	script	Third-party agent enablement
+L	script	About Copilot cloud agent
 L	script	Dependency review
 L	script	Supported Dependabot ecosystems
 L	script	Enterprise security policies
 L	script	Adding organizations
+L	script	Creating a GitHub Pages site
 N	script	#stage
 N	script	#fit
 N	script	#scroller
@@ -787,10 +796,7 @@ N	script	span
 N	script	glabel
 N	script	click
 N	script	.fchip
-L	script	. Press Escape or click an empty area to clear.
 L	script	Design choices. 1:
-L	script	Open a highlighted box to see the sources for these.
-L	script	Click a box for what it does and how to check it. Filter to follow a flow, a policy layer or a type of control.
 N	script	sel
 N	script	aria-pressed
 N	script	lbl
@@ -812,7 +818,7 @@ N	script	DEV.
 L	script	Design choice
 L	script	of 4.
 N	script	ev
-L	script	Evidence (quotes checked 10 Nov 2026)
+L	script	Evidence (quotes checked 22 Nov 2026)
 N	script	ol
 N	script	li
 N	script	ev-q
@@ -820,14 +826,11 @@ N	script	_blank
 N	script	noopener
 L	script	Opens the source page at this passage in a new tab
 N	script	ev-note
-L	script	Numbers link to the evidence. Sentences without a number are design requirements or labels.
-L	script	No sentence here needs a source: each is a design requirement, a label or marked as inference.
+L	script	Sentences without a number are design requirements or labels.
 N	script	ul
 N	script	1.1rem
-L	script	Primary sources (10 Nov 2026)
-L	script	Primary sources
-L	script	None needed. These are design requirements, labels or marked as inference.
-L	script	Proposed check (not run)
+L	script	Primary sources (22 Nov 2026)
+L	script	Proposed check
 L	script	Part of
 N	script	links
 N	script	lk
@@ -842,21 +845,22 @@ N	script	resize
 L	page text	GitHub two-enterprise reference
 L	page text	Reference architecture · GitHub Enterprise Cloud
 L	page text	GitHub for classified, internal and public work
-R	page text	Two enterprises, three policy layers and shared operations on one page. Click any box to see what it does and how to check it. Use the filters to follow a flow or a type of control.
+L	page text	Two enterprises, three policy layers and shared operations on one page.
 L	page text	Facts checked
-L	page text	10 Nov 2026
+L	page text	22 Nov 2026
 L	page text	Basis
 L	page text	GitHub, npm and PyPI documentation
 L	page text	Names
 L	page text	illustrative
-R	page text	Proposed controls, not deployed guarantees. G marks a control planned in GitHub; X marks an external process. The tags are design labels, not statements about what a product does. Hosting alternatives apply to A; B stays on github.com for public work.
-L	page text	The diagram is wide. Drag it sideways, or pinch to zoom.
-R	page text	Reference design. Organization and system names are illustrative. Shared standards never mean shared access to source code or detailed logs. These are target controls, not a claim that one policy switch implements each box. Nothing was tested on a real GitHub tenant.
-L	page text	Earlier editable drawings (not rechecked in this review):
+L	page text	Proposed controls, not deployed guarantees. The tags are design labels, not statements about what a product does. Hosting alternatives apply to A; B stays on github.com for public work.
+L	page text	Shared standards never mean shared access to source code or detailed logs.
+L	page text	Earlier editable drawings:
 L	page text	three-page draw.io
 L	page text	and
 L	page text	one-page draw.io
 L	page text	Made with AI
 L	page text	This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.
+L	page text	Tags on this page
+L	page text	inference Interpretation by AI that is not stated in a source.
 L	page text	Filters
 L	page text	Two-enterprise GitHub reference architecture
