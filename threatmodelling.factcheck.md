@@ -67,6 +67,14 @@ Sources fetched again with curl before moving "Last updated" to 15 Nov 2026.
 - **Threat S:** the weakness (no expiry, logout does not end the session) matches ASVS 3.3.1 and 3.3.2.
 - **Arithmetic:** no score, matrix position or band changed.
 
+## Presentation mode, 23 Nov 2026
+
+- **Method and STRIDE.** The five slides follow the four questions in the [Threat Modeling Manifesto](https://www.threatmodelingmanifesto.org/). The six category names match [Microsoft's STRIDE table](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats#stride-model). The slide reads threat examples from the worksheet register.
+- **Scope and scoring.** Checked the fictional scope and cloud crossings against the worksheet and its [text diagram](threatmodelling.dfd.txt). Confirmed I at likelihood 4 and impact 5 (20, high) and R at likelihood 2 and impact 3 (6, low) against the worksheet's matrix and bands.
+- **Treatment and review.** The four choices match the worksheet's names for the responses in [NIST Question 3](https://pages.nist.gov/nccoe-genomic-data-threat-modeling/Vol_C/PTM/Question3.html). The ownership example matches server-side enforcement and object-level access control in [OWASP ASVS 4.0.3, 4.1.1 and 4.2.1](https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md). The two-customer test and the new handler role are fictional workshop exercises.
+- **Browser checks.** Chromium at 1280 × 720, 1440 × 900, 375 × 667 and 320 × 568 with the light and dark palettes represented. Verified navigation, reveals, all six threat choices, keyboard marker activation, full screen on desktop, slide and worksheet links, selection and scroll restoration, and no horizontal page overflow or application console errors. The environment could not load the existing Google Fonts stylesheet or a favicon. Browser checks used fallback fonts. Other browsers and assistive technology were outside this pass.
+- **Presentation UI follow-up.** The browser checks above predate the masthead presentation control, removal of facilitator labels and added matrix risk key. This follow-up could not be checked in a browser because the preview blocked local-file URLs and the workspace could not bind a local HTTP server. The section-anchor check and `git diff --check` passed.
+
 ## Limits
 
 - ASVS may change after 3 November 2026.

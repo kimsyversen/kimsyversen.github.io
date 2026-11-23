@@ -47,6 +47,11 @@ code{font-family:var(--mono);font-size:0.86em}
 .mast{border-top:6px solid var(--rule);padding-top:10px}
 .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
 h1{font-size:clamp(3rem,11.4vw,8.6rem);font-weight:800;font-stretch:112%;line-height:0.86;letter-spacing:-0.035em;margin:30px 0 0;margin-left:-0.04em}
+.meta-actions{display:flex;align-items:center;gap:12px}
+.present-link{font:inherit;color:var(--muted);background:none;border:0;padding:0;min-height:44px;cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px}
+.present-link:hover{color:var(--red);text-decoration-color:currentColor}
+.present-link:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.present-link[hidden]{display:none}
 .intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px 56px;align-items:start;padding:26px 0 30px}
 .lead{font-size:clamp(1.15rem,2vw,1.42rem);line-height:1.42;max-width:36rem}
 .spec{margin:0;display:grid;grid-template-columns:auto 1fr;font-size:0.9rem;border-top:1px solid var(--line)}
@@ -255,6 +260,64 @@ h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::
 a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
 @media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
 @media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+
+/* Presentation */
+.lesson-button{font:600 .9rem/1.25 var(--body);padding:.6rem .85rem;min-height:44px;border:1px solid var(--line);border-radius:0;background:var(--bg);color:var(--ink);cursor:pointer}
+.lesson-button:hover:not(:disabled){border-color:var(--ink)}
+.lesson-button:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.lesson-button:disabled{opacity:.45;cursor:default}
+.lesson-primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.lesson{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:var(--bg);color:var(--ink)}
+.lesson:not([open]){display:none}
+.lesson[open]{display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+.lesson-stage{overflow-y:auto;overscroll-behavior:contain}
+.lesson-bar,.lesson-nav{display:flex;align-items:center;justify-content:space-between;gap:8px 16px;padding:10px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left))}
+.lesson-bar{border-bottom:1px solid var(--line)}
+.lesson-brand{font:750 clamp(1rem,2vw,1.25rem)/1.15 var(--display)}
+.lesson-actions{display:flex;gap:8px}
+.lesson-nav{border-top:1px solid var(--line);padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.lesson-nav .lesson-button{min-width:5.5rem}
+.lesson-count{font:500 .9rem/1.3 var(--mono);color:var(--muted)}
+.lesson-slide{max-width:90rem;margin:0 auto;padding:clamp(20px,4.5vh,56px) clamp(16px,5vw,80px) 28px}
+.lesson-kicker{font:600 clamp(.8rem,1.3vw,1rem)/1.3 var(--mono);color:var(--muted);margin-bottom:10px}
+.lesson-slide h2{font-size:clamp(2rem,5.2vw,4.75rem);text-wrap:wrap;line-height:1.02;margin-bottom:clamp(16px,3.4vh,38px)}
+.lesson-slide h2:focus{outline:none}
+.lesson-columns{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(20px,4vw,62px);align-items:start}
+.lesson-visual{min-width:0}
+.lesson-visual figure{gap:8px}
+.lesson-visual figcaption{font-size:clamp(.88rem,1.35vw,1.16rem)}
+.lesson-visual .fig-scroll:not(.sq) svg{min-width:500px}
+.lesson-visual .fig-scroll.sq svg{min-width:0;max-width:min(100%,42vh,390px);margin-inline:auto}
+.lesson-visual .sq .dot{pointer-events:none}
+.lesson-visual svg [hidden]{display:none}
+.lesson-discussion{border-top:3px solid var(--red);padding-top:12px;font-size:clamp(1rem,1.55vw,1.37rem);line-height:1.4}
+.lesson-prompt{font-size:clamp(1.22rem,2.05vw,1.85rem);line-height:1.3;font-weight:600;margin:5px 0 12px}
+.lesson-answer{border-top:1px solid var(--line);margin-top:14px;padding-top:12px;scroll-margin-block:12px}
+.lesson-answer p + p{margin-top:8px}
+.lesson-answer ul{margin:.1em 0 0;padding-left:1.15em}
+.lesson-answer li + li{margin-top:.4em}
+.lesson-threats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.lesson-threats .lesson-button{padding:.4rem .55rem;min-width:44px;font-family:var(--mono)}
+.lesson-threats [aria-pressed="true"]{background:var(--red);border-color:var(--red);color:var(--bg)}
+.lesson-formula{font:750 clamp(2rem,4vw,3.5rem)/1.05 var(--display);letter-spacing:-.02em}
+.lesson-formula span{color:var(--red)}
+.lesson-list{margin:0;padding:0;list-style:none;font-size:clamp(1rem,1.55vw,1.37rem)}
+.lesson-list li{padding:8px 0;border-bottom:1px solid var(--line)}
+.lesson-list li:first-child{border-top:1px solid var(--line)}
+.lesson-list strong{font-family:var(--display)}
+.lesson-risk-key{margin:12px 0 0;padding:10px 0 0;list-style:none;border-top:1px solid var(--line);display:grid;gap:8px;font-size:clamp(.82rem,1.15vw,1rem);line-height:1.4}
+.lesson-risk-key li{display:grid;grid-template-columns:1.5rem 1fr;gap:8px}
+.lesson-risk-key strong{font-family:var(--display)}
+.lesson-risk-key span{color:var(--muted)}
+@media (max-width:800px){
+  .lesson-columns{grid-template-columns:minmax(0,1fr)}
+  .lesson-visual .fig-scroll.sq svg{max-width:min(100%,250px)}
+}
+@media (max-width:380px){
+  .lesson-bar,.lesson-nav{gap:6px}
+  .lesson-bar .lesson-button{padding-inline:.6rem}
+}
+@media print{.lesson,.lesson[open],.present-link{display:none}}
 </style>
 </head>
 <body>
@@ -266,10 +329,12 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <div class="page">
 
   <header class="mast">
-    <div class="meta"><span>Security by design · A method on one page</span><span>Last updated 15 Nov 2026</span></div>
+    <div class="meta"><span>Security by design · A method on one page</span><div class="meta-actions"><span>Last updated <time datetime="2026-11-23">23 Nov 2026</time></span><button type="button" class="present-link" id="start-presentation" aria-haspopup="dialog" hidden>Present</button></div></div>
     <h1>Threat modeling</h1>
     <div class="intro">
-      <p class="lead">Think like an attacker while changes are still cheap. Four questions and one drawing take you from idea to a short list of fixes. The example all the way through is a made-up claims portal.</p>
+      <div>
+        <p class="lead">Think like an attacker while changes are still cheap. Four questions and one drawing take you from idea to a short list of fixes. The example all the way through is a made-up claims portal.</p>
+      </div>
       <dl class="spec">
         <dt class="lbl">Threats</dt><dd>STRIDE, per element</dd>
         <dt class="lbl">Scoring</dt><dd>Likelihood × impact</dd>
@@ -455,13 +520,151 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </footer>
 </div>
 
+<dialog class="lesson" id="presentation" aria-labelledby="presentation-label">
+  <div class="lesson-bar">
+    <p class="lesson-brand" id="presentation-label">Threat modeling</p>
+    <div class="lesson-actions">
+      <button type="button" class="lesson-button" id="presentation-fullscreen" hidden>Full screen</button>
+      <button type="button" class="lesson-button" id="presentation-close" aria-keyshortcuts="Escape">Exit</button>
+    </div>
+  </div>
+  <div class="lesson-stage">
+    <section class="lesson-slide" aria-labelledby="present-map-the-system" hidden>
+      <p class="lesson-kicker">Question 1 · The fictional claims portal</p>
+      <h2 id="present-map-the-system" tabindex="-1"><a class="sec-link" href="#present-map-the-system">Map the system</a></h2>
+      <div class="lesson-columns">
+        <div class="lesson-visual">
+          <figure>
+            <div class="fig-scroll" data-lesson-figure="scope" tabindex="0" role="group" aria-label="Claims portal data flow diagram"></div>
+            <figcaption>Customers use the portal to file claims and upload documents. An external provider handles sign-in.</figcaption>
+          </figure>
+        </div>
+        <div class="lesson-discussion">
+          <p class="lesson-prompt">What are we protecting, and which flows cross into the cloud?</p>
+          <button type="button" class="lesson-button" aria-expanded="false" aria-controls="lesson-scope-answer">Reveal example</button>
+          <div class="lesson-answer" id="lesson-scope-answer" hidden>
+            <ul>
+              <li><strong>Assets.</strong> Customer documents, identities and uptime.</li>
+              <li><strong>Crossings.</strong> Browser traffic and the sign-in provider’s identity response. Passwords go to the provider.</li>
+              <li><strong>Scope.</strong> Sign-in, upload and viewing. Leave the handlers’ internal system for a separate model.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-slide" aria-labelledby="present-find-threats-with-stride" hidden>
+      <p class="lesson-kicker">Question 2 · Threat discovery</p>
+      <h2 id="present-find-threats-with-stride" tabindex="-1"><a class="sec-link" href="#present-find-threats-with-stride">Find threats with STRIDE</a></h2>
+      <div class="lesson-columns">
+        <div class="lesson-visual">
+          <figure>
+            <div class="fig-scroll" data-lesson-figure="stride" tabindex="0" role="group" aria-label="Claims portal data flow diagram"></div>
+            <figcaption>At each element, ask what someone could do, what weakness allows it and who would be harmed.</figcaption>
+          </figure>
+        </div>
+        <div class="lesson-discussion">
+          <p class="lesson-prompt">What could let one customer see another customer’s document?</p>
+          <button type="button" class="lesson-button" aria-expanded="false" aria-controls="lesson-stride-answer">Reveal threats</button>
+          <div class="lesson-answer" id="lesson-stride-answer" hidden>
+            <div class="lesson-threats" role="group" aria-label="STRIDE categories"></div>
+            <div aria-live="polite" aria-atomic="true">
+              <p><strong id="lesson-threat-title"></strong></p>
+              <p id="lesson-threat-detail"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-slide" aria-labelledby="present-score-and-rank-the-risks" hidden>
+      <p class="lesson-kicker">Question 3 · Prioritization</p>
+      <h2 id="present-score-and-rank-the-risks" tabindex="-1"><a class="sec-link" href="#present-score-and-rank-the-risks">Score and rank the risks</a></h2>
+      <div class="lesson-columns">
+        <div class="lesson-visual">
+          <figure>
+            <div class="fig-scroll sq" data-lesson-figure="score"></div>
+            <figcaption>Rate likelihood and impact from 1 to 5. Multiply the ratings to rank the threats.</figcaption>
+          </figure>
+          <ul class="lesson-risk-key" aria-label="Risks shown in the matrix">
+            <li><strong>I</strong><span>Information disclosure: a customer reads another customer’s documents.</span></li>
+            <li><strong>R</strong><span>Repudiation: a customer denies sending or changing a document.</span></li>
+          </ul>
+        </div>
+        <div class="lesson-discussion">
+          <p class="lesson-prompt">Which comes first, document disclosure (4 × 5) or an unlogged upload (2 × 3)?</p>
+          <button type="button" class="lesson-button" aria-expanded="false" aria-controls="lesson-score-answer">Reveal scores</button>
+          <div class="lesson-answer" id="lesson-score-answer" hidden>
+            <p class="lesson-formula">4 × 5 <span>= 20</span></p>
+            <p><strong>I · High.</strong> Fix document access first. <strong>R · Low (2 × 3 = 6).</strong> Record who accepts the risk and when they’ll review it.</p>
+            <p>What evidence would change these sample ratings?</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-slide" aria-labelledby="present-pick-a-response-and-test-it" hidden>
+      <p class="lesson-kicker">Question 3 · Treatment</p>
+      <h2 id="present-pick-a-response-and-test-it" tabindex="-1"><a class="sec-link" href="#present-pick-a-response-and-test-it">Pick a response and test it</a></h2>
+      <div class="lesson-columns">
+        <div class="lesson-visual">
+          <ul class="lesson-list">
+            <li><strong>Remove.</strong> Take away the feature or data that creates the threat.</li>
+            <li><strong>Reduce.</strong> Lower the likelihood or impact.</li>
+            <li><strong>Move.</strong> Transfer responsibility through an agreement.</li>
+            <li><strong>Accept.</strong> Record who owns the risk and when they’ll review it.</li>
+          </ul>
+        </div>
+        <div class="lesson-discussion">
+          <p class="lesson-prompt">How could we keep document viewing and prove that customers only see their own files?</p>
+          <button type="button" class="lesson-button" aria-expanded="false" aria-controls="lesson-control-answer">Reveal control</button>
+          <div class="lesson-answer" id="lesson-control-answer" hidden>
+            <p><strong>Reduce.</strong> The server checks ownership on every document request. The developer owns the check.</p>
+            <p><strong>Test.</strong> Use two test customers. Confirm each can open their own document and that the server refuses access to the other customer’s document.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-slide" aria-labelledby="present-review-and-repeat" hidden>
+      <p class="lesson-kicker">Question 4 · Verification</p>
+      <h2 id="present-review-and-repeat" tabindex="-1"><a class="sec-link" href="#present-review-and-repeat">Review and repeat</a></h2>
+      <div class="lesson-columns">
+        <div class="lesson-visual">
+          <ul class="lesson-list">
+            <li><strong>Check coverage.</strong> Walk the diagram with someone who wasn’t in the session.</li>
+            <li><strong>Check evidence.</strong> Run the tests before revising the score.</li>
+            <li><strong>Revisit decisions.</strong> Review accepted risks on their due date and update the model when the system changes.</li>
+          </ul>
+        </div>
+        <div class="lesson-discussion">
+          <p class="lesson-prompt">Claims handlers now need direct portal access. What would you change in the model?</p>
+          <button type="button" class="lesson-button" aria-expanded="false" aria-controls="lesson-review-answer">Reveal example</button>
+          <div class="lesson-answer" id="lesson-review-answer" hidden>
+            <ul>
+              <li>Add the handler, the new flow and any trust boundary it crosses.</li>
+              <li>Decide whether handlers may open claims assigned to someone else.</li>
+              <li>Give the access rule an owner. Test allowed and denied access, then reassess the risk.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <nav class="lesson-nav" aria-label="Presentation slides">
+    <button type="button" class="lesson-button" id="presentation-previous" aria-keyshortcuts="ArrowLeft">Previous</button>
+    <p class="lesson-count" aria-live="polite" id="presentation-count"></p>
+    <button type="button" class="lesson-button lesson-primary" id="presentation-next" aria-keyshortcuts="ArrowRight">Next</button>
+  </nav>
+</dialog>
+
 <script>
 (function(){
   var cur = null;
   function select(el){
     var t = el.getAttribute('data-t');
     cur = (cur === t) ? null : t;
-    document.querySelectorAll('[data-t]').forEach(function(x){
+      document.querySelectorAll('.page [data-t]').forEach(function(x){
       var on = cur !== null && x.getAttribute('data-t') === cur;
       x.classList.toggle('on', on);
       if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -472,12 +675,209 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     var r = row.getBoundingClientRect();
     if (r.top < 0 || r.bottom > window.innerHeight) row.scrollIntoView({block:'center', inline:'nearest'});
   }
-  document.querySelectorAll('[data-t]').forEach(function(el){
+  document.querySelectorAll('.page [data-t]').forEach(function(el){
     el.addEventListener('click', function(){ select(el); });
     el.addEventListener('keydown', function(e){
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(el); }
     });
   });
+})();
+
+(() => {
+  const dialog = document.getElementById('presentation');
+  if (typeof dialog.showModal !== 'function') return;
+
+  const start = document.getElementById('start-presentation');
+  const fullscreen = document.getElementById('presentation-fullscreen');
+  const exit = document.getElementById('presentation-close');
+  const previous = document.getElementById('presentation-previous');
+  const next = document.getElementById('presentation-next');
+  const count = document.getElementById('presentation-count');
+  const stage = dialog.querySelector('.lesson-stage');
+  const slides = Array.from(stage.querySelectorAll('.lesson-slide'));
+  const titles = slides.map(slide => slide.querySelector('h2'));
+  const reveals = Array.from(stage.querySelectorAll('button[aria-controls]'));
+  let current = -1;
+  let worksheetHash = '';
+
+  const diagram = document.querySelector('[aria-labelledby="p1"] .fg');
+  const scopeDiagram = diagram.cloneNode(true);
+  scopeDiagram.querySelectorAll('[data-t]').forEach(marker => marker.remove());
+  const diagramDescription = 'The browser crosses into the cloud to reach the portal. The password stays with the external sign-in provider, which sends identity data to the portal. The portal exchanges files with the document store inside the cloud.';
+  scopeDiagram.setAttribute('role', 'img');
+  scopeDiagram.setAttribute('aria-label', diagramDescription);
+  dialog.querySelector('[data-lesson-figure="scope"]').append(scopeDiagram);
+
+  const threatDiagram = diagram.cloneNode(true);
+  threatDiagram.setAttribute('aria-label', diagramDescription);
+  dialog.querySelector('[data-lesson-figure="stride"]').append(threatDiagram);
+  const markers = Array.from(threatDiagram.querySelectorAll('[data-t]'));
+  const choices = dialog.querySelector('.lesson-threats');
+  const threatTitle = document.getElementById('lesson-threat-title');
+  const threatDetail = document.getElementById('lesson-threat-detail');
+  const threats = new Map();
+
+  for (const item of document.querySelectorAll('.stride li')) {
+    const letter = item.querySelector('.L').textContent;
+    const category = item.querySelector('b').textContent.replace(/\.$/, '');
+    const threatCell = document.querySelector(`#tt tr[data-t="${letter}"] td`).cloneNode(true);
+    const element = threatCell.querySelector('.where');
+    const title = `${category} · ${element.textContent}`;
+    element.remove();
+    threats.set(letter, { title, detail: threatCell.textContent.trim() });
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'lesson-button';
+    button.dataset.t = letter;
+    button.textContent = letter;
+    button.setAttribute('aria-label', category);
+    choices.append(button);
+  }
+
+  const threatControls = [...markers, ...choices.children];
+  function showThreat(letter) {
+    const threat = threats.get(letter);
+    threatTitle.textContent = threat.title;
+    threatDetail.textContent = threat.detail;
+    for (const control of threatControls) {
+      const selected = control.dataset.t === letter;
+      control.classList.toggle('on', selected);
+      control.setAttribute('aria-pressed', String(selected));
+    }
+  }
+
+  for (const control of threatControls) {
+    control.addEventListener('click', () => showThreat(control.dataset.t));
+  }
+  for (const marker of markers) {
+    marker.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        showThreat(marker.dataset.t);
+      }
+    });
+  }
+
+  const matrix = document.querySelector('[aria-labelledby="p4"] .fg').cloneNode(true);
+  matrix.setAttribute('role', 'img');
+  dialog.querySelector('[data-lesson-figure="score"]').append(matrix);
+  const scoreDots = Array.from(matrix.querySelectorAll('[data-t]')).filter(dot => {
+    if (!['I', 'R'].includes(dot.dataset.t)) {
+      dot.remove();
+      return false;
+    }
+    for (const name of ['role', 'tabindex', 'aria-pressed', 'aria-label']) dot.removeAttribute(name);
+    dot.classList.add('on');
+    return true;
+  });
+
+  for (const button of reveals) {
+    button.dataset.revealLabel = button.textContent;
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'false';
+      const answer = setReveal(button, expanded);
+      if (expanded) answer.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+  }
+
+  function setReveal(button, expanded) {
+    const id = button.getAttribute('aria-controls');
+    const answer = document.getElementById(id);
+    answer.hidden = !expanded;
+    button.setAttribute('aria-expanded', String(expanded));
+    button.textContent = expanded ? 'Hide answer' : button.dataset.revealLabel;
+    if (id === 'lesson-stride-answer') {
+      for (const marker of markers) marker.toggleAttribute('hidden', !expanded);
+    }
+    if (id === 'lesson-score-answer') {
+      for (const dot of scoreDots) dot.toggleAttribute('hidden', !expanded);
+      matrix.setAttribute('aria-label', expanded
+        ? 'Risk matrix. I is high at likelihood 4 and impact 5. R is low at likelihood 2 and impact 3.'
+        : 'Risk matrix with likelihood and impact axes, each from 1 to 5.');
+    }
+    return answer;
+  }
+
+  function showSlide(index) {
+    if (index === current) return;
+    if (current !== -1) slides[current].hidden = true;
+    current = index;
+    slides[current].hidden = false;
+    previous.disabled = current === 0;
+    next.textContent = current === slides.length - 1 ? 'Finish' : 'Next';
+    count.textContent = `Slide ${current + 1} of ${slides.length}`;
+    titles[current].focus({ preventScroll: true });
+    stage.scrollTop = 0;
+  }
+
+  function open(index) {
+    current = -1;
+    for (const slide of slides) slide.hidden = true;
+    for (const button of reveals) setReveal(button, false);
+    showThreat('I');
+    dialog.showModal();
+    showSlide(index);
+  }
+
+  function linkedSlide() {
+    return titles.findIndex(title => '#' + title.id === location.hash);
+  }
+
+  function syncHash() {
+    const index = linkedSlide();
+    if (index >= 0) {
+      if (dialog.open) showSlide(index);
+      else open(index);
+    } else {
+      worksheetHash = location.hash;
+      if (dialog.open) dialog.close();
+    }
+  }
+
+  start.addEventListener('click', () => open(0));
+  exit.addEventListener('click', () => dialog.close());
+  previous.addEventListener('click', () => showSlide(current - 1));
+  next.addEventListener('click', () => {
+    if (current === slides.length - 1) dialog.close();
+    else showSlide(current + 1);
+  });
+  dialog.addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.target.closest('.fig-scroll')) return;
+    if (event.key === 'ArrowLeft' && current > 0) {
+      event.preventDefault();
+      showSlide(current - 1);
+    }
+    if (event.key === 'ArrowRight' && current < slides.length - 1) {
+      event.preventDefault();
+      showSlide(current + 1);
+    }
+  });
+
+  if (document.fullscreenEnabled && dialog.requestFullscreen) {
+    // Browsers disallow requesting fullscreen on a dialog. Fullscreen the page behind it.
+    fullscreen.hidden = false;
+    fullscreen.addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else await document.documentElement.requestFullscreen();
+      } catch {
+        // The viewport-sized dialog remains available when fullscreen is denied.
+      }
+    });
+    document.addEventListener('fullscreenchange', () => {
+      fullscreen.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+    });
+  }
+
+  dialog.addEventListener('close', () => {
+    if (document.fullscreenElement === document.documentElement) document.exitFullscreen().catch(() => {});
+    if (linkedSlide() >= 0) history.replaceState(history.state, '', location.pathname + location.search + worksheetHash);
+    if (document.activeElement === document.body) start.focus({ preventScroll: true });
+  });
+  window.addEventListener('hashchange', syncHash);
+  start.hidden = false;
+  syncHash();
 })();
 </script>
 </body>

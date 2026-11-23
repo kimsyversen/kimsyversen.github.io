@@ -87,3 +87,9 @@ index.html has no decisions file. Same note as the other pages, centred in the f
 - **Duplicate caveats cut from the footer** ("not measurements", "a working method, not a requirement").
 - **Plan file deleted.** No open work, and it described the first layout.
 - **Still on ASVS 4.0.3.** Moving to 5.0 IDs is the owner's call and was not done.
+
+## 23 Nov 2026, presentation mode
+
+- **Five slides for live teaching.** The four questions structure the lesson, with scoring and treatment each getting a slide under question 3. Each slide has a discussion prompt and a worked answer that starts hidden.
+- **One claims portal example.** The slides reuse the worksheet's diagram and risk matrix and derive all six STRIDE examples from its register. The closing exercise asks the group to extend the model with a new handler role.
+- **Presentation state stays in the dialog.** Answers and the selected threat persist between slides during a session. Opening a fresh session hides the answers. The worksheet retains its selected threat, and the slide headings support direct links.
