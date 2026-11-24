@@ -329,7 +329,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
   <!-- 1 MAP -->
   <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
     <section id="risk-map-of-mcp">
-      <h2><a class="sec-link" href="#risk-map-of-mcp">Risk map of MCP</a></h2>
+      <h2 id="risk-map-of-mcp-2"><a class="sec-link" href="#risk-map-of-mcp-2">Risk map of MCP</a></h2>
       <div class="rchips" id="dgChips" role="group" aria-label="Show a risk in the diagram"></div>
       <p class="dg-sum" id="dgSummary" aria-live="polite"></p>
     </section>
@@ -352,7 +352,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </figure>
 
     <section id="risk-by-zone">
-      <h2><a class="sec-link" href="#risk-by-zone">Risk by zone</a></h2>
+      <h2 id="risk-by-zone-2"><a class="sec-link" href="#risk-by-zone-2">Risk by zone</a></h2>
       <p class="sub">Each populated cell names a component and its mapped finding, requirement or control. Where a source quote is available, open it below the statement. “No mapped component” means this scenario assigns none to that zone; it does not mean no control exists. Use Checks for the full checklist.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk, controls and evidence by zone">
         <table class="mx">
@@ -367,7 +367,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
   <!-- Risk details, opened from map markers or deep links -->
   <div class="panel" role="tabpanel" id="p-risks" aria-labelledby="t-risks" hidden>
     <section id="the-eight-risks">
-      <h2><a class="sec-link" href="#the-eight-risks">The fourteen risks</a></h2>
+      <h2 id="the-fourteen-risks"><a class="sec-link" href="#the-fourteen-risks">The fourteen risks</a></h2>
       <p class="sub">Grouped from the OWASP MCP Top 10, the CoSAI MCP security paper and parts of the specification's security guidance. The order and the grouping are interpretation by AI. <span class="tag">[inference]</span> OWASP's list is in beta and CoSAI's paper is marked draft, so both may change.</p>
     </section>
 
@@ -408,7 +408,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </aside>
 
     <section id="where-to-start">
-      <h3><a class="sec-link" href="#where-to-start">Where to start</a></h3>
+      <h3 id="where-to-start-2"><a class="sec-link" href="#where-to-start-2">Where to start</a></h3>
       <p class="sub">Suggested first controls for each risk. These are recommendations, and the friction is an AI estimate. <span class="tag">[inference]</span><span class="sc-m"> None of them needs a preview feature.</span></p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
@@ -420,7 +420,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     </section>
 
     <section id="statusdef">
-      <h3><a class="sec-link" href="#statusdef">What a status means</a></h3>
+      <h3 id="what-a-status-means"><a class="sec-link" href="#what-a-status-means">What a status means</a></h3>
       <p class="sub"><b>OK:</b> in place and tested on a named product and operating system, with evidence and a date recorded elsewhere; the tracker stores status values in this browser, with no evidence attachments. <b>Partial:</b> covers some products, platforms or users. <b>Missing:</b> not in place. <b>Unknown:</b> looked at but not confirmed. <b>Not assessed:</b> nobody has looked yet. Definitions are interpretation by AI. <span class="tag">[inference]</span></p>
     </section>
 
@@ -445,7 +445,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     <div class="risks" id="risks">
 
       <article id="risk-m01" class="risk" data-id="M01" data-title="Unapproved MCP servers">
-        <div class="risk-head"><span class="rid">M01</span><div><h3><a class="sec-link" href="#risk-m01">Unapproved MCP servers</a></h3><p class="en">OWASP MCP09 · CoSAI #6</p></div></div>
+        <div class="risk-head"><span class="rid">M01</span><div><h3 id="unapproved-mcp-servers"><a class="sec-link" href="#unapproved-mcp-servers">Unapproved MCP servers</a></h3><p class="en">OWASP MCP09 · CoSAI #6</p></div></div>
         <p><b>In plain words:</b> Without enforced restrictions, users can configure unapproved servers. An allowlist limits which servers can load within its documented scope.</p>
         <p class="sc-g">By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it. <span class="tag">[inference]</span></p>
         <div><span class="lbl">Check</span></div>
@@ -465,7 +465,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m02" class="risk" data-id="M02" data-title="Tampered or malicious server code">
-        <div class="risk-head"><span class="rid">M02</span><div><h3><a class="sec-link" href="#risk-m02">Tampered or malicious server code</a></h3><p class="en">OWASP MCP04 · CoSAI #5, #25, #32</p></div></div>
+        <div class="risk-head"><span class="rid">M02</span><div><h3 id="tampered-or-malicious-server-code"><a class="sec-link" href="#tampered-or-malicious-server-code">Tampered or malicious server code</a></h3><p class="en">OWASP MCP04 · CoSAI #5, #25, #32</p></div></div>
         <p><b>In plain words:</b> A local server is a program someone wrote. If it is malicious, it can act with the launching account's privileges unless isolation restricts it.</p>
         <p>A local server may be installed from a package or repository, or written locally. A tampered package, a bad update or a look-alike name brings malicious code in. Without adequate isolation, it can execute with the MCP client's privileges. No MCP-specific incident for this risk is cited here.</p>
         <div><span class="lbl">Check</span></div>
@@ -481,7 +481,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m03" class="risk" data-id="M03" data-title="Local servers run commands as the user">
-        <div class="risk-head"><span class="rid">M03</span><div><h3><a class="sec-link" href="#risk-m03">Local servers run commands as the user</a></h3><p class="en">OWASP MCP05 · CoSAI #21, #22, #31</p></div></div>
+        <div class="risk-head"><span class="rid">M03</span><div><h3 id="local-servers-run-commands-as-the-user"><a class="sec-link" href="#local-servers-run-commands-as-the-user">Local servers run commands as the user</a></h3><p class="en">OWASP MCP05 · CoSAI #21, #22, #31</p></div></div>
         <p><b>In plain words:</b> A local server is started by a command. If the client executes a malicious command, attacker code runs within the configured execution environment.</p>
         <p>The MCP specification lists local server compromise as a risk: a malicious startup command in the client config, or a malicious payload in the server. The risks it names include arbitrary code execution, no visibility and data exfiltration.</p>
         <p>OWASP lists command injection as MCP05: an agent builds and runs commands or code from untrusted input. This card covers execution and file-path validation failures.</p>
@@ -498,7 +498,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m04" class="risk" data-id="M04" data-title="Prompt injection through tool output">
-        <div class="risk-head"><span class="rid">M04</span><div><h3><a class="sec-link" href="#risk-m04">Prompt injection through tool output</a></h3><p class="en">OWASP MCP06 · CoSAI #4, #11</p></div></div>
+        <div class="risk-head"><span class="rid">M04</span><div><h3 id="prompt-injection-through-tool-output"><a class="sec-link" href="#prompt-injection-through-tool-output">Prompt injection through tool output</a></h3><p class="en">OWASP MCP06 · CoSAI #4, #11</p></div></div>
         <p><b>In plain words:</b> The agent reads text that tools bring back. If that text contains malicious instructions, the agent may follow them.</p>
         <p>Text inside a tool's own description or schema sits under M13. CoSAI #11 also covers direct injection through sampling or a tool's own LLM; the checks below cover indirect content only.</p>
         <div><span class="lbl">Check</span></div>
@@ -514,7 +514,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m05" class="risk" data-id="M05" data-title="MCP tokens stolen or redirected">
-        <div class="risk-head"><span class="rid">M05</span><div><h3><a class="sec-link" href="#risk-m05">MCP tokens stolen or redirected</a></h3><p class="en">OWASP MCP01 · CoSAI #16, #17, #19</p></div></div>
+        <div class="risk-head"><span class="rid">M05</span><div><h3 id="mcp-tokens-stolen-or-redirected"><a class="sec-link" href="#mcp-tokens-stolen-or-redirected">MCP tokens stolen or redirected</a></h3><p class="en">OWASP MCP01 · CoSAI #16, #17, #19</p></div></div>
         <p><b>In plain words:</b> A valid bearer token can authorize access within its scope. An attacker who intercepts it may be able to reuse it until it expires or is revoked.</p>
         <p class="sc-g">Mitiga (May 2026) showed an npm postinstall hook that pre-sets trust entries for common clone paths in <code>~/.claude.json</code>, so no trust prompt fires. A SessionStart hook in a repository cloned there then rewrites an MCP server URL to an attacker's localhost proxy. Mitiga shows interception and reuse of an OAuth bearer token with Atlassian.</p><p class="sc-g">The chain requires one malicious npm install by a user whose Claude Code has dynamic authorization on MCP servers, and a later clone of a repository that carries the hook. Mitiga describes a project SessionStart hook that restores the malicious endpoint; remediation must remove that persistence as well as repair the configuration and rotate credentials.</p>
         <div class="sc-g"><span class="lbl">Check</span></div>
@@ -532,7 +532,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m06" class="risk" data-id="M06" data-title="Permissions wider than needed">
-        <div class="risk-head"><span class="rid">M06</span><div><h3><a class="sec-link" href="#risk-m06">Permissions wider than needed</a></h3><p class="en">OWASP MCP02 · CoSAI #20</p></div></div>
+        <div class="risk-head"><span class="rid">M06</span><div><h3 id="permissions-wider-than-needed"><a class="sec-link" href="#permissions-wider-than-needed">Permissions wider than needed</a></h3><p class="en">OWASP MCP02 · CoSAI #20</p></div></div>
         <p><b>In plain words:</b> A key that opens many doors does more harm when it is stolen or misused. Tokens and permissions should be as narrow as the task allows.</p>
         <p>A token with wide scope reaches further than a narrow one, whether it is stolen or misused. OWASP lists privilege escalation via scope creep as MCP02, and CoSAI lists excessive permissions and overexposure (#20).</p>
         <div><span class="lbl">Check</span></div>
@@ -548,7 +548,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m07" class="risk" data-id="M07" data-title="Local HTTP servers and URLs from servers">
-        <div class="risk-head"><span class="rid">M07</span><div><h3><a class="sec-link" href="#risk-m07">Local HTTP servers and URLs from servers</a></h3><p class="en">CoSAI #26, #29, #30 · MCP specification: transports and security best practices</p></div></div>
+        <div class="risk-head"><span class="rid">M07</span><div><h3 id="local-http-servers-and-urls-from-servers"><a class="sec-link" href="#local-http-servers-and-urls-from-servers">Local HTTP servers and URLs from servers</a></h3><p class="en">CoSAI #26, #29, #30 · MCP specification: transports and security best practices</p></div></div>
         <p><b>In plain words:</b> A server on your own computer can be reached by other programs, and sometimes by web pages. A server can also send your client to addresses it should not visit.</p>
         <p>An MCP server that listens on local HTTP can be reached by other local programs and, through DNS rebinding, by web pages. The specification also warns that a malicious server can supply URLs that point at internal addresses, such as 169.254.169.254.</p>
         <div><span class="lbl">Check</span></div>
@@ -566,7 +566,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m08" class="risk" data-id="M08" data-title="No audit trail or inventory">
-        <div class="risk-head"><span class="rid">M08</span><div><h3><a class="sec-link" href="#risk-m08">No audit trail or inventory</a></h3><p class="en">OWASP MCP08 · CoSAI #15, #34</p></div></div>
+        <div class="risk-head"><span class="rid">M08</span><div><h3 id="no-audit-trail-or-inventory"><a class="sec-link" href="#no-audit-trail-or-inventory">No audit trail or inventory</a></h3><p class="en">OWASP MCP08 · CoSAI #15, #34</p></div></div>
         <p><b>In plain words:</b> Without server inventories and suitable logs, it is hard to say which servers were used and what they did. <span class="tag">[inference]</span></p>
         <p>OWASP lists missing audit and telemetry as MCP08. CoSAI adds invisible agent activity (#15) and lack of observability (#34). No MCP-specific incident for these risks is cited here.</p>
         <div><span class="lbl">Check</span></div>
@@ -582,7 +582,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m09" class="risk" data-id="M09" data-title="Weak approval and over-trust in the model">
-        <div class="risk-head"><span class="rid">M09</span><div><h3><a class="sec-link" href="#risk-m09">Weak approval and over-trust in the model</a></h3><p class="en">CoSAI #7, #9, #13</p></div></div>
+        <div class="risk-head"><span class="rid">M09</span><div><h3 id="weak-approval-and-over-trust-in-the-model"><a class="sec-link" href="#weak-approval-and-over-trust-in-the-model">Weak approval and over-trust in the model</a></h3><p class="en">CoSAI #7, #9, #13</p></div></div>
         <p><b>In plain words:</b> People may approve tool calls without reading them, or a tool may trust the model to behave. Either way, a risky action can go ahead unchecked. <span class="tag">[inference]</span></p>
         <p>CoSAI lists insecure human-in-the-loop checks, approval fatigue and overreliance on the model as MCP threats. The specification says there should always be a human in the loop who can deny tool invocations.</p>
         <div><span class="lbl">Check</span></div>
@@ -597,7 +597,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m10" class="risk" data-id="M10" data-title="Over-sharing and shared servers that mix users">
-        <div class="risk-head"><span class="rid">M10</span><div><h3><a class="sec-link" href="#risk-m10">Over-sharing and shared servers that mix users</a></h3><p class="en">OWASP MCP10 · CoSAI #10, #24</p></div></div>
+        <div class="risk-head"><span class="rid">M10</span><div><h3 id="over-sharing-and-shared-servers-that-mix-users"><a class="sec-link" href="#over-sharing-and-shared-servers-that-mix-users">Over-sharing and shared servers that mix users</a></h3><p class="en">OWASP MCP10 · CoSAI #10, #24</p></div></div>
         <p><b>In plain words:</b> Data can be disclosed or corrupted through over-sharing, retained context or weak tenant isolation. <span class="tag">[inference]</span></p>
         <p>OWASP lists context injection and over-sharing as MCP10. CoSAI adds improper multitenancy (#10), meaning weak isolation between tenants or users, and data exfiltration and corruption (#24). No MCP-specific incident for these risks is cited here.</p>
         <div><span class="lbl">Check</span></div>
@@ -614,7 +614,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m11" class="risk" data-id="M11" data-title="Runaway cost and overload">
-        <div class="risk-head"><span class="rid">M11</span><div><h3><a class="sec-link" href="#risk-m11">Runaway cost and overload</a></h3><p class="en">CoSAI #14, #33</p></div></div>
+        <div class="risk-head"><span class="rid">M11</span><div><h3 id="runaway-cost-and-overload"><a class="sec-link" href="#runaway-cost-and-overload">Runaway cost and overload</a></h3><p class="en">CoSAI #14, #33</p></div></div>
         <p><b>In plain words:</b> An agent or an attacker can make so many calls that costs or load get out of hand. <span class="tag">[inference]</span></p>
         <p>CoSAI lists resource exhaustion and denial of wallet, and missing payload limits. The specification says servers must rate limit tool invocations.</p>
         <div><span class="lbl">Check</span></div>
@@ -629,7 +629,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m12" class="risk" data-id="M12" data-title="Weak protocol and transport protections">
-        <div class="risk-head"><span class="rid">M12</span><div><h3><a class="sec-link" href="#risk-m12">Weak protocol and transport protections</a></h3><p class="en">CoSAI #12, #23, #27, #28</p></div></div>
+        <div class="risk-head"><span class="rid">M12</span><div><h3 id="weak-protocol-and-transport-protections"><a class="sec-link" href="#weak-protocol-and-transport-protections">Weak protocol and transport protections</a></h3><p class="en">CoSAI #12, #23, #27, #28</p></div></div>
         <p><b>In plain words:</b> Traffic between MCP components can be read or changed if transport integrity fails. <span class="tag">[inference]</span></p>
         <p>CoSAI lists man-in-the-middle attacks, missing integrity checks, protocol security gaps and insecure handling of transport descriptors such as stdio.</p>
         <div><span class="lbl">Check</span></div>
@@ -644,7 +644,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m13" class="risk" data-id="M13" data-title="Poisoned tool descriptions and schemas">
-        <div class="risk-head"><span class="rid">M13</span><div><h3><a class="sec-link" href="#risk-m13">Poisoned tool descriptions and schemas</a></h3><p class="en">OWASP MCP03 · CoSAI #2, #3</p></div></div>
+        <div class="risk-head"><span class="rid">M13</span><div><h3 id="poisoned-tool-descriptions-and-schemas"><a class="sec-link" href="#poisoned-tool-descriptions-and-schemas">Poisoned tool descriptions and schemas</a></h3><p class="en">OWASP MCP03 · CoSAI #2, #3</p></div></div>
         <p><b>In plain words:</b> A tool's name, description and parameters are text the model reads. If someone alters them, the model can be steered before any tool is called.</p>
         <p>OWASP defines tool poisoning as an adversary compromising the tools, plugins or their outputs that a model depends on. CoSAI lists tool poisoning (#2), altered tool metadata or descriptors, and full schema poisoning (#3).</p>
                 <div><span class="lbl">Check</span></div>
@@ -660,7 +660,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
       <article id="risk-m14" class="risk" data-id="M14" data-title="Weak authentication and authorization">
-        <div class="risk-head"><span class="rid">M14</span><div><h3><a class="sec-link" href="#risk-m14">Weak authentication and authorization</a></h3><p class="en">OWASP MCP07 · CoSAI #1, #8, #18</p></div></div>
+        <div class="risk-head"><span class="rid">M14</span><div><h3 id="weak-authentication-and-authorization"><a class="sec-link" href="#weak-authentication-and-authorization">Weak authentication and authorization</a></h3><p class="en">OWASP MCP07 · CoSAI #1, #8, #18</p></div></div>
         <p><b>In plain words:</b> Servers and clients must check who is calling and what that caller may do. If they do not, one party can act as another.</p>
         <p>OWASP lists insufficient authentication and authorization as MCP07. CoSAI adds identity spoofing (#1), privilege escalation through authentication or authorization bypass (#8) and weak, legacy or pass-through authentication, such as basic auth or static API keys (#18).</p>
         <p>The specification forbids token passthrough: an MCP server must not accept tokens that were not issued for it. It also describes a confused deputy attack on an MCP proxy server that uses a static client ID, allows dynamic client registration and relies on a third-party consent cookie, when it does not ask for consent for each client.</p>
@@ -678,7 +678,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </article>
 
     <section id="framework-mapping">
-      <h3><a class="sec-link" href="#framework-mapping">Where each list entry sits</a></h3>
+      <h3 id="where-each-list-entry-sits"><a class="sec-link" href="#where-each-list-entry-sits">Where each list entry sits</a></h3>
       <p class="sub">Each source entry has one home. No two OWASP entries share a home. Risks in the Also column are cross-references, not second homes. Broad source entries use the boundaries above for individual findings. Which risk holds each entry is interpretation by AI. <span class="tag">[inference]</span> The Risk list buttons at the top filter this table.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk list mapping table">
         <table class="tbl map">
@@ -706,7 +706,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
   <!-- 3 VS CODE -->
   <div class="panel" role="tabpanel" id="p-vscode" aria-labelledby="t-vscode" hidden>
     <section id="if-you-run-mcp-servers-in-vs-code">
-      <h2><a class="sec-link" href="#if-you-run-mcp-servers-in-vs-code">If you run MCP servers in VS Code</a></h2>
+      <h2 id="if-you-run-mcp-servers-in-vs-code-2"><a class="sec-link" href="#if-you-run-mcp-servers-in-vs-code-2">If you run MCP servers in VS Code</a></h2>
       <p class="sub">What the VS Code documentation says about MCP, and which risk each point touches. The general risks still apply. Rows summarize the VS Code docs as checked on 14 November 2026.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="VS Code and MCP table">
         <table class="tbl vs">
@@ -733,7 +733,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </div>
     </section>
     <section id="other-microsoft-surfaces" class="sc-m">
-      <h3><a class="sec-link" href="#other-microsoft-surfaces">Other Microsoft surfaces</a></h3>
+      <h3 id="other-microsoft-surfaces-2"><a class="sec-link" href="#other-microsoft-surfaces-2">Other Microsoft surfaces</a></h3>
       <p class="sub">What Microsoft and GitHub documentation or CVE records say about MCP outside VS Code, and which risk each row touches. Each row has the exact quote and a link to the source. Checked on 14 November 2026.</p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Other Microsoft surfaces table">
         <table class="tbl vs">
@@ -744,7 +744,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
       </div>
     </section>
     <section id="limits">
-      <h3><a class="sec-link" href="#limits">Limits</a></h3>
+      <h3 id="limits-2"><a class="sec-link" href="#limits-2">Limits</a></h3>
       <p class="sub">VS Code has more than one kind of agent session (Local and Copilot harness), and the settings do not always reach both. The rows say where the docs name a difference.</p>
       <p class="sub">The docs call the Local harness deprecated and say it will be removed in February 2027. Rows about editor-managed servers and Local harness sessions describe that path.</p>
     </section>
@@ -755,7 +755,7 @@ html:not([data-scope="ms"]) .sc-m{display:none!important}
     <p>No setting or command on this page was run on a managed machine.</p>
     <p>Versions and dates change quickly in this area. Check the "Current" box against the sources before you use it in a report.</p>
   <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
-  <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
+  <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
     <dl>
       <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
       <dt><span class="tag">[unverified]</span></dt><dd>Not confirmed in a quoted source.</dd>

@@ -291,7 +291,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     </section>
 
     <section id="risk-by-zone">
-      <h2><a class="sec-link" href="#risk-by-zone">Risk by zone</a></h2>
+      <h2 id="risk-by-zone-2"><a class="sec-link" href="#risk-by-zone-2">Risk by zone</a></h2>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk by zone table">
         <table class="mx">
           <colgroup><col class="c-rk"><col class="c-in"><col class="c-z"><col class="c-z"><col class="c-z"></colgroup>
@@ -302,7 +302,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     </section>
 
     <section id="first">
-      <h2><a class="sec-link" href="#first"><span id="before-you-use-the-map">Risks and mitigations</span></a></h2>
+      <h2 id="risks-and-mitigations"><a class="sec-link" href="#risks-and-mitigations"><span id="before-you-use-the-map">Risks and mitigations</span></a></h2>
       <p class="sub">Effort and relevance are estimated for a managed VS Code fleet. <span class="tag">[inference]</span></p>
       <div class="more-list" id="moreDetails"></div>
     </section>
@@ -312,7 +312,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
   <!-- Workstation checklist -->
   <div class="panel" role="tabpanel" id="p-top10" aria-labelledby="t-top10" hidden>
     <section id="the-ten-risks">
-      <h2><a class="sec-link" href="#the-ten-risks">Workstation checklist</a></h2>
+      <h2 id="workstation-checklist"><a class="sec-link" href="#workstation-checklist">Workstation checklist</a></h2>
       <p class="sub">The OWASP mappings are interpretations. <span class="tag">[inference]</span></p>
     </section>
 
@@ -326,7 +326,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     </aside>
 
     <section id="where-to-start">
-      <h3><a class="sec-link" href="#where-to-start">Where to start</a></h3>
+      <h3 id="where-to-start-2"><a class="sec-link" href="#where-to-start-2">Where to start</a></h3>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
           <colgroup><col class="c-id"><col><col class="c-fr"></colgroup>
@@ -337,7 +337,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     </section>
 
     <section id="statusdef">
-      <h3><a class="sec-link" href="#statusdef">What a status means</a></h3>
+      <h3 id="what-a-status-means"><a class="sec-link" href="#what-a-status-means">What a status means</a></h3>
       <ul>
         <li><b>OK</b> Control passed on the recorded build, OS and harness. Keep the test evidence and date in your assessment record.</li>
         <li><b>Partial</b> Coverage varies by build, platform, harness or population.</li>
@@ -365,7 +365,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     </div>
 
     <section id="filter-by-attack-path">
-      <h3><a class="sec-link" href="#filter-by-attack-path">Filter by attack path</a></h3>
+      <h3 id="filter-by-attack-path-2"><a class="sec-link" href="#filter-by-attack-path-2">Filter by attack path</a></h3>
       <div class="chips" id="pathDesc" role="group" aria-label="Attack path">
         <button type="button" class="chip" data-path="all" aria-pressed="true">All</button>
         <button type="button" class="chip" data-path="content" aria-pressed="false">Malicious content</button>
@@ -378,7 +378,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="risks" id="risks">
 
       <article id="risk-d01" class="risk" data-id="D01" data-title="Malicious packages and install scripts" data-paths="supply creds">
-        <div class="risk-head"><span class="rid">D01</span><div><h3><a class="sec-link" href="#risk-d01">Malicious packages and install scripts</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
+        <div class="risk-head"><span class="rid">D01</span><div><h3 id="malicious-packages-and-install-scripts"><a class="sec-link" href="#malicious-packages-and-install-scripts">Malicious packages and install scripts</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
         <p>A dependency install run through Copilot’s terminal tool can execute package or project code. Microsoft documented credential theft and package republishing through npm install scripts in ChainDrop.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -393,7 +393,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d02" class="risk" data-id="D02" data-title="Code runs when a project is opened" data-paths="repo">
-        <div class="risk-head"><span class="rid">D02</span><div><h3><a class="sec-link" href="#risk-d02">Code runs when a project is opened</a></h3><p class="en">OWASP ASI05 Unexpected Code Execution</p></div></div>
+        <div class="risk-head"><span class="rid">D02</span><div><h3 id="code-runs-when-a-project-is-opened"><a class="sec-link" href="#code-runs-when-a-project-is-opened">Code runs when a project is opened</a></h3><p class="en">OWASP ASI05 Unexpected Code Execution</p></div></div>
         <p>A repository can carry VS Code tasks and workspace settings into a clone. In a trusted folder, a <code>folderOpen</code> task can run when automatic tasks are allowed. A Dev Container can also declare an <code>initializeCommand</code> that runs on the host.</p>
         <p>Workspace Trust disables agents in untrusted folders and limits tasks and other execution features. An archive or shared folder can also carry local <code>.git</code> metadata. Treat that metadata as a separate input before opening the folder in VS Code.</p>
         <div><span class="lbl">Check</span></div>
@@ -409,7 +409,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d03" class="risk" data-id="D03" data-title="Malicious or hijacked extensions" data-paths="supply">
-        <div class="risk-head"><span class="rid">D03</span><div><h3><a class="sec-link" href="#risk-d03">Malicious or hijacked extensions</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
+        <div class="risk-head"><span class="rid">D03</span><div><h3 id="malicious-or-hijacked-extensions"><a class="sec-link" href="#malicious-or-hijacked-extensions">Malicious or hijacked extensions</a></h3><p class="en">OWASP ASI04 Agentic Supply Chain Vulnerabilities</p></div></div>
         <p>VS Code extensions can execute code in the extension host with the developer’s permissions. AWS confirmed that a compromised release of the Amazon Q Developer extension reached the VS Code Marketplace in 2025.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -424,7 +424,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d04" class="risk" data-id="D04" data-title="Secrets and long-lived tokens on the machine" data-paths="creds supply repo">
-        <div class="risk-head"><span class="rid">D04</span><div><h3><a class="sec-link" href="#risk-d04">Secrets and long-lived tokens on the machine</a></h3><p class="en">OWASP ASI03 Identity and Privilege Abuse · MCP01 Token Mismanagement</p></div></div>
+        <div class="risk-head"><span class="rid">D04</span><div><h3 id="secrets-and-long-lived-tokens-on-the-machine"><a class="sec-link" href="#secrets-and-long-lived-tokens-on-the-machine">Secrets and long-lived tokens on the machine</a></h3><p class="en">OWASP ASI03 Identity and Privilege Abuse · MCP01 Token Mismanagement</p></div></div>
         <p>GitHub Copilot can reach secrets through file context, terminal commands, credential helpers or tools with their own tokens. The Copilot sandbox enables Git and GitHub CLI credential integration by default. Dev Containers can also reuse Git credentials and forward SSH agent access.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -440,7 +440,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d05" class="risk" data-id="D05" data-title="Prompt injection and poisoned instruction files" data-paths="content repo">
-        <div class="risk-head"><span class="rid">D05</span><div><h3><a class="sec-link" href="#risk-d05">Prompt injection and poisoned instruction files</a></h3><p class="en">OWASP ASI01 Agent Goal Hijack</p></div></div>
+        <div class="risk-head"><span class="rid">D05</span><div><h3 id="prompt-injection-and-poisoned-instruction-files"><a class="sec-link" href="#prompt-injection-and-poisoned-instruction-files">Prompt injection and poisoned instruction files</a></h3><p class="en">OWASP ASI01 Agent Goal Hijack</p></div></div>
         <p>An issue, web page, repository file or MCP result can carry instructions that redirect Copilot. The Copilot harness also loads project guidance from <code>.github/copilot-instructions.md</code>, <code>AGENTS.md</code> and scoped instructions. Treat changes to that guidance as changes to agent behaviour.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -455,7 +455,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d06" class="risk" data-id="D06" data-title="Untrusted MCP servers, plugins and skills" data-paths="supply content creds">
-        <div class="risk-head"><span class="rid">D06</span><div><h3><a class="sec-link" href="#risk-d06">Untrusted MCP servers, plugins and skills</a></h3><p class="en">OWASP ASI04 · MCP03 Tool Poisoning · MCP07 Insufficient Authentication and Authorization · AST01 Malicious Skills</p></div></div>
+        <div class="risk-head"><span class="rid">D06</span><div><h3 id="untrusted-mcp-servers-plugins-and-skills"><a class="sec-link" href="#untrusted-mcp-servers-plugins-and-skills">Untrusted MCP servers, plugins and skills</a></h3><p class="en">OWASP ASI04 · MCP03 Tool Poisoning · MCP07 Insufficient Authentication and Authorization · AST01 Malicious Skills</p></div></div>
         <p>Copilot can send context to a remote MCP service and read its results. A locally launched server can execute code on the workstation. Plugins and skills can add tools or instructions, so review both the source and the capabilities enabled by a package.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -470,7 +470,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d07" class="risk" data-id="D07" data-title="No sandbox and open network" data-paths="content supply creds">
-        <div class="risk-head"><span class="rid">D07</span><div><h3><a class="sec-link" href="#risk-d07">No sandbox and open network</a></h3><p class="en">OWASP ASI05 · makes exfiltration in ASI01 and ASI03 possible</p></div></div>
+        <div class="risk-head"><span class="rid">D07</span><div><h3 id="no-sandbox-and-open-network"><a class="sec-link" href="#no-sandbox-and-open-network">No sandbox and open network</a></h3><p class="en">OWASP ASI05 · makes exfiltration in ASI01 and ASI03 possible</p></div></div>
         <p>Copilot’s default tools can sandbox terminal commands and locally launched MCP servers. The VS Code Copilot harness setting defaults to off. When enabled, it permits outbound network access by default. Test the effective boundaries on the host that runs the tools.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -486,7 +486,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d08" class="risk" data-id="D08" data-title="Approval bypass" data-paths="content repo">
-        <div class="risk-head"><span class="rid">D08</span><div><h3><a class="sec-link" href="#risk-d08">Approval bypass</a></h3><p class="en">OWASP ASI02 Tool Misuse · ASI09 Human-Agent Trust Exploitation</p></div></div>
+        <div class="risk-head"><span class="rid">D08</span><div><h3 id="approval-bypass"><a class="sec-link" href="#approval-bypass">Approval bypass</a></h3><p class="en">OWASP ASI02 Tool Misuse · ASI09 Human-Agent Trust Exploitation</p></div></div>
         <p>Copilot tool approval depends on the selected permission level, tool, prior grants and harness. The CVE-2025-53773 disclosure showed how workspace settings could weaken approvals in an affected release. Keep the deployed versions patched and validate the effective approval rules.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -502,7 +502,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d09" class="risk" data-id="D09" data-title="No inventory, version floor or agent telemetry" data-paths="content repo supply creds">
-        <div class="risk-head"><span class="rid">D09</span><div><h3><a class="sec-link" href="#risk-d09">No inventory, version floor or agent telemetry</a></h3><p class="en">OWASP MCP08 Lack of Audit and Telemetry · ASI10 Rogue Agents (secondary, detection side)</p></div></div>
+        <div class="risk-head"><span class="rid">D09</span><div><h3 id="no-inventory-version-floor-or-agent-telemetry"><a class="sec-link" href="#no-inventory-version-floor-or-agent-telemetry">No inventory, version floor or agent telemetry</a></h3><p class="en">OWASP MCP08 Lack of Audit and Telemetry · ASI10 Rogue Agents (secondary, detection side)</p></div></div>
         <p>To determine exposure, record the VS Code build, GitHub Copilot version, harness, extension and MCP inventory, and effective policy. Defender process events can record command lines for the created and initiating processes. Correlate them with Copilot telemetry when investigating tool activity.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -517,7 +517,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </article>
 
       <article id="risk-d10" class="risk" data-id="D10" data-title="Code and context sent to unapproved AI services" data-paths="">
-        <div class="risk-head"><span class="rid">D10</span><div><h3><a class="sec-link" href="#risk-d10">Code and context sent to unapproved AI services</a></h3><p class="en">Data governance</p></div></div>
+        <div class="risk-head"><span class="rid">D10</span><div><h3 id="code-and-context-sent-to-unapproved-ai-services"><a class="sec-link" href="#code-and-context-sent-to-unapproved-ai-services">Code and context sent to unapproved AI services</a></h3><p class="en">Data governance</p></div></div>
         <p>Copilot requests can include code, prompts and relevant tool results. Model settings, the signed-in GitHub account and bring-your-own-key providers determine which services can receive the data. Remote MCP is a separate recipient covered in D06.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
@@ -533,7 +533,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     </div>
 
     <section id="respond">
-      <h2><a class="sec-link" href="#respond">Incident response</a></h2>
+      <h2 id="incident-response"><a class="sec-link" href="#incident-response">Incident response</a></h2>
       <ol class="ir">
         <li><b>Contain the workstation and affected remote hosts.</b> End active Copilot sessions and remote connections through your response process. Assess the GitHub identity’s access from other devices.</li>
         <li><b>Preserve evidence before cleanup.</b> Collect available Copilot logs and session data, VS Code and Agent Host configuration, extensions, tool definitions, and GitHub and endpoint events. Limit access to the collected data.</li>
@@ -548,7 +548,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
   <!-- SOURCES -->
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
     <section id="sources-2">
-      <h2><a class="sec-link" href="#sources-2">Sources</a></h2>
+      <h2 id="sources-3"><a class="sec-link" href="#sources-3">Sources</a></h2>
       <p class="sub" id="fact-check-notes">
         <a href="Developer-WS.factcheck.md">Fact check and review notes</a>
       </p>

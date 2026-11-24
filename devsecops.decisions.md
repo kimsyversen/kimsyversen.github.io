@@ -77,4 +77,9 @@
 
 - Both views retain the numbered cards and shared phase anchors. Desktop connectors join Test to Release and show the selected phase's route back to Plan. Phone layouts use a two-column phase index to keep the detail close to the selection.
 - The Agentic trace names its handoffs and recommended human gates. Release passes the approved artifact to Deploy only on approval. Monitor sends alerts to Operate and new work to Plan. The decision to retire is an independent input to Retire.
-- The dedicated four-change table is the home for agentic risks, controls and evidence. The per-phase inferred risk lists were removed from the Agentic view. The standard view's risk counts still link to its risk register.
+- Superseded by the phase registers below: the dedicated four-change table was the home for agentic risks, controls and evidence. The standard view's risk counts linked to its risk register.
+
+## 24 November 2026: authoritative risk registers
+
+- Keep the 55 DevSecOps risks and 30 Agentic DevSecOps risks in their respective phase registers. The agentic theme index links to existing entries. The Markdown file preserves links without repeating risk text or evidence.
+- Keep evidence-review notes in the fact check. The former theme overview remains in Git history. The worked example and presentations illustrate the lifecycle without owning risk entries.
