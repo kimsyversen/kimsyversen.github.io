@@ -220,3 +220,13 @@ No page edits in this round. Page text unchanged since round 2.
 ## Worked example added, 15 November 2026
 
 The table "Example: fixing one bug with agents" in the agentic view is made up: the issue and pull request numbers, the 200 test requests and the 50 refusals in ten minutes come from no source. It is interpretation by AI and carries the `inference` tag. The ownership check, the two tests and the alert on 50 refusals repeat the controls for threat I on `threatmodelling.html`. No quote or link to an outside source was added, so no source was fetched.
+
+## Selected-phase trace, 24 November 2026
+
+- The trace visualizes the page's lifecycle interpretation. Handoff labels were checked against the existing inputs and outputs, including the Release recommendation, approval before Deploy, and Monitor's alerts for Operate and tickets and issues for Plan. The four proposed human gates retain their recommendation tags. Feedback from any phase is a choice in this lifecycle model.
+- Compared all 73 quote elements and the three evidence and example tables with the pre-edit page. Their wording, labels and source links match. Existing public anchors and retained local links were checked. The trace introduces no new sourced claims.
+- In Chromium, tested all phase selections in both views at 320, 390, 768, 820 and 1280 px, the Release, Monitor and Retire paths, shared phase and evidence links, feedback links, print styles, the script-free fallback and the index link. Other browser engines were not exercised.
+
+## Consolidated phase risks, 24 November 2026
+
+The DevSecOps view groups all 55 scenarios from the 24 November audit in the existing Risks by phase table. The 22 scenarios that overlap the earlier table retain their original source excerpts. Evidence descriptions and links come from the audited register. The source review and its limitations are recorded in [devsecops.risks.md](devsecops.risks.md#evidence-and-coverage-checks). Sources were not fetched again for this layout change. Chromium checks at 1280 and 375 pixels passed for the original phase fragment, opening the evidence and page width. Static checks confirmed all 55 audit entries, all 10 panel counts, the existing quotes and the public fragments.

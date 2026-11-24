@@ -1,33 +1,39 @@
 DEVSECOPS LIFECYCLE MAP, TWO VIEWS
 
-Flow description: A switch at the top selects one of two views. Each view is a
-row of numbered phase boxes. Selecting a box shows the detail of that phase
-below the row. A table under the boxes lists risks with their evidence.
-Boxes with an accent border mark a checkpoint (DevSecOps) or a human gate
-(Agentic). Work from the last phase returns to Plan.
+The view switch selects a set of numbered phase cards. The selected card is
+ivory. On desktop, a return across the gap between rows connects Test to
+Release. Solid connectors highlight the selected phase's neighbours. A dashed
+connector runs from the selection to Plan, since feedback can arise at any
+phase. Narrow screens use a compact two-column phase index.
 
-VIEW 1: DEVSECOPS (ten phases, two rows of five)
-Detail panel: governance activity, secure development activity, risk count.
-Table: governance and secure development risks by phase.
+VIEW 1: DEVSECOPS
 
 [01 Plan *] -> [02 Design *] -> [03 Code *] -> [04 Build] -> [05 Test]
-[06 Release *] -> [07 Deploy] -> [08 Operate *] -> [09 Monitor] -> [10 Retire]
-* checkpoint
+                                                                   |
+            +------------------------------------------------------+
+            v
+[06 Release *] -> [07 Deploy] -> [08 Operate *] -> [09 Monitor]
+[10 Retire] closes the lifecycle.
 
-Monitoring, incidents, changes and new vulnerabilities can return work to Plan.
+* Governance checkpoint. The panel shows governance and secure development
+activities and links to the selected phase's risks and evidence.
 
-VIEW 2: AGENTIC DEVSECOPS (ten phases, two rows of five)
-Detail panel: input, output, human gate, risks.
-Table: four changes agents bring, each with a risk and a control.
-Example table: one made-up fix followed through the ten phases, with what the
-agent does, what it hands on and the person at each human gate.
+VIEW 2: AGENTIC DEVSECOPS
 
 [01 Plan G] -> [02 Code] -> [03 Review G] -> [04 Build] -> [05 Test]
-[06 Release G] -> [07 Deploy] -> [08 Operate] -> [09 Monitor] -> [10 Retire G]
-G human gate. The output of one phase is the input of the next.
+                                                                  |
+            +------------------ Test evidence --------------------+
+            v
+[06 Release G] -> [07 Deploy] -> [08 Operate] -> [09 Monitor]
+[10 Retire G] starts from a decision to retire and ends the flow.
 
-Monitor sends alerts to Operate. Incident tickets and new issues from Monitor go
-back to Plan as new requests. Retire starts from a decision to retire and ends
-the flow.
+G Recommended human gate. The selected trace names the handoffs and any human
+approval. The phase panel gives the inputs and outputs. Earlier outputs and
+standing inputs can also supply a phase.
 
-On narrow screens the boxes stack in one column.
+Release receives test results and a risk verdict. A person decides whether to
+approve production. On approval, Deploy receives the approved artifact.
+Monitor sends alerts to Operate and incident tickets and new issues to Plan.
+
+The worked example follows the phases for one bug fix. The four-change table
+holds the agent risks, controls and supporting evidence.
