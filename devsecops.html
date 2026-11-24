@@ -407,9 +407,24 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .present-nav button:last-child { background: var(--ink); color: var(--paper); }
 .present-stage { overflow: auto; overscroll-behavior: contain; }
 .present-slide { width: min(66rem, 100% - 32px); margin: 0 auto; padding-block: clamp(20px, 4vh, 48px); }
-.present-chapters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
-.present-chapters li { border-top: 2px solid var(--line); padding-top: 6px; color: var(--muted); font: 500 .72rem/1.3 var(--mono); }
-.present-chapters [aria-current] { border-color: var(--accent); color: var(--accent); }
+.present-flow { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px 16px; margin: 0 0 18px; padding: 0; list-style: none; }
+.present-flow li {
+  position: relative; padding: 6px 2px; border: 1px solid var(--line); border-radius: 4px;
+  color: var(--muted); font: 500 .78rem/1.3 var(--mono); text-align: center;
+}
+.present-flow li:not(:last-child)::after {
+  position: absolute; inset: 0 auto 0 100%; display: grid; width: 16px; place-items: center;
+  color: var(--trace); content: "→" / "";
+}
+.present-flow [aria-current] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+@media (560px < width <= 900px) {
+  .present-flow { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .present-flow li:nth-child(5n):not(:last-child)::after { content: "↵" / ""; }
+}
+@media (max-width: 560px) {
+  .present-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .present-flow li:nth-child(3n):not(:last-child)::after { content: "↵" / ""; }
+}
 .present-scenario { margin-bottom: 18px; max-width: 64ch; color: var(--muted); }
 .present-slide h2 { font: 500 clamp(2.6rem, 6.5vw, 5.75rem)/.95 var(--serif); overflow-wrap: anywhere; }
 .present-subtitle { margin-top: 6px; color: var(--engineering); font: 500 clamp(1.25rem, 3vw, 2.4rem)/1.2 var(--serif); }
@@ -427,7 +442,13 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .present-more .present-facts { margin-top: 4px; }
 .present-reference summary { color: var(--muted); }
 .present-more a { color: var(--accent); }
-@media (max-width: 560px) { .present-facts { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .present-slide { padding-block: 16px; }
+  .present-flow, .present-scenario { margin-bottom: 12px; }
+  .present-flow li { padding-block: 4px; }
+  .present-question { margin-top: 14px; font-size: 1.3rem; }
+  .present-facts { grid-template-columns: minmax(0, 1fr); }
+}
 @media print { .presentation[open], .present-start { display: none; } }
 
 </style>
@@ -1810,17 +1831,13 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   </div>
   <div class="present-stage">
     <section class="present-slide" id="presentation-slide">
-      <ol class="present-chapters" role="list" aria-label="Lesson chapters">
-        <li>Define the problem</li>
-        <li>Make and ship the fix</li>
-        <li>Run and retire</li>
-      </ol>
+      <ol class="present-flow" role="list" aria-label="Lifecycle phases shown so far"></ol>
       <p class="present-scenario">In a claims portal, a customer can open another customer’s document. <span class="tag">[inference]</span></p>
       <h2 id="present-plan" tabindex="-1"><a class="sec-link" href="#present-plan"></a></h2>
       <p class="present-subtitle"></p>
       <p class="present-question"></p>
-      <details class="present-more">
-        <summary>Reveal an example answer</summary>
+      <details class="present-more" open>
+        <summary>Example answer</summary>
         <p class="present-answer"></p>
       </details>
       <details class="present-more present-reference">
@@ -2040,7 +2057,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     const title = dialog.querySelector("h2");
     const titleLink = title.querySelector("a");
     const subtitle = dialog.querySelector(".present-subtitle");
-    const chapters = dialog.querySelectorAll(".present-chapters li");
+    const flow = dialog.querySelector(".present-flow");
     const question = dialog.querySelector(".present-question");
     const answer = dialog.querySelector(".present-answer");
     const reveal = dialog.querySelector(".present-more");
@@ -2048,7 +2065,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     const facts = dialog.querySelector(".present-facts");
     const sourceLink = reference.querySelector(".present-source");
     const slides = new Map();
-    const revealed = new Set();
+    const collapsedAnswers = new Set();
     let active, returnHash, openedFromLink;
 
     // Each phase asks for one decision about the same fictional claims portal.
@@ -2140,21 +2157,20 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     function renderSlide(slide) {
       if (slide === active) return;
       if (active) {
-        if (reveal.open) revealed.add(active.id);
-        else revealed.delete(active.id);
+        if (reveal.open) collapsedAnswers.delete(active.id);
+        else collapsedAnswers.add(active.id);
       }
       active = slide;
       const { id, map, phase, index } = slide;
       const panel = document.getElementById(map.prefix + "phase-" + phase.id);
       const agentic = Boolean(map.prefix);
       const [takeaway, prompt, exampleAnswer] = lessons[agentic ? "agentic" : "devsecops"][phase.id];
-      let chapter = 1;
-      if (["plan", "design"].includes(phase.id)) chapter = 0;
-      if (["operate", "monitor", "retire"].includes(phase.id)) chapter = 2;
-      chapters.forEach((item, i) => {
-        if (chapter === i) item.setAttribute("aria-current", "step");
-        else item.removeAttribute("aria-current");
-      });
+      flow.replaceChildren(...map.phases.slice(0, index + 1).map(step => {
+        const node = document.createElement("li");
+        node.textContent = step.name;
+        if (step === phase) node.setAttribute("aria-current", "step");
+        return node;
+      }));
       label.textContent = agentic ? "Agentic DevSecOps presentation" : "DevSecOps presentation";
       title.id = id;
       titleLink.href = "#" + id;
@@ -2169,7 +2185,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 
       sourceLink.href = agentic ? "#agentic-example" : "#risks-" + phase.id;
       sourceLink.textContent = agentic ? "Full example" : "Risk cases and sources";
-      reveal.open = revealed.has(id);
+      reveal.open = !collapsedAnswers.has(id);
       reference.open = false;
       previous.disabled = index === 0;
       next.textContent = index === map.phases.length - 1 ? "Finish" : "Next";
@@ -2183,7 +2199,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
       openedFromLink = fromLink;
       returnHash = fromLink ? slide.phase.link.hash : location.hash;
       active = null;
-      revealed.clear();
+      collapsedAnswers.clear();
       dialog.showModal();
       renderSlide(slide);
     }
@@ -2195,7 +2211,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 
     start.addEventListener("click", () => {
       const map = maps.find(item => !item.root.closest("[hidden]"));
-      open(slides.get("present-" + map.phases[map.selected].link.hash.slice(1)), false);
+      open(slides.get("present-" + map.phases[0].link.hash.slice(1)), false);
     });
     close.addEventListener("click", () => dialog.close());
     previous.addEventListener("click", () => move(-1));

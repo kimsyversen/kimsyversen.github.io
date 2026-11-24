@@ -238,3 +238,7 @@ The slides use the existing phase activities, risk summaries and claims portal e
 ## Presentation lesson, 24 November 2026
 
 The lesson uses the fictional claims portal throughout. The prompts and sample answers illustrate the existing phase activities and agent handoffs. They add no sourced claims. The phase reference stays linked to the risk register or full agentic example. Chromium at 1280, 375 and 320 pixels confirmed that prompts fit above the fold at a height of 640 pixels, answers start hidden, chapter indicators follow the phase, and slide links and navigation still work.
+
+## Growing lifecycle diagram, 24 November 2026
+
+Both presentations now start at Plan. Each slide adds the next phase to the diagram and marks it as current. Shared slide links still open at their specified phase with the preceding phases shown. Example answers start open. Chromium at 1280, 820, 375 and 320 pixels verified the node order, connectors, current phase, answer state, slide links, and navigation. At 640 pixels tall the prompts fit without scrolling.
