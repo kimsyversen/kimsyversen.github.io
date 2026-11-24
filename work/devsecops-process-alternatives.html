@@ -1,0 +1,543 @@
+<div id="devsecops-process-alternatives">
+  <style>
+    #devsecops-process-alternatives {
+      --rail: color-mix(in srgb, var(--foreground) 40%, var(--background));
+      --guide: color-mix(in srgb, var(--foreground) 11%, transparent);
+      --active: var(--viz-series-1);
+      --gate: color-mix(in srgb, var(--viz-series-2) 74%, var(--foreground));
+      --return: color-mix(in srgb, var(--viz-series-3) 74%, var(--foreground));
+      --return-guide: color-mix(in srgb, var(--return) 46%, var(--background));
+      --muted-foreground: color-mix(in srgb, var(--foreground) 72%, var(--background));
+      --blue: color-mix(in srgb, var(--foreground) 88%, var(--background));
+      --primary-foreground: var(--background);
+      display: grid;
+      gap: .8rem;
+      container-type: inline-size;
+    }
+    #devsecops-process-alternatives .ds-options { display: grid; gap: .25rem; padding-inline-end: min(90px, 12%); }
+    #devsecops-process-alternatives .ds-stage { position: relative; min-inline-size: 0; }
+    #devsecops-process-alternatives .ds-map { height: 240px; }
+    #devsecops-process-alternatives .ds-orbit { height: 342px; }
+    #devsecops-process-alternatives .ds-drawing { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    #devsecops-process-alternatives .ds-station { position: absolute; transform: translate(-50%, -50%); }
+    #devsecops-process-alternatives .ds-legend { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem .65rem; }
+    #devsecops-process-alternatives .ds-key-item { display: inline-flex; align-items: center; gap: .45rem; }
+    #devsecops-process-alternatives .ds-return-key { inline-size: 1.5rem; border-block-start: 2px dashed var(--return); }
+    #devsecops-process-alternatives .ds-tracks + .ds-legend .ds-return-key { display: none; }
+    #devsecops-process-alternatives .ds-diamond {
+      display: inline-block;
+      width: .65em;
+      height: .65em;
+      margin-inline: .22em .15em;
+      border: 1.5px solid var(--gate);
+      transform: rotate(45deg);
+    }
+    #devsecops-process-alternatives .ds-terminal {
+      display: inline-block;
+      width: .57em;
+      height: .57em;
+      margin-inline: .25em .15em;
+      outline: 1px solid currentColor;
+      outline-offset: 2px;
+    }
+    #devsecops-process-alternatives .ds-terminal.ds-gated { border: 2px solid var(--gate); transform: rotate(45deg); }
+    #devsecops-process-alternatives .ds-tracks { padding-block: .3rem; }
+    #devsecops-process-alternatives .ds-track-labels,
+    #devsecops-process-alternatives .ds-track-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(5.4rem, 16%) minmax(0, 1fr);
+      align-items: center;
+      gap: .6rem;
+    }
+    #devsecops-process-alternatives .ds-track-labels { margin-block-end: .45rem; }
+    #devsecops-process-alternatives .ds-track-labels > :first-child { text-align: end; }
+    #devsecops-process-alternatives .ds-track-head {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+    #devsecops-process-alternatives .ds-track-head:first-child { justify-content: flex-end; }
+    #devsecops-process-alternatives .ds-track-head > span {
+      width: 1.4rem;
+      height: 2px;
+      flex: none;
+      background: var(--active);
+    }
+    #devsecops-process-alternatives .ds-track-head:first-child > span { background: var(--gate); }
+    #devsecops-process-alternatives .ds-track-row { position: relative; min-height: 2.4rem; }
+    #devsecops-process-alternatives .ds-track-row::before {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 50%;
+      border-inline-start: 1px solid var(--rail);
+      pointer-events: none;
+    }
+    #devsecops-process-alternatives .ds-track-row:first-child::before { inset-block-start: 50%; }
+    #devsecops-process-alternatives .ds-track-row:last-child::before { inset-block-end: 50%; }
+    #devsecops-process-alternatives .ds-track-cell {
+      display: flex;
+      align-items: center;
+      min-inline-size: 0;
+      gap: .5rem;
+      overflow-wrap: anywhere;
+    }
+    #devsecops-process-alternatives .ds-track-cell:first-child { text-align: end; justify-content: flex-end; }
+    #devsecops-process-alternatives .ds-track-cell::after {
+      content: "";
+      inline-size: clamp(.4rem, 6cqw, 4rem);
+      flex: none;
+      block-size: 1px;
+      background: color-mix(in srgb, var(--gate) 48%, var(--background));
+    }
+    #devsecops-process-alternatives .ds-track-cell:last-child::after {
+      order: -1;
+      background: color-mix(in srgb, var(--active) 52%, var(--background));
+    }
+    #devsecops-process-alternatives .ds-track-row.ds-current .ds-track-cell::after { block-size: 2px; background: var(--gate); }
+    #devsecops-process-alternatives .ds-track-row.ds-current .ds-track-cell:last-child::after { background: var(--active); }
+    #devsecops-process-alternatives .ds-track-row .ds-track-station {
+      position: relative;
+      justify-self: center;
+      background-color: var(--background);
+    }
+    #devsecops-process-alternatives .ds-detail { border-block-start: 1px solid var(--border); padding-block-start: .7rem; }
+    #devsecops-process-alternatives .ds-detail-title { display: flex; flex-wrap: wrap; gap: .25rem .6rem; align-items: baseline; }
+    #devsecops-process-alternatives .ds-detail dl { margin: .55rem 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: .35rem 1rem; }
+    #devsecops-process-alternatives .ds-detail dd { margin: .15rem 0 0; }
+    #devsecops-process-alternatives #preview-phase { font-weight: 500; }
+    @container (max-width: 420px) {
+      #devsecops-process-alternatives .ds-options { padding-inline-end: 0; }
+      #devsecops-process-alternatives .ds-track-labels,
+      #devsecops-process-alternatives .ds-track-row { gap: .3rem; }
+      #devsecops-process-alternatives .ds-track-head > span { display: none; }
+      #devsecops-process-alternatives .ds-track-cell { gap: .3rem; }
+      #devsecops-process-alternatives .ds-track-cell::after { inline-size: .4rem; }
+      #devsecops-process-alternatives .ds-detail dl { grid-template-columns: 1fr; }
+    }
+    @container (max-width: 425px) {
+      #devsecops-process-alternatives .ds-map { height: 352px; }
+    }
+  </style>
+  <h1>DevSecOps lifecycle</h1>
+  <div class="ds-options">
+    <div class="viz-row" role="group" aria-label="Visualization">
+      <button class="btn" type="button" data-layout="transit" aria-pressed="true">Transit map</button>
+      <button class="btn" type="button" data-layout="orbit" aria-pressed="false">Lifecycle orbit</button>
+      <button class="btn" type="button" data-layout="tracks" aria-pressed="false">Parallel tracks</button>
+    </div>
+    <div class="viz-row" role="group" aria-label="Lifecycle">
+      <button class="btn btn-ghost" type="button" data-mode="delivery" aria-pressed="true">DevSecOps</button>
+      <button class="btn btn-ghost" type="button" data-mode="agentic" aria-pressed="false">Agentic DevSecOps</button>
+    </div>
+  </div>
+  <div class="ds-stage" role="group" aria-label="Lifecycle phases" aria-describedby="ds-feedback-key"></div>
+  <div class="ds-legend text-small" aria-label="Map key">
+    <span class="ds-key-item"><span class="ds-diamond" aria-hidden="true"></span><span data-key>Checkpoint</span></span>
+    <span class="ds-key-item"><span class="ds-terminal" aria-hidden="true"></span>End of lifecycle</span>
+    <span class="ds-key-item"><span class="ds-return-key" aria-hidden="true"></span><span id="ds-feedback-key">Feedback to Plan from any phase</span></span>
+  </div>
+  <div class="ds-detail" aria-live="polite" aria-atomic="true">
+    <div class="ds-detail-title"><span id="preview-phase"></span><span class="text-muted text-small" data-phase-status></span></div>
+    <dl>
+      <div><dt class="text-muted text-small" data-left-label></dt><dd data-left-detail></dd></div>
+      <div><dt class="text-muted text-small" data-right-label></dt><dd data-right-detail></dd></div>
+    </dl>
+  </div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('devsecops-process-alternatives');
+  const stage = root.querySelector('.ds-stage');
+  const layouts = Array.from(root.querySelectorAll('[data-layout]'));
+  const modes = Array.from(root.querySelectorAll('[data-mode]'));
+  const keyLabel = root.querySelector('[data-key]');
+  const phaseHeading = root.querySelector('#preview-phase');
+  const phaseStatus = root.querySelector('[data-phase-status]');
+  const leftLabel = root.querySelector('[data-left-label]');
+  const rightLabel = root.querySelector('[data-right-label]');
+  const leftDetail = root.querySelector('[data-left-detail]');
+  const rightDetail = root.querySelector('[data-right-detail]');
+
+  // Phase order and checkpoints follow devsecops.html. Activity and handoff summaries are compacted for the diagrams.
+  const lifecycles = {
+    delivery: {
+      name: 'DevSecOps', gate: 'Checkpoint', headings: ['Governance', 'Secure development'],
+      phases: [
+        ['Plan', 'Classify', 'Security criteria', 'Name the risk owner and agree the security level and data scope.', 'Define acceptance criteria, security and privacy requirements, and likely threats.', true],
+        ['Design', 'Choose concept', 'Threat modeling', 'Compare architecture and supplier risks. Record the security case.', 'Model threats and turn mitigations into owned, testable requirements.', true],
+        ['Code', 'Ready to build', 'Secure coding and review', 'Confirm the threat model, backlog, pipeline checks and team ownership.', 'Review changes, protect secrets and repositories, and assess dependencies.', true],
+        ['Build', 'Track evidence', 'Build traceability', 'Track security findings, owners and due dates.', 'Produce a signed artifact with an SBOM and provenance.', false],
+        ['Test', 'Review test evidence', 'Security testing', 'Compare test evidence with the agreed security requirements.', 'Test functionality and security, including the running application.', false],
+        ['Release', 'Production go / no-go', 'Release verification', 'Review controls, recovery and monitoring before approving production.', 'Approve a verified, traceable version after the required checks pass.', true],
+        ['Deploy', 'Controlled promotion', 'Rollout and rollback', 'Promote the approved release and confirm the rollout is reversible.', 'Verify the rollout under hardened settings and least-privilege access.', false],
+        ['Operate', 'Handover', 'Maintain service', 'Transfer operations with named owners, dates and evidence.', 'Patch vulnerabilities, maintain backups and respond to incidents.', true],
+        ['Monitor', 'Measure and improve', 'Detection and alerting', 'Review risk, overdue actions and tested requirements.', 'Track live signals and surface issues that may send work back to Plan.', false],
+        ['Retire', 'Closeout', 'Secure shutdown', 'Assign closure ownership and review remaining access and data obligations.', 'Revoke access and handle data under retention requirements.', false]
+      ]
+    },
+    agentic: {
+      name: 'Agentic DevSecOps', gate: 'Human gate', headings: ['Input', 'Output'],
+      phases: [
+        ['Plan', 'Change request', 'Task spec', 'A request, security policies and past incidents.', 'Task spec, security requirements and threat list. A person approves the spec.', true],
+        ['Code', 'Approved task spec', 'Pull request', 'The approved spec, repository and security requirements.', 'A pull request with code and tests.', false],
+        ['Review', 'Pull request', 'Verdict', 'The pull request and the threat list from Plan.', 'Findings, fixes and a verdict. A person approves the merge.', true],
+        ['Build', 'Merged code', 'Signed artifact', 'The merged code and its dependencies.', 'A signed artifact, SBOM and provenance.', false],
+        ['Test', 'Signed artifact', 'Test evidence', 'The artifact, tests from Code and the test environment.', 'Test results and a risk verdict.', false],
+        ['Release', 'Test and build evidence', 'Go or no-go', 'Test evidence, signed artifact, SBOM, provenance and release policy.', 'A recommendation with the evidence pack. A person decides on production.', true],
+        ['Deploy', 'Approved artifact', 'Running service', 'The approved artifact and infrastructure code.', 'A running service and its deploy record.', false],
+        ['Operate', 'Running service', 'Logs and records', 'The service, deploy record, runbook and alerts from Monitor.', 'Logs, incident records and change records.', false],
+        ['Monitor', 'Logs and reports', 'New work', 'Service logs, agent activity records and new vulnerability reports.', 'Alerts for Operate. Tickets and new issues can go back to Plan.', false],
+        ['Retire', 'Decision to retire', 'Closure record', 'The decision to retire and records of infrastructure, changes and credentials.', 'A shutdown plan and closure record. A person approves shutdown and data handling.', true]
+      ]
+    }
+  };
+  const SVG = 'http://www.w3.org/2000/svg';
+  const state = { layout: 'transit', mode: 'delivery', phase: 'Release' };
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const round = (number) => Math.round(number * 10) / 10;
+  const point = (x, y) => [round(x), round(y)];
+
+  function restore(saved) {
+    const previous = saved?.modelContent;
+    if (!previous || !layouts.some((button) => button.dataset.layout === previous.layout) ||
+        !Object.hasOwn(lifecycles, previous.mode) ||
+        !lifecycles[previous.mode].phases.some(([name]) => name === previous.phase)) return;
+    Object.assign(state, { layout: previous.layout, mode: previous.mode, phase: previous.phase });
+  }
+
+  function save() {
+    window.openai?.setWidgetState?.({ modelContent: { ...state }, privateContent: null })?.catch(() => {});
+  }
+
+  function html(tag, className, label) {
+    const element = document.createElement(tag);
+    element.className = className;
+    if (label) element.textContent = label;
+    return element;
+  }
+
+  function svg(parent, tag, attributes) {
+    const element = document.createElementNS(SVG, tag);
+    for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+    parent.append(element);
+    return element;
+  }
+
+  function line(drawing, d, color, width = 1.25, dash) {
+    const attributes = { d, fill: 'none', stroke: `var(${color})`, 'stroke-width': width, 'stroke-linecap': 'round' };
+    if (dash) attributes['stroke-dasharray'] = dash;
+    return svg(drawing, 'path', attributes);
+  }
+
+  function arrow(drawing, center, angle, color) {
+    const [x, y] = center;
+    svg(drawing, 'path', {
+      d: 'M -5 -3 L 0 0 L -5 3', fill: 'none', stroke: `var(${color})`,
+      'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+      transform: `translate(${x} ${y}) rotate(${angle})`
+    });
+  }
+
+  function marker(drawing, position, gated, terminal, active) {
+    const [x, y] = position;
+    if (active) {
+      svg(drawing, 'circle', { cx: x, cy: y, r: 20, fill: 'var(--active)', opacity: .12 });
+      svg(drawing, 'circle', { cx: x, cy: y, r: 15, fill: 'none', stroke: 'var(--active)', 'stroke-opacity': .45 });
+    }
+    const color = gated ? 'var(--gate)' : active ? 'var(--active)' : 'var(--rail)';
+    const style = { fill: 'var(--background)', stroke: color, 'stroke-width': 1.8 };
+    if (terminal) {
+      svg(drawing, 'rect', { x: x - 8, y: y - 8, width: 16, height: 16, rx: 1, ...style });
+      if (!gated) svg(drawing, 'rect', { x: x - 4, y: y - 4, width: 8, height: 8, fill: color });
+    }
+    if (gated) {
+      const radius = terminal ? 4.5 : 8;
+      svg(drawing, 'path', { d: `M ${x} ${y - radius} l ${radius} ${radius} -${radius} ${radius} -${radius} -${radius} Z`, ...style });
+    } else if (!terminal) {
+      svg(drawing, 'circle', { cx: x, cy: y, r: 5, ...style });
+    }
+  }
+
+  function createStation(phase, model) {
+    const [name, , , , , gated] = phase;
+    const button = html('button', 'btn btn-ghost', name);
+    button.type = 'button';
+    button.dataset.phase = name;
+    const annotations = [name];
+    if (gated) annotations.push(model.gate);
+    if (name === 'Retire') annotations.push('End of lifecycle');
+    button.setAttribute('aria-label', annotations.join(', '));
+    button.setAttribute('aria-pressed', String(name === state.phase));
+    return button;
+  }
+
+  function position(element, [x, y]) {
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+  }
+
+  function drawTransitFeedback(drawing, stations, active, rail, vertical) {
+    const [planX, planY] = stations[0];
+    const planEntry = vertical ? point(planX + 12, planY) : point(planX, planY + 12);
+    const junctions = stations.map(([x, y]) => vertical ? point(rail, y) : point(x, rail));
+    const path = (points) => `M ${points.map(([x, y]) => `${x} ${y}`).join(' L ')}`;
+    const branches = svg(drawing, 'g', { class: 'ds-feedback-branches' });
+
+    line(branches, path([junctions[0], junctions[4]]), '--return-guide', 1.35, '4 5');
+    stations.slice(1).forEach((station, index) => {
+      line(branches, path([station, junctions[index + 1]]), '--return-guide', 1.35, '4 5');
+    });
+    for (const [x, y] of junctions.slice(0, 5)) {
+      svg(branches, 'circle', { cx: x, cy: y, r: 2, fill: 'var(--return-guide)' });
+    }
+
+    const route = svg(drawing, 'g', { class: 'ds-feedback-active' });
+    let selectedRoute = path([stations[active], junctions[active], junctions[0], planEntry]);
+    if (active === 0) {
+      const bend = vertical ? [planX + 8, planY - 27, rail - 2, planY - 27] : [planX - 28, planY + 10, planX - 28, rail - 8];
+      selectedRoute = `M ${planX} ${planY} C ${bend.join(' ')} ${junctions[0].join(' ')} L ${planEntry.join(' ')}`;
+    }
+    line(route, selectedRoute, '--return', 2.3, '5 4');
+    arrow(route, planEntry, vertical ? 180 : -90, '--return');
+  }
+
+  function transitGeometry(drawing, width, active) {
+    if (width <= 425) return narrowTransitGeometry(drawing, width, active);
+    const first = clamp(width * .12, 29, 90);
+    const last = width - clamp(width * .12, 37, 90);
+    const step = (last - first) / 4;
+    const top = 61;
+    const bottom = 181;
+    const bend = width - 8;
+    const stations = Array.from({ length: 10 }, (_, index) => {
+      const rowIndex = index < 5 ? index : 9 - index;
+      return point(first + step * rowIndex, index < 5 ? top : bottom);
+    });
+    for (const y of [top - 13, top + 13, bottom - 13, bottom + 13]) {
+      line(drawing, `M ${first} ${y} H ${last}`, '--guide', 1);
+    }
+    drawTransitFeedback(drawing, stations, active, (top + bottom) / 2, false);
+
+    stations.slice(0, -1).forEach(([x, y], index) => {
+      const [nextX, nextY] = stations[index + 1];
+      const selected = index === active || index + 1 === active;
+      const color = selected ? '--active' : '--rail';
+      const weight = selected ? 2.5 : 1.35;
+      if (index === 4) {
+        line(drawing, `M ${x} ${y} C ${bend} ${y} ${bend} ${y + 18} ${bend} ${y + 32} V ${nextY - 32} C ${bend} ${nextY - 18} ${bend} ${nextY} ${nextX} ${nextY}`, color, weight);
+        arrow(drawing, point(bend, (y + nextY) / 2), 90, color);
+      } else {
+        line(drawing, `M ${x} ${y} H ${nextX}`, color, weight);
+        arrow(drawing, point((x + nextX) / 2, y), nextX > x ? 0 : 180, color);
+      }
+    });
+    return {
+      stations,
+      labels: stations.map(([x, y], index) => point(x, y + (index < 5 ? -35 : 33)))
+    };
+  }
+
+  function narrowTransitGeometry(drawing, width, active) {
+    const left = width * .3;
+    const right = width * .7;
+    const top = 33;
+    const bottom = 313;
+    const stations = Array.from({ length: 10 }, (_, index) =>
+      index < 5 ? point(left, top + index * 70) : point(right, bottom - (index - 5) * 70));
+    drawTransitFeedback(drawing, stations, active, width / 2, true);
+    stations.slice(0, -1).forEach(([x, y], index) => {
+      const [nextX, nextY] = stations[index + 1];
+      const selected = index === active || index + 1 === active;
+      const color = selected ? '--active' : '--rail';
+      const weight = selected ? 2.5 : 1.35;
+      if (index === 4) {
+        line(drawing, `M ${x} ${y} C ${x} ${y + 39} ${nextX} ${y + 39} ${nextX} ${nextY}`, color, weight);
+        arrow(drawing, point(width / 2, bottom + 29.25), 0, color);
+      } else {
+        line(drawing, `M ${x} ${y} V ${nextY}`, color, weight);
+        arrow(drawing, point(x, (y + nextY) / 2), nextY > y ? 90 : -90, color);
+      }
+    });
+    return {
+      stations,
+      labels: stations.map(([, y], index) => point(index < 5 ? 41 : width - 41, y))
+    };
+  }
+
+  function orbitGeometry(drawing, width, active) {
+    const centerX = width / 2;
+    const centerY = 153;
+    const radiusX = width * (width < 430 ? .335 : .37);
+    const radiusY = 103;
+    const angle = (index) => (150 + index * 30) * Math.PI / 180;
+    const ellipse = (theta) => point(centerX + radiusX * Math.cos(theta), centerY + radiusY * Math.sin(theta));
+    const stations = Array.from({ length: 9 }, (_, index) => ellipse(angle(index)));
+    stations.push(point(centerX + radiusX * .55, 278));
+    const [planX, planY] = stations[0];
+    const [monitorX, monitorY] = stations[8];
+    const [retireX, retireY] = stations[9];
+    const wide = width >= 430;
+    svg(drawing, 'ellipse', { cx: centerX, cy: centerY, rx: radiusX - 17, ry: radiusY - 17, fill: 'none', stroke: 'var(--guide)' });
+    svg(drawing, 'ellipse', { cx: centerX, cy: centerY, rx: radiusX - 36, ry: radiusY - 36, fill: 'none', stroke: 'var(--guide)' });
+    const [sourceX, sourceY] = stations[active];
+    const route = svg(drawing, 'g', { class: 'ds-feedback-active' });
+    if (active === 0) {
+      line(route, `M ${planX} ${planY} C ${planX - 18} ${planY + 29} ${planX + 35} ${planY + 37} ${planX + 10} ${planY + 8}`, '--return', 2, '5 4');
+      arrow(route, point(planX + 10, planY + 8), -131, '--return');
+    } else {
+      const approachY = (centerY + planY) / 2;
+      const direction = Math.atan2(planY - approachY, planX - centerX);
+      const entry = point(planX - 12 * Math.cos(direction), planY - 12 * Math.sin(direction));
+      line(route, `M ${sourceX} ${sourceY} Q ${centerX} ${approachY} ${entry[0]} ${entry[1]}`, '--return', 2, '5 4');
+      arrow(route, entry, direction * 180 / Math.PI, '--return');
+    }
+    const exitColor = active >= 8 ? '--active' : '--rail';
+    line(drawing, `M ${monitorX} ${monitorY} Q ${monitorX + 8} ${retireY} ${retireX} ${retireY}`, exitColor, active >= 8 ? 2.5 : 1.35);
+    arrow(drawing, point(retireX + 11, retireY - 2), 190, exitColor);
+
+    stations.slice(0, 8).forEach(([x, y], index) => {
+      const [nextX, nextY] = stations[index + 1];
+      const selected = index === active || index + 1 === active;
+      const color = selected ? '--active' : '--rail';
+      line(drawing, `M ${x} ${y} A ${radiusX} ${radiusY} 0 0 1 ${nextX} ${nextY}`, color, selected ? 2.5 : 1.35);
+      const middle = angle(index + .5);
+      const direction = Math.atan2(radiusY * Math.cos(middle), -radiusX * Math.sin(middle)) * 180 / Math.PI;
+      arrow(drawing, ellipse(middle), direction, color);
+    });
+
+    return {
+      stations,
+      labels: stations.map(([x, y], index) => {
+        if (index === 9) return point(x, y + 32);
+        if (!wide && (index === 1 || index === 7)) return point(x + (index === 1 ? 49 : -49), y);
+        const theta = angle(index);
+        const sideOffset = wide ? 43 : index === 3 || index === 5 ? 54 : 24;
+        return point(x + Math.cos(theta) * sideOffset, y + Math.sin(theta) * 31);
+      })
+    };
+  }
+
+  function drawMap(model) {
+    const width = stage.clientWidth;
+    const height = stage.clientHeight;
+    if (!width || !height) return;
+    const active = model.phases.findIndex(([name]) => name === state.phase);
+    const drawing = document.createElementNS(SVG, 'svg');
+    drawing.setAttribute('class', 'ds-drawing');
+    drawing.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    drawing.setAttribute('aria-hidden', 'true');
+    const geometry = state.layout === 'transit' ? transitGeometry : orbitGeometry;
+    const { stations, labels } = geometry(drawing, width, active);
+    model.phases.forEach((phase, index) => marker(drawing, stations[index], phase[5], index === 9, index === active));
+    stage.querySelector('.ds-drawing')?.remove();
+    stage.prepend(drawing);
+    stage.querySelectorAll('.ds-station').forEach((station, index) => {
+      const [x, y] = labels[index];
+      const padding = station.offsetWidth / 2 + 2;
+      position(station, point(clamp(x, padding, width - padding), y));
+    });
+  }
+
+  function renderTracks(model) {
+    const headings = html('div', 'ds-track-labels text-small');
+    const left = html('span', 'ds-track-head', model.headings[0]);
+    left.append(html('span', ''));
+    const right = html('span', 'ds-track-head');
+    right.append(html('span', ''), model.headings[1]);
+    headings.append(left, html('span', ''), right);
+    stage.append(headings);
+
+    const rows = html('div', 'ds-track-rows');
+    for (const phase of model.phases) {
+      const [name, before, after, , , gated] = phase;
+      const row = html('div', 'ds-track-row');
+      const button = createStation(phase, model);
+      if (name === 'Retire') {
+        const cap = html('span', gated ? 'ds-terminal ds-gated' : 'ds-terminal');
+        cap.setAttribute('aria-hidden', 'true');
+        button.append(cap);
+      } else if (gated) {
+        const diamond = html('span', 'ds-diamond');
+        diamond.setAttribute('aria-hidden', 'true');
+        button.append(diamond);
+      }
+      const station = html('div', 'ds-track-station');
+      station.append(button);
+      row.append(html('span', 'ds-track-cell text-small', before), station, html('span', 'ds-track-cell text-small', after));
+      rows.append(row);
+    }
+    stage.append(rows);
+  }
+
+  function syncSelection(model) {
+    for (const button of stage.querySelectorAll('[data-phase]')) {
+      const selected = button.dataset.phase === state.phase;
+      button.setAttribute('aria-pressed', String(selected));
+      if (state.layout === 'tracks') button.closest('.ds-track-row').classList.toggle('ds-current', selected);
+    }
+    const [name, , , first, second, gated] = model.phases.find(([label]) => label === state.phase);
+    const status = [gated ? model.gate : '', name === 'Retire' ? 'End of lifecycle' : ''].filter(Boolean);
+    phaseHeading.textContent = name;
+    phaseStatus.textContent = status.join(' · ');
+    leftLabel.textContent = model.headings[0];
+    rightLabel.textContent = model.headings[1];
+    leftDetail.textContent = first;
+    rightDetail.textContent = second;
+    if (state.layout !== 'tracks') drawMap(model);
+  }
+
+  function render() {
+    const model = lifecycles[state.mode];
+    for (const button of layouts) button.setAttribute('aria-pressed', String(button.dataset.layout === state.layout));
+    for (const button of modes) button.setAttribute('aria-pressed', String(button.dataset.mode === state.mode));
+    keyLabel.textContent = model.gate;
+    const classes = { transit: 'ds-map', orbit: 'ds-orbit', tracks: 'ds-tracks' };
+    stage.className = `ds-stage ${classes[state.layout]}`;
+    stage.setAttribute('aria-label', `${model.name} lifecycle phases`);
+    stage.replaceChildren();
+    if (state.layout === 'tracks') {
+      renderTracks(model);
+    } else {
+      for (const phase of model.phases) {
+        const station = html('div', 'ds-station');
+        station.append(createStation(phase, model));
+        stage.append(station);
+      }
+    }
+    syncSelection(model);
+  }
+
+  root.addEventListener('click', (event) => {
+    const button = event.target.closest('button');
+    if (!button || !root.contains(button) || button.getAttribute('aria-pressed') === 'true') return;
+    const { layout, mode, phase } = button.dataset;
+    if (phase) {
+      state.phase = phase;
+      syncSelection(lifecycles[state.mode]);
+    } else {
+      if (layout) state.layout = layout;
+      if (mode) {
+        const oldIndex = lifecycles[state.mode].phases.findIndex(([name]) => name === state.phase);
+        state.mode = mode;
+        const target = lifecycles[mode].phases;
+        if (!target.some(([name]) => name === state.phase)) state.phase = target[oldIndex][0];
+      }
+      render();
+    }
+    save();
+  });
+
+  restore(window.openai?.widgetState);
+  render();
+  new ResizeObserver(() => {
+    if (state.layout !== 'tracks') drawMap(lifecycles[state.mode]);
+  }).observe(stage);
+  window.addEventListener('openai:set_globals', (event) => {
+    restore(event.detail?.globals?.widgetState);
+    render();
+  });
+})();
+</script>

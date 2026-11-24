@@ -1,0 +1,582 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Source+Sans+3:wght@400;600&amp;display=swap">
+<div class="viz-dotted-background" id="devsecops-selected-phase-trace">
+  <style>
+    #devsecops-selected-phase-trace { padding: 6px; }
+    #devsecops-selected-phase-trace .st-page {
+      --paper: #171b1e;
+      --ink: #f4ede1;
+      --muted: #babbb6;
+      --line: #41474a;
+      --connector: #778780;
+      --accent: #f3ab76;
+      --evidence: #b6ccc2;
+      --serif: "Newsreader", Georgia, serif;
+      --sans: "Source Sans 3", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", monospace;
+      background: var(--paper);
+      color: var(--ink);
+      color-scheme: dark;
+      font: 400 1rem/1.48 var(--sans);
+      padding: clamp(15px, 3.5vw, 34px);
+      border-radius: 3px;
+      container-type: inline-size;
+    }
+    #devsecops-selected-phase-trace :is(h1, h3, p, dl, dd, ol, ul) { margin: 0; }
+    #devsecops-selected-phase-trace .st-header {
+      border-block-start: 2px solid var(--ink);
+      padding-block-start: 9px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 2px 18px;
+    }
+    #devsecops-selected-phase-trace .st-header h1 { font: 600 1.15rem/1.22 var(--sans); }
+    #devsecops-selected-phase-trace .st-context { color: var(--muted); font: 400 .8rem/1.45 var(--sans); }
+    #devsecops-selected-phase-trace .st-map { position: relative; isolation: isolate; }
+    #devsecops-selected-phase-trace .st-grid {
+      position: relative;
+      padding: 23px 14px 25px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 51px 23px;
+      list-style: none;
+    }
+    #devsecops-selected-phase-trace .st-grid > li { display: flex; min-width: 0; }
+    #devsecops-selected-phase-trace .st-phase {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      min-width: 0;
+      min-height: 100px;
+      padding: 9px 10px 10px;
+      text-align: start;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      background: var(--paper);
+      cursor: var(--cursor-interaction, pointer);
+    }
+    #devsecops-selected-phase-trace .st-phase[data-gate] { border-color: var(--accent); }
+    #devsecops-selected-phase-trace .st-phase[data-related]:not([data-gate]) { border-color: var(--connector); }
+    #devsecops-selected-phase-trace .st-phase:hover { background: color-mix(in srgb, var(--ink) 8%, var(--paper)); }
+    #devsecops-selected-phase-trace .st-phase[aria-pressed="true"] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+    #devsecops-selected-phase-trace :is(button, a):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    #devsecops-selected-phase-trace .st-num { font: 500 .69rem/1.3 var(--mono); color: var(--muted); }
+    #devsecops-selected-phase-trace .st-name { margin-block-start: 3px; font: 500 1.36rem/1.02 var(--serif); }
+    #devsecops-selected-phase-trace .st-out { margin-block-start: 4px; color: var(--muted); font: 400 .8125rem/1.23 var(--sans); overflow-wrap: anywhere; }
+    #devsecops-selected-phase-trace .st-gate { margin-block-start: 6px; color: var(--accent); font: 500 .625rem/1.2 var(--mono); letter-spacing: .075em; text-transform: uppercase; }
+    #devsecops-selected-phase-trace .st-phase[aria-pressed="true"] > span { color: inherit; }
+    #devsecops-selected-phase-trace .st-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    #devsecops-selected-phase-trace .st-bridge-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      padding-inline: .58em;
+      background: var(--paper);
+      color: var(--evidence);
+      font: 500 .75rem/1.35 var(--mono);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    #devsecops-selected-phase-trace .st-trace {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-block: 1px solid var(--line);
+      padding: 11px 0 12px;
+      gap: 10px 0;
+    }
+    #devsecops-selected-phase-trace .st-trace-item { padding-inline: 14px; min-width: 0; }
+    #devsecops-selected-phase-trace .st-trace-item:first-child { padding-inline-start: 1px; }
+    #devsecops-selected-phase-trace .st-trace-item + .st-trace-item { border-inline-start: 1px solid var(--line); }
+    #devsecops-selected-phase-trace .st-route-label {
+      display: flex;
+      align-items: center;
+      gap: .5em;
+      margin-block-end: 3px;
+      color: var(--evidence);
+      text-transform: uppercase;
+      font: 500 .6875rem/1.3 var(--mono);
+      letter-spacing: .02em;
+    }
+    #devsecops-selected-phase-trace .st-route-label[data-kind="gate"] { color: var(--accent); }
+    #devsecops-selected-phase-trace .st-route-label[data-kind="feedback"] { color: var(--muted); }
+    #devsecops-selected-phase-trace .st-route-label[data-kind="gate"]::before {
+      content: "";
+      inline-size: 6px;
+      block-size: 6px;
+      border: 1px solid currentColor;
+      transform: rotate(45deg);
+      margin-inline: 2px;
+    }
+    #devsecops-selected-phase-trace .st-trace dd { font: 500 1.18rem/1.14 var(--serif); text-wrap: pretty; }
+    #devsecops-selected-phase-trace .st-qualifier { display: block; margin-block-start: 4px; color: var(--muted); font: 400 .79rem/1.24 var(--sans); }
+    #devsecops-selected-phase-trace .st-panel { display: grid; grid-template-columns: minmax(135px, .38fr) minmax(0, 1fr); gap: 14px 24px; padding-block: 21px 15px; }
+    #devsecops-selected-phase-trace .st-panel h3 { font: 500 clamp(1.65rem, 4cqw, 2.35rem)/1 var(--serif); margin-block-start: 3px; }
+    #devsecops-selected-phase-trace .st-panel p { color: var(--muted); font-size: .9375rem; margin-block-start: 4px; }
+    #devsecops-selected-phase-trace .st-panel-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; align-items: baseline; }
+    #devsecops-selected-phase-trace .st-panel-facts dt { color: var(--accent); font: 500 .69rem/1.5 var(--mono); text-transform: uppercase; letter-spacing: .035em; }
+    #devsecops-selected-phase-trace .st-panel-facts dd { font-size: .9375rem; }
+    #devsecops-selected-phase-trace .st-panel-facts ul { padding: 0; display: grid; gap: 3px; list-style: none; }
+    #devsecops-selected-phase-trace .st-panel-facts strong { font-weight: 600; color: var(--evidence); }
+    #devsecops-selected-phase-trace .st-feedback { padding-block-start: 10px; border-block-start: 1px solid var(--line); font-size: .88rem; color: var(--muted); }
+    #devsecops-selected-phase-trace .st-feedback button { background: transparent; border: 0; font: inherit; color: var(--accent); text-decoration: underline; text-underline-offset: .2em; padding: 0; cursor: var(--cursor-interaction, pointer); }
+    #devsecops-selected-phase-trace .st-feedback span { color: var(--accent); margin-inline-end: .5em; }
+    #devsecops-selected-phase-trace .st-page .st-heading-link { color: inherit; text-decoration: none; }
+    #devsecops-selected-phase-trace .st-heading-link:hover { text-decoration: underline; }
+    @container (max-width: 620px) {
+      #devsecops-selected-phase-trace .st-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 16px 0; gap: 6px 8px; }
+      #devsecops-selected-phase-trace .st-phase { flex-direction: row; align-items: baseline; gap: 7px; min-height: 44px; padding: 8px 9px; }
+      #devsecops-selected-phase-trace .st-name { font-size: 1.18rem; }
+      #devsecops-selected-phase-trace :is(.st-out, .st-gate, .st-connectors, .st-bridge-label) { display: none; }
+      #devsecops-selected-phase-trace .st-phase[data-gate]::after { content: ""; position: absolute; inset: 9px 9px auto auto; width: 5px; height: 5px; border: 1px solid currentColor; color: var(--accent); transform: rotate(45deg); }
+      #devsecops-selected-phase-trace .st-phase[data-gate][aria-pressed="true"]::after { color: #7f3e16; }
+      #devsecops-selected-phase-trace .st-panel { grid-template-columns: minmax(0, 1fr); }
+    }
+    @container (max-width: 425px) {
+      #devsecops-selected-phase-trace .st-trace { grid-template-columns: 1fr; gap: 9px; }
+      #devsecops-selected-phase-trace .st-trace-item { padding: 0; }
+      #devsecops-selected-phase-trace .st-trace-item + .st-trace-item { border-inline-start: 0; }
+      #devsecops-selected-phase-trace .st-panel-facts { grid-template-columns: 1fr; gap: 3px; }
+      #devsecops-selected-phase-trace .st-panel-facts dd + dt { margin-block-start: 7px; }
+    }
+  /* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+</style>
+  <div class="st-page">
+    <div class="st-header">
+      <h1>The agent handoffs</h1>
+      <span class="st-context">Agentic DevSecOps · Lifecycle mapping [inference]</span>
+    </div>
+    <div class="st-map">
+      <svg class="st-connectors" aria-hidden="true"></svg>
+      <ol class="st-grid" aria-label="Agentic DevSecOps phases"></ol>
+      <span class="st-bridge-label" aria-hidden="true" hidden>Test evidence</span>
+    </div>
+    <div aria-live="polite" aria-atomic="true">
+      <dl class="st-trace" aria-label="Selected phase handoffs"></dl>
+      <div class="st-panel" id="st-selected-phase">
+        <div>
+          <span class="st-num" data-st-num></span>
+          <h3 id="st-detail-heading"><a class="sec-link st-heading-link" href="#st-detail-heading" data-st-name>Release</a></h3>
+          <p data-st-purpose></p>
+        </div>
+        <dl class="st-panel-facts"></dl>
+      </div>
+    </div>
+    <p class="st-feedback"><span aria-hidden="true">↰</span>Any phase can send feedback <button type="button" data-st-planning>back to Plan</button>.</p>
+  </div>
+</div>
+<script type="application/json" id="st-phase-data">
+[
+  {
+    "name": "Plan",
+    "purpose": "Turn a request into a spec",
+    "shortOutput": "Task spec",
+    "input": "Issue or change request, security policies, past incidents and any existing threat register.",
+    "output": "Task spec, security requirements and a threat list.",
+    "gate": "A person approves the spec.",
+    "risks": [
+      [
+        "Untrusted input",
+        "The request text can carry hidden instructions."
+      ],
+      [
+        "Human approval",
+        "A wrong spec steers every later phase."
+      ]
+    ]
+  },
+  {
+    "name": "Code",
+    "purpose": "Write the change",
+    "shortOutput": "Pull request",
+    "input": "Approved task spec, the repository and the security requirements.",
+    "output": "A branch with code and tests, opened as a pull request.",
+    "gate": null,
+    "risks": [
+      [
+        "Untrusted input",
+        "Repository files and web pages the agent reads can carry instructions."
+      ],
+      [
+        "Agent access",
+        "The agent can write to the repository."
+      ]
+    ]
+  },
+  {
+    "name": "Review",
+    "purpose": "Check the change",
+    "shortOutput": "Verdict",
+    "input": "The pull request and the threat list from planning.",
+    "output": "Findings, fixes and a verdict to approve or reject.",
+    "gate": "A person approves the merge.",
+    "risks": [
+      [
+        "Untrusted input",
+        "The pull request under review can carry instructions for the reviewing agent."
+      ],
+      [
+        "Human approval",
+        "An agent approving another agent’s change is not an independent check."
+      ]
+    ]
+  },
+  {
+    "name": "Build",
+    "purpose": "Produce the artifact",
+    "shortOutput": "Signed artifact",
+    "input": "The merged code and its dependencies.",
+    "output": "Signed artifact, SBOM and provenance.",
+    "gate": null,
+    "risks": [
+      [
+        "Agent access",
+        "The build holds signing keys and pulls in dependencies."
+      ],
+      [
+        "Traceable handoffs",
+        "Without provenance, it is hard to tell what produced the artifact."
+      ]
+    ]
+  },
+  {
+    "name": "Test",
+    "purpose": "Try to break it",
+    "shortOutput": "Test evidence",
+    "input": "The signed artifact, the tests from the pull request (carried over from Code) and a test environment.",
+    "output": "Test results and a risk verdict.",
+    "gate": null,
+    "risks": [
+      [
+        "Agent access",
+        "The agent runs attacks, and a test environment connected to production could be hit."
+      ],
+      [
+        "Traceable handoffs",
+        "A verdict without the test results cannot be checked."
+      ]
+    ]
+  },
+  {
+    "name": "Release",
+    "purpose": "Check against policy",
+    "shortOutput": "Go or no go",
+    "input": "Test results and risk verdict, the signed artifact, SBOM, provenance and the release policy.",
+    "output": "A go or no go recommendation with the evidence pack.",
+    "gate": "A person decides on production.",
+    "risks": [
+      [
+        "Human approval",
+        "Going to production is the high-impact action."
+      ],
+      [
+        "Traceable handoffs",
+        "The decision is only as good as the evidence pack."
+      ]
+    ]
+  },
+  {
+    "name": "Deploy",
+    "purpose": "Roll out the artifact",
+    "shortOutput": "Running service",
+    "input": "The approved artifact and the infrastructure code.",
+    "output": "The running service and a deploy record.",
+    "gate": null,
+    "risks": [
+      [
+        "Agent access",
+        "The agent holds production credentials."
+      ],
+      [
+        "Traceable handoffs",
+        "The deploy record ties the running service to the approved artifact."
+      ]
+    ]
+  },
+  {
+    "name": "Operate",
+    "purpose": "Run and respond",
+    "shortOutput": "Logs and records",
+    "input": "The running service, the deploy record, the runbook and alerts from monitoring.",
+    "output": "Logs, incident records and change records.",
+    "gate": null,
+    "risks": [
+      [
+        "Agent access",
+        "A responding agent can change production."
+      ],
+      [
+        "Traceable handoffs",
+        "A fix made during an incident still needs a record of what changed."
+      ]
+    ]
+  },
+  {
+    "name": "Monitor",
+    "purpose": "Watch the service and the agents",
+    "shortOutput": "New work",
+    "input": "Logs from the service, records of what the agents did, and new vulnerability reports.",
+    "output": "Alerts, incident tickets and new issues.",
+    "gate": null,
+    "risks": [
+      [
+        "Untrusted input",
+        "Logs and vulnerability reports are outside text."
+      ],
+      [
+        "Traceable handoffs",
+        "An agent action that leaves no record cannot be monitored."
+      ]
+    ]
+  },
+  {
+    "name": "Retire",
+    "purpose": "Shut the service down",
+    "shortOutput": "Closure record",
+    "input": "The decision to retire, and the infrastructure code, change records and the list of credentials the agents hold, which show what the service holds and can reach.",
+    "output": "A shutdown plan. After approval: the service shut down, access revoked, data deleted or archived, and a closure record.",
+    "gate": "A person approves the shutdown and what happens to the data.",
+    "risks": [
+      [
+        "Agent access",
+        "Credentials held by the agents outlive the service unless they are revoked too."
+      ],
+      [
+        "Human approval",
+        "Deleting data cannot be undone."
+      ]
+    ]
+  }
+]
+</script>
+<script>
+(() => {
+  const root = document.getElementById('devsecops-selected-phase-trace');
+  const grid = root.querySelector('.st-grid');
+  const map = root.querySelector('.st-map');
+  const diagram = root.querySelector('.st-connectors');
+  const bridgeLabel = root.querySelector('.st-bridge-label');
+  const trace = root.querySelector('.st-trace');
+  const detail = root.querySelector('.st-panel-facts');
+  const detailName = root.querySelector('[data-st-name]');
+  const detailNumber = root.querySelector('[data-st-num]');
+  const purpose = root.querySelector('[data-st-purpose]');
+  const phases = JSON.parse(document.getElementById('st-phase-data').textContent);
+  const transfers = [
+    'Approved task spec', 'Pull request', 'Merged code', 'Signed artifact', 'Test results and risk verdict',
+    'Approved artifact', 'Running service and deploy record', 'Logs and records'
+  ];
+  const conditions = { 0: 'If the spec is approved', 2: 'If the merge is approved', 5: 'If production is approved' };
+  const namespace = 'http://www.w3.org/2000/svg';
+  const copper = 'var(--accent)';
+  const sage = 'var(--evidence)';
+  const rail = 'var(--connector)';
+  let selected = 5;
+
+  function element(tag, name, text) {
+    const node = document.createElement(tag);
+    if (name) node.className = name;
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function mark(tag, attributes) {
+    const node = document.createElementNS(namespace, tag);
+    for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+    diagram.append(node);
+    return node;
+  }
+
+  function elbow(points, radius = 9) {
+    let d = `M ${points[0].join(' ')}`;
+    for (let index = 1; index < points.length - 1; index++) {
+      const [x, y] = points[index];
+      const tangent = ([endX, endY]) => {
+        const dx = endX - x;
+        const dy = endY - y;
+        const fraction = Math.min(.45, radius / (Math.hypot(dx, dy) || 1));
+        return `${x + dx * fraction} ${y + dy * fraction}`;
+      };
+      d += ` L ${tangent(points[index - 1])} Q ${x} ${y} ${tangent(points[index + 1])}`;
+    }
+    return `${d} L ${points.at(-1).join(' ')}`;
+  }
+
+  function route(points, { color = rail, active = false, dash, opacity = 1 } = {}) {
+    const end = points.at(-1);
+    const previous = points.at(-2);
+    const turn = Math.atan2(end[1] - previous[1], end[0] - previous[0]) * 180 / Math.PI;
+    const attributes = {
+      d: elbow(points), fill: 'none', stroke: color, opacity,
+      'stroke-width': active ? 1.9 : 1.13, 'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+    };
+    if (dash) attributes['stroke-dasharray'] = dash;
+    mark('path', attributes);
+    mark('path', {
+      d: 'M -4.8 -3 L 0 0 -4.8 3', fill: 'none', stroke: color, opacity,
+      'stroke-width': active ? 1.8 : 1.1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+      transform: `translate(${end.join(' ')}) rotate(${turn})`
+    });
+  }
+
+  function positioned(box) {
+    const origin = map.getBoundingClientRect();
+    const rect = box.getBoundingClientRect();
+    const left = rect.left - origin.left;
+    const right = rect.right - origin.left;
+    const top = rect.top - origin.top;
+    const bottom = rect.bottom - origin.top;
+    return { left, right, top, bottom, x: (left + right) / 2, y: (top + bottom) / 2 };
+  }
+
+  function draw() {
+    diagram.replaceChildren();
+    bridgeLabel.hidden = true;
+    if (getComputedStyle(diagram).display === 'none') return;
+    const boxes = buttons.map(positioned);
+    const [plan, , , , test, release, deploy, operate, monitor] = boxes;
+    const width = map.clientWidth;
+    const height = map.clientHeight;
+    const middle = (test.bottom + release.top) / 2;
+    diagram.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+    const focus = boxes[selected];
+    if (selected > 0) {
+      const toLeft = selected >= 5;
+      const start = toLeft ? focus.bottom : focus.top;
+      const gutter = toLeft ? height - 8 : 8;
+      const spine = toLeft ? 4 : plan.x;
+      const branch = [[focus.x, start], [focus.x, gutter], [spine, gutter]];
+      branch.push(...(toLeft ? [[spine, plan.y], [plan.left - 2, plan.y]] : [[plan.x, plan.top - 2]]));
+      route(branch, { color: selected === 8 ? copper : rail, active: selected === 8, dash: '3.5 4.5', opacity: selected === 8 ? 1 : .8 });
+    }
+
+    for (let index = 0; index < transfers.length; index++) {
+      const source = boxes[index];
+      const destination = boxes[index + 1];
+      const active = selected === index || selected === index + 1;
+      const color = active ? (index === 5 ? copper : sage) : rail;
+      const points = index === 4
+        ? [[source.x, source.bottom], [source.x, middle], [destination.x, middle], [destination.x, destination.top - 2]]
+        : [[source.right + 2, source.y], [destination.left - 2, destination.y]];
+      route(points, { color, active, opacity: active ? 1 : .77 });
+    }
+    if (selected === 4 || selected === 5) {
+      bridgeLabel.hidden = false;
+      bridgeLabel.style.left = `${(test.x + release.x) / 2}px`;
+      bridgeLabel.style.top = `${middle}px`;
+    }
+    if (selected === 8) {
+      const y = monitor.top - 12;
+      route([[monitor.x, monitor.top], [monitor.x, y], [operate.x, y], [operate.x, operate.top - 2]], { color: sage, active: true });
+    }
+    if (selected === 5 || selected === 6) {
+      const x = (release.right + deploy.left) / 2;
+      const y = (release.y + deploy.y) / 2;
+      mark('path', { d: `M ${x} ${y - 17} l 3.4 3.4 -3.4 3.4 -3.4 -3.4 Z`, fill: copper });
+    }
+  }
+
+  function createPhase({ name, shortOutput, gate }, index) {
+    const item = element('li');
+    const control = element('button', 'st-phase');
+    control.type = 'button';
+    control.setAttribute('aria-pressed', 'false');
+    control.setAttribute('aria-controls', 'st-selected-phase');
+    control.setAttribute('aria-label', [name, shortOutput, gate ? 'Recommended human gate' : ''].filter(Boolean).join(', '));
+    control.append(element('span', 'st-num', String(index + 1).padStart(2, '0')), element('span', 'st-name', name), element('span', 'st-out', shortOutput));
+    if (gate) {
+      control.dataset.gate = '';
+      control.append(element('span', 'st-gate', 'Human gate'));
+    }
+    control.addEventListener('click', () => select(index, true));
+    item.append(control);
+    grid.append(item);
+    return control;
+  }
+
+  function traceRows(index) {
+    const phase = phases[index];
+    const rows = [];
+    if (index === 0) rows.push(['Into Plan', 'New request']);
+    else if (index === 9) rows.push(['Into Retire', 'Decision to retire']);
+    else rows.push([`${phases[index - 1].name} → ${phase.name}`, transfers[index - 1], conditions[index - 1]]);
+    if (phase.gate) rows.push(['Human gate', phase.gate, '[recommendation]', 'gate']);
+    if (index === 8) rows.push(['Monitor → Operate', 'Alerts'], ['Monitor → Plan', 'Incident tickets and new issues', '', 'feedback']);
+    else if (index === 9) rows.push(['Retire output', 'Closure record', 'After shutdown and data handling']);
+    else rows.push([`${phase.name} → ${phases[index + 1].name}`, transfers[index], conditions[index]]);
+    if (!phase.gate && index !== 8) rows.push([`${phase.name} → Plan`, 'Planning feedback', 'As needed', 'feedback']);
+    return rows;
+  }
+
+  function renderTrace(index) {
+    trace.replaceChildren(...traceRows(index).map(([label, value, qualifier, kind]) => {
+      const item = element('div', 'st-trace-item');
+      const term = element('dt', 'st-route-label', label);
+      if (kind) term.dataset.kind = kind;
+      const description = element('dd', '', value);
+      if (qualifier) description.append(element('span', 'st-qualifier', qualifier));
+      item.append(term, description);
+      return item;
+    }));
+  }
+
+  function renderDetail(index) {
+    const phase = phases[index];
+    detailName.textContent = phase.name;
+    detailNumber.textContent = String(index + 1).padStart(2, '0');
+    purpose.textContent = phase.purpose;
+    const risks = element('ul');
+    for (const [label, text] of phase.risks) {
+      const item = element('li');
+      item.append(element('strong', '', label), ` ${text}`);
+      risks.append(item);
+    }
+    const riskDescription = element('dd');
+    riskDescription.append(risks);
+    detail.replaceChildren(
+      element('dt', '', 'Input'), element('dd', '', phase.input),
+      element('dt', '', 'Output'), element('dd', '', phase.output),
+      element('dt', '', 'Risks [inference]'), riskDescription
+    );
+  }
+
+  function select(index, save = false) {
+    if (index < 0 || index >= phases.length) return;
+    if (save && selected === index) return;
+    selected = index;
+    const near = index === 8 ? [0, 7] : index === 9 ? [] : [index - 1, index + 1].filter((number) => number !== 9);
+    buttons.forEach((button, number) => {
+      button.setAttribute('aria-pressed', String(number === selected));
+      button.toggleAttribute('data-related', near.includes(number));
+    });
+    renderTrace(selected);
+    renderDetail(selected);
+    draw();
+    if (save) window.openai?.setWidgetState?.({ modelContent: { phase: phases[selected].name }, privateContent: null })?.catch(() => {});
+  }
+
+  function applyState(widgetState) {
+    const index = phases.findIndex((phase) => phase.name === widgetState?.modelContent?.phase);
+    select(index >= 0 ? index : 5);
+  }
+
+  const buttons = phases.map(createPhase);
+  root.querySelector('[data-st-planning]').addEventListener('click', () => {
+    select(0, true);
+    buttons[0].focus();
+  });
+  applyState(window.openai?.widgetState);
+  window.addEventListener('openai:set_globals', (event) => applyState(event.detail?.globals?.widgetState));
+  new ResizeObserver(draw).observe(map);
+  document.fonts.ready.then(draw);
+})();
+</script>

@@ -189,3 +189,20 @@ Working notes.
 - Iteration 21 (22 Nov 2026): 0 accepted findings (3 coverage suggestions rejected). Clean count 1.
 - Iteration 22 (22 Nov 2026): 3 findings edited (Visual Studio 2026 scope of allow list, M02 env wording, M01 inference tag), 1 rejected. Clean count 0.
 - Iteration 23 (22 Nov 2026): 0 findings in both views. Clean count 1.
+- Iteration 24 (23 Nov 2026): 2 findings, 1 edited (Copilot Studio auth options scoped to the onboarding wizard), 1 rejected (Visual Studio 2026 scope stays). Clean count 0.
+- Iteration 25 (23 Nov 2026): 3 findings, all edited (OpenTelemetry scoped to Copilot Chat in VS Code, autostart marked experimental, SSRF guidance scoped to OAuth metadata discovery). Clean count 0.
+- Iteration 26 (23 Nov 2026): 2 findings, both edited (M03 sandbox SHOULD scoped to one-click local setup; Visual Studio tool-list reset separated from the 2026 18.7+ trust prompt). Clean count 0.
+- Iteration 27 (23 Nov 2026): clean. Clean count 1.
+- Iteration 28 General (23 Nov 2026): 3 findings, 1 rejected (token passthrough quote exists), 2 edited (CoSAI #26 outbound or inbound; OAuth discovery checks scoped to server-deployed clients). Clean count 0.
+- Iteration 28 Microsoft (23 Nov 2026): 2 findings, 1 edited (Copilot Studio auth, query key and SSE scoped to the standard harness; DLP stays unscoped), 1 rejected again (GSA client prerequisite, no new evidence). Clean count 0.
+- Iteration 29 (23 Nov 2026): General 2 findings edited (M01 serverName scope, M07 Origin scope), Microsoft none. Clean count 0.
+- Iteration 30 (23 Nov 2026): General and Microsoft clean. Clean count 1.
+- Iteration 31 (23 Nov 2026): General 2 findings, 1 edited (M05/cfgf entry point), 1 rejected (M02 local wording). Microsoft none. Clean count 0.
+- Iteration 32 (23 Nov 2026): General none, Microsoft 2 findings edited (M08 coverage wording, Visual Studio 2026 name). Clean count 0.
+- Iteration 33 (23 Nov 2026): General none, Microsoft 4 findings, 1 edited (APIM example wording), 3 rejected (CVE versions, GSA scope, Windows label). Clean count 0.
+- Iteration 34: three findings accepted (M05 token lifetime now sourced to CoSAI via cs35 instead of [inference], M07 check 2 allows restricted IPC, SSE point scoped to the standard harness). Clean count 0.
+- Iteration 35: nine findings, six accepted (gateway scope, autostart exclusions, Azure pinning scope, SSRF client scope, M14 plain words, CoSAI #1 wording), three rejected (BYO verb, workspace prompt, state handle MUST NOT). Clean count 0.
+- Iteration 36: five findings accepted (APIM scope, identity capture default scope, DNS rebinding conditions, OWASP MCP05 validation qualifier, M13 plain words). Clean count 0.
+- Iteration 37: one finding accepted (M05 remediation sentence narrowed to what Mitiga says about rotation). Microsoft view clean. Clean count 0.
+- Iteration 38: four findings, all rejected (confused deputy MUST follows the spec sentence, Codex sentence already follows the identity setup, Invariant and GSA limits are coverage). Clean count 1.
+- Iteration 39: one finding, rejected (autostart "starts" matches the documented default "Start servers that have never run or whose configuration has changed"). Clean count 2. Stop criterion met. "Current as of" and "checked on" stay at 14 November 2026 because the sources were not refetched in this run.

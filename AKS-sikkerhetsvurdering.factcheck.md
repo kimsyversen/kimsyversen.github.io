@@ -2,7 +2,13 @@
 
 Belongs to [AKS-sikkerhetsvurdering.html](AKS-sikkerhetsvurdering.html). Decisions: [AKS-sikkerhetsvurdering.decisions.md](AKS-sikkerhetsvurdering.decisions.md).
 
-Checked 13 Nov 2026. Each source page was fetched that day and the claim was compared with the page text. Four full passes were made. The second led to three added source entries. The third changed the control plane wording in two places and added the REST reference. The fourth read the final page again from the header to the end of the script, including the text the script builds, and found nothing to change. The stylesheet holds no reader text.
+First checked 13 Nov 2026 and fully rechecked 24 Nov 2026 (see the section below). Each source page was fetched that day and the claim was compared with the page text. Four full passes were made. The second led to three added source entries. The third changed the control plane wording in two places and added the REST reference. The fourth read the final page again from the header to the end of the script, including the text the script builds, and found nothing to change. The stylesheet holds no reader text.
+
+Round 9 (24 Nov 2026): the glossary entries on cluster tenancy, root versus privileged and base64 Secrets now link to concepts-security, the Pod Security Standards page and the Kubernetes Secrets page. The node-breakout line and the platform-team ownership line are tagged [inference]. Both audit halves found no wrong claims.
+
+Round 10 (24 Nov 2026): fixed three items, each confirmed by a second persona against live pages. NetworkPolicy selects by pods, namespaces and IP blocks (kubernetes.io network-policies). Ubuntu 22.04 support ends 30 June 2027 (upgrade-os-version) and ACL FIPS needs AKS 1.34 or later (enable-fips-nodes). Pod Sandboxing is Azure Linux only, no Ubuntu, Windows or Azure Container Linux, no FIPS, Trusted Launch or Arm64, and the limits are listed under both kata-vm-isolation and kata-vm-isolation-v2 (use-pod-sandboxing); NAP is not supported with v2.
+
+Round 11 (24 Nov 2026): the outbound control label no longer says it filters traffic, because the outbound type only sets how traffic leaves (egress-outboundtype). The IMDS bullet notes that Azure Policy is unsupported with IMDS restriction (imds-restriction) and that deployment safeguards need the Azure Policy add-on (deployment-safeguards); the combined effect is tagged [inference]. Three other items were rejected: the SSH wording matches concepts-security, the Ingress NGINX deadline wording is correct, and no other claim differed from its source.
 
 ## Claims and verdicts
 
@@ -27,14 +33,14 @@ Checked 13 Nov 2026. Each source page was fetched that day and the claim was com
 | IMDS restriction is preview and covers only pods without hostNetwork. | [imds-restriction](https://learn.microsoft.com/en-us/azure/aks/imds-restriction) | Confirmed |
 | Cilium policies do not cover hostNetwork pods. | [azure-cni-powered-by-cilium](https://learn.microsoft.com/en-us/azure/aks/azure-cni-powered-by-cilium): "Network policies aren't applied to pods using host networking" | Confirmed |
 | NetworkPolicy: both directions open by default, isolation is per direction, needs an enforcing plugin. | [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/) | Confirmed |
-| NAT alone does not filter destinations. | [secure-nat-gateway](https://learn.microsoft.com/en-us/azure/nat-gateway/secure-nat-gateway) | Confirmed |
+| NAT Gateway gives outbound addresses and scale. Microsoft pairs it with Azure Firewall for traffic inspection. | [secure-nat-gateway](https://learn.microsoft.com/en-us/azure/nat-gateway/secure-nat-gateway): "combine outbound SNAT scalability with centralized traffic inspection and threat protection" | Confirmed. The source has no sentence saying NAT does not filter, so the old wording was replaced. |
 | Admission runs after authentication and authorisation, can block some connections, reads bypass it. | [Admission Control](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) | Confirmed |
 | Pod Security Admission enforce acts on pods, not on the owning Deployment. Baseline allows root. Audit and Warn do not reject. | [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/), [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) | Confirmed |
 | Deployment safeguards have Warn and Enforce, with namespace exclusions. | [deployment-safeguards](https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards) | Confirmed |
 | Azure Policy uses Gatekeeper pods. Effects such as Deny and Audit are set in Azure. | [policy-for-kubernetes](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/policy-for-kubernetes) | Confirmed |
 | AKS storage encryption is always on. KMS is an optional extra layer. | [kms-data-encryption-concepts](https://learn.microsoft.com/en-us/azure/aks/kms-data-encryption-concepts) | Confirmed |
 | Secrets Store CSI Driver mounts Key Vault secrets. | [csi-secrets-store-driver](https://learn.microsoft.com/en-us/azure/aks/csi-secrets-store-driver) | Confirmed |
-| `kube-audit-admin` leaves out get and list. `kube-audit` logs them. `guard` category exists. | [monitor-aks](https://learn.microsoft.com/en-us/azure/aks/monitor-aks#aks-audit-policy): "excludes the get and list audit events" | Confirmed |
+| `kube-audit-admin` leaves out get and list. `kube-audit` logs them. | [monitor-aks](https://learn.microsoft.com/en-us/azure/aks/monitor-aks#aks-audit-policy): "excludes the get and list audit events" | Confirmed. The `guard` category is listed without a description in [monitor-aks-reference](https://learn.microsoft.com/en-us/azure/aks/monitor-aks-reference), so the page no longer mentions it. |
 | Defender rescans registry images by activity, so inactive images can fall outside. | [agentless vulnerability assessment](https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure) | Confirmed |
 | Defender documents a Kubernetes alerts simulation tool. | [alerts-containers](https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool) | Confirmed |
 | Image Cleaner does not support Windows node pools or AKS virtual nodes. | [image-cleaner](https://learn.microsoft.com/en-us/azure/aks/image-cleaner) | Confirmed |
@@ -75,15 +81,51 @@ Scope: only the quotes in the figure "How a request gets into AKS". Each source 
 
 The plain-language pass on 16 Nov 2026 changed wording only. One explanation was added: IMDS as "the Azure service on each node that can hand out identity tokens". It rests on the IMDS claims already checked above. `[inference]`
 
+## Full recheck, 24 Nov 2026
+
+All claims above and the request-flow quotes were fetched again on 24 Nov 2026 by four auditors (platform, identity and network, policy and logging, request flow). A second reviewer with a support engineer role fetched the sources again for each proposed change. 16 of 19 were confirmed and applied, 3 were rejected (certificate rotation wording already adequate, flow.txt is a shortened copy with the same facts, control plane upgrades are covered under Versions). Round 1 found no outright errors. Changes:
+
+| Change on the page | Source | Verdict |
+|---|---|---|
+| Root in a container versus root on the node. | No source states it. | `[inference]` tag added |
+| K04: Standard defaults to Privileged, Automatic to Baseline. Gatekeeper fails open. Compliance dashboard. | [deployment-safeguards](https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards): "On AKS Standard clusters, Pod Security Standards default to the `Privileged` level, which doesn't enforce any restrictions." and "`fail-open` model" | Confirmed |
+| K03: CSI driver can sync to a Kubernetes Secret. | [csi-secrets-store-driver](https://learn.microsoft.com/en-us/azure/aks/csi-secrets-store-driver): "Syncs with Kubernetes secrets." The etcd and RBAC consequence is `[inference]`. | Confirmed |
+| Defender daily rescan leaves out images not pushed or pulled in 30 days and not running in a monitored cluster. | [agentless vulnerability assessment](https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure) | Confirmed |
+| K02: Run Command RBAC actions and `disableRunCommand`. | [access-private-cluster](https://learn.microsoft.com/en-us/azure/aks/access-private-cluster) | Confirmed |
+| K08: IMDS restriction on an existing cluster needs a node reimage. Privileged pods and SSH can change iptables rules. | [imds-restriction](https://learn.microsoft.com/en-us/azure/aks/imds-restriction) | Confirmed |
+| Platform-initiated upgrade ignores deprecated API use and can override a Pod Disruption Budget. | [supported-kubernetes-versions](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions) | Confirmed |
+| Ingress NGINX migration targets. | [AKS blog](https://blog.aks.azure.com/2025/11/13/ingress-nginx-update) | Confirmed |
+| Azure Linux 2.0 removal worded as the docs word it. Region status not stated. | [upgrade-os-version](https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version) | Confirmed |
+| Pod Sandboxing: Azure Linux only, no FIPS or Trusted Launch, not assessed by Defender. | [use-pod-sandboxing](https://learn.microsoft.com/en-us/azure/aks/use-pod-sandboxing) | Confirmed |
+| Confidential Containers page says both "Azure Linux only" and "Azure Linux 2.0". Not on Automatic. | [confidential-containers-overview](https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview) | Confirmed |
+| Ubuntu FIPS node pools use Ubuntu 22.04. Azure Linux 3.0 and later and Azure Container Linux also support FIPS. No FIPS with Pod Sandboxing ([use-pod-sandboxing](https://learn.microsoft.com/en-us/azure/aks/use-pod-sandboxing)). | [enable-fips-nodes](https://learn.microsoft.com/en-us/azure/aks/enable-fips-nodes): "Ubuntu 24.04 doesn't currently support FIPS" | Confirmed |
+| jq filter also lists hostIPC. | [deployment-safeguards](https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards) error table | Confirmed. The edited filter was run on three sample pods on 24 Nov 2026: it listed the hostIPC and hostNetwork pods and skipped the plain one. |
+
+Round 8 (24 Nov 2026): Ingress NGINX migration sentence now names Application Gateway for Containers and the application routing Gateway API implementation first, with the Istio add-on as a service mesh option. concepts-network-ingress says "Consider Gateway API ingress with the Istio service mesh add-on" under "Service mesh or advanced ingress requirements", and the Istio add-on page says it "supports both Istio's own ingress traffic management API and the Kubernetes Gateway API". The same ingress page has a Note: "The Istio add-on currently doesn't support Gateway API for Istio ingress traffic". No page says GA or preview, so the conflict is tagged `[unverified]`. Kubescape: no Microsoft Learn page mentions it. kubescape.io calls it a "Cloud Native Computing Foundation (CNCF) incubating project"; cncf.io: "moved to the Incubating maturity level on January 13, 2025". Alert sentence now follows alerts-containers: "The alerts available in an environment depend on the Kubernetes distribution (AKS, EKS, GKE, or Arc-enabled), the installed components, and the specific activities being monitored."
+
+Round 7 (24 Nov 2026) linked "Physical security and hypervisor: Microsoft" to [shared-responsibility](https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility): "Microsoft is responsible for the underlying cloud infrastructure, which includes: Physical security ... Physical hosts ... Hypervisor". Added to Sources.
+
+Round 6 (24 Nov 2026) widened the IMDS unsupported list on the page to match imds-restriction ("Unsupported add-ons include: ..." with virtual nodes and the cluster extensions Flux, Dapr, Azure App Configuration, Azure Machine Learning, Azure Container Storage and Azure Backup).
+
+Round 4 (24 Nov 2026) added two checks from [concepts-security](https://learn.microsoft.com/en-us/azure/aks/concepts-security): K01 seccomp ("Built-in Linux security features such as AppArmor and seccomp are recommended as best practices") and K07 node SSH ("SSH is enabled by default and only accessible using the internal IP address. Disabling SSH ... is in preview").
+
+Round 3 (24 Nov 2026, verified against live pages by a second reviewer): IMDS restriction (imds-restriction) now lists the unsupported add-ons and Windows node pools, and the iptables quote "can be modified with SSH or node-shell, so we recommend using Disable SSH or using a policy to disable privileged pods". Confidential Containers: "isn't supported with... AKS Automatic". Pod Sandboxing GA and preview variants noted. K09 MFA and Conditional Access: concepts-identity says only "A built-in cluster admin certificate that bypasses Entra ID", local-accounts says "non-auditable backdoor"; neither mentions MFA or Conditional Access, so that part is tagged `[inference]`. The "False positives or need context" bullets are tagged `[inference]`.
+
+Round 2 (24 Nov 2026) changed the FIPS and IMDS sentences to the exact scope the sources give, listed seven body-linked pages in Sources, and fixed one awkward sentence in K10.
+
+Not added, low value: newer node OS retirement dates (Ubuntu 20.04 and 22.04, Azure Linux with OS Guard), external OIDC provider (preview), TLS wording for the change lane.
+
 ## Interpretation by AI
+
+Also tagged: the K09 MFA and Conditional Access effect of the admin certificate, and the six bullets under "False positives or need context" (legitimate causes of alerts).
 
 These are tagged `[inference]` on the page and are not stated in a source: the main question in the short version, the platform and app team split, the manual review advice next to tools, the link between attack paths and items, the placement of risks and owners in the risk map, CIS checks of control plane nodes not being visible, service mesh as a security control, IMDS calls as a false positive, and the owner shown per step in the request-flow figure.
 
 ## Gaps
 
 - **No cluster was examined.** The az and kubectl commands were compared with the documentation only.
-- **The jq pod filter** was run on seven sample pods on 13 Nov 2026. It listed the five with hostNetwork, hostPID, a privileged container, a privileged init container or hostPath, and skipped the two plain ones. It has not been run against a live cluster. Tagged `[unverified]` on the page.
-- **Source conflict on Pod Sandboxing.** Its own page has no preview label. [concepts-security](https://learn.microsoft.com/en-us/azure/aks/concepts-security) still says "(preview)". The page follows the feature's own page.
+- **The jq pod filter** was run on seven sample pods on 13 Nov 2026 and, with hostIPC added, on three sample pods on 24 Nov 2026. It listed the five with hostNetwork, hostPID, a privileged container, a privileged init container or hostPath, and skipped the two plain ones. It has not been run against a live cluster. Tagged `[unverified]` on the page.
+- **Pod Sandboxing variants (24 Nov 2026).** use-pod-sandboxing says "`runtimeClassName: kata-vm-isolation` (GA)" and "`kata-vm-isolation-v2` (preview)". The listed limits (Azure Linux only, no FIPS or Trusted Launch, no Defender assessment) apply to both. [concepts-security](https://learn.microsoft.com/en-us/azure/aks/concepts-security) still says "(preview)" for the feature. The page follows the feature's own page.
 - **Azure Linux 2.0 image removal.** The source says removal begins on 31 Oct 2026. Whether images are already gone in a given region is not stated.
 - **Request-flow figure.** The order of the network steps for a user's request (load balancer, ingress, Service, NetworkPolicy, pod) is the common setup and is not stated as one sequence in a single source. Each step has its own quote. The risk ids per step are interpretation by AI. The text-fragment links were not opened in a browser one by one.
 - **TLS at the ingress controller** is left out of the figure. No clean source sentence was found on 16 Nov 2026.

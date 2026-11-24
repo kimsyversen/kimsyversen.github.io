@@ -521,7 +521,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               <p>Shape the solution</p>
             </div>
             <dl class="panel-facts">
-              <dt>Governance</dt><dd><span class="fact-title">Choose concept</span>Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget.</dd>
+              <dt>Governance</dt><dd><span class="fact-title">Choose concept</span>Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget. Complete the DPIA if one is needed.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Threat modeling</span>Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</dd>
               <dt>Risks</dt><dd><a class="fact-link" href="#risks-design">2 governance, 3 secure development</a></dd>
             </dl>
@@ -534,7 +534,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </div>
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Ready to build</span>Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</dd>
-              <dt class="eng">Secure development</dt><dd><span class="fact-title">Secure coding and review</span>Use secure coding standards, review changes, protect secrets and assess dependencies.</dd>
+              <dt class="eng">Secure development</dt><dd><span class="fact-title">Secure coding and review</span>Use secure coding standards, review changes, protect secrets and repositories, and assess dependencies.</dd>
               <dt>Risks</dt><dd><a class="fact-link" href="#risks-code">1 governance, 5 secure development</a></dd>
             </dl>
           </section>
@@ -546,7 +546,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </div>
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Track evidence</span>Track whether security activities are complete. Keep findings, owners and due dates visible.</dd>
-              <dt class="eng">Secure development</dt><dd><span class="fact-title">Build traceability</span>Package from trusted inputs and keep the artifact traceable to its source and dependencies.</dd>
+              <dt class="eng">Secure development</dt><dd><span class="fact-title">Build traceability</span>Build in a hardened environment, sign the artifact, and keep an SBOM and provenance that trace it to its source and dependencies.</dd>
               <dt>Risks</dt><dd><a class="fact-link" href="#risks-build">2 governance, 3 secure development</a></dd>
             </dl>
           </section>
@@ -558,7 +558,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </div>
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Review test evidence</span>Review test evidence against the agreed security requirements and follow unresolved findings to closure.</dd>
-              <dt class="eng">Secure development</dt><dd><span class="fact-title">Security testing</span>Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</dd>
+              <dt class="eng">Secure development</dt><dd><span class="fact-title">Security testing</span>Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration, and test the running application.</dd>
               <dt>Risks</dt><dd><a class="fact-link" href="#risks-test">1 governance, 4 secure development</a></dd>
             </dl>
           </section>
@@ -618,7 +618,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </div>
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Closeout</span>Assign closure ownership and confirm remaining access and data obligations are addressed.</dd>
-              <dt class="eng">Secure development</dt><dd><span class="fact-title">Secure decommissioning</span>Decommission the service, revoke credentials and access, and handle data under retention requirements.</dd>
+              <dt class="eng">Secure development</dt><dd><span class="fact-title">Secure decommissioning</span>Decommission the service, revoke credentials and access, sanitize media, keep an inventory of data-bearing assets, and handle data under retention requirements.</dd>
               <dt>Risks</dt><dd><a class="fact-link" href="#risks-retire">3 governance, 4 secure development</a></dd>
             </dl>
           </section>
@@ -686,7 +686,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Partial.</strong> Ireland's DPC found that Meta stored some user passwords in plain text. The DOJ separately documented that a password retrieved in plain text from a federal portal database was used to access a complainant's email. One case establishes plaintext storage and the other establishes retrieval and misuse. The original requirements remain unknown. NIST specifies storage protections for centrally verified passwords. <a href="https://www.dataprotection.ie/en/news-media/press-releases/DPC-announces-91-million-fine-of-Meta">Irish DPC decision summary, 2024</a> · <a href="https://www.justice.gov/usao-edva/pr/federal-jury-convicts-alexandria-man-charges-relating-deletion-us-government-databases">DOJ conviction announcement, 2026</a> · <a href="https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#passwordver">NIST SP 800-63B-4, password verifiers</a></p>
                     <blockquote>“Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PO.1.2 <span aria-hidden="true">↗</span></a>
-                    <p>Documented case:</p>
+                    <p>Documented case, on plaintext storage only; the DPC cited Articles 5(1)(f), 32(1), 33(1) and 33(5), not missing requirements:</p>
                     <blockquote>“MPIL notified the DPC that it had inadvertently stored certain passwords of social media users in ‘plaintext’ on its internal systems”</blockquote>
                     <a href="https://www.dataprotection.ie/en/news-media/press-releases/DPC-announces-91-million-fine-of-Meta#:~:text=MPIL%20notified%20the%20DPC%20that%20it%20had%20inadvertently%20stored%20certain%20passwords%20of%20social%20media%20users%20in%20%E2%80%98plaintext%E2%80%99%20on%20its%20internal%20systems">Irish Data Protection Commission · Meta fined €91 million, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
@@ -697,7 +697,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Partial.</strong> The House report records that sensitive data at Equifax was unencrypted. It leaves the original requirements and the protection that would have stopped the theft unknown. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">House Oversight report, PDF pp. 3-4</a></p>
                     <blockquote>“protection requirements concerning confidentiality, integrity, availability, and authenticity of all data assets”</blockquote>
                     <a href="https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets">OWASP Top 10:2025 A06 · Requirements and Resource Management <span aria-hidden="true">↗</span></a>
-                    <p>Documented case:</p>
+                    <p>Documented case, on unencrypted data only; the report does not say it was left out of scope:</p>
                     <blockquote>“Attackers sent 9,000 queries on these 48 databases, successfully locating unencrypted personally identifiable information (PII) data 265 times.”</blockquote>
                     <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
@@ -732,7 +732,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Direct for the boundary failure.</strong> Microsoft documented that its enterprise mail system accepted tokens signed with a consumer key. Investigators did not establish how the attacker obtained the key. <a href="https://www.microsoft.com/en-us/msrc/blog/2023/09/results-of-major-technical-investigations-for-storm-0558-key-acquisition">Microsoft investigation, updated 2024</a></p>
                     <blockquote>“Threat modeling is a structured activity for identifying, evaluating, and managing system threats, architectural design flaws, and recommended security mitigations.”</blockquote>
                     <a href="https://owaspsamm.org/model/design/threat-assessment/stream-b/#:~:text=Threat%20modeling%20is%20a%20structured%20activity%20for%20identifying%2C%20evaluating%2C%20and%20managing%20system%20threats%2C%20architectural%20design%20flaws%2C%20and%20recommended%20security%20mitigations.">OWASP SAMM · Threat Modeling <span aria-hidden="true">↗</span></a>
-                    <p>Statistic:</p>
+                    <p>Statistic, not tied to threat modeling; the source does not give a cause:</p>
                     <blockquote>“100% of the applications tested were found to have some form of broken access control.”</blockquote>
                     <a href="https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/#:~:text=100%25%20of%20the%20applications%20tested%20were%20found%20to%20have%20some%20form%20of%20broken%20access%20control.">OWASP Top 10:2025 A01 · Broken Access Control <span aria-hidden="true">↗</span></a>
                   </div>
@@ -792,7 +792,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Direct for the flaw and data access.</strong> Progress identified a SQL injection flaw in MOVEit Transfer and reported that attackers exploited it to gain unauthorized access to data. The vendor's review and testing history remains unknown. <a href="https://www.progress.com/docs/default-source/moveit-docs/moveit-transfer_moveit-cloud-vulnerabilities-customer-faq_posted.pdf">Progress patch FAQ</a> · <a href="https://www.sec.gov/Archives/edgar/data/876167/000087616724000031/prgs-20231130.htm">Progress SEC annual filing, 2024</a></p>
                     <blockquote>“Help identify vulnerabilities so that they can be corrected before the software is released to prevent exploitation.”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=23">NIST SSDF 1.1 · PW.7 <span aria-hidden="true">↗</span></a>
-                    <p>Documented case:</p>
+                    <p>Documented case, a zero-day in a vendor product:</p>
                     <blockquote>“Internet-facing MOVEit Transfer web applications were infected with a web shell named LEMURLOOT, which was then used to steal data from underlying MOVEit Transfer databases.”</blockquote>
                     <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a#:~:text=Internet%2Dfacing%20MOVEit%20Transfer%20web%20applications%20were%20infected%20with%20a%20web%20shell%20named%20LEMURLOOT%2C%20which%20was%20then%20used%20to%20steal%20data%20from%20underlying%20MOVEit%20Transfer%20databases.">CISA and FBI · Advisory AA23-158A on MOVEit, 2023 <span aria-hidden="true">↗</span></a>
                   </div>
@@ -841,7 +841,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://slsa.dev/spec/v1.2/threats#:~:text=An%20adversary%20introduces%20an%20unauthorized%20change%20to%20a%20build%20output%20through%20tampering%20of%20the%20build%20process">SLSA 1.2 · (E) Build process <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
                     <blockquote>“The adversary enjoyed longstanding, covert access to the build process that SolarWinds uses for Orion”</blockquote>
-                    <a href="https://www.cisa.gov/news-events/directives/ed-21-01-mitigate-solarwinds-orion-code-compromise-closed#:~:text=The%20adversary%20enjoyed%20longstanding%2C%20covert%20access%20to%20the%20build%20process%20that%20SolarWinds%20uses%20for%20Orion">CISA · Emergency Directive 21-01 on SolarWinds Orion, 2020 <span aria-hidden="true">↗</span></a>
+                    <a href="https://www.cisa.gov/news-events/directives/ed-21-01-mitigate-solarwinds-orion-code-compromise-closed#:~:text=The%20adversary%20enjoyed%20longstanding%2C%20covert%20access%20to%20the%20build%20process%20that%20SolarWinds%20uses%20for%20Orion">CISA · ED 21-01 Supplemental Guidance v3 on SolarWinds Orion, 2021 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
                 <li><details class="risk" id="risk-b-t2">
@@ -875,7 +875,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Direct.</strong> CrowdStrike's Channel File 291 analysis identifies the validation and testing gaps that preceded a Windows outage. The case concerns reliability of security software's content update. <a href="https://www.crowdstrike.com/wp-content/uploads/2024/08/Channel-File-291-Incident-Root-Cause-Analysis-08.06.2024.pdf#page=2">CrowdStrike root cause analysis, 2024</a></p>
                     <blockquote>“ensure that the implemented security controls operate as expected and satisfy the project’s stated security requirements”</blockquote>
                     <a href="https://owaspsamm.org/model/verification/requirements-driven-testing/#:~:text=ensure%20that%20the%20implemented%20security%20controls%20operate%20as%20expected%20and%20satisfy%20the%20project%E2%80%99s%20stated%20security%20requirements">OWASP SAMM · Requirements-driven Testing <span aria-hidden="true">↗</span></a>
-                    <p>Documented case:</p>
+                    <p>Documented case, a testing gap in a content update, not a security-control test:</p>
                     <blockquote>“This parameter count mismatch evaded multiple layers of build validation and testing”</blockquote>
                     <a href="https://www.crowdstrike.com/wp-content/uploads/2024/08/Channel-File-291-Incident-Root-Cause-Analysis-08.06.2024.pdf#page=2">CrowdStrike · Channel File 291 root cause analysis, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
@@ -909,9 +909,9 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Direct for readiness and impact.</strong> TSB considered attestations, test evidence and residual risks. The FCA found gaps in risk management and preparation for the scale of post-migration defects. The decision and approvals are described in the full notice. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=48">FCA final notice, sections J and 4.265 onward</a></p>
                     <blockquote>“all relevant stakeholders have a solid understanding of the imposed risk.”</blockquote>
                     <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=all%20relevant%20stakeholders%20have%20a%20solid%20understanding%20of%20the%20imposed%20risk.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
-                    <p>Documented case:</p>
+                    <p>Documented case, on poor planning and control of the migration; the FCA does not describe the go-live decision:</p>
                     <blockquote>“TSB failed to organise and control the IT migration programme adequately”</blockquote>
-                    <a href="https://www.fca.org.uk/news/press-releases/tsb-fined-48m-operational-resilience-failings#:~:text=TSB%20failed%20to%20organise%20and%20control%20the%20IT%20migration%20programme%20adequately">FCA · TSB fined £48.65m, 2022 <span aria-hidden="true">↗</span></a>
+                    <a href="https://www.fca.org.uk/news/press-releases/tsb-fined-48m-operational-resilience-failings#:~:text=TSB%20failed%20to%20organise%20and%20control%20the%20IT%20migration%20programme%20adequately">FCA and PRA · TSB fined £48.65m together, 2022 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
                 <li><details class="risk" id="risk-r-g2">
@@ -1140,7 +1140,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <p class="risk-case"><strong>Direct.</strong> The OCC cited Morgan Stanley's inventory failure. The SEC's later order found devices containing customer data were sold and ultimately resold, with some reaching an online auction. <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-134.html">OCC penalty, 2020</a> · <a href="https://www.sec.gov/newsroom/press-releases/2022-168">SEC order and announcement, 2022</a></p>
                     <blockquote>“Media sanitization refers to a process that renders access to target data on the media infeasible for a given level of effort.”</blockquote>
                     <a href="https://csrc.nist.gov/pubs/sp/800/88/r2/final#:~:text=Media%20sanitization%20refers%20to%20a%20process%20that%20renders%20access%20to%20target%20data%20on%20the%20media%20infeasible%20for%20a%20given%20level%20of%20effort.">NIST SP 800-88 Rev. 2 · Media Sanitization <span aria-hidden="true">↗</span></a>
-                    <p>Documented case:</p>
+                    <p>Documented case, on the missing inventory only; the quote does not say the data left the bank’s control:</p>
                     <blockquote>“failed to maintain appropriate inventory of customer data stored on the decommissioned hardware devices.”</blockquote>
                     <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-134.html#:~:text=failed%20to%20maintain%20appropriate%20inventory%20of%20customer%20data%20stored%20on%20the%20decommissioned%20hardware%20devices.">OCC · Morgan Stanley fined $60 million, 2020 <span aria-hidden="true">↗</span></a>
                   </div>
@@ -1202,7 +1202,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               <p>Turn a request into a spec</p>
             </div>
             <dl class="panel-facts">
-              <dt>Input</dt><dd>Issue or change request, security policies and past incidents.</dd>
+              <dt>Input</dt><dd>Issue or change request, security policies, past incidents and any existing threat register.</dd>
               <dt>Output</dt><dd>Task spec, security requirements and a threat list.</dd>
               <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person approves the spec. <span class="tag">[recommendation]</span></dd>
             </dl>
@@ -1252,7 +1252,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               <p>Try to break it</p>
             </div>
             <dl class="panel-facts">
-              <dt>Input</dt><dd>The signed artifact and a test environment.</dd>
+              <dt>Input</dt><dd>The signed artifact, the tests from the pull request (carried over from Code) and a test environment.</dd>
               <dt>Output</dt><dd>Test results and a risk verdict.</dd>
             </dl>
           </section>
@@ -1264,7 +1264,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               <p>Check against policy</p>
             </div>
             <dl class="panel-facts">
-              <dt>Input</dt><dd>Test results, SBOM, provenance and the release policy.</dd>
+              <dt>Input</dt><dd>Test results and risk verdict, the signed artifact, SBOM, provenance and the release policy.</dd>
               <dt>Output</dt><dd>A go or no go recommendation with the evidence pack.</dd>
               <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person decides on production. <span class="tag">[recommendation]</span></dd>
             </dl>
@@ -1289,7 +1289,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               <p>Run and respond</p>
             </div>
             <dl class="panel-facts">
-              <dt>Input</dt><dd>The running service, the deploy record and alerts from monitoring.</dd>
+              <dt>Input</dt><dd>The running service, the deploy record, the runbook and alerts from monitoring.</dd>
               <dt>Output</dt><dd>Logs, incident records and change records.</dd>
             </dl>
           </section>
@@ -1313,9 +1313,9 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
               <p>Shut the service down</p>
             </div>
             <dl class="panel-facts">
-              <dt>Input</dt><dd>The decision to retire, and the deploy and monitoring records that show what the service holds and can reach.</dd>
-              <dt>Output</dt><dd>The service shut down, access revoked, data deleted or archived, and a closure record.</dd>
-              <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person approves the shutdown and the data deletion. <span class="tag">[recommendation]</span></dd>
+              <dt>Input</dt><dd>The decision to retire, and the infrastructure code, change records and the list of credentials the agents hold, which show what the service holds and can reach.</dd>
+              <dt>Output</dt><dd>A shutdown plan. After approval: the service shut down, access revoked, data deleted or archived, and a closure record.</dd>
+              <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person approves the shutdown and what happens to the data. <span class="tag">[recommendation]</span></dd>
             </dl>
           </section>
 
@@ -1337,7 +1337,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-plan"><span class="phase-index">01</span>Plan</a></th>
               <td>Reads issue 214 and the threat register. Writes a spec: on every document fetch the server checks that the logged-in customer owns the document, and answers no if the check fails or breaks.</td>
-              <td>The spec with two tests. Customer A asks for customer B’s document and is refused. The check is made to throw an error and nothing is delivered.
+              <td>The spec with two tests, and the threat list. Customer A asks for customer B’s document and is refused. The check is made to throw an error and nothing is delivered.
                 <p class="walk-gate"><b>Human gate</b>The product owner reads the spec and approves it.</p></td>
             </tr>
             <tr>
@@ -1353,13 +1353,13 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </tr>
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-build"><span class="phase-index">04</span>Build</a></th>
-              <td>Builds the merged commit and signs the result.</td>
+              <td>Builds the merged commit in a separate build service, which signs the result.</td>
               <td>Signed artifact, SBOM and provenance that names the commit and the builder.</td>
             </tr>
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-test"><span class="phase-index">05</span>Test</a></th>
-              <td>Starts the artifact in a test environment with made-up customers. Runs the three tests, then asks for 200 documents that belong to other customers.</td>
-              <td>Test results: all 200 requests refused. Risk verdict: low.</td>
+              <td>Starts the artifact in a test environment with made-up customers. Runs the three tests, then asks for 200 documents that belong to other customers, one by one and in bulk downloads.</td>
+              <td>Test results: the three tests passed and all 200 requests were refused. Risk verdict: low for this bug, no other behaviour tested.</td>
             </tr>
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-release"><span class="phase-index">06</span>Release</a></th>
@@ -1370,11 +1370,11 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-deploy"><span class="phase-index">07</span>Deploy</a></th>
               <td>Rolls out the approved artifact with a credential that works for this deploy only.</td>
-              <td>The running service and a deploy record: artifact digest, time and approver.</td>
+              <td>The running service and a deploy record: artifact digest and time.</td>
             </tr>
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-operate"><span class="phase-index">08</span>Operate</a></th>
-              <td>Runs the service. When Monitor alerts on one account, it ends that account’s sessions as the runbook says.</td>
+              <td>Runs the service. When Monitor alerts on one account, it ends that account’s sessions, a low-impact step the runbook allows without approval.</td>
               <td>An incident record and a change record of what it did.</td>
             </tr>
             <tr>
@@ -1384,8 +1384,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </tr>
             <tr>
               <th scope="row" class="phase-name"><a href="#agentic-retire"><span class="phase-index">10</span>Retire</a></th>
-              <td>Not part of this change. When the portal is replaced, an agent lists what the portal holds and can reach, from the deploy and monitoring records.</td>
-              <td>The portal shut down, the agents’ credentials revoked, the documents archived and a closure record.
+              <td>Not part of this change. When the portal is replaced, an agent lists what the portal holds and can reach, from the infrastructure code, the change records and the agents’ credential list.</td>
+              <td>A shutdown plan. After approval: the portal shut down, the agents’ credentials revoked, the documents archived and a closure record.
                 <p class="walk-gate"><b>Human gate</b>A person approves the shutdown and what happens to the documents.</p></td>
             </tr>
           </tbody>
