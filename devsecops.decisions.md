@@ -73,6 +73,39 @@
 - The whole example carries one `inference` tag. It adds no risk, control or quote. The four-changes table stays the one home for those.
 - Retire is shown as "not part of this change", with what would happen when the portal is replaced. Reason: one fix does not retire a service, but leaving the row out would break the match with the ten phases.
 
+### 23 November 2026: statement-by-statement review
+
+Three reviewers checked every quote against its live source and every claim against its quote. A fourth, independent reviewer confirmed or rejected each finding. All quotes were verbatim. Changes follow the confirmed findings.
+
+- Risk wording narrowed to what the case shows: Meta (plaintext only; the DPC cited Articles 5(1)(f) and 32), Equifax unencrypted data (not "left out of scope"), MOVEit (a zero-day in a vendor product), TSB (poor planning and control; the FCA does not describe a go-live decision). Case labels now say so. "Aimed at guesses" is tagged `inference`.
+- Design governance risk now says "risk response options or a risk assessment", because GV.RM-04 covers the first and the OCC case the second.
+- The A01 statistic is labelled as not tied to threat modeling.
+- Activity text gained items the page's own risks depend on: Build (hardened environment, signing, SBOM, provenance), Design (DPIA completion), Code (repositories), Test (test the running application), Retire (sanitize media, inventory).
+- Agentic view: "same lifecycle" sentence now names the Review/Design difference. The unsourced press-report sentence under Traceable handoffs was cut and the line tagged `inference`. The ASI03 identity quote moved from Agent access to Traceable handoffs, where it supports the point. Researcher rows say "VS Code agent mode". The YOLO quote starts at the sentence that names the setting.
+- Example: Plan hands on the threat list, the build service (not the agent) signs, the Test requests include bulk downloads, the runbook is an Operate input and the session end needs no approval. Release input lists the signed artifact and risk verdict.
+- Rejected: footer sentence on lanes (it is shown only in the DevSecOps view). No change for SAMM/CISA/Verkkokauppa fit points (J, K, L) and for Release, Deploy omissions (N, O): the page claims nothing wrong there.
+
+### 23 November 2026: second review round
+
+- Meta caveat now lists Articles 5(1)(f), 32(1), 33(1) and 33(5), as the DPC press release does.
+- XZ risk says "may give attackers a way in": CISA reports code that may allow access, not a realised breach.
+- Case labels added for CrowdStrike (a testing gap in a content update, not a security-control test) and Morgan Stanley (missing inventory only).
+- Agentic inputs and outputs aligned: Test gets the tests from the pull request, Plan may start from an existing threat register, Retire reads the infrastructure code and change records, and Retire's output says "A shutdown plan. After approval: ..." so the gate comes before the work. The example Test hands on the three test results.
+- "Cases for the four changes" became "Cases, where a primary source was found". The agentic intro names the DevSecOps view and says Design is absent.
+- Not changed: Code to Review threat-list handoff (Review names its source), Build signing-key risk (generic risk, specific example), vendor-heading rows, the YOLO quote opening, the ASI03 placement.
+
+## 23 November 2026: third review round
+Applied 9 of 10 findings after independent verification: standing inputs named in the agentic intro, Test input says tests carry over from Code, Deploy example drops "approver" (Release output has none), Operate containment called a low-impact step, Test verdict limited to this bug, agents' credentials added to Retire input, Test agent-access risk states the consequence, SolarWinds risk says "trusted release" (CISA quote does not name updates), TSB label says the £48.65m is the FCA and PRA fine together (FCA alone £29.75m). Codecov fit left as is: customers ran the altered uploader.
+
+## 23 November 2026: fourth review round
+Two confirmed fixes: the standing-inputs sentence is now non-exhaustive and names the agents' credential list; the Retire human gate approves "what happens to the data" because the output is deleted or archived. The auditor fetched only GitHub Docs, The Register and SEC sources in this round; the rest were not re-fetched.
+
+## 23 November 2026: fifth review round
+One confirmed fix: the SolarWinds quote sits in CISA's ED 21-01 Supplemental Guidance v3 (6 Jan 2021), not the 13 Dec 2020 directive, so the link label now names that document and year. The auditor fetched nearly all sources; GDPR (EUR-Lex) quotes were not re-fetched live.
+
+## 23 November 2026: sixth review round
+Two confirmed fixes in the agentic intro: the DevSecOps view is now described correctly (it has Design and no separate Review; the earlier wording said the reverse), and the cases pointer links to "What changes when agents do the work". GDPR Articles 24, 30 and 35 quotes were confirmed verbatim on gdpr-info.eu.
+
 ### 24 November 2026: selected-phase trace
 
 - Both views retain the numbered cards and shared phase anchors. Desktop connectors join Test to Release and show the selected phase's route back to Plan. Phone layouts use a two-column phase index to keep the detail close to the selection.

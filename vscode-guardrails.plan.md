@@ -1,6 +1,6 @@
 # VS Code agent guardrails: plan
 
-Status on 15 November 2026: `vscode-guardrails.html` built and listed as entry 13 in the index.
+Status on 24 November 2026: `vscode-guardrails.html` built, listed as entry 13 in the index, and reviewed statement by statement on 24 November 2026 (see the fact check).
 
 ## Open work
 

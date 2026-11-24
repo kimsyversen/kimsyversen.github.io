@@ -319,7 +319,7 @@ figcaption{display:grid;gap:8px}
     <div class="meta">
       <span><b>Framework</b> OWASP Kubernetes Top 10 (2025)</span>
       <span><b>AKS sources</b> Microsoft Learn, the AKS blog</span>
-      <span><b>Facts checked</b> 13 Nov 2026</span>
+      <span><b>Facts checked</b> 24 Nov 2026</span>
     </div>
   </header>
 
@@ -368,17 +368,17 @@ figcaption{display:grid;gap:8px}
       <h2 id="kubernetes-in-five-minutes-2"><a class="sec-link" href="#kubernetes-in-five-minutes-2">Kubernetes in five minutes</a></h2>
       <p class="sub">Kubernetes runs containers on a group of machines. You tell it what should run, through the Kubernetes API, and it keeps things that way. These are the terms you will meet, and why they matter for security.</p>
       <dl class="gloss">
-        <div><dt>Cluster</dt><dd>The control plane, which steers, plus the nodes, which run the apps.</dd><dd class="sec"><b>Security:</b> A shared cluster is not a strong wall between teams that do not trust each other.</dd></div>
+        <div><dt>Cluster</dt><dd>The control plane, which steers, plus the nodes, which run the apps.</dd><dd class="sec"><b>Security:</b> A shared cluster is not a strong wall between <a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">teams that do not trust each other</a>.</dd></div>
         <div><dt>API server</dt><dd>The front door to the cluster. kubectl and deployment tools talk to it.</dd><dd class="sec"><b>Security:</b> Roles control API access. Admission control can also stop changes.</dd></div>
         <div><dt>Node</dt><dd>Usually an Azure VM that runs pods in AKS.</dd><dd class="sec"><b>Security:</b> An attacker who breaks out of a container can reach the node and the other pods on it.</dd></div>
-        <div><dt>Pod</dt><dd>The smallest runnable unit: one or more containers.</dd><dd class="sec"><b>Security:</b> The securityContext setting and the image's default user decide what the pod may do. Root and privileged are different things.</dd></div>
+        <div><dt>Pod</dt><dd>The smallest runnable unit: one or more containers.</dd><dd class="sec"><b>Security:</b> The securityContext setting and the image's default user decide what the pod may do. <a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/" target="_blank" rel="noopener">Root and privileged are different things.</a></dd></div>
         <div><dt>Namespace</dt><dd>A named area in the cluster, often one per team or app.</dd><dd class="sec"><b>Security:</b> A boundary for access and rules, but not a strong wall.</dd></div>
         <div><dt>RBAC</dt><dd>Rules for who can do what: Role, ClusterRole and bindings. In AKS it can use Entra ID.</dd><dd class="sec"><b>Security:</b> Give each identity only the permissions it needs.</dd></div>
         <div><dt>ServiceAccount</dt><dd>The identity a pod uses when it talks to the Kubernetes API.</dd><dd class="sec"><b>Security:</b> Anyone with a valid token can act as that ServiceAccount. Turn off automatic mounting of the token when the pod does not need the API.</dd></div>
         <div><dt>Workload identity</dt><dd>An app in a pod can exchange a ServiceAccount token for an access token from Entra ID.</dd><dd class="sec"><b>Security:</b> Replaces stored passwords and keys for supported services. Still limit what the identity may do in Azure.</dd></div>
         <div><dt>Admission control</dt><dd>Checks changes and some connections, after the sign-in and permission checks. Reading objects skips it.</dd><dd class="sec"><b>Security:</b> Pod Security Admission can reject a pod even if the Deployment that creates it was accepted.</dd></div>
-        <div><dt>NetworkPolicy</dt><dd>Rules for which IP addresses and ports a pod may talk to. They only work if the cluster's network plugin enforces them.</dd><dd class="sec"><b>Security:</b> All pod traffic is allowed by default. Network controls can restrict it.</dd></div>
-        <div><dt>Secret</dt><dd>A Kubernetes object for passwords and keys.</dd><dd class="sec"><b>Security:</b> Base64 text in a YAML file is encoding, not encryption. AKS encrypts the storage separately.</dd></div>
+        <div><dt>NetworkPolicy</dt><dd>Rules for which pods, namespaces and IP ranges a pod may talk to, and on which ports. They only work if the cluster's network plugin enforces them.</dd><dd class="sec"><b>Security:</b> All pod traffic is allowed by default. Network controls can restrict it.</dd></div>
+        <div><dt>Secret</dt><dd>A Kubernetes object for passwords and keys.</dd><dd class="sec"><b>Security:</b> <a href="https://kubernetes.io/docs/concepts/configuration/secret/" target="_blank" rel="noopener">Base64 text in a YAML file is encoding, not encryption.</a> AKS encrypts the storage separately.</dd></div>
         <div><dt>Ingress / Gateway</dt><dd>Can route traffic to apps from internal or public addresses.</dd><dd class="sec"><b>Security:</b> Check which services are reachable from outside.</dd></div>
       </dl>
     </section>
@@ -393,7 +393,7 @@ figcaption{display:grid;gap:8px}
         <li><div><h3 id="get-read-access"><a class="sec-link" href="#get-read-access">Get read access</a></h3><p>Agree on Azure Reader, access to security findings and logs, and the read access you need in Kubernetes. With Entra ID, the Cluster User role or an equal permission lets you fetch the kubeconfig, the file kubectl uses to connect. Without Entra integration, Cluster User gives the same access as Cluster Admin. See <a href="https://learn.microsoft.com/en-us/azure/aks/control-kubeconfig-access" target="_blank" rel="noopener">Microsoft's role overview</a>.</p><p class="note">“Azure Kubernetes Service RBAC Reader” does not give read access to roles, bindings or Secrets. Ask the platform team to help with the RBAC check.</p><p class="out"><b>Result:</b> clear read access and documented access limits.</p></div></li>
         <li><div><h3 id="interview-the-platform-team"><a class="sec-link" href="#interview-the-platform-team">Interview the platform team</a></h3><p>Use the questions below. Ask for an architecture sketch and the infrastructure code (Terraform or Bicep). It shows how things are meant to be. Compare the sketch with the risk map under the Architecture tab.</p><p class="out"><b>Result:</b> the intended design, and where to look for differences.</p></div></li>
         <li><div><h3 id="check-the-configuration"><a class="sec-link" href="#check-the-configuration">Check the configuration</a></h3><p>Go through the top 10: the Azure layer (portal or az), the Kubernetes layer (kubectl), and pipeline and registry. Take at least one app team's namespace in detail.</p><p class="out"><b>Result:</b> findings with evidence.</p></div></li>
-        <li><div><h3 id="let-the-tools-work"><a class="sec-link" href="#let-the-tools-work">Let the tools work</a></h3><p>Defender for Cloud recommendations, Azure Policy compliance, and preferably Kubescape. Tools can find wrong settings and risky access. Add your own review of the model and the routines. <span class="tag">[inference]</span></p><p class="out"><b>Result:</b> broad coverage and a check of your own findings.</p></div></li>
+        <li><div><h3 id="let-the-tools-work"><a class="sec-link" href="#let-the-tools-work">Let the tools work</a></h3><p>Defender for Cloud recommendations, Azure Policy compliance, and preferably <a href="https://kubescape.io" target="_blank" rel="noopener">Kubescape</a>, an open source scanner that Microsoft Learn does not cover. Tools can find wrong settings and risky access. Add your own review of the model and the routines. <span class="tag">[inference]</span></p><p class="out"><b>Result:</b> broad coverage and a check of your own findings.</p></div></li>
         <li><div><h3 id="assess-and-prioritise"><a class="sec-link" href="#assess-and-prioritise">Assess and prioritise</a></h3><p>Go through the three attack paths under Top 10. Rank findings by how much damage they can do and how easy they are to exploit. Give each finding an owner (platform or app team) and a concrete action.</p><p class="out"><b>Result:</b> prioritised report.</p></div></li>
       </ol>
     </section>
@@ -452,11 +452,11 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
     </section>
 
     <aside class="callout" id="current">
-      <h3 id="current-as-of-1-november-2026"><a class="sec-link" href="#current-as-of-1-november-2026">Current as of 13 November 2026</a></h3>
+      <h3 id="current-as-of-1-november-2026"><a class="sec-link" href="#current-as-of-1-november-2026">Current as of 24 November 2026</a></h3>
       <ul>
-        <li><b>Versions:</b> Check the <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">support deadline</a> and whether LTS is enabled on the cluster. Limited “platform support” after regular support does not give security fixes for Kubernetes. It lasts 60 days. From 1 June 2027, AKS itself upgrades a cluster that is still on an unsupported version after that, without waiting for your maintenance window.</li>
-        <li><b>Ingress NGINX:</b> The project's maintenance ended in March 2026. Microsoft supports critical security fixes for NGINX in the application routing add-on until the end of November 2026. Migrate before then.</li>
-        <li><b>Azure Linux 2.0:</b> Security support ended on 30 November 2025. <a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Node image removal was set to begin on 31 October 2026</a>. Affected node pools can then no longer scale.</li>
+        <li><b>Versions:</b> Check the <a href="https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions" target="_blank" rel="noopener">support deadline</a> and whether LTS is enabled on the cluster. Limited “platform support” after regular support does not give security fixes for Kubernetes. It lasts 60 days. From 1 June 2027, AKS itself upgrades a cluster that is still on an unsupported version after that, without waiting for your maintenance window. It also ignores deprecated API use and can override a Pod Disruption Budget, so workloads may be disrupted.</li>
+        <li><b>Ingress NGINX:</b> The project's maintenance ended in March 2026. Microsoft supports critical security fixes for NGINX in the application routing add-on until the end of November 2026. Migrate before then, for example to Application Gateway for Containers or the application routing Gateway API implementation. If you need a service mesh, Microsoft also documents <a href="https://learn.microsoft.com/en-us/azure/aks/istio-gateway-api" target="_blank" rel="noopener">Gateway API ingress with the Istio add-on</a>. One Microsoft page still has a Note saying the Istio add-on does not support Gateway API for ingress. <span class="tag">[unverified]</span></li>
+        <li><b>Azure Linux 2.0:</b> Security support ended on 30 November 2025. <a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Microsoft's docs say node images are removed from 31 October 2026</a>, so affected node pools cannot scale. The docs give no status per region.</li>
         <li><b>Pod-managed identity:</b> The deprecation was announced in 2022. Support for the AKS add-on ran out in September 2025. Migrate to Workload ID.</li>
       </ul>
     </aside>
@@ -493,13 +493,14 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
 
       <article id="risk-k01" class="risk" data-id="K01" data-title="Insecure workload configuration" data-paths="workload supply">
         <div class="risk-head"><span class="rid">K01</span><div><h3 id="insecure-workload-configuration"><a class="sec-link" href="#insecure-workload-configuration">Insecure workload configuration</a></h3><p class="en">Insecure Workload Configurations</p></div></div>
-        <p>Containers that run as root or privileged, or that get access to the node's file system (hostPath) or network (hostNetwork). Such settings can make the damage bigger if a container is taken over. Root alone does not give access to the node.</p>
+        <p>Containers that run as root or privileged, or that get access to the node's file system (hostPath) or network (hostNetwork). Such settings can make the damage bigger if a container is taken over. Root in a container is not root on the node, but it widens the damage if the container is escaped. Privileged mode, hostPath or extra capabilities can give node access. <span class="tag">[inference]</span></p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
           <li>Which level is enforced? The command shows explicit namespace labels for Pod Security Admission. Baseline allows root on Linux.
             <div class="cmd"><pre><code>kubectl get ns -L pod-security.kubernetes.io/enforce</code></pre><button type="button" class="copy">Copy</button></div></li>
           <li>Also check Azure Policy assignments, enforcement and exceptions.</li>
           <li>What does Defender for Cloud say about privileged containers and root?</li>
+          <li>Do workloads set a seccomp profile and drop extra capabilities? Microsoft recommends AppArmor and seccomp to limit what containers can do.</li>
         </ul>
         <p class="finding"><span class="lbl">Possible findings</span>Rules that are not enforced, rules that only log, broad exceptions. A missing namespace label alone does not prove that protection is missing.</p>
         <div class="paths"><span>Compromised workload</span><span>Supply chain</span></div>
@@ -515,7 +516,7 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
           <li>Who has broad permissions? Match each binding with the rules in the role it points to.
             <div class="cmd"><pre><code>kubectl get clusterrolebindings,rolebindings -A -o wide
 kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" class="copy">Copy</button></div></li>
-          <li>Check the Azure roles separately. Who can fetch the admin kubeconfig or use <a href="https://learn.microsoft.com/en-us/azure/aks/access-private-cluster" target="_blank" rel="noopener">AKS Run Command</a>? The latter can give access to a private cluster through the Azure API.</li>
+          <li>Check the Azure roles separately. Who can fetch the admin kubeconfig or use <a href="https://learn.microsoft.com/en-us/azure/aks/access-private-cluster" target="_blank" rel="noopener">AKS Run Command</a>? The latter can give access to a private cluster through the Azure API. Who holds <code>runcommand/action</code> and <code>commandResults/read</code>? Is <code>disableRunCommand</code> set to true?</li>
           <li>Does the deploy pipeline have only the permissions it needs? <a href="https://learn.microsoft.com/en-us/azure/aks/concepts-security" target="_blank" rel="noopener">Microsoft advises against cluster-admin for pipelines</a>.</li>
         </ul>
         <p class="finding"><span class="lbl">Possible findings</span>A developer group with “temporary” cluster-admin, a pipeline with cluster-admin, a default service account with extra roles.</p>
@@ -528,7 +529,7 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <p>Secrets can leak from code, images and pods. Base64 text in a YAML file is encoding, not encryption. AKS encrypts the storage. KMS adds an extra layer.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Are secrets fetched from a controlled secret store, for example Key Vault through the SDK or the Secrets Store CSI Driver?</li>
+          <li>Are secrets fetched from a controlled secret store, for example Key Vault through the SDK or the Secrets Store CSI Driver? If you sync to a Kubernetes Secret, the value is in etcd again and Secret RBAC applies. <span class="tag">[inference]</span></li>
           <li>Is KMS encryption of secrets in etcd turned on where the requirements call for it?</li>
           <li>Who can read Secrets with get, list or watch? Who can mount them in a pod?</li>
           <li>Are stored keys replaced with workload identity where possible?</li>
@@ -545,7 +546,8 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
         <ul class="checks">
           <li>Are the necessary rules enforced, for example with Azure Policy Deny or Pod Security Admission enforce?</li>
           <li>Are only images from approved registries allowed, for example your own Azure Container Registry?</li>
-          <li>Are deployment safeguards in <a href="https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards" target="_blank" rel="noopener">Enforce mode</a>, and which namespaces are exempt?</li>
+          <li>Are deployment safeguards in <a href="https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards" target="_blank" rel="noopener">Enforce mode</a>, is a Pod Security Standards level set, and which namespaces are exempt? Standard defaults to Privileged, which blocks nothing. Automatic defaults to Baseline.</li>
+          <li>Gatekeeper fails open, so a skipped check does not block a deployment. Read the compliance dashboard too.</li>
           <li>Who can grant exceptions, and are the exceptions documented and time-limited?</li>
         </ul>
         <p class="finding"><span class="lbl">Possible findings</span>Everything in Audit mode, whole namespaces exempt.</p>
@@ -561,7 +563,7 @@ kubectl get clusterroles,roles -A -o yaml</code></pre><button type="button" clas
           <li>Is there a default-deny policy, one that blocks everything not explicitly allowed, for both ingress and egress on all relevant pods? Also check the allow rules in other policies.
             <div class="cmd"><pre><code>kubectl get networkpolicies -A</code></pre><button type="button" class="copy">Copy</button></div></li>
           <li>Check that the network plugin enforces the policies, and test real traffic. With Cilium: also look at the Cilium policies.</li>
-          <li>Is outbound traffic limited to the destinations the apps need? NAT alone does not filter destinations.</li>
+          <li>Is outbound traffic limited to the destinations the apps need? NAT Gateway gives outbound addresses and scale. Microsoft pairs it with Azure Firewall for traffic inspection.</li>
           <li>Are internal services reachable only from the intended networks and workloads?</li>
         </ul>
         <p class="finding"><span class="lbl">Possible findings</span>No limits on traffic between teams or to the internet.</p>
@@ -595,6 +597,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
             <div class="cmd"><pre><code>az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;</code></pre><button type="button" class="copy">Copy</button></div></li>
           <li>Which cluster and node OS upgrade channel is selected, and who makes sure updates happen on time?</li>
           <li>Which OS do the node pools run? Azure Linux 2.0 no longer gets security updates.</li>
+          <li>Is SSH to the nodes needed, and who can reach it? SSH is on by default and only reachable on the internal IP. Disabling it is in preview.</li>
           <li>Is there a list of add-ons and third-party components, with an owner and an update routine?</li>
         </ul>
         <p class="finding"><span class="lbl">Possible findings</span>Auto-upgrade off with no manual routine, ingress-nginx installed with Helm and forgotten.</p>
@@ -609,7 +612,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <ul class="checks">
           <li>Is Microsoft Entra Workload ID in use? Support for pod-managed identity has ended.</li>
           <li>What can the kubelet identity and each workload identity access, including through inherited permissions?</li>
-          <li>Test whether pods can reach IMDS (169.254.169.254), the Azure service on each node that can hand out identity tokens. <a href="https://learn.microsoft.com/en-us/azure/aks/imds-restriction" target="_blank" rel="noopener">AKS IMDS restriction</a> (preview) only covers pods without hostNetwork. The Cilium policies in Azure CNI do not cover hostNetwork pods either.</li>
+          <li>Test whether pods can reach IMDS (169.254.169.254), the Azure service on each node that can hand out identity tokens. <a href="https://learn.microsoft.com/en-us/azure/aks/imds-restriction" target="_blank" rel="noopener">AKS IMDS restriction</a> (preview) only covers pods without hostNetwork. On an existing cluster it applies only after the nodes are reimaged, and SSH or node-shell access can change the iptables rules, so Microsoft recommends disabling SSH or blocking privileged pods with a policy. Azure Policy, Container Insights, application routing, Application Gateway ingress controller, virtual nodes and several cluster extensions (for example Flux, Dapr and Azure Backup) cannot be used with it. Microsoft lists more. Windows node pools are not supported. Azure Policy is on the unsupported list and deployment safeguards use the Azure Policy add-on, so the two probably cannot be combined. [inference] The Cilium policies in Azure CNI do not cover hostNetwork pods either.</li>
           <li>Are there long-lived service principal secrets stored in the cluster?</li>
         </ul>
         <p class="finding"><span class="lbl">Possible findings</span>A workload identity with Contributor on the whole subscription.</p>
@@ -619,7 +622,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
       <article id="risk-k09" class="risk" data-id="K09" data-title="Weak authentication" data-paths="credentials">
         <div class="risk-head"><span class="rid">K09</span><div><h3 id="weak-authentication"><a class="sec-link" href="#weak-authentication">Weak authentication</a></h3><p class="en">Broken Authentication Mechanisms</p></div></div>
-        <p>Shared admin kubeconfig files, local accounts turned on, long-lived tokens or missing MFA. Fixed admin credentials skip Entra ID, and so also MFA and Conditional Access.</p>
+        <p>Shared admin kubeconfig files, local accounts turned on, long-lived tokens or missing MFA. The built-in admin certificate bypasses Entra ID, so MFA and Conditional Access probably do not apply to it. <span class="tag">[inference]</span></p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
           <li>Is Entra ID integration on, and are local accounts off? Look for <code>disableLocalAccounts: true</code> in <code>az aks show</code>. Previously issued local certificates must be revoked during <a href="https://learn.microsoft.com/en-us/azure/aks/local-accounts" target="_blank" rel="noopener">certificate rotation</a>.</li>
@@ -634,10 +637,10 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
 
       <article id="risk-k10" class="risk" data-id="K10" data-title="Insufficient logging and monitoring" data-paths="credentials workload supply">
         <div class="risk-head"><span class="rid">K10</span><div><h3 id="insufficient-logging-and-monitoring"><a class="sec-link" href="#insufficient-logging-and-monitoring">Insufficient logging and monitoring</a></h3><p class="en">Inadequate Logging And Monitoring</p></div></div>
-        <p>Without audit logs you can reach, API calls are harder to investigate. Alerts need an owner.</p>
+        <p>Without audit logs that you can read, API calls are harder to investigate. Alerts need an owner.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Collect the relevant audit and guard logs. <code>kube-audit-admin</code> leaves out get/list. For such API calls against Secrets, <code>kube-audit</code> can show who asked for access. Check the coverage against the <a href="https://learn.microsoft.com/en-us/azure/aks/monitor-aks#aks-audit-policy" target="_blank" rel="noopener">AKS audit policy</a>.</li>
+          <li>Collect the relevant audit logs. <code>kube-audit-admin</code> leaves out get/list. For such API calls against Secrets, <code>kube-audit</code> can show who asked for access. Check the coverage against the <a href="https://learn.microsoft.com/en-us/azure/aks/monitor-aks#aks-audit-policy" target="_blank" rel="noopener">AKS audit policy</a>.</li>
           <li>Do Defender or equivalent tools cover the relevant nodes and workloads? Test a documented alert.</li>
           <li>Who receives the alerts, and how do they follow them up?</li>
           <li>How long are the logs kept, and who can delete them?</li>
@@ -652,7 +655,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <p>Images from unknown sources, vulnerable libraries, or a pipeline that many people can change. The item was K02 in the 2022 list and has no place of its own in the 2025 edition, but Microsoft's AKS recommendations have a separate section on it.</p>
         <div><span class="lbl">Check in AKS</span></div>
         <ul class="checks">
-          <li>Are images scanned in CI? Check which images <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure" target="_blank" rel="noopener">Defender rescans</a> in the registry. Inactive images may fall outside.</li>
+          <li>Are images scanned in CI? Check which images <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure" target="_blank" rel="noopener">Defender rescans</a> in the registry. Images not pushed or pulled in 30 days and not running in a monitored cluster are left out of the daily rescan and get no new findings.</li>
           <li>Are only images from approved registries allowed?</li>
           <li>Are images signed and verified?</li>
           <li>On supported Linux nodes: does Image Cleaner remove unused, vulnerable images? Windows node pools and AKS virtual nodes are not supported.</li>
@@ -868,9 +871,9 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
           <ul>
             <li><b>Operating the control plane components</b> (API server, etcd, scheduler): Microsoft manages and maintains them.</li>
             <li><b>CIS checks of control plane nodes and files:</b> not visible to the customer in AKS. <span class="tag">[inference]</span></li>
-            <li><b>Physical security and hypervisor:</b> Microsoft.</li>
-            <li><b>FIPS node pools:</b> consider when the requirements call for FIPS 140-3 cryptographic modules.</li>
-            <li><b>Pod Sandboxing:</b> pods with the Kata runtime get their own kernel. For <a href="https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview#limitations" target="_blank" rel="noopener">Confidential Containers (preview)</a> Microsoft lists only Azure Linux 2.0, which is retired in AKS.</li>
+            <li><b>Physical security and hypervisor:</b> <a href="https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility" target="_blank" rel="noopener">Microsoft</a>.</li>
+            <li><b>FIPS node pools:</b> consider when the requirements call for FIPS 140-3 cryptographic modules. FIPS node pools on Ubuntu use Ubuntu 22.04, because Ubuntu 24.04 does not support FIPS yet. AKS stops supporting Ubuntu 22.04 on 30 June 2027. Azure Linux 3.0 and later and Azure Container Linux (AKS 1.34 or later) also support FIPS. FIPS cannot be enabled on a node pool that uses Pod Sandboxing.</li>
+            <li><b>Pod Sandboxing:</b> each pod gets its own guest kernel in a lightweight VM. Azure Linux only, so not Ubuntu, Windows or Azure Container Linux. Not with FIPS, Trusted Launch or Arm64. Defender for Containers does not assess these pods. For <a href="https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview#limitations" target="_blank" rel="noopener">Confidential Containers (preview)</a> Microsoft lists only Azure Linux 2.0, which is retired in AKS. The same page also says "Azure Linux only". Confidential Containers is not supported on AKS Automatic. The limits above apply to the GA runtime (kata-vm-isolation) and to the v2 runtime (kata-vm-isolation-v2, preview). Only v2 is in preview and it also lacks node auto-provisioning support.</li>
             <li><b>Service mesh and mTLS:</b> consider if this is used as a security control. <span class="tag">[inference]</span></li>
             <li><b>Windows node pools:</b> only if they exist.</li>
           </ul>
@@ -894,7 +897,7 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <li><div><h3 id="map-a-baseline-per-workload"><a class="sec-link" href="#map-a-baseline-per-workload">Map a baseline per workload</a></h3><p>Map normal processes, outbound destinations and file paths. Use this to judge alerts. Start with the most exposed apps.</p><p class="out"><b>Result:</b> normal behaviour per workload.</p></div></li>
         <li><div><h3 id="choose-data-sources"><a class="sec-link" href="#choose-data-sources">Choose data sources</a></h3><p>Combine relevant node sensors and Kubernetes audit logs. Check which scenarios the tool supports, and test the coverage.</p><p class="out"><b>Result:</b> coverage map: which scenario is caught by which source.</p></div></li>
         <li><div><h3 id="run-in-monitor-mode-first"><a class="sec-link" href="#run-in-monitor-mode-first">Run in monitor mode first</a></h3><p>Start with alerting and tune the rules. Consider blocking only if the tool supports it and the consequences are tested.</p><p class="out"><b>Result:</b> rule set tuned to your own workloads.</p></div></li>
-        <li><div><h3 id="simulate-attacks-in-a-test-environment"><a class="sec-link" href="#simulate-attacks-in-a-test-environment">Simulate attacks in a test environment</a></h3><p>Use the tool's documented simulations, for example <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool" target="_blank" rel="noopener">Defender's test simulations</a>. Measure the expected alert and the delay. A shell or a file change does not necessarily trigger an alert.</p><p class="out"><b>Result:</b> test result per scenario, with time to alert.</p></div></li>
+        <li><div><h3 id="simulate-attacks-in-a-test-environment"><a class="sec-link" href="#simulate-attacks-in-a-test-environment">Simulate attacks in a test environment</a></h3><p>Use the tool's documented simulations, for example <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-containers#kubernetes-alerts-simulation-tool" target="_blank" rel="noopener">Defender's test simulations</a>. Measure the expected alert and the delay. A shell or a file change does not always trigger an alert, because the alerts you get depend on the installed components and the activity being monitored.</p><p class="out"><b>Result:</b> test result per scenario, with time to alert.</p></div></li>
         <li><div><h3 id="define-the-operating-model-before-rollout"><a class="sec-link" href="#define-the-operating-model-before-rollout">Define the operating model before rollout</a></h3><p>Who sorts and judges the alerts, in which SIEM, how long logs are kept, and what the response is: isolate the pod, take an image of the node, notify the app team. Measure false positives per week and time from event to alert.</p><p class="out"><b>Result:</b> owner, response routine and key figures.</p></div></li>
       </ol>
     </section>
@@ -917,12 +920,12 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
         <div class="col no">
           <h3 id="false-positives-or-need-context"><a class="sec-link" href="#false-positives-or-need-context">False positives or need context</a></h3>
           <ul>
-            <li><b>A shell during legitimate troubleshooting</b> (kubectl debug, operations work).</li>
-            <li><b>Startup scripts, cron jobs, health checks</b> and package managers in normal operation.</li>
+            <li><b>A shell during legitimate troubleshooting</b> (kubectl debug, operations work). <span class="tag">[inference]</span></li>
+            <li><b>Startup scripts, cron jobs, health checks</b> and package managers in normal operation. <span class="tag">[inference]</span></li>
             <li><b>Calls to IMDS</b> from apps that use managed identity. <span class="tag">[inference]</span></li>
-            <li><b>Sidecars, init containers and DaemonSets</b> that look like unexpected processes or network activity on the node.</li>
-            <li><b>Load tests and service discovery</b> that resemble a port scan.</li>
-            <li><b>High CPU or crypto use</b> in legitimate apps.</li>
+            <li><b>Sidecars, init containers and DaemonSets</b> that look like unexpected processes or network activity on the node. <span class="tag">[inference]</span></li>
+            <li><b>Load tests and service discovery</b> that resemble a port scan. <span class="tag">[inference]</span></li>
+            <li><b>High CPU or crypto use</b> in legitimate apps. <span class="tag">[inference]</span></li>
           </ul>
         </div>
       </div>
@@ -932,8 +935,8 @@ kubectl get ingress -A</code></pre><button type="button" class="copy">Copy</butt
     <section id="check-the-static-part-first">
       <h2 id="check-the-static-part-first-2"><a class="sec-link" href="#check-the-static-part-first-2">Check the static part first</a></h2>
       <p class="sub">The command checks existing pod specifications. It needs <code>jq</code> and permission to list pods in all namespaces. <span class="tag">[unverified]</span></p>
-      <div class="cmd"><pre><code><span class="c"># Pods with hostNetwork, hostPID, a privileged container or hostPath</span>
-kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or any((.spec.containers[]?, .spec.initContainers[]?, .spec.ephemeralContainers[]?); .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Copy</button></div>
+      <div class="cmd"><pre><code><span class="c"># Pods with hostNetwork, hostPID, hostIPC, a privileged container or hostPath</span>
+kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true or .spec.hostPID==true or .spec.hostIPC==true or any((.spec.containers[]?, .spec.initContainers[]?, .spec.ephemeralContainers[]?); .securityContext.privileged==true) or any(.spec.volumes[]?; .hostPath!=null)) | "\(.metadata.namespace)/\(.metadata.name)"'</code></pre><button type="button" class="copy">Copy</button></div>
       <p class="note">For Defender, see <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction" target="_blank" rel="noopener">Introduction to Microsoft Defender for Containers</a> before you choose a tool.</p>
     </section>
   </div>
@@ -942,7 +945,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   <div class="panel" role="tabpanel" id="p-sources" aria-labelledby="t-sources" hidden>
     <section id="sources-2">
       <h2 id="sources-3"><a class="sec-link" href="#sources-3">Sources</a></h2>
-      <p class="sub">Checked against primary sources on 13 November 2026. The quotes in the request-flow figure were checked on 16 November 2026. Recommendations and examples are not findings from an examined cluster.</p>
+      <p class="sub">Checked against primary sources on 24 November 2026. Recommendations and examples are not findings from an examined cluster.</p>
       <ol class="sources">
         <li><a href="https://kubernetes-top10.owasp.org/" target="_blank" rel="noopener">OWASP Kubernetes Top Ten</a><span>The 2025 and 2022 lists, with descriptions of K01-K10.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/secure-aks" target="_blank" rel="noopener">Secure your Azure Kubernetes Service (AKS) deployment</a><span>Microsoft's security recommendations for AKS.</span></li>
@@ -985,6 +988,17 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/concepts-network-services" target="_blank" rel="noopener">Kubernetes Services in AKS</a><span>Microsoft Learn. Public and internal load balancers.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/egress-outboundtype" target="_blank" rel="noopener">Customize cluster egress with outbound types</a><span>Microsoft Learn. Outbound type.</span></li>
         <li><a href="https://learn.microsoft.com/en-us/azure/aks/deployment-safeguards" target="_blank" rel="noopener">Deployment safeguards</a><span>Microsoft Learn. Enforcement through Azure Policy.</span></li>
+              <li><a href="https://learn.microsoft.com/en-us/azure/aks/imds-restriction" target="_blank" rel="noopener">Restrict pod access to IMDS (preview)</a><span>Scope, reimage and iptables.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/access-private-cluster" target="_blank" rel="noopener">Access a private AKS cluster</a><span>Run Command, its RBAC actions and disabling it.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/control-kubeconfig-access" target="_blank" rel="noopener">Control access to the kubeconfig</a><span>Cluster User and Cluster Admin roles.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/upgrade-os-version" target="_blank" rel="noopener">Upgrade the node OS version</a><span>Azure Linux 2.0 retirement dates.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/confidential-containers-overview" target="_blank" rel="noopener">Confidential Containers on AKS</a><span>Limitations.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure" target="_blank" rel="noopener">Agentless vulnerability assessment</a><span>Which registry images are rescanned.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction" target="_blank" rel="noopener">Introduction to Defender for Containers</a><span>Overview.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility" target="_blank" rel="noopener">Shared responsibility in the cloud</a><span>Microsoft Learn. Physical security, hosts and hypervisor.</span></li>
+        <li><a href="https://learn.microsoft.com/en-us/azure/aks/istio-gateway-api" target="_blank" rel="noopener">Gateway API for ingress with the Istio add-on</a><span>Microsoft Learn. Istio add-on ingress with Gateway API.</span></li>
+        <li><a href="https://kubescape.io" target="_blank" rel="noopener">Kubescape</a><span>Project site. CNCF incubating project, not a Microsoft product.</span></li>
+        <li><a href="https://kubernetes.io/docs/concepts/configuration/secret/" target="_blank" rel="noopener">Secrets</a><span>Kubernetes documentation. Secret values are base64 encoded, not encrypted by default.</span></li>
       </ol>
     </section>
   </div>
@@ -1069,7 +1083,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
 
   /* Responsibility stack */
   var layers = [
-    { t: 'Pipeline and container registry', d: 'The platform team often owns the container registry and the pipeline templates, while the app teams build their own images.', s: 'Look for: images with no verified origin, no scanning, pipelines with full admin rights (cluster-admin) or stored secrets.' },
+    { t: 'Pipeline and container registry', d: 'The platform team often owns the container registry and the pipeline templates, while the app teams build their own images. [inference]', s: 'Look for: images with no verified origin, no scanning, pipelines with full admin rights (cluster-admin) or stored secrets.' },
     { t: 'Workloads', d: 'The app teams write YAML or Helm charts, choose images and decide how the app uses secrets, within the platform\'s rules.', s: 'Look for: root and privileged containers, secrets in YAML, missing network policies for their own app.' },
     { t: 'Namespaces and access', d: 'The platform team creates namespaces, access and rules. The app teams work within them.', s: 'Look for: app teams with rights across the whole cluster, prod and test in the same namespace, weak separation between teams.' },
     { t: 'Platform services in the cluster', d: 'Shared components the platform team looks after: ingress or gateway, Azure Policy, logging, Secrets Store CSI Driver, GitOps agent.', s: 'Look for: outdated components such as ingress-nginx, rules that only log and never block, no owner.' },
@@ -1249,7 +1263,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     nsA:   { x:606,  y:116, w:188, h:96,  st:3, t:'Namespace: team A',  s:'Pods, ServiceAccounts', s2:'Secrets, NetworkPolicy', short:'Namespace' },
     nsB:   { x:606,  y:252, w:188, h:76,  st:3, t:'Namespace: team B',  s:'Same setup per team' },
     ing:   { x:828,  y:116, w:166, h:84,  st:3, t:'Ingress / Gateway',  s:'Inbound traffic' },
-    egress:{ x:828,  y:252, w:166, h:84,  st:3, t:'Outbound control',   s:'Filters traffic out of the cluster' },
+    egress:{ x:828,  y:252, w:166, h:84,  st:3, t:'Outbound control',   s:'Sets how traffic leaves the cluster' },
     plat:  { x:606,  y:360, w:388, h:76,  st:3, t:'Platform components', s:'Azure Policy, operators, CSI, logging, Defender' },
     nodes: { x:606,  y:460, w:388, h:76,  st:3, t:'Node pools',         s:'VM-based nodes with kubelet and node OS' },
     ew:    { link:true, mx:683, my:223,  st:3, t:'Traffic between namespaces', short:'Between namespaces' },
@@ -1284,7 +1298,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
   var PLACE = [
     ['K01','git','Manifests and Helm charts define the desired setup. Admission can change it. Check securityContext, hostPath and hostNetwork in the actual pod.'],
     ['K01','nsA','Insecure settings take effect when the pod runs.'],
-    ['K01','nodes','An attacker who breaks out of a container can reach the node and the other pods on it.'],
+    ['K01','nodes','An attacker who breaks out of a container can reach the node and the other pods on it. [inference]'],
     ['K02','arm','Azure roles on the AKS resource control who can change the setup and fetch the kubeconfig.'],
     ['K02','api','Check which authorisation the cluster uses for Entra identities. Kubernetes RBAC controls the permissions of ServiceAccounts.'],
     ['K02','ci','Give the deploy identity only the permissions it needs. Microsoft advises against cluster-admin for pipelines.'],
@@ -1298,7 +1312,7 @@ kubectl get pods -A -o json | jq -r '.items[] | select(.spec.hostNetwork==true o
     ['K04','plat','Azure Policy uses Gatekeeper pods in the cluster. Check policies, enforcement and exceptions.'],
     ['K04','arm','Azure Policy assignments, the effect (for example Deny or Audit) and exceptions are managed in Azure.'],
     ['K05','ew','Traffic between namespaces is allowed by default; check which network controls restrict it.'],
-    ['K05','egress','Limit outbound traffic to the destinations the apps need. NAT alone does not filter destinations.'],
+    ['K05','egress','Limit outbound traffic to the destinations the apps need. NAT Gateway gives outbound addresses and scale. Microsoft pairs it with Azure Firewall for traffic inspection.'],
     ['K06','api','Public endpoint by default. It should be private or limited to known IP addresses.'],
     ['K06','ing','Which Services and routes are exposed to the internet, and should they be?'],
     ['K07','ing','Ingress NGINX gets no security fixes from the project after March 2026. Microsoft supports critical security fixes for NGINX in application routing until the end of November 2026.'],

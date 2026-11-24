@@ -1,0 +1,836 @@
+<div id="devsecops-handoff-map">
+  <style>
+    #devsecops-handoff-map {
+      --hm-ink: var(--foreground);
+      --hm-subtle: color-mix(in srgb, var(--hm-ink) 69%, var(--background));
+      --hm-rail: color-mix(in srgb, var(--hm-ink) 45%, var(--background));
+      --hm-grid: color-mix(in srgb, var(--hm-ink) 14%, var(--background));
+      --hm-active: color-mix(in srgb, var(--viz-series-1) 78%, var(--hm-ink));
+      --hm-gate: color-mix(in srgb, var(--viz-series-2) 70%, var(--hm-ink));
+      --hm-feedback: color-mix(in srgb, var(--viz-series-3) 70%, var(--hm-ink));
+      --hm-alert: color-mix(in srgb, var(--viz-series-4) 70%, var(--hm-ink));
+      --muted-foreground: var(--hm-subtle);
+      --blue: color-mix(in srgb, var(--hm-ink) 89%, var(--background));
+      --primary-foreground: var(--background);
+      display: grid;
+      gap: calc(var(--font-size-base) * .65);
+      container-type: inline-size;
+    }
+    #devsecops-handoff-map .hm-heading { display: grid; gap: calc(var(--font-size-base) * .5); }
+    #devsecops-handoff-map .hm-stage { position: relative; height: 380px; isolation: isolate; min-width: 0; }
+    #devsecops-handoff-map .hm-drawing { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    #devsecops-handoff-map .hm-positioned { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; }
+    #devsecops-handoff-map .hm-stage-note { color: var(--hm-subtle); background: var(--background); padding-inline: .4em; pointer-events: none; }
+    #devsecops-handoff-map .hm-key { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem 1rem; }
+    #devsecops-handoff-map .hm-key span { white-space: nowrap; }
+    #devsecops-handoff-map .hm-key-item { display: inline-flex; gap: .45rem; align-items: center; }
+    #devsecops-handoff-map .hm-key-line { inline-size: 1.35rem; border-block-start: 2px solid var(--hm-rail); }
+    #devsecops-handoff-map .hm-key-feedback { border-color: var(--hm-feedback); border-block-start-style: dashed; }
+    #devsecops-handoff-map .hm-key-gate { inline-size: .65rem; block-size: .65rem; border: 1.5px solid var(--hm-gate); transform: rotate(45deg); margin-inline: .12rem; }
+    #devsecops-handoff-map .hm-inspector { border-block-start: 1px solid var(--border); padding-block-start: .75rem; display: grid; gap: .65rem; }
+    #devsecops-handoff-map .hm-selection { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .65rem; }
+    #devsecops-handoff-map .hm-selection h2 { margin: 0; }
+    #devsecops-handoff-map .sec-link { color: inherit; text-decoration: none; }
+    #devsecops-handoff-map .hm-summary { color: var(--hm-subtle); }
+    #devsecops-handoff-map .hm-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem 1rem; margin: 0; }
+    #devsecops-handoff-map .hm-fact { min-width: 0; }
+    #devsecops-handoff-map .hm-fact dd { margin: .22rem 0 0; overflow-wrap: break-word; }
+    #devsecops-handoff-map .hm-fact-name { font-weight: 500; }
+    #devsecops-handoff-map .hm-fact ul { margin: 0; padding-inline-start: 1.15rem; }
+    #devsecops-handoff-map .hm-fact li + li { margin-block-start: .24rem; }
+    #devsecops-handoff-map .hm-inference { color: var(--hm-subtle); }
+    @container (max-width: 525px) {
+      #devsecops-handoff-map .hm-stage { height: 502px; }
+      #devsecops-handoff-map .hm-facts { grid-template-columns: 1fr; }
+    }
+  /* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+</style>
+  <div class="hm-heading">
+    <h1>Follow the handoff</h1>
+    <div class="viz-row" role="group" aria-label="Lifecycle view">
+      <button class="btn" type="button" data-hm-mode="delivery" aria-pressed="false">DevSecOps</button>
+      <button class="btn" type="button" data-hm-mode="agentic" aria-pressed="true">Agentic DevSecOps</button>
+    </div>
+  </div>
+  <div class="hm-stage" role="group" aria-label="Lifecycle phases" aria-describedby="hm-key-feedback"></div>
+  <div class="hm-key text-small" role="group" aria-label="Map key">
+    <span class="hm-key-item"><i class="hm-key-line" aria-hidden="true"></i>Typical progression</span>
+    <span class="hm-key-item"><i class="hm-key-line hm-key-feedback" aria-hidden="true"></i><span id="hm-key-feedback">Any phase can feed into Plan</span></span>
+    <span class="hm-key-item"><i class="hm-key-gate" aria-hidden="true"></i><span data-hm-gate>Recommended human gate</span></span>
+  </div>
+  <div class="hm-inspector" aria-live="polite" aria-atomic="true">
+    <div class="hm-selection">
+      <h2 id="hm-phase"><a class="sec-link" href="#hm-phase" data-hm-phase-name>Release</a></h2>
+      <span class="hm-summary" data-hm-purpose></span>
+    </div>
+    <dl class="hm-facts" data-hm-facts></dl>
+  </div>
+  <p class="hm-inference text-small">Lifecycle mapping is an interpretation by AI.</p>
+</div>
+<script type="application/json" id="hm-phase-data">
+{
+  "delivery": [
+    {
+      "name": "Plan",
+      "purpose": "Set the direction",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Classify",
+          "text": "Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks."
+        },
+        {
+          "term": "Secure development",
+          "title": "Security requirements",
+          "text": "Set scope, acceptance criteria, security and privacy requirements, and likely threats."
+        },
+        {
+          "term": "Risks",
+          "text": "2 governance, 2 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Design",
+      "purpose": "Shape the solution",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Choose concept",
+          "text": "Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget. Complete the DPIA if one is needed."
+        },
+        {
+          "term": "Secure development",
+          "title": "Threat modeling",
+          "text": "Model threats across data flows and integrations. Turn mitigations into owned, testable requirements."
+        },
+        {
+          "term": "Risks",
+          "text": "1 governance, 1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Code",
+      "purpose": "Build to the standard",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Ready to build",
+          "text": "Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready."
+        },
+        {
+          "term": "Secure development",
+          "title": "Secure coding and review",
+          "text": "Use secure coding standards, review changes, protect secrets and repositories, and assess dependencies."
+        },
+        {
+          "term": "Risks",
+          "text": "3 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Build",
+      "purpose": "Package from trusted inputs",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Track evidence",
+          "text": "Track whether security activities are complete. Keep findings, owners and due dates visible."
+        },
+        {
+          "term": "Secure development",
+          "title": "Build traceability",
+          "text": "Build in a hardened environment, sign the artifact, and keep an SBOM and provenance that trace it to its source and dependencies."
+        },
+        {
+          "term": "Risks",
+          "text": "1 governance, 1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "purpose": "Verify the controls",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Review test evidence",
+          "text": "Review test evidence against the agreed security requirements and follow unresolved findings to closure."
+        },
+        {
+          "term": "Secure development",
+          "title": "Security testing",
+          "text": "Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration, and test the running application."
+        },
+        {
+          "term": "Risks",
+          "text": "1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Release",
+      "purpose": "Approve the version",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Production go / no-go",
+          "text": "Check required controls, recovery and monitoring. Resolve critical and high findings before release, or use a time-limited exception approved by the authorized risk owner, with compensating controls where appropriate."
+        },
+        {
+          "term": "Secure development",
+          "title": "Release verification",
+          "text": "Approve a verified, traceable software version after required checks pass."
+        },
+        {
+          "term": "Risks",
+          "text": "1 governance, 1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Deploy",
+      "purpose": "Deliver with guardrails",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Controlled promotion",
+          "text": "Promote only the approved release and confirm the rollout is understood and reversible."
+        },
+        {
+          "term": "Secure development",
+          "title": "Rollout and rollback",
+          "text": "Use hardened settings and least-privilege access. Verify the rollout and support rollback."
+        },
+        {
+          "term": "Risks",
+          "text": "1 governance, 1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Operate",
+      "purpose": "Run the service",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Handover",
+          "text": "Transfer operations and open actions with named owners, dates and the evidence needed to continue."
+        },
+        {
+          "term": "Secure development",
+          "title": "Service maintenance",
+          "text": "Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents."
+        },
+        {
+          "term": "Risks",
+          "text": "1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Monitor",
+      "purpose": "Learn from live signals",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Measure and improve",
+          "text": "Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence."
+        },
+        {
+          "term": "Secure development",
+          "title": "Detection and alerting",
+          "text": "Track service health, performance, user experience and security events. Alert on suspicious activity or change."
+        },
+        {
+          "term": "Risks",
+          "text": "1 governance, 1 secure development"
+        }
+      ]
+    },
+    {
+      "name": "Retire",
+      "purpose": "Close the lifecycle",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Governance",
+          "title": "Closeout",
+          "text": "Assign closure ownership and confirm remaining access and data obligations are addressed."
+        },
+        {
+          "term": "Secure development",
+          "title": "Secure decommissioning",
+          "text": "Decommission the service, revoke credentials and access, sanitize media, keep an inventory of data-bearing assets, and handle data under retention requirements."
+        },
+        {
+          "term": "Risks",
+          "text": "1 governance, 2 secure development"
+        }
+      ]
+    }
+  ],
+  "agentic": [
+    {
+      "name": "Plan",
+      "purpose": "Turn a request into a spec",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "Issue or change request, security policies, past incidents and any existing threat register."
+        },
+        {
+          "term": "Output",
+          "text": "Task spec, security requirements and a threat list."
+        },
+        {
+          "term": "Human gate",
+          "text": "A person approves the spec. [recommendation]"
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Untrusted input The request text can carry hidden instructions.",
+            "Human approval A wrong spec steers every later phase."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Code",
+      "purpose": "Write the change",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "Approved task spec, the repository and the security requirements."
+        },
+        {
+          "term": "Output",
+          "text": "A branch with code and tests, opened as a pull request."
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Untrusted input Repository files and web pages the agent reads can carry instructions.",
+            "Agent access The agent can write to the repository."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Review",
+      "purpose": "Check the change",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "The pull request and the threat list from planning."
+        },
+        {
+          "term": "Output",
+          "text": "Findings, fixes and a verdict to approve or reject."
+        },
+        {
+          "term": "Human gate",
+          "text": "A person approves the merge. [recommendation]"
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Untrusted input The pull request under review can carry instructions for the reviewing agent.",
+            "Human approval An agent approving another agent’s change is not an independent check."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Build",
+      "purpose": "Produce the artifact",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "The merged code and its dependencies."
+        },
+        {
+          "term": "Output",
+          "text": "Signed artifact, SBOM and provenance."
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Agent access The build holds signing keys and pulls in dependencies.",
+            "Traceable handoffs Without provenance, it is hard to tell what produced the artifact."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "purpose": "Try to break it",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "The signed artifact, the tests from the pull request (carried over from Code) and a test environment."
+        },
+        {
+          "term": "Output",
+          "text": "Test results and a risk verdict."
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Agent access The agent runs attacks, and a test environment connected to production could be hit.",
+            "Traceable handoffs A verdict without the test results cannot be checked."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Release",
+      "purpose": "Check against policy",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "Test results and risk verdict, the signed artifact, SBOM, provenance and the release policy."
+        },
+        {
+          "term": "Output",
+          "text": "A go or no go recommendation with the evidence pack."
+        },
+        {
+          "term": "Human gate",
+          "text": "A person decides on production. [recommendation]"
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Human approval Going to production is the high-impact action.",
+            "Traceable handoffs The decision is only as good as the evidence pack."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Deploy",
+      "purpose": "Roll out the artifact",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "The approved artifact and the infrastructure code."
+        },
+        {
+          "term": "Output",
+          "text": "The running service and a deploy record."
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Agent access The agent holds production credentials.",
+            "Traceable handoffs The deploy record ties the running service to the approved artifact."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Operate",
+      "purpose": "Run and respond",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "The running service, the deploy record, the runbook and alerts from monitoring."
+        },
+        {
+          "term": "Output",
+          "text": "Logs, incident records and change records."
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Agent access A responding agent can change production.",
+            "Traceable handoffs A fix made during an incident still needs a record of what changed."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Monitor",
+      "purpose": "Watch the service and the agents",
+      "gate": false,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "Logs from the service, records of what the agents did, and new vulnerability reports."
+        },
+        {
+          "term": "Output",
+          "text": "Alerts, incident tickets and new issues."
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Untrusted input Logs and vulnerability reports are outside text.",
+            "Traceable handoffs An agent action that leaves no record cannot be monitored."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Retire",
+      "purpose": "Shut the service down",
+      "gate": true,
+      "facts": [
+        {
+          "term": "Input",
+          "text": "The decision to retire, and the infrastructure code, change records and the list of credentials the agents hold, which show what the service holds and can reach."
+        },
+        {
+          "term": "Output",
+          "text": "A shutdown plan. After approval: the service shut down, access revoked, data deleted or archived, and a closure record."
+        },
+        {
+          "term": "Human gate",
+          "text": "A person approves the shutdown and what happens to the data. [recommendation]"
+        },
+        {
+          "term": "Risks [inference]",
+          "items": [
+            "Agent access Credentials held by the agents outlive the service unless they are revoked too.",
+            "Human approval Deleting data cannot be undone."
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script>
+(() => {
+  const root = document.getElementById('devsecops-handoff-map');
+  const stage = root.querySelector('.hm-stage');
+  const phaseName = root.querySelector('[data-hm-phase-name]');
+  const purpose = root.querySelector('[data-hm-purpose]');
+  const facts = root.querySelector('[data-hm-facts]');
+  const gateLabel = root.querySelector('[data-hm-gate]');
+  const modeButtons = Array.from(root.querySelectorAll('[data-hm-mode]'));
+  const lifecycles = JSON.parse(document.getElementById('hm-phase-data').textContent);
+  const state = { mode: 'agentic', phase: 'Release' };
+  const layers = { rail: 'var(--hm-rail)', active: 'var(--hm-active)', gate: 'var(--hm-gate)', feedback: 'var(--hm-feedback)', alert: 'var(--hm-alert)' };
+  const SVG = 'http://www.w3.org/2000/svg';
+  let layoutWidth = 0;
+
+  function html(tag, className, content) {
+    const element = document.createElement(tag);
+    element.className = className;
+    if (content) element.textContent = content;
+    return element;
+  }
+
+  function svg(parent, tag, attributes) {
+    const element = document.createElementNS(SVG, tag);
+    for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+    parent.append(element);
+    return element;
+  }
+
+  function path(parent, d, color, width, dash) {
+    const attributes = { d, fill: 'none', stroke: color, 'stroke-width': width, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };
+    if (dash) attributes['stroke-dasharray'] = dash;
+    return svg(parent, 'path', attributes);
+  }
+
+  function arrow(parent, [x, y], rotation, color) {
+    return svg(parent, 'path', {
+      d: 'M -5 -3.2 L 0 0 -5 3.2', fill: 'none', stroke: color,
+      'stroke-width': 1.55, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+      transform: `translate(${x} ${y}) rotate(${rotation})`
+    });
+  }
+
+  function roundedPath(points, radius = 15) {
+    const coords = (p) => `${p[0]} ${p[1]}`;
+    let d = `M ${coords(points[0])}`;
+    for (let index = 1; index < points.length - 1; index++) {
+      const [x, y] = points[index];
+      const towards = (other) => {
+        const dx = other[0] - x;
+        const dy = other[1] - y;
+        const distance = Math.hypot(dx, dy);
+        const scale = distance ? Math.min(.45, radius / distance) : 0;
+        return [x + dx * scale, y + dy * scale];
+      };
+      d += ` L ${coords(towards(points[index - 1]))} Q ${x} ${y} ${coords(towards(points[index + 1]))}`;
+    }
+    return `${d} L ${coords(points.at(-1))}`;
+  }
+
+  function along(parent, curve, fraction, color) {
+    const length = curve.getTotalLength();
+    const here = curve.getPointAtLength(length * fraction);
+    const before = curve.getPointAtLength(length * fraction - 1);
+    const angle = Math.atan2(here.y - before.y, here.x - before.x) * 180 / Math.PI;
+    arrow(parent, [here.x, here.y], angle, color);
+  }
+
+  function desktop(width) {
+    const x = (fraction) => Math.round(fraction * width);
+    const points = [[.18, 61], [.35, 61], [.52, 61], [.57, 136], [.71, 136], [.86, 136], [.86, 241], [.65, 241], [.43, 241], [.86, 326]]
+      .map(([fraction, y]) => [x(fraction), y]);
+    const [, , , , , release, deploy, operate, monitor, retire] = points;
+    const turn = [x(.54), 101];
+    const retirement = [[x(.75), deploy[1]], [x(.75), retire[1]], retire];
+    return {
+      points, railX: x(.075), railEnd: 357,
+      feedbackShelf: [103, 103, 103, 191, 191, 191, 284, 284, 284, 357],
+      turn, operateTurn: [], retirement,
+      alerts: `M ${monitor.join(' ')} C ${monitor[0] + 20} 201 ${operate[0] - 20} 201 ${operate.join(' ')}`,
+      label: (index) => [points[index][0], points[index][1] + (index === 9 ? 29 : -30)],
+      notes: {
+        approval: [release[0] - 73, 180],
+        retirement: [retirement[1][0] - 69, retire[1]],
+        alerts: [(operate[0] + monitor[0]) / 2, 198]
+      }
+    };
+  }
+
+  function narrow(width) {
+    const x = (fraction) => Math.round(fraction * width);
+    const points = [[.22, 25], [.22, 73], [.22, 121], [.68, 168], [.68, 216], [.68, 264], [.68, 337], [.36, 374], [.36, 424], [.68, 464]]
+      .map(([fraction, y]) => [x(fraction), y]);
+    const [, , code, build, , release, deploy, operate, monitor, retire] = points;
+    const retirement = [[deploy[0], deploy[1]], [deploy[0], retire[1]], retire];
+    return {
+      points, railX: x(.038), railEnd: 491,
+      feedbackShelf: [45, 92, 141, 187, 234, 298, 356, 396, 446, 491],
+      turn: [(code[0] + build[0]) / 2, (code[1] + build[1]) / 2],
+      operateTurn: [[deploy[0] - 30, deploy[1]]], retirement,
+      alerts: `M ${monitor[0]} ${monitor[1]} C ${monitor[0] - 31} ${monitor[1]} ${operate[0] - 31} ${operate[1]} ${operate[0]} ${operate[1]}`,
+      label: (index) => {
+        const [cx, cy] = points[index];
+        return [cx + (index < 3 ? 52 : index === 7 || index === 8 ? 54 : 46), cy];
+      },
+      notes: {
+        approval: [release[0] + 5, 303],
+        retirement: [retire[0] - 70, 461],
+        alerts: [operate[0] - 49, (operate[1] + monitor[1]) / 2]
+      }
+    };
+  }
+
+  function drawSurface(drawing, width, height) {
+    const definitions = svg(drawing, 'defs', {});
+    const dots = svg(definitions, 'pattern', { id: 'hm-dots', width: 18, height: 18, patternUnits: 'userSpaceOnUse' });
+    svg(dots, 'circle', { cx: 3, cy: 3, r: .8, fill: 'var(--hm-grid)' });
+    svg(drawing, 'rect', { x: 0, y: 0, width, height, fill: 'url(#hm-dots)' });
+  }
+
+  function stationMark(drawing, { gate, name }, [x, y], selected) {
+    if (selected) {
+      svg(drawing, 'circle', { cx: x, cy: y, r: 20, fill: layers.active, 'fill-opacity': .1 });
+      svg(drawing, 'circle', { cx: x, cy: y, r: 14.5, fill: 'none', stroke: layers.active, 'stroke-opacity': .48 });
+    }
+    const outline = { fill: 'var(--background)', stroke: gate ? layers.gate : selected ? layers.active : layers.rail, 'stroke-width': 2 };
+    if (name === 'Retire') {
+      svg(drawing, 'rect', { x: x - 8, y: y - 8, width: 16, height: 16, rx: 2, ...outline });
+      if (!gate) svg(drawing, 'rect', { x: x - 3, y: y - 3, width: 6, height: 6, fill: layers.rail });
+    }
+    if (gate) {
+      const r = name === 'Retire' ? 4 : 7;
+      svg(drawing, 'path', { d: `M ${x} ${y - r} l ${r} ${r} -${r} ${r} -${r} -${r} Z`, ...outline });
+    } else if (name !== 'Retire') {
+      svg(drawing, 'circle', { cx: x, cy: y, r: selected ? 6.5 : 5.5, ...outline });
+      if (selected) svg(drawing, 'circle', { cx: x, cy: y, r: 2.3, fill: layers.active });
+    }
+  }
+
+  function drawProgress(drawing, layout, active) {
+    const { points, turn, operateTurn, retirement } = layout;
+    for (let index = 0; index < 8; index++) {
+      const selected = active === index || active === index + 1;
+      const color = selected ? layers.active : layers.rail;
+      const bends = index === 2 ? [turn] : index === 6 ? operateTurn : [];
+      const curve = path(drawing, roundedPath([points[index], ...bends, points[index + 1]]), color, selected ? 3 : 1.6);
+      along(drawing, curve, index === 5 ? .28 : .52, color);
+    }
+    const color = active === 9 ? layers.active : layers.rail;
+    const branch = path(drawing, roundedPath(retirement), color, active === 9 ? 3 : 1.6);
+    along(drawing, branch, .72, color);
+    const [x, y] = retirement[0];
+    svg(drawing, 'circle', { cx: x, cy: y, r: 2.6, fill: color });
+  }
+
+  function drawFeedback(drawing, layout, active) {
+    const { points, railX, railEnd, feedbackShelf } = layout;
+    const [planX, planY] = points[0];
+    const [selectedX, selectedY] = points[active];
+    const shelf = feedbackShelf[active];
+    const entry = [planX - 12, planY];
+    const rail = roundedPath([[railX, railEnd], [railX, planY], entry], 12);
+    path(drawing, rail, layers.feedback, 1.3, '2 5').setAttribute('stroke-opacity', '.44');
+    for (const y of new Set(feedbackShelf)) {
+      svg(drawing, 'circle', { cx: railX, cy: y, r: 1.9, fill: layers.feedback, 'fill-opacity': .48 });
+    }
+    const route = roundedPath([[selectedX, selectedY], [selectedX - 15, shelf], [railX, shelf], [railX, planY], entry], 13);
+    const group = svg(drawing, 'g', { class: 'hm-feedback-route' });
+    path(group, route, 'var(--background)', 6.5);
+    const curve = path(group, route, layers.feedback, 2.35, '5 4');
+    arrow(group, entry, 0, layers.feedback);
+    return curve;
+  }
+
+  function pulse(drawing, track) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const d = track.getAttribute('d');
+    const traveler = svg(drawing, 'circle', { r: 4.2, fill: layers.feedback, stroke: 'var(--background)', 'stroke-width': 1.5, visibility: 'hidden' });
+    const movement = svg(traveler, 'animateMotion', { path: d, dur: '.85s', begin: 'indefinite', fill: 'remove' });
+    if (typeof movement.beginElement !== 'function') { traveler.remove(); return; }
+    movement.addEventListener('endEvent', () => traveler.remove(), { once: true });
+    traveler.setAttribute('visibility', 'visible');
+    movement.beginElement();
+  }
+
+  function place(element, [x, y], width) {
+    const half = element.offsetWidth / 2 + 1;
+    element.style.left = `${Math.max(half, Math.min(width - half, x))}px`;
+    element.style.top = `${y}px`;
+  }
+
+  function draw(model, animate = false) {
+    const width = stage.clientWidth;
+    const height = stage.clientHeight;
+    if (!width || !height) return;
+    layoutWidth = width;
+    const compact = width <= 525;
+    const layout = compact ? narrow(width) : desktop(width);
+    const active = model.findIndex((phase) => phase.name === state.phase);
+    const drawing = document.createElementNS(SVG, 'svg');
+    drawing.setAttribute('class', 'hm-drawing');
+    drawing.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    drawing.setAttribute('aria-hidden', 'true');
+    stage.querySelector('.hm-drawing')?.remove();
+    stage.prepend(drawing);
+    drawSurface(drawing, width, height);
+    drawProgress(drawing, layout, active);
+    const feedback = drawFeedback(drawing, layout, active);
+    const alerts = state.mode === 'agentic' && active === 8;
+    if (alerts) {
+      const curve = path(drawing, layout.alerts, layers.alert, 2.3);
+      along(drawing, curve, .84, layers.alert);
+    }
+    model.forEach((phase, index) => stationMark(drawing, phase, layout.points[index], index === active));
+    stage.querySelectorAll('[data-hm-station]').forEach((station, index) => place(station, layout.label(index), width));
+    for (const [name, position] of Object.entries(layout.notes)) {
+      const label = stage.querySelector(`[data-hm-note="${name}"]`);
+      label.hidden = name === 'alerts' && !alerts;
+      if (!label.hidden) place(label, position, width);
+    }
+    if (animate) pulse(drawing, feedback);
+  }
+
+  function station(phase) {
+    const marker = html('div', 'hm-positioned');
+    marker.dataset.hmStation = phase.name;
+    const button = html('button', 'btn btn-ghost', phase.name);
+    button.type = 'button';
+    button.dataset.hmPhase = phase.name;
+    button.setAttribute('aria-label', [phase.name, phase.gate ? gateLabel.textContent : '', phase.name === 'Retire' ? 'End of lifecycle' : ''].filter(Boolean).join(', '));
+    marker.append(button);
+    return marker;
+  }
+
+  function renderFact({ term, text, title, items }) {
+    const block = html('div', 'hm-fact');
+    const heading = html('dt', 'text-small text-muted', term);
+    const description = html('dd', '');
+    if (title) description.append(html('span', 'hm-fact-name', title), ' ');
+    if (items) {
+      const list = html('ul', '');
+      for (const item of items) list.append(html('li', '', item));
+      description.append(list);
+    } else {
+      description.append(text);
+    }
+    block.append(heading, description);
+    return block;
+  }
+
+  function select(model, animate = false) {
+    for (const button of stage.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button.dataset.hmPhase === state.phase));
+    const phase = model.find((item) => item.name === state.phase);
+    phaseName.textContent = phase.name;
+    purpose.textContent = phase.purpose;
+    facts.replaceChildren(...phase.facts.map(renderFact));
+    draw(model, animate);
+  }
+
+  function render() {
+    const model = lifecycles[state.mode];
+    const isAgentic = state.mode === 'agentic';
+    gateLabel.textContent = isAgentic ? 'Recommended human gate' : 'Checkpoint';
+    stage.setAttribute('aria-label', isAgentic ? 'Agentic DevSecOps phases' : 'DevSecOps phases');
+    for (const button of modeButtons) button.setAttribute('aria-pressed', String(button.dataset.hmMode === state.mode));
+    stage.replaceChildren(...model.map(station));
+    const notes = { approval: isAgentic ? 'Approved artifact' : 'Approved release', retirement: 'Decision to retire', alerts: 'Alerts' };
+    for (const [name, text] of Object.entries(notes)) {
+      const label = html('span', 'hm-positioned hm-stage-note text-small', text);
+      label.dataset.hmNote = name;
+      stage.append(label);
+    }
+    select(model);
+  }
+
+  function restore(saved) {
+    const previous = saved?.modelContent;
+    if (!previous || !Object.hasOwn(lifecycles, previous.mode) || !lifecycles[previous.mode].some((phase) => phase.name === previous.phase)) return;
+    Object.assign(state, { mode: previous.mode, phase: previous.phase });
+  }
+
+  root.addEventListener('click', (event) => {
+    const button = event.target.closest('button');
+    if (!button || button.getAttribute('aria-pressed') === 'true') return;
+    if (button.dataset.hmMode) {
+      const index = lifecycles[state.mode].findIndex((phase) => phase.name === state.phase);
+      state.mode = button.dataset.hmMode;
+      const model = lifecycles[state.mode];
+      if (!model.some((phase) => phase.name === state.phase)) state.phase = model[index].name;
+      render();
+    } else if (button.dataset.hmPhase) {
+      state.phase = button.dataset.hmPhase;
+      select(lifecycles[state.mode], true);
+    } else return;
+    window.openai?.setWidgetState?.({ modelContent: { ...state }, privateContent: null })?.catch(() => {});
+  });
+  window.addEventListener('openai:set_globals', (event) => {
+    restore(event.detail?.globals?.widgetState);
+    render();
+  });
+  restore(window.openai?.widgetState);
+  render();
+  new ResizeObserver(() => {
+    if (stage.clientWidth !== layoutWidth) draw(lifecycles[state.mode]);
+  }).observe(stage);
+})();
+</script>
