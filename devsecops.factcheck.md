@@ -230,3 +230,7 @@ The table "Example: fixing one bug with agents" in the agentic view is made up: 
 ## Consolidated phase risks, 24 November 2026
 
 The DevSecOps view groups all 55 scenarios from the 24 November audit in the existing Risks by phase table. The 22 scenarios that overlap the earlier table retain their original source excerpts. Evidence descriptions and links come from the audited register. The source review and its limitations are recorded in [devsecops.risks.md](devsecops.risks.md#evidence-and-coverage-checks). Sources were not fetched again for this layout change. Chromium checks at 1280 and 375 pixels passed for the original phase fragment, opening the evidence and page width. Static checks confirmed all 55 audit entries, all 10 panel counts, the existing quotes and the public fragments.
+
+## Presentation mode, 24 November 2026
+
+The slides use the existing phase activities, risk summaries and claims portal example. They introduce no new sourced claims. Chromium at 1280, 375 and 320 pixels passed checks for slide order, keyboard navigation, reveals, direct links, dismissal, return focus and page width. Browser fullscreen was not exercised.

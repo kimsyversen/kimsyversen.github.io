@@ -382,6 +382,49 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .panel-facts dd .fact-link { color: var(--accent); }
 @media print { .view[hidden], [data-view][hidden] { display: block; } .switch { display: none; } }
 
+.present-button {
+  min-height: 44px; padding: 7px 13px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--paper); color: var(--ink); font: 600 .95rem/1.2 var(--sans); cursor: pointer;
+}
+.present-button:hover:not(:disabled) { border-color: var(--accent); }
+.present-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.present-button:disabled { opacity: .45; cursor: default; }
+.present-start { border-color: var(--accent); color: var(--accent); }
+.presentation {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; background: var(--paper); color: var(--ink);
+}
+.presentation[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.present-bar, .present-nav {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+  border-bottom: 1px solid var(--line);
+}
+.present-bar p { font: 500 clamp(1.05rem, 3vw, 1.45rem)/1.2 var(--serif); }
+.present-actions { display: flex; gap: 8px; }
+.present-nav { border-top: 1px solid var(--line); border-bottom: 0; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+.present-nav button { min-width: 5.5rem; }
+.present-nav button:last-child { background: var(--ink); color: var(--paper); }
+.present-stage { overflow: auto; overscroll-behavior: contain; }
+.present-slide { width: min(74rem, 100% - 32px); margin: 0 auto; padding-block: clamp(24px, 6vh, 64px); }
+.present-slide h2 { font: 500 clamp(2.6rem, 8vw, 6.5rem)/.95 var(--serif); overflow-wrap: anywhere; }
+.present-subtitle { margin-top: 10px; color: var(--muted); font: 500 clamp(1.15rem, 2.7vw, 2rem)/1.2 var(--serif); }
+.present-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 24px 0 16px; }
+.present-facts > div { padding: 12px 16px; border-top: 2px solid var(--line); background: color-mix(in srgb, var(--ink) 4%, var(--paper)); }
+.present-facts dt, .present-count { color: var(--muted); font: 500 .78rem/1.4 var(--mono); }
+.present-facts dt { color: var(--engineering); margin-bottom: 6px; }
+.present-facts dd { margin: 0; font-size: clamp(1rem, 2vw, 1.35rem); overflow-wrap: anywhere; }
+.present-facts .present-gate { grid-column: 1 / -1; border-color: var(--accent); }
+.present-facts .present-gate dt { color: var(--accent); }
+.present-more { border-top: 1px solid var(--line); }
+.present-more summary { width: fit-content; padding-block: 11px; color: var(--accent); cursor: pointer; }
+.present-more .present-facts { margin-top: 4px; }
+.present-more ul { margin: 0; padding-left: 1.15em; }
+.present-more li + li { margin-top: .4em; }
+.present-more a { color: var(--accent); }
+@media (max-width: 560px) { .present-facts { grid-template-columns: minmax(0, 1fr); } }
+@media print { .presentation[open], .present-start { display: none; } }
+
 </style>
 </head>
 <body>
@@ -394,6 +437,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
         <a href="#view-devsecops" data-go="devsecops" aria-current="true">DevSecOps</a>
         <a href="#view-agentic" data-go="agentic">Agentic DevSecOps</a>
       </nav>
+      <button type="button" id="start-presentation" class="present-button present-start" aria-haspopup="dialog" hidden>Present</button>
     </div>
   </header>
 
@@ -1751,6 +1795,32 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     </section>
   </footer>
 </div>
+<dialog class="presentation" id="presentation" aria-labelledby="presentation-label">
+  <div class="present-bar">
+    <p id="presentation-label">DevSecOps presentation</p>
+    <div class="present-actions">
+      <button type="button" id="presentation-fullscreen" class="present-button" hidden>Full screen</button>
+      <button type="button" id="presentation-close" class="present-button" aria-keyshortcuts="Escape">Exit</button>
+    </div>
+  </div>
+  <div class="present-stage">
+    <section class="present-slide" id="presentation-slide">
+      <h2 id="present-plan" tabindex="-1"><a class="sec-link" href="#present-plan"></a></h2>
+      <p class="present-subtitle"></p>
+      <dl class="present-facts"></dl>
+      <details class="present-more">
+        <summary></summary>
+        <dl class="present-facts"></dl>
+        <a class="present-source" href="#risks"></a>
+      </details>
+    </section>
+  </div>
+  <nav class="present-nav" aria-label="Presentation slides">
+    <button type="button" id="presentation-previous" class="present-button" aria-keyshortcuts="ArrowLeft">Previous</button>
+    <p class="present-count" id="presentation-count" aria-live="polite"></p>
+    <button type="button" id="presentation-next" class="present-button" aria-keyshortcuts="ArrowRight">Next</button>
+  </nav>
+</dialog>
 <script>
 (function () {
   var views = [].slice.call(document.querySelectorAll("[data-view]"));
@@ -1774,6 +1844,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     };
   });
   var current = "";
+  var presentation;
   var svgNamespace = "http://www.w3.org/2000/svg";
 
   function appendSvg(svg, tag, attributes) {
@@ -1928,6 +1999,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   }
   function route(scroll) {
     var raw = decodeURIComponent(location.hash.slice(1)), el = raw && document.getElementById(raw);
+    if (presentation && presentation.syncHash(raw)) return;
     if (raw === "view-agentic" || raw === "view-devsecops") { showView(raw.slice(5)); if (scroll) scrollTo(0, 0); return; }
     var v = el && el.closest("[data-view]");
     showView(v ? v.getAttribute("data-view") : current || "devsecops");
@@ -1937,6 +2009,172 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     });
     if (el && scroll) el.scrollIntoView();
   }
+
+  function setupPresentation() {
+    const dialog = document.getElementById("presentation");
+    if (typeof dialog.showModal !== "function") return;
+
+    const start = document.getElementById("start-presentation");
+    const fullscreen = document.getElementById("presentation-fullscreen");
+    const label = document.getElementById("presentation-label");
+    const close = document.getElementById("presentation-close");
+    const previous = document.getElementById("presentation-previous");
+    const next = document.getElementById("presentation-next");
+    const count = document.getElementById("presentation-count");
+    const stage = dialog.querySelector(".present-stage");
+    const title = dialog.querySelector("h2");
+    const titleLink = title.querySelector("a");
+    const subtitle = dialog.querySelector(".present-subtitle");
+    const facts = dialog.querySelector(".present-facts");
+    const more = dialog.querySelector(".present-more");
+    const reveal = more.querySelector("summary");
+    const moreFacts = more.querySelector("dl");
+    const sourceLink = more.querySelector(".present-source");
+    const example = document.getElementById("agentic-example");
+    const slides = new Map();
+    const revealed = new Set();
+    let active, returnHash, openedFromLink;
+
+    for (const map of maps) {
+      map.phases.forEach((phase, index) => {
+        const id = "present-" + phase.link.hash.slice(1);
+        slides.set(id, { id, map, phase, index });
+      });
+    }
+
+    function addFact(list, term, source) {
+      const card = document.createElement("div");
+      const dt = document.createElement("dt");
+      const dd = document.createElement("dd");
+      dt.textContent = term;
+      dd.append(...Array.from(source.childNodes, node => node.cloneNode(true)));
+      if (term === "Human gate") card.className = "present-gate";
+      card.append(dt, dd);
+      list.append(card);
+    }
+
+    function renderSlide(slide) {
+      if (slide === active) return;
+      if (active) {
+        if (more.open) revealed.add(active.id);
+        else revealed.delete(active.id);
+      }
+      active = slide;
+      const { id, map, phase, index } = slide;
+      const panel = document.getElementById(map.prefix + "phase-" + phase.id);
+      const agentic = Boolean(map.prefix);
+      label.textContent = agentic ? "Agentic DevSecOps presentation" : "DevSecOps presentation";
+      title.id = id;
+      titleLink.href = "#" + id;
+      titleLink.textContent = phase.name;
+      subtitle.textContent = panel.querySelector(".panel-head p").textContent;
+      facts.replaceChildren();
+      for (const dt of panel.querySelectorAll(".panel-facts dt")) {
+        if (dt.textContent !== "Risks") addFact(facts, dt.textContent, dt.nextElementSibling);
+      }
+
+      moreFacts.replaceChildren();
+      if (agentic) {
+        reveal.replaceChildren("Claims portal example ", example.querySelector(".map-title .tag").cloneNode(true));
+        const row = example.querySelector(`a[href="${phase.link.hash}"]`).closest("tr");
+        addFact(moreFacts, "What the agent does", row.cells[1]);
+        addFact(moreFacts, "What it hands on", row.cells[2]);
+        sourceLink.href = "#agentic-example";
+        sourceLink.textContent = "Full example";
+      } else {
+        reveal.textContent = "Phase risks";
+        const row = document.getElementById("risks-" + phase.id);
+        for (const [term, lane] of [["Governance risks", ".gov-risks"], ["Secure development risks", ".engineering-risks"]]) {
+          const list = document.createElement("ul");
+          for (const summary of row.querySelectorAll(lane + " summary")) {
+            const item = document.createElement("li");
+            item.textContent = summary.textContent;
+            list.append(item);
+          }
+          const wrapper = document.createElement("div");
+          wrapper.append(list);
+          addFact(moreFacts, term, wrapper);
+        }
+        sourceLink.href = "#" + row.id;
+        sourceLink.textContent = "Risk cases and sources";
+      }
+
+      more.open = revealed.has(id);
+      previous.disabled = index === 0;
+      next.textContent = index === map.phases.length - 1 ? "Finish" : "Next";
+      count.textContent = `${index + 1} / ${map.phases.length}`;
+      history.replaceState(history.state, "", "#" + id);
+      title.focus({ preventScroll: true });
+      stage.scrollTop = 0;
+    }
+
+    function open(slide, fromLink) {
+      openedFromLink = fromLink;
+      returnHash = fromLink ? slide.phase.link.hash : location.hash;
+      active = null;
+      revealed.clear();
+      dialog.showModal();
+      renderSlide(slide);
+    }
+
+    function move(offset) {
+      const phase = active.map.phases[active.index + offset];
+      if (phase) renderSlide(slides.get("present-" + phase.link.hash.slice(1)));
+    }
+
+    start.addEventListener("click", () => {
+      const map = maps.find(item => !item.root.closest("[hidden]"));
+      open(slides.get("present-" + map.phases[map.selected].link.hash.slice(1)), false);
+    });
+    close.addEventListener("click", () => dialog.close());
+    previous.addEventListener("click", () => move(-1));
+    next.addEventListener("click", () => {
+      if (active.index === active.map.phases.length - 1) dialog.close();
+      else move(1);
+    });
+    dialog.addEventListener("keydown", event => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        move(event.key === "ArrowLeft" ? -1 : 1);
+      }
+    });
+    if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
+      fullscreen.hidden = false;
+      fullscreen.addEventListener("click", async () => {
+        try {
+          if (document.fullscreenElement) await document.exitFullscreen();
+          else await document.documentElement.requestFullscreen();
+        } catch {
+          // The presentation remains open if the browser denies fullscreen.
+        }
+      });
+      document.addEventListener("fullscreenchange", () => {
+        fullscreen.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
+      });
+    }
+    dialog.addEventListener("close", () => {
+      if (dialog.open) return;
+      if (document.fullscreenElement === document.documentElement) document.exitFullscreen().catch(() => {});
+      if (slides.has(location.hash.slice(1))) {
+        history.replaceState(history.state, "", location.pathname + location.search + returnHash);
+        if (openedFromLink) route(true);
+      }
+      if (document.activeElement === document.body) start.focus({ preventScroll: true });
+    });
+    start.hidden = false;
+    return {
+      syncHash(raw) {
+        const slide = slides.get(raw);
+        if (slide) {
+          if (dialog.open) renderSlide(slide);
+          else open(slide, true);
+        } else if (dialog.open) dialog.close();
+        return Boolean(slide);
+      }
+    };
+  }
+
   document.documentElement.classList.add("js");
   maps.forEach(function (m) {
     m.root.classList.add("js");
@@ -1970,6 +2208,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     maps.forEach(function (map) { observer.observe(map.flow); });
   }
   if (document.fonts) document.fonts.ready.then(function () { maps.forEach(drawFlow); });
+  presentation = setupPresentation();
   route(true);
 })();
 </script>
