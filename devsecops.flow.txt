@@ -35,5 +35,15 @@ Release receives test results and a risk verdict. A person decides whether to
 approve production. On approval, Deploy receives the approved artifact.
 Monitor sends alerts to Operate and incident tickets and new issues to Plan.
 
-The worked example follows the phases for one bug fix. The four-change table
-holds the agent risks, controls and supporting evidence.
+The worked example follows one bug fix. The phase register holds the risks and
+evidence. The theme index links into that register.
+
+PRESENTATION
+
+Slide 1: [Plan]
+Slide 2: [Plan] -> [Design or Code]
+Slide 3: [Plan] -> [Design or Code] -> [Code or Review]
+
+Each slide adds one phase from the selected view's order above and marks the new
+phase as current. The diagram wraps on narrower screens. It shows the lesson
+order. Retirement starts from a separate decision to close the service.

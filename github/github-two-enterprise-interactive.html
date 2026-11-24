@@ -314,7 +314,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   <p class="foot">Shared standards never mean shared access to source code or detailed logs.</p>
   <p class="foot">Earlier editable drawings: <a href="github-two-enterprise-reference.drawio">three-page draw.io</a> and <a href="github-two-enterprise-reference-compact.drawio">one-page draw.io</a>.</p>
   <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
-  <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
+  <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
     <dl>
       <dt><em class="inf">inference</em></dt><dd>Interpretation by AI that is not stated in a source.</dd>
     </dl>
@@ -633,7 +633,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     var exe = A ? ['A.e1','A.e2','A.e3'] : ['B.e1','B.e2','B.e3'];
     var evi = A ? ['A.v1','A.v2','A.v3'] : ['B.v1','B.v2','B.v3'];
     var h = '<section class="tower ' + (A ? 'tw-a pa' : 'tw-b pb') + '" id="enterprise-' + k.toLowerCase() + '" aria-label="Enterprise ' + k + '">';
-    h += '<header class="th">' + ic(A ? 'lock' : 'globe') + '<div><h2><a class="sec-link" href="#enterprise-' + k.toLowerCase() + '">' +
+    var heading = A ? 'enterprise-a-sensitive' : 'enterprise-b-internal-and-public';
+    h += '<header class="th">' + ic(A ? 'lock' : 'globe') + '<div><h2 id="' + heading + '"><a class="sec-link" href="#' + heading + '">' +
       (A ? 'ENTERPRISE A · SENSITIVE' : 'ENTERPRISE B · INTERNAL AND PUBLIC') + '</a></h2><p>' +
       (A ? 'Enterprise Managed Users. Source code and IaC for classified critical systems.' : 'Personal accounts, with SAML and SCIM set up per org. Internal work and public releases.') + '</p></div></header>';
     h += layer('IDENTITY', '<div class="row3">' + ident.map(function(i){ return card(i); }).join('') + '</div>');
@@ -685,13 +686,13 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     h += '</div>';
 
     h += '<div class="ops">';
-    h += '<div class="col"><div class="sec" id="build-and-deploy"><h3><a class="sec-link" href="#build-and-deploy">BUILD AND DEPLOY</a></h3><span>Each domain has its own runners, identity and target.</span></div>' +
+    h += '<div class="col"><div class="sec" id="build-and-deploy"><h3 id="h-build-and-deploy"><a class="sec-link" href="#h-build-and-deploy">BUILD AND DEPLOY</a></h3><span>Each domain has its own runners, identity and target.</span></div>' +
       lane('L.a') + lane('L.brel') + lane('L.bpr') + '</div>';
-    h += '<div class="col"><div class="sec" id="exchange-and-respond"><h3><a class="sec-link" href="#exchange-and-respond">EXCHANGE AND RESPOND</a></h3><span>Transfer is an external process. Remove it if prohibited.</span></div>' +
+    h += '<div class="col"><div class="sec" id="exchange-and-respond"><h3 id="h-exchange-and-respond"><a class="sec-link" href="#h-exchange-and-respond">EXCHANGE AND RESPOND</a></h3><span>Transfer is an external process. Remove it if prohibited.</span></div>' +
       lane('L.exp') + lane('L.imp') + lane('L.ir') + '</div>';
-    h += '<div class="col"><div class="sec" id="platform-operations"><h3><a class="sec-link" href="#platform-operations">PLATFORM OPERATIONS</a></h3><span>Per domain.</span></div><div class="panel c4 ps">' +
+    h += '<div class="col"><div class="sec" id="platform-operations"><h3 id="h-platform-operations"><a class="sec-link" href="#h-platform-operations">PLATFORM OPERATIONS</a></h3><span>Per domain.</span></div><div class="panel c4 ps">' +
       OPS.map(function(o){ return card(o[0], 'chip'); }).join('') + '</div></div>';
-    h += '<div class="col"><div class="sec" id="accountability"><h3><a class="sec-link" href="#accountability">ACCOUNTABILITY</a></h3><span>Every control has a named owner.</span></div><div class="panel c3 ps">' +
+    h += '<div class="col"><div class="sec" id="accountability"><h3 id="h-accountability"><a class="sec-link" href="#h-accountability">ACCOUNTABILITY</a></h3><span>Every control has a named owner.</span></div><div class="panel c3 ps">' +
       ACC.map(function(o){ return card(o[0], 'chip'); }).join('') + '</div></div>';
     h += '</div>';
     return h;

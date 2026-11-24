@@ -1247,7 +1247,7 @@ for _old, _new in EDITS:
         sys.exit(f"page edit does not apply exactly once: {_old[:80]!r}")
     FINAL = FINAL.replace(_old, _new)
 from mcp_governance_interactive_review import apply_review
-FINAL = apply_review(FINAL, ev, REC, INF, UNV, evp)
+FINAL = add_anchors(apply_review(FINAL, ev, REC, INF, UNV, evp))
 
 for ch in (chr(0x2014), chr(0x2013)):
     if ch in FINAL:

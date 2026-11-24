@@ -436,7 +436,7 @@ body[data-view="preview"] .view-safe{display:none!important}
   <main id="main-content" tabindex="-1">
 
   <section class="sec" id="design" aria-labelledby="h-design">
-    <header class="sh"><h2 id="h-design"><a class="sec-link" href="#design">The design</a></h2>
+    <header class="sh"><h2 id="h-design"><a class="sec-link" href="#h-design">The design</a></h2>
     <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers.&nbsp;<span class="tg r">recommendation</span></p>
     <p class="goal view-safe"><b>Scope</b>Use API Management Standard v2 or Premium v2 to reach the private backend <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V307">V307</a>. Standalone Azure AI Gateway is a released option for publishing MCP tools <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V300">V300</a>.</p>
     <p class="goal view-preview"><b>Scope</b>Pilot Azure AI Gateway private networking and optional Agent 365 controls in a sandbox. Keep the API Management route available for rollback. <span class="tg r">recommendation</span></p></header>
@@ -569,7 +569,7 @@ Design target: approved servers only for managed clients
   </section>
 
   <section class="sec" id="controls" aria-labelledby="h-controls">
-    <header class="sh"><h2 id="h-controls"><a class="sec-link" href="#controls">Controls</a></h2>
+    <header class="sh"><h2 id="h-controls"><a class="sec-link" href="#h-controls">Controls</a></h2>
     <p class="goal"><b>How to read</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers.</p></header>
 
     <div class="sub3" id="controls-by-layer">
@@ -675,7 +675,7 @@ Design target: approved servers only for managed clients
   </section>
 
   <section class="sec" id="rollout" aria-labelledby="h-rollout">
-    <header class="sh"><h2 id="h-rollout"><a class="sec-link" href="#rollout">Rollout and tests</a></h2>
+    <header class="sh"><h2 id="h-rollout"><a class="sec-link" href="#h-rollout">Rollout and tests</a></h2>
     <p class="goal"><b>Goal</b>API Management alone does not guarantee objectives A and B.&nbsp;<span class="tg r">recommendation</span></p></header>
     <div class="sub3" id="order">
       <h3 id="h-order"><a class="sec-link" href="#h-order">Order of work</a></h3>
@@ -711,7 +711,7 @@ Design target: approved servers only for managed clients
   </section>
 
   <section class="sec" id="gaps" aria-labelledby="h-gaps">
-    <header class="sh"><h2 id="h-gaps"><a class="sec-link" href="#gaps">Gaps</a></h2>
+    <header class="sh"><h2 id="h-gaps"><a class="sec-link" href="#h-gaps">Gaps</a></h2>
     </header>
     <ol>
 <li><strong id="gap-github-builtin">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V21">V21</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V92">V92</a>. Two switches are untested: the MCP servers in Copilot policy, which turns off every MCP server <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V93">V93</a>, and Registry only <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V94">V94</a>, a public preview with weaker enforcement <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V95">V95</a> <a class="ev" href="https://github.com/kimsyversen/kimsyversen.github.io/blob/master/mcp-governance-microsoft.factcheck.md#ev-V96">V96</a>. No design control covers it. Pilot both, or limit it through GitHub account permissions.</li>
@@ -726,7 +726,7 @@ Design target: approved servers only for managed clients
   </section>
 
   <section class="sec view-preview" id="preview" aria-labelledby="h-preview">
-    <header class="sh"><h2 id="h-preview"><a class="sec-link" href="#preview">With preview&nbsp;<span class="tg pv">preview</span></a></h2>
+    <header class="sh"><h2 id="h-preview"><a class="sec-link" href="#h-preview">With preview&nbsp;<span class="tg pv">preview</span></a></h2>
     <p class="goal">Test optional controls in a sandbox after verifying the API Management baseline. <span class="tg r">recommendation</span></p></header>
     <div class="sub3" id="preview-controls">
       <span id="added-with-preview-preview"></span>
