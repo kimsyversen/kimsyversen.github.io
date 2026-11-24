@@ -196,6 +196,8 @@ h1 {
   overflow-wrap: anywhere;
 }
 .risk-evidence a { display: inline-block; margin-top: 5px; color: var(--risk); }
+.risk-case a { display: inline; }
+.risk-case + * { margin-top: 8px; }
 .loop-note {
   display: flex;
   align-items: baseline;
@@ -433,7 +435,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Classify</span>Name the risk owner, agree the security level, and record data scope, DPIA need and initial risks.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Security requirements</span>Set scope, acceptance criteria, security and privacy requirements, and likely threats.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-plan">2 governance, 2 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-plan">3 governance, 2 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-design" aria-labelledby="design">
@@ -445,7 +447,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Choose concept</span>Compare options for architecture and supplier risk. Record the security case, expected residual risk, plan and budget.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Threat modeling</span>Model threats across data flows and integrations. Turn mitigations into owned, testable requirements.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-design">1 governance, 1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-design">2 governance, 3 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-code" aria-labelledby="code">
@@ -457,7 +459,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Ready to build</span>Confirm the threat model, security backlog, delivery environment, pipeline checks and team ownership are ready.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Secure coding and review</span>Use secure coding standards, review changes, protect secrets and assess dependencies.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-code">3 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-code">1 governance, 5 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-build" aria-labelledby="build">
@@ -469,7 +471,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Track evidence</span>Track whether security activities are complete. Keep findings, owners and due dates visible.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Build traceability</span>Package from trusted inputs and keep the artifact traceable to its source and dependencies.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-build">1 governance, 1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-build">2 governance, 3 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-test" aria-labelledby="test">
@@ -481,7 +483,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Review test evidence</span>Review test evidence against the agreed security requirements and follow unresolved findings to closure.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Security testing</span>Check functionality, quality and security. Scan code, packages, secrets and infrastructure configuration.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-test">1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-test">1 governance, 4 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-release" aria-labelledby="release">
@@ -493,7 +495,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Production go / no-go</span>Check required controls, recovery and monitoring. Resolve critical and high findings before release, or use a time-limited exception approved by the authorized risk owner, with compensating controls where appropriate.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Release verification</span>Approve a verified, traceable software version after required checks pass.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-release">1 governance, 1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-release">2 governance, 2 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-deploy" aria-labelledby="deploy">
@@ -505,7 +507,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Controlled promotion</span>Promote only the approved release and confirm the rollout is understood and reversible.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Rollout and rollback</span>Use hardened settings and least-privilege access. Verify the rollout and support rollback.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-deploy">1 governance, 1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-deploy">1 governance, 4 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-operate" aria-labelledby="operate">
@@ -517,7 +519,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Handover</span>Transfer operations and open actions with named owners, dates and the evidence needed to continue.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Service maintenance</span>Maintain reliability, patch vulnerabilities, manage access and backups, and respond to incidents.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-operate">1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-operate">3 governance, 3 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-monitor" aria-labelledby="monitor">
@@ -529,7 +531,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Measure and improve</span>Review risk, overdue actions, vulnerability age, tested requirements and recovery results on a set cadence.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Detection and alerting</span>Track service health, performance, user experience and security events. Alert on suspicious activity or change.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-monitor">1 governance, 1 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-monitor">5 governance, 2 secure development</a></dd>
             </dl>
           </section>
           <section class="phase-panel" id="phase-retire" aria-labelledby="retire">
@@ -541,7 +543,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Governance</dt><dd><span class="fact-title">Closeout</span>Assign closure ownership and confirm remaining access and data obligations are addressed.</dd>
               <dt class="eng">Secure development</dt><dd><span class="fact-title">Secure decommissioning</span>Decommission the service, revoke credentials and access, and handle data under retention requirements.</dd>
-              <dt>Risks</dt><dd><a class="fact-link" href="#risks-retire">1 governance, 2 secure development</a></dd>
+              <dt>Risks</dt><dd><a class="fact-link" href="#risks-retire">3 governance, 4 secure development</a></dd>
             </dl>
           </section>
 
@@ -550,22 +552,22 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 
   <section class="risk-register" id="risks" aria-labelledby="risks-by-phase">
         <div class="map-title">
-          <h2 id="risks-by-phase"><a class="sec-link" href="#risks-by-phase">Risks by phase</a></h2>
-          <p>A blank cell means no documented case was found for that activity, not that it carries no risk.</p>
+          <h2 id="risks-by-phase"><span id="devsecops-risk-audit" aria-hidden="true"></span><span id="devsecops-risk-audit-heading" aria-hidden="true"></span><a class="sec-link" href="#risks-by-phase">Risks by phase</a></h2>
+          <p>55 scenarios grouped by the phase where teams can address them. <span class="tag">[inference]</span></p>
         </div>
-        <table class="risk-table">
-          <caption>Consequences when governance or secure development activities are missed, each with a documented case or statistic.</caption>
+        <table class="risk-table" aria-labelledby="risks-by-phase">
           <colgroup><col class="phase-col"><col class="governance-col"><col class="engineering-col"></colgroup>
           <thead>
             <tr><th scope="col">Phase</th><th scope="col">Governance risks</th><th scope="col">Secure development risks</th></tr>
           </thead>
           <tbody>
             <tr id="risks-plan">
-              <th scope="row" class="phase-name"><a href="#phase-plan"><span class="phase-index">01</span>Plan</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-plan"><span id="devsecops-audit-plan" class="phase-index">01</span>Plan</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Nobody is accountable for security, so agreed policy is not carried out and weaknesses stay open.</summary>
+                <li><details class="risk" id="risk-p-g1">
+                  <summary>Product and IT have no clear owner for enforcing security policy, so known weaknesses stay open.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for accountability.</strong> The House investigation found unclear lines of authority and a gap between Equifax's IT policies and how teams carried them out. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=4">House Oversight report, PDF p. 4</a></p>
                     <blockquote>“Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=22">NIST CSF 2.0 · GV.RR-02 <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -573,9 +575,10 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=4">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                <li><details class="risk">
-                  <summary>A legal duty is missed, and a regulator fines the company.</summary>
+                <li><details class="risk" id="risk-p-g2">
+                  <summary>A project misses a privacy duty when defining how it will use personal data, so it leaves required records or assessments incomplete and can be fined.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The Polish authority fined Toyota Bank Polska for leaving profiling out of its records of processing and data protection impact assessment. <a href="https://www.uodo.gov.pl/en/553/1833">Polish Data Protection Office</a></p>
                     <blockquote>“Identify compliance obligations related to the organization's products, services, or activities, and evaluate compliance risks”</blockquote>
                     <a href="https://committee.iso.org/files/live/sites/tc309/files/FAQ%2037301/ISO%2037301%20FAQs%2C%20May%202022.pdf">ISO 37301 · ISO/TC 309 FAQ, question 12 <span aria-hidden="true">↗</span></a>
                     <blockquote>“Legal, regulatory, and contractual requirements regarding cybersecurity”</blockquote>
@@ -593,11 +596,18 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.edpb.europa.eu/news/national-news/2025/polish-sa-administrative-fine-132-000-eu-improper-positioning-dpo-and_en#:~:text=a%20fine%20of%2072%20000%20%E2%82%AC%20for%20infringement%20of%20Articles%2030%281%29%2C%2035%281%2C7%29%20of%20the%20GDPR">EDPB · Polish authority fines Toyota Bank Polska, decision of 2024 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Security requirements are missing or not carried through, and the product stores passwords without encryption.</summary>
+                <li><details class="risk" id="risk-p-g3">
+                  <summary>The business depends on one provider and has no tested fallback, so losing that provider can stop essential work.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Partial.</strong> UnitedHealth reported widespread payment and claims disruption after the Change Healthcare shutdown. The testimony leaves individual customers' contingency plans unknown. <a href="https://www.congress.gov/118/meeting/house/117242/witnesses/HHRG-118-IF02-Wstate-WittyS-20240501-U5.pdf">Testimony to Congress, 2024</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-p-t1">
+                  <summary>The requirements miss password protection in storage and logs, so the software can record passwords in plain text.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Partial.</strong> Ireland's DPC found that Meta stored some user passwords in plain text. The DOJ separately documented that a password retrieved in plain text from a federal portal database was used to access a complainant's email. One case establishes plaintext storage and the other establishes retrieval and misuse. The original requirements remain unknown. NIST specifies storage protections for centrally verified passwords. <a href="https://www.dataprotection.ie/en/news-media/press-releases/DPC-announces-91-million-fine-of-Meta">Irish DPC decision summary, 2024</a> · <a href="https://www.justice.gov/usao-edva/pr/federal-jury-convicts-alexandria-man-charges-relating-deletion-us-government-databases">DOJ conviction announcement, 2026</a> · <a href="https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#passwordver">NIST SP 800-63B-4, password verifiers</a></p>
                     <blockquote>“Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=14">NIST SSDF 1.1 · PO.1.2 <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -605,9 +615,10 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.dataprotection.ie/en/news-media/press-releases/DPC-announces-91-million-fine-of-Meta#:~:text=MPIL%20notified%20the%20DPC%20that%20it%20had%20inadvertently%20stored%20certain%20passwords%20of%20social%20media%20users%20in%20%E2%80%98plaintext%E2%80%99%20on%20its%20internal%20systems">Irish Data Protection Commission · Meta fined €91 million, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                <li><details class="risk">
-                  <summary>Sensitive data is left out of scope and stays unencrypted, so a break-in exposes it.</summary>
+                <li><details class="risk" id="risk-p-t2">
+                  <summary>The project misses a location that holds personal data, so an intruder who reaches it can find readable records.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Partial.</strong> The House report records that sensitive data at Equifax was unencrypted. It leaves the original requirements and the protection that would have stopped the theft unknown. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">House Oversight report, PDF pp. 3-4</a></p>
                     <blockquote>“protection requirements concerning confidentiality, integrity, availability, and authenticity of all data assets”</blockquote>
                     <a href="https://top10.owasp.org/2025/A06_2025-Insecure_Design/#:~:text=protection%20requirements%20concerning%20confidentiality%2C%20integrity%2C%20availability%2C%20and%20authenticity%20of%20all%20data%20assets">OWASP Top 10:2025 A06 · Requirements and Resource Management <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -615,14 +626,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+              </ul></td>
             </tr>
             <tr id="risks-design">
-              <th scope="row" class="phase-name"><a href="#phase-design"><span class="phase-index">02</span>Design</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-design"><span id="devsecops-audit-design" class="phase-index">02</span>Design</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A major technology change goes ahead without a risk assessment, and a regulator fines the company.</summary>
+                <li><details class="risk" id="risk-ds-g1">
+                  <summary>A major migration goes ahead without assessing how it changes security risks, so known weaknesses stay open and the company can face enforcement.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The OCC cited ineffective pre-migration risk assessment processes and untimely correction of deficiencies in its $80 million Capital One penalty. The OCC release leaves the options considered unknown. <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-101.html">OCC, 2020</a></p>
                     <blockquote>“Strategic direction that describes appropriate risk response options is established and communicated”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf#page=21">NIST CSF 2.0 · GV.RM-04 <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -630,11 +642,18 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-101.html#:~:text=the%20bank%27s%20failure%20to%20establish%20effective%20risk%20assessment%20processes%20prior%20to%20migrating%20significant%20information%20technology%20operations%20to%20the%20public%20cloud%20environment">OCC · Capital One fined $80 million, 2020 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Abuse paths are left open, and users reach data or functions they should not.</summary>
+                <li><details class="risk" id="risk-ds-g2">
+                  <summary>A supplier integration can read sensitive customer records, so a compromise of its access credentials can expose data from connected companies.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for the access and theft.</strong> Google's incident responders documented data theft from Salesforce tenants through stolen OAuth tokens associated with Salesloft Drift. The tenants' supplier reviews and available permission choices remain unknown. <a href="https://cloud.google.com/security/report/resources/cloud-threat-horizons-report-h1-2026">Google Cloud Threat Horizons, H1 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-ds-t1">
+                  <summary>The design leaves a gap in access controls, so a user or service reaches restricted data or functions.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for the boundary failure.</strong> Microsoft documented that its enterprise mail system accepted tokens signed with a consumer key. Investigators did not establish how the attacker obtained the key. <a href="https://www.microsoft.com/en-us/msrc/blog/2023/09/results-of-major-technical-investigations-for-storm-0558-key-acquisition">Microsoft investigation, updated 2024</a></p>
                     <blockquote>“Threat modeling is a structured activity for identifying, evaluating, and managing system threats, architectural design flaws, and recommended security mitigations.”</blockquote>
                     <a href="https://owaspsamm.org/model/design/threat-assessment/stream-b/#:~:text=Threat%20modeling%20is%20a%20structured%20activity%20for%20identifying%2C%20evaluating%2C%20and%20managing%20system%20threats%2C%20architectural%20design%20flaws%2C%20and%20recommended%20security%20mitigations.">OWASP SAMM · Threat Modeling <span aria-hidden="true">↗</span></a>
                     <p>Statistic:</p>
@@ -642,15 +661,35 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/#:~:text=100%25%20of%20the%20applications%20tested%20were%20found%20to%20have%20some%20form%20of%20broken%20access%20control.">OWASP Top 10:2025 A01 · Broken Access Control <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-ds-t2">
+                  <summary>Several services rely on the same component without a working fallback, so one failure can disrupt them at the same time.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> A failure of the storage behind Cloudflare Workers KV disrupted multiple products. Cloudflare identified reliance on a single storage provider as a design weakness. <a href="https://blog.cloudflare.com/cloudflare-service-outage-june-12-2025/">Cloudflare incident report, 12 June 2025</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-ds-t3">
+                  <summary>A website loads code a supplier can change, so a compromise at the supplier can put malicious code in visitors' browsers without a new release from the website team.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Optimizely reported that injected project JavaScript ran in some affected websites' visitors' browsers in November 2026. The investigation scopes the affected projects and documents exposure. <a href="https://pages.optimizely.com/rs/947-RKE-048/images/Security%20Incident%20Report%20-%20Optimizely%20Web%20Experimentation%20-%20Nov%2017%202026.pdf">Optimizely incident report, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-code">
-              <th scope="row" class="phase-name"><a href="#phase-code"><span class="phase-index">03</span>Code</a></th>
-              <td class="gov-risks"></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A credential left in code is found by intruders and used to reach customer data.</summary>
+              <th scope="row" class="phase-name"><a href="#phase-code"><span id="devsecops-audit-code" class="phase-index">03</span>Code</a></th>
+              <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-c-g1">
+                  <summary>The company lets a staff account with weak sign-in protection access a repository, so someone who takes over the account can find credentials for production data.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Complaint.</strong> The FTC alleged that Drizly did not require multifactor authentication for personal GitHub accounts with access to its repositories. It alleged that an intruder used a compromised account to obtain credentials and access production data. The FTC subsequently finalized a consent order. <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/202-3185-Drizly-Complaint.pdf">FTC complaint, paragraphs 18-26</a> · <a href="https://www.ftc.gov/legal-library/browse/cases-proceedings/2023185-drizly-llc-matter">FTC case and final order</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-c-t1">
+                  <summary>A working cloud credential is left in code or its history, and an intruder who finds it uses it to reach customer data.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Complaint.</strong> The FTC alleged this path in the revised Uber complaint that led to a settlement. <a href="https://www.ftc.gov/news-events/news/press-releases/2018/04/uber-agrees-expanded-settlement-ftc-related-privacy-security-claims">FTC settlement announcement, 2018</a></p>
                     <blockquote>“The product contains hard-coded credentials, such as a password or cryptographic key.”</blockquote>
                     <a href="https://cwe.mitre.org/data/definitions/798.html#:~:text=The%20product%20contains%20hard%2Dcoded%20credentials%2C%20such%20as%20a%20password%20or%20cryptographic%20key.">MITRE CWE-798 · Use of Hard-coded Credentials <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -658,9 +697,10 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.ftc.gov/news-events/news/press-releases/2018/04/uber-agrees-expanded-settlement-ftc-related-privacy-security-claims#:~:text=intruders%20had%20again%20accessed%20consumer%20data%20the%20company%20stored%20on%20its%20third%2Dparty%20cloud%20provider%E2%80%99s%20servers%20by%20using%20an%20access%20key%20an%20Uber%20engineer%20had%20posted%20on%20a%20code%2Dsharing%20website.">FTC · allegation in its revised complaint, settled by Uber, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                <li><details class="risk">
-                  <summary>A compromised or vulnerable dependency enters the product and gives attackers a way in.</summary>
+                <li><details class="risk" id="risk-c-t2">
+                  <summary>A product takes a compromised or vulnerable dependency, so customers inherit malicious code or a security flaw they did not introduce.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Compromise and vulnerable component case.</strong> Red Hat traced a backdoor to affected releases of XZ Utils. Australian cyber authorities documented exploitation of the Log4j library in real incidents. The XZ source describes the compromised releases. The Log4j source illustrates exposure through a software dependency. <a href="https://www.redhat.com/en/blog/understanding-red-hats-response-xz-security-incident">Red Hat XZ review, 2024</a> · <a href="https://www.cyber.gov.au/publication/asds-acsc-annual-cyber-threat-report-july-2021-to-june-2022">Australian Cyber Security Centre annual threat report, 2022</a></p>
                     <blockquote>“an SSC attack is when a malicious party tampers with the steps, artifacts, or actors within the chain to compromise the consumers of a software artifact down the line.”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204D.pdf#page=15">NIST SP 800-204D · Software supply chain attacks <span aria-hidden="true">↗</span></a>
                     <blockquote>“Build into the toolchain automatic detection of known vulnerabilities in software components.”</blockquote>
@@ -670,9 +710,10 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.cisa.gov/news-events/alerts/2024/03/29/reported-supply-chain-compromise-affecting-xz-utils-data-compression-library-cve-2024-3094#:~:text=malicious%20code%20being%20embedded%20in%20XZ%20Utils%20versions%205.6.0%20and%205.6.1.">CISA · XZ Utils alert, CVE-2024-3094, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                <li><details class="risk">
-                  <summary>A flaw in the company’s own code goes unnoticed, and attackers use it to steal data.</summary>
+                <li><details class="risk" id="risk-c-t3">
+                  <summary>A database input flaw goes unnoticed in code the company ships or relies on, and attackers use it to steal stored data.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for the flaw and data access.</strong> Progress identified a SQL injection flaw in MOVEit Transfer and reported that attackers exploited it to gain unauthorized access to data. The vendor's review and testing history remains unknown. <a href="https://www.progress.com/docs/default-source/moveit-docs/moveit-transfer_moveit-cloud-vulnerabilities-customer-faq_posted.pdf">Progress patch FAQ</a> · <a href="https://www.sec.gov/Archives/edgar/data/876167/000087616724000031/prgs-20231130.htm">Progress SEC annual filing, 2024</a></p>
                     <blockquote>“Help identify vulnerabilities so that they can be corrected before the software is released to prevent exploitation.”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=23">NIST SSDF 1.1 · PW.7 <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -680,14 +721,27 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a#:~:text=Internet%2Dfacing%20MOVEit%20Transfer%20web%20applications%20were%20infected%20with%20a%20web%20shell%20named%20LEMURLOOT%2C%20which%20was%20then%20used%20to%20steal%20data%20from%20underlying%20MOVEit%20Transfer%20databases.">CISA and FBI · Advisory AA23-158A on MOVEit, 2023 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-c-t4">
+                  <summary>A bug in how the application handles data across requests sends one customer's information to another during normal use.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> OpenAI traced the 20 March 2023 ChatGPT exposure to a Redis client bug and reported exposure of some users' chat titles or payment-related information. The defect became visible under specific runtime conditions. <a href="https://openai.com/index/march-20-chatgpt-outage/">OpenAI incident report, 2023</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-c-t5">
+                  <summary>A compromised editor extension runs on a developer's computer, and an intruder uses that access to steal source code.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> GitHub attributed an employee-device compromise and theft of internal repositories to a third-party VS Code extension. GitHub rotated a signing key as a precaution and verified its hosted binaries. <a href="https://github.blog/security/investigating-unauthorized-access-to-githubs-internal-repositories/">GitHub investigation, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-build">
-              <th scope="row" class="phase-name"><a href="#phase-build"><span class="phase-index">04</span>Build</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-build"><span id="devsecops-audit-build" class="phase-index">04</span>Build</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Findings are not collected in one place, so nobody sees which weaknesses keep coming back and training and awareness are aimed at guesses.</summary>
+                <li><details class="risk" id="risk-b-g1">
+                  <summary>Teams record build findings without owners or due dates, so they lose track of what needs fixing and which problems keep recurring.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Partial.</strong> The House investigation found inadequate vulnerability tracking, prioritization and follow-up at Equifax. It concerns vulnerability management across operations. NIST SSDF recommends recording and triaging vulnerabilities, including those found by automated tools. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=69">House Oversight report, PDF p. 69</a> · <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=26">NIST SSDF 1.1, RV.1 and RV.2</a></p>
                     <blockquote>“The type or category of the defect, which suggests areas where the development team needs further training.”</blockquote>
                     <a href="https://owaspsamm.org/model/implementation/defect-management/stream-b/#:~:text=The%20type%20or%20category%20of%20the%20defect%2C%20which%20suggests%20areas%20where%20the%20development%20team%20needs%20further%20training.">OWASP SAMM · Defect Management Metrics and Feedback <span aria-hidden="true">↗</span></a>
                     <p>Documented case, on missing tracking only; the report does not link it to training:</p>
@@ -695,11 +749,18 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=69">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>The build system is tampered with, and malicious code ships to customers inside an official update.</summary>
+                <li><details class="risk" id="risk-b-g2">
+                  <summary>Nobody tracks which dependencies are in each release or where it runs, so teams scramble to find affected systems when a dependency flaw is reported.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Partial.</strong> Australian cyber authorities documented incidents involving Log4j and described the difficulty caused by unknown ICT assets and dependencies. Its findings support the discovery problem. A missing build inventory at a specific victim remains unverified. <a href="https://www.cyber.gov.au/publication/asds-acsc-annual-cyber-threat-report-july-2021-to-june-2022">Australian Cyber Security Centre annual threat report, 2022</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-b-t1">
+                  <summary>Attackers tamper with the build system, and malicious code ships to customers inside a release they trust.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> SolarWinds reported compromise of its Orion build process and distribution of affected software updates. <a href="https://www.sec.gov/Archives/edgar/data/1739942/000173994221000015/swi-20210111.htm">SolarWinds SEC filing, 2021</a></p>
                     <blockquote>“An adversary introduces an unauthorized change to a build output through tampering of the build process”</blockquote>
                     <a href="https://slsa.dev/spec/v1.2/threats#:~:text=An%20adversary%20introduces%20an%20unauthorized%20change%20to%20a%20build%20output%20through%20tampering%20of%20the%20build%20process">SLSA 1.2 · (E) Build process <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -707,15 +768,35 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.cisa.gov/news-events/directives/ed-21-01-mitigate-solarwinds-orion-code-compromise-closed#:~:text=The%20adversary%20enjoyed%20longstanding%2C%20covert%20access%20to%20the%20build%20process%20that%20SolarWinds%20uses%20for%20Orion">CISA · Emergency Directive 21-01 on SolarWinds Orion, 2020 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-b-t2">
+                  <summary>The build system holds credentials for several projects, so a break-in there gives an intruder access to other repositories, cloud services, or release systems.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> CircleCI reported unauthorized access to customer environment variables, tokens and keys. AWS separately attributed an unauthorized Amazon Q extension change to a build integration token with excessive scope. <a href="https://circleci.com/blog/jan-4-2023-incident-report/">CircleCI postmortem, 2023</a> · <a href="https://aws.amazon.com/security/security-bulletins/AWS-2025-015/">AWS security bulletin, 2025</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-b-t3">
+                  <summary>A CI job that runs unreviewed code shares state or permissions with the release build, so it can publish a compromised package under the project's name.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> TanStack reported that a workflow trust-boundary failure let an attacker misuse a short-lived publishing identity. It documented 84 malicious versions across 42 packages. <a href="https://tanstack.com/blog/npm-supply-chain-compromise-postmortem">TanStack postmortem, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-test">
-              <th scope="row" class="phase-name"><a href="#phase-test"><span class="phase-index">05</span>Test</a></th>
-              <td class="gov-risks"></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A check meant to stop faulty releases does not work, and a bad update crashes the systems it reaches.</summary>
+              <th scope="row" class="phase-name"><a href="#phase-test"><span id="devsecops-audit-test" class="phase-index">05</span>Test</a></th>
+              <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-t-g1">
+                  <summary>A team skips a required test without raising the decision, so the release approver cannot see what remains untested.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for testing governance.</strong> The FCA found that TSB omitted active-active performance testing, failed to assess the risks of that omission, and bypassed the expected testing forum. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=10">FCA final notice, sections 2.34-2.35 and 5.4-5.5</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-t-t1">
+                  <summary>A check misses that an update is incompatible with the software that reads it, and the update crashes the systems it reaches.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> CrowdStrike's Channel File 291 analysis identifies the validation and testing gaps that preceded a Windows outage. The case concerns reliability of security software's content update. <a href="https://www.crowdstrike.com/wp-content/uploads/2024/08/Channel-File-291-Incident-Root-Cause-Analysis-08.06.2024.pdf#page=2">CrowdStrike root cause analysis, 2024</a></p>
                     <blockquote>“ensure that the implemented security controls operate as expected and satisfy the project’s stated security requirements”</blockquote>
                     <a href="https://owaspsamm.org/model/verification/requirements-driven-testing/#:~:text=ensure%20that%20the%20implemented%20security%20controls%20operate%20as%20expected%20and%20satisfy%20the%20project%E2%80%99s%20stated%20security%20requirements">OWASP SAMM · Requirements-driven Testing <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -723,14 +804,33 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.crowdstrike.com/wp-content/uploads/2024/08/Channel-File-291-Incident-Root-Cause-Analysis-08.06.2024.pdf#page=2">CrowdStrike · Channel File 291 root cause analysis, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-t-t2">
+                  <summary>A team copies real customer data into a test system with weaker protections, and outsiders can access the copy.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Complaint.</strong> The FTC alleged that identifiable customer data in a Global Tel*Link test environment was accessible over the internet without password protection. The FTC later finalized its consent order. <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/Complaint-GlobalTelLink.pdf">FTC complaint, paragraphs 21-33</a> · <a href="https://www.ftc.gov/news-events/news/press-releases/2024/02/ftc-finalizes-order-global-tellink-over-security-failures-led-breach-sensitive-data">FTC final order announcement, 2024</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-t-t3">
+                  <summary>Tests miss how a security feature behaves under realistic load, and the feature slows or takes down the live service when rolled out.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> A Cloudflare WAF rule passed the standard tests, which lacked a check for excessive CPU use. The resulting outage was amplified by global rollout. <a href="https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/">Cloudflare incident report, 2 July 2019</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-t-t4">
+                  <summary>Tests check that allowed requests work and skip requests from the wrong account, so an access flaw reaches production and lets users change another customer's resources.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Phala Cloud reported that an ownership check was missing from AI-assisted code. Normal tests and review missed it, and an attacker changed resources they did not own. <a href="https://status.phala.network/incident/915228">Phala Cloud postmortem, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-release">
-              <th scope="row" class="phase-name"><a href="#phase-release"><span class="phase-index">06</span>Release</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-release"><span id="devsecops-audit-release" class="phase-index">06</span>Release</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A go-live is approved before the system is ready, and customers lose access to the service.</summary>
+                <li><details class="risk" id="risk-r-g1">
+                  <summary>The team approves a release with gaps in its risk and recovery checks, and customers lose access while the team struggles to restore service.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for readiness and impact.</strong> TSB considered attestations, test evidence and residual risks. The FCA found gaps in risk management and preparation for the scale of post-migration defects. The decision and approvals are described in the full notice. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=48">FCA final notice, sections J and 4.265 onward</a></p>
                     <blockquote>“all relevant stakeholders have a solid understanding of the imposed risk.”</blockquote>
                     <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=all%20relevant%20stakeholders%20have%20a%20solid%20understanding%20of%20the%20imposed%20risk.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -738,11 +838,18 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.fca.org.uk/news/press-releases/tsb-fined-48m-operational-resilience-failings#:~:text=TSB%20failed%20to%20organise%20and%20control%20the%20IT%20migration%20programme%20adequately">FCA · TSB fined £48.65m, 2022 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A release file is changed after the build, and customers run the attacker’s version.</summary>
+                <li><details class="risk" id="risk-r-g2">
+                  <summary>A release goes ahead under an undocumented exception, so teams cannot verify who accepted the risk or when they must meet the conditions.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Supervisory finding.</strong> The FCA observed an AI use case going to production under an undocumented exception and observed failures to track conditional approvals across its wholesale-bank review. The report documents the governance failure. Customer harm remains unknown. <a href="https://www.fca.org.uk/publications/multi-firm-reviews/wholesale-banks-supervision-insights-3-autumn-2026">FCA wholesale-bank review, autumn 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-r-t1">
+                  <summary>A release file is changed after the build, and customers run the attacker's version under the original name.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Codecov reported that its published Bash Uploader was modified and that a customer spotted a checksum mismatch. HashiCorp disclosed exposure of a signing key and rotated it. Unauthorized use of that key was unverified. <a href="https://about.codecov.io/security-update/">Codecov incident notice, 2021</a> · <a href="https://discuss.hashicorp.com/t/hcsec-2021-12-codecov-security-event-and-hashicorp-gpg-key-exposure/23512">HashiCorp customer impact advisory, 2021</a></p>
                     <blockquote>“SLSA Build L2 covers tampering of the artifact or provenance after the build.”</blockquote>
                     <a href="https://slsa.dev/spec/v1.2/verifying-artifacts#:~:text=SLSA%20Build%20L2%20covers%20tampering%20of%20the%20artifact%20or%20provenance%20after%20the%20build.">SLSA 1.2 · Verifying Artifacts <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -750,14 +857,21 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://about.codecov.io/security-update/#:~:text=someone%20had%20gained%20unauthorized%20access%20to%20our%20Bash%20Uploader%20script%20and%20modified%20it%20without%20our%20permission.">Codecov · Bash Uploader security update, 2021 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-r-t2">
+                  <summary>A registry accepts a new version published outside the approved build process, and customers can install it under the project's trusted name.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for publication.</strong> The Axios maintainer confirmed that a compromised account published two new malicious npm versions. The notice identifies the affected versions and the publication window. <a href="https://github.com/axios/axios/issues/10636">Axios maintainer postmortem, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-deploy">
-              <th scope="row" class="phase-name"><a href="#phase-deploy"><span class="phase-index">07</span>Deploy</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-deploy"><span id="devsecops-audit-deploy" class="phase-index">07</span>Deploy</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Code reaches production without a controlled deployment, and a faulty rollout causes heavy losses.</summary>
+                <li><details class="risk" id="risk-d-g1">
+                  <summary>Nobody verifies that every production system got the approved version, so a partial rollout goes undetected and causes losses.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The SEC found inadequate controls for deploying and testing Knight Capital's order router. One server was missed in deployment and the firm lost more than $460 million. <a href="https://www.sec.gov/files/litigation/admin/2013/34-70694.pdf">SEC Knight Capital order, 2013</a></p>
                     <blockquote>“Implement approved configuration-controlled changes to the system”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r5.pdf#page=125">NIST SP 800-53 Rev. 5 · CM-3 <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -765,11 +879,12 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.sec.gov/newsroom/press-releases/2013-222#:~:text=Did%20not%20have%20adequate%20controls%20and%20procedures%20for%20code%20deployment%20and%20testing%20for%20its%20equity%20order%20router.">SEC · Knight Capital charged after a loss of more than $460 million, 2013 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+              </ul></td>
               <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A misconfigured cloud service goes live, and an outsider downloads the data behind it.</summary>
+                <li><details class="risk" id="risk-d-t1">
+                  <summary>A misconfigured production access control gives an intruder a way to reach customer data.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The DOJ linked unauthorized access to data in the Capital One intrusion to a misconfigured web application firewall. The date the setting was introduced remains unknown. <a href="https://www.justice.gov/usao-wdwa/pr/former-seattle-tech-worker-convicted-wire-fraud-and-computer-intrusions">DOJ conviction announcement, 2022</a></p>
                     <blockquote>“missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services”</blockquote>
                     <a href="https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration/#:~:text=missing%20appropriate%20security%20hardening%20across%20any%20part%20of%20the%20application%20stack%20or%20improperly%20configured%20permissions%20on%20cloud%20services">OWASP Top 10:2025 A02 · Security Misconfiguration <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -777,15 +892,53 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.justice.gov/usao-wdwa/pr/former-seattle-tech-worker-convicted-wire-fraud-and-computer-intrusions#:~:text=She%20then%20used%20those%20misconfigured%20accounts%20to%20hack%20in%20and%20download%20the%20data%20of%20more%20than%2030%20entities%2C%20including%20Capital%20One%20bank.">US Department of Justice · Capital One intrusion conviction, 2022 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-d-t2">
+                  <summary>A faulty configuration reaches several regions before teams can stop the rollout, and failure in a shared service can slow recovery.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Google Cloud reported that a globally replicated policy update interacted with a recently released Service Control change. Multiple services were disrupted, and clearing the problematic state took longer in a large region. <a href="https://status.cloud.google.com/incidents/ow5i3PPK96RduMcb1SsW">Google Cloud incident report, 12 June 2025</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-d-t3">
+                  <summary>A cloud resource is set to expire by mistake, so it is deleted across the zones meant to keep it running.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Google traced deletion of one UniSuper private cloud, spanning two zones, to a term incorrectly set at provisioning. Separately stored backups and third-party backup software helped recovery. <a href="https://cloud.google.com/blog/products/infrastructure/details-of-google-cloud-gcve-incident?hl=en">Google Cloud GCVE incident report, 2024</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-d-t4">
+                  <summary>A team deletes the old database before checking data integrity after a migration, so missing records take longer to recover.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> LootLocker reported missing writes after a cutover and that it deleted the source database before discovering the gap. It later restored the source and replayed the identified records. <a href="https://lootlocker.com/blog/db-postmortem-data-loss-during-database-migration/">LootLocker migration postmortem, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-operate">
-              <th scope="row" class="phase-name"><a href="#phase-operate"><span class="phase-index">08</span>Operate</a></th>
-              <td class="gov-risks"></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>A known flaw is not patched, and attackers use it to break in.</summary>
+              <th scope="row" class="phase-name"><a href="#phase-operate"><span id="devsecops-audit-operate" class="phase-index">08</span>Operate</a></th>
+              <td class="gov-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-o-g1">
+                  <summary>Operations stops rotating signing keys without establishing a replacement, so old keys stay trusted.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for the maintenance gap.</strong> The Cyber Safety Review Board found that Microsoft paused manual consumer signing-key rotation after an outage and lacked automated rotation or key-age alerting before the intrusion. The initial key acquisition remained unknown. <a href="https://www.govinfo.gov/content/pkg/CHRG-118hhrg58996/pdf/CHRG-118hhrg58996.pdf#page=16">Cyber Safety Review Board report in the congressional record, PDF p. 16</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-o-g2">
+                  <summary>The support plan underestimates how many failures can happen at once, so the team takes longer to restore service.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for support preparedness.</strong> TSB recognized a post-go-live defect volume risk. The FCA found the bank was inadequately prepared for the scale at which it materialized. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=80">FCA final notice, section 4.265 onward</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-o-g3">
+                  <summary>A critical system stays in service after its vendor stops providing security fixes, so attackers can exploit a flaw for which the team has no supported patch.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for unsupported equipment.</strong> The DOJ reported that most routers in the KV botnet were past vendor support. The case concerns small-office and home-office devices. UK financial authorities separately highlighted end-of-life systems and loss of vendor support as resourcing issues. <a href="https://www.justice.gov/archives/opa/pr/us-government-disrupts-botnet-peoples-republic-china-used-conceal-hacking-critical">DOJ botnet disruption, 2024</a> · <a href="https://www.fca.org.uk/news/statements/fca-boe-treasury-joint-statement-frontier-ai-models-cyber-resilience">FCA, Bank of England and Treasury statement, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-o-t1">
+                  <summary>A known flaw is left unpatched on a live system, and attackers use it to break in.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The Equifax investigation linked the breach to an unpatched Apache Struts vulnerability. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=2">House Oversight report, PDF pp. 2-3</a></p>
                     <blockquote>“Help ensure that vulnerabilities are remediated in accordance with risk to reduce the window of opportunity for attackers.”</blockquote>
                     <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=26">NIST SSDF 1.1 · RV.2 <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -793,14 +946,27 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=2">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-o-t2">
+                  <summary>A team leaves some service credentials active after a supplier breach, and an intruder reuses them to get in.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Cloudflare traced access to its systems to credentials it had missed when rotating secrets after the Okta incident. <a href="https://blog.cloudflare.com/thanksgiving-2023-security-incident/">Cloudflare Thanksgiving 2023 incident report</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-o-t3">
+                  <summary>Backups stop without an alert or fail when needed at scale, so the team cannot recover all the data after a production failure.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> GitLab could not use several expected recovery paths after a database incident and recovered from an older copy, with data loss. <a href="https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/">GitLab database outage postmortem, 2017</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-monitor">
-              <th scope="row" class="phase-name"><a href="#phase-monitor"><span class="phase-index">09</span>Monitor</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-monitor"><span id="devsecops-audit-monitor" class="phase-index">09</span>Monitor</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Nobody checks that required fixes were made, and an attack hits the systems left unpatched.</summary>
+                <li><details class="risk" id="risk-m-g1">
+                  <summary>Nobody checks that required fixes reached every affected system, so vulnerable services stay exposed after the fixes were supposed to be complete.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The UK National Audit Office found no formal mechanism to assess local NHS compliance with national advice before WannaCry. The report records disruption across the NHS. <a href="https://www.nao.org.uk/wp-content/uploads/2017/10/Investigation-WannaCry-cyber-attack-and-the-NHS.pdf#page=8">NAO report, PDF pp. 7-9</a></p>
                     <blockquote>“centrally monitor and regularly report on SLA breaches.”</blockquote>
                     <a href="https://owaspsamm.org/model/implementation/defect-management/stream-a/#:~:text=centrally%20monitor%20and%20regularly%20report%20on%20SLA%20breaches.">OWASP SAMM · Defect Tracking <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -808,11 +974,36 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.nao.org.uk/wp-content/uploads/2017/10/Investigation-WannaCry-cyber-attack-and-the-NHS.pdf#page=8">UK National Audit Office · WannaCry and the NHS, 2017 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Monitoring is not working, and data theft goes unseen for months.</summary>
+                <li><details class="risk" id="risk-m-g2">
+                  <summary>The company delays telling affected customers about a breach, so they lose time to protect their accounts and data.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Complaint and final order.</strong> The FTC alleged that CafePress concealed a breach from affected customers. It finalized an order requiring consumer notification and security measures. <a href="https://www.ftc.gov/news-events/news/press-releases/2022/06/ftc-finalizes-action-against-cafepress-covering-data-breach-lax-security-0">FTC final action, 2022</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-m-g3">
+                  <summary>An outsourced security team has unclear rules for escalating alerts, so the company responds after attackers have had time to steal data.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The SEC found inadequate alert review and escalation arrangements at R.R. Donnelley. Its systems began alerting about three weeks before the eventual encryption and theft of data. <a href="https://www.sec.gov/files/litigation/admin/2024/34-100365.pdf">SEC order, paragraphs 5-17</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-m-g4">
+                  <summary>A manufacturer fails to recognize that an exploited product flaw is reportable, so it misses the deadline for warning authorities.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Obligation.</strong> For manufacturers in scope, EU Cyber Resilience Act reporting began on 11 September 2026. Covered actively exploited product vulnerabilities and severe security incidents have a 24-hour early-warning deadline from awareness. This source establishes the deadline. <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">European Commission CRA reporting guidance</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-m-g5">
+                  <summary>A new security report is closed as a duplicate, so the additional exposure stays open until the issue is disclosed publicly.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> ClickUp reported that a materially different submission revealing customer email addresses and a live API token was incorrectly closed. ClickUp learned of the details on public disclosure. It reported no evidence that anyone beyond the researcher used the token. <a href="https://clickup.com/blog/april-27th-update/">ClickUp incident update, 2026</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-m-t1">
+                  <summary>Security monitoring fails without an alert, and data theft goes unseen while the service appears to be working.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Equifax's traffic inspection had been blind for 19 months because of an expired certificate. The investigation distinguishes that period from the shorter period of the breach. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">House Oversight report, PDF p. 3</a></p>
                     <blockquote>“Without logging and monitoring, attacks and breaches cannot be detected”</blockquote>
                     <a href="https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/#:~:text=Without%20logging%20and%20monitoring%2C%20attacks%20and%20breaches%20cannot%20be%20detected">OWASP Top 10:2025 A09 · Security Logging and Alerting Failures <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -820,14 +1011,21 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">US House Oversight Committee · Equifax breach report, 2018 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-m-t2">
+                  <summary>Security logs are missing or unavailable to the people investigating, so they cannot tell what happened or who was affected.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The CSRB found that the Commerce Department could not use newly enabled Microsoft logging to investigate earlier activity. <a href="https://www.govinfo.gov/content/pkg/CHRG-118hhrg58996/pdf/CHRG-118hhrg58996.pdf#page=21">Cyber Safety Review Board report in the congressional record, PDF pp. 20-21</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
             <tr id="risks-retire">
-              <th scope="row" class="phase-name"><a href="#phase-retire"><span class="phase-index">10</span>Retire</a></th>
+              <th scope="row" class="phase-name"><a href="#phase-retire"><span id="devsecops-audit-retire" class="phase-index">10</span>Retire</a></th>
               <td class="gov-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>Personal data is kept with no end date, and a regulator fines the company.</summary>
+                <li><details class="risk" id="risk-x-g1">
+                  <summary>Nobody sets when to delete personal data, so it is kept indefinitely and the company can be fined.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for retention.</strong> Finland’s privacy authority fined Verkkokauppa.com for failing to define a customer-account data retention period. In 2026, the Supreme Administrative Court upheld the retention finding and left the reduced €792,639 penalty in place. The case concerns ongoing retention independently of a service shutdown. <a href="https://www.edpb.europa.eu/news/finnish-sa-administrative-fine-of-eu-856000-for-failing-to-define-storage-period-of-customer_en">EDPB case summary, 2024</a> · <a href="https://www.kho.fi/paatokset/kho-12-6-2026-1604/">Supreme Administrative Court decision, 2026</a></p>
                     <blockquote>“You have retention requirements for data, and you destroy backups in a timely manner after the relevant retention period ends”</blockquote>
                     <a href="https://owaspsamm.org/model/operations/operational-management/stream-a/#:~:text=You%20have%20retention%20requirements%20for%20data%2C%20and%20you%20destroy%20backups%20in%20a%20timely%20manner%20after%20the%20relevant%20retention%20period%20ends">OWASP SAMM · Data Protection <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -835,11 +1033,24 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.edpb.europa.eu/news/national-news/2024/finnish-sa-administrative-fine-eu-856000-failing-define-storage-period_en#:~:text=The%20Finnish%20SA%20imposed%20an%20administrative%20fine%20of%20856%2C000%20euros%20on%20the%20controller%20for%20failing%20to%20define%20storage%20period%20of%20customer%20account%20data.">EDPB · Finnish authority fines Verkkokauppa.com, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
-              <td class="engineering-risks"><ul class="risk-table-list">
-                <li><details class="risk">
-                  <summary>An account or credential is not switched off, and an intruder uses it to get in.</summary>
+                <li><details class="risk" id="risk-x-g2">
+                  <summary>A company hires a disposal vendor without checking its ability to destroy data securely, and is held responsible when customer records leave its control.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The SEC found that Morgan Stanley Smith Barney hired a moving and storage company without data-destruction experience and failed to oversee disposal. Equipment with customer data later reached resale. <a href="https://www.sec.gov/newsroom/press-releases/2022-168">SEC order announcement, 2022</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-x-g3">
+                  <summary>A cleanup relies on retention settings the company has never verified, so it deletes records the company must keep.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for records cleanup.</strong> The SEC found that about 47 million J.P. Morgan Securities communications were permanently deleted after the archiving vendor failed to apply the expected retention settings in one domain. Some communications fell within the regulatory retention period. The case concerns records cleanup during operation. <a href="https://www.sec.gov/files/litigation/admin/2023/34-97787.pdf">SEC order, paragraphs 5-11</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
+              <td class="engineering-risks"><ul class="risk-table-list">
+                <li><details class="risk" id="risk-x-t1">
+                  <summary>An account or credential is left active after an employee leaves or a service shuts down, and an intruder uses it to get in.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct for employee offboarding.</strong> The DOJ reported that a former medical center employee used an administrator account after termination, deleted files and disrupted operations. A service credential left active after shutdown has the same revocation gap. <a href="https://www.justice.gov/usao-de/pr/middletown-man-sentenced-six-months-home-confinement-damaging-former-employers-computer">DOJ sentencing announcement, 2021</a></p>
                     <blockquote>“When secrets are no longer required or potentially compromised, you must securely revoke them to restrict access.”</blockquote>
                     <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet#273-revocation">OWASP Secrets Management Cheat Sheet · 2.7.3 Revocation <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -847,9 +1058,10 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-046a#:~:text=The%20victim%20organization%20confirmed%20that%20this%20account%20was%20not%20disabled%20immediately%20following%20the%20employee%E2%80%99s%20departure.">CISA · Advisory AA24-046A, 2024 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                <li><details class="risk">
-                  <summary>Hardware is disposed of without tracking the data on it, and customer data leaves the company’s control.</summary>
+                <li><details class="risk" id="risk-x-t2">
+                  <summary>The disposal team loses track of which devices still hold customer data, and equipment with readable data is sold or discarded.</summary>
                   <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> The OCC cited Morgan Stanley's inventory failure. The SEC's later order found devices containing customer data were sold and ultimately resold, with some reaching an online auction. <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-134.html">OCC penalty, 2020</a> · <a href="https://www.sec.gov/newsroom/press-releases/2022-168">SEC order and announcement, 2022</a></p>
                     <blockquote>“Media sanitization refers to a process that renders access to target data on the media infeasible for a given level of effort.”</blockquote>
                     <a href="https://csrc.nist.gov/pubs/sp/800/88/r2/final#:~:text=Media%20sanitization%20refers%20to%20a%20process%20that%20renders%20access%20to%20target%20data%20on%20the%20media%20infeasible%20for%20a%20given%20level%20of%20effort.">NIST SP 800-88 Rev. 2 · Media Sanitization <span aria-hidden="true">↗</span></a>
                     <p>Documented case:</p>
@@ -857,384 +1069,23 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
                     <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-134.html#:~:text=failed%20to%20maintain%20appropriate%20inventory%20of%20customer%20data%20stored%20on%20the%20decommissioned%20hardware%20devices.">OCC · Morgan Stanley fined $60 million, 2020 <span aria-hidden="true">↗</span></a>
                   </div>
                 </details></li>
-                </ul></td>
+                <li><details class="risk" id="risk-x-t3">
+                  <summary>A shutdown script is given the wrong list of systems, so it deletes live customer services that the team has to restore.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Atlassian intended to remove a legacy standalone app, but a target-list mix-up resulted in deletion of 883 cloud sites. <a href="https://www.atlassian.com/blog/how-we-build/post-incident-review-april-2022-outage">Atlassian post-incident review, 2022</a></p>
+                  </div>
+                </details></li>
+                <li><details class="risk" id="risk-x-t4">
+                  <summary>Old DNS or email records still point to an abandoned service, and someone takes it over and sends phishing mail under the company's name.</summary>
+                  <div class="risk-evidence">
+                    <p class="risk-case"><strong>Direct.</strong> Guardio Labs documented a malicious campaign that used abandoned dependencies in DNS and email records to send spam and phishing mail under trusted names. <a href="https://site.guard.io/labs/subdomailing-thousands-of-hijacked-major-brand-subdomains-found-bombarding-users-with-millions">Guardio Labs SubdoMailing investigation, 2024</a></p>
+                  </div>
+                </details></li>
+              </ul></td>
             </tr>
           </tbody>
         </table>
       </section>
-<section class="risk-register risk-audit" id="devsecops-risk-audit" aria-labelledby="devsecops-risk-audit-heading">
-  <div class="map-title">
-    <h2 id="devsecops-risk-audit-heading"><a class="sec-link" href="#devsecops-risk-audit">DevSecOps phase risk audit</a></h2>
-  </div>
-  <p class="audit-intro">Reviewed 24 November 2026 against both views. The register contains 55 DevSecOps risks and 30 agentic risks. It covers enterprise governance and secure development in every phase. A case can illustrate several risks when it documents a different failure for each one.</p>
-  <p class="audit-intro">Each risk sits at the phase where a team can address the failure. Governance covers ownership, oversight and decisions. Secure development covers code, tooling and service execution. <strong>Page</strong> identifies a risk represented in the HTML. <strong>Added</strong> identifies an additional risk. <span class="tag">[inference]</span></p>
-  <p class="audit-intro"><strong>Direct</strong> identifies a documented failure or consequence. A qualifier names the part the source establishes. <strong>Partial</strong> identifies a documented part of the scenario with a material gap in the causal evidence. <strong>Complaint</strong> attributes an allegation to a regulator. <strong>Compromise</strong> identifies a malicious change or access event with downstream harm still unknown. <strong>Supervisory finding</strong>, <strong>Obligation</strong>, <strong>Field data</strong>, <strong>Study</strong>, <strong>Demonstration</strong>, <strong>Operational case</strong>, <strong>Analogue</strong>, and <strong>Control evidence</strong> identify their respective source types. Scenario wording describes what can happen in a comparable setting. Check the evidence column for what happened in the cited case.</p>
-  <h3 id="devsecops-audit-plan"><a class="sec-link" href="#devsecops-audit-plan">Plan</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-plan">Page phase</a> · <a href="devsecops.html#risks-plan">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">P-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">Product and IT have no clear owner for enforcing security policy, so known weaknesses stay open.</td>
-<td data-label="Public evidence"><strong>Direct for accountability.</strong> The House investigation found unclear lines of authority and a gap between Equifax's IT policies and how teams carried them out. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=4">House Oversight report, PDF p. 4</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">P-G2 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">A project misses a privacy duty when defining how it will use personal data, so it leaves required records or assessments incomplete and can be fined.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The Polish authority fined Toyota Bank Polska for leaving profiling out of its records of processing and data protection impact assessment. <a href="https://www.uodo.gov.pl/en/553/1833">Polish Data Protection Office</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">P-G3 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">The business depends on one provider and has no tested fallback, so losing that provider can stop essential work.</td>
-<td data-label="Public evidence"><strong>Partial.</strong> UnitedHealth reported widespread payment and claims disruption after the Change Healthcare shutdown. The testimony leaves individual customers' contingency plans unknown. <a href="https://www.congress.gov/118/meeting/house/117242/witnesses/HHRG-118-IF02-Wstate-WittyS-20240501-U5.pdf">Testimony to Congress, 2024</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">P-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">The requirements miss password protection in storage and logs, so the software can record passwords in plain text.</td>
-<td data-label="Public evidence"><strong>Partial.</strong> Ireland's DPC found that Meta stored some user passwords in plain text. The DOJ separately documented that a password retrieved in plain text from a federal portal database was used to access a complainant's email. One case establishes plaintext storage and the other establishes retrieval and misuse. The original requirements remain unknown. NIST specifies storage protections for centrally verified passwords. <a href="https://www.dataprotection.ie/en/news-media/press-releases/DPC-announces-91-million-fine-of-Meta">Irish DPC decision summary, 2024</a> · <a href="https://www.justice.gov/usao-edva/pr/federal-jury-convicts-alexandria-man-charges-relating-deletion-us-government-databases">DOJ conviction announcement, 2026</a> · <a href="https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#passwordver">NIST SP 800-63B-4, password verifiers</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">P-T2 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">The project misses a location that holds personal data, so an intruder who reaches it can find readable records.</td>
-<td data-label="Public evidence"><strong>Partial.</strong> The House report records that sensitive data at Equifax was unencrypted. It leaves the original requirements and the protection that would have stopped the theft unknown. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">House Oversight report, PDF pp. 3-4</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-design"><a class="sec-link" href="#devsecops-audit-design">Design</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-design">Page phase</a> · <a href="devsecops.html#risks-design">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">DS-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">A major migration goes ahead without assessing how it changes security risks, so known weaknesses stay open and the company can face enforcement.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The OCC cited ineffective pre-migration risk assessment processes and untimely correction of deficiencies in its $80 million Capital One penalty. The OCC release leaves the options considered unknown. <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-101.html">OCC, 2020</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">DS-G2 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A supplier integration can read sensitive customer records, so a compromise of its access credentials can expose data from connected companies.</td>
-<td data-label="Public evidence"><strong>Direct for the access and theft.</strong> Google's incident responders documented data theft from Salesforce tenants through stolen OAuth tokens associated with Salesloft Drift. The tenants' supplier reviews and available permission choices remain unknown. <a href="https://cloud.google.com/security/report/resources/cloud-threat-horizons-report-h1-2026">Google Cloud Threat Horizons, H1 2026</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">DS-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">The design leaves a gap in access controls, so a user or service reaches restricted data or functions.</td>
-<td data-label="Public evidence"><strong>Direct for the boundary failure.</strong> Microsoft documented that its enterprise mail system accepted tokens signed with a consumer key. Investigators did not establish how the attacker obtained the key. <a href="https://www.microsoft.com/en-us/msrc/blog/2023/09/results-of-major-technical-investigations-for-storm-0558-key-acquisition">Microsoft investigation, updated 2024</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">DS-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">Several services rely on the same component without a working fallback, so one failure can disrupt them at the same time.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> A failure of the storage behind Cloudflare Workers KV disrupted multiple products. Cloudflare identified reliance on a single storage provider as a design weakness. <a href="https://blog.cloudflare.com/cloudflare-service-outage-june-12-2025/">Cloudflare incident report, 12 June 2025</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">DS-T3 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A website loads code a supplier can change, so a compromise at the supplier can put malicious code in visitors' browsers without a new release from the website team.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Optimizely reported that injected project JavaScript ran in some affected websites' visitors' browsers in November 2026. The investigation scopes the affected projects and documents exposure. <a href="https://pages.optimizely.com/rs/947-RKE-048/images/Security%20Incident%20Report%20-%20Optimizely%20Web%20Experimentation%20-%20Nov%2017%202026.pdf">Optimizely incident report, 2026</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-code"><a class="sec-link" href="#devsecops-audit-code">Code</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-code">Page phase</a> · <a href="devsecops.html#risks-code">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">C-G1 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">The company lets a staff account with weak sign-in protection access a repository, so someone who takes over the account can find credentials for production data.</td>
-<td data-label="Public evidence"><strong>Complaint.</strong> The FTC alleged that Drizly did not require multifactor authentication for personal GitHub accounts with access to its repositories. It alleged that an intruder used a compromised account to obtain credentials and access production data. The FTC subsequently finalized a consent order. <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/202-3185-Drizly-Complaint.pdf">FTC complaint, paragraphs 18-26</a> · <a href="https://www.ftc.gov/legal-library/browse/cases-proceedings/2023185-drizly-llc-matter">FTC case and final order</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">C-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A working cloud credential is left in code or its history, and an intruder who finds it uses it to reach customer data.</td>
-<td data-label="Public evidence"><strong>Complaint.</strong> The FTC alleged this path in the revised Uber complaint that led to a settlement. <a href="https://www.ftc.gov/news-events/news/press-releases/2018/04/uber-agrees-expanded-settlement-ftc-related-privacy-security-claims">FTC settlement announcement, 2018</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">C-T2 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A product takes a compromised or vulnerable dependency, so customers inherit malicious code or a security flaw they did not introduce.</td>
-<td data-label="Public evidence"><strong>Compromise and vulnerable component case.</strong> Red Hat traced a backdoor to affected releases of XZ Utils. Australian cyber authorities documented exploitation of the Log4j library in real incidents. The XZ source describes the compromised releases. The Log4j source illustrates exposure through a software dependency. <a href="https://www.redhat.com/en/blog/understanding-red-hats-response-xz-security-incident">Red Hat XZ review, 2024</a> · <a href="https://www.cyber.gov.au/publication/asds-acsc-annual-cyber-threat-report-july-2021-to-june-2022">Australian Cyber Security Centre annual threat report, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">C-T3 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A database input flaw goes unnoticed in code the company ships or relies on, and attackers use it to steal stored data.</td>
-<td data-label="Public evidence"><strong>Direct for the flaw and data access.</strong> Progress identified a SQL injection flaw in MOVEit Transfer and reported that attackers exploited it to gain unauthorized access to data. The vendor's review and testing history remains unknown. <a href="https://www.progress.com/docs/default-source/moveit-docs/moveit-transfer_moveit-cloud-vulnerabilities-customer-faq_posted.pdf">Progress patch FAQ</a> · <a href="https://www.sec.gov/Archives/edgar/data/876167/000087616724000031/prgs-20231130.htm">Progress SEC annual filing, 2024</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">C-T4 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A bug in how the application handles data across requests sends one customer's information to another during normal use.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> OpenAI traced the 20 March 2023 ChatGPT exposure to a Redis client bug and reported exposure of some users' chat titles or payment-related information. The defect became visible under specific runtime conditions. <a href="https://openai.com/index/march-20-chatgpt-outage/">OpenAI incident report, 2023</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">C-T5 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A compromised editor extension runs on a developer's computer, and an intruder uses that access to steal source code.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> GitHub attributed an employee-device compromise and theft of internal repositories to a third-party VS Code extension. GitHub rotated a signing key as a precaution and verified its hosted binaries. <a href="https://github.blog/security/investigating-unauthorized-access-to-githubs-internal-repositories/">GitHub investigation, 2026</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-build"><a class="sec-link" href="#devsecops-audit-build">Build</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-build">Page phase</a> · <a href="devsecops.html#risks-build">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">B-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">Teams record build findings without owners or due dates, so they lose track of what needs fixing and which problems keep recurring.</td>
-<td data-label="Public evidence"><strong>Partial.</strong> The House investigation found inadequate vulnerability tracking, prioritization and follow-up at Equifax. It concerns vulnerability management across operations. NIST SSDF recommends recording and triaging vulnerabilities, including those found by automated tools. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=69">House Oversight report, PDF p. 69</a> · <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf#page=26">NIST SSDF 1.1, RV.1 and RV.2</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">B-G2 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">Nobody tracks which dependencies are in each release or where it runs, so teams scramble to find affected systems when a dependency flaw is reported.</td>
-<td data-label="Public evidence"><strong>Partial.</strong> Australian cyber authorities documented incidents involving Log4j and described the difficulty caused by unknown ICT assets and dependencies. Its findings support the discovery problem. A missing build inventory at a specific victim remains unverified. <a href="https://www.cyber.gov.au/publication/asds-acsc-annual-cyber-threat-report-july-2021-to-june-2022">Australian Cyber Security Centre annual threat report, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">B-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">Attackers tamper with the build system, and malicious code ships to customers inside a release they trust.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> SolarWinds reported compromise of its Orion build process and distribution of affected software updates. <a href="https://www.sec.gov/Archives/edgar/data/1739942/000173994221000015/swi-20210111.htm">SolarWinds SEC filing, 2021</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">B-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">The build system holds credentials for several projects, so a break-in there gives an intruder access to other repositories, cloud services, or release systems.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> CircleCI reported unauthorized access to customer environment variables, tokens and keys. AWS separately attributed an unauthorized Amazon Q extension change to a build integration token with excessive scope. <a href="https://circleci.com/blog/jan-4-2023-incident-report/">CircleCI postmortem, 2023</a> · <a href="https://aws.amazon.com/security/security-bulletins/AWS-2025-015/">AWS security bulletin, 2025</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">B-T3 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A CI job that runs unreviewed code shares state or permissions with the release build, so it can publish a compromised package under the project's name.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> TanStack reported that a workflow trust-boundary failure let an attacker misuse a short-lived publishing identity. It documented 84 malicious versions across 42 packages. <a href="https://tanstack.com/blog/npm-supply-chain-compromise-postmortem">TanStack postmortem, 2026</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-test"><a class="sec-link" href="#devsecops-audit-test">Test</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-test">Page phase</a> · <a href="devsecops.html#risks-test">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">T-G1 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A team skips a required test without raising the decision, so the release approver cannot see what remains untested.</td>
-<td data-label="Public evidence"><strong>Direct for testing governance.</strong> The FCA found that TSB omitted active-active performance testing, failed to assess the risks of that omission, and bypassed the expected testing forum. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=10">FCA final notice, sections 2.34-2.35 and 5.4-5.5</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">T-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A check misses that an update is incompatible with the software that reads it, and the update crashes the systems it reaches.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> CrowdStrike's Channel File 291 analysis identifies the validation and testing gaps that preceded a Windows outage. The case concerns reliability of security software's content update. <a href="https://www.crowdstrike.com/wp-content/uploads/2024/08/Channel-File-291-Incident-Root-Cause-Analysis-08.06.2024.pdf#page=2">CrowdStrike root cause analysis, 2024</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">T-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A team copies real customer data into a test system with weaker protections, and outsiders can access the copy.</td>
-<td data-label="Public evidence"><strong>Complaint.</strong> The FTC alleged that identifiable customer data in a Global Tel*Link test environment was accessible over the internet without password protection. The FTC later finalized its consent order. <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/Complaint-GlobalTelLink.pdf">FTC complaint, paragraphs 21-33</a> · <a href="https://www.ftc.gov/news-events/news/press-releases/2024/02/ftc-finalizes-order-global-tellink-over-security-failures-led-breach-sensitive-data">FTC final order announcement, 2024</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">T-T3 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">Tests miss how a security feature behaves under realistic load, and the feature slows or takes down the live service when rolled out.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> A Cloudflare WAF rule passed the standard tests, which lacked a check for excessive CPU use. The resulting outage was amplified by global rollout. <a href="https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/">Cloudflare incident report, 2 July 2019</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">T-T4 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">Tests check that allowed requests work and skip requests from the wrong account, so an access flaw reaches production and lets users change another customer's resources.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Phala Cloud reported that an ownership check was missing from AI-assisted code. Normal tests and review missed it, and an attacker changed resources they did not own. <a href="https://status.phala.network/incident/915228">Phala Cloud postmortem, 2026</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-release"><a class="sec-link" href="#devsecops-audit-release">Release</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-release">Page phase</a> · <a href="devsecops.html#risks-release">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">R-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">The team approves a release with gaps in its risk and recovery checks, and customers lose access while the team struggles to restore service.</td>
-<td data-label="Public evidence"><strong>Direct for readiness and impact.</strong> TSB considered attestations, test evidence and residual risks. The FCA found gaps in risk management and preparation for the scale of post-migration defects. The decision and approvals are described in the full notice. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=48">FCA final notice, sections J and 4.265 onward</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">R-G2 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A release goes ahead under an undocumented exception, so teams cannot verify who accepted the risk or when they must meet the conditions.</td>
-<td data-label="Public evidence"><strong>Supervisory finding.</strong> The FCA observed an AI use case going to production under an undocumented exception and observed failures to track conditional approvals across its wholesale-bank review. The report documents the governance failure. Customer harm remains unknown. <a href="https://www.fca.org.uk/publications/multi-firm-reviews/wholesale-banks-supervision-insights-3-autumn-2026">FCA wholesale-bank review, autumn 2026</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">R-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A release file is changed after the build, and customers run the attacker's version under the original name.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Codecov reported that its published Bash Uploader was modified and that a customer spotted a checksum mismatch. HashiCorp disclosed exposure of a signing key and rotated it. Unauthorized use of that key was unverified. <a href="https://about.codecov.io/security-update/">Codecov incident notice, 2021</a> · <a href="https://discuss.hashicorp.com/t/hcsec-2021-12-codecov-security-event-and-hashicorp-gpg-key-exposure/23512">HashiCorp customer impact advisory, 2021</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">R-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A registry accepts a new version published outside the approved build process, and customers can install it under the project's trusted name.</td>
-<td data-label="Public evidence"><strong>Direct for publication.</strong> The Axios maintainer confirmed that a compromised account published two new malicious npm versions. The notice identifies the affected versions and the publication window. <a href="https://github.com/axios/axios/issues/10636">Axios maintainer postmortem, 2026</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-deploy"><a class="sec-link" href="#devsecops-audit-deploy">Deploy</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-deploy">Page phase</a> · <a href="devsecops.html#risks-deploy">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">D-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">Nobody verifies that every production system got the approved version, so a partial rollout goes undetected and causes losses.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The SEC found inadequate controls for deploying and testing Knight Capital's order router. One server was missed in deployment and the firm lost more than $460 million. <a href="https://www.sec.gov/files/litigation/admin/2013/34-70694.pdf">SEC Knight Capital order, 2013</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">D-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A misconfigured production access control gives an intruder a way to reach customer data.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The DOJ linked unauthorized access to data in the Capital One intrusion to a misconfigured web application firewall. The date the setting was introduced remains unknown. <a href="https://www.justice.gov/usao-wdwa/pr/former-seattle-tech-worker-convicted-wire-fraud-and-computer-intrusions">DOJ conviction announcement, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">D-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A faulty configuration reaches several regions before teams can stop the rollout, and failure in a shared service can slow recovery.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Google Cloud reported that a globally replicated policy update interacted with a recently released Service Control change. Multiple services were disrupted, and clearing the problematic state took longer in a large region. <a href="https://status.cloud.google.com/incidents/ow5i3PPK96RduMcb1SsW">Google Cloud incident report, 12 June 2025</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">D-T3 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A cloud resource is set to expire by mistake, so it is deleted across the zones meant to keep it running.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Google traced deletion of one UniSuper private cloud, spanning two zones, to a term incorrectly set at provisioning. Separately stored backups and third-party backup software helped recovery. <a href="https://cloud.google.com/blog/products/infrastructure/details-of-google-cloud-gcve-incident?hl=en">Google Cloud GCVE incident report, 2024</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">D-T4 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A team deletes the old database before checking data integrity after a migration, so missing records take longer to recover.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> LootLocker reported missing writes after a cutover and that it deleted the source database before discovering the gap. It later restored the source and replayed the identified records. <a href="https://lootlocker.com/blog/db-postmortem-data-loss-during-database-migration/">LootLocker migration postmortem, 2026</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-operate"><a class="sec-link" href="#devsecops-audit-operate">Operate</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-operate">Page phase</a> · <a href="devsecops.html#risks-operate">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">O-G1 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">Operations stops rotating signing keys without establishing a replacement, so old keys stay trusted.</td>
-<td data-label="Public evidence"><strong>Direct for the maintenance gap.</strong> The Cyber Safety Review Board found that Microsoft paused manual consumer signing-key rotation after an outage and lacked automated rotation or key-age alerting before the intrusion. The initial key acquisition remained unknown. <a href="https://www.govinfo.gov/content/pkg/CHRG-118hhrg58996/pdf/CHRG-118hhrg58996.pdf#page=16">Cyber Safety Review Board report in the congressional record, PDF p. 16</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">O-G2 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">The support plan underestimates how many failures can happen at once, so the team takes longer to restore service.</td>
-<td data-label="Public evidence"><strong>Direct for support preparedness.</strong> TSB recognized a post-go-live defect volume risk. The FCA found the bank was inadequately prepared for the scale at which it materialized. <a href="https://www.fca.org.uk/publication/final-notices/tsb-bank-plc-2022.pdf#page=80">FCA final notice, section 4.265 onward</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">O-G3 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A critical system stays in service after its vendor stops providing security fixes, so attackers can exploit a flaw for which the team has no supported patch.</td>
-<td data-label="Public evidence"><strong>Direct for unsupported equipment.</strong> The DOJ reported that most routers in the KV botnet were past vendor support. The case concerns small-office and home-office devices. UK financial authorities separately highlighted end-of-life systems and loss of vendor support as resourcing issues. <a href="https://www.justice.gov/archives/opa/pr/us-government-disrupts-botnet-peoples-republic-china-used-conceal-hacking-critical">DOJ botnet disruption, 2024</a> · <a href="https://www.fca.org.uk/news/statements/fca-boe-treasury-joint-statement-frontier-ai-models-cyber-resilience">FCA, Bank of England and Treasury statement, 2026</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">O-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">A known flaw is left unpatched on a live system, and attackers use it to break in.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The Equifax investigation linked the breach to an unpatched Apache Struts vulnerability. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=2">House Oversight report, PDF pp. 2-3</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">O-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A team leaves some service credentials active after a supplier breach, and an intruder reuses them to get in.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Cloudflare traced access to its systems to credentials it had missed when rotating secrets after the Okta incident. <a href="https://blog.cloudflare.com/thanksgiving-2023-security-incident/">Cloudflare Thanksgiving 2023 incident report</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">O-T3 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">Backups stop without an alert or fail when needed at scale, so the team cannot recover all the data after a production failure.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> GitLab could not use several expected recovery paths after a database incident and recovered from an older copy, with data loss. <a href="https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/">GitLab database outage postmortem, 2017</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-monitor"><a class="sec-link" href="#devsecops-audit-monitor">Monitor</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-monitor">Page phase</a> · <a href="devsecops.html#risks-monitor">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">M-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">Nobody checks that required fixes reached every affected system, so vulnerable services stay exposed after the fixes were supposed to be complete.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The UK National Audit Office found no formal mechanism to assess local NHS compliance with national advice before WannaCry. The report records disruption across the NHS. <a href="https://www.nao.org.uk/wp-content/uploads/2017/10/Investigation-WannaCry-cyber-attack-and-the-NHS.pdf#page=8">NAO report, PDF pp. 7-9</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">M-G2 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">The company delays telling affected customers about a breach, so they lose time to protect their accounts and data.</td>
-<td data-label="Public evidence"><strong>Complaint and final order.</strong> The FTC alleged that CafePress concealed a breach from affected customers. It finalized an order requiring consumer notification and security measures. <a href="https://www.ftc.gov/news-events/news/press-releases/2022/06/ftc-finalizes-action-against-cafepress-covering-data-breach-lax-security-0">FTC final action, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">M-G3 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">An outsourced security team has unclear rules for escalating alerts, so the company responds after attackers have had time to steal data.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The SEC found inadequate alert review and escalation arrangements at R.R. Donnelley. Its systems began alerting about three weeks before the eventual encryption and theft of data. <a href="https://www.sec.gov/files/litigation/admin/2024/34-100365.pdf">SEC order, paragraphs 5-17</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">M-G4 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A manufacturer fails to recognize that an exploited product flaw is reportable, so it misses the deadline for warning authorities.</td>
-<td data-label="Public evidence"><strong>Obligation.</strong> For manufacturers in scope, EU Cyber Resilience Act reporting began on 11 September 2026. Covered actively exploited product vulnerabilities and severe security incidents have a 24-hour early-warning deadline from awareness. This source establishes the deadline. <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">European Commission CRA reporting guidance</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">M-G5 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A new security report is closed as a duplicate, so the additional exposure stays open until the issue is disclosed publicly.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> ClickUp reported that a materially different submission revealing customer email addresses and a live API token was incorrectly closed. ClickUp learned of the details on public disclosure. It reported no evidence that anyone beyond the researcher used the token. <a href="https://clickup.com/blog/april-27th-update/">ClickUp incident update, 2026</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">M-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">Security monitoring fails without an alert, and data theft goes unseen while the service appears to be working.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Equifax's traffic inspection had been blind for 19 months because of an expired certificate. The investigation distinguishes that period from the shorter period of the breach. <a href="https://oversight.house.gov/wp-content/uploads/2018/12/Equifax-Report.pdf#page=3">House Oversight report, PDF p. 3</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">M-T2 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">Security logs are missing or unavailable to the people investigating, so they cannot tell what happened or who was affected.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The CSRB found that the Commerce Department could not use newly enabled Microsoft logging to investigate earlier activity. <a href="https://www.govinfo.gov/content/pkg/CHRG-118hhrg58996/pdf/CHRG-118hhrg58996.pdf#page=21">Cyber Safety Review Board report in the congressional record, PDF pp. 20-21</a></td>
-</tr>
-</tbody></table>
-  <h3 id="devsecops-audit-retire"><a class="sec-link" href="#devsecops-audit-retire">Retire</a></h3>
-  <p class="audit-intro"><a href="devsecops.html#phase-retire">Page phase</a> · <a href="devsecops.html#risks-retire">Page risk row</a></p>
-  <table class="risk-audit-table">
-<thead><tr>
-<th scope="col">Risk</th>
-<th scope="col">Enterprise failure and consequence</th>
-<th scope="col">Public evidence</th>
-</tr></thead><tbody>
-<tr>
-<th scope="row" data-label="Risk">X-G1 · Governance · Page</th>
-<td data-label="Enterprise failure and consequence">Nobody sets when to delete personal data, so it is kept indefinitely and the company can be fined.</td>
-<td data-label="Public evidence"><strong>Direct for retention.</strong> Finland’s privacy authority fined Verkkokauppa.com for failing to define a customer-account data retention period. In 2026, the Supreme Administrative Court upheld the retention finding and left the reduced €792,639 penalty in place. The case concerns ongoing retention independently of a service shutdown. <a href="https://www.edpb.europa.eu/news/finnish-sa-administrative-fine-of-eu-856000-for-failing-to-define-storage-period-of-customer_en">EDPB case summary, 2024</a> · <a href="https://www.kho.fi/paatokset/kho-12-6-2026-1604/">Supreme Administrative Court decision, 2026</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">X-G2 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A company hires a disposal vendor without checking its ability to destroy data securely, and is held responsible when customer records leave its control.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The SEC found that Morgan Stanley Smith Barney hired a moving and storage company without data-destruction experience and failed to oversee disposal. Equipment with customer data later reached resale. <a href="https://www.sec.gov/newsroom/press-releases/2022-168">SEC order announcement, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">X-G3 · Governance · Added</th>
-<td data-label="Enterprise failure and consequence">A cleanup relies on retention settings the company has never verified, so it deletes records the company must keep.</td>
-<td data-label="Public evidence"><strong>Direct for records cleanup.</strong> The SEC found that about 47 million J.P. Morgan Securities communications were permanently deleted after the archiving vendor failed to apply the expected retention settings in one domain. Some communications fell within the regulatory retention period. The case concerns records cleanup during operation. <a href="https://www.sec.gov/files/litigation/admin/2023/34-97787.pdf">SEC order, paragraphs 5-11</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">X-T1 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">An account or credential is left active after an employee leaves or a service shuts down, and an intruder uses it to get in.</td>
-<td data-label="Public evidence"><strong>Direct for employee offboarding.</strong> The DOJ reported that a former medical center employee used an administrator account after termination, deleted files and disrupted operations. A service credential left active after shutdown has the same revocation gap. <a href="https://www.justice.gov/usao-de/pr/middletown-man-sentenced-six-months-home-confinement-damaging-former-employers-computer">DOJ sentencing announcement, 2021</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">X-T2 · Secure development · Page</th>
-<td data-label="Enterprise failure and consequence">The disposal team loses track of which devices still hold customer data, and equipment with readable data is sold or discarded.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> The OCC cited Morgan Stanley's inventory failure. The SEC's later order found devices containing customer data were sold and ultimately resold, with some reaching an online auction. <a href="https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-134.html">OCC penalty, 2020</a> · <a href="https://www.sec.gov/newsroom/press-releases/2022-168">SEC order and announcement, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">X-T3 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">A shutdown script is given the wrong list of systems, so it deletes live customer services that the team has to restore.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Atlassian intended to remove a legacy standalone app, but a target-list mix-up resulted in deletion of 883 cloud sites. <a href="https://www.atlassian.com/blog/how-we-build/post-incident-review-april-2022-outage">Atlassian post-incident review, 2022</a></td>
-</tr>
-<tr>
-<th scope="row" data-label="Risk">X-T4 · Secure development · Added</th>
-<td data-label="Enterprise failure and consequence">Old DNS or email records still point to an abandoned service, and someone takes it over and sends phishing mail under the company's name.</td>
-<td data-label="Public evidence"><strong>Direct.</strong> Guardio Labs documented a malicious campaign that used abandoned dependencies in DNS and email records to send spam and phishing mail under trusted names. <a href="https://site.guard.io/labs/subdomailing-thousands-of-hijacked-major-brand-subdomains-found-bombarding-users-with-millions">Guardio Labs SubdoMailing investigation, 2024</a></td>
-</tr>
-</tbody></table>
-</section>
     </main>
   </div>
 
@@ -1882,11 +1733,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   <div class="map-title">
     <h2 id="shared-risk-audit-heading"><a class="sec-link" href="#shared-risk-audit">Evidence and coverage checks</a></h2>
   </div>
-  <ul class="audit-checks"><li><strong>Phase coverage, 24 November 2026.</strong> Reviewed the ten phase panels in each view, the 22 risks in the HTML risk table and the four agent themes. Both lanes are covered in every phase of each view. The agentic view has a separate Review phase. The DevSecOps view covers Design.</li><li><strong>Source review, 24 November 2026.</strong> Opened all 84 distinct external source URLs and checked the case statements against the evidence. Narrowed wording where the investigation established an outcome and left the upstream decision unknown. The password and data requirements cases support the observed failure while leaving the original decisions unknown. The Exchange Online findings link to the original board report reproduced in the congressional record. The FCA's 2026 review establishes observed approvals and exceptions at firms. GitHub documents configurable approvals. The Hugging Face evidence concerns internal evaluations, and the Railway case concerns a historical difference in dashboard and API protections.</li><li><strong>2026 relevance.</strong> Reviewed current vendor and regulator reports for trust boundaries in development tools, builds and releases, verification of access controls, product incident reporting, agent changes and activity records. Verizon's 2026 DBIR provides observed industry context for vulnerability exploitation and third-party involvement. NIST continues to list SSDF 1.1 as final and 1.2 as a draft. <a href="https://www.verizon.com/about/news/breach-industry-wide-dbir-finds">Verizon 2026 DBIR summary</a> · <a href="https://csrc.nist.gov/Projects/ssdf/publications">NIST SSDF publications</a> · <a href="https://genai.owasp.org/top-10-for-agentic-applications-2026/">OWASP Agentic Top 10</a></li><li><strong>Scope of conclusions.</strong> Relative priority depends on the affected business service, its owner, current controls, likelihood and business impact. Public cases establish relevance and help test the risk wording. Their frequency or severity cannot establish an individual enterprise's exposure. <a href="https://csrc.nist.gov/pubs/ir/8286/a/r1/final">NIST IR 8286A Rev. 1</a></li></ul>
+  <ul class="audit-checks"><li><strong>Phase coverage, 24 November 2026.</strong> The audit covers governance and secure development in all ten phases of each view. See <a href="#risks-by-phase">Risks by phase</a> and the <a href="#agentic-risk-audit">agentic phase risks</a>.</li><li><strong>Source review, 24 November 2026.</strong> Opened all 84 distinct external source URLs and checked the case statements against the evidence. Narrowed wording where the investigation established an outcome and left the upstream decision unknown. The password and data requirements cases support the observed failure while leaving the original decisions unknown. The Exchange Online findings link to the original board report reproduced in the congressional record. The FCA's 2026 review establishes observed approvals and exceptions at firms. GitHub documents configurable approvals. The Hugging Face evidence concerns internal evaluations, and the Railway case concerns a historical difference in dashboard and API protections.</li><li><strong>2026 relevance.</strong> Reviewed current vendor and regulator reports for trust boundaries in development tools, builds and releases, verification of access controls, product incident reporting, agent changes and activity records. Verizon's 2026 DBIR provides observed industry context for vulnerability exploitation and third-party involvement. NIST continues to list SSDF 1.1 as final and 1.2 as a draft. <a href="https://www.verizon.com/about/news/breach-industry-wide-dbir-finds">Verizon 2026 DBIR summary</a> · <a href="https://csrc.nist.gov/Projects/ssdf/publications">NIST SSDF publications</a> · <a href="https://genai.owasp.org/top-10-for-agentic-applications-2026/">OWASP Agentic Top 10</a></li><li><strong>Scope of conclusions.</strong> Relative priority depends on the affected business service, its owner, current controls, likelihood and business impact. Public cases establish relevance and help test the risk wording. Their frequency or severity cannot establish an individual enterprise's exposure. <a href="https://csrc.nist.gov/pubs/ir/8286/a/r1/final">NIST IR 8286A Rev. 1</a></li></ul>
 </section>
 
   <footer>
-    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation" data-view="devsecops">The lifecycle mapping, the risks and the match between each risk and its case are an interpretation by AI. Each risk describes a consequence when the activity in the same phase and lane is skipped.</span></p>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation" data-view="devsecops">The lifecycle mapping, the risks and the match between each risk and its case are an interpretation by AI.</span></p>
+    <section class="tag-key" id="tag-key-devsecops" data-view="devsecops"><h2 id="h-tag-key-devsecops"><a class="sec-link" href="#tag-key-devsecops">Tags on this page</a></h2>
+      <dl>
+        <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
+      </dl>
+    </section>
     <section class="tag-key" id="tag-key" data-view="agentic"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
       <dl>
         <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
