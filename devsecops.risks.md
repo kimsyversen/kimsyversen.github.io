@@ -250,10 +250,7 @@ The DevSecOps risks also apply when agents do the work. The risks below address 
 
 ## Evidence and coverage checks
 
-- **Phase coverage, 24 November 2026.** Reviewed the ten phase panels in each view, the 22 risks in the HTML risk table and the four agent themes. Both lanes are covered in every phase of each view. The agentic view has a separate Review phase. The DevSecOps view covers Design.
-- **Source review, 24 November 2026.** Opened all 84 distinct external source URLs and checked the case statements against the evidence. Narrowed wording where the investigation established an outcome and left the upstream decision unknown. The password and data requirements cases support the observed failure while leaving the original decisions unknown. The Exchange Online findings link to the original board report reproduced in the congressional record. The FCA's 2026 review establishes observed approvals and exceptions at firms. GitHub documents configurable approvals. The Hugging Face evidence concerns internal evaluations, and the Railway case concerns a historical difference in dashboard and API protections.
-- **2026 relevance.** Reviewed current vendor and regulator reports for trust boundaries in development tools, builds and releases, verification of access controls, product incident reporting, agent changes and activity records. Verizon's 2026 DBIR provides observed industry context for vulnerability exploitation and third-party involvement. NIST continues to list SSDF 1.1 as final and 1.2 as a draft. [Verizon 2026 DBIR summary](https://www.verizon.com/about/news/breach-industry-wide-dbir-finds) · [NIST SSDF publications](https://csrc.nist.gov/Projects/ssdf/publications) · [OWASP Agentic Top 10](https://genai.owasp.org/top-10-for-agentic-applications-2026/)
-- **Scope of conclusions.** Relative priority depends on the affected business service, its owner, current controls, likelihood and business impact. Public cases establish relevance and help test the risk wording. Their frequency or severity cannot establish an individual enterprise's exposure. [NIST IR 8286A Rev. 1](https://csrc.nist.gov/pubs/ir/8286/a/r1/final)
+See [Evidence and coverage checks](devsecops.factcheck.md#evidence-and-coverage-checks) in the fact check.
 
 ### Tags on this page
 
