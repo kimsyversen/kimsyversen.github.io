@@ -406,9 +406,15 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .present-nav button { min-width: 5.5rem; }
 .present-nav button:last-child { background: var(--ink); color: var(--paper); }
 .present-stage { overflow: auto; overscroll-behavior: contain; }
-.present-slide { width: min(74rem, 100% - 32px); margin: 0 auto; padding-block: clamp(24px, 6vh, 64px); }
-.present-slide h2 { font: 500 clamp(2.6rem, 8vw, 6.5rem)/.95 var(--serif); overflow-wrap: anywhere; }
-.present-subtitle { margin-top: 10px; color: var(--muted); font: 500 clamp(1.15rem, 2.7vw, 2rem)/1.2 var(--serif); }
+.present-slide { width: min(66rem, 100% - 32px); margin: 0 auto; padding-block: clamp(20px, 4vh, 48px); }
+.present-chapters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
+.present-chapters li { border-top: 2px solid var(--line); padding-top: 6px; color: var(--muted); font: 500 .72rem/1.3 var(--mono); }
+.present-chapters [aria-current] { border-color: var(--accent); color: var(--accent); }
+.present-scenario { margin-bottom: 18px; max-width: 64ch; color: var(--muted); }
+.present-slide h2 { font: 500 clamp(2.6rem, 6.5vw, 5.75rem)/.95 var(--serif); overflow-wrap: anywhere; }
+.present-subtitle { margin-top: 6px; color: var(--engineering); font: 500 clamp(1.25rem, 3vw, 2.4rem)/1.2 var(--serif); }
+.present-question { margin: clamp(16px, 4vh, 32px) 0 10px; max-width: 40ch; font: 500 clamp(1.4rem, 3.1vw, 2.55rem)/1.16 var(--serif); }
+.present-answer { max-width: 58ch; padding: 2px 0 12px; font-size: clamp(1rem, 1.85vw, 1.35rem); }
 .present-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 24px 0 16px; }
 .present-facts > div { padding: 12px 16px; border-top: 2px solid var(--line); background: color-mix(in srgb, var(--ink) 4%, var(--paper)); }
 .present-facts dt, .present-count { color: var(--muted); font: 500 .78rem/1.4 var(--mono); }
@@ -419,8 +425,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .present-more { border-top: 1px solid var(--line); }
 .present-more summary { width: fit-content; padding-block: 11px; color: var(--accent); cursor: pointer; }
 .present-more .present-facts { margin-top: 4px; }
-.present-more ul { margin: 0; padding-left: 1.15em; }
-.present-more li + li { margin-top: .4em; }
+.present-reference summary { color: var(--muted); }
 .present-more a { color: var(--accent); }
 @media (max-width: 560px) { .present-facts { grid-template-columns: minmax(0, 1fr); } }
 @media print { .presentation[open], .present-start { display: none; } }
@@ -1805,11 +1810,21 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   </div>
   <div class="present-stage">
     <section class="present-slide" id="presentation-slide">
+      <ol class="present-chapters" role="list" aria-label="Lesson chapters">
+        <li>Define the problem</li>
+        <li>Make and ship the fix</li>
+        <li>Run and retire</li>
+      </ol>
+      <p class="present-scenario">In a claims portal, a customer can open another customer’s document. <span class="tag">[inference]</span></p>
       <h2 id="present-plan" tabindex="-1"><a class="sec-link" href="#present-plan"></a></h2>
       <p class="present-subtitle"></p>
-      <dl class="present-facts"></dl>
+      <p class="present-question"></p>
       <details class="present-more">
-        <summary></summary>
+        <summary>Reveal an example answer</summary>
+        <p class="present-answer"></p>
+      </details>
+      <details class="present-more present-reference">
+        <summary>Phase reference</summary>
         <dl class="present-facts"></dl>
         <a class="present-source" href="#risks"></a>
       </details>
@@ -2025,15 +2040,84 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     const title = dialog.querySelector("h2");
     const titleLink = title.querySelector("a");
     const subtitle = dialog.querySelector(".present-subtitle");
+    const chapters = dialog.querySelectorAll(".present-chapters li");
+    const question = dialog.querySelector(".present-question");
+    const answer = dialog.querySelector(".present-answer");
+    const reveal = dialog.querySelector(".present-more");
+    const reference = dialog.querySelector(".present-reference");
     const facts = dialog.querySelector(".present-facts");
-    const more = dialog.querySelector(".present-more");
-    const reveal = more.querySelector("summary");
-    const moreFacts = more.querySelector("dl");
-    const sourceLink = more.querySelector(".present-source");
-    const example = document.getElementById("agentic-example");
+    const sourceLink = reference.querySelector(".present-source");
     const slides = new Map();
     const revealed = new Set();
     let active, returnHash, openedFromLink;
+
+    // Each phase asks for one decision about the same fictional claims portal.
+    const lessons = {
+      devsecops: {
+        plan: ["Make the goal testable",
+          "What rule should the team agree on before anyone writes code?",
+          "A customer may open only documents they own. The product owner agrees on that rule, and the team writes a test that tries to open another customer’s document."],
+        design: ["Decide where to enforce the rule",
+          "Where should the ownership check happen if someone bypasses the portal screen?",
+          "The server checks who owns the document before sending it. Apply the same rule to single downloads and bulk downloads."],
+        code: ["Keep the rule consistent",
+          "What should a code reviewer look for when the fix touches several download paths?",
+          "Trace each download path to an ownership check. Check that a failure in the check still prevents the document from being sent."],
+        build: ["Tie the package to the reviewed code",
+          "How will the team know the package it tests contains the reviewed fix?",
+          "Use the build record to link the package to the reviewed code revision. Verify the signature and record the package’s digest, its digital fingerprint."],
+        test: ["Test what must be refused",
+          "A customer can still download their own document. What else would you test?",
+          "Try another customer’s document both on its own and in a bulk download. Then force the ownership check to fail. In every case, the portal should send no restricted document."],
+        release: ["Decide whether the fix is ready",
+          "What would you want to see before approving this version for production?",
+          "Check that the tests covered the agreed rule and ran on the version being approved. Confirm who will watch the rollout and how to stop or roll it back."],
+        deploy: ["Verify what actually went live",
+          "The rollout reports success. How would you check that customers received the approved fix?",
+          "Compare the running version with the approved one, then use test accounts to check that the live portal refuses access across accounts."],
+        operate: ["Give responders a plan",
+          "An alert points to one customer account. What should the on-call team do first?",
+          "Check the alert against the service logs and follow the agreed response procedure. Record what happened and who owns the next action."],
+        monitor: ["Turn a signal into new work",
+          "One account is repeatedly refused access. What should go to Operations, and what could go back to Planning?",
+          "Alert Operations so it can investigate the account now. Send Planning a separate proposal to limit repeated requests, with the evidence that prompted it."],
+        retire: ["Close access and account for the data",
+          "When the portal is replaced, what should the owner check before signing off?",
+          "Confirm the old service and its credentials are disabled. Record which documents were deleted or archived under the retention rules and who owns the archive."],
+      },
+      agentic: {
+        plan: ["Agree on what the agent may do",
+          "What would you put in the task spec, and who should approve it?",
+          "State the ownership rule and the refusal tests in the spec. Have the product owner approve it before the coding agent starts."],
+        code: ["Hand over a change someone can review",
+          "What can the coding agent deliver without access to production?",
+          "It opens a pull request on its own branch with the ownership check, tests and a link to the original issue."],
+        review: ["Give the reviewer a specific gap to look for",
+          "The single download path is fixed. What other path should the review agent inspect?",
+          "Check bulk downloads for the same ownership rule. If the check is missing there, ask for a fix and a test. The developer reviews the result before merging."],
+        build: ["Hand over a package that can be verified",
+          "What should the build agent pass on so the next agent can identify what it is testing?",
+          "Pass on the signed package and the record of the builder and merged code revision, along with a list of the components included in the package."],
+        test: ["Say exactly what the tests proved",
+          "If the portal refuses all cross-account requests in the test, what can the agent report?",
+          "Report which single and bulk requests were tried, that they were refused, and which package was tested. Keep the conclusion limited to this bug."],
+        release: ["Keep the production decision with a person",
+          "The policy checks pass. What can the release agent recommend, and who decides?",
+          "The agent can recommend release and attach the test results and build record. The release owner reads the evidence and decides whether to deploy."],
+        deploy: ["Limit access to this rollout",
+          "What access does the deployment agent need, and what should it leave behind?",
+          "Give it a credential that works only for this rollout. Record which approved package went live and when."],
+        operate: ["Set the limits before an alert arrives",
+          "Monitoring flags one account. What may the agent do under the portal’s response procedure?",
+          "In this example the procedure lets the agent end the account’s sessions. It records what it did so someone can review the action."],
+        monitor: ["Send urgent alerts and future work to different owners",
+          "Who gets the alert about the account now, and where does a proposal to limit requests go?",
+          "Send the alert to Operations for investigation. Open a separate issue for Planning to consider limiting how fast one account can request documents."],
+        retire: ["Approve what will be shut down and kept",
+          "The portal is being replaced. What should the agent prepare before someone approves shutdown?",
+          "List the old service, the credentials it and its agents can use, and the data it holds. Propose what to revoke, delete or archive for a person to approve."],
+      },
+    };
 
     for (const map of maps) {
       map.phases.forEach((phase, index) => {
@@ -2056,50 +2140,37 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     function renderSlide(slide) {
       if (slide === active) return;
       if (active) {
-        if (more.open) revealed.add(active.id);
+        if (reveal.open) revealed.add(active.id);
         else revealed.delete(active.id);
       }
       active = slide;
       const { id, map, phase, index } = slide;
       const panel = document.getElementById(map.prefix + "phase-" + phase.id);
       const agentic = Boolean(map.prefix);
+      const [takeaway, prompt, exampleAnswer] = lessons[agentic ? "agentic" : "devsecops"][phase.id];
+      let chapter = 1;
+      if (["plan", "design"].includes(phase.id)) chapter = 0;
+      if (["operate", "monitor", "retire"].includes(phase.id)) chapter = 2;
+      chapters.forEach((item, i) => {
+        if (chapter === i) item.setAttribute("aria-current", "step");
+        else item.removeAttribute("aria-current");
+      });
       label.textContent = agentic ? "Agentic DevSecOps presentation" : "DevSecOps presentation";
       title.id = id;
       titleLink.href = "#" + id;
       titleLink.textContent = phase.name;
-      subtitle.textContent = panel.querySelector(".panel-head p").textContent;
+      subtitle.textContent = takeaway;
+      question.textContent = prompt;
+      answer.textContent = exampleAnswer;
       facts.replaceChildren();
       for (const dt of panel.querySelectorAll(".panel-facts dt")) {
         if (dt.textContent !== "Risks") addFact(facts, dt.textContent, dt.nextElementSibling);
       }
 
-      moreFacts.replaceChildren();
-      if (agentic) {
-        reveal.replaceChildren("Claims portal example ", example.querySelector(".map-title .tag").cloneNode(true));
-        const row = example.querySelector(`a[href="${phase.link.hash}"]`).closest("tr");
-        addFact(moreFacts, "What the agent does", row.cells[1]);
-        addFact(moreFacts, "What it hands on", row.cells[2]);
-        sourceLink.href = "#agentic-example";
-        sourceLink.textContent = "Full example";
-      } else {
-        reveal.textContent = "Phase risks";
-        const row = document.getElementById("risks-" + phase.id);
-        for (const [term, lane] of [["Governance risks", ".gov-risks"], ["Secure development risks", ".engineering-risks"]]) {
-          const list = document.createElement("ul");
-          for (const summary of row.querySelectorAll(lane + " summary")) {
-            const item = document.createElement("li");
-            item.textContent = summary.textContent;
-            list.append(item);
-          }
-          const wrapper = document.createElement("div");
-          wrapper.append(list);
-          addFact(moreFacts, term, wrapper);
-        }
-        sourceLink.href = "#" + row.id;
-        sourceLink.textContent = "Risk cases and sources";
-      }
-
-      more.open = revealed.has(id);
+      sourceLink.href = agentic ? "#agentic-example" : "#risks-" + phase.id;
+      sourceLink.textContent = agentic ? "Full example" : "Risk cases and sources";
+      reveal.open = revealed.has(id);
+      reference.open = false;
       previous.disabled = index === 0;
       next.textContent = index === map.phases.length - 1 ? "Finish" : "Next";
       count.textContent = `${index + 1} / ${map.phases.length}`;

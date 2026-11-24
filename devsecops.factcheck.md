@@ -234,3 +234,7 @@ The DevSecOps view groups all 55 scenarios from the 24 November audit in the exi
 ## Presentation mode, 24 November 2026
 
 The slides use the existing phase activities, risk summaries and claims portal example. They introduce no new sourced claims. Chromium at 1280, 375 and 320 pixels passed checks for slide order, keyboard navigation, reveals, direct links, dismissal, return focus and page width. Browser fullscreen was not exercised.
+
+## Presentation lesson, 24 November 2026
+
+The lesson uses the fictional claims portal throughout. The prompts and sample answers illustrate the existing phase activities and agent handoffs. They add no sourced claims. The phase reference stays linked to the risk register or full agentic example. Chromium at 1280, 375 and 320 pixels confirmed that prompts fit above the fold at a height of 640 pixels, answers start hidden, chapter indicators follow the phase, and slide links and navigation still work.
