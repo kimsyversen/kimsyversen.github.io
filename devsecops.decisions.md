@@ -72,3 +72,9 @@
 - It reuses the risk table styles. One new style, `.walk-gate`, marks the human gate lines.
 - The whole example carries one `inference` tag. It adds no risk, control or quote. The four-changes table stays the one home for those.
 - Retire is shown as "not part of this change", with what would happen when the portal is replaced. Reason: one fix does not retire a service, but leaving the row out would break the match with the ten phases.
+
+### 24 November 2026: selected-phase trace
+
+- Both views retain the numbered cards and shared phase anchors. Desktop connectors join Test to Release and show the selected phase's route back to Plan. Phone layouts use a two-column phase index to keep the detail close to the selection.
+- The Agentic trace names its handoffs and recommended human gates. Release passes the approved artifact to Deploy only on approval. Monitor sends alerts to Operate and new work to Plan. The decision to retire is an independent input to Retire.
+- The dedicated four-change table is the home for agentic risks, controls and evidence. The per-phase inferred risk lists were removed from the Agentic view. The standard view's risk counts still link to its risk register.

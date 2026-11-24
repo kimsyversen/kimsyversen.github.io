@@ -262,7 +262,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 }
 .flow { list-style: none; margin: 0; padding: 16px 0 0; display: grid; gap: 22px; }
 .flow-10 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-.flow-10 li:nth-child(5n+1)::before { content: none; }
+.flow-10 li:is(:nth-child(5n+1), :last-child)::before { content: none; }
 .flow li { position: relative; display: flex; }
 .flow li + li::before { content: "\2192"; position: absolute; left: -18px; top: 50%; transform: translateY(-50%); color: var(--trace); font: 400 .9rem/1 var(--mono); }
 .flow a { flex: 1; min-width: 0; padding: 10px 10px 12px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); text-decoration: none; }
@@ -275,6 +275,38 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .flow-out { display: block; margin-top: 5px; color: var(--muted); font-size: .8125rem; line-height: 1.3; }
 .flow-gate { display: block; margin-top: 7px; color: var(--accent); font: 500 .62rem/1.3 var(--mono); letter-spacing: .075em; text-transform: uppercase; }
 .flow a[aria-current] .flow-num, .flow a[aria-current] .flow-out, .flow a[aria-current] .flow-gate { color: inherit; }
+.flow-map { position: relative; isolation: isolate; }
+.flow-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+.flow-map .flow { position: relative; }
+.map.js .flow { padding: 14px 14px 24px; row-gap: 46px; }
+.map.js .flow li::before { content: none; }
+.map.js .flow-lines { display: block; }
+.flow-edge { fill: none; stroke: var(--trace); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.flow-edge.active { stroke: var(--engineering); stroke-width: 1.9; }
+.flow-edge.approval { stroke: var(--accent); }
+.flow-edge.feedback { stroke-dasharray: 3 4; }
+.flow-evidence { fill: var(--engineering); stroke: var(--paper); stroke-width: 10; paint-order: stroke; font: 500 .75rem var(--mono); }
+.flow a[data-related]:not([aria-current]):not(.gated a) { border-color: var(--trace); }
+.flow-key { display: none; }
+.phase-trace {
+  margin: 0;
+  padding: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+.phase-trace[hidden], .map.has-trace .phase-gate { display: none; }
+.trace-step { min-width: 0; padding: 0 14px; }
+.trace-step:first-child { padding-inline-start: 0; }
+.trace-step + .trace-step { border-inline-start: 1px solid var(--line); }
+.trace-step dt { color: var(--engineering); font: 500 .69rem/1.35 var(--mono); text-transform: uppercase; }
+.trace-step.human dt { color: var(--accent); }
+.trace-step.human dt::before { content: "◇"; margin-inline-end: .5em; }
+.trace-step.back dt { color: var(--muted); }
+.trace-step dd { margin: 4px 0 0; font: 500 1.22rem/1.12 var(--serif); text-wrap: pretty; }
+.trace-condition { display: block; margin-top: 4px; color: var(--muted); font: 400 .8125rem/1.3 var(--sans); }
+.trace-step .tag { display: table; margin-top: 4px; }
+.map.has-trace .phase-panel { margin-top: 0; }
 .phase-panel { display: grid; grid-template-columns: minmax(176px, .45fr) minmax(0, 1fr); gap: 10px 36px; margin-top: 20px; padding: 18px 0 20px; border-block: 1px solid var(--line); scroll-margin-top: 6px; }
 .js .phase-panel:not(.is-on) { display: none; }
 .panel-head h3 { margin-top: 4px; font: 500 clamp(1.65rem, 2.7vw, 2.35rem)/.95 var(--serif); }
@@ -288,14 +320,29 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .risk-table tr { scroll-margin-top: 6px; }
 .risk-table tr:target th { color: var(--accent); }
 @media (max-width: 760px) {
-  .flow { grid-template-columns: minmax(0, 1fr); }
-  .flow li:not(:first-child)::before { content: "\2193"; left: 14px; top: -18px; transform: none; }
+  .flow, .map.js .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 9px; padding: 10px 0 14px; }
+  .flow li + li::before { content: none; }
+  .flow a { display: flex; align-items: baseline; gap: 7px; position: relative; min-height: 44px; padding: 8px 9px; }
+  .flow-name { font-size: 1.18rem; }
+  .flow a :is(.flow-out, .flow-gate) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .flow .gated a::after { content: ""; position: absolute; inset: 9px 9px auto auto; width: 6px; height: 6px; border: 1px solid var(--accent); transform: rotate(45deg); }
+  .flow .gated a[aria-current]::after { border-color: #7f3e16; }
+  .map.js .flow-lines { display: none; }
+  .flow-key { display: block; color: var(--muted); font: 500 .69rem/1.4 var(--mono); }
+  .flow-key span { color: var(--accent); margin-inline-end: .35em; }
   .phase-panel { grid-template-columns: minmax(0, 1fr); }
   .panel-facts { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .panel-facts dd { margin-bottom: 10px; }
 }
+@media (max-width: 460px) {
+  .phase-trace { grid-template-columns: 1fr; gap: 12px; }
+  .trace-step { padding-inline: 0; }
+  .trace-step + .trace-step { border-inline-start: 0; }
+}
 @media print {
   .js .phase-panel:not(.is-on) { display: grid; }
+  .map.js .flow-lines, .phase-trace { display: none; }
+  .map.has-trace .phase-gate { display: block; }
 }
 @media (max-width: 560px) {
   .phase-col { width: 26%; }
@@ -311,11 +358,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 .fact-title { display: block; font-weight: 600; }
 .panel-facts dt.eng { color: var(--engineering); }
 .panel-facts dd .fact-link { color: var(--accent); }
-@media (max-width: 900px) {
-  .flow-10 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .flow-10 li:nth-child(odd)::before { content: none; }
-}
-@media (max-width: 760px) { .flow-10 { grid-template-columns: minmax(0, 1fr); } }
 @media print { .view[hidden], [data-view][hidden] { display: block; } .switch { display: none; } }
 
 </style>
@@ -345,18 +387,22 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
           <p>This working lifecycle connects governance with secure development. The phase mapping is an interpretation by AI, not a prescribed or universal sequence, and activities can overlap and repeat. Risks are grouped in the table below.</p>
         </div>
 
-        <ol class="flow flow-10">
-            <li class="gated"><a href="#plan"><span class="flow-num">01</span><span class="flow-name">Plan</span><span class="flow-out">Set the direction</span><span class="flow-gate">Checkpoint</span></a></li>
-            <li class="gated"><a href="#design"><span class="flow-num">02</span><span class="flow-name">Design</span><span class="flow-out">Shape the solution</span><span class="flow-gate">Checkpoint</span></a></li>
-            <li class="gated"><a href="#code"><span class="flow-num">03</span><span class="flow-name">Code</span><span class="flow-out">Build to the standard</span><span class="flow-gate">Checkpoint</span></a></li>
-            <li><a href="#build"><span class="flow-num">04</span><span class="flow-name">Build</span><span class="flow-out">Package from trusted inputs</span></a></li>
-            <li><a href="#test"><span class="flow-num">05</span><span class="flow-name">Test</span><span class="flow-out">Verify the controls</span></a></li>
-            <li class="gated"><a href="#release"><span class="flow-num">06</span><span class="flow-name">Release</span><span class="flow-out">Approve the version</span><span class="flow-gate">Checkpoint</span></a></li>
-            <li><a href="#deploy"><span class="flow-num">07</span><span class="flow-name">Deploy</span><span class="flow-out">Deliver with guardrails</span></a></li>
-            <li class="gated"><a href="#operate"><span class="flow-num">08</span><span class="flow-name">Operate</span><span class="flow-out">Run the service</span><span class="flow-gate">Checkpoint</span></a></li>
-            <li><a href="#monitor"><span class="flow-num">09</span><span class="flow-name">Monitor</span><span class="flow-out">Learn from live signals</span></a></li>
-            <li><a href="#retire"><span class="flow-num">10</span><span class="flow-name">Retire</span><span class="flow-out">Close the lifecycle</span></a></li>
-        </ol>
+        <p class="flow-key"><span aria-hidden="true">◇</span>Checkpoint</p>
+        <div class="flow-map">
+          <svg class="flow-lines" aria-hidden="true"></svg>
+          <ol class="flow flow-10">
+              <li class="gated"><a href="#plan"><span class="flow-num">01</span><span class="flow-name">Plan</span><span class="flow-out">Set the direction</span><span class="flow-gate">Checkpoint</span></a></li>
+              <li class="gated"><a href="#design"><span class="flow-num">02</span><span class="flow-name">Design</span><span class="flow-out">Shape the solution</span><span class="flow-gate">Checkpoint</span></a></li>
+              <li class="gated"><a href="#code"><span class="flow-num">03</span><span class="flow-name">Code</span><span class="flow-out">Build to the standard</span><span class="flow-gate">Checkpoint</span></a></li>
+              <li><a href="#build"><span class="flow-num">04</span><span class="flow-name">Build</span><span class="flow-out">Package from trusted inputs</span></a></li>
+              <li><a href="#test"><span class="flow-num">05</span><span class="flow-name">Test</span><span class="flow-out">Verify the controls</span></a></li>
+              <li class="gated"><a href="#release"><span class="flow-num">06</span><span class="flow-name">Release</span><span class="flow-out">Approve the version</span><span class="flow-gate">Checkpoint</span></a></li>
+              <li><a href="#deploy"><span class="flow-num">07</span><span class="flow-name">Deploy</span><span class="flow-out">Deliver with guardrails</span></a></li>
+              <li class="gated"><a href="#operate"><span class="flow-num">08</span><span class="flow-name">Operate</span><span class="flow-out">Run the service</span><span class="flow-gate">Checkpoint</span></a></li>
+              <li><a href="#monitor"><span class="flow-num">09</span><span class="flow-name">Monitor</span><span class="flow-out">Learn from live signals</span></a></li>
+              <li><a href="#retire"><span class="flow-num">10</span><span class="flow-name">Retire</span><span class="flow-out">Close the lifecycle</span></a></li>
+          </ol>
+        </div>
 
           <section class="phase-panel" id="phase-plan" aria-labelledby="plan">
             <div class="panel-head">
@@ -479,7 +525,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             </dl>
           </section>
 
-        <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Monitoring, incidents, changes and new vulnerabilities can send work <a href="#plan">back to planning</a>.</span></p>
+        <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Any phase can send feedback <a href="#plan">back to planning</a>.</span></p>
       </section>
 
   <section class="risk-register" id="risks" aria-labelledby="risks-by-phase">
@@ -808,21 +854,26 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
       <section class="map" id="agentic-lifecycle" data-prefix="agentic-" aria-labelledby="agentic-map-heading">
         <div class="map-title">
           <h2 id="agentic-map-heading"><a class="sec-link" href="#agentic-map-heading">The agent handoffs</a></h2>
-          <p>An AI agent does the work in each phase, and the output of one phase is the input of the next. <span class="tag">[inference]</span> The same phases with people doing the work are on the <a href="#view-devsecops">DevSecOps</a> page. The risk lines in each phase are theoretical: no case was found for a single phase. Cases for the four changes are in the table below the phases.</p>
+          <p>An AI agent does the work in each phase. Handoffs can draw on earlier outputs and standing inputs such as policies, runbooks, infrastructure code and credential inventories. <span class="tag">[inference]</span> The <a href="#view-devsecops">DevSecOps view</a> includes Design. The agentic view has a separate Review phase. <a href="#what-changes">What changes when agents do the work</a> covers risks, controls and supporting evidence.</p>
         </div>
 
-        <ol class="flow flow-10">
-            <li class="gated"><a href="#agentic-plan"><span class="flow-num">01</span><span class="flow-name">Plan</span><span class="flow-out">Task spec</span><span class="flow-gate">Human gate</span></a></li>
-            <li><a href="#agentic-code"><span class="flow-num">02</span><span class="flow-name">Code</span><span class="flow-out">Pull request</span></a></li>
-            <li class="gated"><a href="#agentic-review"><span class="flow-num">03</span><span class="flow-name">Review</span><span class="flow-out">Verdict</span><span class="flow-gate">Human gate</span></a></li>
-            <li><a href="#agentic-build"><span class="flow-num">04</span><span class="flow-name">Build</span><span class="flow-out">Signed artifact</span></a></li>
-            <li><a href="#agentic-test"><span class="flow-num">05</span><span class="flow-name">Test</span><span class="flow-out">Test evidence</span></a></li>
-            <li class="gated"><a href="#agentic-release"><span class="flow-num">06</span><span class="flow-name">Release</span><span class="flow-out">Go or no go</span><span class="flow-gate">Human gate</span></a></li>
-            <li><a href="#agentic-deploy"><span class="flow-num">07</span><span class="flow-name">Deploy</span><span class="flow-out">Running service</span></a></li>
-            <li><a href="#agentic-operate"><span class="flow-num">08</span><span class="flow-name">Operate</span><span class="flow-out">Logs and records</span></a></li>
-            <li><a href="#agentic-monitor"><span class="flow-num">09</span><span class="flow-name">Monitor</span><span class="flow-out">New work</span></a></li>
-            <li class="gated"><a href="#agentic-retire"><span class="flow-num">10</span><span class="flow-name">Retire</span><span class="flow-out">Closure record</span><span class="flow-gate">Human gate</span></a></li>
-        </ol>
+        <p class="flow-key"><span aria-hidden="true">◇</span>Recommended human gate</p>
+        <div class="flow-map">
+          <svg class="flow-lines" aria-hidden="true"></svg>
+          <ol class="flow flow-10">
+              <li class="gated"><a href="#agentic-plan" data-handoff="Approved task spec" data-approval="If the spec is approved"><span class="flow-num">01</span><span class="flow-name">Plan</span><span class="flow-out">Task spec</span><span class="flow-gate">Human gate</span></a></li>
+              <li><a href="#agentic-code"><span class="flow-num">02</span><span class="flow-name">Code</span><span class="flow-out">Pull request</span></a></li>
+              <li class="gated"><a href="#agentic-review" data-handoff="Merged code" data-approval="If the merge is approved"><span class="flow-num">03</span><span class="flow-name">Review</span><span class="flow-out">Verdict</span><span class="flow-gate">Human gate</span></a></li>
+              <li><a href="#agentic-build"><span class="flow-num">04</span><span class="flow-name">Build</span><span class="flow-out">Signed artifact</span></a></li>
+              <li><a href="#agentic-test" data-handoff="Test results and risk verdict"><span class="flow-num">05</span><span class="flow-name">Test</span><span class="flow-out">Test evidence</span></a></li>
+              <li class="gated"><a href="#agentic-release" data-handoff="Approved artifact" data-approval="If production is approved"><span class="flow-num">06</span><span class="flow-name">Release</span><span class="flow-out">Go or no go</span><span class="flow-gate">Human gate</span></a></li>
+              <li><a href="#agentic-deploy" data-handoff="Running service and deploy record"><span class="flow-num">07</span><span class="flow-name">Deploy</span><span class="flow-out">Running service</span></a></li>
+              <li><a href="#agentic-operate"><span class="flow-num">08</span><span class="flow-name">Operate</span><span class="flow-out">Logs and records</span></a></li>
+              <li><a href="#agentic-monitor"><span class="flow-num">09</span><span class="flow-name">Monitor</span><span class="flow-out">New work</span></a></li>
+              <li class="gated"><a href="#agentic-retire"><span class="flow-num">10</span><span class="flow-name">Retire</span><span class="flow-out">Closure record</span><span class="flow-gate">Human gate</span></a></li>
+          </ol>
+        </div>
+        <dl class="phase-trace" aria-label="Selected phase handoffs" aria-live="polite" hidden></dl>
 
           <section class="phase-panel" id="agentic-phase-plan" aria-labelledby="agentic-plan">
             <div class="panel-head">
@@ -833,11 +884,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>Issue or change request, security policies and past incidents.</dd>
               <dt>Output</dt><dd>Task spec, security requirements and a threat list.</dd>
-              <dt>Human gate</dt><dd>A person approves the spec. <span class="tag">[recommendation]</span></dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-untrusted-input">Untrusted input</a> The request text can carry hidden instructions.</li>
-                <li><a href="#risk-human-approval">Human approval</a> A wrong spec steers every later phase.</li>
-              </ul></dd>
+              <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person approves the spec. <span class="tag">[recommendation]</span></dd>
             </dl>
           </section>
 
@@ -850,10 +897,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>Approved task spec, the repository and the security requirements.</dd>
               <dt>Output</dt><dd>A branch with code and tests, opened as a pull request.</dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-untrusted-input">Untrusted input</a> Repository files and web pages the agent reads can carry instructions.</li>
-                <li><a href="#risk-agent-access">Agent access</a> The agent can write to the repository.</li>
-              </ul></dd>
             </dl>
           </section>
 
@@ -866,11 +909,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>The pull request and the threat list from planning.</dd>
               <dt>Output</dt><dd>Findings, fixes and a verdict to approve or reject.</dd>
-              <dt>Human gate</dt><dd>A person approves the merge. <span class="tag">[recommendation]</span></dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-untrusted-input">Untrusted input</a> The pull request under review can carry instructions for the reviewing agent.</li>
-                <li><a href="#risk-human-approval">Human approval</a> An agent approving another agent’s change is not an independent check.</li>
-              </ul></dd>
+              <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person approves the merge. <span class="tag">[recommendation]</span></dd>
             </dl>
           </section>
 
@@ -883,10 +922,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>The merged code and its dependencies.</dd>
               <dt>Output</dt><dd>Signed artifact, SBOM and provenance.</dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-agent-access">Agent access</a> The build holds signing keys and pulls in dependencies.</li>
-                <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> Without provenance, nobody can tell what produced the artifact.</li>
-              </ul></dd>
             </dl>
           </section>
 
@@ -899,10 +934,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>The signed artifact and a test environment.</dd>
               <dt>Output</dt><dd>Test results and a risk verdict.</dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-agent-access">Agent access</a> The agent runs attacks, so the test environment must be cut off from production.</li>
-                <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> A verdict without the test results cannot be checked.</li>
-              </ul></dd>
             </dl>
           </section>
 
@@ -915,11 +946,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>Test results, SBOM, provenance and the release policy.</dd>
               <dt>Output</dt><dd>A go or no go recommendation with the evidence pack.</dd>
-              <dt>Human gate</dt><dd>A person decides on production. <span class="tag">[recommendation]</span></dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-human-approval">Human approval</a> Going to production is the high-impact action.</li>
-                <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> The decision is only as good as the evidence pack.</li>
-              </ul></dd>
+              <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person decides on production. <span class="tag">[recommendation]</span></dd>
             </dl>
           </section>
 
@@ -932,10 +959,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>The approved artifact and the infrastructure code.</dd>
               <dt>Output</dt><dd>The running service and a deploy record.</dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-agent-access">Agent access</a> The agent holds production credentials.</li>
-                <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> The deploy record ties the running service to the approved artifact.</li>
-              </ul></dd>
             </dl>
           </section>
 
@@ -948,10 +971,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>The running service, the deploy record and alerts from monitoring.</dd>
               <dt>Output</dt><dd>Logs, incident records and change records.</dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-agent-access">Agent access</a> A responding agent can change production.</li>
-                <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> A fix made during an incident still needs a record of what changed.</li>
-              </ul></dd>
             </dl>
           </section>
 
@@ -964,10 +983,6 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>Logs from the service, records of what the agents did, and new vulnerability reports.</dd>
               <dt>Output</dt><dd>Alerts, incident tickets and new issues.</dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-untrusted-input">Untrusted input</a> Logs and vulnerability reports are outside text.</li>
-                <li><a href="#risk-traceable-handoffs">Traceable handoffs</a> An agent action that leaves no record cannot be monitored.</li>
-              </ul></dd>
             </dl>
           </section>
 
@@ -980,16 +995,12 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
             <dl class="panel-facts">
               <dt>Input</dt><dd>The decision to retire, and the deploy and monitoring records that show what the service holds and can reach.</dd>
               <dt>Output</dt><dd>The service shut down, access revoked, data deleted or archived, and a closure record.</dd>
-              <dt>Human gate</dt><dd>A person approves the shutdown and the data deletion. <span class="tag">[recommendation]</span></dd>
-              <dt>Risks <span class="tag">[inference]</span></dt><dd><ul>
-                <li><a href="#risk-agent-access">Agent access</a> Credentials held by the agents outlive the service unless they are revoked too.</li>
-                <li><a href="#risk-human-approval">Human approval</a> Deleting data cannot be undone.</li>
-              </ul></dd>
+              <dt class="phase-gate">Human gate</dt><dd class="phase-gate">A person approves the shutdown and the data deletion. <span class="tag">[recommendation]</span></dd>
             </dl>
           </section>
 
 
-        <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Incident tickets and new issues from Monitor go <a href="#agentic-plan">back to planning</a> as new requests.</span></p>
+        <p class="loop-note"><span class="feedback-mark" aria-hidden="true">↰</span><span>Any phase can send feedback <a href="#agentic-plan">back to planning</a>.</span></p>
       </section>
 
       <section class="risk-register" id="agentic-example" aria-labelledby="example-fixing-one-bug-with-agents">
@@ -1219,15 +1230,151 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
 (function () {
   var views = [].slice.call(document.querySelectorAll("[data-view]"));
   var tabs = [].slice.call(document.querySelectorAll(".switch a"));
-  var maps = [].slice.call(document.querySelectorAll(".map")).map(function (root) {
+  var maps = Array.from(document.querySelectorAll(".map"), function (root) {
+    var prefix = root.dataset.prefix;
+    var links = Array.from(root.querySelectorAll(".flow a"));
     return {
       root: root,
-      prefix: root.getAttribute("data-prefix"),
-      links: [].slice.call(root.querySelectorAll(".flow a")),
-      panels: [].slice.call(root.querySelectorAll(".phase-panel"))
+      prefix: prefix,
+      links: links,
+      phases: links.map(function (link) {
+        return { link: link, id: link.hash.slice(1 + prefix.length), name: link.querySelector(".flow-name").textContent,
+          output: link.querySelector(".flow-out").textContent };
+      }),
+      panels: Array.from(root.querySelectorAll(".phase-panel")),
+      flow: root.querySelector(".flow-map"),
+      diagram: root.querySelector(".flow-lines"),
+      handoffs: root.querySelector(".phase-trace"),
+      selected: 0
     };
   });
   var current = "";
+  var svgNamespace = "http://www.w3.org/2000/svg";
+
+  function appendSvg(svg, tag, attributes) {
+    var node = document.createElementNS(svgNamespace, tag);
+    Object.keys(attributes).forEach(function (key) { node.setAttribute(key, attributes[key]); });
+    svg.append(node);
+    return node;
+  }
+
+  function roundedPath(points) {
+    function towards(point, end) {
+      var dx = end[0] - point[0], dy = end[1] - point[1];
+      var scale = Math.min(.45, 9 / (Math.hypot(dx, dy) || 1));
+      return [point[0] + dx * scale, point[1] + dy * scale].join(" ");
+    }
+    var path = "M " + points[0].join(" ");
+    for (var i = 1; i < points.length - 1; i++) {
+      var point = points[i];
+      path += " L " + towards(point, points[i - 1]) + " Q " + point.join(" ") + " " + towards(point, points[i + 1]);
+    }
+    return path + " L " + points[points.length - 1].join(" ");
+  }
+
+  function drawEdge(svg, points, classes) {
+    var tip = points[points.length - 1], previous = points[points.length - 2];
+    var angle = Math.atan2(tip[1] - previous[1], tip[0] - previous[0]) * 180 / Math.PI;
+    appendSvg(svg, "path", { "class": classes, d: roundedPath(points) });
+    appendSvg(svg, "path", {
+      "class": classes.replace(" feedback", ""), d: "M -5 -3 L 0 0 -5 3",
+      transform: "translate(" + tip.join(" ") + ") rotate(" + angle + ")"
+    });
+  }
+
+  function drawFlow(map) {
+    var svg = map.diagram;
+    svg.replaceChildren();
+    if (!svg.getClientRects().length) return;
+    var origin = map.flow.getBoundingClientRect();
+    var cards = map.phases.map(function (phase) {
+      var rect = phase.link.getBoundingClientRect();
+      var left = rect.left - origin.left, top = rect.top - origin.top;
+      return { left: left, right: left + rect.width, top: top, bottom: top + rect.height,
+        x: left + rect.width / 2, y: top + rect.height / 2 };
+    });
+    svg.setAttribute("viewBox", "0 0 " + origin.width + " " + origin.height);
+    var plan = cards[0], test = cards[4], release = cards[5];
+    var middle = (test.bottom + release.top) / 2;
+    var selected = cards[map.selected];
+    var showsMonitorRoutes = map.handoffs && map.phases[map.selected].id === "monitor";
+    if (map.selected > 0) {
+      var feedback = map.selected >= 5
+        ? [[selected.x, selected.bottom], [selected.x, origin.height - 8], [4, origin.height - 8], [4, plan.y], [plan.left - 2, plan.y]]
+        : [[selected.x, selected.top], [selected.x, 4], [plan.x, 4], [plan.x, plan.top - 2]];
+      drawEdge(svg, feedback, "flow-edge feedback" + (showsMonitorRoutes ? " active approval" : ""));
+    }
+    for (var index = 0; index < cards.length - 2; index++) {
+      var source = cards[index], destination = cards[index + 1];
+      var active = map.selected === index || map.selected === index + 1;
+      var approval = active && map.phases[index].link.dataset.approval;
+      var classes = "flow-edge" + (active ? " active" : "") + (approval ? " approval" : "");
+      var points = index === 4
+        ? [[source.x, source.bottom], [source.x, middle], [destination.x, middle], [destination.x, destination.top - 2]]
+        : [[source.right + 2, source.y], [destination.left - 2, destination.y]];
+      drawEdge(svg, points, classes);
+      if (approval) {
+        var x = (source.right + destination.left) / 2, y = source.y - 13;
+        appendSvg(svg, "path", { d: "M " + x + " " + (y - 3) + " l 3 3 -3 3 -3 -3 Z", fill: "var(--accent)" });
+      }
+    }
+    if (map.handoffs && (map.selected === 4 || map.selected === 5)) {
+      appendSvg(svg, "text", { "class": "flow-evidence", x: (test.x + release.x) / 2, y: middle,
+        "text-anchor": "middle", "dominant-baseline": "central" }).textContent = map.phases[4].output;
+    }
+    if (showsMonitorRoutes) {
+      var monitor = cards[8], operate = cards[7], y = monitor.top - 11;
+      drawEdge(svg, [[monitor.x, monitor.top], [monitor.x, y], [operate.x, y], [operate.x, operate.top - 2]], "flow-edge active");
+    }
+  }
+
+  function handoff(from, to) {
+    return { label: from.name + " → " + to.name, value: from.link.dataset.handoff || from.output,
+      condition: from.link.dataset.approval };
+  }
+
+  function renderHandoffs(map) {
+    var index = map.selected, phases = map.phases, phase = phases[index];
+    var panel = map.panels.find(function (item) { return item.id === map.prefix + "phase-" + phase.id; });
+    var gate = panel.querySelector("dd.phase-gate");
+    var steps = [];
+    if (phase.id === "plan") steps.push({ label: "Into Plan", value: "New request" });
+    else if (phase.id === "retire") steps.push({ label: "Into Retire", value: "Decision to retire" });
+    else steps.push(handoff(phases[index - 1], phase));
+    if (gate) steps.push({ label: "Human gate", gate: gate });
+    if (phase.id === "monitor") {
+      steps.push({ label: "Monitor → Operate", value: "Alerts" },
+        { label: "Monitor → Plan", value: "Incident tickets and new issues", feedback: true });
+    } else if (phase.id === "retire") {
+      steps.push({ label: "Retire output", value: phase.output, condition: "After shutdown and data handling" });
+    } else {
+      steps.push(handoff(phase, phases[index + 1]));
+    }
+    if (!gate && phase.id !== "monitor") steps.push({ label: phase.name + " → Plan", value: "Planning feedback", feedback: true });
+
+    var items = steps.map(function (step) {
+      var item = document.createElement("div");
+      item.className = "trace-step" + (step.gate ? " human" : "") + (step.feedback ? " back" : "");
+      var term = document.createElement("dt"), description = document.createElement("dd");
+      term.textContent = step.label;
+      if (step.gate) {
+        step.gate.childNodes.forEach(function (child) { description.append(child.cloneNode(true)); });
+      } else {
+        description.textContent = step.value;
+        if (step.condition) {
+          var condition = document.createElement("span");
+          condition.className = "trace-condition";
+          condition.textContent = step.condition;
+          description.append(condition);
+        }
+      }
+      item.append(term, description);
+      return item;
+    });
+    map.handoffs.replaceChildren.apply(map.handoffs, items);
+    map.handoffs.hidden = false;
+    map.root.classList.add("has-trace");
+  }
   function showView(name) {
     current = name;
     views.forEach(function (v) { v.hidden = v.getAttribute("data-view") !== name; });
@@ -1235,12 +1382,19 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
       if (a.getAttribute("data-go") === name) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
     });
     document.getElementById("skip").setAttribute("href", name === "agentic" ? "#agentic-lifecycle" : "#lifecycle");
+    maps.forEach(function (map) { if (!map.root.closest("[hidden]")) drawFlow(map); });
   }
   function showPhase(m, id) {
-    m.links.forEach(function (a) {
-      if (a.hash === "#" + m.prefix + id) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+    m.selected = m.phases.findIndex(function (phase) { return phase.id === id; });
+    var related = id === "retire" ? [] : [m.selected - 1, m.selected + 1].filter(function (index) { return index >= 0 && index < m.phases.length - 1; });
+    if (m.handoffs && id === "monitor") related.push(0);
+    m.links.forEach(function (link, index) {
+      if (index === m.selected) link.setAttribute("aria-current", "true"); else link.removeAttribute("aria-current");
+      link.toggleAttribute("data-related", related.includes(index));
     });
     m.panels.forEach(function (p) { p.classList.toggle("is-on", p.id === m.prefix + "phase-" + id); });
+    if (m.handoffs) renderHandoffs(m);
+    drawFlow(m);
   }
   function phaseOf(m, raw) {
     if (raw.indexOf(m.prefix) !== 0) return null;
@@ -1268,8 +1422,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
         var id = a.hash.slice(1 + m.prefix.length);
         showPhase(m, id);
         history.replaceState(null, "", a.hash);
-        var panel = document.getElementById(m.prefix + "phase-" + id);
-        if (panel.getBoundingClientRect().top > innerHeight - 80) panel.scrollIntoView({ block: "start" });
+        var detail = m.handoffs || document.getElementById(m.prefix + "phase-" + id);
+        if (detail.getBoundingClientRect().top > innerHeight - 80) detail.scrollIntoView({ block: "start" });
       });
     });
   });
@@ -1281,6 +1435,16 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     });
   });
   window.addEventListener("hashchange", function () { route(true); });
+  if (window.ResizeObserver) {
+    var observer = new ResizeObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var map = maps.find(function (item) { return item.flow === entry.target; });
+        drawFlow(map);
+      });
+    });
+    maps.forEach(function (map) { observer.observe(map.flow); });
+  }
+  if (document.fonts) document.fonts.ready.then(function () { maps.forEach(drawFlow); });
   route(true);
 })();
 </script>
