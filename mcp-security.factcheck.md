@@ -54,6 +54,17 @@ python3 -I scripts/check-evidence-quotes.py <cache-dir> mcp_security_evidence mc
 | <a id="ev-V39"></a>V39 | The MCP server executes actions with its own (often broad) privileges, not the requesting user's permissions. | [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html#key-risks) | VERIFIED |
 | <a id="ev-V40"></a>V40 | Malicious instructions hidden in tool descriptions, parameter schemas, or return values that manipulate the LLM's behavior. | [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html#key-risks) | VERIFIED |
 | <a id="ev-V41"></a>V41 | MCP lets LLMs decide which tools to invoke, when, and with what parameters. | [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html#introduction) | VERIFIED |
+| <a id="ev-V42"></a>V42 | The code run inherits all the privileges of the execution user. | [Node.js security policy](https://github.com/nodejs/node/blob/main/SECURITY.md#:~:text=The%20code%20run%20inherits%20all%20the) | VERIFIED |
+| <a id="ev-V43"></a>V43 | Node.js trusts any code it is asked to run. | [Node.js Docs, permissions](https://nodejs.org/api/permissions.html#:~:text=Node.js%20trusts%20any%20code%20it%20is) | VERIFIED |
+| <a id="ev-V44"></a>V44 | This command installs a package and any packages that it depends on. | [npm Docs, npm install](https://docs.npmjs.com/cli/v11/commands/npm-install#:~:text=This%20command%20installs%20a%20package%20and) | VERIFIED |
+| <a id="ev-V45"></a>V45 | attackers also try to add malicious behavior to existing popular packages. | [npm Docs, threats and mitigations](https://docs.npmjs.com/threats-and-mitigations#:~:text=attackers%20also%20try%20to%20add%20malicious) | VERIFIED |
+| <a id="ev-V46"></a>V46 | A compromised dependency can alter agent behavior or introduce execution-level backdoors. | [OWASP MCP Top 10](https://owasp.org/www-project-mcp-top-10/#:~:text=A%20compromised%20dependency%20can%20alter%20agent) | VERIFIED |
+| <a id="ev-V47"></a>V47 | the language model can discover and invoke tools automatically based on its contextual understanding and the user's prompts. | [MCP specification, tools](https://modelcontextprotocol.io/specification/latest/server/tools#:~:text=the%20language%20model%20can%20discover%20and) | VERIFIED |
+| <a id="ev-V48"></a>V48 | MCP introduces a fundamentally new attack surface: AI agents dynamically executing tools based on natural language, with access to sensitive systems. | [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html#:~:text=MCP%20introduces%20a%20fundamentally%20new%20attack) | VERIFIED |
+| <a id="ev-V49"></a>V49 | Remote MCP servers function similarly to local MCP servers but are hosted on the internet rather than your local machine. | [MCP Docs, connect to remote servers](https://modelcontextprotocol.io/docs/develop/connect-remote-servers#:~:text=Remote%20MCP%20servers%20function%20similarly%20to) | VERIFIED |
+| <a id="ev-V50"></a>V50 | Unlike local servers that require installation and configuration on each device, remote servers are available from any MCP client with an internet connection. | [MCP Docs, connect to remote servers](https://modelcontextprotocol.io/docs/develop/connect-remote-servers#:~:text=Unlike%20local%20servers%20that%20require%20installation) | VERIFIED |
+| <a id="ev-V51"></a>V51 | Only remote HTTP MCP servers are supported. | [Cloudflare Docs, MCP server portals](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/mcp-portals/#:~:text=Only%20remote%20HTTP%20MCP%20servers%20are) | VERIFIED |
+| <a id="ev-V52"></a>V52 | Only remote MCP servers are inspected. Local MCP servers that run on a device aren't visible to Global Secure Access. | [Microsoft Learn, Global Secure Access MCP firewall](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall#:~:text=Only%20remote%20MCP%20servers%20are%20inspected.) | VERIFIED |
 <!-- End source quotes -->
 
 ## Claims
@@ -73,7 +84,12 @@ python3 -I scripts/check-evidence-quotes.py <cache-dir> mcp_security_evidence mc
 | Make outbound connections and exfiltrate sensitive information | V34, V36 | VERIFIED. V36 describes a malicious npm package |
 | Execute other applications and commands | V5, V32 | VERIFIED as a documented risk |
 | Modify files and establish persistence | V37 | VERIFIED as a documented risk of code execution reached through a malicious server's OAuth URL |
-| Comparison table | V9 to V12, V41 | `[inference]`. Quotes cover tool poisoning, changed descriptions, cross-server attacks and model-chosen tool calls; the npm column and the "No" cells are interpretation |
+| Heading and sentence under the table: MCP adds AI risks on top of npm package risks | V41, V48 | VERIFIED |
+| Table: supply chain and transitive dependency risk, both columns | V44, V45, V46 | VERIFIED. A local npm-based server is an npm package (V4, V1) |
+| Table: arbitrary code execution and access to local credentials, both columns | V1, V3, V32, V35, V42 | VERIFIED |
+| Table: no built-in sandboxing, both columns | V7, V43, V42 | VERIFIED for Node.js, npx and the MCP SDK. Node.js has an opt-in permission model that does not protect against malicious code, and some clients offer a sandbox that must be turned on (V9) |
+| Table: MCP column, tool poisoning, AI-driven tool invocation, cross-MCP manipulation | V10, V11, V12, V41, V47 | VERIFIED as documented. Not tested |
+| Table: npm column, "Not applicable" and "Not inherent" for the three MCP rows | V10, V12, V1 | Follows from the definitions: these risks are defined by MCP tool descriptions and model-chosen tool calls, which a plain npm package does not have |
 | No sandbox by default from npm or MCP | V9 shows a client sandbox that must be turned on | Removed from the page on 26 November 2026. Was: `[inference]`. Other clients and Node's permission model were not reviewed |
 | npm 12 blocks dependency install scripts by default | V8 | Removed from the page on 26 November 2026. Was: VERIFIED. How this applies to the package that npx itself runs was not checked; the page says only "dependency" |
 | npm 11, bundled with Node.js 24 and 26, still runs them | V19; [Node.js release index](https://nodejs.org/dist/index.json), read 26 November 2026: v24.22.3 ships npm 11.19.1, v26.13.1 ships npm 11.20.0 | Removed from the page on 26 November 2026. Was: VERIFIED |
@@ -83,12 +99,15 @@ python3 -I scripts/check-evidence-quotes.py <cache-dir> mcp_security_evidence mc
 | A local MCP server carries local code execution risk | V4, V5, V21 | VERIFIED as a documented risk. Not observed |
 | A malicious remote server can attack a client flaw, for example through an OAuth authorization URL | V22 | Removed from the page on 26 November 2026. Was: VERIFIED as a documented attack. Not observed |
 | Local and remote transports | V13, V14 | VERIFIED |
-| Remote server code runs on another machine, so there is no direct local server execution | Meaning of "remote" | Plain definition |
-| A native remote connection is closer to consuming an API than to installing software | V14, V15 | `[inference]` |
+| Remote server code runs on another machine, so there is no direct local server execution | V49 | VERIFIED |
+| A native remote connection is closer to consuming an API than to installing software | V14, V15 | Removed from the page on 26 November 2026. Was: `[inference]` |
+| A remote server does not need installing on each device | V50 | VERIFIED |
 | A remote server is still an MCP server, and OWASP names these four MCP risks | V31, V16, V38, V39, V40 | VERIFIED. The cheat sheet does not list risks per transport |
 | A local bridge connects a stdio client to a remote server | V25 | VERIFIED for mcp-remote |
 | A bridge is local software; mcp-remote had a command injection flaw | V25, V17; advisory range 0.0.5 up to but not including 0.1.16 | VERIFIED for mcp-remote. Not observed |
-| An MCP gateway does not inherently stop npx; restricting MCP servers alone leaves the npx risk | Follows from where a gateway sits | `[inference]` |
+| An MCP gateway does not inherently stop npx; restricting MCP servers alone leaves the npx risk | Follows from where a gateway sits | Removed from the page on 26 November 2026. Was: `[inference]` |
+| Some gateways cover only remote servers, so they do not govern local execution | V51, V52 | VERIFIED for Cloudflare MCP server portals and the Global Secure Access MCP firewall. Other gateways were not reviewed |
+| Limit npx as well as MCP servers, because npx can run any command from an npm package | V1 | `[recommendation]`; the reason is VERIFIED |
 | Two governance layers, principles, controls | V6 for sandboxing | `[recommendation]`, supplied by the owner's brief; not source claims |
 
 ## Gaps

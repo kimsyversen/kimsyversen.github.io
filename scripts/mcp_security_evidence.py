@@ -34,6 +34,22 @@ SOURCES = {
     "cisa": ("CISA alert, npm supply chain compromise",
              "https://www.cisa.gov/news-events/alerts/2025/09/23/widespread-supply-chain-compromise-impacting-npm-ecosystem", None),
     "owasp": ("OWASP MCP Top 10", "https://owasp.org/www-project-mcp-top-10/", None),
+    "nodesec": ("Node.js security policy",
+        "https://raw.githubusercontent.com/nodejs/node/main/SECURITY.md", None),
+    "nodeperm": ("Node.js Docs, permissions",
+        "https://nodejs.org/api/permissions.html", None),
+    "npminstall": ("npm Docs, npm install",
+        "https://docs.npmjs.com/cli/v11/commands/npm-install", None),
+    "npmthreat": ("npm Docs, threats and mitigations",
+        "https://docs.npmjs.com/threats-and-mitigations", None),
+    "mcptools": ("MCP specification, tools",
+        "https://modelcontextprotocol.io/specification/latest/server/tools", None),
+    "connect": ("MCP Docs, connect to remote servers",
+        "https://modelcontextprotocol.io/docs/develop/connect-remote-servers", None),
+    "cfportal": ("Cloudflare Docs, MCP server portals",
+        "https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/mcp-portals/", None),
+    "gsa": ("Microsoft Learn, Global Secure Access MCP firewall",
+        "https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall", None),
 }
 
 QUOTES = [
@@ -78,6 +94,17 @@ QUOTES = [
     ("deputy", "cheat", "The MCP server executes actions with its own (often broad) privileges, not the requesting user's permissions."),
     ("schema", "cheat", "Malicious instructions hidden in tool descriptions, parameter schemas, or return values that manipulate the LLM's behavior."),
     ("llmchoose", "cheat", "MCP lets LLMs decide which tools to invoke, when, and with what parameters."),
+    ("nodepriv", "nodesec", "The code run inherits all the privileges of the execution user."),
+    ("nodetrust", "nodeperm", "Node.js trusts any code it is asked to run."),
+    ("deps", "npminstall", "This command installs a package and any packages that it depends on."),
+    ("npmmal", "npmthreat", "attackers also try to add malicious behavior to existing popular packages."),
+    ("mcpsupply", "owasp", "A compromised dependency can alter agent behavior or introduce execution-level backdoors."),
+    ("modelctl", "mcptools", "the language model can discover and invoke tools automatically based on its contextual understanding and the user's prompts."),
+    ("surface", "cheat", "MCP introduces a fundamentally new attack surface: AI agents dynamically executing tools based on natural language, with access to sensitive systems."),
+    ("hosted", "connect", "Remote MCP servers function similarly to local MCP servers but are hosted on the internet rather than your local machine."),
+    ("noinstall", "connect", "Unlike local servers that require installation and configuration on each device, remote servers are available from any MCP client with an internet connection."),
+    ("cfremote", "cfportal", "Only remote HTTP MCP servers are supported."),
+    ("gsaremote", "gsa", "Only remote MCP servers are inspected. Local MCP servers that run on a device aren't visible to Global Secure Access."),
 ]
 
 IDS = {key: f"V{n}" for n, (key, _, _) in enumerate(QUOTES, 1)}

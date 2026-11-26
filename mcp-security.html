@@ -142,7 +142,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </section>
 
   <section id="npm-package-or-mcp-server">
-    <h2 id="h-npm-package-or-mcp-server"><a class="sec-link" href="#h-npm-package-or-mcp-server">MCP servers add AI risks to the usual npm package risks</a> <span class="tag">[inference]</span></h2>
+    <h2 id="h-npm-package-or-mcp-server"><a class="sec-link" href="#h-npm-package-or-mcp-server">MCP servers add AI risks to the usual npm package risks</a></h2>
     <div class="tbl"><table>
       <thead><tr><th scope="col">Security characteristic</th><th scope="col">npm / npx</th><th scope="col">Local npm-based MCP</th></tr></thead>
       <tbody><tr><th scope="row">Supply chain risk</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Transitive dependency risk</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Arbitrary code execution</th><td class="y">Yes, when executed</td><td class="y">Yes, when executed</td></tr><tr><th scope="row">Access to local credentials</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Built-in sandboxing</th><td class="">No</td><td class="">No</td></tr><tr class="add"><th scope="row">MCP tool poisoning</th><td class="">Not applicable</td><td class="y">Yes</td></tr><tr class="add"><th scope="row">AI-driven tool invocation</th><td class="">Not inherent</td><td class="y">Yes</td></tr><tr class="add"><th scope="row">Cross-MCP tool manipulation</th><td class="">Not applicable</td><td class="y">Possible</td></tr></tbody>
@@ -164,7 +164,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <figure role="group" aria-label="The MCP client talks over Streamable HTTP to a remote MCP server.">
         <ol class="flow"><li>MCP client</li><li class="via">Streamable HTTP</li><li>Remote MCP server</li></ol>
         </figure>
-        <p class="note">Server code runs on another machine. A native remote connection is closer to consuming an external API than to installing software. <span class="tag">[inference]</span></p>
+        <p class="note">Server code runs on another machine. Unlike a local server, it does not need installing on each device.</p>
         <p class="verdict good">No direct local server execution</p>
       </div>
       <div><h3 id="remote-mcp-through-a-local-bridge"><a class="sec-link" href="#remote-mcp-through-a-local-bridge">Remote through a local bridge</a></h3>
@@ -180,17 +180,17 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 
   <section id="two-governance-layers">
     <h2 id="h-two-governance-layers"><a class="sec-link" href="#h-two-governance-layers">Control both which code runs and what the AI can access</a> <span class="tag">[recommendation]</span></h2>
-    <figure class="layers" role="group" aria-label="Software execution governance decides which code may run on the endpoint. MCP governance decides which capabilities, tools, data and external services the AI is permitted to access. An MCP gateway can help address the second, but it does not inherently address the first if developers remain free to execute arbitrary local MCP servers.">
+    <figure class="layers" role="group" aria-label="Software execution governance decides which code may run on the endpoint. MCP governance decides which capabilities, tools, data and external services the AI is permitted to access. An MCP gateway can help address the second. Some gateways cover only remote servers, so they do not address the first.">
       <div><h3 id="software-execution-governance"><a class="sec-link" href="#software-execution-governance">Software execution governance</a></h3>
         <p class="q">What code is permitted to execute on the endpoint?</p>
-        <ol class="flow"><li>Developer runs <code>npx</code> with any package</li><li class="hot">Local MCP server executes</li><li class="new">An MCP gateway does not inherently stop this <span class="tag">[inference]</span></li></ol>
+        <ol class="flow"><li>Developer runs <code>npx</code> with any package</li><li class="hot">Local MCP server executes</li><li class="new">Some gateways cover only remote servers</li></ol>
       </div>
       <div><h3 id="mcp-capability-governance"><a class="sec-link" href="#mcp-capability-governance">MCP governance</a></h3>
         <p class="q">What capabilities, tools, data and external services is the AI permitted to access?</p>
         <ol class="flow"><li>AI client</li><li class="hot">MCP gateway</li><li>Approved servers, tools, data and services</li></ol>
       </div>
     </figure>
-    <p class="point">Restricting MCP servers while permitting unrestricted <code>npx</code> leaves the underlying arbitrary code execution risk in place. <span class="tag">[inference]</span></p>
+    <p class="point">Limit <code>npx</code> as well as MCP servers: <code>npx</code> can run any command from an npm package.</p>
     <p class="prose" style="margin-top:12px">MCP governance should extend existing software supply chain and endpoint security controls, not replace them.</p>
   </section>
 
@@ -212,7 +212,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
     <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
       <dl>
-        <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
         <dt><span class="tag">[recommendation]</span></dt><dd>A design choice proposed on this page.</dd>
       </dl>
     </section>
