@@ -20,6 +20,12 @@ const fetch = simulate({ act: 'fetch' });
 assert.equal(fetch.asks, 1);
 assert.match(fetch.g[1].say, /host/);
 assert.equal(simulate({ act: 'fetch', answer: 'no' }).ran, false);
+// With the sandbox network blocked, the Copilot SDK says a fetch needs approval to run outside it.
+const fenced = { act: 'fetch', sandbox: 'on', net: 'blocked' };
+assert.equal(simulate(fenced).asks, 2);
+assert.equal(simulate({ ...fenced, esc: 'never' }).why, 'fence');
+assert.equal(simulate({ ...fenced, level: 'all', answer: 'no' }).why, 'fence-no');
+assert.equal(simulate({ ...fenced, net: 'open' }).asks, 1);
 
 const network = { act: 'curl', sandbox: 'on', net: 'blocked' };
 assert.equal(simulate({ ...network, level: 'all', answer: 'no' }).why, 'fence-no');

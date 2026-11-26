@@ -2,6 +2,35 @@
 
 Original check on 15 November 2026. Sources are the VS Code docs, each marked `DateApproved: 11/11/2026`. The raw markdown was read from the `microsoft/vscode-docs` repository on GitHub, which the public pages under `https://code.visualstudio.com/docs/` are built from.
 
+## Rechecked on 26 November 2026
+
+Goal: verify the four `inference` tags on the page. Docs read as published HTML (`DateApproved: 11/25/2026`). VS Code code at the pinned commit `d03edc4`, whose `package.json` pins `@github/copilot-sdk` `1.0.33-preview.0`. Quote check: 56 of 56 quotes in the page script found word for word, plus the two table questions and six baseline step names. Platform table compared with "Check platform availability" and "Install missing sandbox dependencies": no change. Not run in VS Code. No independent second review.
+
+| Tagged outcome before | Verdict and basis |
+|---|---|
+| Assisted: the AI reviewer's yes skips the `.env` rule | Verified in code. `assistedcond` is the deciding `if`; `assistedwrite` is the return under it. No edit rule is checked first. |
+| Sandbox off: `cat ~/.ssh/id_ed25519` runs without asking | Verified in code. `rulecat` allows `cat`, and `shellrule` returns early only for a command that is not approved or has write destinations. Limit: the Copilot SDK also defines a "path" permission request that the VS Code host does not use for approval, and the closed Copilot runtime was not checked. Supersedes row "`cat ~/.ssh/id_ed25519` ... carries the `inference` tag" of 24 November. |
+| `.env` rule set to Allow: the edit is saved without asking | Verified in code. `envoverride` lets a user setting replace the default pattern value, and `writeauto` approves an edit that passes the rules. |
+| The sandbox does not cover the fetch tool | Wrong for a sandbox with network turned off. The Copilot SDK says a URL request can ask to run the fetch outside the sandbox after the network policy denied it (`fetchbypass`, `fetchgrant`). VS Code passes `allowOutbound` and `allowBypass` to the runtime only when the sandbox is on (`sbonly`, `netfwd`, `bypassfwd`). The bypass request is confirmed by the user also under Allow all (`bypass`), and the AI reviewer cannot approve it (`assistedcond`). The simulator now shows this. Supersedes the fetch rows of 24 November. |
+
+Limits of the fetch reading: it rests on a preview SDK whose sandbox types are marked experimental, the Copilot runtime is closed, and the VS Code docs do not say that the sandbox covers the fetch tool. The SDK also says built-in file tools can ask to write a path the sandbox file policy blocks. The page's `.env` example is inside the writable project folder and keeps the docs statement that edit tools use VS Code's permission system.
+
+Other corrections: six links to docs sections used old anchors and landed at the top of the page. The docs anchors now start with `_` (checked in a browser, 26 November 2026).
+
+Quote ids removed: `sbcover`, `fetchsep`. Ids added:
+
+| Id | Quote | Source | Verdict |
+|----|-------|--------|---------|
+| assistedcond | `if (recommendation === 'approve' && !requiresUserConfirmation && !requestSandboxBypass) {` | [copilotAgentSession.ts L8741](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8741) | Word for word, 26 Nov 2026 |
+| shellrule | `if (result !== 'approved' \|\| writeDestinations.length === 0) {` | [sessionPermissions.ts L707-L720](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L707-L720) | Word for word, 26 Nov 2026 |
+| envoverride | `patterns[pattern] = isApproved === true;` | [chatSettings.ts L151-L163](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/chat/common/chatSettings.ts#L151-L163) | Word for word, 26 Nov 2026 |
+| writeauto | `if (this._isEditAutoApproved(writeResources, workingDirectories)) {` | [sessionPermissions.ts L371-L377](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L371-L377) | Word for word, 26 Nov 2026 |
+| sbonly | `if (enabledRaw !== AgentSandboxEnabledValue.On) {` | [sandboxConfigForSdk.ts L139-L141](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/sandboxConfigForSdk.ts#L139-L141) | Word for word, 26 Nov 2026 |
+| netfwd | `...(typeof allowNetwork === 'boolean' ? { allowOutbound: allowNetwork } : {}),` | [sandboxConfigForSdk.ts L187](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/sandboxConfigForSdk.ts#L187) | Word for word, 26 Nov 2026 |
+| bypassfwd | `const allowBypass = sandbox?.[AgentHostSandboxKey.AllowUnsandboxedCommands];` | [sandboxConfigForSdk.ts L160](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/sandboxConfigForSdk.ts#L160) | Word for word, 26 Nov 2026 |
+| fetchbypass | True when the tool is asking to run this URL fetch outside the sandbox, after the network policy denied the approved URL or the sandbox proxy could not reach it (host opted in via sandbox.allowBypass). | [session-events.ts L12840](https://github.com/github/copilot-sdk/blob/v1.0.33-preview.0/nodejs/src/generated/session-events.ts#L12840) | Word for word, 26 Nov 2026 |
+| fetchgrant | This is a request, not a grant: the fetch runs only if the user approves this permission request. | [session-events.ts L12840](https://github.com/github/copilot-sdk/blob/v1.0.33-preview.0/nodejs/src/generated/session-events.ts#L12840) | Word for word, 26 Nov 2026 |
+
 ## Rechecked on 24 November 2026
 
 Statement by statement review of the whole page. Docs retrieved as Markdown (`DateApproved: 11/18/2026`). Code read at the pinned commit. Quote check script: 49 of 49 quotes found (the two table questions and the six baseline step names in the first rows below are checked by hand; docs quotes in the saved docs text, code quotes in the saved source files).
@@ -66,8 +95,8 @@ Corrections made:
 | escoff | requests to run outside the sandbox fail instead of prompting. | [agents/run/agent-sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing) | Word for word, 24 Nov 2026 |
 | escyes | Approving execution outside the sandbox removes its file and network restrictions for that operation. | [agents/run/agent-sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing) | Word for word, 24 Nov 2026 |
 | notcovered | The agent's read, edit, and write tools use VS Code's permission system directly. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Word for word, 24 Nov 2026 |
-| sbcover | The sandbox covers terminal commands and their child processes. | [agents/run/agent-sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing) | Word for word, 24 Nov 2026 |
-| fetchsep | URL approval and sandbox network restrictions are different controls. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Word for word, 24 Nov 2026 |
+| sbcover | The sandbox covers terminal commands and their child processes. | [agents/run/agent-sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing) | Superseded 26 Nov 2026: no longer on the page |
+| fetchsep | URL approval and sandbox network restrictions are different controls. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Superseded 26 Nov 2026: no longer on the page |
 | indep | For example, even with Allow all, a command can't write to a folder the sandbox marks read-only. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word, 24 Nov 2026 |
 | keep | Pending edits are already saved to disk, so running your application or tests uses the changed files. | [agents/run/review-code-edits](https://code.visualstudio.com/docs/agents/run/review-code-edits) | Word for word, 24 Nov 2026 |
 | noundo | Stopping a request or restoring workspace files doesn't reverse completed terminal commands, network requests, deployments, or changes to external services. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Word for word, 24 Nov 2026 |
