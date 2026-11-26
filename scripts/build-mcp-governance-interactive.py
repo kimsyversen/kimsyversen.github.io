@@ -43,7 +43,7 @@ from section_anchors import add_anchors  # noqa: E402
 HEAD, STYLE, MARKERS, AI_NOTE = ns["HEAD"], ns["STYLE"], ns["MARKERS"], ns["AI_NOTE"]
 EXTRA_CSS_OLD = ns["EXTRA_CSS"]
 FACTCHECK_URL = ns["FACTCHECK_URL"]
-REC, UNV, INF, PRE = ns["REC"], ns["UNV"], ns["INF"], ns["PRE"]
+UNV, INF, PRE = ns["UNV"], ns["INF"], ns["PRE"]
 LAYER_ROWS, DESIGN_ROWS, GR_PREV_RAW = ns["LAYER_ROWS"], ns["DESIGN_ROWS"], ns["GR_PREV_RAW"]
 GR_PREV_FY = ns["GR_PREV"][0]
 PREVIEW_HTML, ROLLOUT, GAPS = ns["PREVIEW"], ns["ROLLOUT"], ns["GAPS"]
@@ -155,12 +155,12 @@ for _c in CONTROLS:
     if _c["id"] == "foundry-network":
         _c["doc"] = (f"For a Foundry toolbox, its hosting project governs network access {ev('fy-gov')}. "
                      f"Downstream connectivity depends on the tool and its hosting {ev('fy-tool')}. "
-                     f"Configure egress separately from inbound private access. {REC}")
+                     f"Configure egress separately from inbound private access.")
 CONTROLS.append(dict(
     id="foundry-egress", title="Foundry Network guardrail", meta="Objective B",
     applies="Foundry hosted agents", layers=[4], objs=["B"], preview=False, guardrail=False,
     req=f"Allow approved destinations and deny unmatched outbound connections from the hosted agent sandbox. "
-        f"Check downstream connections separately when a toolbox runs the tool. {REC}",
+        f"Check downstream connections separately when a toolbox runs the tool.",
     doc=(f"Hosted-agent network egress controls are generally available {ev('fy-egress-ga')}. "
          f"The Copilot harness for prompt agents, Transform rules, secret-backed header values and Azure Policy governance "
          f"for hosted-agent egress remain in preview {PRE} {ev('fy-egress-ga', 'fy-egress-harness', 'fy-egress-exceptions')}. "
@@ -170,7 +170,7 @@ CONTROLS.append(dict(
 CONTROLS.append(dict(
     id="purview-audit", title="Purview audit of agent tool calls", meta="Objectives A and B",
     applies="Agent 365 agent instances", layers=[0], objs=["A", "B"], preview=False, guardrail=False,
-    req=(f"Add the Purview audit log for Agent 365 activities to the log review. Look for tool calls to servers that are not on the approved list. {REC} "
+    req=(f"Add the Purview audit log for Agent 365 activities to the log review. Look for tool calls to servers that are not on the approved list. "
          f"{INF} Interpretation by AI: MCP tool calls count as agent-to-tools interactions. The Purview pages do not name MCP."),
     doc=(f"Agent 365 agent instances are audited from creation {ev('purview-audit-on')}, including agent-to-tools interactions "
          f"{ev('purview-audit-tools')}, in a searchable audit log {ev('purview-audit-search')}. "
@@ -197,7 +197,7 @@ PART["Azure API Management"] = (
     f"The company gateway exposes MCP tools. API Management does not support MCP resources or prompts {ev('apim-mcp-scope')}.",
     f"Supported classic and v2 tiers can host MCP routes. Check individual capabilities by tier {ev('mcp-tiers', 'pv-apim-tier')}. "
     f"The self-hosted gateway can also manage MCP servers {ev('apim-ga-tiers')}.",
-    f'Choose a tier that can reach the <a href="#ctrl-backend">private backend</a> and enforce the required policies. {REC}',
+    f'Choose a tier that can reach the <a href="#ctrl-backend">private backend</a> and enforce the required policies.',
 )
 
 def clean_use(use, here=()):
@@ -1068,9 +1068,9 @@ KEY = ('<ul class="key" aria-label="Line key">'
 DESIGN = f"""
   <section class="sec" id="design" aria-labelledby="h-design">
     <header class="sh"><h2 id="h-design">The design</h2>
-    <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers. Map the approved inventory into each policy target, because visibility alone does not enforce access.&nbsp;{REC}</p><p class="goal"><b>Coverage</b><a href="#gaps">Gaps</a> limit Objective B; a gateway does not govern every client or external MCP server by itself.</p>
+    <p class="goal"><b>In short</b>Keep the company MCP server behind the gateway and limit managed clients to approved servers. Map the approved inventory into each policy target, because visibility alone does not enforce access.</p><p class="goal"><b>Coverage</b><a href="#gaps">Gaps</a> limit Objective B; a gateway does not govern every client or external MCP server by itself.</p>
     <p class="goal view-safe"><b>Scope</b>Use Azure API Management Standard v2 or Premium v2 with outbound VNet integration to reach the private company backend {ev('apim-private', 'apim-private-tiers')}. The dedicated Azure AI Gateway is generally available {ev('gateway-ga')}. Its connection to a private backend remains in preview {PRE} {evp('gateway-network')}.</p>
-    <p class="goal view-preview"><b>Scope</b>The sandbox tests Azure AI Gateway with preview private networking and optional tool threat protection {PRE} {evp('gateway-network', 'gateway-threat')}. Keep the API Management route until the replacement meets the same access requirements. {REC}</p>
+    <p class="goal view-preview"><b>Scope</b>The sandbox tests Azure AI Gateway with preview private networking and optional tool threat protection {PRE} {evp('gateway-network', 'gateway-threat')}. Keep the API Management route until the replacement meets the same access requirements.</p>
     <p class="goal"><b>Objectives</b>A means company backend access through the gateway only. B means restricting managed clients to approved MCP servers.</p></header>
     <div class="dg-tools">
       <div class="chipset" role="group" aria-label="Follow a path"><span class="cl">Follow a path</span>{path_buttons()}</div>
@@ -1102,7 +1102,7 @@ def cut_block(start, end):
 
 pv_header = f"""<header class="sh"><h2 id="h-preview">With preview&nbsp;{PRE}</h2>
     <p class="goal"><b>Sandbox scope</b>Test private connectivity, tool threat protection and Agent 365 enforcement independently.
-    Verify direct access to the company backend is denied with each gateway configuration. {REC}</p></header>"""
+    Verify direct access to the company backend is denied with each gateway configuration.</p></header>"""
 
 WF_STEPS = [
     ("gov", "Company governance", [
@@ -1117,7 +1117,7 @@ WF_STEPS = [
                f"{ev('a365-tools-role-ai', 'a365-tools-role-global', 'review-req-fields', 'review-req-info')} {evp('pv-byo-approval')} Individual tool controls are rolling out for supported Agent 365 servers. BYO server tool-level blocking is planned. Until then, block at server level and authorize at the gateway and backend. {ev('a365-tools-granular')} {evp('pv-byo-roll', 'pv-a365-ctrl')}"),
         ("a3", "6a Approve, consent, available", f"Approval makes the server available in the organizational registry. It becomes available to agent-building surfaces only after Microsoft Entra tenant consent. {ev('a365-tools-approve', 'a365-tools-consent')} {evp('pv-byo-approval')} Then apply target policies and backend authorization."),
         ("a4", "6b Reject", "Rejection leaves the server unavailable. Record the reason in Git."),
-        ("a5", "7 Later deny", f"Mark the server denied in Git; the pipeline removes it from its targets. In the Microsoft 365 admin center, block it in the registry and remove its connector by hand. Verify that calls are denied. {REC}"),
+        ("a5", "7 Later deny", f"Mark the server denied in Git; the pipeline removes it from its targets. In the Microsoft 365 admin center, block it in the registry and remove its connector by hand. Verify that calls are denied."),
     ]),
 ]
 
@@ -1137,7 +1137,7 @@ PREVIEW = f"""
 
     <div class="sub3" id="approval-workflow">
       <h3>Approval and denial workflow</h3>
-      <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other. {REC}</p>
+      <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other.</p>
       {workflow_html()}
       <p class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. This is the MCP server request queue {ev('a365-tools-tabs', 'review-req-queue')}. </p><p class="q-note">Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. {ev('a365-agent-approve', 'a365-agent-request-review', 'a365-agent-readonly', 'a365-agent-incomplete')} These are distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')}</p>
     </div>
@@ -1148,7 +1148,7 @@ PREVIEW = f"""
         <li>Create the dedicated gateway in a supported region {ev('gateway-regions')}. Test private backend connectivity and direct-call denial {evp('gateway-network')}.</li>
         <li>Have a Global Administrator review and grant the tenant consent. Verify server discovery and block/unblock on the selected gateway {evp('review-gateway-admin', 'pv-a365-role', 'pv-a365-rw', 'pv-a365-matrix')}.</li>
         <li>On Azure AI Gateway, test per-tool blocking with a static tool list. Test preview threat protection with delegated user tokens, including evaluator failure in Audit and Block modes {evp('pv-a365-static', 'pv-ttp-token', 'pv-ttp-app', 'gateway-threat')}.</li>
-        <li>Keep production on the released path until required features have confirmed support and the team has tested rollback. {REC}</li>
+        <li>Keep production on the released path until required features have confirmed support and the team has tested rollback.</li>
       </ol></div>
   </section>
 """
@@ -1160,7 +1160,6 @@ FOOTER = f"""
       <dl>
         <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI. It is not stated in a source.</dd>
         <dt><span class="tg u">unverified</span></dt><dd>Not confirmed in a quoted source.</dd>
-        <dt><span class="tg r">recommendation</span></dt><dd>A design choice proposed on this page, not documented Microsoft or GitHub behavior.</dd>
         <dt><span class="tg pv">preview</span></dt><dd>The feature is in preview. Use it for a sandbox pilot only.</dd>
       </dl>
     </section>
@@ -1247,7 +1246,7 @@ for _old, _new in EDITS:
         sys.exit(f"page edit does not apply exactly once: {_old[:80]!r}")
     FINAL = FINAL.replace(_old, _new)
 from mcp_governance_interactive_review import apply_review
-FINAL = add_anchors(apply_review(FINAL, ev, REC, INF, UNV, evp))
+FINAL = add_anchors(apply_review(FINAL, ev, INF, UNV, evp))
 
 for ch in (chr(0x2014), chr(0x2013)):
     if ch in FINAL:

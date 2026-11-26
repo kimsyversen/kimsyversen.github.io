@@ -2,6 +2,11 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 # Decisions: MCP Governance in a Microsoft ecosystem
 
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+- Superseded: earlier entries that label requirements `recommendation`. Sentences that read as product facts without the tag were reworded as advice.
+
 ## 2026-11-19, gateway release and integration boundaries
 
 - Supersedes the preview product and the v2-only Foundry routing assumptions below. Keep API Management Standard v2 or Premium v2 as the baseline for a private MCP backend. List standalone Azure AI Gateway in Released only and pilot its private networking separately.

@@ -149,3 +149,7 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - Keep the 17 published risk IDs, interactive placements and saved status keys. Tell readers to reassess their saved statuses because the controls now evaluate a narrower scenario.
 - Replace the multi-agent release snapshot with durable control boundaries. Keep applicable incidents as attributed workstation examples. Use the historical fact-check ledger for the broader source and review history.
 - Treat device policy, Copilot enterprise-managed settings and account policy as separate enforcement paths. The page gives checks by tool and execution host. The fact check records documentation verdicts and browser validation.
+
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.

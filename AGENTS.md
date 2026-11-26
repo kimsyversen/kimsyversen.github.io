@@ -18,7 +18,7 @@ For pages with multiple sections or tables, define each section's job and scope.
 
 - Verify factual claims against primary sources and record the date and verdict in the fact check. Cut unsupported claims or label them `[unverified]` or `[inference]`. Record gaps in testing.
 - Write `[inference]` as interpretation by AI, not stated in a source. Never write it as the owner's or a person's own view: no "my", "our" or "mine" (not "my judgement", "my estimate", "our reading", "these definitions are mine"). Use "interpretation by AI" or "AI estimate" in sentences, headings and generated text on every page, and in the fact check. A tag that already says it, such as the `inference` tag on a page, needs no such wording after it.
-- Tags (`inference`, `unverified`, `recommendation`, `preview`) stand alone in the text: do not add "Interpretation by AI:" or any repeat of the tag's meaning after them. Each page that uses tags ends with a "Tags on this page" key under the Made with AI note. The key lists only the tags that page uses, with one sentence each: `inference` is interpretation by AI that is not stated in a source, `unverified` is not confirmed in a quoted source, `recommendation` is a design choice proposed on the page, and `preview` is a feature in preview. Add or remove a key row in the same edit that adds or removes the last use of a tag.
+- Tags (`inference`, `unverified`, `preview`) stand alone in the text: do not add "Interpretation by AI:" or any repeat of the tag's meaning after them. Each page that uses tags ends with a "Tags on this page" key under the Made with AI note. The key lists only the tags that page uses, with one sentence each: `inference` is interpretation by AI that is not stated in a source, `unverified` is not confirmed in a quoted source, and `preview` is a feature in preview. Add or remove a key row in the same edit that adds or removes the last use of a tag.
 - Put the exact quote and a link to its passage beside each sourced diagram claim. Reserve diagram text without evidence for requirements and labels.
 - Run the page's quote and label checks when evidence or wording changes. Recheck sources and update the fact check before moving the page's "Current as of" date.
 
@@ -40,3 +40,5 @@ Make every section linkable. Each `<section>` and each `<article>` that holds a 
 ## 6. Recommendations
 
 Prefer the simplest option with the least upkeep and explain any added complexity. Recommendations must work without preview features. Label preview features when mentioned.
+
+Do not tag recommendations. Word them as advice, as an instruction ("Have a person approve the merge") or with "should", so they cannot be read as documented behaviour.

@@ -5,7 +5,7 @@ The legacy builder remains unchanged. Scoped replacements fail if shared wording
 import re
 
 
-def apply_review(page, ev, rec, inf, unv, evp):
+def apply_review(page, ev, inf, unv, evp):
     def replace(old, new):
         nonlocal page
         assert page.count(old) == 1, (old[:100], page.count(old))
@@ -31,15 +31,15 @@ def apply_review(page, ev, rec, inf, unv, evp):
     control('inventory', requirement=(
         'Keep approved and denied servers in reviewed Git changes, with endpoint, owner, authentication, permitted tools and risk class. '
         'Use the company gateway URL for company backends. Review address, identity, permissions, tool and version changes. '
-        f'Pin and verify local packages or container digests; a URL or command allowlist does not establish code integrity. {rec}'))
+        f'Pin and verify local packages or container digests; a URL or command allowlist does not establish code integrity.'))
     control('pipeline', requirement=(
         'Build adapters for GitHub managed settings and Foundry connection tool lists; validate each before deployment. '
         'Keep Power Platform MCP policy manual until its API path is verified. Microsoft 365 connector access stays manual. '
-        f'Use separate least-privilege credentials, record the reviewed commit and target result, and reconcile drift. {rec}'))
+        f'Use separate least-privilege credentials, record the reviewed commit and target result, and reconcile drift.'))
     control('client', requirement=(
         'Set a managed allowlist of approved endpoints and reject unmatched servers on each supported client. '
         'For restrictions that must survive account switching or unavailable server policy, use protected device policy. '
-        f'Test precedence and client versions. Built-in servers, custom profiles, cloud sessions and other clients need separate coverage. {rec}'),
+        f'Test precedence and client versions. Built-in servers, custom profiles, cloud sessions and other clients need separate coverage.'),
         documented=(
         f'VS Code documents allow, deny and managed-only policies {ev("vs-allow", "vs-managed", "vs-deny")}. '
         f'GitHub matches URLs and blocks unmatched entries; deny wins {ev("gh-url", "gh-block", "gh-deny")}. '
@@ -48,33 +48,33 @@ def apply_review(page, ev, rec, inf, unv, evp):
     control('stdio', requirement=(
         'Limit local launch commands through managed policy. Pin reviewed artifacts and verify their integrity before execution. '
         'Apply application control, process isolation, least privilege and file and credential restrictions. '
-        f'Account for local administrators, shell tools, other MCP clients and unmanaged devices as bypass paths. {rec}'))
+        f'Account for local administrators, shell tools, other MCP clients and unmanaged devices as bypass paths.'))
     control('windows', requirement=(
         'Restrict device egress to approved destinations where operationally feasible. Test DNS, proxies, VPNs and permitted general web traffic. '
         f'Windows Firewall is not an MCP URL or tool-content allowlist; a permitted HTTPS destination may carry other traffic. {inf} '
-        f'Combine egress restrictions with client policy and application control. {rec}'))
+        f'Combine egress restrictions with client policy and application control.'))
     control('gateway', requirement=(
         'Publish company MCP endpoints through API Management. Explicitly configure every client connection to that gateway address. '
         'Authenticate, authorize each caller and tool, rate-limit and log. Enforce tool arguments and object permissions at the server. '
-        f'Do not treat an HTTP path filter as an MCP tool-name policy without verifying JSON-RPC handling. {rec}'))
+        f'Do not treat an HTTP path filter as an MCP tool-name policy without verifying JSON-RPC handling.'))
     control('identity', requirement=(
         'At the gateway, validate token issuer, tenant, audience, expiry and caller permissions. '
         'Allow only the gateway identity to authenticate to the private backend. '
-        f'Strip caller-supplied identity headers. For user-specific object permissions, send verified caller context over the gateway-only path or use the delegated variant below. {rec}'),
+        f'Strip caller-supplied identity headers. For user-specific object permissions, send verified caller context over the gateway-only path or use the delegated variant below.'),
         documented=(
         f'API Management validates Entra tokens or subscription keys {ev("in-entra", "in-key")}; its managed identity can authenticate to a backend {ev("out-mi")}. '
         f'OBO preserves user delegation and requires a downstream token {ev("review-obo", "review-obo-token")}. '
-        f'{rec} For a delegated variant, keep gateway-only networking, acquire the correct backend audience token and retain user authorization. '
+        f'For a delegated variant, keep gateway-only networking, acquire the correct backend audience token and retain user authorization. '
         f'{unv} No OBO implementation or cross-client sign-in flow has been tested. A subscription key alone does not identify an individual user. {inf}'))
     control('backend', requirement=(
         'Disable public backend access and permit the company gateway over a private path. Require valid backend authentication and least-privilege tool authorization. '
-        f'Select hosting and a gateway tier that support the required private connection; classic Functions Consumption cannot meet this private-endpoint baseline. {rec}'))
+        f'Select hosting and a gateway tier that support the required private connection; classic Functions Consumption cannot meet this private-endpoint baseline.'))
     control('logging', requirement=(
         'Collect gateway, backend and supported client telemetry. Correlate authenticated caller, tenant, tool, decision and request ID. '
         'Redact credentials and sensitive payloads; restrict log access and retention. Monitor unapproved connections, policy drift and unusual tool use. '
-        f'Review the inventory and run bypass tests periodically. {rec}'))
+        f'Review the inventory and run bypass tests periodically.'))
     control('purview-audit', requirement=(
-        f'Validate actual audit events and fields for each agent integration before relying on server or tool visibility. {rec} '
+        f'Validate actual audit events and fields for each agent integration before relying on server or tool visibility. '
         f'{inf} MCP calls may fall within agent-to-tools interactions; the cited Purview pages do not explicitly establish MCP endpoint coverage.'),
         documented=(
         f'Agent 365 instances are audited from creation, including agent-to-tools interactions {ev("purview-audit-on", "purview-audit-tools", "purview-audit-search")}. '
@@ -84,14 +84,14 @@ def apply_review(page, ev, rec, inf, unv, evp):
     control('byo', requirement=(
         'Exclude direct BYO access to the private company backend: it contradicts gateway-only access. '
         'If piloting BYO, use a separate test endpoint, or test registration of the company gateway URL with compatible authentication. '
-        f'Keep backend isolation and caller authorization intact; neither composition is validated here. {rec}'))
+        f'Keep backend isolation and caller authorization intact; neither composition is validated here.'))
     control('ttp-users', requirement=(
         'Use a separate pilot endpoint for delegated user-token flows. Keep app-only workloads on an appropriately authenticated baseline endpoint. '
-        f'One server policy covers every caller, so mixing incompatible callers can reject legitimate calls. {rec}'))
+        f'One server policy covers every caller, so mixing incompatible callers can reject legitimate calls.'))
     control('power-platform', requirement=(
         '<span id="gap-unverified-url-block"></span>Use advanced connector policies (ACP) for listed MCP servers once Copilot Studio design-time enforcement reaches the target workload. '
         f'Keep classic policies for custom, HTTP and Copilot Studio virtual connectors. Use mixed mode when adding ACP {ev("pp-custom", "review-custom-classic", "review-acp-mixed", "acp-virtual")}. '
-        f'Configure MCP policy manually until the API adapter is validated. {rec}'),
+        f'Configure MCP policy manually until the API adapter is validated.'),
         documented=(
         f'ACP blocks whole MCP servers. A connector block covers its dependent tools {ev("pp-block", "studio")}. '
         f'Before design-time enforcement reaches a workload, ACP enforces at runtime only. Microsoft ties general availability to design-time rollout {ev("review-acp-rollout", "acp-runtime")}. '
@@ -100,7 +100,7 @@ def apply_review(page, ev, rec, inf, unv, evp):
     control('ttp-modes', requirement=(
         'Configure evaluation mode in Microsoft Defender. Test Audit, Block and evaluator failures. '
         'Use pre-invocation checks to stop calls and post-invocation checks to withhold results. '
-        f'Do not automatically retry a write whose result was withheld: the action may already have completed. {rec}'),
+        f'Do not automatically retry a write whose result was withheld: the action may already have completed.'),
         documented=(
         f'Audit mode fails open; Block mode fails closed {evp("pv-ttp-audit", "pv-ttp-block")}. '
         f'One policy covers every tool and caller of a server {evp("pv-ttp-scope")}. '
@@ -115,14 +115,14 @@ def apply_review(page, ev, rec, inf, unv, evp):
     replace('The pages read on 2026-11-11 describe only a preview control there.', 'The reviewed external detection control at that layer is preview.')
     replace('The API Management integration does not automatically route agents through a customer-hosted gateway', 'Agent 365 does not automatically route agents through a customer-hosted gateway')
     replace('Confirm its public endpoint fits the backend isolation target.', 'Keep its public endpoint separate from the private backend.') if 'Confirm its public endpoint fits the backend isolation target.' in page else None
-    replace('Until then, block at server level and authorize at the server.', 'Until then, block at server level and authorize at the server. <span class="tg r">recommendation</span>')
+    replace('Until then, block at server level and authorize at the server.', 'Until then, block at server level and authorize at the server.')
     replace('Blocked or preview route</li>', 'Rejected route or preview alternative</li>')
     # 2026-11-12 holistic review: cite the overview for the separate product, fix ownership and scope wording.
     replace('Configure Microsoft 365 access and Power Platform MCP policy manually until their respective automation is verified.',
             'Configure Microsoft 365 agent access by hand; it has no API option. Configure Power Platform MCP policy by hand until its API path is verified.')
     replace('<dt>Applies to</dt><dd>Agent 365 agent instances</dd>', '<dt>Applies to</dt><dd>Agent 365 agent instances and Foundry AI interactions</dd>')
     replace('No design control covers them. Pilot both, or limit it through GitHub account permissions.',
-            f'No design control covers them. Pilot both switches, or limit the built-in server through GitHub account permissions. {rec}')
+            f'No design control covers them. Pilot both switches, or limit the built-in server through GitHub account permissions.')
     assert page.count('What establishes the guarantee') == 14
     page = page.replace('What establishes the guarantee', 'Required control or validation')
     replace('Safe stop, or a rollback to the released-only design</td>',

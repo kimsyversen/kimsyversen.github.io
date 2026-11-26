@@ -26,8 +26,6 @@ h3{font-size:1.1rem;font-weight:700;line-height:1.25;margin-bottom:14px}
 p{margin:0}
 p + p{margin-top:12px}
 code{font-family:var(--mono);font-size:.9em;overflow-wrap:anywhere}
-.tag{font:500 .72rem/1 var(--mono);color:var(--muted);white-space:nowrap;letter-spacing:0;text-transform:none}
-h2 .tag{margin-left:.6em;vertical-align:middle}
 .top{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:.85rem;color:var(--muted)}
 .hero{padding:clamp(36px,7vw,84px) 0 clamp(28px,4vw,48px);border-bottom:3px solid var(--rule)}
 .hero .lede{margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
@@ -87,10 +85,6 @@ ol.principles li::before{content:counter(p,decimal-leading-zero);font:500 .85rem
 footer{padding-top:28px;font-size:.88rem;color:var(--muted)}
 .ai-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin-bottom:22px}
 .ai-note b{color:var(--ink)}
-.tag-key{padding:0;border:0}
-.tag-key h2{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
-.tag-key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0}
-.tag-key dd{margin:0}
 :is(section,article,h2,h3)[id]{scroll-margin-top:24px}
 /* section links */
 h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
@@ -179,7 +173,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </section>
 
   <section id="two-governance-layers">
-    <h2 id="h-two-governance-layers"><a class="sec-link" href="#h-two-governance-layers">Control both which code runs and what the AI can access</a> <span class="tag">[recommendation]</span></h2>
+    <h2 id="h-two-governance-layers"><a class="sec-link" href="#h-two-governance-layers">Control both which code runs and what the AI can access</a></h2>
     <figure class="layers" role="group" aria-label="Software execution governance decides which code may run on the endpoint. MCP governance decides which capabilities, tools, data and external services the AI is permitted to access. An MCP gateway can help address the second. Some gateways cover only remote servers, so they do not address the first.">
       <div><h3 id="software-execution-governance"><a class="sec-link" href="#software-execution-governance">Software execution governance</a></h3>
         <p class="q">What code is permitted to execute on the endpoint?</p>
@@ -195,12 +189,12 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </section>
 
   <section id="principles">
-    <h2 id="h-principles"><a class="sec-link" href="#h-principles">13 principles for using MCP securely</a> <span class="tag">[recommendation]</span></h2>
+    <h2 id="h-principles"><a class="sec-link" href="#h-principles">13 principles for using MCP securely</a></h2>
     <ol class="principles"><li id="principle-1">Only approved, inventoried, and owned MCP servers may be used.</li><li id="principle-2">All agent actions must be traceable to a human user or accountable workload owner.</li><li id="principle-3">All MCP connections must use secure authentication, communication, and credential management.</li><li id="principle-4">Agents and MCP servers must operate with least privilege.</li><li id="principle-5">Sensitive tool actions must require appropriate authorization and human approval where necessary.</li><li id="principle-6">Data accessed or transmitted through MCP must comply with organizational data protection requirements.</li><li id="principle-7">Untrusted content must not override security policies or execution boundaries.</li><li id="principle-8">MCP servers, tools, and dependencies must be trusted and protected against tampering.</li><li id="principle-9">MCP execution must be isolated within controlled system and network boundaries.</li><li id="principle-10">MCP interactions must not bypass established security controls.</li><li id="principle-11">All MCP activities must be logged, monitored, and auditable.</li><li id="principle-12">MCP operations must enforce resource limits, support revocation, and fail securely.</li><li id="principle-13">MCP integrations must undergo security assessment, testing, and ongoing lifecycle management.</li></ol>
   </section>
 
   <section id="enterprise-controls">
-    <h2 id="h-enterprise-controls"><a class="sec-link" href="#h-enterprise-controls">Enterprise controls that put the principles into practice</a> <span class="tag">[recommendation]</span></h2>
+    <h2 id="h-enterprise-controls"><a class="sec-link" href="#h-enterprise-controls">Enterprise controls that put the principles into practice</a></h2>
     <div class="tbl"><table>
       <thead><tr><th scope="col">Control</th><th scope="col">Recommendation</th></tr></thead>
       <tbody><tr><th scope="row">Package governance</th><td>Approved publishers and packages</td></tr><tr><th scope="row">Software distribution</th><td>Controlled internal artifact registry</td></tr><tr><th scope="row">Version management</th><td>Pinned versions and locked dependencies</td></tr><tr><th scope="row">Supply chain security</th><td>SCA, malware scanning and provenance verification</td></tr><tr><th scope="row">Execution isolation</th><td>Restricted containers, sandboxes or VMs</td></tr><tr><th scope="row">Network security</th><td>Restricted outbound connectivity</td></tr><tr><th scope="row">Identity</th><td>Dedicated, least-privileged credentials per server</td></tr><tr><th scope="row">MCP governance</th><td>Approved servers and tools</td></tr><tr><th scope="row">Change management</th><td>Review package and tool definition changes</td></tr></tbody>
@@ -210,11 +204,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 
   <footer>
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
-    <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
-      <dl>
-        <dt><span class="tag">[recommendation]</span></dt><dd>A design choice proposed on this page.</dd>
-      </dl>
-    </section>
+    <span id="tag-key" aria-hidden="true"></span><span id="h-tag-key" aria-hidden="true"></span>
   </footer>
 </div>
 </body>

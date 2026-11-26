@@ -26,7 +26,7 @@ A Git repository holds the approved and denied MCP servers. A reviewed pull requ
 ## Rules
 
 - Same look as `enterprise-ai-agent-governance-summary.html` (copied from it by the builder).
-- Every product fact has a quote in `scripts/mcp_governance_evidence.py`. Design choices are labelled recommendation. Gaps in the sources are labelled inference or unverified.
+- Every product fact has a quote in `scripts/mcp_governance_evidence.py`. Design choices are worded as advice, without a tag. Gaps in the sources are labelled inference or unverified.
 - The released-only design needs no preview feature. The With preview section labels every preview feature and keeps the released-only design underneath.
 - Paragraphs and cells at most 60 words. No em or en dashes.
 
@@ -121,7 +121,7 @@ python3 -I scripts/check-enterprise-agent-labels.py mcp-governance-microsoft.htm
 - [ ] Not checked: the `#ev-V` redirect and the quote links (they point to the GitHub copy of the fact check on master, so they work only after the owner publishes master; anchor behavior on GitHub not tested). Not tried on a real phone or in Safari.
 
 ## One table by call layer 2026-11-11
-- [x] The Controls table (by design requirement) and the "What each guardrail does" table (by layer) are one table, "Controls by call layer": 30 rows under 9 group rows (Whole path, layers 1 to 8). Columns: Control, Applies to, Design requirement, What Microsoft and GitHub document. The Label column is gone; the recommendation tag sits in the requirement cell.
+- [x] The Controls table (by design requirement) and the "What each guardrail does" table (by layer) are one table, "Controls by call layer": 30 rows under 9 group rows (Whole path, layers 1 to 8). Columns: Control, Applies to, Design requirement, What Microsoft and GitHub document. The Label column is gone; the recommendation tag sits in the requirement cell (tag removed 26 Nov 2026).
 - [x] Merged: Data policy into Policy sync, Power Platform; Tool list into Policy sync, Foundry; Allow and deny lists into Client allowlist. The Foundry toolbox network text moved to a new anchor, `ctrl-foundry-network`, at layer 5. The Microsoft 365 Copilot note became a Write approval row at layer 3.
 - [x] Old ids kept: `guardrails`, `h-guardrails`, `what-each-guardrail-does` are empty anchors. All `ctrl-*` anchors work.
 - [x] Checks: builder, anchor check, label check (199 texts), quote check (202, 0 problems), no dashes, no lost id except the ones removed earlier, 0 dead links. Browser (localhost): no sideways scroll at 1280 and 375 px, no console errors.

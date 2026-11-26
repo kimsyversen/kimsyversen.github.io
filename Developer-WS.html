@@ -384,7 +384,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <ul class="checks">
           <li>Can Copilot install dependencies from public registries? Use an approved registry or proxy where policy requires package blocks or a release cooldown. A managed <code>.npmrc</code> sets defaults that a project, environment variable or command line can override.</li>
           <li>For npm 12, review <code>allowScripts</code> entries and check that <code>dangerously-allow-all-scripts</code> is disabled. Review root <code>.npm-extension.mjs</code> or <code>.npm-extension.cjs</code> separately. npm runs a root extension during <code>npm install</code> and checks its recorded hash during <code>npm ci</code>.</li>
-          <li>Include each package manager the VS Code fleet uses. Decide who can approve urgent updates that a cooldown would block. Test using an approved package and a blocked package in the Copilot terminal. <span class="tag">[recommendation]</span></li>
+          <li>Include each package manager the VS Code fleet uses. Decide who can approve urgent updates that a cooldown would block. Test using an approved package and a blocked package in the Copilot terminal.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Direct public registry access, broad script grants, repository-controlled install settings and unreviewed root extensions.</p>
         <p class="note"><a href="https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/">Microsoft ChainDrop analysis</a> · <a href="https://docs.npmjs.com/cli/v12/using-npm/config">npm v12 configuration</a> · <a href="https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/">npm project extensions</a></p>
@@ -400,7 +400,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <ul class="checks">
           <li>Open unfamiliar folders in Restricted Mode. Check inherited trust from parent folders, especially broad development or download directories. Review workspace files before granting trust.</li>
           <li>Keep automatic tasks off for unreviewed projects. Review <code>.vscode/tasks.json</code>, executable paths in settings, <code>.code-workspace</code> files, Dev Container setup and <code>.vscode/mcp.json</code> when present.</li>
-          <li>Prefer a fresh clone from an approved source when files arrive with local Git metadata. Require code-owner approval for execution-sensitive files on shared repositories, then verify the branch rule and who can bypass it. <span class="tag">[recommendation]</span></li>
+          <li>Prefer a fresh clone from an approved source when files arrive with local Git metadata. Require code-owner approval for execution-sensitive files on shared repositories, then verify the branch rule and who can bypass it.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Broad trusted roots, automatic tasks enabled, downloaded Git metadata and unreviewed workspace configuration.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a> · <a href="https://code.visualstudio.com/docs/debugtest/tasks">VS Code tasks</a> · <a href="https://github.com/devcontainers/spec/blob/main/docs/specs/devcontainerjson-reference.md">Dev Container metadata</a> · <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners">GitHub code ownership</a></p>
@@ -415,7 +415,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <ul class="checks">
           <li>Deploy <code>AllowedExtensions</code> with approved extension IDs, including the required GitHub Copilot extensions. Inventory installed versions and publishers across the profiles and remote extension hosts in use.</li>
           <li>Check approvals for local VSIX packages. Microsoft says the allowlist checks declared identifiers. Verify origin and integrity separately when distributing local packages.</li>
-          <li>For managed updates, use a staged rollout or <code>ExtensionsAutoUpdateDelay</code> with a route for urgent fixes. Review extensions that also expose tools to Copilot. <span class="tag">[recommendation]</span></li>
+          <li>For managed updates, use a staged rollout or <code>ExtensionsAutoUpdateDelay</code> with a route for urgent fixes. Review extensions that also expose tools to Copilot.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Marketplace or local packages outside the approved inventory, broad publisher grants and untracked remote extension hosts.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/enterprise/extensions">VS Code enterprise extension management</a> · <a href="https://aws.amazon.com/security/security-bulletins/AWS-2025-015/">AWS extension bulletin</a> · <a href="https://code.visualstudio.com/docs/agents/run/security">VS Code AI security</a></p>
@@ -428,7 +428,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <p>GitHub Copilot can reach secrets through file context, terminal commands, credential helpers or tools with their own tokens. The Copilot sandbox enables Git and GitHub CLI credential integration by default. Dev Containers can also reuse Git credentials and forward SSH agent access.</p>
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
-          <li>Keep production credentials and secret files out of the development environment where practical. Scope and expire GitHub, registry and cloud credentials. Inspect which identities an agent session can actually use, including in a Dev Container. <span class="tag">[recommendation]</span></li>
+          <li>Keep production credentials and secret files out of the development environment where practical. Scope and expire GitHub, registry and cloud credentials. Inspect which identities an agent session can actually use, including in a Dev Container.</li>
           <li>In Copilot Agent Host, check managed <code>permissions.deny</code> rules for sensitive reads and <code>sandbox.userPolicy.filesystem.deniedPaths</code> for sandboxed processes. Test file-tool access and terminal access separately with dummy secrets.</li>
           <li>Check where Git stores credentials. The <code>store</code> helper uses plaintext. Inspect SSH forwarding, environment variables and credential helpers before approving agent commands.</li>
           <li>Use GitHub content exclusion for supported Copilot workflows. GitHub documents limits for indirect access, symlinks, remote filesystems and third-party MCP tools. Check these paths separately.</li>
@@ -445,8 +445,8 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Verify which instructions load for the selected Copilot session and repository root. Review project and user-level instructions before giving the agent access to unfamiliar workspaces or external content.</li>
-          <li>Require review for changes to instructions, custom agents and skills. Use Workspace Trust for unfamiliar projects and a separate approval or permission control for sensitive actions. <span class="tag">[recommendation]</span></li>
-          <li>Use harmless sample content to check how the session handles a misleading instruction and whether the target tool still requires approval. Include tool results and pages in the test if the team uses them. <span class="tag">[recommendation]</span></li>
+          <li>Require review for changes to instructions, custom agents and skills. Use Workspace Trust for unfamiliar projects and a separate approval or permission control for sensitive actions.</li>
+          <li>Use harmless sample content to check how the session handles a misleading instruction and whether the target tool still requires approval. Include tool results and pages in the test if the team uses them.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Instruction changes with no owner, unexpected instruction sources and sensitive tool actions available without review.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/reference/custom-instructions-reference">VS Code custom instructions</a> · <a href="https://code.visualstudio.com/docs/agents/run/security">VS Code AI security</a> · <a href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust">Workspace Trust</a></p>
@@ -461,7 +461,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <ul class="checks">
           <li>Inventory editor-managed servers and Agent Host-owned servers separately. Use <code>ChatMCP</code> and <code>ChatAllowedMcpServers</code> for editor-managed servers. Check the GitHub-managed <code>allowedMcpServers</code> and <code>deniedMcpServers</code> for Agent Host. GitHub exempts built-in first-party servers from deny rules. Review their tools separately.</li>
           <li>For each server, approve the executable or endpoint and confirm its tools, data recipients and downstream access. Verify that remote services validate the token audience and use separately scoped credentials for downstream calls.</li>
-          <li>If plugins are unnecessary, disable plugin integration. Otherwise review enabled plugins, their marketplaces, bundled servers and any automatic updates. In the deployed Copilot harness, check whether the intended settings restrict installation, execution or both. <span class="tag">[recommendation]</span></li>
+          <li>If plugins are unnecessary, disable plugin integration. Otherwise review enabled plugins, their marketplaces, bundled servers and any automatic updates. In the deployed Copilot harness, check whether the intended settings restrict installation, execution or both.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>A registry treated as the only enforcement layer, unreviewed local executables and remote tools with broad write scopes.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">VS Code enterprise MCP controls</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed MCP settings</a> · <a href="https://code.visualstudio.com/docs/enterprise/policies">VS Code plugin and MCP policies</a> · <a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP authorization specification</a></p>
@@ -475,9 +475,9 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Check the deployed OS and tool implementation. Use GitHub’s managed <code>sandbox.enabled</code>, <code>failIfUnavailable</code> and <code>allowBypass</code> where supported. Windows support is experimental <span class="tag">[preview]</span>. Assess the VS Code Local harness terminal sandbox separately if it is still enabled.</li>
-          <li>Test limits on workspace writes, reads outside the workspace, outbound network, access to local services and requests to run outside the sandbox. Use dummy files and approved test destinations. <span class="tag">[recommendation]</span></li>
+          <li>Test limits on workspace writes, reads outside the workspace, outbound network, access to local services and requests to run outside the sandbox. Use dummy files and approved test destinations.</li>
           <li>Test egress separately for the built-in shell, browser or fetch tool, extensions, and local or remote MCP. <code>ChatAgentNetworkFilter</code> covers supported editor tools and compatible terminal sandbox implementations. Verify account or tenant restrictions where an allowed host also accepts personal accounts.</li>
-          <li>For higher-risk sessions, use a separate execution environment with minimal mounts, credentials and network access. Check whether a Dev Container forwards credentials or exposes host services before relying on that boundary. <span class="tag">[recommendation]</span></li>
+          <li>For higher-risk sessions, use a separate execution environment with minimal mounts, credentials and network access. Check whether a Dev Container forwards credentials or exposes host services before relying on that boundary.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>A sandbox toggle treated as fleet enforcement, untested fallback prompts and an allowed service that also accepts personal accounts.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing">Copilot sandbox scope and defaults</a> · <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">Harness-specific policy scope</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed sandbox</a> · <a href="https://code.visualstudio.com/docs/remote/advancedcontainers/sharing-git-credentials">Dev Container credentials</a></p>
@@ -493,7 +493,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
           <li>Set <code>ChatToolsAutoApprove</code> to false to disable global auto-approval. Use GitHub-managed session permission settings to restrict bypass and Assisted permissions separately. Verify that the intended session modes and grants can be used only where policy permits.</li>
           <li>Use GitHub managed <code>permissions.ask</code> for Copilot Agent Host actions that require fresh approval. Use <code>permissions.deny</code> for prohibited actions. Confirm the rule against the actual tool, including an MCP tool where applicable.</li>
           <li>Where terminal commands must ask, check <code>ChatToolsTerminalEnableAutoApprove</code> and the shell the session uses. Microsoft documents Copilot coverage for the built-in shell. Use <code>ChatAgentHostCustomTerminalTool</code> to keep sessions on it where needed.</li>
-          <li>Use session-scoped approvals where possible. Check the destination and scope shown in each prompt before granting file, network or tool access. <span class="tag">[recommendation]</span></li>
+          <li>Use session-scoped approvals where possible. Check the destination and scope shown in each prompt before granting file, network or tool access.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Autonomous permission levels in routine sessions, durable grants for state-changing tools and prompts that obscure the destination.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/agents/run/approvals">VS Code tool approvals</a> · <a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">Enterprise approval policies</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings">GitHub managed permissions</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-53773">CVE record with Microsoft CNA data</a></p>
@@ -508,7 +508,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <ul class="checks">
           <li>Inventory the deployed builds and extensions from endpoint management. Check updates after a security fix and confirm which harness and shell implementation users actually run.</li>
           <li>Run <b>Developer: Policy Diagnostics</b> on a managed device, then exercise the intended restriction in a real session on each supported OS and harness. Handle the report as sensitive because it can include account and session details.</li>
-          <li>For monitoring, send Copilot OpenTelemetry data to an approved collector. Correlate a harmless test action with endpoint events where it creates a process. Check coverage for MCP and for other tool actions that may lack a matching process event. See D17 for content capture. <span class="tag">[recommendation]</span></li>
+          <li>For monitoring, send Copilot OpenTelemetry data to an approved collector. Correlate a harmless test action with endpoint events where it creates a process. Check coverage for MCP and for other tool actions that may lack a matching process event. See D17 for content capture.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Configured policy with no enforcement test, missing harness inventory and endpoint events treated as a complete session history.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/enterprise/policies">VS Code Policy Diagnostics</a> · <a href="https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table">Defender process event schema</a> · <a href="https://code.visualstudio.com/docs/agents/guides/monitoring-agents">Copilot OpenTelemetry</a></p>
@@ -523,7 +523,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <ul class="checks">
           <li>Use <code>ChatApprovedAccountOrganizations</code> with explicit organisation names. It checks membership. Verify company-managed identity separately if required, and check the effect of switching accounts.</li>
           <li>Use GitHub organisation or enterprise policy for approved Copilot models and features, and check availability of models configured with personal provider keys. VS Code says those credentials are subject to the other provider’s terms.</li>
-          <li>Check which source code and tool outputs may go to Copilot under company data rules. Verify provider retention, training use, residency and deletion terms for the features in use. <span class="tag">[recommendation]</span></li>
+          <li>Check which source code and tool outputs may go to Copilot under company data rules. Verify provider retention, training use, residency and deletion terms for the features in use.</li>
         </ul>
         <p class="finding"><span class="lbl">Look for</span>Personal Copilot accounts with company access, unapproved model credentials and unknown handling terms for code or tool results.</p>
         <p class="note"><a href="https://code.visualstudio.com/docs/enterprise/manage-ai-settings">Enterprise AI and account policies</a> · <a href="https://code.visualstudio.com/docs/setup/copilot">Copilot sign-in and model credentials</a> · <a href="https://code.visualstudio.com/docs/agents/run/security">VS Code AI data and tool risks</a></p>
@@ -541,7 +541,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Check for persistence.</b> Review VS Code user and workspace settings, tasks, extensions, Copilot instructions and plugins, MCP configuration, Git hooks and remote tunnel services.</li>
         <li><b>Trace downstream changes.</b> Check pushes, pull requests, workflow runs, package releases and actions taken by connected tools. Restore the workstation and affected projects from a known-good state.</li>
       </ol>
-      <p class="note"><span class="tag">[recommendation]</span> <a href="https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents">Microsoft incident response guidance</a></p>
+      <p class="note"><a href="https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents">Microsoft incident response guidance</a></p>
     </section>
   </div>
 
@@ -562,7 +562,6 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       <b>Tags on this page</b>
       <ul>
         <li><span class="tag">[inference]</span> is interpretation by AI that is not stated in a source.</li>
-        <li><span class="tag">[recommendation]</span> is a design choice proposed on the page.</li>
         <li><span class="tag">[preview]</span> is a feature in preview.</li>
       </ul>
     </div>

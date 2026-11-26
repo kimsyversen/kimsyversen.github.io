@@ -133,8 +133,13 @@ Edited the page file directly; the builder script was behind the page at the tim
 
 - 2026-11-13: added V223 to the MCP server request queue sentence. V182 alone names only the Requests (preview) tab.
 
-- 2026-11-13: tagged the "block at server level" fallback and the "Gate promotion" step as recommendation. The quotes only support the premise.
+- 2026-11-13: tagged the "block at server level" fallback and the "Gate promotion" step as recommendation (superseded 26 Nov 2026). The quotes only support the premise.
 
 - 2026-11-13: removed "This is advice only" from the untrusted-results row. V107 is an instruction to treat results as untrusted input. It does not say no product control exists, so the claim had no quote.
 - 2026-11-13: Split the custom/HTTP connector claim into what V78 says (ACP does not yet support them) and what V224 says (use classic data policies today), so each half has its own quote.
 - 2026-11-13: Option 2 now says the Foundry AI Gateway uses API Management behind the scenes, matching V197, instead of claiming it is an API Management service.
+
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+- Superseded: earlier entries that tag text `recommendation`. Sentences that read as product facts without the tag were reworded as advice.

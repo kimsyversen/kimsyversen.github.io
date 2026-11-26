@@ -676,7 +676,6 @@ The checker proves a verdict was recorded for the exact wording, not that the ve
 label	MCP Governance in a Microsoft ecosystem
 requirement	A proposed design to make a gateway the only way to reach a company MCP server and to limit managed clients to approved servers, across GitHub Copilot, VS Code, Foundry, Copilot Studio and Microsoft 365 Copilot.
 label	The design
-label	recommendation
 label	SOURCE OF TRUTH
 label	APPLY ON MERGE
 label	GIT REPOSITORY
@@ -908,3 +907,7 @@ No factual claim changed; the preview figure and its caption moved to The design
 
 - The approval figure, its text description and its caption said consent made the server Available. Wrong: V184 says approval makes it available in the organizational registry; V185 says agent-building surfaces can use it only after consent. Figure now shows Available, then consent, then use by agent builders.
 - The Approval lock carried `unverified` and "Not tested on a managed device". V157 quotes the managed setting `permissions.disableBypassPermissionsMode`, re-read in the VS Code enterprise AI settings page on 2026-11-12. Tag and sentence removed; `unverified` is still used on the page.
+
+## 26 Nov 2026, quote check after removing recommendation tags
+
+10 of 232 quotes failed: V21, V115, V151 to V155, V159, V160 and V324 were not found in the source served that day. The claims were not rechecked and the page's date is unchanged. Anchor and reviewed-text checks passed. The `recommendation` rows above are history.

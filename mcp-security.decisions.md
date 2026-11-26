@@ -3,7 +3,7 @@
 26 November 2026
 
 - Diagrams are HTML and CSS, not ASCII files. The owner said design rules in AGENTS.md do not apply to this page. Each figure has a text description.
-- The brief's "I would govern this" and "I would distinguish" are written without "I" and tagged `[recommendation]`, because AGENTS.md forbids showing AI-drafted views as a person's own.
+- The brief's "I would govern this" and "I would distinguish" are written without "I" and tagged `[recommendation]` (tag superseded 26 Nov 2026), because AGENTS.md forbids showing AI-drafted views as a person's own.
 - Superseded in part: "Built-in sandboxing: No" stays in the table, with a note that a client or operating system can add one.
 - The 13 principles are kept word for word.
 - The bridge case has its own diagram beside local and remote, so the exception sits next to the "no local execution" statement.
@@ -31,3 +31,8 @@
 - Text uses the full width, like the figures and tables. The owner saw that the opening paragraph was narrower. The limits on the opening, prose and highlighted sentences are removed. The title keeps its limit.
 - The page has no `[inference]` tags. The table and its heading rest on added quotes. The API comparison is replaced by the documented point that a remote server needs no installation on each device. The gateway statements now say only that some gateways cover remote servers only, with Cloudflare and Microsoft as evidence. The npx sentence is now advice under the section's `[recommendation]` tag.
 - The three npm column cells for MCP-only risks follow from the definitions and have no quote of their own.
+
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+- Superseded: the `recommendation` tag on the reworded "I would" sentences. The page uses no tags, so the key is gone; its anchors stay as empty spans.
