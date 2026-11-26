@@ -30,7 +30,7 @@ Make every section linkable. Each `<section>` and each `<article>` that holds a 
 
 ## 5. Style and checks
 
-
+- Text uses the full width of its column, the same as figures and tables. Do not set `max-width` or `text-wrap: balance` on paragraphs, list items, table cells or captions. Headings are exempt.
 - Keep static flow and architecture figures in plain text ASCII files beside the page. Give each figure a text description of the flow.
 - Run `python3 -I scripts/section_anchors.py --check` before finishing. It fails if a section has no id or link.
 - Write only sentences the reader would miss if you deleted them; never restate a heading or label, say where something is on the page, or state the obvious.
