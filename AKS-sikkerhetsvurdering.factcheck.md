@@ -10,6 +10,8 @@ Round 10 (24 Nov 2026): fixed three items, each confirmed by a second persona ag
 
 Round 11 (24 Nov 2026): the outbound control label no longer says it filters traffic, because the outbound type only sets how traffic leaves (egress-outboundtype). The IMDS bullet notes that Azure Policy is unsupported with IMDS restriction (imds-restriction) and that deployment safeguards need the Azure Policy add-on (deployment-safeguards); the combined effect is tagged [inference]. Three other items were rejected: the SSH wording matches concepts-security, the Ingress NGINX deadline wording is correct, and no other claim differed from its source.
 
+Round 13 (25 Nov 2026): added five caveats, each confirmed by a second persona against live pages. Azure Policy: a Deny assignment does not stop pre-existing resources, and the add-on auto-excludes kube-system and gatekeeper-system (policy-for-kubernetes). Kubernetes: default-deny egress blocks DNS, node traffic is always allowed, hostNetwork behaviour is undefined (network-policies). AKS: Azure NPM ends on Windows 30 Sep 2026 and on Linux 30 Sep 2028, and policies might not process LoadBalancer traffic, so use loadBalancerSourceRanges (use-network-policies). Audit: the policy is AKS-managed and logs some reads at level None (monitor-aks). Defender: the sensor host OS list names Azure Linux 1.0 and 2.0 and Ubuntu up to 22.04 only, and most runtime features show Linux only, with exceptions such as advanced hunting and agentless malware detection (support-matrix-defender-for-containers). Rejected: a claim that an unset networkPolicy field means no enforcement, which the page does not state. The effect for newer OS versions is interpretation by AI.
+
 ## Claims and verdicts
 
 | Claim on the page | Source | Verdict |
