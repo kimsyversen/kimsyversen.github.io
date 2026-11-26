@@ -98,9 +98,10 @@ for _k in REUSE:
 QUOTES = list(NEW_QUOTES) + [(k, _ge_q[k][0], _ge_q[k][1]) for k in REUSE] + LATE_QUOTES
 QUOTES += [(k, *_ge_q[k]) for k in ("gh-builtin-cli", "gh-builtin-off")]
 QUOTES.append(("vs-import", "vs-pol", "For cloud-managed devices, import the ADMX and ADML files into your management solution, then configure and assign the imported administrative template policies."))
+QUOTES.append(("gh-intune", "gh-ref", 'The "allow" value is accepted only through native Windows device management, such as Intune or the Windows registry.'))
 # Every quote from these sources was matched again on ge.LATER_CHECKED.
 LATER = [k for k, s, _ in QUOTES
-         if s in ("vs-pol", "in-admx") or k in ("gh-builtin", "gh-builtin-cli", "gh-builtin-off")]
+         if s in ("vs-pol", "in-admx") or k in ("gh-builtin", "gh-builtin-cli", "gh-builtin-off", "gh-intune")]
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
 
 # A text fragment cannot cross an HTML block (table cell, code line). For quotes that

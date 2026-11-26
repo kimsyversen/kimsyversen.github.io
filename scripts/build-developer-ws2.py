@@ -144,7 +144,7 @@ CLIENTS = table(
          C("A syntax error in a policy value stops the setting from being applied.", ["vs-syntax"])],
         [L("GitHub Copilot"),
          C("Native MDM delivery is available on Windows and macOS. All native MDM values must be strings.", ["gh-mdm", "gh-str"])
-         + C("The deploy and reference pages do not name Intune, so an Intune route is an inference.", [], [INF]),
+         + C("GitHub names Intune as an example of native Windows device management, for one sandbox value that is accepted only that way.", ["gh-intune"]),
          C("The effective allowlist is the intersection of all sources: a server must be permitted by every source.", ["gh-inter"]),
          C("First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules.", ["gh-builtin"])
          + C("In Copilot CLI, the account's Copilot MCP policy still applies to them. If it disables MCP, the built-in GitHub MCP server does not start.", ["gh-builtin-cli", "gh-builtin-off"])],
@@ -196,7 +196,7 @@ SECTIONS = [
             C("Intune has no MCP policy of its own. No Intune page read for this work names one.", [], [INF]),
             C("The VS Code docs name Intune for deploying policies on Windows and macOS.", ["vs-intune", "vs-mac-intune"]),
             C("VS Code has three MCP policies: an allowlist, a denylist and a managed-only switch. Deny wins. A policy value overrides the setting at every level.", ["vs-allow", "vs-deny", "vs-only", "vs-over"]),
-            C("GitHub documents OS-level delivery for Copilot. The page does not name Intune, so the Intune route for that is an inference.", ["gh-mdm"], [INF]),
+            C("GitHub documents OS-level delivery for Copilot. It names Intune as an example of native Windows device management.", ["gh-mdm", "gh-intune"]),
             C("Intune can deliver App Control for Business policies to Windows devices. They restrict which apps run, so code runs only if the policy says so.", ["ac-intune", "ac-apps", "ac-code"]),
             C("Windows only: an App Control policy that lists VS Code can keep another MCP client from running. It can also stop a local server that is its own program file. No source names MCP for this.", ["ac-apps"], [INF]),
             C("Defender file indicators can block a file on macOS. Blocking prevents the file from being read, written or executed. On macOS they cover Mach-O executables, POSIX shell scripts and AppleScript files.", ["ind-mac", "ind-block", "ind-types"]),
@@ -226,7 +226,7 @@ SECTIONS = [
     section("gaps", "Open gaps",
             C("Local servers that an allowed interpreter runs from a script file, and local servers on macOS that are not on a file deny list, are stopped by no layer here. The one lever is to leave the interpreter out of the Windows policy.", ["fw-remote", "def-incomplete", "ac-implicit"], [INF]),
             C("The Graph API can create a settings catalog policy. Whether every setting named on this page can be sent that way was not checked, so a pipeline from a repository to Intune is not shown.", ["graph-cp"], [UNV]),
-            C("The Intune route for GitHub Copilot's own MDM values is not named by GitHub.", [], [INF]),
+            C("No Intune steps for GitHub Copilot's MDM values were found on GitHub's deploy and reference pages.", [], [INF]),
             C("Whether a second VS Code copy, such as Insiders or a portable install, reads the same policy was not checked.", [], [UNV]),
             R("VS Code on every laptop must be a version whose reference page lists the three MCP policies.", tag="p"),
             R("If another MCP client is found on a laptop, a script must read its MCP file and flag any server that is not approved. That detects a server. It does not stop one.", tag="p"),

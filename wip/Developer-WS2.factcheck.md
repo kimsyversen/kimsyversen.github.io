@@ -72,7 +72,7 @@ Belongs to: [Developer-WS2.html](Developer-WS2.html)
 | label | Nothing tested in a real tenant |
 | label | Open gaps |
 | label | Rollout |
-| label | Checked 2026-11-06: every quote below matched its source word for word, by script. V1, V2, V3, V4, V5, V6, V7, V11, V12, V21, V47, V48, V49, V50, V51, V52 matched on 2026-11-26. |
+| label | Checked 2026-11-06: every quote below matched its source word for word, by script. V1, V2, V3, V4, V5, V6, V7, V11, V12, V21, V47, V48, V49, V50, V51, V52, V53 matched on 2026-11-26. |
 | requirement | A match must be read as proof of the words only, not of the claim built on them. |
 | label | Tags: inference means reasoned from the quotes with no source of its own. Unverified means not checked. |
 | label | Evidence |
@@ -98,7 +98,7 @@ Each row is one claim paragraph on the page. Two steps were done. The script fou
 | 1 | Intune has no MCP policy of its own. No Intune page read for this work names one. | none | Labelled inference. No quote. Drawn from pages read, not stated on them. |
 | 2 | The VS Code docs name Intune for deploying policies on Windows and macOS. | V1 V48 | Reworded 2026-11-26 after the docs changed. Read against the quotes; matches. The Windows quote names Intune as an example of a device management solution. The macOS quote lists Intune with Apple Business Manager under deploying profiles at scale. Not tested. |
 | 3 | VS Code has three MCP policies: an allowlist, a denylist and a managed-only switch. Deny wins. A policy value overrides the setting at every level. | V2 V3 V4 V5 | Read against the quotes 2026-11-06; matches. The reference page lists a minimum VS Code version per policy (1.130 for the allowlist and denylist, 1.132 for managed-only, read in the page source, not in the rendered text). That is not on the page as a claim, so the page asks for a version check instead. |
-| 4 | GitHub documents OS-level delivery for Copilot. The page does not name Intune, so the Intune route for that is an inference. | V8 | Read against the quote 2026-11-06; the quoted part matches. The Intune route is an inference with no quote. |
+| 4 | GitHub documents OS-level delivery for Copilot. It names Intune as an example of native Windows device management. | V8 V53 | Reworded 2026-11-26. The reference page now names Intune for one sandbox value. Replaces the earlier statement that the page does not name Intune. macOS is not covered by the Intune quote. |
 | 5 | Intune can deliver App Control for Business policies to Windows devices. They restrict which apps run, so code runs only if the policy says so. | V39 V40 V41 | Read against the quotes 2026-11-06; matches. The Intune quote says "managed Windows devices". The Windows page quote is about code running only if policy says so. |
 | 6 | Windows only: an App Control policy that lists VS Code can keep another MCP client from running. It can also stop a local server that is its own program file. No source names MCP for this. | V40 | Labelled inference. The quote says the policy restricts the apps users can run. Applying it to MCP clients and servers is reasoning, not a source statement. Not tested. |
 | 7 | Defender file indicators can block a file on macOS. Blocking prevents the file from being read, written or executed. On macOS they cover Mach-O executables, POSIX shell scripts and AppleScript files. | V42 V43 V44 | Read against the quotes 2026-11-06; matches. The page's Windows note says PE files only. The macOS note names the three types. |
@@ -114,7 +114,7 @@ Each row is one claim paragraph on the page. Two steps were done. The script fou
 | 17 | Whether the macOS profile accepts the three MCP policies was not read in the sample file. | none | Labelled unverified. No quote. The sample file was not opened. The docs say a profile holds key and value pairs for the available policies (read 2026-11-06, not quotable because of how the page renders code), which is a reason to expect it, not proof. |
 | 18 | A syntax error in a policy value stops the setting from being applied. | V49 | Read against the quote 2026-11-06; matches. The note appears in the macOS steps. Whether it also holds on Windows was not checked. |
 | 19 | Native MDM delivery is available on Windows and macOS. All native MDM values must be strings. | V8 V9 | Read against the quotes 2026-11-06; matches. |
-| 20 | The deploy and reference pages do not name Intune, so an Intune route is an inference. | none | Labelled inference. No quote. Drawn from pages read, not stated on them. |
+| 20 | GitHub names Intune as an example of native Windows device management, for one sandbox value that is accepted only that way. | V53 | Added 2026-11-26. Quote matches. It replaces "do not name Intune", which is no longer true for the reference page. |
 | 21 | The effective allowlist is the intersection of all sources: a server must be permitted by every source. | V10 | Read against the quotes 2026-11-06; matches. |
 | 22 | First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules. | V21 | Corrected 2026-11-26. The earlier wording added "cannot be blocked", which the page no longer says. Read against the quote; matches. |
 | 22a | In Copilot CLI, the account's Copilot MCP policy still applies to them. If it disables MCP, the built-in GitHub MCP server does not start. | V50 V51 | Added 2026-11-26. Read against the quotes; matches. Not tested. |
@@ -134,7 +134,7 @@ Each row is one claim paragraph on the page. Two steps were done. The script fou
 | 36 | Discovery is not a complete inventory of installed software. It does not prove active use. | V25 V27 | Read against the quotes 2026-11-06; matches. |
 | 37 | Local servers that an allowed interpreter runs from a script file, and local servers on macOS that are not on a file deny list, are stopped by no layer here. The one lever is to leave the interpreter out of the Windows policy. | V25 V29 V46 | Read against the quotes 2026-11-06; the quoted part matches. The inference part has no quote. A web search on 2026-11-06 found no Microsoft control that allows only approved executables on macOS, and no Microsoft page that names node or python for App Control script enforcement. |
 | 38 | The Graph API can create a settings catalog policy. Whether every setting named on this page can be sent that way was not checked, so a pipeline from a repository to Intune is not shown. | V38 | Read against the quotes 2026-11-06; the quoted part matches. The unverified part has no quote. |
-| 39 | The Intune route for GitHub Copilot's own MDM values is not named by GitHub. | none | Labelled inference. No quote. Drawn from the pages read, not stated on them. |
+| 39 | No Intune steps for GitHub Copilot's MDM values were found on GitHub's deploy and reference pages. | none | Labelled inference. Both pages searched for "Intune" on 2026-11-26: the deploy page has no mention, the reference page has the one in V53. |
 | 40 | Whether a second VS Code copy, such as Insiders or a portable install, reads the same policy was not checked. | none | Labelled unverified. No quote. The reference page offers a link to open each policy in VS Code Insiders, which suggests Insiders reads policies, but that was not read as a statement. |
 
 ## How it was checked
@@ -146,11 +146,12 @@ Each row is one claim paragraph on the page. Two steps were done. The script fou
 
 - 2026-11-26, after the claim about the built-in GitHub MCP server was corrected: the same command ran against pages fetched that day. 51 quotes; V21, V50 and V51 found. V1 and V11 were not found word for word and stay open: they were not rechecked or changed. The ledger matches the page text. "Current as of" dates were not moved.
 - 2026-11-26, second run: V1 (VS Code policy page) and V11 (Intune import page) were replaced with the current wording and V52 was added. The same command then found 52 quotes, 0 problems. Only the claims citing changed quotes or the built-in server were reread. "Current as of" dates were not moved.
+- 2026-11-26, third run: V53 (GitHub settings reference, Intune) was added. The same command found 53 quotes, 53 link targets, 0 problems. "Current as of" dates were not moved.
 
 ## Findings that rest on absence
 
 - "No Intune page read names an MCP setting" is `[inference]`. Pages read: the ADMX import, macOS custom settings, remediations, custom compliance, firewall and dynamic keyword pages, and earlier the script and Win32 pages. Not a search of all Intune documentation.
-- "GitHub pages do not name Intune" is `[inference]`. Pages read: GitHub Copilot managed settings deploy and reference pages.
+- "No Intune steps for GitHub Copilot's MDM values were found" is `[inference]`. Pages searched 2026-11-26: GitHub Copilot managed settings deploy and reference pages.
 - "App Control can keep another client or a local server program from running" is `[inference]`. The sources say the policy restricts which apps run on managed Windows devices. They do not mention MCP. Pages read: the Intune App Control for Business page and the Application Control for Windows overview.
 - "No layer stops script-run local servers, or macOS local servers not on a deny list" is `[inference]` from the Global Secure Access and Defender quotes (remote only, discovery only), from App Control being about apps, and from file indicators being per file hash. On 2026-11-06 a web search for a Microsoft macOS allowlist (Intune or Defender) returned only third-party tools such as Santa, and Microsoft pages that do not cover it. The App Control script enforcement page says scripts run through an unenlightened host such as many 3rd-party Java or Python engines are not controlled.
 - "Only VS Code reads these policies" is `[inference]`. The policies are VS Code settings.

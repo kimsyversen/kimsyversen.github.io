@@ -95,3 +95,7 @@ Still true: nothing tested in a real tenant, and the two local-server gaps (allo
 ## D22. Intune claims follow the rewritten policy page (2026-11-26)
 
 Chosen: say the VS Code docs name Intune as a way to deploy policies, and that cloud-managed devices import the ADMX and ADML files into their management solution. Why: the page no longer names Intune for imported templates, so the old claim had no quote. "Current as of" dates stay, because only these claims were rechecked.
+
+## D23. GitHub now names Intune (2026-11-26)
+
+The settings reference names Intune as an example of native Windows device management, for one sandbox value. Two statements now quote it (V53) without an inference tag, and one tagged statement is narrowed to the missing steps. This replaces the earlier "GitHub does not name Intune". "Current as of" stays, because only these claims were rechecked.
