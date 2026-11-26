@@ -946,7 +946,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 </table></div>
 <p><strong>Limits:</strong></p>
 <ul>
-<li>Redirection controls reduce transfer paths. Do not treat them as proof that data cannot leave an unmanaged viewing device.&nbsp;<span class="tg i">inference</span></li>
+<li>Disabling redirection helps prevent users from copying content out of the remote session.&nbsp;<span class="tg v">verified</span> <a class="ev" href="#ev-32">E32</a> Screen capture protection does not give DRM-level protection.&nbsp;<span class="tg v">verified</span> <a class="ev" href="#ev-33">E33</a> These controls should not be taken as proof that data cannot leave an unmanaged viewing device.</li>
 </ul>
 <p>The following identity limits are&nbsp;<span class="tg v">verified</span>:</p>
 <ul>
@@ -1233,7 +1233,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <li><strong>Maker credentials:</strong> tools support end-user or maker-provided credentials; user authentication is the default.&nbsp;<span class="tg v">verified</span> Require end-user credentials for shared agents that must preserve each user's access limits. Review credential configuration before release; the cited data-policy page does not establish a universal switch that bans maker credentials.&nbsp;<span class="tg r">recommendation</span></li>
 <li><strong>Environment groups</strong> hold only managed environments. A published rule is enforced in every member environment and becomes read-only there. There are no per-environment exceptions.&nbsp;<span class="tg v">verified</span><ul>
 <li>Rules include: accessing conversation transcripts, generative AI settings, external models, knowledge sources, sharing agents with Editor or Viewer permission, and Skills in Copilot Studio.&nbsp;<span class="tg v">verified</span></li>
-<li>One group rule set covers many environments, which keeps admin work low.&nbsp;<span class="tg i">inference</span></li>
+<li>One group rule set covers many environments. Microsoft says this reduces administrative overhead.&nbsp;<span class="tg v">verified</span> <a class="ev" href="#ev-34">E34</a></li>
 </ul>
 </li>
 <li><strong>MCP:</strong> connector blocking covers MCP tools that rely on those connectors (see <a href="#s24">2.4</a>).&nbsp;<span class="tg v">verified</span> For other paths, require approved connections, restrict maker privileges and test both direct and gateway calls. Agent 365 registration alone does not prove default-deny enforcement. Nothing was tested in a tenant.&nbsp;<span class="tg r">recommendation</span></li>
@@ -1714,7 +1714,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>Question</th><th>Global Secure Access MCP log</th><th>Gap and what to do</th></tr></thead>
 <tbody>
-<tr><td>Who called</td><td>User principal name.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-13">E13</a></td><td>Only for traffic the firewall sees.&nbsp;<span class="tg i">inference</span></td></tr>
+<tr><td>Who called</td><td>User principal name.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-13">E13</a></td><td>Only for traffic Global Secure Access can inspect.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-35">E35</a></td></tr>
 <tr><td>Which server</td><td>Destination URL, which the log treats as the server's identifier.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-14">E14</a></td><td> </td></tr>
 <tr><td>Which tool, with what input</td><td>Tool name and input arguments of a tools/call request.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-15">E15</a></td><td>The page does not say whether sensitive values are masked.&nbsp;<span class="tg u">unverified</span></td></tr>
 <tr><td>Result</td><td>The response event, matched to the request by event ID.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-16">E16</a></td><td> </td></tr>
@@ -1732,7 +1732,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <li>On devices, logging needs the client and TLS inspection. A device without the client is not covered, so consultants' own laptops are a gap.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg i">inference</span> <a class="ev" href="#ev-10">E10</a> <a class="ev" href="#ev-11">E11</a></li>
 <li>The firewall, the MCP log and the Agent 365 Tools Gateway are all preview. Behavior and licences can change.&nbsp;<span class="tg v">verified</span>&nbsp;<span class="tg pv">preview</span> <a class="ev" href="#ev-1">E1</a> <a class="ev" href="#ev-8">E8</a></li>
 <li>The Global Secure Access MCP firewall does not inspect JSON-RPC batches.&nbsp;<span class="tg v">verified</span> <a class="ev" href="#ev-31">E31</a> Verify that the server and backend enforce access independently.&nbsp;<span class="tg r">recommendation</span></li>
-<li>The firewall is one layer. A server on an approved URL can still return harmful content, so controls 4 and 7 still apply.&nbsp;<span class="tg i">inference</span> </li>
+<li>The firewall is one layer. Connecting a server does not show that every tool result is safe.&nbsp;<span class="tg v">verified</span> <a class="ev" href="#ev-36">E36</a> Controls 4 and 7 should still apply.</li>
 <li>Private endpoints, network groups, outbound limits and on-behalf-of: no Microsoft page on them was read for this part.&nbsp;<span class="tg u">unverified</span> </li>
 <li>Nothing here was tested in a real tenant.&nbsp;<span class="tg u">unverified</span> </li>
 </ul></div>
@@ -1746,7 +1746,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <li><span class="tg i">inference</span><span>A conclusion drawn from the available sources.</span></li>
       <li><span class="tg u">unverified</span><span>A question for source review or the tenant pilot. A preview label describes product maturity.</span></li>
     </ul>
-    <details class="deep"><summary>Show the 31 quotes<span>E1 to E31</span></summary><div class="body">
+    <details class="deep"><summary>Show the 36 quotes<span>E1 to E36</span></summary><div class="body">
       <div class="tbl-wrap"><table class="tbl">
 <thead><tr><th>#</th><th>Exact quote</th><th>Source</th></tr></thead>
 <tbody>
@@ -1781,6 +1781,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <tr id="ev-29"><td>E29</td><td>Run untrusted servers with least privilege in an isolated environment.</td><td><a href="https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security#:~:text=Run%20untrusted%20servers%20with%20least%20privilege%20in%20an%20isolated%20environment.">Azure MCP Server security</a></td></tr>
 <tr id="ev-30"><td>E30</td><td>A malicious server can use its tool descriptions to influence agent behavior toward other trusted servers in the same context</td><td><a href="https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security#:~:text=A%20malicious%20server%20can%20use%20its%20tool%20descriptions%20to%20influence%20agent%20behavior%20toward%20other%20trusted%20servers%20in%20the%20same%20context">Azure MCP Server security</a></td></tr>
 <tr id="ev-31"><td>E31</td><td>JSON-RPC batches aren’t inspected.</td><td><a href="https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall#:~:text=JSON%2DRPC%20batches%20aren%E2%80%99t%20inspected.">Global Secure Access MCP firewall (preview)</a></td></tr>
+<tr id="ev-32"><td>E32</td><td>Disabling redirection helps prevent users from copying content from the remote session.</td><td><a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection#:~:text=Disabling%20redirection%20helps%20prevent%20users%20from%20copying%20content%20from%20the%20remote%20session.">Azure Virtual Desktop screen capture protection</a></td></tr>
+<tr id="ev-33"><td>E33</td><td>Screen capture protection doesn't provide Digital Rights Management (DRM)-level protection.</td><td><a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection#:~:text=Screen%20capture%20protection%20doesn%27t%20provide%20Digital%20Rights%20Management%20%28DRM%29%2Dlevel%20protection.">Azure Virtual Desktop screen capture protection</a></td></tr>
+<tr id="ev-34"><td>E34</td><td>This centralized approach eliminates the need to configure each environment one-by-one, ensures consistency, significantly reduces administrative overhead</td><td><a href="https://learn.microsoft.com/en-us/power-platform/admin/environment-groups#:~:text=This%20centralized%20approach%20eliminates%20the%20need%20to%20configure%20each%20environment%20one%2Dby%2Done%2C%20ensures%20consistency%2C%20significantly%20reduces%20administrative%20overhead">Environment groups overview</a></td></tr>
+<tr id="ev-35"><td>E35</td><td>Local MCP servers running on a device are not visible because their traffic doesn't have a network footprint that Global Secure Access can inspect.</td><td><a href="https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging#:~:text=Local%20MCP%20servers%20running%20on%20a%20device%20are%20not%20visible%20because%20their%20traffic%20doesn%27t%20have%20a%20network%20footprint%20that%20Global%20Secure%20Access%20can%20inspect.">Global Secure Access MCP traffic logs (preview)</a></td></tr>
+<tr id="ev-36"><td>E36</td><td>Trusting a publisher or connecting a server doesn't establish that every tool result is safe.</td><td><a href="https://code.visualstudio.com/docs/agents/security#:~:text=Trusting%20a%20publisher%20or%20connecting%20a%20server%20doesn%27t%20establish%20that%20every%20tool%20result%20is%20safe.">Secure development with AI in VS Code</a></td></tr>
 </tbody>
 </table></div>
     </div></details>
@@ -1789,7 +1794,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 
   <!-- ============ SOURCES ============ -->
   <section class="sec" id="sources" aria-labelledby="hs" style="margin-top:56px">
-    <header class="sh"><span class="num">Src</span><h2 id="hs"><a class="sec-link" href="#hs">Sources, read 5 and 6 Nov 2026</a></h2>
+    <header class="sh"><span class="num">Src</span><h2 id="hs"><a class="sec-link" href="#hs">Sources, read 5, 6 and 26 Nov 2026</a></h2>
     <p class="goal">89 pages. The date is the one displayed on the page, where there is one.</p></header>
     <details class="deep"><summary>Show all sources<span>89 links</span></summary><div class="body">
       <div class="tbl-wrap"><table class="tbl src">
@@ -1882,6 +1887,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <tr><td>API Management, secure access to MCP servers, read 2026-11-06</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers">learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers</a></td><td class="d">2026-09-11</td></tr>
 <tr><td>API Management validate-azure-ad-token policy, read 2026-11-06</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/api-management/validate-azure-ad-token-policy">learn.microsoft.com/en-us/azure/api-management/validate-azure-ad-token-policy</a></td><td class="d">2026-08-19</td></tr>
 <tr><td>Azure MCP Server security, read 2026-11-06</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security">learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security</a></td><td class="d">2026-07-31</td></tr>
+<tr><td>Azure Virtual Desktop screen capture protection, read 2026-11-26</td><td class="u"><a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection">learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection</a></td><td class="d">2026-09-29</td></tr>
+<tr><td>Secure development with AI in VS Code, read 2026-11-26</td><td class="u"><a href="https://code.visualstudio.com/docs/agents/security">code.visualstudio.com/docs/agents/security</a></td><td class="d">2026-11-25</td></tr>
 <tr><td>MCP security best practices (draft), read 2026-11-06</td><td class="u"><a href="https://modelcontextprotocol.io/docs/draft/tutorials/security/security_best_practices">modelcontextprotocol.io/docs/draft/tutorials/security/security_best_practices</a></td><td class="d">no date on page</td></tr>
 <tr><td>MCP authorization (draft), read 2026-11-06</td><td class="u"><a href="https://modelcontextprotocol.io/specification/draft/basic/authorization">modelcontextprotocol.io/specification/draft/basic/authorization</a></td><td class="d">no date on page</td></tr>
 </tbody>
