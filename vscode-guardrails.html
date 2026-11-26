@@ -222,7 +222,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </section>
 
   <section id="baseline">
-    <div class="ph"><p class="lbl">From the VS Code docs</p><h2 id="h-baseline"><a class="sec-link" href="#h-baseline">Six steps the VS Code docs recommend</a></h2></div>
+    <div class="ph"><h2 id="h-baseline"><a class="sec-link" href="#h-baseline">Six steps the VS Code docs recommend</a></h2></div>
     <ol class="base">
       <li><span>Review a project before trusting it.</span></li>
       <li><span>Confirm the session&rsquo;s workspace and execution environment.</span></li>
@@ -397,7 +397,7 @@ function evaluate(s){
     else{fenced=true;push("sandbox","pass","VS Code started the server inside the sandbox. The agent sandbox does not cover independently started servers.",["mcpsb","mcpown"])}
   } else if(!term){
     if(a.id==="env") push("sandbox","skip","The edit tool uses VS Code’s permission system directly.",["notcovered"]);
-    else push("sandbox","skip","The fetch tool is not a terminal command, so the terminal sandbox does not cover it.",["sbcover","fetchsep"]);
+    else push("sandbox","skip","The fetch tool is not a terminal command, so the terminal sandbox does not cover it."+tag("inference"),["sbcover","fetchsep"]);
   } else if(s.sandbox==="off") push("sandbox","open","The sandbox is off, which is the default. The sandbox does not limit which files or network destinations the command can reach.",["sboff","privs"]);
   else {
     var blocked=(a.id==="ssh")||(a.id==="curl"&&s.net==="blocked");

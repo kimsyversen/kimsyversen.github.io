@@ -8,14 +8,14 @@
 - Six actions (superseded by the seventh action below), picked so each shows a different rule: read-only command, `rm`, a read outside the project, a network send, an edit tool call, a fetch tool call.
 - "When asked, you say Yes or No" (now labelled "Your answer when VS Code asks") is a setting, not a button in the flow. Reason: one model, no hidden state, and every result is reproducible from the settings.
 - Outcomes that combine rules, and are not stated in one source sentence, carry `inference` or `unverified` at the gate.
-- Each gate result shows the exact quote and a link with a text fragment that jumps to the passage.
+- Each sourced gate result shows the exact quote. Docs quotes link with a text fragment that jumps to the passage. Code quotes link to the pinned lines.
 - Same worksheet look as the threat modeling page: paper, ink, hairline rules, red only for "stopped". No cards, pills or gradients.
 - The small ASCII face is the only decoration. It moves to the gate where the action ends.
 - No ASCII figure file beside the page. Reason: the figure is interactive, not static, and each gate result is already plain text.
 - No browser storage and no shared-state links. Reason: least upkeep.
 - The docs' six-step baseline is quoted, not rewritten as recommendations. The sandbox step was tagged `preview`; superseded on 24 November 2026, when all preview tags were removed.
-- Where the docs are silent, the VS Code source code is the source, quoted and linked by line at a pinned commit. Reason: it is the primary source for what the product does, and a pinned link keeps showing the quoted lines. Used for the built-in terminal rules (`cat`, `curl`) and for the "run outside the sandbox" prompt under Allow all.
-- `cat ~/.ssh/id_ed25519` now runs without a question under Manual permissions. Supersedes the first version, which showed a prompt and marked it `unverified`.
+- Where the docs are silent, the VS Code source code is the source, quoted and linked by line at a pinned commit. Reason: it is the primary source for what the product does, and a pinned link keeps showing the quoted lines. Used for the built-in terminal rules (`cat`, `rm`, `curl`, `git status`), the `.env` default, the Assisted approval, sandboxed auto-approval and the "run outside the sandbox" prompt under Allow all. The fact check lists each code-based claim.
+- `cat ~/.ssh/id_ed25519` now runs without a question under Manual permissions. Supersedes the first version, which showed a prompt and marked it `unverified`. Since 24 November 2026 the outcome carries the `inference` tag, because nothing checks the read paths of shell commands and it was not run in VS Code.
 - "The judging model says Yes or No" (now labelled "The AI reviewer's answer") is a setting, like "When asked, you say". Reason: no source says what the judge answers for a given call, so the page shows both outcomes. Supersedes the first version, where Assisted always passed.
 - Under Assisted the judge is checked before the sandbox rule. Supersedes the first version, where a sandboxed command skipped the judge. Reason: the source code asks you when the judge says no, also for a sandboxed command.
 - A control that cannot change the result is switched off, for example the `.env` rule under Allow all, the judge outside Assisted, and "Your answer when VS Code asks" when no check asks. Since 24 November 2026 `sync()` finds every such control by running `evaluate()` with each option and comparing the output. Reason: a live control that does nothing reads as a rule that works.

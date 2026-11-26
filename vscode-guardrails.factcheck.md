@@ -4,7 +4,7 @@ Original check on 15 November 2026. Sources are the VS Code docs, each marked `D
 
 ## Rechecked on 24 November 2026
 
-Statement by statement review of the whole page. Docs retrieved as Markdown (`DateApproved: 11/18/2026`). Code read at the pinned commit. Quote check script: 49 of 49 quotes found (docs quotes in the saved docs text, code quotes in the saved source files).
+Statement by statement review of the whole page. Docs retrieved as Markdown (`DateApproved: 11/18/2026`). Code read at the pinned commit. Quote check script: 49 of 49 quotes found (the two table questions and the six baseline step names in the first rows below are checked by hand; docs quotes in the saved docs text, code quotes in the saved source files).
 
 Corrections made:
 
@@ -13,7 +13,7 @@ Corrections made:
 | Sandbox is marked Preview | Removed. The current docs no longer mark macOS or Linux as preview. The Windows row now reads "Windows (Experimental)" as in the docs table. |
 | Platform table had a Status column | Removed. The column held old preview wording. The table is now the requirements from "Check platform availability". |
 | `.env` edits have no rule by default, so a model-free edit runs | False. `chatSettings.ts` line 141 has a default rule for `.env` set to `false`, which means ask. The simulator default is now "Ask first (default)". An "Allow" setting stays as the changed case. |
-| Setting name for the permission level | `chat.defaultConfiguration` replaces the older name. |
+| Setting name for the permission level | `chat.defaultConfiguration` is the Copilot harness setting. `chat.permissions.default` is the Local harness name. |
 | Baseline list used older step names | Replaced with the six step names in the current docs. |
 | MCP sandbox setting | The example uses the default of `chat.agent.sandbox.mcpServers`. Per-server MCP sandboxing is not modelled and the scope paragraph says so. |
 | `git status` and `rm` outcomes | Now tied to code. `git status` is allowed by `gitAutoApproveRules.ts` line 13. `rm` is `false` at `defaultAutoApproveRules.ts` line 211. |
@@ -21,18 +21,28 @@ Corrections made:
 | Fetch tool and the sandbox | Now says the fetch tool is not a terminal command. URL approval applies. The sandbox covers terminal commands and their child processes. |
 | Network blocked quote was about the integrated browser | Replaced with the sentence that says to set `chat.agent.sandbox.network.allowNetwork` to false to block outbound access. |
 | Four quote links jumped to the first match on the page | `notcovered`, `notvm`, `worktree` and `ext` now carry explicit text fragment links. Found by a second reviewer on 24 Nov 2026. |
-| Fetch tool "not the sandbox" | Softened to say the terminal sandbox does not cover the fetch tool. Docs: tools that do not start operating system processes have their own permission checks. Not observed: whether sandbox network rules ever touch a fetch. |
+| Fetch tool "not the sandbox" | Softened to say the terminal sandbox does not cover the fetch tool. Docs: tools that do not start operating system processes have their own permission checks. Not observed: whether sandbox network rules ever touch a fetch. `copilotAgentSession.ts` line 8715 lets a `url` request carry `requestSandboxBypass`, and agent-sandboxing.md says that blocking the network also blocks the integrated browser, so the claim is tagged `inference` on the page (25 November 2026). |
 | Linux row cited only the platform table | The page now also cites "Install missing sandbox dependencies" for namespaces and `/dev/net/tun`. |
 | Code anchor for the Assisted approval line started at 8743 | Now 8741 to 8772, which includes the deciding `if`. |
 | Hole list omitted documented limits | Added three rows: Git and GitHub CLI credentials in the sandbox, session-wide bypass, and sensitive-file rules not covering terminal commands. |
 | Windows row omitted the local network setting | Added. agent-sandboxing.md: "On Windows, using a proxy, domain restrictions, or credential masking requires `chat.agent.sandbox.network.allowLocalNetwork` to be `true`." |
 | `[preview]` tags | Removed. No preview feature remains in the simulator. |
 | `escno` and `editauto` and `mcpask` quotes | Removed. The docs text changed, and the replacement quotes are in the table below. |
+| Scope paragraph did not say the MCP example ignores the sandbox network setting and run-outside request | Confirmed. Sentence added to the scope paragraph. |
+| `cat ~/.ssh/id_ed25519` with the sandbox off ran without asking, shown as fact | Theoretical. Not run in VS Code, and no code path checks read paths of shell commands. The outcome now carries the `inference` tag. |
 
 ## Source quotes
 
 | Id | Quote | Source | Verdict |
 |----|-------|--------|---------|
+| qapproval | Can this action run without asking for confirmation? | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety#agent-sandboxing) | Word for word, 24 Nov 2026 |
+| qsandbox | Which resources can this covered process access when it runs? | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety#agent-sandboxing) | Word for word, 24 Nov 2026 |
+| base1 | Review a project before trusting it. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline) | Word for word, 24 Nov 2026 |
+| base2 | Confirm the session’s workspace and execution environment. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline) | Word for word, 24 Nov 2026 |
+| base3 | Choose an appropriate permission level. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline) | Word for word, 24 Nov 2026 |
+| base4 | Restrict command access and verify it. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline) | Word for word, 24 Nov 2026 |
+| base5 | Limit tools and credentials to the task. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline) | Word for word, 24 Nov 2026 |
+| base6 | Review changes before integrating them. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security#recommended-security-baseline) | Word for word, 24 Nov 2026 |
 | restricted | Opening a workspace in restricted mode disables agents in that workspace. | [editing/workspaces/workspace-trust](https://code.visualstudio.com/docs/editing/workspaces/workspace-trust) | Word for word, 24 Nov 2026 |
 | trustcert | Trust permits access or execution; it doesn't certify that every result or action is safe. | [agents/concepts/trust-and-safety](https://code.visualstudio.com/docs/agents/concepts/trust-and-safety) | Word for word, 24 Nov 2026 |
 | manual | With Manual permissions, you review actions that aren't already approved. | [agents/run/approvals](https://code.visualstudio.com/docs/agents/run/approvals) | Word for word, 24 Nov 2026 |
@@ -72,7 +82,7 @@ Corrections made:
 | rulecat | cat: true | [defaultAutoApproveRules.ts L32-L39](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L32-L39) | Word for word, read in the saved file at the pinned commit |
 | rulerm | rm: false | [defaultAutoApproveRules.ts L211](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L211) | Word for word, read in the saved file at the pinned commit |
 | rulecurl | curl: false | [defaultAutoApproveRules.ts L229-L230](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L229-L230) | Word for word, read in the saved file at the pinned commit |
-| gitstatus | '/^git(\\s+(-(?-i:C)\\s+\\S+\|--no-pager))*\\s+status\\b/': true, | [gitAutoApproveRules.ts L13](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/gitAutoApproveRules.ts#L13) | Word for word, read in the saved file at the pinned commit |
+| gitstatus | `'/^git(\\s+(-(?-i:C)\\s+\\S+\|--no-pager))*\\s+status\\b/': true,` | [gitAutoApproveRules.ts L13](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/gitAutoApproveRules.ts#L13) | Word for word, read in the saved file at the pinned commit |
 | allsens | Allow all, global auto-approval, or an applicable saved approval for the exact file can allow an edit without another prompt. | [agents/run/review-code-edits](https://code.visualstudio.com/docs/agents/run/review-code-edits) | Word for word, 24 Nov 2026 |
 | sandboxauto | Auto-approve shell commands that run sandboxed by default | [copilotAgentSession.ts L8886-L8894](https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8886-L8894) | Word for word, read in the saved file at the pinned commit |
 | mcpbroad | Extensions, plugins, MCP servers, skills, and hooks can include code that runs in your environment. | [agents/run/security](https://code.visualstudio.com/docs/agents/run/security) | Word for word, 24 Nov 2026 |
@@ -85,7 +95,7 @@ Corrections made:
 
 ## Earlier reviews
 
-The table below is kept for history. Some quotes in it were replaced on 24 November 2026.
+The table below is kept for history. Its Basis column quotes docs sentences from the 11 November 2026 docs that are not in the 18 November 2026 docs the page cites now: "defaults to `off`", "A `false` rule requires approval.", "Uses an LLM judge to assess each tool call.", "Calls that the judge does not approve require your confirmation.", "The model-based risk assessment can make mistakes.", "New sessions use the level configured by", "require a diff and approval for edits to sensitive files", "controls this fallback", "applies to" (Review code edits), "MCP tool invocations require explicit user approval" and "detected writes outside the workspace" (the old description of `chat.tools.terminal.blockDetectedFileWrites`). Current replacements in the Source quotes table above: `sboff`, `termdefault`, `rulecurl`, `assisted`, `assistedrisk`, `sensitive`, `allsens` and `manual`. The setting-name sentences and `blockDetectedFileWrites` have no quote row. Verdicts in the table are the 15 November result, not a recheck.
 
 ## Claims reviewed on 15 November 2026
 
@@ -102,15 +112,8 @@ The table below is kept for history. Some quotes in it were replaced on 24 Novem
 | With the sandbox on, Manual permissions runs a terminal command without a question | Confirmed in source code, 15 November 2026. Was shown without a tag on the docs sentence "the runtime can approve". | `copilotAgentSession.ts` has the comment "Auto-approve shell commands that run sandboxed by default, since the sandbox already contains them". The code under it excludes requests to leave the sandbox, organisation-managed approval and inline chat on one file. The page shows none of those three. Not run in VS Code. |
 | Under Assisted permissions the judging model decides every call, also a sandboxed command | Confirmed in source code, 15 November 2026. The page earlier let the sandbox skip the judge. | Same function: `requiresUserConfirmation = judgeRecommendation === 'requireApproval'` makes `canAutoApprove` false, and the sandbox auto-approve needs `canAutoApprove`. Approvals doc: "Uses an LLM judge to assess each tool call." Not run in VS Code. |
 | Under Assisted permissions the judge can say yes or no, and the page shows both | Changed 15 November 2026. The page earlier always showed a yes. | Approvals doc: "Calls that the judge does not approve require your confirmation." and "The model-based risk assessment can make mistakes." Which answer the judge gives for a given call is not in any source, so it is a setting. |
-| Under Assisted permissions, a yes from the judge saves the `.env` edit without asking the sensitive-file rule | `[inference]` Interpretation by AI from the source code, 15 November 2026. Tagged `inference` on the page. | `_handlePermissionRequest` in `copilotAgentSession.ts` returns `approve-once` with the reason `assisted_approval` (lines 8741 to 8772) before any edit check in that function. No docs sentence says it. Not run in VS Code. |
+| Under Assisted permissions, a yes from the judge saves the `.env` edit without asking the sensitive-file rule | `[inference]` From the source code, 15 November 2026. Tagged `inference` on the page. | `_handlePermissionRequest` in `copilotAgentSession.ts` returns `approve-once` with the reason `assisted_approval` (lines 8741 to 8772) before any edit check in that function. No docs sentence says it. Not run in VS Code. |
 | Allow all skips the sensitive-file rule, so the `.env` rule control is switched off under Allow all | Confirmed in docs and source code, 15 November 2026. The control was earlier live but ignored. | Review code edits, quote `allsens`, which "applies to" the Allow all permission level. `getAutoApproval` in `sessionPermissions.ts` returns at "2. Session-level auto-approve" before the comment "Ask rules never override global or session Allow All." and before `_requiresEditConfirmation`. Not run in VS Code. |
 | Setting names under the controls: `chat.permissions.default` (Local harness name; the page now uses `chat.defaultConfiguration`), `chat.tools.edits.autoApprove`, `chat.agent.sandbox.enabled`, `chat.agent.sandbox.network.allowNetwork`, `chat.agent.sandbox.allowUnsandboxedCommands` | Confirmed, 15 November 2026. Each name was found in the saved text of the docs page it links to. | Approvals: "New sessions use the level configured by `chat.permissions.default`." Review code edits: "Use `chat.tools.edits.autoApprove` with glob patterns to require a diff and approval for edits to sensitive files." Agent sandboxing: settings table, and "The `chat.agent.sandbox.allowUnsandboxedCommands` setting controls this fallback". Workspace, the judge and "When asked, you say" have no setting and show none. |
 | An MCP tool call asks under Manual permissions | Confirmed in docs, 15 November 2026 | Quote `mcpask`. The page shows the first call, before any longer approval is given. Not run in VS Code. |
 | With the sandbox on, a local MCP server that VS Code starts runs inside it | Confirmed in docs, 15 November 2026 | Quote `mcpsb` is the purpose of `chat.agent.sandbox.mcpServers`, which defaults to `true`. Quote `mcpown` gives the limit. The page does not model the sandbox network setting or a request to run outside for the MCP action. Per-server MCP sandboxing is a separate feature and is not on the page. Not run in VS Code. |
-
-### Iteration 10 corrections, 24 November 2026
-
-| Finding | Verdict |
-|---|---|
-| Scope paragraph did not say the MCP example ignores the sandbox network setting and run-outside request | Confirmed. Sentence added to the scope paragraph. |
-| `cat ~/.ssh/id_ed25519` with the sandbox off ran without asking, shown as fact | Theoretical. Not run in VS Code, and no code path checks read paths of shell commands. The outcome now carries the `inference` tag. |
