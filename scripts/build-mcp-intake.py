@@ -99,36 +99,58 @@ def chips(ids):
     return '<ul class="chips">' + "".join(f"<li>{chip(i)}</li>" for i in ids) + "</ul>" if ids else ""
 
 
+PHASES = (
+    ("Screen the request", (
+        ("Log the request", "Owner, purpose, data and access", "Name the person responsible. List the task, the data it needs and any changes the server should be allowed to make.", (("Request details", "stage-request"),)),
+        ("Check the approved catalog", "Reuse a server if it meets the need.", "Compare the request with the existing approval. If the task needs broader access, send that change for review before granting it.", (("Approval record", "record"), ("Permission changes", "trigger-permissions"))),
+        ("Verify the publisher", "Match the package or URL to vendor documentation.", "Start at the publisher's own site. Follow its link to the package, image or endpoint and check the exact name and owner.", (("Publisher checks", "h-checks-screen"),)),
+    ), ("Before downloading or connecting", "Complete the desk checks before fetching a new artifact or contacting a candidate endpoint.", "stage-screen")),
+    ("Assess the server", (
+        ("Pin or record the server", "Pin local artifacts. Record the remote URL.", "For a package or image, record the version, digest and locked dependencies. For a hosted service, verify the endpoint and obtain evidence from its operator.", (("Artifact checks", "stage-pin"), ("Remote operator evidence", "check-H9"))),
+        ("Scan and review", "Check for malware, vulnerabilities and excessive access.", "Scan local files without installing or starting the server. For a remote service, review the operator's scan evidence. Compare tool descriptions, instructions and requested permissions with the stated task.", (("Scan checks", "stage-scan"), ("Tool and permission review", "stage-review"))),
+        ("Test in a sandbox", "Use test data and disposable credentials.", "Make the first connection or launch in isolation. Capture the tools and other metadata the client sees. Check observed file and network access against the request.", (("Sandbox procedure", "stage-sandbox"),)),
+    ), ("Clear all blocking findings", "Keep the candidate out of production until every blocking check passes. Record how each finding was resolved.", "checks")),
+    ("Approve and release", (
+        ("Get an independent decision", "Use the approver for the risk tier.", "Assign the tier from the server's highest-risk capability. Give the designated approver the findings and proposed limits before rollout.", (("Risk tiers and approvers", "tiers"),)),
+        ("Record what was approved", "Save the configuration, access limits and expiry.", "Record the reviewed artifact or endpoint, tool definitions, permissions, owner, approver and review date. Keep this baseline for later comparisons.", (("Example approval record", "record"),)),
+        ("Release to a small group", "Enforce the approved configuration.", "Start with a limited pilot. Confirm the client applies the approved access limits and that the team can disable or roll back the server before widening access.", (("Release checks", "stage-release"), ("Platform controls", "platform"))),
+    ), ("Release only with approval", "Release only the configuration covered by the decision. Keep a held or rejected candidate out of use.", "stage-decide")),
+    ("Watch for changes", (
+        ("Compare with the approval record", "Check tool definitions and permissions.", "Compare the live tool list, descriptions and access with the saved baseline. Hold newly exposed capabilities until the affected checks pass.", (("Tool changes", "trigger-surface"), ("Permission changes", "trigger-permissions"))),
+        ("Track vulnerability advisories", "Check dependencies and vendor notices.", "Match alerts to the deployed version and its dependencies. For a hosted service, ask the operator whether the deployed service is affected.", (("Advisory response", "trigger-advisory"),)),
+        ("Respond to suspected compromise", "Suspend access and investigate.", "Disable access, preserve relevant logs and identify affected installations. Revoke exposed credentials and investigate before restoring service.", (("Incident response", "trigger-incident"), ("Malicious package or publisher takeover", "trigger-malicious"))),
+    ), ("Renew or retire before approval expires", "Have the owner confirm the need and the approver renew the record. Remove access when approval ends.", "trigger-expiry")),
+)
+
+
+def disclosure(title, hint, guidance, links, cls):
+    refs = " ".join(f'<a href="#{target}">{esc(label)}</a>' for label, target in links)
+    subtitle = f'<small>{say(hint)}</small>' if hint else ""
+    return (f'<details class="{cls}"><summary><strong>{esc(title)}</strong>{subtitle}</summary>'
+            f'<div class="guidance"><p>{say(guidance)}</p><div class="refs">{refs}</div></div></details>')
+
+
 def intro():
-    phases = (
-        ("Screen the request",
-         "Record the owner, purpose, data and access needed. Check the approved catalog and verify the publisher before downloading or connecting."),
-        ("Assess the server",
-         "Pin the local artifact and dependencies, or record the remote URL and get vendor evidence. Scan for vulnerabilities and malware, review tools and permissions, then test in isolation with test data."),
-        ("Approve and release",
-         "Have an independent approver review the findings. Record the approved configuration, limits and expiry. Roll it out to a small group first."),
-        ("Watch for changes",
-         "Compare live tool definitions with the approval record and track vulnerability alerts. Reassess changes before allowing them. Suspend access if you suspect compromise."),
-    )
-    rows = "\n".join(
-        f'      <li><h3>{esc(title)}</h3><p>{say(action)}</p></li>'
-        for title, action in phases
-    )
+    cards = []
+    for n, (title, actions, gate) in enumerate(PHASES, 1):
+        rows = "".join(disclosure(*action, "action") for action in actions)
+        label, guidance, target = gate
+        gate_html = disclosure(label, "", guidance, (("Decision criteria", target),), "gate")
+        cards.append(f'<li class="phase p{n}"><span class="number">0{n}</span><h3>{esc(title)}</h3>{rows}{gate_html}</li>')
+    hold = disclosure("Hold or reject", "Resolve blockers or record why you declined.", "For a hold, assign each blocker to an owner and repeat the failed checks. For a rejection, record the decision and stop the rollout.", (("Decision outcomes", "h-decisions"),), "hold")
+    loop = disclosure("When something changes, rerun the affected checks", "", "Use the change type to decide which checks to repeat and whether the current deployment can stay in use during review.", (("Reassessment triggers", "changes"),), "loop")
     return f"""
   <header class="hero">
     <h1>MCP server intake</h1>
-    <p class="lede">{say("Review new servers before use and reassess them when they change.")}</p>
+    <p class="lede">Local packages, containers and remote endpoints</p>
   </header>
-
   <main>
   <section id="start-here">
-    <h2 id="h-start-here">Start here</h2>
-    <ol class="intake-steps">
-{rows}
-    </ol>
+    <h2 class="sr-only" id="h-start-here">Start here</h2>
+    <ol class="flow">{''.join(cards)}</ol>
+    <div class="branches"><div class="withheld"><span>Approval withheld</span>{hold}</div>{loop}</div>
   </section>
 """
-
 
 def process():
     panels = []
@@ -371,11 +393,6 @@ pre{overflow-x:auto;background:var(--wash);padding:16px;margin:16px 0 0}
 .hero{padding:clamp(32px,6vw,64px) 0 24px;border-bottom:2px solid var(--rule)}
 .hero .lede{margin-top:12px;font-size:clamp(1.05rem,1.7vw,1.2rem)}
 #start-here{padding:24px 0}
-.intake-steps{padding-left:1.75rem}
-.intake-steps li{padding-left:.35rem}
-.intake-steps li + li{margin-top:14px}
-.intake-steps li::marker{color:var(--red);font:600 .9rem var(--mono)}
-.intake-steps h3{margin:0 0 3px}
 .related{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:20px;font-size:.92rem}
 
 .reference,.item{border-top:1px solid var(--line)}
@@ -447,6 +464,61 @@ footer{padding-top:28px;font-size:.88rem;color:var(--muted)}
 footer h2{font-size:1rem;margin:0}
 .ai-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin-bottom:22px}
 .ai-note b{color:var(--ink)}
+.page{max-width:1720px}
+.hero{padding:22px 0 14px;border-bottom:1px solid var(--line)}
+.hero h1{font-family:Georgia,serif}
+:root{--bg:#f7f5ef;--ink:#162533;--line:#d5dbd7;--muted:#485967;--panel:#fff;--arrow:#63747c}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.flow,.branches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:clamp(18px,2.6vw,46px)}
+.flow{list-style:none;padding:0}
+.phase,.hold{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:clamp(14px,1.45vw,26px)}
+.phase{position:relative;display:flex;flex-direction:column;min-width:0}
+.p1{--accent:#994323;--tint:#f7ebe1}
+.p2{--accent:#294c9c;--tint:#ebeffb}
+.p3{--accent:#11664a;--tint:#e3f1e9}
+.p4,.branches{--accent:#783c78;--tint:#f3eaf3}
+.number,.gate,.loop{background:var(--tint);color:var(--accent);border-radius:6px}
+.number{align-self:flex-start;padding:3px 10px;font-weight:700;font-size:.85rem}
+.phase h3{font-size:clamp(1.25rem,1.65vw,1.85rem);margin:12px 0 4px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.phase h3 a.sec-link::after{display:none}
+.phase:not(:last-child)::after{content:"";position:absolute;left:100%;top:64px;width:clamp(18px,2.6vw,46px);height:12px;background:var(--arrow);clip-path:polygon(0 42%,74% 42%,74% 0,100% 50%,74% 100%,74% 58%,0 58%)}
+.flow summary,.branches summary,.library>summary{cursor:pointer}
+.action{flex:1;padding:4px 0}
+.action summary,.gate summary,.branches summary{position:relative;list-style:none;padding:8px 22px 8px 0;line-height:1.35}
+.flow summary::-webkit-details-marker,.branches summary::-webkit-details-marker{display:none}
+.flow summary::after,.branches summary::after{content:"+";position:absolute;right:4px;top:9px;color:var(--accent);font-weight:700}
+.flow details[open]>summary::after,.branches details[open]>summary::after{content:"−"}
+summary:hover strong{text-decoration:underline;text-underline-offset:3px}
+summary small{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}
+.gate,.loop{font-size:.87rem}
+.gate{margin-top:12px}
+.gate summary,.loop summary{text-align:center;padding-left:18px}
+.guidance{padding:6px 0 12px;font-size:.94rem;color:var(--ink)}
+.refs{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
+.gate .guidance,.loop .guidance{padding:4px 12px 12px}
+.branches{position:relative;padding-bottom:4px}
+.withheld{grid-column:3;position:relative;padding-top:16px;color:#9b3229}
+.withheld>span{display:block;margin:0 0 12px 16%;font-weight:600;font-size:.86rem}
+.withheld::before{content:"↓";position:absolute;left:9%;top:0;height:47px;display:flex;align-items:flex-end;border-left:2px solid currentColor;text-indent:-.52em;line-height:.8}
+.hold{background:#faebe7;border-color:#e6c2b9;padding:5px 14px;--accent:#9b3229}
+.loop{grid-column:2/5;justify-self:center;margin-top:22px;z-index:1;max-width:76%}
+.loop summary{padding-right:26px}
+.branches::before{content:"";position:absolute;inset:0 calc((100% - 3 * clamp(18px,2.6vw,46px)) / 8) 20px calc(37.5% - clamp(18px,2.6vw,46px) / 8);border:2px dashed var(--accent);border-top:0;pointer-events:none}
+.branches::after{content:"▲";position:absolute;left:calc(37.5% - clamp(18px,2.6vw,46px) / 8);transform:translateX(-42%);top:-5px;color:var(--accent)}
+.library{border-block:1px solid var(--line);padding:12px 0}
+.library>summary{font-weight:700}
+.library,.related,footer{max-width:1000px;margin-inline:auto}
+@media(max-width:950px){
+.flow,.branches{display:block}
+.phase+.phase{margin-top:26px}
+.phase:not(:last-child)::after{top:100%;left:50%;width:26px;transform-origin:left center;transform:translateY(-50%) rotate(90deg)}
+.branches::before,.branches::after,.withheld::before{display:none}
+.withheld>span{margin-left:0}
+.loop{max-width:none;margin-top:12px}
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--panel:#202526;--bg:#151a1d;--ink:#eef1f2;--muted:#c1cbcf}
+.p1{--accent:#ffbd99;--tint:#452f23}.p2{--accent:#b5caff;--tint:#293650}.p3{--accent:#a5e4c6;--tint:#203e34}.p4,.branches{--accent:#e4bae6;--tint:#3c2c41}
+.hold{background:#432e2b;--accent:#ffb4a7}.withheld{color:#ffb4a7}}
 [id]{scroll-margin-top:16px}
 """
 
@@ -486,11 +558,13 @@ def build():
         ("Worked examples", cases()),
         ("Coverage and platform limits", coverage() + platform()),
     )
+    body += '<details class="library"><summary>Full reference guide</summary>'
     body += "\n".join(
         f'  <details class="reference"><summary>{esc(title)}</summary>{content}  </details>'
         for title, content in references
     )
     body += """
+    </details>
     <p class="related">
       <a href="mcp-security.html#h-enterprise-controls">MCP Security: enterprise controls</a>
       <a href="mcp-governance-microsoft.html#h-controls">MCP governance on Microsoft: controls</a>

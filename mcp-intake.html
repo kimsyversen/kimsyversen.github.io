@@ -34,11 +34,6 @@ pre{overflow-x:auto;background:var(--wash);padding:16px;margin:16px 0 0}
 .hero{padding:clamp(32px,6vw,64px) 0 24px;border-bottom:2px solid var(--rule)}
 .hero .lede{margin-top:12px;font-size:clamp(1.05rem,1.7vw,1.2rem)}
 #start-here{padding:24px 0}
-.intake-steps{padding-left:1.75rem}
-.intake-steps li{padding-left:.35rem}
-.intake-steps li + li{margin-top:14px}
-.intake-steps li::marker{color:var(--red);font:600 .9rem var(--mono)}
-.intake-steps h3{margin:0 0 3px}
 .related{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:20px;font-size:.92rem}
 
 .reference,.item{border-top:1px solid var(--line)}
@@ -110,6 +105,61 @@ footer{padding-top:28px;font-size:.88rem;color:var(--muted)}
 footer h2{font-size:1rem;margin:0}
 .ai-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin-bottom:22px}
 .ai-note b{color:var(--ink)}
+.page{max-width:1720px}
+.hero{padding:22px 0 14px;border-bottom:1px solid var(--line)}
+.hero h1{font-family:Georgia,serif}
+:root{--bg:#f7f5ef;--ink:#162533;--line:#d5dbd7;--muted:#485967;--panel:#fff;--arrow:#63747c}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.flow,.branches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:clamp(18px,2.6vw,46px)}
+.flow{list-style:none;padding:0}
+.phase,.hold{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:clamp(14px,1.45vw,26px)}
+.phase{position:relative;display:flex;flex-direction:column;min-width:0}
+.p1{--accent:#994323;--tint:#f7ebe1}
+.p2{--accent:#294c9c;--tint:#ebeffb}
+.p3{--accent:#11664a;--tint:#e3f1e9}
+.p4,.branches{--accent:#783c78;--tint:#f3eaf3}
+.number,.gate,.loop{background:var(--tint);color:var(--accent);border-radius:6px}
+.number{align-self:flex-start;padding:3px 10px;font-weight:700;font-size:.85rem}
+.phase h3{font-size:clamp(1.25rem,1.65vw,1.85rem);margin:12px 0 4px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.phase h3 a.sec-link::after{display:none}
+.phase:not(:last-child)::after{content:"";position:absolute;left:100%;top:64px;width:clamp(18px,2.6vw,46px);height:12px;background:var(--arrow);clip-path:polygon(0 42%,74% 42%,74% 0,100% 50%,74% 100%,74% 58%,0 58%)}
+.flow summary,.branches summary,.library>summary{cursor:pointer}
+.action{flex:1;padding:4px 0}
+.action summary,.gate summary,.branches summary{position:relative;list-style:none;padding:8px 22px 8px 0;line-height:1.35}
+.flow summary::-webkit-details-marker,.branches summary::-webkit-details-marker{display:none}
+.flow summary::after,.branches summary::after{content:"+";position:absolute;right:4px;top:9px;color:var(--accent);font-weight:700}
+.flow details[open]>summary::after,.branches details[open]>summary::after{content:"−"}
+summary:hover strong{text-decoration:underline;text-underline-offset:3px}
+summary small{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}
+.gate,.loop{font-size:.87rem}
+.gate{margin-top:12px}
+.gate summary,.loop summary{text-align:center;padding-left:18px}
+.guidance{padding:6px 0 12px;font-size:.94rem;color:var(--ink)}
+.refs{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
+.gate .guidance,.loop .guidance{padding:4px 12px 12px}
+.branches{position:relative;padding-bottom:4px}
+.withheld{grid-column:3;position:relative;padding-top:16px;color:#9b3229}
+.withheld>span{display:block;margin:0 0 12px 16%;font-weight:600;font-size:.86rem}
+.withheld::before{content:"↓";position:absolute;left:9%;top:0;height:47px;display:flex;align-items:flex-end;border-left:2px solid currentColor;text-indent:-.52em;line-height:.8}
+.hold{background:#faebe7;border-color:#e6c2b9;padding:5px 14px;--accent:#9b3229}
+.loop{grid-column:2/5;justify-self:center;margin-top:22px;z-index:1;max-width:76%}
+.loop summary{padding-right:26px}
+.branches::before{content:"";position:absolute;inset:0 calc((100% - 3 * clamp(18px,2.6vw,46px)) / 8) 20px calc(37.5% - clamp(18px,2.6vw,46px) / 8);border:2px dashed var(--accent);border-top:0;pointer-events:none}
+.branches::after{content:"▲";position:absolute;left:calc(37.5% - clamp(18px,2.6vw,46px) / 8);transform:translateX(-42%);top:-5px;color:var(--accent)}
+.library{border-block:1px solid var(--line);padding:12px 0}
+.library>summary{font-weight:700}
+.library,.related,footer{max-width:1000px;margin-inline:auto}
+@media(max-width:950px){
+.flow,.branches{display:block}
+.phase+.phase{margin-top:26px}
+.phase:not(:last-child)::after{top:100%;left:50%;width:26px;transform-origin:left center;transform:translateY(-50%) rotate(90deg)}
+.branches::before,.branches::after,.withheld::before{display:none}
+.withheld>span{margin-left:0}
+.loop{max-width:none;margin-top:12px}
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--panel:#202526;--bg:#151a1d;--ink:#eef1f2;--muted:#c1cbcf}
+.p1{--accent:#ffbd99;--tint:#452f23}.p2{--accent:#b5caff;--tint:#293650}.p3{--accent:#a5e4c6;--tint:#203e34}.p4,.branches{--accent:#e4bae6;--tint:#3c2c41}
+.hold{background:#432e2b;--accent:#ffb4a7}.withheld{color:#ffb4a7}}
 [id]{scroll-margin-top:16px}
 /* section links */
 h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
@@ -127,20 +177,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 
   <header class="hero">
     <h1>MCP server intake</h1>
-    <p class="lede">Review new servers before use and reassess them when they change.</p>
+    <p class="lede">Local packages, containers and remote endpoints</p>
   </header>
-
   <main>
   <section id="start-here">
-    <h2 id="h-start-here"><a class="sec-link" href="#h-start-here">Start here</a></h2>
-    <ol class="intake-steps">
-      <li><h3 id="screen-the-request"><a class="sec-link" href="#screen-the-request">Screen the request</a></h3><p>Record the owner, purpose, data and access needed. Check the approved catalog and verify the publisher before downloading or connecting.</p></li>
-      <li><h3 id="assess-the-server"><a class="sec-link" href="#assess-the-server">Assess the server</a></h3><p>Pin the local artifact and dependencies, or record the remote URL and get vendor evidence. Scan for vulnerabilities and malware, review tools and permissions, then test in isolation with test data.</p></li>
-      <li><h3 id="approve-and-release"><a class="sec-link" href="#approve-and-release">Approve and release</a></h3><p>Have an independent approver review the findings. Record the approved configuration, limits and expiry. Roll it out to a small group first.</p></li>
-      <li><h3 id="watch-for-changes"><a class="sec-link" href="#watch-for-changes">Watch for changes</a></h3><p>Compare live tool definitions with the approval record and track vulnerability alerts. Reassess changes before allowing them. Suspend access if you suspect compromise.</p></li>
-    </ol>
+    <h2 class="sr-only" id="h-start-here"><a class="sec-link" href="#h-start-here">Start here</a></h2>
+    <ol class="flow"><li class="phase p1"><span class="number">01</span><h3 id="screen-the-request"><a class="sec-link" href="#screen-the-request">Screen the request</a></h3><details class="action"><summary><strong>Log the request</strong><small>Owner, purpose, data and access</small></summary><div class="guidance"><p>Name the person responsible. List the task, the data it needs and any changes the server should be allowed to make.</p><div class="refs"><a href="#stage-request">Request details</a></div></div></details><details class="action"><summary><strong>Check the approved catalog</strong><small>Reuse a server if it meets the need.</small></summary><div class="guidance"><p>Compare the request with the existing approval. If the task needs broader access, send that change for review before granting it.</p><div class="refs"><a href="#record">Approval record</a> <a href="#trigger-permissions">Permission changes</a></div></div></details><details class="action"><summary><strong>Verify the publisher</strong><small>Match the package or URL to vendor documentation.</small></summary><div class="guidance"><p>Start at the publisher&#x27;s own site. Follow its link to the package, image or endpoint and check the exact name and owner.</p><div class="refs"><a href="#h-checks-screen">Publisher checks</a></div></div></details><details class="gate"><summary><strong>Before downloading or connecting</strong></summary><div class="guidance"><p>Complete the desk checks before fetching a new artifact or contacting a candidate endpoint.</p><div class="refs"><a href="#stage-screen">Decision criteria</a></div></div></details></li><li class="phase p2"><span class="number">02</span><h3 id="assess-the-server"><a class="sec-link" href="#assess-the-server">Assess the server</a></h3><details class="action"><summary><strong>Pin or record the server</strong><small>Pin local artifacts. Record the remote URL.</small></summary><div class="guidance"><p>For a package or image, record the version, digest and locked dependencies. For a hosted service, verify the endpoint and obtain evidence from its operator.</p><div class="refs"><a href="#stage-pin">Artifact checks</a> <a href="#check-H9">Remote operator evidence</a></div></div></details><details class="action"><summary><strong>Scan and review</strong><small>Check for malware, vulnerabilities and excessive access.</small></summary><div class="guidance"><p>Scan local files without installing or starting the server. For a remote service, review the operator&#x27;s scan evidence. Compare tool descriptions, instructions and requested permissions with the stated task.</p><div class="refs"><a href="#stage-scan">Scan checks</a> <a href="#stage-review">Tool and permission review</a></div></div></details><details class="action"><summary><strong>Test in a sandbox</strong><small>Use test data and disposable credentials.</small></summary><div class="guidance"><p>Make the first connection or launch in isolation. Capture the tools and other metadata the client sees. Check observed file and network access against the request.</p><div class="refs"><a href="#stage-sandbox">Sandbox procedure</a></div></div></details><details class="gate"><summary><strong>Clear all blocking findings</strong></summary><div class="guidance"><p>Keep the candidate out of production until every blocking check passes. Record how each finding was resolved.</p><div class="refs"><a href="#checks">Decision criteria</a></div></div></details></li><li class="phase p3"><span class="number">03</span><h3 id="approve-and-release"><a class="sec-link" href="#approve-and-release">Approve and release</a></h3><details class="action"><summary><strong>Get an independent decision</strong><small>Use the approver for the risk tier.</small></summary><div class="guidance"><p>Assign the tier from the server&#x27;s highest-risk capability. Give the designated approver the findings and proposed limits before rollout.</p><div class="refs"><a href="#tiers">Risk tiers and approvers</a></div></div></details><details class="action"><summary><strong>Record what was approved</strong><small>Save the configuration, access limits and expiry.</small></summary><div class="guidance"><p>Record the reviewed artifact or endpoint, tool definitions, permissions, owner, approver and review date. Keep this baseline for later comparisons.</p><div class="refs"><a href="#record">Example approval record</a></div></div></details><details class="action"><summary><strong>Release to a small group</strong><small>Enforce the approved configuration.</small></summary><div class="guidance"><p>Start with a limited pilot. Confirm the client applies the approved access limits and that the team can disable or roll back the server before widening access.</p><div class="refs"><a href="#stage-release">Release checks</a> <a href="#platform">Platform controls</a></div></div></details><details class="gate"><summary><strong>Release only with approval</strong></summary><div class="guidance"><p>Release only the configuration covered by the decision. Keep a held or rejected candidate out of use.</p><div class="refs"><a href="#stage-decide">Decision criteria</a></div></div></details></li><li class="phase p4"><span class="number">04</span><h3 id="watch-for-changes"><a class="sec-link" href="#watch-for-changes">Watch for changes</a></h3><details class="action"><summary><strong>Compare with the approval record</strong><small>Check tool definitions and permissions.</small></summary><div class="guidance"><p>Compare the live tool list, descriptions and access with the saved baseline. Hold newly exposed capabilities until the affected checks pass.</p><div class="refs"><a href="#trigger-surface">Tool changes</a> <a href="#trigger-permissions">Permission changes</a></div></div></details><details class="action"><summary><strong>Track vulnerability advisories</strong><small>Check dependencies and vendor notices.</small></summary><div class="guidance"><p>Match alerts to the deployed version and its dependencies. For a hosted service, ask the operator whether the deployed service is affected.</p><div class="refs"><a href="#trigger-advisory">Advisory response</a></div></div></details><details class="action"><summary><strong>Respond to suspected compromise</strong><small>Suspend access and investigate.</small></summary><div class="guidance"><p>Disable access, preserve relevant logs and identify affected installations. Revoke exposed credentials and investigate before restoring service.</p><div class="refs"><a href="#trigger-incident">Incident response</a> <a href="#trigger-malicious">Malicious package or publisher takeover</a></div></div></details><details class="gate"><summary><strong>Renew or retire before approval expires</strong></summary><div class="guidance"><p>Have the owner confirm the need and the approver renew the record. Remove access when approval ends.</p><div class="refs"><a href="#trigger-expiry">Decision criteria</a></div></div></details></li></ol>
+    <div class="branches"><div class="withheld"><span>Approval withheld</span><details class="hold"><summary><strong>Hold or reject</strong><small>Resolve blockers or record why you declined.</small></summary><div class="guidance"><p>For a hold, assign each blocker to an owner and repeat the failed checks. For a rejection, record the decision and stop the rollout.</p><div class="refs"><a href="#h-decisions">Decision outcomes</a></div></div></details></div><details class="loop"><summary><strong>When something changes, rerun the affected checks</strong></summary><div class="guidance"><p>Use the change type to decide which checks to repeat and whether the current deployment can stay in use during review.</p><div class="refs"><a href="#changes">Reassessment triggers</a></div></div></details></div>
   </section>
-  <details class="reference"><summary>Stage-by-stage instructions</summary>
+<details class="library"><summary>Full reference guide</summary>  <details class="reference"><summary>Stage-by-stage instructions</summary>
   <section id="process">
     <h2 id="h-process"><a class="sec-link" href="#h-process">Process</a></h2>
     <p>Nine stages run in order. A failed gate stops the server there. Nothing from the server runs before Sandbox.</p>
@@ -1161,6 +1206,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <dl class="pairs"><dt>Vetting the MCP client, host or local proxy</dt><dd>A weak client can undo a well reviewed server. Assess clients separately.</dd><dt>Message integrity past TLS</dt><dd>A proxy or other component that handles decrypted messages could change or replay them. Assess it with the platform.</dd><dt>Prompt injection controls during use</dt><dd>Per-call approval prompts, output filtering and permission controls during use belong to the platform and agent design.</dd><dt>Inside a remote service</dt><dd>Its code, build and staff are visible only through the vendor&#x27;s evidence.</dd><dt>Legal and privacy assessment</dt><dd>License and data answers are collected here. Contracts and privacy review follow your normal process.</dd></dl>
   </section>
   </details>
+    </details>
     <p class="related">
       <a href="mcp-security.html#h-enterprise-controls">MCP Security: enterprise controls</a>
       <a href="mcp-governance-microsoft.html#h-controls">MCP governance on Microsoft: controls</a>

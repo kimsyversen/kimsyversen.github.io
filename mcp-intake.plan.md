@@ -4,7 +4,7 @@ Page: `mcp-intake.html`. Started 2026-11-26.
 
 ## Goal
 
-An intake process for MCP servers covering publisher checks, traditional and MCP-specific scans, onboarding, and reassessment. The guide starts with four actions and keeps the detailed instructions in expandable sections. The full evidence review is complete when two consecutive passes find no incorrect or incomplete statement.
+An intake process for MCP servers covering publisher checks, traditional and MCP-specific scans, onboarding, and reassessment. The guide opens with a four-stage interactive diagram. Each action expands in place and links to its detailed reference. The full evidence review is complete when two consecutive passes find no incorrect or incomplete statement.
 
 ## Scope
 
