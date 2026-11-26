@@ -7,8 +7,8 @@
 3. **Checks have one home.** Stages, triggers, scenarios and coverage refer to checks by id.
 4. **Basis shown per check.** A check either quotes a source or is a plain requirement. Statements that are AI interpretation carry the `inference` tag.
 5. **No dependency on the preview MCP Registry or preview platform features.** They are mentioned with a `preview` tag only.
-6. **Interactive HTML flow, no separate ASCII figure.** The flow is a set of buttons and panels in the page text, so it is its own text description. A second copy in ASCII would duplicate it.
-7. **All text is in the static HTML.** Script only shows and hides. Without script, everything is visible.
-8. **No browser storage.** State lives in the URL hash.
+6. **Superseded: buttons and stage panels.** Start with four actions in the reading order. Keep the nine stages and other implementation details in native disclosures.
+7. **All text is in the static HTML.** Disclosures work without script. Script opens the relevant disclosures when a reader follows a section link.
+8. **No browser storage.** Fragments link directly to existing sections, checks, triggers and examples.
 9. **Risk tiers are capability based.** The tier follows what the server can do, not who asks.
 10. **Recommended cooling period for new versions: 7 days**, skipped for a fix to an exploited vulnerability. It is advice, not a sourced threshold.

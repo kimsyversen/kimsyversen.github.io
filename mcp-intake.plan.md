@@ -4,7 +4,7 @@ Page: `mcp-intake.html`. Started 2026-11-26.
 
 ## Goal
 
-An intake process for MCP servers: hygiene checks (publisher, trust, age and more), traditional and MCP-specific scanning, onboarding of new servers, and re-assessment when something changes. It builds on enterprise controls. It is interactive: a reader can click through each stage. Done when two review passes in a row find no incorrect or incomplete statement.
+An intake process for MCP servers covering publisher checks, traditional and MCP-specific scans, onboarding, and reassessment. The guide starts with four actions and keeps the detailed instructions in expandable sections. The full evidence review is complete when two consecutive passes find no incorrect or incomplete statement.
 
 ## Scope
 
@@ -16,11 +16,11 @@ Out, and said on the page: vetting the MCP client or host, model-level prompt in
 
 | Section | Job |
 |---|---|
-| Intro and minimum set | What the process does, its limit, the smallest useful version |
-| Process | The nine stages. Only home of stage descriptions |
+| Start here | Four actions for reviewing, approving and monitoring a server |
+| Process | The detailed procedure in nine stages |
 | When something changes | Triggers, how each is detected, what runs again, what stays in use meanwhile |
 | Walk through a case | Worked scenarios through the stages |
-| Checks | Only home of each check: requirement, pass condition, fail action, scope, basis |
+| Checks | Minimum checklist, full check requirements, pass conditions, fail actions, scope, and basis |
 | Coverage | Vulnerability classes, checks that address them, what can still get through |
 | Risk tiers and decisions | Tier rules, who decides, exceptions |
 | Approval record | What is pinned and compared later |
