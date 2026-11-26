@@ -25,7 +25,7 @@ END = "<!-- /ledger -->"
 
 APPLIES = {"P": "Package", "C": "Container", "R": "Remote"}
 FAIL_TEXT = {
-    "Block": "The server cannot move on, or is suspended if already in use, until this is fixed.",
+    "Block": "The server or version being assessed cannot move on until this is fixed. If the failing one is already in use, it is suspended, unless a change trigger says what to do instead.",
     "Review": "The approver decides and records why.",
 }
 STAGE = {s["key"]: s for s in D.STAGES}
@@ -114,7 +114,7 @@ def intro():
     <h2 id="h-start-here">Start here</h2>
     <p>{say("Passing intake lowers risk. It does not prove that a server is safe.", "inference quote:l-noproof")}{tag("inference")}</p>
     {sources(["l-noproof"])}
-    <p>{say("If you can only do ten things, do these.")}</p>
+    <p>{say("If you cannot do everything yet, do these first.")}</p>
     <ul class="minimum">{minimum}</ul>
   </section>
 """
@@ -197,7 +197,7 @@ def change():
     <ul class="picker" data-group="trigger">{buttons}</ul>
     {panels}
     <h3 id="h-auto-approval">Automatic approval of a new version</h3>
-    <p>{say("Allow it only when all of these are true. Otherwise a person decides.")}</p>
+    <p>{say("Allow it only when all of these are true. It skips the Review stage, so nobody reads the code difference. The approver for the server's tier approves the rule in advance and is the approver of record. Otherwise a person decides.")}</p>
     {plain_list(D.AUTO)}
     <h3 id="h-force-review">Differences that need a person</h3>
     <div class="tbl"><table><thead><tr><th scope="col">Difference</th><th scope="col">Checks</th></tr></thead><tbody>{force}</tbody></table></div>
@@ -330,7 +330,7 @@ def decide():
 
   <section id="record">
     <h2 id="h-record">Approval record</h2>
-    <p>{say("Keep one record for each approved server. Later changes are compared with it. The example is fictional.", "example")}</p>
+    <p>{say("Keep one record for each approved server. Later changes are compared with it. For a remote server, origin holds the URL and the authorization server details instead. The example is fictional.", "example")}</p>
     <pre tabindex="0"><code>{say(D.RECORD, "example")}</code></pre>
   </section>
 """
