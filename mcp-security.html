@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>MCP security</title>
+<title>MCP Security</title>
 <meta name="description" content="Why a local MCP server is software you run, how local and remote servers differ, and the principles and controls to govern them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,15 +28,11 @@ p + p{margin-top:12px}
 code{font-family:var(--mono);font-size:.9em;overflow-wrap:anywhere}
 .tag{font:500 .72rem/1 var(--mono);color:var(--muted);white-space:nowrap;letter-spacing:0;text-transform:none}
 h2 .tag{margin-left:.6em;vertical-align:middle}
-.prose{max-width:66ch}
 .top{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:.85rem;color:var(--muted)}
 .hero{padding:clamp(36px,7vw,84px) 0 clamp(28px,4vw,48px);border-bottom:3px solid var(--rule)}
-.hero .lede{max-width:52ch;margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
+.hero .lede{margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
 section{padding:clamp(32px,5vw,56px) 0;border-bottom:1px solid var(--line)}
 figure{margin:0}
-.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px 32px;margin-top:24px}
-blockquote{margin:0;padding-left:12px;border-left:2px solid var(--line);font-size:.86rem;color:var(--muted)}
-blockquote cite{display:block;font-style:normal;margin-top:2px}
 
 /* diagrams */
 .flow{list-style:none;margin:0;padding:0}
@@ -71,7 +67,7 @@ blockquote cite{display:block;font-style:normal;margin-top:2px}
 .layers .q{font:700 clamp(1.1rem,2vw,1.4rem)/1.25 var(--display);margin:0 0 18px}
 .layers h3{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 @media (max-width:780px){.layers{grid-template-columns:minmax(0,1fr)}.layers > div + div{border-left:0;border-top:2px solid var(--rule)}}
-.point{margin-top:24px;font:700 clamp(1.15rem,2.2vw,1.5rem)/1.3 var(--display);max-width:44ch}
+.point{margin-top:24px;font:700 clamp(1.15rem,2.2vw,1.5rem)/1.3 var(--display)}
 
 /* tables and lists */
 .tbl{overflow-x:auto}
@@ -111,32 +107,26 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-26">26 Nov 2026</time></span></div>
 
   <header class="hero">
-    <h1>A local MCP server is software you run</h1>
-    <p class="lede">Installing a local MCP server through <code>npx</code> is in practice the same as downloading and executing any other npm package. <span class="tag">[inference]</span></p>
+    <h1>MCP Security</h1>
+    <p class="lede" id="what-is-mcp">MCP (Model Context Protocol) is a set of rules that lets an AI app use other programs, called MCP servers. A server can give the app tools (things it can do, like search the web), resources (things it can read, like a file) and prompts (ready-made instructions). A server runs on your computer or on another one.</p>
   </header>
 
   <main>
   <section id="same-as-any-npm-package">
-    <h2 id="h-same-as-any-npm-package"><a class="sec-link" href="#h-same-as-any-npm-package">Same as any npm package</a></h2>
-    <figure class="lanes" role="group" aria-label="Both an npm package and an npm-based MCP server are fetched by npx and executed on your machine. The MCP server then also exposes tools, resources or prompts to an AI client.">
+    <h2 id="h-same-as-any-npm-package"><a class="sec-link" href="#h-same-as-any-npm-package">MCP servers are installed the same way as other npm packages</a></h2>
+    <figure class="lanes" role="group" aria-label="Both an npm package and an npm-based MCP server are executed on your machine by npx, which uses a copy on your machine or downloads one, possibly a newer release. The MCP server then also exposes tools, resources or prompts to an AI client.">
       <div><h3 id="npm-package"><a class="sec-link" href="#npm-package">npm package</a></h3>
-        <ol class="flow"><li><code>npx some-package</code></li><li>Downloaded from the registry</li><li class="hot">Executed on your machine</li><li>Does what its code does</li></ol>
+        <ol class="flow"><li><code>npx some-package</code></li><li>Taken from your machine or downloaded, possibly as a newer release</li><li class="hot">Executed on your machine</li><li>Does what its code does</li></ol>
       </div>
       <div><h3 id="local-mcp-server"><a class="sec-link" href="#local-mcp-server">Local MCP server</a></h3>
-        <ol class="flow"><li><code>npx some-mcp-server</code></li><li>Downloaded from the registry</li><li class="hot">Executed on your machine</li><li class="new">Does what its code does, and exposes <b>tools, resources or prompts</b> to an AI client over MCP</li></ol>
+        <ol class="flow"><li><code>npx some-mcp-server</code></li><li>Taken from your machine or downloaded, possibly as a newer release</li><li class="hot">Executed on your machine</li><li class="new">Does what its code does, and exposes <b>tools, resources or prompts</b> to an AI client over MCP</li></ol>
       </div>
     </figure>
-    <p class="prose" style="margin-top:24px">The Model Context Protocol adds no installation mechanism, security boundary or sandbox of its own to this path. The difference is what the package does after it starts. <span class="tag">[inference]</span></p>
-    <div class="quotes">
-<blockquote id="ev-V1">&ldquo;This command allows you to run an arbitrary command from an npm package&rdquo; <cite><a href="https://docs.npmjs.com/cli/v11/commands/npx#:~:text=This%20command%20allows%20you%20to%20run">npm Docs, npx</a></cite></blockquote>
-<blockquote id="ev-V4">&ldquo;Local MCP servers are binaries that are downloaded and executed on the same machine as the MCP client.&rdquo; <cite><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices#local-mcp-server-compromise">MCP security best practices</a></cite></blockquote>
-<blockquote id="ev-V7">&ldquo;stdio transport is not a sandbox.&rdquo; <cite><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md#stdio-transport-trust-boundary">MCP security policy</a></cite></blockquote>
-    </div>
   </section>
 
   <section id="what-a-malicious-server-can-do">
-    <h2 id="h-what-a-malicious-server-can-do"><a class="sec-link" href="#h-what-a-malicious-server-can-do">What a malicious server can do</a> <span class="tag">[inference]</span></h2>
-    <figure class="reach" role="group" aria-label="A malicious MCP server process running without isolation, with your account's access, can read files, take secrets, connect out, run programs, persist and exfiltrate data.">
+    <h2 id="h-what-a-malicious-server-can-do"><a class="sec-link" href="#h-what-a-malicious-server-can-do">A malicious MCP server can use the same access as your other software</a></h2>
+    <figure class="reach" role="group" aria-label="A malicious MCP server process running without isolation, with your account's access, can read local files, access available environment variables, tokens and credentials, make outbound connections, execute other programs, modify files and persist, and exfiltrate sensitive information.">
       <div class="proc"><b>Malicious MCP server process</b><span>No isolation. Your account&rsquo;s access.</span></div>
       <div class="arrow" aria-hidden="true"></div>
       <ul>
@@ -148,91 +138,69 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <li>Exfiltrate sensitive information</li>
       </ul>
     </figure>
-    <p class="point">It can do this without the AI invoking a single MCP tool. Running the server is enough.</p>
-    <div class="quotes">
-<blockquote id="ev-V2">&ldquo;Local MCP servers are trusted like any other software you install.&rdquo; <cite><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md#trust-model">MCP security policy</a></cite></blockquote>
-<blockquote id="ev-V3">&ldquo;When you run a local MCP server, you are trusting it with the same level of access as any other application or package on your system.&rdquo; <cite><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md#trust-model">MCP security policy</a></cite></blockquote>
-<blockquote id="ev-V5">&ldquo;Attackers can execute any command with MCP client privileges.&rdquo; <cite><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices#local-mcp-server-compromise">MCP security best practices</a></cite></blockquote>
-    </div>
+    <p class="point">It can do these things without the AI invoking a single MCP tool. Execution of the server itself is sufficient.</p>
   </section>
 
   <section id="npm-package-or-mcp-server">
-    <h2 id="h-npm-package-or-mcp-server"><a class="sec-link" href="#h-npm-package-or-mcp-server">npm package or MCP server</a> <span class="tag">[inference]</span></h2>
+    <h2 id="h-npm-package-or-mcp-server"><a class="sec-link" href="#h-npm-package-or-mcp-server">MCP servers add AI risks to the usual npm package risks</a> <span class="tag">[inference]</span></h2>
     <div class="tbl"><table>
       <thead><tr><th scope="col">Security characteristic</th><th scope="col">npm / npx</th><th scope="col">Local npm-based MCP</th></tr></thead>
       <tbody><tr><th scope="row">Supply chain risk</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Transitive dependency risk</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Arbitrary code execution</th><td class="y">Yes, when executed</td><td class="y">Yes, when executed</td></tr><tr><th scope="row">Access to local credentials</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Built-in sandboxing</th><td class="">No</td><td class="">No</td></tr><tr class="add"><th scope="row">MCP tool poisoning</th><td class="">Not applicable</td><td class="y">Yes</td></tr><tr class="add"><th scope="row">AI-driven tool invocation</th><td class="">Not inherent</td><td class="y">Yes</td></tr><tr class="add"><th scope="row">Cross-MCP tool manipulation</th><td class="">Not applicable</td><td class="y">Possible</td></tr></tbody>
     </table></div>
-    <p class="prose" style="margin-top:20px">MCP adds AI-specific attack surfaces on top of the usual software supply chain risks. A client or the operating system can add a sandbox, but neither npm nor MCP supplies one by default. npm 12 blocks dependency install scripts by default; that does not sandbox the program you then run.</p>
-    <div class="quotes">
-<blockquote id="ev-V10">&ldquo;A Tool Poisoning Attack occurs when malicious instructions are embedded within MCP tool descriptions&rdquo; <cite><a href="https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks#:~:text=A%20Tool%20Poisoning%20Attack%20occurs%20when">Invariant Labs, tool poisoning attacks</a></cite></blockquote>
-<blockquote id="ev-V11">&ldquo;a malicious server can change the tool description after the client has already approved it.&rdquo; <cite><a href="https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks#:~:text=a%20malicious%20server%20can%20change%20the">Invariant Labs, tool poisoning attacks</a></cite></blockquote>
-<blockquote id="ev-V12">&ldquo;a malicious server can poison tool descriptions to exfiltrate data accessible through other trusted servers&rdquo; <cite><a href="https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks#:~:text=a%20malicious%20server%20can%20poison%20tool">Invariant Labs, tool poisoning attacks</a></cite></blockquote>
-<blockquote id="ev-V8">&ldquo;Dependency install scripts are blocked by default.&rdquo; <cite><a href="https://docs.npmjs.com/cli/v12/commands/npm-approve-scripts#:~:text=Dependency%20install%20scripts%20are%20blocked%20by">npm Docs, npm approve-scripts</a></cite></blockquote>
-<blockquote id="ev-V9">&ldquo;On macOS and Linux, per-server sandboxing restricts file system and network access for stdio MCP servers.&rdquo; <cite><a href="https://code.visualstudio.com/docs/agents/run/manage-mcp-servers#:~:text=On%20macOS%20and%20Linux%2C%20per%2Dserver%20sandboxing">VS Code Docs, manage MCP servers</a></cite></blockquote>
-    </div>
+    <p class="prose" style="margin-top:20px">MCP therefore introduces additional AI-specific attack surfaces on top of traditional software supply chain risks.</p>
   </section>
 
   <section id="local-remote-and-bridged">
-    <h2 id="h-local-remote-and-bridged"><a class="sec-link" href="#h-local-remote-and-bridged">Local, remote and bridged servers</a></h2>
+    <h2 id="h-local-remote-and-bridged"><a class="sec-link" href="#h-local-remote-and-bridged">Local, remote and bridged servers carry different risks</a></h2>
     <div class="lanes three">
       <div><h3 id="local-mcp"><a class="sec-link" href="#local-mcp">Local MCP</a></h3>
         <figure role="group" aria-label="The MCP client talks over stdio to an MCP server process on the same machine.">
         <ol class="flow"><li>MCP client</li><li class="via">stdio</li><li class="hot">MCP server process</li></ol>
         </figure>
-        <p class="note">Both processes run locally unless separately isolated.</p>
+        <p class="note">Client and server run on the same machine, with the same privileges unless the server is isolated.</p>
         <p class="verdict bad">Local code execution risk</p>
       </div>
       <div><h3 id="remote-mcp"><a class="sec-link" href="#remote-mcp">Remote MCP</a></h3>
-        <figure role="group" aria-label="The MCP client talks over HTTPS to a remote MCP server.">
-        <ol class="flow"><li>MCP client</li><li class="via">HTTPS</li><li>Remote MCP server</li></ol>
+        <figure role="group" aria-label="The MCP client talks over Streamable HTTP to a remote MCP server.">
+        <ol class="flow"><li>MCP client</li><li class="via">Streamable HTTP</li><li>Remote MCP server</li></ol>
         </figure>
-        <p class="note">Server code executes on external infrastructure. Closer to consuming an external API than to installing software. <span class="tag">[inference]</span></p>
+        <p class="note">Server code runs on another machine. A native remote connection is closer to consuming an external API than to installing software. <span class="tag">[inference]</span></p>
         <p class="verdict good">No direct local server execution</p>
       </div>
       <div><h3 id="remote-mcp-through-a-local-bridge"><a class="sec-link" href="#remote-mcp-through-a-local-bridge">Remote through a local bridge</a></h3>
-        <figure role="group" aria-label="The MCP client talks over stdio to a locally installed bridge, which talks over HTTPS to a remote MCP server.">
-        <ol class="flow"><li>MCP client</li><li class="via">stdio</li><li class="hot">Locally installed bridge</li><li class="via">HTTPS</li><li>Remote MCP server</li></ol>
+        <figure role="group" aria-label="The MCP client talks over stdio to a locally installed bridge, which talks over Streamable HTTP to a remote MCP server.">
+        <ol class="flow"><li>MCP client</li><li class="via">stdio</li><li class="hot">Locally installed bridge</li><li class="via">Streamable HTTP</li><li>Remote MCP server</li></ol>
         </figure>
-        <p class="note">The bridge is local software.</p>
-        <p class="verdict bad">Local code execution risk returns</p>
+        <p class="note">The bridge is local software. One bridge, mcp-remote, had a command injection flaw.</p>
+        <p class="verdict bad">Local software can have flaws</p>
       </div>
     </div>
-    <p class="prose" style="margin-top:24px">A remote server still brings risks of data disclosure, weak authorization, prompt injection and tool poisoning. <span class="tag">[inference]</span></p>
-    <div class="quotes">
-<blockquote id="ev-V13">&ldquo;newline-delimited messages over the standard streams of a client-launched subprocess.&rdquo; <cite><a href="https://modelcontextprotocol.io/specification/latest/basic/transports#:~:text=newline%2Ddelimited%20messages%20over%20the%20standard%20streams">MCP specification, transports</a></cite></blockquote>
-<blockquote id="ev-V14">&ldquo;each message is an HTTP POST to a single MCP endpoint&rdquo; <cite><a href="https://modelcontextprotocol.io/specification/latest/basic/transports#:~:text=each%20message%20is%20an%20HTTP%20POST">MCP specification, transports</a></cite></blockquote>
-<blockquote id="ev-V15">&ldquo;Authorization is OPTIONAL for MCP implementations.&rdquo; <cite><a href="https://modelcontextprotocol.io/specification/latest/basic/authorization#:~:text=Authorization%20is%20OPTIONAL%20for%20MCP%20implementations.">MCP specification, authorization</a></cite></blockquote>
-<blockquote id="ev-V16">&ldquo;Because models are designed to follow natural-language instructions, prompt injection attacks are both powerful and subtle.&rdquo; <cite><a href="https://owasp.org/www-project-mcp-top-10/#:~:text=Because%20models%20are%20designed%20to%20follow">OWASP MCP Top 10</a></cite></blockquote>
-<blockquote id="ev-V17">&ldquo;mcp-remote is exposed to OS command injection when connecting to untrusted MCP servers&rdquo; <cite><a href="https://github.com/advisories/GHSA-6xpm-ggf7-wc3p#:~:text=mcp%2Dremote%20is%20exposed%20to%20OS%20command">CVE-2025-6514, fixed in mcp-remote 0.1.16</a></cite></blockquote>
-    </div>
+    <p class="prose" style="margin-top:24px">A remote server is still an MCP server. OWASP names data exfiltration, servers acting with broader rights than the user, prompt injection and tool poisoning among MCP risks.</p>
   </section>
 
   <section id="two-governance-layers">
-    <h2 id="h-two-governance-layers"><a class="sec-link" href="#h-two-governance-layers">Two governance layers</a> <span class="tag">[recommendation]</span></h2>
-    <figure class="layers" role="group" aria-label="Software execution governance decides which code may run on the endpoint. MCP governance decides which capabilities, tools, data and external services the AI may access. An MCP gateway helps with the second, and a local server started with npx can go around it.">
+    <h2 id="h-two-governance-layers"><a class="sec-link" href="#h-two-governance-layers">Control both which code runs and what the AI can access</a> <span class="tag">[recommendation]</span></h2>
+    <figure class="layers" role="group" aria-label="Software execution governance decides which code may run on the endpoint. MCP governance decides which capabilities, tools, data and external services the AI is permitted to access. An MCP gateway can help address the second, but it does not inherently address the first if developers remain free to execute arbitrary local MCP servers.">
       <div><h3 id="software-execution-governance"><a class="sec-link" href="#software-execution-governance">Software execution governance</a></h3>
         <p class="q">What code is permitted to execute on the endpoint?</p>
-        <ol class="flow"><li>Developer runs <code>npx</code> with any package</li><li class="hot">Local MCP server executes</li><li class="new">An MCP gateway does not inherently stop this</li></ol>
+        <ol class="flow"><li>Developer runs <code>npx</code> with any package</li><li class="hot">Local MCP server executes</li><li class="new">An MCP gateway does not inherently stop this <span class="tag">[inference]</span></li></ol>
       </div>
       <div><h3 id="mcp-capability-governance"><a class="sec-link" href="#mcp-capability-governance">MCP governance</a></h3>
-        <p class="q">Which capabilities, tools, data and external services may the AI access?</p>
+        <p class="q">What capabilities, tools, data and external services is the AI permitted to access?</p>
         <ol class="flow"><li>AI client</li><li class="hot">MCP gateway</li><li>Approved servers, tools, data and services</li></ol>
       </div>
     </figure>
-    <p class="point">Restricting MCP servers while permitting unrestricted <code>npx</code> leaves the arbitrary code execution risk in place.</p>
+    <p class="point">Restricting MCP servers while permitting unrestricted <code>npx</code> leaves the underlying arbitrary code execution risk in place. <span class="tag">[inference]</span></p>
     <p class="prose" style="margin-top:12px">MCP governance should extend existing software supply chain and endpoint security controls, not replace them.</p>
-    <div class="quotes">
-<blockquote id="ev-V6">&ldquo;Execute MCP server commands in a sandboxed environment with minimal default privileges&rdquo; <cite><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices#local-mcp-server-compromise">MCP security best practices</a></cite></blockquote>
-    </div>
   </section>
 
   <section id="principles">
-    <h2 id="h-principles"><a class="sec-link" href="#h-principles">Security and governance principles</a> <span class="tag">[recommendation]</span></h2>
+    <h2 id="h-principles"><a class="sec-link" href="#h-principles">13 principles for using MCP securely</a> <span class="tag">[recommendation]</span></h2>
     <ol class="principles"><li id="principle-1">Only approved, inventoried, and owned MCP servers may be used.</li><li id="principle-2">All agent actions must be traceable to a human user or accountable workload owner.</li><li id="principle-3">All MCP connections must use secure authentication, communication, and credential management.</li><li id="principle-4">Agents and MCP servers must operate with least privilege.</li><li id="principle-5">Sensitive tool actions must require appropriate authorization and human approval where necessary.</li><li id="principle-6">Data accessed or transmitted through MCP must comply with organizational data protection requirements.</li><li id="principle-7">Untrusted content must not override security policies or execution boundaries.</li><li id="principle-8">MCP servers, tools, and dependencies must be trusted and protected against tampering.</li><li id="principle-9">MCP execution must be isolated within controlled system and network boundaries.</li><li id="principle-10">MCP interactions must not bypass established security controls.</li><li id="principle-11">All MCP activities must be logged, monitored, and auditable.</li><li id="principle-12">MCP operations must enforce resource limits, support revocation, and fail securely.</li><li id="principle-13">MCP integrations must undergo security assessment, testing, and ongoing lifecycle management.</li></ol>
   </section>
 
   <section id="enterprise-controls">
-    <h2 id="h-enterprise-controls"><a class="sec-link" href="#h-enterprise-controls">Enterprise controls</a> <span class="tag">[recommendation]</span></h2>
+    <h2 id="h-enterprise-controls"><a class="sec-link" href="#h-enterprise-controls">Enterprise controls that put the principles into practice</a> <span class="tag">[recommendation]</span></h2>
     <div class="tbl"><table>
       <thead><tr><th scope="col">Control</th><th scope="col">Recommendation</th></tr></thead>
       <tbody><tr><th scope="row">Package governance</th><td>Approved publishers and packages</td></tr><tr><th scope="row">Software distribution</th><td>Controlled internal artifact registry</td></tr><tr><th scope="row">Version management</th><td>Pinned versions and locked dependencies</td></tr><tr><th scope="row">Supply chain security</th><td>SCA, malware scanning and provenance verification</td></tr><tr><th scope="row">Execution isolation</th><td>Restricted containers, sandboxes or VMs</td></tr><tr><th scope="row">Network security</th><td>Restricted outbound connectivity</td></tr><tr><th scope="row">Identity</th><td>Dedicated, least-privileged credentials per server</td></tr><tr><th scope="row">MCP governance</th><td>Approved servers and tools</td></tr><tr><th scope="row">Change management</th><td>Review package and tool definition changes</td></tr></tbody>
