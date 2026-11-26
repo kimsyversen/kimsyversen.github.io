@@ -1,0 +1,25 @@
+MCP server intake
+=================
+
+[Screen the request] --> [Assess the server] --> [Approve and release] --> [Watch for changes]
+                               ^                         |                         |
+                               |                         v                         |
+                               |                  [Hold or reject]                 |
+                               +--------- Reassess the affected checks <-----------+
+
+1. Screen the request. Record the owner, purpose, data and access.
+   Check whether an approved server meets the need. Before downloading or
+   connecting to a new candidate, match its package or URL to the publisher's
+   documentation.
+2. Assess the server. Pin local artifacts and dependencies, or record the
+   remote URL and obtain vendor evidence. Scan for vulnerabilities and malware.
+   Review MCP tools, permissions and instructions, then test in isolation.
+3. Approve and release. Have the independent approver for the risk tier decide.
+   Hold or reject the request if approval is withheld. If approved, record the
+   configuration, limits and expiry, and release to a small group first.
+4. Watch for changes. Compare the live server with the approval record and
+   track vulnerability advisories. Rerun the affected checks when something
+   changes. Suspend access and investigate suspected compromise. Renew or
+   retire the server before its approval expires.
+
+Reference: mcp-intake.html
