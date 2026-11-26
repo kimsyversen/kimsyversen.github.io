@@ -64,7 +64,7 @@ VERIFIED_SOURCE_DATES = {
     "a365-byo": "2026-11-16",
     "a365-gw": "2026-11-06",
     "fy-gov-tools": "2026-11-17",
-    "pp-acp": "2026-09-09",
+    "pp-acp": "2026-11-21",
     "pp-acp-api": "2026-10-02",
     "fy-mcp": "2026-11-17",
     "apim-genai": "2026-05-29",
@@ -95,6 +95,8 @@ VERIFIED_SOURCE_DATES = {
     "purview-dspm": "2026-05-26",
     "purview-foundry": "2026-05-01",
     "review-obo": "2025-01-04",
+    "vs-tools": "2026-11-25",
+    "vs-appr": "2026-11-25",
 }
 SOURCES = {key: (title, url, VERIFIED_SOURCE_DATES.get(key)) for key, (title, url, _date) in SOURCES.items()}
 
@@ -183,7 +185,7 @@ for _key, _source, _quote in [
     ("studio-standard", "studio-standard", "This article describes features used in agents or agent flows powered by the standard harness"),
     ("studio-copilot-preview", "studio-copilot", "Add a Model Context Protocol (MCP) server to your agent as a tool (Microsoft Copilot) (preview)"),
     ("acp-runtime", "pp-acp", "ACP operates as a runtime-only enforcement for that workload"),
-    ("acp-virtual", "pp-acp", "continue using classic data policies for Copilot Studio virtual connector governance"),
+    ("acp-virtual", "pp-acp", "For Copilot Studio virtual connectors that don't have a dedicated setting yet, continue using classic data policies."),
     ("acp-environment", "pp-acp", "on non-managed environments, the nonblockable connectors remain nonblockable"),
 ]:
     QUOTES.append((_key, _source, _quote))

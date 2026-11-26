@@ -14,7 +14,8 @@ GUARDRAILS ALONG ONE MCP TOOL CALL (request goes down, response comes back)
 | [b]2 PERSON APPROVES[/b]          |   | [b]2 PERSON APPROVES[/b]          |   | [b]2 PERSON APPROVES[/b]          |
 | require_approval           |   | Ask user before running    |   | Confirmation dialog        |
 | (default: always)          |   | [red]Off by default[/red]             |   | (default: Manual)          |
-| Can be set to never        |   | (Kusto MCP example)        |   | [red]Allow all skips it[/red]         |
+| Can be set to never        |   | (Kusto MCP example)        |   | [red]Allow all skips ordinary[/red]   |
+|                            |   |                            |   | [red]confirmations[/red]              |
 |                            |   |                            |   | Policy can lock it         |
 +----------------------------+   +----------------------------+   +----------------------------+
                |                                |                                |              

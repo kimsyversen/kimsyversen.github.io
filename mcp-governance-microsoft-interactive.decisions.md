@@ -143,3 +143,7 @@ Edited the page file directly; the builder script was behind the page at the tim
 
 - The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
 - Superseded: earlier entries that tag text `recommendation`. Sentences that read as product facts without the tag were reworded as advice.
+
+## 26 Nov 2026, claims narrowed to current sources
+
+Where a source changed, the claim was narrowed or cut instead of tagged `unverified`, so each cell keeps only what a current quote says.

@@ -90,7 +90,7 @@ def apply_review(page, ev, inf, unv, evp):
         f'One server policy covers every caller, so mixing incompatible callers can reject legitimate calls.'))
     control('power-platform', requirement=(
         '<span id="gap-unverified-url-block"></span>Use advanced connector policies (ACP) for listed MCP servers once Copilot Studio design-time enforcement reaches the target workload. '
-        f'Keep classic policies for custom, HTTP and Copilot Studio virtual connectors. Use mixed mode when adding ACP {ev("pp-custom", "review-custom-classic", "review-acp-mixed", "acp-virtual")}. '
+        f'Keep classic policies for custom and HTTP connectors, and for Copilot Studio virtual connectors without a dedicated agent setting. Use mixed mode when adding ACP {ev("pp-custom", "review-custom-classic", "review-acp-mixed", "acp-virtual")}. '
         f'Configure MCP policy manually until the API adapter is validated.'),
         documented=(
         f'ACP blocks whole MCP servers. A connector block covers its dependent tools {ev("pp-block", "studio")}. '

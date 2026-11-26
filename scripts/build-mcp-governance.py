@@ -380,10 +380,10 @@ GR_PREV += [r[1] for r in GR_PREV_RAW]
 DESC_GR_SAFE = ("Guardrails by layer for one MCP tool call, in three columns: Foundry agent, Copilot Studio, and VS Code with GitHub Copilot. "
                 "Layer 1 which server: Foundry allowed_tools, Copilot Studio data policy, VS Code and GitHub allow and deny lists plus a server trust prompt in VS Code. "
                 "Layer 2 person approves: Foundry require_approval, default always, which can be set to never. Copilot Studio can ask before running a tool. Microsoft documents the setting for the Kusto Query MCP Server. "
-                "VS Code shows a confirmation dialog by default, the Allow all level skips it, and a company policy can lock it. "
+                "VS Code asks the person to approve some actions by default, the Allow all level skips ordinary confirmations, and a company policy can lock it. "
                 "Layer 3 call content: preview only for Foundry and Copilot Studio. VS Code has preview hooks. "
                 "Layer 4 network and gateway: the table lists what applies to every client, plus two lines that apply to Foundry only. Layer 5 company MCP server: the design target is that only the gateway can call it. "
-                "Layer 6 tool response: preview only for Foundry. Copilot Studio has a built-in prompt attack block, whose layer is an AI estimate. VS Code supports confirmation after a tool runs, depending on approval settings.")
+                "Layer 6 tool response: preview only for Foundry. Copilot Studio has a built-in prompt attack block, whose layer is an AI estimate. VS Code can ask for a review of some tool results, depending on approval settings.")
 
 def gname(name):
     return pname(name, "Guardrail")
@@ -411,8 +411,8 @@ LAYER_ROWS = [
     ("grp", ["Layer 1, which server"]),
     [control_label("power-platform", "Policy sync, Power Platform", "Objective B"),
      "Copilot Studio",
-     f"<span id=\"gap-unverified-url-block\"></span>Use advanced connector policies (ACP) for listed MCP servers once design-time enforcement reaches the workload. Keep classic policies in mixed mode for custom, HTTP and Copilot Studio virtual connectors. Verify the MCP API adapter before automating.",
-     f"ACP supports deployment-pipeline automation {ev('pp-pipe')}, MCP server-level blocking but not per-tool blocks {ev('pp-block')}, and connector blocking also blocks dependent MCP tools {ev('studio')}. Microsoft ties ACP general availability to each workload's design-time rollout {ev('rel-acp-rollout')}. Mixed mode preserves classic policies {ev('rel-acp-mixed', 'rel-acp-virtual', 'pp-custom')}. The API tutorial lacks an MCP-specific example; verify this path in the target tenant {ev('pp-api')}."],
+     f"<span id=\"gap-unverified-url-block\"></span>Use advanced connector policies (ACP) for listed MCP servers once design-time enforcement reaches the workload. Keep classic policies in mixed mode for custom and HTTP connectors, and for Copilot Studio virtual connectors without a dedicated agent setting. Verify the MCP API adapter before automating.",
+     f"ACP supports deployment-pipeline automation {ev('pp-pipe')}, MCP server-level blocking but not per-tool blocks {ev('pp-block')}, and connector blocking also blocks dependent MCP tools {ev('studio')}. Microsoft ties ACP general availability to each workload's design-time rollout {ev('rel-acp-rollout')}. Mixed mode preserves classic policies, which still apply to Copilot Studio virtual connectors without a dedicated agent setting {ev('rel-acp-mixed', 'rel-acp-virtual', 'pp-custom')}. The API tutorial lacks an MCP-specific example; verify this path in the target tenant {ev('pp-api')}."],
     [control_label("foundry", "Policy sync, Foundry", "Objective B"),
      "Foundry",
      f"Configure each approved MCP connection with a nonempty allowed tool list. Remove or disable the connection when no tools should be allowed. Validate the pipeline separately.",
@@ -438,7 +438,7 @@ LAYER_ROWS = [
     [gname("Ask before running"), "Copilot Studio", NONE_ADDED,
      f"A maker can set a tool to ask the end user for confirmation in the chat before it runs. The option is off by default. {ev('gr-cs-ask')} Microsoft documents this setting for the Kusto Query MCP Server {ev('rel-cs-confirm')}."],
     [gname("Confirmation dialog"), "VS Code", NONE_ADDED,
-     f"By default, actions that are not auto-approved need the person's confirmation, and the dialog shows the input parameters {ev('gr-vs-appr', 'gr-vs-manual')}. The Allow all level runs all tool calls without confirmation {ev('gr-vs-allowall')}. Assisted permissions lets an LLM judge assess each call {ev('gr-vs-assist')}. Documented for VS Code only."],
+     f"Manual permissions, the default, asks about actions that the runtime, a rule or a saved approval has not cleared {ev('gr-vs-manual')}. A prompt asks for a review of inputs and target {ev('gr-vs-appr')}. Allow all skips ordinary confirmations {ev('gr-vs-allowall')}. Assisted permissions lets a model pick what needs review {ev('gr-vs-assist')}. VS Code only."],
     [gname("Approval lock"), "VS Code", NONE_ADDED,
      f"A company can limit the levels above. A policy that turns off global auto-approval leaves only one-time approval and ignores saved approvals {ev('gr-vs-pol-auto')}. A managed setting can disable Allow all {ev('gr-vs-pol-bypass')}."],
     [gname("Write approval"), "Microsoft 365 Copilot", NONE_ADDED,
@@ -446,7 +446,7 @@ LAYER_ROWS = [
 
     ("grp", [f"Layer 3, call content. Foundry and Copilot Studio have no released control here. Theirs are in <a href=\"#guardrails-preview\">With preview</a>."]),
     ("view-preview", [gname("Tool call hook"), "VS Code, GitHub Copilot", NONE_ADDED,
-     f"VS Code labels agent hooks preview {evp('rel-vs-hooks')}. A preToolUse hook can inspect a supported tool's arguments and deny the call. A filter that misses a tool does not check that call {ev('gr-vs-hook')}. VS Code says hooks are not a substitute for enforced permissions or enterprise controls {ev('gr-vs-hook-not')}. {UNV} MCP call coverage is unverified."]),
+     f"VS Code labels agent hooks preview {evp('rel-vs-hooks')}. A hook can deny a call {evp('rel-vs-hook-deny')}. A preToolUse command hook error denies it, but a timeout falls back to normal permissions, even for policy hooks {ev('gr-vs-hook')}. VS Code says hooks are not a substitute for enforced permissions or enterprise controls {ev('gr-vs-hook-not')}. {UNV} MCP call coverage is unverified."]),
 
     ("grp", ["Layer 4, network and gateway"]),
     [control_label("gateway", "Gateway", "Objective A"),
@@ -494,7 +494,7 @@ LAYER_ROWS = [
     [gname("Prompt attack block"), "Copilot Studio", NONE_ADDED,
      f"Built-in protection against user prompt injection (UPIA) and cross-domain prompt injection (XPIA). At runtime the agent blocks attacks of these types. {ev('gr-cs-upia', 'gr-cs-block')} {INF} Interpretation by AI: the source does not say at which layer. It is listed here because cross-domain attacks can arrive in tool results."],
     [gname("Result review"), "VS Code", NONE_ADDED,
-     f"Tool approval covers confirmation before or after a tool runs {ev('gr-vs-after')}. A tool granted post-approval adds its result to the chat context. VS Code warns about prompt injection in external data {ev('gr-vs-post')}. {UNV} Not checked which tools ask for a result review by default."],
+     f"For web fetch and similar, approving the request does not approve the response {ev('gr-vs-after')}. In the client tool picker, skipping result review sends results to chat unreviewed {ev('gr-vs-post')}. VS Code warns of prompt injection in tool results {ev('rel-vs-injection')}. {UNV} Not checked which tools ask for a result review by default."],
 ]
 
 GUARDRAILS = f"""
@@ -559,7 +559,7 @@ ROLLOUT = f"""
 
 # ---- gaps ---------------------------------------------
 GAPS_LIST = [
-    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists cannot block it {ev('gh-builtin-order', 'gh-builtin')}. Two switches are untested: the MCP servers in Copilot policy, which turns off every MCP server {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. No design control covers it. Pilot both, or limit it through GitHub account permissions.",
+    f"<strong id=\"gap-github-builtin\">Built-in GitHub MCP server.</strong> Allow and deny lists exempt it {ev('gh-builtin-order', 'gh-builtin')}. In Copilot CLI, disabling MCP in the account policy stops it {ev('rel-gh-cli-policy', 'rel-gh-cli-off')}. Two switches are untested: the MCP servers in Copilot policy, which turns off every MCP server {ev('gh-policy-off')}, and Registry only {ev('gh-reg-only')}, a public preview with weaker enforcement {ev('gh-reg-preview', 'gh-reg-bypass')}. No design control covers it. Pilot both, or limit it through GitHub account permissions.",
     f"<strong id=\"gap-m365-manual\">Microsoft 365 Copilot is set by hand.</strong> Agent and plugin access has no PowerShell or API option {ev('m365-noapi')}, so the pipeline cannot keep this target in step. {UNV} No page read says whether a custom connector can be created by API. Declarative agents that carry their own MCP server were not checked.",
     f"<strong id=\"gap-one-gateway\">One gateway for Foundry and the other clients.</strong> Foundry accepts a gateway-routed MCP URL on either gateway {ev('rel-fy-endpoint', 'rel-fy-tiers')}. Verify that each Foundry tool and project connection uses the company route and that other clients still reach it.",
     f"<strong id=\"gap-m365-status\">Microsoft 365 Copilot connector status.</strong> Microsoft lists federated connectors as generally available {ev('rel-fed')}. Confirm the connector in the target tenant and Copilot experience.",

@@ -330,3 +330,7 @@ Owner's ask: simplify, keep the essentials, readers are skilled. Fact check off 
 ## 2026-11-12, no "not tested in a tenant" statements
 
 Removed "Nothing is tested in a tenant" from the lead, the first item in the gaps list, the same sentence from the preview Baseline line, and the footer sentence on tests in a tenant, laptop or agent runtime. This applies to both MCP pages, since they share the builder. Reason: the owner said a proposed design is obviously untested, so saying so adds nothing. The acceptance tests still read "Not run", and the pilot steps say what to test.
+
+## 26 Nov 2026, claims narrowed to current sources
+
+Where a source changed, the claim was narrowed or cut instead of tagged `unverified`, so each cell keeps only what a current quote says. The guardrail figure says "Allow all skips ordinary confirmations" because the source no longer says all calls.
