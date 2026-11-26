@@ -13,3 +13,7 @@ Goal: the page reads in plain words, and it shows how a request gets into AKS an
 4. Checks: `scripts/section_anchors.py`, then `--check`. Browser check on desktop and narrow width: no sideways scroll, no console errors, tabs, filters, risk map, new figure links, link into a hidden tab.
 
 Not in scope: rechecking the claims verified on 13 Nov 2026. The "Current as of" date stays unless those are rechecked.
+
+## 26 Nov 2026, inference tags
+
+Done. Open: the remaining tagged statements have no source that states them.
