@@ -17,8 +17,8 @@ from urllib.parse import quote as urlquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from section_anchors import add_anchors  # noqa: E402
-from developer_ws2_evidence import BLOCK_FRAGS, CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
-from governance_evidence import LATER, LATER_CHECKED  # noqa: E402
+from developer_ws2_evidence import BLOCK_FRAGS, CHECKED, IDS, LATER, QUOTES, SOURCES  # noqa: E402
+from governance_evidence import LATER_CHECKED  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "wip" / "Developer-WS2.html"
@@ -134,7 +134,7 @@ CLIENTS = table(
     ["Part", "Intune route", "Blocking control", "Gap"],
     [
         [L("VS Code on Windows"),
-         C("The docs name Microsoft Intune for the imported VS Code policy templates. Each release ships the ADMX files, from version 1.69. Intune's import of custom ADMX is a public preview.", ["vs-intune", "vs-admx", "in-admx-prev"]),
+         C("The VS Code docs name Microsoft Intune as a way to deploy policies. For cloud-managed devices, import the ADMX and ADML files into your management solution. Each release ships the ADMX files, from version 1.69. Intune's import of custom ADMX is a public preview.", ["vs-intune", "vs-import", "vs-admx", "in-admx-prev"]),
          C("ChatAllowedMcpServers lets only matching servers run. ChatDeniedMcpServers blocks matching servers, and deny wins. ChatAllowManagedMcpServersOnly uses only the managed allowlist.", ["vs-allow", "vs-deny", "vs-only"])
          + C("A policy value overrides the setting at every level. Computer-level policy beats user-level policy.", ["vs-over", "vs-pc"]),
          C("Only VS Code reads these policies. An MCP client other than VS Code is not covered by them.", ["vs-only"], [INF])],
@@ -194,7 +194,7 @@ SECTIONS = [
     section("answer", "The answer",
             R("The design must be: GitHub Copilot in VS Code is the only MCP client that runs, VS Code must carry a managed MCP server list, and Intune must deliver it and put it back when it changes.", tag="p"),
             C("Intune has no MCP policy of its own. No Intune page read for this work names one.", [], [INF]),
-            C("The VS Code docs name Intune for the imported policy templates on Windows and for macOS profiles.", ["vs-intune", "vs-mac-intune"]),
+            C("The VS Code docs name Intune for deploying policies on Windows and macOS.", ["vs-intune", "vs-mac-intune"]),
             C("VS Code has three MCP policies: an allowlist, a denylist and a managed-only switch. Deny wins. A policy value overrides the setting at every level.", ["vs-allow", "vs-deny", "vs-only", "vs-over"]),
             C("GitHub documents OS-level delivery for Copilot. The page does not name Intune, so the Intune route for that is an inference.", ["gh-mdm"], [INF]),
             C("Intune can deliver App Control for Business policies to Windows devices. They restrict which apps run, so code runs only if the policy says so.", ["ac-intune", "ac-apps", "ac-code"]),

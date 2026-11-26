@@ -18,7 +18,7 @@ SOURCES = {
     "a365-gw": ("Microsoft Learn, Agent 365 Tools Gateway",
                 "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-tools-gateway", "2026-11-06"),
     "a365-byo": ("Microsoft Learn, Agent 365 bring-your-own MCP server",
-                 "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server", "2026-11-05"),
+                 "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/manage-byo-mcp-server", "2026-11-16"),
     "studio": ("Microsoft Learn, Copilot Studio data loss prevention",
                "https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention", "2026-10-22"),
     "policy-ref": ("Microsoft Learn, Azure AI services policy reference",
@@ -58,13 +58,15 @@ SOURCES = {
     "intune-lic": ("Microsoft Learn, Intune licenses",
                    "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/licenses", "2026-08-06"),
     "agent-builder": ("Microsoft Learn, Agent Builder",
-                      "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder", "2026-10-27"),
+                      "https://learn.microsoft.com/en-us/plugins/agent-builder", "2026-11-16"),
     "a365-overview": ("Microsoft Learn, Agent 365 admin overview",
                       "https://learn.microsoft.com/en-us/microsoft-agent-365/admin/agent-365-overview", "2026-10-23"),
     "tk-build": ("Microsoft Learn, build plugins from an MCP server with Agents Toolkit",
-                 "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/build-mcp-plugins", "2026-09-30"),
+                 "https://learn.microsoft.com/en-us/plugins/build-mcp-plugins", "2026-11-16"),
     "tk-govern": ("Microsoft Learn, govern plugins for Microsoft 365 Copilot",
-                  "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/govern-plugins", "2026-10-12"),
+                  "https://learn.microsoft.com/en-us/plugins/govern-plugins", "2026-11-16"),
+    "tk-manage": ("Microsoft Learn, govern plugin access, tools and connections",
+                  "https://learn.microsoft.com/en-us/plugins/manage", "2026-11-16"),
     "def-discover": ("Microsoft Learn, discover local AI agents with Defender for Endpoint",
                      "https://learn.microsoft.com/en-us/defender-endpoint/discover-local-ai-agents", "2026-11-03"),
     "def-overview": ("Microsoft Learn, local AI agent discovery overview",
@@ -89,9 +91,9 @@ QUOTES = [
     ("gw-ga", "a365-gw", "You must have the Global Administrator role to connect Azure AI Gateway."),
     ("gw-preview", "a365-gw", "This feature is in preview. Preview features aren't meant for production use and might have restricted functionality."),
     ("byo-clients", "a365-byo", "Supported client surfaces during preview are Copilot Studio, Visual Studio Code, Claude Code, and GitHub Copilot CLI. Azure AI Foundry and Microsoft 365 Declarative Agents aren't supported."),
-    ("byo-runtime", "a365-byo", "Blocked MCP servers can't be invoked at runtime across any client surface."),
+    ("byo-runtime", "a365-byo", "The Agent 365 Tooling Gateway enforces server blocking for invocations routed through the gateway from supported clients. Don't assume blocking prevents direct access to the underlying server endpoint."),
     ("byo-approve", "a365-byo", "An IT admin reviews the request in the Microsoft 365 admin center and approves or rejects it. After approval, the admin grants the required Microsoft Entra permissions for the server."),
-    ("byo-tool", "a365-byo", "This capability is rolling out for supported MCP servers registered on Agent 365. Support for BYO MCP servers is planned for a future release."),
+    ("byo-tool", "a365-byo", "Individual tool blocking for BYO MCP servers is planned for a future release. Tool-level controls are rolling out for other supported MCP server types registered on Agent 365."),
     ("byo-republish", "a365-byo", "You can't republish new versions of your remote MCP server during preview."),
     ("byo-public", "a365-byo", "Your MCP server has a publicly accessible endpoint."),
     ("byo-preview", "a365-byo", "This feature is in preview. Preview features aren't meant for production use and might have restricted functionality."),
@@ -124,14 +126,14 @@ QUOTES = [
     ("ab-inv", "a365-overview", "Specific platforms supported include: Microsoft Copilot Studio, SharePoint, Agent Builder, AI Foundry, Agents Toolkit, other Microsoft agentic types (such as Researcher), and non-Microsoft agentic platforms (such as Manus or Genspark)."),
     ("ab-draft", "a365-overview", "Currently, you can only view draft agents from Copilot Studio. Support for draft agents from other platforms, such Agent Builder, Foundry, and SharePoint, aren't currently available."),
     ("ab-ext", "agent-builder", "Agent Builder doesn't support authoring actions that integrate external services."),
-    ("ab-admin", "agent-builder", "Administrators can control whether Agent Builder is available to users in their organization."),
+    ("ab-admin", "agent-builder", "Creating agents in Agent Builder is a core Copilot capability when agents are enabled. Administrators can't disable agent creation in Agent Builder separately while keeping agents enabled. They can control agent access, org-wide sharing, and approval for catalog publishing."),
     ("ab-copy", "agent-builder", "To add low-code actions, connectors, or workflows, copy the agent to Microsoft Copilot Studio"),
-    ("tk-build", "tk-build", "adding an MCP server as a plugin using the Microsoft 365 Agents Toolkit"),
+    ("tk-build", "tk-build", "This guide shows you how to integrate your service with a declarative agent for Microsoft 365 Copilot by using Microsoft 365 Agents Toolkit to add an MCP plugin that connects the agent to your server."),
     ("tk-sideload", "tk-build", "Confirm that both Custom App Upload Enabled and Copilot Access Enabled display under your Microsoft 365 account"),
-    ("tk-block", "tk-govern", "Install, uninstall, block, delete, or manage user availability for a plugin"),
+    ("tk-block", "tk-govern", "Install, uninstall, block, or delete a plugin, as supported for that item"),
     ("tk-req", "tk-govern", "Review plugin access requests or standalone MCP server registration requests"),
-    ("tk-noaccess", "tk-govern", "Plugin availability doesn't grant access to external services or data"),
-    ("tk-sep", "tk-govern", "An included agent, connector connection, or remote MCP server can also have separate controls"),
+    ("tk-noaccess", "tk-manage", "Blocking or uninstalling a plugin doesn't necessarily stop a remote service, revoke consent, remove indexed connector data, or prevent another plugin from using the same MCP server or connector."),
+    ("tk-sep", "tk-manage", "Its owner manages runtime availability, credentials, security, logging, and service configuration."),
     ("def-disc", "def-discover", "Microsoft Defender discovers supported AI agents and their MCP servers on onboarded devices"),
     ("def-av", "def-discover", "MCP server configuration discovery still requires antivirus active mode and real-time protection"),
     ("def-cmd", "def-overview", "The available configuration details can include the server name, type, endpoint, and the command used to start a local MCP server"),
@@ -165,9 +167,13 @@ QUOTES = [
     ("graph-cp", "graph-cp", "Create a new deviceManagementConfigurationPolicy object."),
     ("gh-builtin-cli", "gh-ref", "In Copilot CLI, the account's Copilot MCP policy still applies to trusted first-party servers"),
     ("gh-builtin-off", "gh-ref", "If that policy disables MCP, the built-in GitHub MCP server does not start."),
+    ("tk-users", "tk-govern", "Manage user availability for a plugin"),
 ]
 
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
 # Quotes found after CHECKED. The evidence tables name them with their own date.
 LATER_CHECKED = "2026-11-26"
-LATER = ["gh-builtin", "gh-builtin-cli", "gh-builtin-off"]
+# Every quote from these sources was matched again on LATER_CHECKED.
+LATER_SOURCES = {"a365-byo", "agent-builder", "tk-build", "tk-govern", "tk-manage"}
+LATER = [k for k, s, _ in QUOTES
+         if s in LATER_SOURCES or k in ("gh-builtin", "gh-builtin-cli", "gh-builtin-off")]

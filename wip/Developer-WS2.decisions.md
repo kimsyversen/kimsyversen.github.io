@@ -91,3 +91,7 @@ The macOS route was checked: the official VS Code policy page says each release 
 The minimum VS Code versions (1.130 allow and deny, 1.132 managed-only) appear only in the page source, not in the rendered text the checker reads. The page does not state them. It has a requirement to check the version on the policy reference page.
 
 Still true: nothing tested in a real tenant, and the two local-server gaps (allowed interpreter on Windows, macOS not on the deny list) are not solved.
+
+## D22. Intune claims follow the rewritten policy page (2026-11-26)
+
+Chosen: say the VS Code docs name Intune as a way to deploy policies, and that cloud-managed devices import the ADMX and ADML files into their management solution. Why: the page no longer names Intune for imported templates, so the old claim had no quote. "Current as of" dates stay, because only these claims were rechecked.

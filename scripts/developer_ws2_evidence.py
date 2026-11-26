@@ -17,9 +17,9 @@ _MS = "https://learn.microsoft.com/en-us/intune"
 
 NEW_SOURCES = {
     "vs-pol": ("VS Code docs, enterprise policies",
-               "https://code.visualstudio.com/docs/enterprise/policies", "none shown"),
+               "https://code.visualstudio.com/docs/enterprise/policies", "2026-11-25"),
     "in-admx": ("Microsoft Learn, import custom ADMX and ADML templates into Intune",
-                f"{_MS}/device-configuration/settings-catalog/import-custom-admx-templates", "2026-07-01"),
+                f"{_MS}/device-configuration/settings-catalog/import-custom-admx-templates", "2026-11-16"),
     "in-mac": ("Microsoft Learn, custom settings for Apple devices in Intune",
                f"{_MS}/device-configuration/templates/configure-custom-settings-apple", "2026-07-01"),
     "in-rem": ("Microsoft Learn, remediations in Intune",
@@ -48,7 +48,7 @@ REUSE = [
 NEW_QUOTES = [
     # Claude Code
     # VS Code
-    ("vs-intune", "vs-pol", "use your MDM solution (for example, Microsoft Intune) to configure the imported VS Code administrative template policies."),
+    ("vs-intune", "vs-pol", "You can deploy policies through Active Directory Group Policy or a device management solution such as Microsoft Intune."),
     ("vs-over", "vs-pol", "When a policy value is set, the value overrides the VS Code setting value configured at any level (default, user, and workspace)."),
     ("vs-allow", "vs-pol", "ChatAllowedMcpServers Allowlist of Model Context Protocol servers. When set, only servers matching an entry may be installed or run; omit entirely to allow all servers (subject to the deny list)."),
     ("vs-deny", "vs-pol", "ChatDeniedMcpServers Denylist of Model Context Protocol servers. Servers matching any entry are blocked from being installed or run, even if they also match the allow list; deny rules always take precedence."),
@@ -63,7 +63,7 @@ NEW_QUOTES = [
     # Claude Desktop
     # Cursor
     # Intune delivery
-    ("in-admx", "in-admx", "You can import custom and third-party/partner ADMX and ADML templates into the Intune admin center."),
+    ("in-admx", "in-admx", "You can import custom and partner ADMX and ADML templates into the Intune admin center."),
     ("in-admx-prev", "in-admx", "Import custom ADMX and ADML administrative templates into Microsoft Intune (public preview)"),
     ("in-mac", "in-mac", "For macOS devices, the settings must be in an .xml or .mobileconfig file."),
     ("in-chan", "in-mac", "After you select a channel and save the profile, you can't change the channel."),
@@ -97,6 +97,10 @@ for _k in REUSE:
 
 QUOTES = list(NEW_QUOTES) + [(k, _ge_q[k][0], _ge_q[k][1]) for k in REUSE] + LATE_QUOTES
 QUOTES += [(k, *_ge_q[k]) for k in ("gh-builtin-cli", "gh-builtin-off")]
+QUOTES.append(("vs-import", "vs-pol", "For cloud-managed devices, import the ADMX and ADML files into your management solution, then configure and assign the imported administrative template policies."))
+# Every quote from these sources was matched again on ge.LATER_CHECKED.
+LATER = [k for k, s, _ in QUOTES
+         if s in ("vs-pol", "in-admx") or k in ("gh-builtin", "gh-builtin-cli", "gh-builtin-off")]
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
 
 # A text fragment cannot cross an HTML block (table cell, code line). For quotes that
