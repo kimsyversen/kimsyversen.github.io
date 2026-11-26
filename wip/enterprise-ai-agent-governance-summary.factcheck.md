@@ -2,7 +2,7 @@
 
 # Fact check ledger: governance summary
 **Checked on:** 2026-11-06
-**Method:** every factual claim in the route table, automation table and gaps is tied to an exact quote (ids V1 to V91) or labelled `unverified`, `inference` or `recommendation`. Quotes live in `scripts/governance_evidence.py`.
+**Method:** every factual claim in the route table, automation table and gaps is tied to an exact quote (ids V1 to V96) or labelled `unverified`, `inference` or `recommendation`. Quotes live in `scripts/governance_evidence.py`.
 **Not tested:** nothing was run in a real tenant, on a consultant device or on an agent runtime. All verdicts come from documentation.
 
 ## Mechanical quote check
@@ -15,11 +15,13 @@ Rerun on 2026-11-26: 90 quotes. V5, V89 and V90 found. V15, V17 (a365-byo), V50 
 
 Second run on 2026-11-26: those seven quotes were replaced with the current wording, V91 was added, and the same command found 91 quotes, 0 problems. The Agent Builder, build and govern pages moved to `learn.microsoft.com/en-us/plugins/`. V56 and V57 now come from the new "govern plugin access, tools and connections" page. Only the rows citing changed quotes were reread. "Documentation checked" was not moved.
 
+Third run on 2026-11-26: Work IQ Dev Tools added with V92 to V96, from the build page and the Work IQ Dev Tools quickstart and CLI reference on `microsoft.github.io/wiqd/`. The same command found 96 quotes, 0 problems. The quickstart and the reference show no page date. No statement that the tool is generally available or in preview was found in the docs home page, quickstart, CLI reference or build page, so the row carries no preview tag. Nothing was installed or run.
+
 Changed meaning (2026-11-26):
 - BYO block (V15): was a block on runtime use from every client surface. Now covers calls routed through the Agent 365 gateway from supported clients, and Microsoft says not to assume direct access is prevented.
 - Agent Builder (V50): was an admin switch for Agent Builder. Now agent creation cannot be disabled separately while agents stay enabled.
 - Plugins (V56): the statement that plugin availability grants no access is gone. The new page says a block or uninstall does not necessarily stop the remote service, revoke consent or stop another plugin using the same server.
-- Build page (V52): it now recommends starting with Work IQ Dev Tools and keeps the Agents Toolkit steps for existing projects. Not added to the page.
+- Build page (V52): it now recommends starting with Work IQ Dev Tools and keeps the Agents Toolkit steps for existing projects. Added to the page later the same day (next paragraph).
 
 ## Verdicts
 
@@ -30,7 +32,7 @@ Changed meaning (2026-11-26):
 | BYO row | Reread 2026-11-26. V15 now covers only calls routed through the gateway from supported clients, so the row no longer says a blocked server cannot be invoked from any client. V17 says blocking single tools on BYO servers is planned. Confirmed by V14 to V20 and V42. V42 shows registration through the `a365` command line, so registration can be scripted. Approval is a person in the admin center. Approval from a pipeline: unverified. |
 | Copilot Studio row | V21 confirms connector blocking also blocks MCP tools. V43 shows the `New-DlpPolicy` PowerShell command creates a data policy, so a pipeline could call it. Mapping the Git list to connector entries is our own build, labelled recommendation and untested. Moved from inference. |
 | Foundry row | V22 to V24 confirm the approved-tools policy, Deny and the non-compliant marking of existing resources. V25 covers the Azure CLI route. Runtime blocking: inference (not shown). The pipeline is our own build and untested. |
-| Agents Toolkit row | Reread 2026-11-26. V52 says the Agents Toolkit adds an MCP plugin that connects a declarative agent to a server. V53 says a developer needs custom app upload enabled to sideload, so the admin setting matters. V54 says an admin can install, uninstall, block or delete a plugin, as supported for that item. V91 covers user availability. V55 says admins review plugin access requests and standalone MCP server registration requests. V56 says blocking or uninstalling does not necessarily stop the remote service, revoke consent or stop another plugin using the same server. V57 says the remote service's owner manages availability, credentials, security, logging and configuration. Verdict: documented. Whether the Git list, the Agent 365 gateway or the network firewall applies to these plugins is not stated: unverified. |
+| Agents Toolkit and Work IQ Dev Tools row | Reread 2026-11-26. V52 and V95 say a remote MCP server can be added to a declarative agent, by the Toolkit or by `wiqd agent add action`. V92 recommends Work IQ Dev Tools for supported pro-code declarative-agent and plugin scenarios, V93 keeps the Toolkit instructions for existing projects and workflows that require them, V94 says Work IQ Dev Tools does not target custom engine agents. V96 says a tenant administrator must approve a submitted plugin before users find it in the catalog. V53 says a developer needs custom app upload enabled to sideload in the Toolkit walkthrough. V54 says an admin can install, uninstall, block or delete a plugin, as supported for that item. V91 covers user availability. V55 says admins review plugin access requests and standalone MCP server registration requests. V56 says blocking or uninstalling does not necessarily stop the remote service, revoke consent or stop another plugin using the same server. V57 says the remote service's owner manages availability, credentials, security, logging and configuration. Verdict: documented. Whether sharing a plugin with named users needs approval was not checked and is not on the page. Whether the Git list, the Agent 365 gateway or the network firewall applies to these plugins is not stated: unverified. |
 | Agent Builder row | Reread 2026-11-26. V47 confirms Agent 365 inventories Agent Builder agents. V48 says draft agents from Agent Builder are not shown. V49 says Agent Builder has no external-service actions. V51 says connectors and workflows need a copy to Copilot Studio. V50 says agent creation cannot be disabled separately while agents stay enabled, and that admins control agent access, org-wide sharing and catalog publishing approval (corrected: the earlier row said admins can switch Agent Builder on or off). MCP servers are not mentioned on the Agent Builder page: unverified (not observed). Per-server allow or block: not shown. The route is not in the 2.4 figure. |
 | Local stdio row | V6 and V7 confirm the exact-command rule and the wildcard limit. V31 and V33 confirm Global Secure Access does not see local servers. V58 and V61 confirm Defender for Endpoint discovers supported local servers on devices, and is not a complete inventory. No source says Defender blocks a server (unverified). |
 | Defender local discovery (path 4, local row, gap) | Checked 2026-11-06 against three Microsoft Learn pages, each last updated 2026-11-03. V58 discovers agents and their MCP servers. V59 needs antivirus active mode and real-time protection. V60 lists the details Defender can report. V61 not a complete inventory. V62 Plan 2 is the minimum license. V63 generally available on supported Windows and macOS, except preview scenarios. V64 the VS Code GitHub Copilot extension row has both ticks. V65 discovery does not prove use. Blocking: no source read shows it, labelled unverified. Corrects an earlier version of this page that said only the GitHub list reaches local servers. |
@@ -178,7 +180,7 @@ label	unverified
 label	Agent 365 bring-your-own registry preview Agent 365 BYO MCP
 label	Copilot Studio Power Platform data policies
 label	Agent Builder Microsoft 365 Copilot, users build their own agents
-label	Agents Toolkit Microsoft 365 Agents Toolkit, developers build declarative agents with MCP plugins
+label	Agents Toolkit and Work IQ Dev Tools developers build declarative agents with MCP plugins
 label	inference
 label	Foundry agent tools preview Azure Policy approved tools
 label	Local MCP via stdio GitHub serverCommand list

@@ -67,6 +67,10 @@ SOURCES = {
                   "https://learn.microsoft.com/en-us/plugins/govern-plugins", "2026-11-16"),
     "tk-manage": ("Microsoft Learn, govern plugin access, tools and connections",
                   "https://learn.microsoft.com/en-us/plugins/manage", "2026-11-16"),
+    "wiqd-quick": ("Work IQ Dev Tools docs, quickstart",
+                   "https://microsoft.github.io/wiqd/getting-started/quickstart/", "none shown"),
+    "wiqd-ref": ("Work IQ Dev Tools docs, CLI reference",
+                 "https://microsoft.github.io/wiqd/cli/reference/", "none shown"),
     "def-discover": ("Microsoft Learn, discover local AI agents with Defender for Endpoint",
                      "https://learn.microsoft.com/en-us/defender-endpoint/discover-local-ai-agents", "2026-11-03"),
     "def-overview": ("Microsoft Learn, local AI agent discovery overview",
@@ -168,12 +172,18 @@ QUOTES = [
     ("gh-builtin-cli", "gh-ref", "In Copilot CLI, the account's Copilot MCP policy still applies to trusted first-party servers"),
     ("gh-builtin-off", "gh-ref", "If that policy disables MCP, the built-in GitHub MCP server does not start."),
     ("tk-users", "tk-govern", "Manage user availability for a plugin"),
+    ("wiqd-rec", "tk-build", "Recommended: Start with Work IQ Dev Tools for supported pro-code declarative-agent and plugin scenarios."),
+    ("wiqd-old", "tk-build", "Toolkit-based instructions remain available for existing projects and workflows that require them."),
+    ("wiqd-engine", "tk-build", "WIQD doesn't target custom engine agents."),
+    ("wiqd-mcp", "wiqd-ref", "Add an OpenAPI or remote MCP action to a declarative agent."),
+    ("wiqd-approve", "wiqd-quick", "Submission is not approval: a tenant administrator must approve the plugin before users can discover it in the catalog."),
 ]
 
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
 # Quotes found after CHECKED. The evidence tables name them with their own date.
 LATER_CHECKED = "2026-11-26"
 # Every quote from these sources was matched again on LATER_CHECKED.
-LATER_SOURCES = {"a365-byo", "agent-builder", "tk-build", "tk-govern", "tk-manage"}
+LATER_SOURCES = {"a365-byo", "agent-builder", "tk-build", "tk-govern", "tk-manage",
+                 "wiqd-quick", "wiqd-ref"}
 LATER = [k for k, s, _ in QUOTES
          if s in LATER_SOURCES or k in ("gh-builtin", "gh-builtin-cli", "gh-builtin-off")]

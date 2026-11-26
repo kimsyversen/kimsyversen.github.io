@@ -385,7 +385,7 @@ section[id]{scroll-margin-top:52px}
       <p class="lead">How we govern MCP servers and what to do with them. The page shows what we can do, what we cannot do and which tool does the job, then the target state. Open questions are at the end.</p>
       <dl class="spec">
         <dt class="lbl">Scope</dt><dd>MCP servers, agents and consultant access</dd>
-        <dt class="lbl">Evidence</dt><dd><a href="#evidence">91 exact quotes</a> and the <a href="enterprise-ai-agent-security-recommendation.html">long page</a></dd>
+        <dt class="lbl">Evidence</dt><dd><a href="#evidence">96 exact quotes</a> and the <a href="enterprise-ai-agent-security-recommendation.html">long page</a></dd>
         <dt class="lbl">Kinds of claim</dt><dd>A product fact has a quote. The risk tiers, action policy, checklist, runbook and target state are our design choices, labelled recommendation. No source can confirm them. A gap is labelled unverified.</dd>
         <dt class="lbl">Tenant tests</dt><dd class="w">None run.</dd>
       </dl>
@@ -690,11 +690,11 @@ section[id]{scroll-margin-top:52px}
             <div role="cell"><b class="matrix-label" aria-hidden="true">Evidence</b><p><a class="ev" href="#ev-V47">V47</a> <a class="ev" href="#ev-V48">V48</a> <a class="ev" href="#ev-V49">V49</a> <a class="ev" href="#ev-V50">V50</a> <a class="ev" href="#ev-V51">V51</a></p></div>
           </div>
           <div class="matrix-row" id="route-toolkit" role="row">
-            <h4 role="rowheader">Agents Toolkit <span class="rt">Microsoft 365 Agents Toolkit, developers build declarative agents with MCP plugins</span></h4>
-            <div role="cell"><b class="matrix-label" aria-hidden="true">We can</b><p>Build a declarative agent that uses an MCP server as a plugin. Block a plugin, where supported for that item, and manage who can use it in the Microsoft 365 admin center. Review plugin access requests and standalone MCP server registration requests there.</p></div>
-            <div role="cell"><b class="matrix-label" aria-hidden="true">We cannot</b><p>Count a plugin block as control of the server: it does not necessarily stop the remote service, revoke consent or stop another plugin from using the same server. Apply the Git list to these plugins: no source shows it. <span class="tg u">unverified</span> Say whether the Agent 365 gateway or the network firewall sees this traffic: not shown. <span class="tg u">unverified</span></p></div>
-            <div role="cell"><b class="matrix-label" aria-hidden="true">Admin work</b><p>A person approves or blocks each plugin and each registration request. A developer needs custom app upload enabled to test. The remote server's owner manages its availability, credentials, security, logging and configuration.</p></div>
-            <div role="cell"><b class="matrix-label" aria-hidden="true">Evidence</b><p><a class="ev" href="#ev-V52">V52</a> <a class="ev" href="#ev-V53">V53</a> <a class="ev" href="#ev-V54">V54</a> <a class="ev" href="#ev-V55">V55</a> <a class="ev" href="#ev-V56">V56</a> <a class="ev" href="#ev-V57">V57</a> <a class="ev" href="#ev-V91">V91</a></p></div>
+            <h4 role="rowheader">Agents Toolkit and Work IQ Dev Tools <span class="rt">developers build declarative agents with MCP plugins</span></h4>
+            <div role="cell"><b class="matrix-label" aria-hidden="true">We can</b><p>Build a declarative agent that uses a remote MCP server. Microsoft recommends Work IQ Dev Tools for supported scenarios, not custom engine agents, and keeps Toolkit instructions for existing projects and workflows that need them. In the Microsoft 365 admin center, block a plugin where supported, manage who can use it, and review access and server registration requests.</p></div>
+            <div role="cell"><b class="matrix-label" aria-hidden="true">We cannot</b><p>Count a plugin block as control of the server: it does not necessarily stop the remote service, revoke consent or stop another plugin using the same server. Apply the Git list to these plugins: no source shows it. <span class="tg u">unverified</span> Say whether the Agent 365 gateway or the network firewall sees this traffic: not shown. <span class="tg u">unverified</span></p></div>
+            <div role="cell"><b class="matrix-label" aria-hidden="true">Admin work</b><p>A person approves or blocks each plugin and each registration request. A plugin submitted to the tenant catalog with Work IQ Dev Tools needs administrator approval before users can discover it there. A developer testing with the Toolkit needs custom app upload enabled. The remote server's owner manages its availability, credentials, security, logging and configuration.</p></div>
+            <div role="cell"><b class="matrix-label" aria-hidden="true">Evidence</b><p><a class="ev" href="#ev-V52">V52</a> <a class="ev" href="#ev-V53">V53</a> <a class="ev" href="#ev-V54">V54</a> <a class="ev" href="#ev-V55">V55</a> <a class="ev" href="#ev-V56">V56</a> <a class="ev" href="#ev-V57">V57</a> <a class="ev" href="#ev-V91">V91</a> <a class="ev" href="#ev-V92">V92</a> <a class="ev" href="#ev-V93">V93</a> <a class="ev" href="#ev-V94">V94</a> <a class="ev" href="#ev-V95">V95</a> <a class="ev" href="#ev-V96">V96</a></p></div>
           </div>
           <div class="matrix-row" id="pub-foundry" role="row">
             <h4 role="rowheader">Foundry agent tools <span class="tg pv">preview</span> <span class="rt">Azure Policy approved tools</span></h4>
@@ -739,7 +739,7 @@ section[id]{scroll-margin-top:52px}
             <div role="cell"><b class="matrix-label" aria-hidden="true">Evidence</b><p><a class="ev" href="#ev-V27">V27</a> <a class="ev" href="#ev-V28">V28</a> <a class="ev" href="#ev-V44">V44</a></p></div>
           </div>
       </div>
-      <p class="q-note">The network firewall, Agent Builder and Agents Toolkit rows are proposed additions. The approval diagram above does not show them. The Admin work column describes our design unless it cites a quote.</p>
+      <p class="q-note">The network firewall, Agent Builder and developer tools rows are proposed additions. The approval diagram above does not show them. The Admin work column describes our design unless it cites a quote.</p>
     </div>
   </section>
 
@@ -852,7 +852,7 @@ section[id]{scroll-margin-top:52px}
 <tr><td>Allowed MCP servers in VS Code and GitHub Copilot</td><td>GitHub <code>managed-settings.json</code></td><td><a href="#pub-vscode">Route table</a>. <a class="ev" href="#ev-V1">V1</a> <a class="ev" href="#ev-V2">V2</a></td></tr>
 <tr><td>Approve and block remote MCP servers</td><td>Agent 365 Tools Gateway and BYO registry</td><td><a href="#pub-a365">Gateway</a> and <a href="#route-a365-byo">BYO</a> rows. Both preview. <a class="ev" href="#ev-V13">V13</a> <a class="ev" href="#ev-V20">V20</a></td></tr>
 <tr><td>Block connectors in Copilot Studio</td><td>Power Platform data policies</td><td><a href="#route-studio">Studio row</a>. <a class="ev" href="#ev-V21">V21</a></td></tr>
-<tr><td>Agents that developers build with MCP plugins</td><td>Agents Toolkit, then the admin center</td><td><a href="#route-toolkit">Agents Toolkit row</a>. <a class="ev" href="#ev-V52">V52</a> <a class="ev" href="#ev-V54">V54</a> <a class="ev" href="#ev-V55">V55</a> <a class="ev" href="#ev-V56">V56</a></td></tr>
+<tr><td>Agents that developers build with MCP plugins</td><td>Work IQ Dev Tools or Agents Toolkit, then the admin center</td><td><a href="#route-toolkit">Developer tools row</a>. <a class="ev" href="#ev-V52">V52</a> <a class="ev" href="#ev-V54">V54</a> <a class="ev" href="#ev-V55">V55</a> <a class="ev" href="#ev-V56">V56</a> <a class="ev" href="#ev-V92">V92</a> <a class="ev" href="#ev-V95">V95</a></td></tr>
 <tr><td>Agents that users build themselves</td><td>Agent Builder, then Copilot Studio</td><td><a href="#route-builder">Agent Builder row</a>. <a class="ev" href="#ev-V47">V47</a> <a class="ev" href="#ev-V49">V49</a> <a class="ev" href="#ev-V50">V50</a> <a class="ev" href="#ev-V51">V51</a></td></tr>
 <tr><td>Restrict tools in Foundry</td><td>Azure Policy approved tools</td><td><a href="#pub-foundry">Foundry row</a>. Preview. <a class="ev" href="#ev-V22">V22</a></td></tr>
 <tr><td>Catalog of MCP servers</td><td>Azure API Center</td><td><a href="#pub-apic">API Center row</a>. <a class="ev" href="#ev-V27">V27</a></td></tr>
@@ -975,7 +975,7 @@ section[id]{scroll-margin-top:52px}
 <li><strong>GitHub exemptions.</strong> Allow and deny rules skip custom agent profiles. Deny rules exempt the built-in server, but in Copilot CLI disabling MCP in the account policy stops it. Coverage varies by environment. <a class="ev" href="#ev-V4">V4</a> <a class="ev" href="#ev-V5">V5</a> <a class="ev" href="#ev-V8">V8</a> <a class="ev" href="#ev-V89">V89</a> <a class="ev" href="#ev-V90">V90</a></li>
 <li><strong>Direct connections.</strong> The gateway does not route agents by itself. Restrict server connectivity so the gateway is the only caller. Permissions at the API or data source still apply. <a class="ev" href="#ev-V40">V40</a> <a class="ev" href="#ev-V41">V41</a></li>
 <li><strong>Agent Builder.</strong> It has no external actions of its own, and draft agents from it are not in the inventory. Its creation of agents cannot be switched off while agents stay enabled. <a class="ev" href="#ev-V48">V48</a> <a class="ev" href="#ev-V49">V49</a> <a class="ev" href="#ev-V50">V50</a> <a class="ev" href="#ev-V51">V51</a></li>
-<li><strong>Agents Toolkit.</strong> Developers can add an MCP server as a plugin to a declarative agent. The admin center can block the plugin, but no source shows the Git list, the gateway or the firewall applying to it. <a class="ev" href="#ev-V52">V52</a> <a class="ev" href="#ev-V54">V54</a> <a class="ev" href="#ev-V56">V56</a> <span class="tg u">unverified</span></li>
+<li><strong>Agents Toolkit and Work IQ Dev Tools.</strong> Developers can add a remote MCP server to a declarative agent. The admin center can block the plugin, but no source shows the Git list, the gateway or the firewall applying to it. <a class="ev" href="#ev-V52">V52</a> <a class="ev" href="#ev-V54">V54</a> <a class="ev" href="#ev-V56">V56</a> <a class="ev" href="#ev-V95">V95</a> <span class="tg u">unverified</span></li>
 <li><strong>More gaps are on the long page:</strong> unmanaged consultant laptops, personal Copilot access, guest licensing, Sentinel connectors and policy start-up behavior. See its <a href="enterprise-ai-agent-security-recommendation.html#part5">known gaps</a>.</li>
 </ol></div>
     </div>
@@ -1002,7 +1002,7 @@ section[id]{scroll-margin-top:52px}
       <h2 id="h-e"><a class="sec-link" href="#h-e">Quotes behind the route table</a></h2>
     </div>
     <div class="blk" style="margin-top:20px">
-      <p class="sub">Each quote was found word for word on its source page on 2026-11-06, except V5, V14, V15, V16, V17, V18, V19, V20, V42, V49, V50, V51, V52, V53, V54, V55, V56, V57, V89, V90, V91, found on 2026-11-26. The link opens the page at the quote. Page date is the date the page shows.</p>
+      <p class="sub">Each quote was found word for word on its source page on 2026-11-06, except V5, V14, V15, V16, V17, V18, V19, V20, V42, V49, V50, V51, V52, V53, V54, V55, V56, V57, V89, V90, V91, V92, V93, V94, V95, V96, found on 2026-11-26. The link opens the page at the quote. Page date is the date the page shows.</p>
       <div class="tbl-wrap"><table class="tbl src">
         <thead><tr><th>Id</th><th>Quote</th><th>Source</th><th>Page date</th></tr></thead>
         <tbody>
@@ -1097,6 +1097,11 @@ section[id]{scroll-margin-top:52px}
 <tr id="ev-V89"><td>V89</td><td>In Copilot CLI, the account's Copilot MCP policy still applies to trusted first-party servers</td><td><a href="https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings#:~:text=In%20Copilot%20CLI%2C%20the,still%20applies%20to%20trusted%20first%2Dparty%20servers">GitHub Docs, enterprise managed settings reference</a></td><td>none shown</td></tr>
 <tr id="ev-V90"><td>V90</td><td>If that policy disables MCP, the built-in GitHub MCP server does not start.</td><td><a href="https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings#:~:text=If%20that%20policy%20disables%20MCP%2C%20the%20built%2Din%20GitHub%20MCP%20server%20does%20not%20start.">GitHub Docs, enterprise managed settings reference</a></td><td>none shown</td></tr>
 <tr id="ev-V91"><td>V91</td><td>Manage user availability for a plugin</td><td><a href="https://learn.microsoft.com/en-us/plugins/govern-plugins#:~:text=Manage%20user%20availability%20for%20a%20plugin">Microsoft Learn, govern plugins for Microsoft 365 Copilot</a></td><td>2026-11-16</td></tr>
+<tr id="ev-V92"><td>V92</td><td>Recommended: Start with Work IQ Dev Tools for supported pro-code declarative-agent and plugin scenarios.</td><td><a href="https://learn.microsoft.com/en-us/plugins/build-mcp-plugins#:~:text=Recommended%3A%20Start%20with%20Work%20IQ%20Dev,supported%20pro%2Dcode%20declarative%2Dagent%20and%20plugin%20scenarios.">Microsoft Learn, build plugins from an MCP server with Agents Toolkit</a></td><td>2026-11-16</td></tr>
+<tr id="ev-V93"><td>V93</td><td>Toolkit-based instructions remain available for existing projects and workflows that require them.</td><td><a href="https://learn.microsoft.com/en-us/plugins/build-mcp-plugins#:~:text=Toolkit%2Dbased%20instructions%20remain%20available%20for%20existing,projects%20and%20workflows%20that%20require%20them.">Microsoft Learn, build plugins from an MCP server with Agents Toolkit</a></td><td>2026-11-16</td></tr>
+<tr id="ev-V94"><td>V94</td><td>WIQD doesn't target custom engine agents.</td><td><a href="https://learn.microsoft.com/en-us/plugins/build-mcp-plugins#:~:text=WIQD,target%20custom%20engine%20agents.">Microsoft Learn, build plugins from an MCP server with Agents Toolkit</a></td><td>2026-11-16</td></tr>
+<tr id="ev-V95"><td>V95</td><td>Add an OpenAPI or remote MCP action to a declarative agent.</td><td><a href="https://microsoft.github.io/wiqd/cli/reference/#:~:text=Add%20an%20OpenAPI%20or%20remote%20MCP%20action%20to%20a%20declarative%20agent.">Work IQ Dev Tools docs, CLI reference</a></td><td>none shown</td></tr>
+<tr id="ev-V96"><td>V96</td><td>Submission is not approval: a tenant administrator must approve the plugin before users can discover it in the catalog.</td><td><a href="https://microsoft.github.io/wiqd/getting-started/quickstart/#:~:text=Submission%20is%20not%20approval%3A%20a%20tenant,can%20discover%20it%20in%20the%20catalog.">Work IQ Dev Tools docs, quickstart</a></td><td>none shown</td></tr>
         </tbody>
       </table></div>
     </div>
