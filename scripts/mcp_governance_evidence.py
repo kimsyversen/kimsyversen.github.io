@@ -367,6 +367,9 @@ SOURCES.update({
     "ga-apim-network": ("Microsoft Learn, API Management outbound virtual network integration",
                         "https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound", None),
 })
+SOURCES["apim-portal"] = ("Microsoft Learn, create an API Management instance in the Azure portal",
+                          "https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance", "2026-03-27")
+
 RELEASE_QUOTES = [
     ("rel-gateway", "ga-launch", "general availability of Azure AI Gateway"),
     ("rel-regions", "ga-launch", "available today in 17 Azure regions"),
@@ -402,6 +405,8 @@ RELEASE_QUOTES = [
     ("rel-gh-cli-off", "gh-ref", "If that policy disables MCP, the built-in GitHub MCP server does not start."),
     ("rel-vs-injection", "vs-appr", "Prompt injection in files or tool results, or an agent mistake, can cause unintended changes or actions on external services."),
     ("rel-vs-hook-deny", "ga-vs-hooks", "Tool calls denied by a hook show the reason and are identified as blocked by hooks rather than ordinary failures."),
+    ("rel-vs-intune", "vs-pol", "You can deploy policies through Active Directory Group Policy or a device management solution such as Microsoft Intune."),
+    ("rel-apim-portal", "apim-portal", "This quickstart describes the steps for creating a new API Management instance by using the Azure portal."),
 
 ]
 RELEASE_PREVIEW = {"rel-network", "rel-tool-threat", "rel-agent-admin", "rel-fy-model-preview", "rel-update-pe", "rel-vs-hooks", "rel-vs-hook-deny"}

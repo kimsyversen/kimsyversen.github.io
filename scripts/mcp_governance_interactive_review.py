@@ -65,7 +65,7 @@ def apply_review(page, ev, inf, unv, evp):
         f'API Management validates Entra tokens or subscription keys {ev("in-entra", "in-key")}; its managed identity can authenticate to a backend {ev("out-mi")}. '
         f'OBO preserves user delegation and requires a downstream token {ev("review-obo", "review-obo-token")}. '
         f'For a delegated variant, keep gateway-only networking, acquire the correct backend audience token and retain user authorization. '
-        f'{unv} No OBO implementation or cross-client sign-in flow has been tested. A subscription key alone does not identify an individual user. {inf}'))
+        f'{unv} No OBO implementation or cross-client sign-in flow has been tested. A subscription key on its own is not strong authentication {ev("review-key-weak")}.'))
     control('backend', requirement=(
         'Disable public backend access and permit the company gateway over a private path. Require valid backend authentication and least-privilege tool authorization. '
         f'Select hosting and a gateway tier that support the required private connection; classic Functions Consumption cannot meet this private-endpoint baseline.'))

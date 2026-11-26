@@ -194,5 +194,10 @@ PREVIEW_ONLY.difference_update(HISTORICAL | {"pv-aig-separate", "pv-res-change",
                                             "pv-shared-cred", "pv-aig-comb", "pv-gr-mde-how", "pv-gr-mde-vs", "pv-gr-def-local", "review-def-local-sep"})
 PREVIEW_ONLY.update({"gr-vs-hook", "gr-vs-hook-not", "vs-hook-preview", "gateway-network", "gateway-threat", "a365-gateway-preview", "studio-copilot-preview"})
 
+SOURCES["review-apim-auth"] = ("Microsoft Learn, API Management authentication and authorization",
+                              "https://learn.microsoft.com/en-us/azure/api-management/authentication-authorization-overview", "2025-09-25")
+QUOTES.append(("review-key-weak", "review-apim-auth", "On its own, a subscription key isn't a strong form of authentication"))
+IDS["review-key-weak"] = f"V{len(QUOTES)}"
+
 QUOTES.extend(RELEASE_QUOTES)
 IDS.update(RELEASE_IDS)

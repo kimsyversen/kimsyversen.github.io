@@ -334,3 +334,7 @@ Removed "Nothing is tested in a tenant" from the lead, the first item in the gap
 ## 26 Nov 2026, claims narrowed to current sources
 
 Where a source changed, the claim was narrowed or cut instead of tagged `unverified`, so each cell keeps only what a current quote says. The guardrail figure says "Allow all skips ordinary confirmations" because the source no longer says all calls.
+
+## 26 Nov 2026, inference tags
+
+A tag is removed only when a quoted source states the claim, or the claim was narrowed to what a source states. A repeated conclusion is cut and left at its tagged home. Interpretation keeps its tag.

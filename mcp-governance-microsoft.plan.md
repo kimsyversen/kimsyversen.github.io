@@ -166,3 +166,7 @@ Owner's ask: simplify, keep the essentials, readers are skilled. Fact check off 
 ## 2026-11-11: remove open questions
 
 - [x] Remove the Open questions block, rename the section Gaps, update the ledger and notes
+
+## 26 Nov 2026, verify inference tags
+
+- [x] Check tagged claims against primary sources, edit builders, rebuild, run quote and label checks.

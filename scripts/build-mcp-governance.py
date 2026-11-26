@@ -289,11 +289,11 @@ DESIGN_ROWS = [
      f"{control_link('m365', 'Policy sync, Microsoft 365 Copilot')}; {control_link('m365-network', 'Microsoft 365 Copilot network path')}"],
     [pname("Client and device controls", "Enforcement"),
      "Managed URL policies and, on Windows, outbound firewall rules where applicable.",
-     f"Intune and VS Code policy {INF}. They sit on the device, so they do not cover Microsoft 365 Copilot.",
-     f"{control_link('client', 'Client allowlist')}; {control_link('windows', 'Windows outbound limits')}; {control_link('stdio', 'Local stdio servers')}"],
+     f"VS Code policy is deployed with Group Policy or a device management solution such as Microsoft Intune {ev('rel-vs-intune')}. Windows firewall rules are set in Intune {ev('ifw-block')}.",
+     f"{control_link('client', 'Client allowlist')}; {control_link('windows', 'Windows outbound limits')}; {control_link('stdio', 'Local stdio servers')}; {control_link('m365-network', 'Microsoft 365 Copilot network path')}"],
     [pname("Azure API Management", "Gateway"),
      f"The company MCP gateway for every client. AI gateway capabilities extend the API Management service {ev('apim-ai-not-separate')}.",
-     f"Azure {INF}. MCP server management is listed for classic and v2 tiers {ev('mcp-tiers')}.",
+     f"Set up in the Azure portal {ev('rel-apim-portal')}. MCP server management is listed for classic and v2 tiers {ev('mcp-tiers')}.",
      f"{control_link('gateway', 'Gateway')}; {control_link('backend', 'Backend isolation')}; {control_link('identity', 'Identity')}. Use Standard v2 or Premium v2 for the private backend {ev('rel-apim-network')}."],
     [pname("AI Gateway integrated with Foundry", "Model and tool connections"),
      f"Foundry can consume models via Azure AI Gateway or API Management {ev('rel-fy-model')}.",
@@ -363,7 +363,7 @@ FIGURE = f"""
 # ---- controls ------------------------------------------------------------
 GR_PREV = [
     ["Tool call and tool response guardrails", "Foundry", "3 and 6",
-     f"Both are in preview {evp('gr-fy-call', 'gr-fy-resp')}. The response control scans for indirect prompt injection {evp('pv-gr-fy-indirect')}. Controls take no effect for tools outside the supported list {evp('pv-gr-fy-support', 'pv-gr-fy-list', 'pv-gr-fy-noeffect')}. {INF} Interpretation by AI: the list does not name MCP, so do not rely on them for MCP."],
+     f"Both are in preview {evp('gr-fy-call', 'gr-fy-resp')}. The response control scans for indirect prompt injection {evp('pv-gr-fy-indirect')}. Controls take no effect for tools outside the supported list {evp('pv-gr-fy-support', 'pv-gr-fy-list', 'pv-gr-fy-noeffect')}. The list does not name MCP, so do not rely on them for MCP."],
 ]
 GR_PREV_RAW = [
     ("opt-preview", ["Threat detection", "Copilot Studio", "3", f"An external service allows or blocks a tool call. The page is prerelease {evp('pv-gr-cs-pre', 'pv-gr-cs-det')}. By default the call goes ahead if the service is silent for one second. This can be changed to block {evp('pv-gr-cs-1s', 'pv-gr-cs-errblock')}. It runs only with generative orchestration {evp('pv-gr-cs-gen')}. The agent shares data with the provider {evp('pv-gr-cs-share')}."]),
