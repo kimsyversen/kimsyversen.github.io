@@ -113,3 +113,10 @@ Hid the Risks tab in navigation at the owner's request. Kept its panel available
 4. Update fact check, decisions, index dates. Done.
 5. Run the quote checker, anchor check and browser check. Done.
 6. Second full pass that finds nothing. Done.
+
+## 26 November 2026: verify inference tags (/goal)
+
+1. Search primary sources for every tagged statement. Done.
+2. Add quotes, narrow wording to the quote, keep the tag where only AI interpretation supports it. Done.
+3. Show quotes beside general view text, update the checker and the fact check. Done.
+4. Run the quote checker, anchor check and browser check. Done.

@@ -1204,6 +1204,25 @@ label	MCP specification: tools
 label	Model Context Protocol, version 2026-07-28. Human in the loop and rate limiting.
 label	All
 label	VS Code: manage AI settings in enterprise environments
+label	OWASP entry page. Beta list.
+label	Invariant Labs research blog.
+label	Model Context Protocol. Access token rules.
+label	OWASP community page. Sensitive data in URLs.
+label	Visual Studio Code. Workspace Trust review.
+label	OWASP MCP01: Token Mismanagement and Secret Exposure
+label	OWASP MCP02: Privilege Escalation via Scope Creep
+label	OWASP MCP03: Tool Poisoning
+label	OWASP MCP04: Software Supply Chain Attacks and Dependency Tampering
+label	OWASP MCP05: Command Injection and Execution
+label	OWASP MCP06: Intent Flow Subversion
+label	OWASP MCP07: Insufficient Authentication and Authorization
+label	OWASP MCP08: Lack of Audit and Telemetry
+label	OWASP MCP09: Shadow MCP Servers
+label	OWASP MCP10: Context Injection and Over-Sharing
+label	VS Code agent security docs
+label	OWASP: information exposure through query strings in URL
+label	MCP authorization (2026-07-28)
+label	Invariant Labs: MCP tool poisoning attacks
 ```
 <!-- End reviewed presentation text (Microsoft view) -->
 
@@ -1611,3 +1630,110 @@ Date: 23 Nov 2026. New General and Microsoft reviewers; verifier: a different pe
 | Autostart row says "starts"; docs say "can start" | REJECT. The setting description documents the default as "Start servers that have never run or whose configuration has changed"; the "can" in the intro only says autostart exists. |
 
 Clean count: 2. Stop criterion met (iterations 38 and 39).
+
+# 26 November 2026: inference tags checked against sources
+
+Scope: the statements that carried `[inference]`. Each new quote was matched by the check script against the page fetched on 26 November 2026. The other sources were not reviewed again, so "Facts checked" stays at 14 November 2026. Product behaviour was not tested.
+
+OWASP names MCP06 "Prompt Injection via Contextual Payloads" on the index page (quote `owinject`) and "Intent Flow Subversion" on the entry page.
+
+## Changed text
+
+| Where | Old | New |
+|---|---|---|
+| General view | By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. So each developer decides what the agent can reach, unless policy limits it. | By default in Claude Code anyone can connect any MCP server. Anthropic reviews connectors before listing them in its Directory, but does not security-audit or manage any MCP server. |
+| General view | Typical findings: Unrestricted server configuration, required servers missing from the allowlist, user-assigned names used as identity checks. | Look for: Unrestricted server configuration, required servers blocked because the allowlist misses them, user-assigned names used as identity checks. |
+| General view | Who wrote each approved server, and how does it update? | Who owns each approved server, which version runs, and how does it update? |
+| General view | Typical findings: Servers installed from any package, no review of updates, unpinned versions. | Look for: Servers installed without signing or provenance checks, dependencies fetched automatically, floating versions. |
+| General view | Typical findings: One-click setup that hides the command, servers started with no sandbox. | Look for: One-click setup that hides the command, servers started with no sandbox. |
+| General view | Are untrusted reading tasks separated into sessions without tools that can write, send or run things? | When the task is to read untrusted content, are tool calls that write or delete blocked? |
+| General view | Typical findings: One agent holding both a reader of outside text and a server that can send or change things. | Look for: One agent holding both a reader of outside text and a server that can send or change things. |
+| General view | Typical findings: No watch on MCP config files, overly long-lived credentials. | Look for: No watch on MCP config files, overly long-lived credentials. |
+| General view | Typical findings: Broad personal tokens in MCP config, servers with more access than their job needs. | Look for: Broad personal tokens in MCP config, servers with more access than their job needs. |
+| General view | Typical findings: A server left running on localhost with no token, bound to all interfaces. | Look for: A server left running on localhost with no token, bound to all interfaces. |
+| General view | Typical findings: No inventory, no usage logs. | Look for: No inventory, no usage logs. |
+| General view | Typical findings: Auto-approve switched on for tools that write or send. Tools that accept any input because the model is expected to behave. | Look for: Auto-approve switched on for tools that write or send. Tools that accept any input because the model is expected to behave. |
+| General view | Typical findings: Unnecessary data sent to remote servers. Shared context or cache data exposed to another user. Missing controls on data modification. | Look for: Unnecessary data sent to remote servers. Shared context or cache data exposed to another user. Missing controls on data modification. |
+| General view | Typical findings: No spending cap on agent keys. No limit on payload size or call rate. | Look for: No spending cap on agent keys. No limit on payload size or call rate. |
+| General view | Typical findings: Remote servers on plain HTTP. Certificate checks switched off. | Look for: Remote servers on plain HTTP. Certificate checks switched off. |
+| General view | Typical findings: Tool descriptions never reviewed. Servers that can change their tools after approval. | Look for: Tool descriptions never reviewed. Servers that can change their tools after approval. |
+| General view | Typical findings: Servers that forward whatever token they receive. Servers that accept calls without checking the caller. Servers that accept basic auth or a shared static API key as the only caller check. | Look for: Servers that forward whatever token they receive. Servers that accept calls without checking the caller. Servers that accept basic auth or a shared static API key as the only caller check. |
+| General view | In a trusted repo, a new or changed server entry can start on your next chat message. Built from the two rows above. | In a trusted repo, a new or changed server entry can start on your next chat message. |
+| M03/policy | Governance recommendation: require local servers to run sandboxed with minimal default privileges. | Require local servers to run sandboxed with minimal default privileges. |
+| M04/content | Untrusted tool content can carry malicious instructions, visible or hidden. OWASP calls this contextual prompt injection. CoSAI lists resource content poisoning (#4). | Untrusted tool content can carry hidden malicious instructions. OWASP calls this contextual prompt injection. CoSAI lists resource content poisoning (#4). |
+| M09/llm | CoSAI says MCP server developers may implement overly permissive tools and assume the model will invoke them safely (#7). The model is not a safe gate for tool permissions. | CoSAI says MCP server developers may implement overly permissive tools and assume the model will invoke them safely (#7). Do not rely on the model as the gate for tool permissions. |
+| M09/policy | Policy checkpoint: require a human decision for high-impact tools and keep prompts limited enough to review. | Require a human decision for high-impact tools and keep prompts limited enough to review. |
+| M09/agent (Microsoft) | Auto-confirm in Visual Studio removes the prompt for that tool. | Visual Studio asks for confirmation when a tool is invoked, and can confirm a tool automatically for a session, a solution or all future invocations. |
+| General view | Label "Typical findings" | Label "Look for" |
+
+## New quotes
+
+| id | source | quote | where | verdict |
+|---|---|---|---|---|
+| o1life | [ow01p](https://owasp.org/www-project-mcp-top-10/2025/MCP01-2025-Token-Mismanagement-and-Secret-Exposure) | Token lifetimes are longer than session duration or lack enforced rotation. |  | VERIFIED 26 Nov 2026 |
+| o1audit | [ow01p](https://owasp.org/www-project-mcp-top-10/2025/MCP01-2025-Token-Mismanagement-and-Secret-Exposure) | Regularly audit MCP configurations, server endpoints, and stored contexts. |  | VERIFIED 26 Nov 2026 |
+| o1hard | [ow01p](https://owasp.org/www-project-mcp-top-10/2025/MCP01-2025-Token-Mismanagement-and-Secret-Exposure) | Tokens or API keys are hard-coded in MCP client, server, or tool configurations. |  | VERIFIED 26 Nov 2026 |
+| o2min | [ow02p](https://owasp.org/www-project-mcp-top-10/2025/MCP02-2025%E2%80%93Privilege-Escalation-via-Scope-Creep) | Define minimal permissions required per agent before deployment. |  | VERIFIED 26 Nov 2026 |
+| o2just | [ow02p](https://owasp.org/www-project-mcp-top-10/2025/MCP02-2025%E2%80%93Privilege-Escalation-via-Scope-Creep) | Alert on permission increases and requires a documented justification and approval. |  | VERIFIED 26 Nov 2026 |
+| o2review | [ow02p](https://owasp.org/www-project-mcp-top-10/2025/MCP02-2025%E2%80%93Privilege-Escalation-via-Scope-Creep) | No automated entitlement/permission review process exists. |  | VERIFIED 26 Nov 2026 |
+| o2broad | [ow02p](https://owasp.org/www-project-mcp-top-10/2025/MCP02-2025%E2%80%93Privilege-Escalation-via-Scope-Creep) | until the agent holds broad or administrative privileges |  | VERIFIED 26 Nov 2026 |
+| o3review | [ow03p](https://owasp.org/www-project-mcp-top-10/2025/MCP03-2025%E2%80%93Tool-Poisoning) | strong signal to review the server before trusting it |  | VERIFIED 26 Nov 2026 |
+| o3runtime | [ow03p](https://owasp.org/www-project-mcp-top-10/2025/MCP03-2025%E2%80%93Tool-Poisoning) | Agents accept and act on schema changes at runtime without operator confirmation. |  | VERIFIED 26 Nov 2026 |
+| o3prov | [ow03p](https://owasp.org/www-project-mcp-top-10/2025/MCP03-2025%E2%80%93Tool-Poisoning) | There is no provenance or version binding stored with the schema (who changed it, when, why). |  | VERIFIED 26 Nov 2026 |
+| o4sign | [ow04p](https://owasp.org/www-project-mcp-top-10/2025/MCP04-2025%E2%80%93Software-Supply-Chain-Attacks%26Dependency-Tampering) | The system installs MCP connectors or plugins without signing / provenance checks |  | VERIFIED 26 Nov 2026 |
+| o4fetch | [ow04p](https://owasp.org/www-project-mcp-top-10/2025/MCP04-2025%E2%80%93Software-Supply-Chain-Attacks%26Dependency-Tampering) | Dependencies are fetched automatically during runtime or build |  | VERIFIED 26 Nov 2026 |
+| o4float | [ow04p](https://owasp.org/www-project-mcp-top-10/2025/MCP04-2025%E2%80%93Software-Supply-Chain-Attacks%26Dependency-Tampering) | Teams use "latest" or floating version references |  | VERIFIED 26 Nov 2026 |
+| o4hash | [ow04p](https://owasp.org/www-project-mcp-top-10/2025/MCP04-2025%E2%80%93Software-Supply-Chain-Attacks%26Dependency-Tampering) | There is no dependency integrity verification (hash, signature, attestation) |  | VERIFIED 26 Nov 2026 |
+| o4sbom | [ow04p](https://owasp.org/www-project-mcp-top-10/2025/MCP04-2025%E2%80%93Software-Supply-Chain-Attacks%26Dependency-Tampering) | SBOM / dependency inventory is incomplete or unavailable |  | VERIFIED 26 Nov 2026 |
+| o4net | [ow04p](https://owasp.org/www-project-mcp-top-10/2025/MCP04-2025%E2%80%93Software-Supply-Chain-Attacks%26Dependency-Tampering) | Restrict filesystem + network access |  | VERIFIED 26 Nov 2026 |
+| o5valid | [ow05p](https://owasp.org/www-project-mcp-top-10/2025/MCP05-2025%E2%80%93Command-Injection%26Execution) | No input validation exists for parameters before they're incorporated into system calls, SQL queries, or API requests. |  | VERIFIED 26 Nov 2026 |
+| o5sandbox | [ow05p](https://owasp.org/www-project-mcp-top-10/2025/MCP05-2025%E2%80%93Command-Injection%26Execution) | No runtime sandboxing isolates tool execution from the host system or critical resources. |  | VERIFIED 26 Nov 2026 |
+| o5approve | [ow05p](https://owasp.org/www-project-mcp-top-10/2025/MCP05-2025%E2%80%93Command-Injection%26Execution) | Require approval for destructive, privileged, or system-modifying operations. |  | VERIFIED 26 Nov 2026 |
+| o6untrust | [ow06p](https://owasp.org/www-project-mcp-top-10/2025/MCP06-2025%E2%80%93Intent-Flow-Subversion) | Treat all natural-language content from MCP resources/ or tool outputs as untrusted. | M04/content | VERIFIED 26 Nov 2026 |
+| o6hidden | [ow06p](https://owasp.org/www-project-mcp-top-10/2025/MCP06-2025%E2%80%93Intent-Flow-Subversion) | the model retrieves a resource that contains "hidden instructions" which override the original user intent. | M04/content | VERIFIED 26 Nov 2026 |
+| o6block | [ow06p](https://owasp.org/www-project-mcp-top-10/2025/MCP06-2025%E2%80%93Intent-Flow-Subversion) | if the user intent is "Read," the agent is blocked from "Delete" or "Write" tool calls |  | VERIFIED 26 Nov 2026 |
+| o7valid | [ow07p](https://owasp.org/www-project-mcp-top-10/2025/MCP07-2025%E2%80%93Insufficient-Authentication%26Authorization) | Tools or connectors don't validate caller identity or scope before execution |  | VERIFIED 26 Nov 2026 |
+| o7static | [ow07p](https://owasp.org/www-project-mcp-top-10/2025/MCP07-2025%E2%80%93Insufficient-Authentication%26Authorization) | Tokens or API keys are shared, static, or long-lived |  | VERIFIED 26 Nov 2026 |
+| o8lose | [ow08p](https://owasp.org/www-project-mcp-top-10/2025/MCP08-2025%E2%80%93Lack-of-Audit-and-Telemetry) | When audit logging and telemetry are absent or poorly implemented, organizations lose visibility into what actions agents perform, what data they access, and how decisions are made. |  | VERIFIED 26 Nov 2026 |
+| o8capture | [ow08p](https://owasp.org/www-project-mcp-top-10/2025/MCP08-2025%E2%80%93Lack-of-Audit-and-Telemetry) | Tool invocations, prompt contents, and system events are not captured or correlated. |  | VERIFIED 26 Nov 2026 |
+| o8alert | [ow08p](https://owasp.org/www-project-mcp-top-10/2025/MCP08-2025%E2%80%93Lack-of-Audit-and-Telemetry) | There is no alerting for anomalous tool use, unauthorized API calls, or unexpected model behaviors. |  | VERIFIED 26 Nov 2026 |
+| o8spike | [ow08p](https://owasp.org/www-project-mcp-top-10/2025/MCP08-2025%E2%80%93Lack-of-Audit-and-Telemetry) | Unexplained spikes in API billing, latency, or resource consumption |  | VERIFIED 26 Nov 2026 |
+| o8xdr | [ow08p](https://owasp.org/www-project-mcp-top-10/2025/MCP08-2025%E2%80%93Lack-of-Audit-and-Telemetry) | Use Extended Detection and Response (XDR) systems to correlate agent behaviors with network or endpoint signals. | M08.checks[2] | VERIFIED 26 Nov 2026 |
+| o9central | [ow09p](https://owasp.org/www-project-mcp-top-10/2025/MCP09-2025%E2%80%93Shadow-MCP-Servers) | Teams or developers can deploy MCP servers without central registration or security review. |  | VERIFIED 26 Nov 2026 |
+| o9meta | [ow09p](https://owasp.org/www-project-mcp-top-10/2025/MCP09-2025%E2%80%93Shadow-MCP-Servers) | Maintain metadata: owner, purpose, version, endpoints, compliance state, and contact. | M08/policy; M05.checks[2] | VERIFIED 26 Nov 2026 |
+| o9list | [ow09p](https://owasp.org/www-project-mcp-top-10/2025/MCP09-2025%E2%80%93Shadow-MCP-Servers) | If your security team cannot list all active MCP servers in the environment, shadow deployments already exist. |  | VERIFIED 26 Nov 2026 |
+| o9forensic | [ow09p](https://owasp.org/www-project-mcp-top-10/2025/MCP09-2025%E2%80%93Shadow-MCP-Servers) | Untracked servers delay containment and forensics during security incidents. |  | VERIFIED 26 Nov 2026 |
+| o9drift | [ow09p](https://owasp.org/www-project-mcp-top-10/2025/MCP09-2025%E2%80%93Shadow-MCP-Servers) | Track configuration drift and endpoint proliferation over time. | M05.checks[2] | VERIFIED 26 Nov 2026 |
+| o10leak | [ow10p](https://owasp.org/www-project-mcp-top-10/2025/MCP10-2025%E2%80%93ContextInjection%26OverSharing) | When this context is shared, persistently stored, or insufficiently scoped, sensitive information from one session, agent, or user can leak into another. |  | VERIFIED 26 Nov 2026 |
+| o10teams | [ow10p](https://owasp.org/www-project-mcp-top-10/2025/MCP10-2025%E2%80%93ContextInjection%26OverSharing) | The same context store is accessible across teams or departments |  | VERIFIED 26 Nov 2026 |
+| o10ttl | [ow10p](https://owasp.org/www-project-mcp-top-10/2025/MCP10-2025%E2%80%93ContextInjection%26OverSharing) | No policy defines how long context can live (no TTL or expiry rule) |  | VERIFIED 26 Nov 2026 |
+| o10isolate | [ow10p](https://owasp.org/www-project-mcp-top-10/2025/MCP10-2025%E2%80%93ContextInjection%26OverSharing) | In multi-tenant setups, isolate retrieval indexes and vector stores. |  | VERIFIED 26 Nov 2026 |
+| o10class | [ow10p](https://owasp.org/www-project-mcp-top-10/2025/MCP10-2025%E2%80%93ContextInjection%26OverSharing) | Sensitive data enters context without classification or tagging |  | VERIFIED 26 Nov 2026 |
+| ccreview | [cc](https://code.claude.com/docs/en/managed-mcp) | Anthropic reviews connectors against its listing criteria before adding them to the Anthropic Directory |  | VERIFIED 26 Nov 2026 |
+| ghblock | [ghal](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist) | any MCP server that doesn't match an entry is blocked. |  | VERIFIED 26 Nov 2026 |
+| spconsent | [spsec](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices) | If an MCP client supports one-click local MCP server configuration, it MUST implement proper consent mechanisms prior to executing commands. |  | VERIFIED 26 Nov 2026 |
+| spverify | [spsec](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices) | MCP servers that implement authorization MUST verify all inbound requests. |  | VERIFIED 26 Nov 2026 |
+| splocal | [sphttp](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http) | When running locally, servers SHOULD bind only to localhost (127.0.0.1) rather than all network interfaces (0.0.0.0). |  | VERIFIED 26 Nov 2026 |
+| spauthconn | [sphttp](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http) | Servers SHOULD implement proper authentication for all connections. |  | VERIFIED 26 Nov 2026 |
+| spinputs | [sptools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools) | Show tool inputs to the user before calling the server, to avoid malicious or accidental data exfiltration |  | VERIFIED 26 Nov 2026 |
+| spconfirm | [sptools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools) | Prompt for user confirmation on sensitive operations | M09.checks[0] | VERIFIED 26 Nov 2026 |
+| spquery | [spauth](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization) | Access tokens MUST NOT be included in the URI query string | M05/tok (Microsoft); M05.body[2]; M05.checks[1] | VERIFIED 26 Nov 2026 |
+| qsdata | [qsl](https://owasp.org/www-community/vulnerabilities/Information_exposure_through_query_strings_in_url) | Information exposure through query strings in URL is when sensitive data is passed to parameters in the URL. | M05/tok (Microsoft); M05.body[2] | VERIFIED 26 Nov 2026 |
+| qswhere | [qsl](https://owasp.org/www-community/vulnerabilities/Information_exposure_through_query_strings_in_url) | Referer Header Web Logs Shared Systems Browser History Browser Cache | M05/tok (Microsoft); M05.body[2]; M05.checks[1] | VERIFIED 26 Nov 2026 |
+| invdesc | [invtp](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks) | malicious instructions are embedded within MCP tool descriptions that are invisible to users but visible to AI models. | M13/agent | VERIFIED 26 Nov 2026 |
+| invrug | [invtp](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks) | a malicious server can change the tool description after the client has already approved it. | M13/agent | VERIFIED 26 Nov 2026 |
+| invsee | [invtp](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks) | Users have no visibility into the full tool descriptions |  | VERIFIED 26 Nov 2026 |
+| invpr | [inv](https://invariantlabs.ai/blog/mcp-github-vulnerability) | It willingly pulls private repository data into context, and leaks it into a pull request | M04.checks[0] | VERIFIED 26 Nov 2026 |
+| vsecchg | [vsec](https://code.visualstudio.com/docs/agents/security) | Review them before trusting the repository, including changes made by others. | M05.checks[0] | VERIFIED 26 Nov 2026 |
+| vctrust | [vscm](https://code.visualstudio.com/docs/agents/run/manage-mcp-servers) | Workspace .vscode/mcp.json and .mcp.json configurations inherit Workspace Trust. | VS Code table | VERIFIED 26 Nov 2026 |
+| vcsubmit | [vscm](https://code.visualstudio.com/docs/agents/run/manage-mcp-servers) | When you submit a chat message, VS Code can start servers to discover their tools. | VS Code table | VERIFIED 26 Nov 2026 |
+| vclatest | [vconf](https://code.visualstudio.com/docs/agents/reference/mcp-configuration) | This example configures one local Playwright server: { "mcpServers" : { "playwright" : { "type" : "stdio" , "command" : "npx" , "args" : [ "-y" , "@playwright/mcp@latest" ] | VS Code table | VERIFIED 26 Nov 2026 |
+| vsreq | [vs](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers) | When you invoke a tool, Copilot requests confirmation to run the tool. | M09/agent (Microsoft) | VERIFIED 26 Nov 2026 |
+| azrbac | [azmcp](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) | Grant each caller only the Azure RBAC roles required for its task. | M06.checks[0] | VERIFIED 26 Nov 2026 |
+| csnames | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | Malicious actors create MCP servers or tools with names/descriptions similar to legitimate ones, tricking clients or AI agents into invoking harmful tools due to naming confusion or LLM hallucination. |  | VERIFIED 26 Nov 2026 |
+| csbind | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | MCP implementations commonly bind to all available interfaces (0.0.0.0) rather than localhost, exposing internal services to external networks. |  | VERIFIED 26 Nov 2026 |
+| csquota | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | Lack of resource consumption controls, quota management systems, and economic attack prevention mechanisms. |  | VERIFIED 26 Nov 2026 |
+| cstokens | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | The protocol provides no specifications for token limits, context size boundaries, API call quotas, computational resource allocation, or cost management, enabling resource exhaustion and economic denial-of-service attacks |  | VERIFIED 26 Nov 2026 |
+| cspayload | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | Unrestricted payload sizes or recursion depth in protocols enable |  | VERIFIED 26 Nov 2026 |
+| cstls | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | TLS should be used to protect all data in transit. |  | VERIFIED 26 Nov 2026 |
+| cstamper | [cosai](https://www.coalitionforsecureai.org/wp-content/uploads/2026/03/model-context-protocol-security-1.pdf) | Without integrity verification, malicious actors can modify tool definitions post-deployment, alter configuration files after approval, and inject malicious updates without detection |  | VERIFIED 26 Nov 2026 |
