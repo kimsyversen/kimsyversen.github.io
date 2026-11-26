@@ -6,6 +6,14 @@
 **Not tested:** nothing was run in a real tenant. All verdicts come from documentation, not behavior.
 
 
+## Built-in GitHub MCP server (2026-11-26)
+
+Corrects one list item under "How GitHub decides" in section 2.3 and qualifies row 44. Only this item was rechecked.
+
+| Claim | Verdict | What the source says | Source |
+|---|---|---|---|
+| Allowlist and denylist rules always allow built-in default servers. In Copilot CLI, the account's Copilot MCP policy still applies: if it disables MCP, the built-in GitHub MCP server does not start. | Corrected. The old item said the server cannot be blocked, with no CLI exception. | "First-party Copilot servers, such as the built-in GitHub MCP server, are exempt from these deny rules." "If that policy disables MCP, the built-in GitHub MCP server does not start." "Always allow built-in default servers, such as the built-in GitHub MCP server." | [Managed settings reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings), [Allowlist page](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist) |
+
 ## Current review status (2026-11-05)
 
 This statement review supersedes earlier verdicts where they conflict. Earlier passes remain below as history, including their unresolved questions. Their claims of exhaustive reading and absence of documentation are not evidence of universal product behavior.
@@ -350,6 +358,19 @@ Not researched: the three tool tiers in the photographed Copilot answer. They ar
 Markdown and HTML both hold Part 6. Seven sources were added to both source tables (89 in total).
 
 
+## Inference tags checked, 26 November 2026
+
+Quotes E32 to E36 were matched against the fetched pages on 2026-11-26. Other sources were not reread.
+
+| Old tagged statement | New statement | Evidence | Verdict |
+|---|---|---|---|
+| Redirection controls reduce transfer paths. Do not treat them as proof... | Disabling redirection helps prevent copying; screen capture protection is not DRM-level protection. The warning is advice. | E32, E33 | Documented. "Reduce transfer paths" narrowed. |
+| One group rule set covers many environments, which keeps admin work low. | Microsoft says this reduces administrative overhead. | E34 | Documented. |
+| Only for traffic the firewall sees. | Only for traffic Global Secure Access can inspect. | E35 | Documented, preview. The quote names local MCP servers as not visible. |
+| A server on an approved URL can still return harmful content... | Connecting a server does not show that every tool result is safe. Controls 4 and 7 should still apply. | E36 | Documented, narrowed. The source is VS Code, not the firewall page. |
+
+Kept as inference: pairing of device policies with Copilot keys, local MCP coverage by the gateway, no backend field, no decision field, consultants' laptops. Each is an interpretation or a statement about what pages do not say.
+
 ## Presentation and route check, 2026-11-06
 
 The [HTML page](enterprise-ai-agent-security-recommendation.html) uses design requirements in the diagrams and a route matrix for documented capabilities and tenant checks. This review rechecked the touched coverage statements against primary documentation and did not move the dates for earlier source checks.
@@ -639,7 +660,7 @@ label	Separate from production
 label	server checklist
 label	Server checklist recommendation
 label	SharePoint, repos, APIs
-label	Sources, read 5 and 6 Nov 2026
+label	Sources, read 5, 6 and 26 Nov 2026
 label	Staff
 requirement	Staff use a managed device. Consultants sign in from their laptop to a managed cloud desktop and access code and tools from there.
 requirement	Start from default deny where supported. Test the exceptions and block or restrict alternate paths. Review and publish the approved list.

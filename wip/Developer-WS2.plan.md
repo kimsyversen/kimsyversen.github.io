@@ -46,3 +46,7 @@ Intune has no MCP setting of its own. It delivers each client's own managed poli
 4. Fact check file with verdicts and ledger.
 5. Index entry, footnote, dates.
 6. Check light, dark, 375px, real clicks on evidence links, console.
+
+## 26 November 2026: verify inference tags
+
+- Done: Intune statements about GitHub updated from the current reference page. Other tags are about missing information or reasoning and stay.

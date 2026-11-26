@@ -247,12 +247,6 @@ footer{border-top:2px solid var(--rule);padding-top:14px;display:grid;gap:10px;f
 .ai-note{display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:0.78rem;line-height:1.5;color:var(--muted)}
 .ai-note b{font-weight:600;font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
 @media (max-width:560px){.ai-note{grid-template-columns:1fr}}
-.tag{display:inline-block;font:500 0.7rem/1.5 var(--mono);font-style:normal;color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 5px;white-space:nowrap;vertical-align:1px}
-.tag-key{margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:9rem 1fr;gap:2px 16px;font-size:0.78rem;line-height:1.5;color:var(--muted)}
-.tag-key h2{margin:0;font:600 0.68rem/1.5 var(--body);letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);padding-top:1px}
-.tag-key dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;align-items:baseline}
-.tag-key dt,.tag-key dd{margin:0}
-@media (max-width:560px){.tag-key{grid-template-columns:1fr}}
 /* section links */
 h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
 h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
@@ -432,7 +426,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         </div>
         <figcaption><b>Fig. 2</b>The six threats on the matrix.</figcaption>
       </figure>
-      <p class="lbl">Levels <span class="tag">[recommendation]</span></p>
+      <p class="lbl">Suggested levels</p>
       <ul class="bands">
         <li><i class="sw m3"></i><span><b>High, 15 or more.</b> Fix before launch.</span></li>
         <li><i class="sw m2"></i><span><b>Middle, 8 to 14.</b> Put in the plan, with a date.</span></li>
@@ -440,7 +434,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       </ul>
       <details>
         <summary>Why not DREAD?</summary>
-        <p>DREAD gives five numbers per threat: damage, reproducibility, exploitability, affected users and discoverability. <span class="tag">[recommendation]</span> Use two numbers instead. They fit on a plain risk matrix. Scores are a tool for discussion, not a calculation that is right.</p>
+        <p>DREAD gives five numbers per threat: damage, reproducibility, exploitability, affected users and discoverability. Use two numbers instead. They fit on a plain risk matrix. Scores are a tool for discussion, not a calculation that is right.</p>
       </details>
     </section>
 
@@ -464,7 +458,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <tr><td>The server checks that the logged-in customer owns the document on every fetch.</td><td class="ref">4.1.1, 4.2.1</td><td>Developer</td><td>Test: customer A asks for customer B's document and is refused.</td></tr>
             <tr><td>Customers reach only their own claims and nothing more.</td><td class="ref">4.1.3</td><td>Architect</td><td>Review of roles and access rules.</td></tr>
             <tr><td>If the check fails or is missing, the answer is no.</td><td class="ref">4.1.5</td><td>Developer</td><td>Test: make the check throw an error and see that nothing is delivered.</td></tr>
-            <tr><td>Denied attempts are logged. <span class="tag">[recommendation]</span> Many denials raise an alert.</td><td class="ref">7.2.2</td><td>Operations</td><td>Send 50 denied requests and see the alert fire.</td></tr>
+            <tr><td>Denied attempts are logged. Many denials should raise an alert.</td><td class="ref">7.2.2</td><td>Operations</td><td>Send 50 denied requests and see the alert fire.</td></tr>
           </tbody>
         </table>
       </div>
@@ -512,11 +506,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     </div>
     <p>The claims portal and all numbers are made up to show the method. The element-to-letter table follows Microsoft's STRIDE-per-element method, as described by Larry Osterman in 2007. The four responses follow NIST's list (eliminate, disrupt, transfer responsibility, accept) under other names. All requirement IDs were checked against ASVS 4.0.3 on 15 Nov 2026. ASVS 5.0 has since renumbered its requirements, so the IDs here only match 4.0.3. ASVS 7.2.2 covers the logging of denied requests, not the alert on many denials.</p>
   <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
-  <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
-    <dl>
-      <dt><span class="tag">[recommendation]</span></dt><dd>A design choice proposed on the page.</dd>
-    </dl>
-  </section>
+  <span id="tag-key" aria-hidden="true"></span><span id="h-tag-key" aria-hidden="true"></span>
   </footer>
 </div>
 

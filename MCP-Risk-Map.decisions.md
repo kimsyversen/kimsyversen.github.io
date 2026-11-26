@@ -206,3 +206,10 @@ Working notes.
 - Iteration 37: one finding accepted (M05 remediation sentence narrowed to what Mitiga says about rotation). Microsoft view clean. Clean count 0.
 - Iteration 38: four findings, all rejected (confused deputy MUST follows the spec sentence, Codex sentence already follows the identity setup, Invariant and GSA limits are coverage). Clean count 1.
 - Iteration 39: one finding, rejected (autostart "starts" matches the documented default "Start servers that have never run or whose configuration has changed"). Clean count 2. Stop criterion met. "Current as of" and "checked on" stay at 14 November 2026 because the sources were not refetched in this run.
+
+## 26 November 2026: inference tags
+
+- A tag is removed only where a quoted primary source supports the text. Wording was narrowed where the source says less than the old text.
+- Tags stay on grouping, boundaries, definitions, AI estimates and conclusions no source states.
+- General view text lists its quotes in `data-q`. The page shows them below the text, and the check script counts them and fails on unknown ids.
+- "Typical findings" became "Look for": the sources describe these as risks, not how often they occur.

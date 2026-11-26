@@ -15,7 +15,7 @@ from urllib.parse import quote as urlquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from section_anchors import add_anchors  # noqa: E402
-from governance_evidence import CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
+from governance_evidence import CHECKED, IDS, LATER, LATER_CHECKED, QUOTES, SOURCES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 LONG = "enterprise-ai-agent-security-recommendation.html"
@@ -194,8 +194,8 @@ def _row(n, path, where, text, keys):
 
 TRAFFIC_ROWS = "\n".join([
     _row(1, "GitHub settings file to VS Code", "Reaches the client",
-         "Policy, not traffic. Create or update the file in the <code>.github-private</code> repository. Updated settings are applied within about an hour. Coverage varies between environments. The built-in GitHub MCP server cannot be blocked.",
-         ["gh-file", "gh-server", "gh-hour", "gh-vary", "gh-builtin"]),
+         "Policy, not traffic. Create or update the file in the <code>.github-private</code> repository. Updated settings are applied within about an hour. Coverage varies between environments. The built-in GitHub MCP server is exempt from deny rules. In Copilot CLI, disabling MCP in the account policy stops it.",
+         ["gh-file", "gh-server", "gh-hour", "gh-vary", "gh-builtin", "gh-builtin-cli", "gh-builtin-off"]),
     _row(2, "VS Code to the Global Secure Access client", "End user client",
          f"The firewall prerequisites include the Global Secure Access client on a device that is Entra joined or hybrid joined, and TLS inspection, without which it cannot enforce MCP policy. It also needs an Entra Internet Access license, which E7 includes.",
          ["fw-client", "fw-tls", "fw-license", "e7-entra"]),
@@ -206,7 +206,7 @@ TRAFFIC_ROWS = "\n".join([
          f"Local servers that run on a device are not visible to Global Secure Access, so the firewall cannot stop them. Defender for Endpoint can discover supported agents and their configured MCP servers on onboarded devices, and its matrix lists the VS Code GitHub Copilot extension. It is generally available on supported Windows and macOS devices, except preview scenarios. That is detection and inventory, and no source shows it blocking a server. {UNV} The GitHub settings file from path 1 can limit them, where coverage varies.&nbsp;{REC}",
          ["fw-remote", "def-disc", "def-vscode", "def-ga", "def-cmd", "def-noproof", "gh-file", "gh-vary"]),
     _row(5, "Agents in the cloud to the gateway to a remote server", "Not the client",
-         f"The gateway can block or allow a whole server. A server blocked in the Agent 365 bring-your-own registry cannot be called at runtime from any supported client surface. Foundry and Microsoft 365 declarative agents are not supported there. Both are preview.&nbsp;{PRE}",
+         f"The gateway can block or allow a whole server. For a server blocked in the Agent 365 bring-your-own registry, the gateway stops calls that supported clients route through it. Microsoft says not to assume this stops direct access. Foundry and Microsoft 365 declarative agents are not supported there. Both are preview.&nbsp;{PRE}",
          ["gw-block", "gw-preview", "byo-runtime", "byo-clients", "byo-preview"]),
     _row(6, "Agents in the cloud straight to a remote server", "Not the client",
          f"Agent 365 does not send agents through a customer-hosted gateway by itself. To prevent direct access, make the gateway the only permitted caller or use private networking. For Copilot Studio agents, the Global Secure Access integration forwards agent traffic, including custom MCP servers, and logs MCP traffic without TLS inspection. Web content filtering, threat intelligence filtering and network file filtering apply to it. No source shows the MCP firewall applying to this traffic. The firewall is enforced through a Conditional Access policy, and Copilot Studio agents are documented only with the baseline profile, not with profiles linked to Conditional Access. So the firewall most likely does not apply.&nbsp;{INF}",
@@ -321,17 +321,17 @@ Q1 = f"""
 ROWS = "".join([
     route("pub-vscode", "VS Code and GitHub Copilot", "GitHub <code>managed-settings.json</code>",
           "Allow or deny MCP servers set in user and repository settings. Create or update the file in the <code>.github-private</code> repository. Updated settings apply automatically within about an hour.",
-          "Cover servers in repository custom agent profiles. Block the built-in GitHub server. Coverage varies by environment.",
+          "Cover servers in repository custom agent profiles. Block the built-in GitHub server with a deny rule. In Copilot CLI, disabling MCP in the account policy stops it. Coverage varies by environment.",
           f"Settings apply automatically once the file is updated. Using a pull request to approve each change is our own process. {REC}",
-          ["gh-file", "gh-server", "gh-hour", "gh-profiles", "gh-builtin", "gh-vary"]),
+          ["gh-file", "gh-server", "gh-hour", "gh-profiles", "gh-builtin", "gh-builtin-cli", "gh-builtin-off", "gh-vary"]),
     route("pub-a365", "Agent 365 Tools Gateway", "Agent 365 with Azure API Management",
           "Find MCP servers registered with the gateway. Discovery might take a few minutes. Block or allow a whole server, and single tools on supported servers. Block a tool in the admin center when the server is on the AI Gateway tier. Create MCP servers in API Management with REST API, ARM, Bicep, CLI or Terraform.",
           f"Connect the gateway without the Global Administrator role. Block a tool on API Management v1 tiers. Set allow or block from a pipeline: the page documents the admin center only. {UNV} Know whether a new server starts allowed or blocked. {UNV}",
           f"Creating servers in API Management can be automatic from our pipeline. {REC} A person connects the gateway and sets allow or block in the admin center.",
           ["gw-preview", "gw-discover", "gw-block", "gw-tools", "apim-block", "apim-tier", "apim-v1", "gw-ga", "apim-rest"], preview=True),
     route("route-a365-byo", "Agent 365 bring-your-own registry", "Agent 365 BYO MCP",
-          "Block a whole server. A blocked server cannot be called from any client surface. Supported surfaces: Copilot Studio, Visual Studio Code, Claude Code and GitHub Copilot CLI.",
-          "Cover Foundry or Microsoft 365 declarative agents. Block single tools: planned for a future release. Republish a new version during preview. Register a server without a public endpoint.",
+          "Block a whole server. The gateway then stops calls that supported clients route through it. Supported surfaces: Copilot Studio, Visual Studio Code, Claude Code and GitHub Copilot CLI.",
+          "Cover Foundry or Microsoft 365 declarative agents. Count a block as stopping direct access to the server's own address. Block single tools: planned for a future release. Republish a new version during preview. Register a server without a public endpoint.",
           f"A developer registers the server with the <code>a365</code> command line. A person reviews each request, approves it and grants Entra permissions. Approval from a pipeline: no source shows it. {UNV}",
           ["byo-preview", "byo-clients", "byo-runtime", "byo-tool", "byo-republish", "byo-public", "byo-cli", "byo-approve"], preview=True),
     route("route-studio", "Copilot Studio", "Power Platform data policies",
@@ -340,15 +340,16 @@ ROWS = "".join([
           f"A person sets the data policy today. Our pipeline could call the command. Not tested. {REC}",
           ["studio", "dlp-cmd"]),
     route("route-builder", "Agent Builder", "Microsoft 365 Copilot, users build their own agents",
-          "Show Agent Builder agents in the Agent 365 inventory. Switch Agent Builder on or off for the organization.",
-          f"Add actions that integrate external services in Agent Builder: copy the agent to Copilot Studio for that. See draft Agent Builder agents in the inventory. Use MCP servers: the page does not mention them. {UNV}",
-          f"A person switches Agent Builder on or off. After a copy to Copilot Studio, the Copilot Studio row applies, which is interpretation by AI of the quote. {INF}",
+          "Show Agent Builder agents in the Agent 365 inventory. Control agent access, organization-wide sharing and approval for catalog publishing.",
+          f"Switch off agent creation in Agent Builder while agents stay enabled. Add actions that integrate external services in Agent Builder: copy the agent to Copilot Studio for that. See draft Agent Builder agents in the inventory. Use MCP servers: the page does not mention them. {UNV}",
+          f"A person sets agent access, sharing and publishing approval. After a copy to Copilot Studio, the Copilot Studio row applies, which is interpretation by AI of the quote. {INF}",
           ["ab-inv", "ab-draft", "ab-ext", "ab-copy", "ab-admin"]),
-    route("route-toolkit", "Agents Toolkit", "Microsoft 365 Agents Toolkit, developers build declarative agents with MCP plugins",
-          "Build a declarative agent that uses an MCP server as a plugin. Block the plugin package or manage who can use it in the Microsoft 365 admin center. Review plugin access requests and standalone MCP server registration requests there.",
-          f"Count plugin availability as access control for the server: it grants no access to external services or data. Apply the Git list to these plugins: no source shows it. {UNV} Say whether the Agent 365 gateway or the network firewall sees this traffic: not shown. {UNV}",
-          "A person approves or blocks each plugin and each registration request. A developer needs custom app upload enabled to test. The server's own hosting and runtime controls are separate.",
-          ["tk-build", "tk-block", "tk-req", "tk-noaccess", "tk-sideload", "tk-sep"]),
+    route("route-toolkit", "Agents Toolkit and Work IQ Dev Tools", "developers build declarative agents with MCP plugins",
+          "Build a declarative agent that uses a remote MCP server. Microsoft recommends Work IQ Dev Tools for supported scenarios, not custom engine agents, and keeps Toolkit instructions for existing projects and workflows that need them. In the Microsoft 365 admin center, block a plugin where supported, manage who can use it, and review access and server registration requests.",
+          f"Count a plugin block as control of the server: it does not necessarily stop the remote service, revoke consent or stop another plugin using the same server. Apply the Git list to these plugins: no source shows it. {UNV} Say whether the Agent 365 gateway or the network firewall sees this traffic: not shown. {UNV}",
+          "A person approves or blocks each plugin and each registration request. A plugin submitted to the tenant catalog with Work IQ Dev Tools needs administrator approval before users can discover it there. A developer testing with the Toolkit needs custom app upload enabled. The remote server's owner manages its availability, credentials, security, logging and configuration.",
+          ["tk-build", "tk-block", "tk-users", "tk-req", "tk-noaccess", "tk-sideload", "tk-sep",
+           "wiqd-rec", "wiqd-old", "wiqd-engine", "wiqd-mcp", "wiqd-approve"]),
     route("pub-foundry", "Foundry agent tools", "Azure Policy approved tools",
           "Limit agents to approved tool types, MCP endpoints and connectors. Deny rejects a request that breaks the rule. Create the policy with the Azure CLI.",
           f"Change existing resources: they are only marked non-compliant. Block calls at run time: not shown. {INF}",
@@ -395,7 +396,7 @@ CAN = f"""
           <span role="columnheader">Evidence</span>
         </div>{ROWS}
       </div>
-      <p class="q-note">The network firewall, Agent Builder and Agents Toolkit rows are proposed additions. The approval diagram above does not show them. The Admin work column describes our design unless it cites a quote.</p>
+      <p class="q-note">The network firewall, Agent Builder and developer tools rows are proposed additions. The approval diagram above does not show them. The Admin work column describes our design unless it cites a quote.</p>
     </div>
   </section>
 """
@@ -423,7 +424,7 @@ Q2 = f"""
 <tr><td>Allowed MCP servers in VS Code and GitHub Copilot</td><td>GitHub <code>managed-settings.json</code></td><td><a href="#pub-vscode">Route table</a>. {ev("gh-file", "gh-hour")}</td></tr>
 <tr><td>Approve and block remote MCP servers</td><td>Agent 365 Tools Gateway and BYO registry</td><td><a href="#pub-a365">Gateway</a> and <a href="#route-a365-byo">BYO</a> rows. Both preview. {ev("gw-preview", "byo-preview")}</td></tr>
 <tr><td>Block connectors in Copilot Studio</td><td>Power Platform data policies</td><td><a href="#route-studio">Studio row</a>. {ev("studio")}</td></tr>
-<tr><td>Agents that developers build with MCP plugins</td><td>Agents Toolkit, then the admin center</td><td><a href="#route-toolkit">Agents Toolkit row</a>. {ev("tk-build", "tk-block", "tk-req", "tk-noaccess")}</td></tr>
+<tr><td>Agents that developers build with MCP plugins</td><td>Work IQ Dev Tools or Agents Toolkit, then the admin center</td><td><a href="#route-toolkit">Developer tools row</a>. {ev("tk-build", "tk-block", "tk-req", "tk-noaccess", "wiqd-rec", "wiqd-mcp")}</td></tr>
 <tr><td>Agents that users build themselves</td><td>Agent Builder, then Copilot Studio</td><td><a href="#route-builder">Agent Builder row</a>. {ev("ab-inv", "ab-ext", "ab-copy", "ab-admin")}</td></tr>
 <tr><td>Restrict tools in Foundry</td><td>Azure Policy approved tools</td><td><a href="#pub-foundry">Foundry row</a>. Preview. {ev("pol-approved")}</td></tr>
 <tr><td>Catalog of MCP servers</td><td>Azure API Center</td><td><a href="#pub-apic">API Center row</a>. {ev("apic-inv")}</td></tr>
@@ -491,10 +492,10 @@ GAPS_LIST = [
     f"<strong>Local servers.</strong> The network firewall and its logs do not see them. Defender for Endpoint discovers supported ones on onboarded devices. No source shows it blocking a server. {UNV} The GitHub exact-command list is the one restriction with a source, on supported clients. {ev('fw-remote', 'log-remote', 'def-disc', 'gh-exact')}",
     f"<strong>Intune allow list.</strong> The default outbound block stops all traffic that matches no rule, not only MCP, and Microsoft calls it fit for certain highly secure environments. Domain rules fail behind a proxy, secure DNS, some VPNs and cached addresses. Windows only. Whether the Intune firewall profile takes domain names directly: not shown. Not tested. {ev('ifw-block', 'ifw-ver', 'dk-secure', 'dk-limits')} {UNV}",
     f"<strong>Defender discovery needs.</strong> The commercial cloud, Defender for Endpoint Plan 2 at minimum, and antivirus in active mode. Windows needs antivirus platform 4.18.26090.9 or later. macOS needs Defender for Endpoint 101.26072.0017 or later. Microsoft says discovery is not a complete inventory of installed software. {ev('def-cloud', 'def-lic', 'def-av', 'def-os', 'def-win', 'def-mac', 'def-incomplete')}",
-    f"<strong>GitHub exemptions.</strong> Custom agent profiles and the built-in server are exempt. Coverage varies by environment. {ev('gh-profiles', 'gh-builtin', 'gh-vary')}",
+    f"<strong>GitHub exemptions.</strong> Allow and deny rules skip custom agent profiles. Deny rules exempt the built-in server, but in Copilot CLI disabling MCP in the account policy stops it. Coverage varies by environment. {ev('gh-profiles', 'gh-builtin', 'gh-builtin-cli', 'gh-builtin-off', 'gh-vary')}",
     f"<strong>Direct connections.</strong> The gateway does not route agents by itself. Restrict server connectivity so the gateway is the only caller. Permissions at the API or data source still apply. {ev('apim-route', 'apim-restrict')}",
-    f"<strong>Agent Builder.</strong> It has no external actions of its own, and draft agents from it are not in the inventory. An on or off switch is the only control the page documents. {ev('ab-ext', 'ab-copy', 'ab-draft', 'ab-admin')}",
-    f"<strong>Agents Toolkit.</strong> Developers can add an MCP server as a plugin to a declarative agent. The admin center can block the plugin, but no source shows the Git list, the gateway or the firewall applying to it. {ev('tk-build', 'tk-block', 'tk-noaccess')} {UNV}",
+    f"<strong>Agent Builder.</strong> It has no external actions of its own, and draft agents from it are not in the inventory. Its creation of agents cannot be switched off while agents stay enabled. {ev('ab-ext', 'ab-copy', 'ab-draft', 'ab-admin')}",
+    f"<strong>Agents Toolkit and Work IQ Dev Tools.</strong> Developers can add a remote MCP server to a declarative agent. The admin center can block the plugin, but no source shows the Git list, the gateway or the firewall applying to it. {ev('tk-build', 'tk-block', 'tk-noaccess', 'wiqd-mcp')} {UNV}",
     f"<strong>More gaps are on the long page:</strong> unmanaged consultant laptops, personal Copilot access, guest licensing, Sentinel connectors and policy start-up behavior. See its <a href=\"{LONG}#part5\">known gaps</a>.",
 ]
 GAPS_OL = "\n".join(f"<li>{x}</li>" for x in GAPS_LIST)
@@ -539,7 +540,7 @@ EVIDENCE = f"""
       <h2 id="h-e">Quotes behind the route table</h2>
     </div>
     <div class="blk" style="margin-top:20px">
-      <p class="sub">Each quote was found word for word on its source page on {CHECKED}. The link opens the page at the quote. Page date is the date the page shows.</p>
+      <p class="sub">Each quote was found word for word on its source page on {CHECKED}, except {', '.join(IDS[k] for k in LATER)}, found on {LATER_CHECKED}. The link opens the page at the quote. Page date is the date the page shows.</p>
       <div class="tbl-wrap"><table class="tbl src">
         <thead><tr><th>Id</th><th>Quote</th><th>Source</th><th>Page date</th></tr></thead>
         <tbody>

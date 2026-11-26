@@ -46,3 +46,9 @@ Fact check: [AKS-sikkerhetsvurdering.factcheck.md](AKS-sikkerhetsvurdering.factc
 - **Removed sentences that explain how a control works** ("Tap a layer", "Tap a marker or box", "Tap a risk", "Tick them off as you go").
 - **"Current as of" and "Facts checked" stay at 13 Nov 2026.** Only the figure quotes were checked on 16 Nov. The Sources intro says so.
 - **Seven sources added at the end of the list** so the existing numbers stay the same.
+
+## 26 Nov 2026, inference tags
+
+- A tag was removed only where a primary source states the claim, after narrowing the wording where needed, or where the sentence is advice (AGENTS.md: recommendations are not tagged).
+- The K01 root sentence was wrong for pods without a user namespace and was replaced.
+- Risk map entries can now carry a quote and a source link, shown in the detail box.

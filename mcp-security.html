@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MCP Security</title>
+<meta name="description" content="Why a local MCP server is software you run, how local and remote servers differ, and the principles and controls to govern them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Public+Sans:ital,wght@0,400;0,600;1,400&amp;display=swap">
+<style>
+:root{color-scheme:light;--bg:#F3F0E8;--ink:#17150F;--muted:#5F5A4F;--line:#D2CCBE;--rule:#17150F;--red:#B5321C;--green:#2E6B3A;--wash:#E9E5DA;
+--display:"Archivo","Arial Narrow",Arial,sans-serif;--body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#15140F;--ink:#ECE7DB;--muted:#A49E90;--line:#37342C;--rule:#ECE7DB;--red:#F07A60;--green:#8CCB93;--wash:#1F1D17}}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:1120px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.2rem,6.4vw,4.4rem);font-weight:800;font-stretch:88%;line-height:.98;letter-spacing:-.02em;max-width:18ch}
+h2{font-size:clamp(1.35rem,2.4vw,1.7rem);font-weight:750;line-height:1.1;letter-spacing:-.012em;margin-bottom:22px}
+h3{font-size:1.1rem;font-weight:700;line-height:1.25;margin-bottom:14px}
+p{margin:0}
+p + p{margin-top:12px}
+code{font-family:var(--mono);font-size:.9em;overflow-wrap:anywhere}
+.top{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+.hero{padding:clamp(36px,7vw,84px) 0 clamp(28px,4vw,48px);border-bottom:3px solid var(--rule)}
+.hero .lede{margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
+section{padding:clamp(32px,5vw,56px) 0;border-bottom:1px solid var(--line)}
+figure{margin:0}
+
+/* diagrams */
+.flow{list-style:none;margin:0;padding:0}
+.flow li{border:1px solid var(--rule);padding:12px 14px;text-align:center;position:relative}
+.flow li + li{margin-top:30px}
+.flow li + li::before{content:"\2193" / "";position:absolute;left:0;right:0;top:-28px;line-height:26px;color:var(--muted)}
+.flow li.via{border:0;padding:0;font:500 .85rem/1.4 var(--mono);color:var(--muted)}
+.flow li.new{border:2px dashed var(--red)}
+.flow li.hot{background:var(--wash)}
+.lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 40px}
+.lanes.three{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 28px}
+.lanes > div{display:flex;flex-direction:column;border-top:1px solid var(--rule);padding-top:16px}
+.lanes .note{margin-top:14px;font-size:.92rem}
+.verdict{margin-top:8px;font-weight:600}
+.bad{color:var(--red)}
+.good{color:var(--green)}
+@media (max-width:780px){.lanes,.lanes.three{grid-template-columns:minmax(0,1fr)}}
+
+.reach{display:grid;grid-template-columns:minmax(0,4fr) 56px minmax(0,6fr);align-items:center}
+.reach .proc{border:2px solid var(--red);padding:22px 18px;text-align:center}
+.reach .proc b{display:block;font:750 1.25rem/1.2 var(--display);margin-bottom:6px}
+.reach .proc span{font-size:.9rem;color:var(--muted)}
+.reach .arrow{text-align:center;font-size:1.8rem;color:var(--red)}
+.reach .arrow::before{content:"\2192" / ""}
+.reach ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.reach li{padding:10px 0;border-bottom:1px solid var(--line)}
+@media (max-width:700px){.reach{grid-template-columns:minmax(0,1fr)}.reach .arrow::before{content:"\2193" / ""}}
+
+.layers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:2px solid var(--rule)}
+.layers > div{padding:20px}
+.layers > div + div{border-left:2px solid var(--rule)}
+.layers .q{font:700 clamp(1.1rem,2vw,1.4rem)/1.25 var(--display);margin:0 0 18px}
+.layers h3{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+@media (max-width:780px){.layers{grid-template-columns:minmax(0,1fr)}.layers > div + div{border-left:0;border-top:2px solid var(--rule)}}
+.point{margin-top:24px;font:700 clamp(1.15rem,2.2vw,1.5rem)/1.3 var(--display)}
+
+/* tables and lists */
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;padding:10px 16px 10px 0;border-bottom:1px solid var(--line)}
+thead th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom-color:var(--rule)}
+tbody th{font-weight:600}
+td.y{color:var(--red);font-weight:600}
+tr.add th{box-shadow:none;background:var(--wash);padding-left:10px}
+tr.add td{background:var(--wash)}
+@media (max-width:520px){table{font-size:.85rem}th,td{padding-right:8px}}
+ol.principles{list-style:none;margin:0;padding:0;counter-reset:p;columns:2;column-gap:40px;border-top:1px solid var(--rule)}
+ol.principles li{counter-increment:p;display:grid;grid-template-columns:44px minmax(0,1fr);padding:13px 0;border-bottom:1px solid var(--line);break-inside:avoid}
+ol.principles li::before{content:counter(p,decimal-leading-zero);font:500 .85rem/1.7 var(--mono);color:var(--muted)}
+@media (max-width:760px){ol.principles{columns:1}}
+
+footer{padding-top:28px;font-size:.88rem;color:var(--muted)}
+.ai-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin-bottom:22px}
+.ai-note b{color:var(--ink)}
+:is(section,article,h2,h3)[id]{scroll-margin-top:24px}
+/* section links */
+h2 a.sec-link,h3 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after{display:none}}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-26">26 Nov 2026</time></span></div>
+
+  <header class="hero">
+    <h1>MCP Security</h1>
+    <p class="lede" id="what-is-mcp">MCP (Model Context Protocol) is a set of rules that lets an AI app use other programs, called MCP servers. A server can give the app tools (things it can do, like search the web), resources (things it can read, like a file) and prompts (ready-made instructions). A server runs on your computer or on another one.</p>
+  </header>
+
+  <main>
+  <section id="same-as-any-npm-package">
+    <h2 id="h-same-as-any-npm-package"><a class="sec-link" href="#h-same-as-any-npm-package">MCP servers are installed the same way as other npm packages</a></h2>
+    <figure class="lanes" role="group" aria-label="Both an npm package and an npm-based MCP server are executed on your machine by npx, which uses a copy on your machine or downloads one, possibly a newer release. The MCP server then also exposes tools, resources or prompts to an AI client.">
+      <div><h3 id="npm-package"><a class="sec-link" href="#npm-package">npm package</a></h3>
+        <ol class="flow"><li><code>npx some-package</code></li><li>Taken from your machine or downloaded, possibly as a newer release</li><li class="hot">Executed on your machine</li><li>Does what its code does</li></ol>
+      </div>
+      <div><h3 id="local-mcp-server"><a class="sec-link" href="#local-mcp-server">Local MCP server</a></h3>
+        <ol class="flow"><li><code>npx some-mcp-server</code></li><li>Taken from your machine or downloaded, possibly as a newer release</li><li class="hot">Executed on your machine</li><li class="new">Does what its code does, and exposes <b>tools, resources or prompts</b> to an AI client over MCP</li></ol>
+      </div>
+    </figure>
+  </section>
+
+  <section id="what-a-malicious-server-can-do">
+    <h2 id="h-what-a-malicious-server-can-do"><a class="sec-link" href="#h-what-a-malicious-server-can-do">A malicious MCP server can use the same access as your other software</a></h2>
+    <figure class="reach" role="group" aria-label="A malicious MCP server process running without isolation, with your account's access, can read local files, access available environment variables, tokens and credentials, make outbound connections, execute other programs, modify files and persist, and exfiltrate sensitive information.">
+      <div class="proc"><b>Malicious MCP server process</b><span>No isolation. Your account&rsquo;s access.</span></div>
+      <div class="arrow" aria-hidden="true"></div>
+      <ul>
+        <li>Read local files, source code and configuration files</li>
+        <li>Access available environment variables, API tokens and cloud credentials</li>
+        <li>Establish outbound network connections</li>
+        <li>Execute other applications and commands</li>
+        <li>Modify files and establish persistence</li>
+        <li>Exfiltrate sensitive information</li>
+      </ul>
+    </figure>
+    <p class="point">It can do these things without the AI invoking a single MCP tool. Execution of the server itself is sufficient.</p>
+  </section>
+
+  <section id="npm-package-or-mcp-server">
+    <h2 id="h-npm-package-or-mcp-server"><a class="sec-link" href="#h-npm-package-or-mcp-server">MCP servers add AI risks to the usual npm package risks</a></h2>
+    <div class="tbl"><table>
+      <thead><tr><th scope="col">Security characteristic</th><th scope="col">npm / npx</th><th scope="col">Local npm-based MCP</th></tr></thead>
+      <tbody><tr><th scope="row">Supply chain risk</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Transitive dependency risk</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Arbitrary code execution</th><td class="y">Yes, when executed</td><td class="y">Yes, when executed</td></tr><tr><th scope="row">Access to local credentials</th><td class="y">Yes</td><td class="y">Yes</td></tr><tr><th scope="row">Built-in sandboxing</th><td class="">No</td><td class="">No</td></tr><tr class="add"><th scope="row">MCP tool poisoning</th><td class="">Not applicable</td><td class="y">Yes</td></tr><tr class="add"><th scope="row">AI-driven tool invocation</th><td class="">Not inherent</td><td class="y">Yes</td></tr><tr class="add"><th scope="row">Cross-MCP tool manipulation</th><td class="">Not applicable</td><td class="y">Possible</td></tr></tbody>
+    </table></div>
+    <p class="prose" style="margin-top:20px">MCP therefore introduces additional AI-specific attack surfaces on top of traditional software supply chain risks.</p>
+  </section>
+
+  <section id="local-remote-and-bridged">
+    <h2 id="h-local-remote-and-bridged"><a class="sec-link" href="#h-local-remote-and-bridged">Local, remote and bridged servers carry different risks</a></h2>
+    <div class="lanes three">
+      <div><h3 id="local-mcp"><a class="sec-link" href="#local-mcp">Local MCP</a></h3>
+        <figure role="group" aria-label="The MCP client talks over stdio to an MCP server process on the same machine.">
+        <ol class="flow"><li>MCP client</li><li class="via">stdio</li><li class="hot">MCP server process</li></ol>
+        </figure>
+        <p class="note">Client and server run on the same machine, with the same privileges unless the server is isolated.</p>
+        <p class="verdict bad">Local code execution risk</p>
+      </div>
+      <div><h3 id="remote-mcp"><a class="sec-link" href="#remote-mcp">Remote MCP</a></h3>
+        <figure role="group" aria-label="The MCP client talks over Streamable HTTP to a remote MCP server.">
+        <ol class="flow"><li>MCP client</li><li class="via">Streamable HTTP</li><li>Remote MCP server</li></ol>
+        </figure>
+        <p class="note">Server code runs on another machine. Unlike a local server, it does not need installing on each device.</p>
+        <p class="verdict good">No direct local server execution</p>
+      </div>
+      <div><h3 id="remote-mcp-through-a-local-bridge"><a class="sec-link" href="#remote-mcp-through-a-local-bridge">Remote through a local bridge</a></h3>
+        <figure role="group" aria-label="The MCP client talks over stdio to a locally installed bridge, which talks over Streamable HTTP to a remote MCP server.">
+        <ol class="flow"><li>MCP client</li><li class="via">stdio</li><li class="hot">Locally installed bridge</li><li class="via">Streamable HTTP</li><li>Remote MCP server</li></ol>
+        </figure>
+        <p class="note">The bridge is local software. One bridge, mcp-remote, had a command injection flaw.</p>
+        <p class="verdict bad">Local software can have flaws</p>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:24px">A remote server is still an MCP server. OWASP names data exfiltration, servers acting with broader rights than the user, prompt injection and tool poisoning among MCP risks.</p>
+  </section>
+
+  <section id="two-governance-layers">
+    <h2 id="h-two-governance-layers"><a class="sec-link" href="#h-two-governance-layers">Control both which code runs and what the AI can access</a></h2>
+    <figure class="layers" role="group" aria-label="Software execution governance decides which code may run on the endpoint. MCP governance decides which capabilities, tools, data and external services the AI is permitted to access. An MCP gateway can help address the second. Some gateways cover only remote servers, so they do not address the first.">
+      <div><h3 id="software-execution-governance"><a class="sec-link" href="#software-execution-governance">Software execution governance</a></h3>
+        <p class="q">What code is permitted to execute on the endpoint?</p>
+        <ol class="flow"><li>Developer runs <code>npx</code> with any package</li><li class="hot">Local MCP server executes</li><li class="new">Some gateways cover only remote servers</li></ol>
+      </div>
+      <div><h3 id="mcp-capability-governance"><a class="sec-link" href="#mcp-capability-governance">MCP governance</a></h3>
+        <p class="q">What capabilities, tools, data and external services is the AI permitted to access?</p>
+        <ol class="flow"><li>AI client</li><li class="hot">MCP gateway</li><li>Approved servers, tools, data and services</li></ol>
+      </div>
+    </figure>
+    <p class="point">Limit <code>npx</code> as well as MCP servers: <code>npx</code> can run any command from an npm package.</p>
+    <p class="prose" style="margin-top:12px">MCP governance should extend existing software supply chain and endpoint security controls, not replace them.</p>
+  </section>
+
+  <section id="principles">
+    <h2 id="h-principles"><a class="sec-link" href="#h-principles">13 principles for using MCP securely</a></h2>
+    <ol class="principles"><li id="principle-1">Only approved, inventoried, and owned MCP servers may be used.</li><li id="principle-2">All agent actions must be traceable to a human user or accountable workload owner.</li><li id="principle-3">All MCP connections must use secure authentication, communication, and credential management.</li><li id="principle-4">Agents and MCP servers must operate with least privilege.</li><li id="principle-5">Sensitive tool actions must require appropriate authorization and human approval where necessary.</li><li id="principle-6">Data accessed or transmitted through MCP must comply with organizational data protection requirements.</li><li id="principle-7">Untrusted content must not override security policies or execution boundaries.</li><li id="principle-8">MCP servers, tools, and dependencies must be trusted and protected against tampering.</li><li id="principle-9">MCP execution must be isolated within controlled system and network boundaries.</li><li id="principle-10">MCP interactions must not bypass established security controls.</li><li id="principle-11">All MCP activities must be logged, monitored, and auditable.</li><li id="principle-12">MCP operations must enforce resource limits, support revocation, and fail securely.</li><li id="principle-13">MCP integrations must undergo security assessment, testing, and ongoing lifecycle management.</li></ol>
+  </section>
+
+  <section id="enterprise-controls">
+    <h2 id="h-enterprise-controls"><a class="sec-link" href="#h-enterprise-controls">Enterprise controls that put the principles into practice</a></h2>
+    <div class="tbl"><table>
+      <thead><tr><th scope="col">Control</th><th scope="col">Recommendation</th></tr></thead>
+      <tbody><tr><th scope="row">Package governance</th><td>Approved publishers and packages</td></tr><tr><th scope="row">Software distribution</th><td>Controlled internal artifact registry</td></tr><tr><th scope="row">Version management</th><td>Pinned versions and locked dependencies</td></tr><tr><th scope="row">Supply chain security</th><td>SCA, malware scanning and provenance verification</td></tr><tr><th scope="row">Execution isolation</th><td>Restricted containers, sandboxes or VMs</td></tr><tr><th scope="row">Network security</th><td>Restricted outbound connectivity</td></tr><tr><th scope="row">Identity</th><td>Dedicated, least-privileged credentials per server</td></tr><tr><th scope="row">MCP governance</th><td>Approved servers and tools</td></tr><tr><th scope="row">Change management</th><td>Review package and tool definition changes</td></tr></tbody>
+    </table></div>
+  </section>
+  </main>
+
+  <footer>
+    <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+    <span id="tag-key" aria-hidden="true"></span><span id="h-tag-key" aria-hidden="true"></span>
+  </footer>
+</div>
+</body>
+</html>

@@ -77,7 +77,7 @@ index.html has no decisions file. Same note as the other pages, centred in the f
 - **Fig. 1 now shows the password going from the customer to the sign-in provider.** The Move card says the portal never receives passwords. The old drawing had no flow between customer and provider, so it did not show that. The provider-to-portal flow is relabelled "identity".
 - **Threat D lives in the document store only.** The register said "Portal and store" while the marker sat on the store. The store is what fills up; the control still runs in the portal.
 - **Threat S names a weakness.** "A session token is stolen" was the attack. The weakness is that sessions do not expire and logout does not end them, which is what ASVS 3.3.1 and 3.3.2 address.
-- **`[recommendation]` tags and a tag key added.** Tagged: the three score levels, the choice of two numbers over DREAD, and the alert on many denials. These are design choices of the page, not from a source. "Our addition" is gone from the footer.
+- **`[recommendation]` tags and a tag key added** (superseded 26 Nov 2026). Tagged: the three score levels, the choice of two numbers over DREAD, and the alert on many denials. These are design choices of the page, not from a source. "Our addition" is gone from the footer.
 - **DREAD opinion cut.** "Five numbers give more to argue about than two" had no source.
 - **Clicking a figure scrolls the register row into view when it is off screen.** On a phone the highlight happened out of sight. Clicking a register row does not scroll.
 - **One click hint kept, in the Fig. 1 caption.** The markers do not look like buttons, so the hint earns its place. It now says what the click does (marks the threat in the register and the matrix). The repeat under Fig. 2 is cut.
@@ -93,3 +93,8 @@ index.html has no decisions file. Same note as the other pages, centred in the f
 - **Five slides for live teaching.** The four questions structure the lesson, with scoring and treatment each getting a slide under question 3. Each slide has a discussion prompt and a worked answer that starts hidden.
 - **One claims portal example.** The slides reuse the worksheet's diagram and risk matrix and derive all six STRIDE examples from its register. The closing exercise asks the group to extend the model with a new handler role.
 - **Presentation state stays in the dialog.** Answers and the selected threat persist between slides during a session. Opening a fresh session hides the answers. The worksheet retains its selected threat, and the slide headings support direct links.
+
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+- Superseded: the 3 Nov entry that added the tags and tag key. The page uses no tags, so the key is gone; its anchors stay as empty spans.

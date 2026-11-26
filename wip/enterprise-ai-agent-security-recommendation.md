@@ -204,7 +204,7 @@ The effort column gives planning estimates **[recommendation]**, not a guarantee
 
 **Limits:**
 
-- Redirection controls reduce transfer paths. Do not treat them as proof that data cannot leave an unmanaged viewing device. **[inference]**
+- Disabling redirection helps prevent users from copying content out of the remote session. **[verified]** (E32) Screen capture protection does not give DRM-level protection. **[verified]** (E33) These controls should not be taken as proof that data cannot leave an unmanaged viewing device.
 
 The following identity limits are **[verified]**:
 
@@ -237,7 +237,7 @@ The following identity limits are **[verified]**:
    - `serverUrl` accepts `*` wildcards. It applies to remote servers only.
    - `serverCommand` is a list. It must match the command and every argument, in order. It applies to local servers only.
 4. **How GitHub decides [verified]:**
-   1. Built-in default servers, such as the built-in GitHub MCP server, are always allowed and cannot be blocked by deny rules.
+   1. Allowlist and denylist rules always allow built-in default servers, such as the built-in GitHub MCP server. In Copilot CLI, the account's Copilot MCP policy still applies: if it disables MCP, that server does not start.
    2. A match in `deniedMcpServers` blocks the server. Deny wins over allow.
    3. If `allowedMcpServers` exists, anything not matched is blocked. If the key is omitted, all servers are allowed unless denied. An empty list blocks everything except built-in servers.
    4. A URL or command with an unresolved `${VARIABLE}` is blocked.
@@ -380,7 +380,7 @@ flowchart LR
 - **Maker credentials:** tools support end-user or maker-provided credentials; user authentication is the default. **[verified]** Require end-user credentials for shared agents that must preserve each user's access limits. Review credential configuration before release; the cited data-policy page does not establish a universal switch that bans maker credentials. **[recommendation]**
 - **Environment groups** hold only managed environments. A published rule is enforced in every member environment and becomes read-only there. There are no per-environment exceptions. **[verified]**
   - Rules include: accessing conversation transcripts, generative AI settings, external models, knowledge sources, sharing agents with Editor or Viewer permission, and Skills in Copilot Studio. **[verified]**
-  - One group rule set covers many environments, which keeps admin work low. **[inference]**
+  - One group rule set covers many environments. Microsoft says this reduces administrative overhead. **[verified]** (E34)
 - **MCP:** connector blocking covers MCP tools that rely on those connectors (see 2.4). **[verified]** For other paths, require approved connections, restrict maker privileges and test both direct and gateway calls. Agent 365 registration alone does not prove default-deny enforcement. Nothing was tested in a tenant. **[recommendation]**
 - Advanced connector policies in the Power Platform admin center are for the stricter zones. **[verified]**
 
@@ -652,7 +652,7 @@ For every call you can answer six questions. The table shows what the preview lo
 
 | Question | Global Secure Access MCP log | Gap and what to do |
 |---|---|---|
-| Who called | User principal name. **[verified, preview]** (E13) | Only for traffic the firewall sees. **[inference]** |
+| Who called | User principal name. **[verified, preview]** (E13) | Only for traffic Global Secure Access can inspect. **[verified, preview]** (E35) |
 | Which server | Destination URL, which the log treats as the server's identifier. **[verified, preview]** (E14) |   |
 | Which tool, with what input | Tool name and input arguments of a tools/call request. **[verified, preview]** (E15) | The page does not say whether sensitive values are masked. **[unverified]** |
 | Result | The response event, matched to the request by event ID. **[verified, preview]** (E16) |   |
@@ -669,13 +669,13 @@ These limits apply to everything in 6.3.
 - On devices, logging needs the client and TLS inspection. A device without the client is not covered, so consultants' own laptops are a gap. **[verified, inference]** (E10, E11)
 - The firewall, the MCP log and the Agent 365 Tools Gateway are all preview. Behavior and licences can change. **[verified, preview]** (E1, E8)
 - The Global Secure Access MCP firewall does not inspect JSON-RPC batches. **[verified]** E31. Verify that the server and backend enforce access independently. **[recommendation]**
-- The firewall is one layer. A server on an approved URL can still return harmful content, so controls 4 and 7 still apply. **[inference]**
+- The firewall is one layer. Connecting a server does not show that every tool result is safe. **[verified]** (E36) Controls 4 and 7 should still apply.
 - Private endpoints, network groups, outbound limits and on-behalf-of: no Microsoft page on them was read for this part. **[unverified]**
 - Nothing here was tested in a real tenant. **[unverified]**
 
 ## 6.7 Evidence
 
-Each quote was checked word for word against the fetched page on 2026-11-06. The check ignores only spacing and curly quotes. It proves the words are on the page, not that the claim reads them correctly.
+Each quote was checked word for word against the fetched page: E1 to E31 on 2026-11-06, E32 to E36 on 2026-11-26. The check ignores only spacing and curly quotes. It proves the words are on the page, not that the claim reads them correctly.
 
 | # | Exact quote | Source |
 |---|---|---|
@@ -710,10 +710,15 @@ Each quote was checked word for word against the fetched page on 2026-11-06. The
 | E29 | Run untrusted servers with least privilege in an isolated environment. | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
 | E30 | "A malicious server can use its tool descriptions to influence agent behavior toward other trusted servers in the same context" | [Azure MCP Server security](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security) |
 | E31 | "JSON-RPC batches aren’t inspected." | [Global Secure Access MCP firewall (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-configure-mcp-firewall) |
+| E32 | Disabling redirection helps prevent users from copying content from the remote session. | [Azure Virtual Desktop screen capture protection](https://learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection) |
+| E33 | Screen capture protection doesn't provide Digital Rights Management (DRM)-level protection. | [Azure Virtual Desktop screen capture protection](https://learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection) |
+| E34 | This centralized approach eliminates the need to configure each environment one-by-one, ensures consistency, significantly reduces administrative overhead | [Environment groups overview](https://learn.microsoft.com/en-us/power-platform/admin/environment-groups) |
+| E35 | Local MCP servers running on a device are not visible because their traffic doesn't have a network footprint that Global Secure Access can inspect. | [Global Secure Access MCP traffic logs (preview)](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-model-context-protocol-logging) |
+| E36 | Trusting a publisher or connecting a server doesn't establish that every tool result is safe. | [Secure development with AI in VS Code](https://code.visualstudio.com/docs/agents/security) |
 
 ---
 
-# Sources (read 2026-11-05 and 2026-11-06)
+# Sources (read 2026-11-05, 2026-11-06 and 2026-11-26)
 
 | Topic | Link | Displayed update date, where available |
 |---|---|---|
@@ -804,5 +809,7 @@ Each quote was checked word for word against the fetched page on 2026-11-06. The
 | API Management, secure access to MCP servers, read 2026-11-06 | https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers | 2026-09-11 |
 | API Management validate-azure-ad-token policy, read 2026-11-06 | https://learn.microsoft.com/en-us/azure/api-management/validate-azure-ad-token-policy | 2026-08-19 |
 | Azure MCP Server security, read 2026-11-06 | https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/security | 2026-07-31 |
+| Azure Virtual Desktop screen capture protection, read 2026-11-26 | https://learn.microsoft.com/en-us/azure/virtual-desktop/screen-capture-protection | 2026-09-29 |
+| Secure development with AI in VS Code, read 2026-11-26 | https://code.visualstudio.com/docs/agents/security | 2026-11-25 |
 | MCP security best practices (draft), read 2026-11-06 | https://modelcontextprotocol.io/docs/draft/tutorials/security/security_best_practices | no date on page |
 | MCP authorization (draft), read 2026-11-06 | https://modelcontextprotocol.io/specification/draft/basic/authorization | no date on page |

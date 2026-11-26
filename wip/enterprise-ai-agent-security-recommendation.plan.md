@@ -84,3 +84,7 @@ Request: split the document into an overview (what it says) and a technical part
 ## 2026-11-06, QA of the 2.1 diagram
 
 Belongs to [the page](enterprise-ai-agent-security-recommendation.html). Compare 2.1 with the rest of the page, add what is missing at the same detail level, keep ids and links, update the ledger. Done: see decisions of the same date.
+
+## 26 November 2026: verify inference tags
+
+- Done: E32 to E36 added and four tagged statements rewritten. Tags about missing information stay.

@@ -33,7 +33,7 @@
 - Superseded on 15 November 2026 by the ten-phase flow, see below. Eight phases: Plan, Code, Review, Build, Test, Release, Deploy, Operate. `devsecops.html` has ten (it adds Design, Monitor and Retire and has no Review). Reason: the owner approved the eight-phase flow. Review is its own phase because an agent checking another agent's change is a separate handoff with its own gate.
 - Superseded on 15 November 2026 by the phase diagram, see below. Lanes are Input, Phase and agent task, Output. Reason: the page's job is to show what moves between phases. Governance and secure development activities stay on `devsecops.html`, which this page links to instead of repeating.
 - The phase split and every input and output are tagged `inference`. Reason: no source prescribes this flow.
-- A fourth gate (retirement) was added on 15 November 2026, see below. Three human gates (spec, merge, production) are tagged `recommendation`. Reason: the placement is a design choice. The sources support human approval of high-impact actions in general, not these three points.
+- A fourth gate (retirement) was added on 15 November 2026, see below. Three human gates (spec, merge, production) are tagged `recommendation` (superseded 26 Nov 2026). Reason: the placement is a design choice. The sources support human approval of high-impact actions in general, not these three points.
 - The second section has four rows: untrusted input, agent access, human approval, traceable handoffs. Each row has one risk and one control. Reason: one home per fact. Vendor passages are labelled "One vendor's implementation" so they do not read as a standard.
 - The AWS bulletin AWS-2025-015 (Amazon Q Developer for VS Code) is not used. Reason: the bulletin describes an over-scoped token in a build configuration and does not mention prompt injection or agents, so it does not support an agent claim.
 - NIST SP 800-218A and the OWASP Top 10 for Agentic Applications 2026 are not quoted. Reason: only their landing pages were read, not the documents. Superseded for the OWASP document on 15 November 2026, see below. Still holds for NIST SP 800-218A.
@@ -59,7 +59,7 @@
 - Ten phases: the eight above plus Monitor (09) and Retire (10). Reason: the owner asked for them. The eight-phase flow folded monitoring into Operate and had nothing on shutting a service down, and with both views on one page the same phase name meant two things.
 - The two views still differ in one place each: the agentic view has Review and no Design, the DevSecOps view has Design and no Review. Not changed, because the owner asked only for Monitor and Retire.
 - Operate is now "Run and respond" and no longer watches. Monitor takes the logs and the records of what the agents did, and hands on alerts, incident tickets and new issues. Alerts go to Operate. Tickets and issues go back to Plan.
-- Retire has a human gate on the shutdown and the data deletion, tagged `recommendation`. Reason: deletion cannot be undone, and the ASI02 passage already quoted in the Human approval row names "delete" among the actions that need human confirmation.
+- Retire has a human gate on the shutdown and the data deletion, tagged `recommendation` (superseded 26 Nov 2026). Reason: deletion cannot be undone, and the ASI02 passage already quoted in the Human approval row names "delete" among the actions that need human confirmation.
 - Retire's risk lines are Agent access (credentials held by the agents must be revoked too) and Human approval. Monitor's are Untrusted input and Traceable handoffs. No new table rows or quotes. Reason: the table's job is the four changes, and the phase lines only point to them.
 - Operate's second risk line is now Traceable handoffs. The Untrusted input line about logs and vulnerability reports moved to Monitor, where those inputs now arrive.
 - The agentic flow uses the `flow-10` layout. The `flow-8` styles are removed.
@@ -116,3 +116,8 @@ Two confirmed fixes in the agentic intro: the DevSecOps view is now described co
 
 - Keep the 55 DevSecOps risks and 30 Agentic DevSecOps risks in their respective phase registers. The agentic theme index links to existing entries. The Markdown file preserves links without repeating risk text or evidence.
 - Keep evidence-review notes in the fact check. The former theme overview remains in Git history. The worked example and presentations illustrate the lifecycle without owning risk entries.
+
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+- Superseded: the `recommendation` tag on the human gates. The gates now read "Have a person ...".

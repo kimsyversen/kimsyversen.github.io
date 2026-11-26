@@ -1331,3 +1331,19 @@ B.e3 wording (B targets trust only the B repository or environment subject) and 
 Pass 14 finding, ruled real by a separate verifier (22 November 2026): GitHub Pages was not mentioned. Unless an enterprise uses Enterprise Managed Users, Pages sites are public by default even from private repositories. A is EMU and always private, so no change there. B.p2 now says to allow private Pages sites only in other organizations, with a test. [unverified]: whether organization owners are restricted by the Pages creation setting, so the test records the owner case. Existing public sites stay published after the setting changes, so the test lists them.
 
 Pass 15 findings, both ruled real by a separate verifier (22 November 2026): (1) rulesets and security configurations never required status checks or code scanning results, though L.a requires "required checks". A.p3, B.p3, A.p4 and B.p4 now say so, with a test in A.p3 (source: Available rules for rulesets). Not checked in a tenant: that both rules can be picked in an enterprise ruleset. (2) B.idp: the quote beside the supported identity providers sentence was the OAuth authorizer quote. Split into two rows, and "works only with" became "supports" because the docs say "compatible with".
+
+## Inference tags checked, 26 November 2026
+
+Scope: the 12 sentences tagged inference. 7 tags removed, each by rewriting the sentence to what a source says, plus advice where needed. Checked by AI. `node github/verify-evidence.mjs`: OK, 95 sourced (D), 5 inference (I), 270 requirement or label (R), 129 quotes against 47 pages. "Facts checked" stays 22 Nov 2026 because no other source was rechecked for meaning.
+
+| Box | Old tagged sentence | Verdict |
+|---|---|---|
+| B.idp | It does not manage team grants. | Not found in a source. Claim dropped. Replaced with what team synchronization does (team synchronization page). |
+| B.scim | It does not manage personal-account ownership or team grants. | Ownership: each member creates and manages a personal account (IAM fundamentals page). Team grants: claim dropped. |
+| A.p2 | This governs repository lifecycle operations; it cannot stop an authorised reader from copying source elsewhere. | Narrowed: the Read role can pull the repository (repository roles page). |
+| A.o2.iac | Separate state and environment names alone do not isolate systems. | Narrowed to Terraform CLI workspaces (Terraform workspaces page). The environment names part is dropped. |
+| A.o3 | Policy credentials, reusable workflows and runner administration can still affect system code or builds. | Narrowed: only the reusable workflow behaviour is sourced. The rest is a requirement. |
+| A.e1 | Neither runner groups nor disposal alone isolate untrusted code. | Replaced with what runner groups restrict and the re-used hardware risk (secure use page), then a requirement. |
+| A.e2 | Cloud-provider claim support varies. | Supported: claim conditions and their format depend on the provider (OIDC reference). |
+
+Still tagged, no source found that says it: c.bound (two sentences), c.ident (browser profile), A.p8 (IP allow list and data leaving), B.e2 (what isolation depends on).

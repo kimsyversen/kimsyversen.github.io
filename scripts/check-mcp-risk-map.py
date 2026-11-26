@@ -322,8 +322,12 @@ def main():
             used[q] += 1
             if q not in data["MSQ"]:
                 problems.append(f"{where}: unknown quote id {q}")
-    for c in data["COMP_M"].values():
-        pass
+    # General view text names its quotes in a data-q attribute.
+    for attr in re.findall(r'<[a-z]+\b[^>]*\sdata-q="([^"]*)"', markup):
+        for q in attr.split():
+            used[q] += 1
+            if q not in data["MSQ"]:
+                problems.append(f"data-q: unknown quote id {q}")
     for q in data["MSQ"]:
         if q not in used:
             problems.append(f"quote {q} is never used")

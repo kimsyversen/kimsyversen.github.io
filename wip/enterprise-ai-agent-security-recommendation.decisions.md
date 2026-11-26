@@ -104,3 +104,7 @@ Belongs to: [enterprise-ai-agent-security-recommendation.md](enterprise-ai-agent
 - Left out on purpose to keep the detail level: Defender for Cloud Apps session policies, access package expiry, personal Copilot account blocking, risk tiers, Studio connector detail. They are table-level facts in 2.2 to 2.5, not layers.
 - Updated step 2, 3 and 4 of the numbered path under the diagram to match. All new text is labels and design requirements; 18 verdicts added to the ledger (391 texts). The checker proves a verdict was recorded for the exact wording, not that the verdict is right.
 - Checked: checker passes. In Chrome, no text leaves its box, no two texts overlap, no arrow crosses a text. 375 px: no page scroll, the diagram scrolls inside its region. Real mouse clicks over localhost on Agent 365 route, catalog route and limits in 2.6 each set the right hash and scrolled the target to the top; the 2.7 link resolves to an existing id. No console errors. Dark mode not re-run: the new elements reuse existing classes and the preview cannot emulate dark for local files.
+
+## 26 November 2026: inference tags
+
+- Removed an inference tag only where a quote supports the sentence, narrowing the wording to the quote. Advice is worded with "should" and not tagged.

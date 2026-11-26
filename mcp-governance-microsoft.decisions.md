@@ -2,6 +2,11 @@ Belongs to: [MCP Governance in a Microsoft ecosystem](mcp-governance-microsoft.h
 
 # Decisions: MCP Governance in a Microsoft ecosystem
 
+## 26 Nov 2026, recommendation tags removed
+
+- The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+- Superseded: earlier entries that label requirements `recommendation`. Sentences that read as product facts without the tag were reworded as advice.
+
 ## 2026-11-19, gateway release and integration boundaries
 
 - Supersedes the preview product and the v2-only Foundry routing assumptions below. Keep API Management Standard v2 or Premium v2 as the baseline for a private MCP backend. List standalone Azure AI Gateway in Released only and pilot its private networking separately.
@@ -325,3 +330,11 @@ Owner's ask: simplify, keep the essentials, readers are skilled. Fact check off 
 ## 2026-11-12, no "not tested in a tenant" statements
 
 Removed "Nothing is tested in a tenant" from the lead, the first item in the gaps list, the same sentence from the preview Baseline line, and the footer sentence on tests in a tenant, laptop or agent runtime. This applies to both MCP pages, since they share the builder. Reason: the owner said a proposed design is obviously untested, so saying so adds nothing. The acceptance tests still read "Not run", and the pilot steps say what to test.
+
+## 26 Nov 2026, claims narrowed to current sources
+
+Where a source changed, the claim was narrowed or cut instead of tagged `unverified`, so each cell keeps only what a current quote says. The guardrail figure says "Allow all skips ordinary confirmations" because the source no longer says all calls.
+
+## 26 Nov 2026, inference tags
+
+A tag is removed only when a quoted source states the claim, or the claim was narrowed to what a source states. A repeated conclusion is cut and left at its tagged home. Interpretation keeps its tag.

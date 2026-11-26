@@ -21,7 +21,7 @@ Written 2026-11-06, cut to GitHub Copilot in VS Code the same day. Nothing here 
 | 3 | VS Code managed-only | Win | ChatAllowManagedMcpServersOnly | only the managed allowlist counts | |
 | 4 | VS Code macOS profile | Mac | edit the sample .mobileconfig from the app, upload as an Intune custom profile | the sample holds the three MCP policies, A runs, B blocked | |
 | 5 | Bad value | Mac | put a syntax error in a policy value | the setting is not applied, the Window log shows an error | |
-| 6 | GitHub Copilot MDM | Win, Mac | native MDM values (strings) | A runs, B blocked, built-in GitHub server cannot be blocked | |
+| 6 | GitHub Copilot MDM | Win, Mac | native MDM values (strings) | A runs, B blocked, built-in GitHub server still runs despite a deny rule | |
 | 7 | Re-apply, Windows | Win | change a policy value by hand | Intune puts it back, or a remediation does | |
 | 8 | Re-apply, macOS | Mac | remove the profile or edit a value | Intune puts it back | |
 | 9 | Firewall | Win | Intune block-all-outbound with an allow rule for A's host | A's host reachable, B's host not | |
