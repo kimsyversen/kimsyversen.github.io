@@ -18,6 +18,7 @@ from urllib.parse import quote as urlquote
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from section_anchors import add_anchors  # noqa: E402
 from developer_ws2_evidence import BLOCK_FRAGS, CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
+from governance_evidence import LATER, LATER_CHECKED  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "wip" / "Developer-WS2.html"
@@ -145,7 +146,8 @@ CLIENTS = table(
          C("Native MDM delivery is available on Windows and macOS. All native MDM values must be strings.", ["gh-mdm", "gh-str"])
          + C("The deploy and reference pages do not name Intune, so an Intune route is an inference.", [], [INF]),
          C("The effective allowlist is the intersection of all sources: a server must be permitted by every source.", ["gh-inter"]),
-         C("First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules and cannot be blocked.", ["gh-builtin"])],
+         C("First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules.", ["gh-builtin"])
+         + C("In Copilot CLI, the account's Copilot MCP policy still applies to them. If it disables MCP, the built-in GitHub MCP server does not start.", ["gh-builtin-cli", "gh-builtin-off"])],
     ],
 )
 
@@ -231,7 +233,7 @@ SECTIONS = [
             L("Nothing tested in a real tenant", tag="p")),
     section("rollout", "Rollout", ROLLOUT),
     section("evidence", "Evidence",
-            L("Checked 2026-11-06: every quote below matched its source word for word, by script.", tag="p"),
+            L(f"Checked 2026-11-06: every quote below matched its source word for word, by script. {', '.join(IDS[k] for k in LATER)} matched on {LATER_CHECKED}.", tag="p"),
             R("A match must be read as proof of the words only, not of the claim built on them.", tag="p"),
             L("Tags: inference means reasoned from the quotes with no source of its own. Unverified means not checked.", tag="p"),
             EVIDENCE),

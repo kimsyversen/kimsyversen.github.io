@@ -11,11 +11,13 @@
 
 This proves the words are on the page the URL serves today. It does not prove that the claim built on the words is right. Re-run it before moving "Documentation checked".
 
+Rerun on 2026-11-26: 90 quotes. V5, V89 and V90 found. V15, V17 (a365-byo), V50 (agent-builder), V52 (tk-build), V54, V56 and V57 (tk-govern) were not found word for word. They are open: not rechecked or changed. "Documentation checked" was not moved.
+
 ## Verdicts
 
 | Block | Verdict |
 |---|---|
-| VS Code and GitHub row | Confirmed by V1 to V3 (publish, hourly apply), V4 (custom agent profiles exempt), V5 (built-in server exempt), V8 (coverage varies). "A person approves the pull request" is the recommended process, not a vendor fact. |
+| VS Code and GitHub row | Confirmed by V1 to V3 (publish, hourly apply), V4 (custom agent profiles exempt), V5 (built-in server exempt from deny rules; corrected 2026-11-26, the earlier "cannot be blocked" is no longer on the source page), V89 and V90 (in Copilot CLI, disabling MCP in the account policy stops that server; added 2026-11-26), V8 (coverage varies). "A person approves the pull request" is the recommended process, not a vendor fact. |
 | Tools Gateway row | Confirmed by V9 to V13, V26 and V37 to V39. V37 shows blocking a tool in the admin center. V38 shows tool-level blocking needs the AI Gateway tier. V39 shows v1 tiers are unsupported. Allow or block by pipeline: unverified (the page documents the admin center only). Whether a new server starts allowed or blocked: unverified (searched the gateway and API Management pages, not stated). |
 | BYO row | Confirmed by V14 to V20 and V42. V42 shows registration through the `a365` command line, so registration can be scripted. Approval is a person in the admin center. Approval from a pipeline: unverified. |
 | Copilot Studio row | V21 confirms connector blocking also blocks MCP tools. V43 shows the `New-DlpPolicy` PowerShell command creates a data policy, so a pipeline could call it. Mapping the Git list to connector entries is our own build, labelled recommendation and untested. Moved from inference. |

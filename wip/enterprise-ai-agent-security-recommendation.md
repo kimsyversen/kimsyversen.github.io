@@ -237,7 +237,7 @@ The following identity limits are **[verified]**:
    - `serverUrl` accepts `*` wildcards. It applies to remote servers only.
    - `serverCommand` is a list. It must match the command and every argument, in order. It applies to local servers only.
 4. **How GitHub decides [verified]:**
-   1. Built-in default servers, such as the built-in GitHub MCP server, are always allowed and cannot be blocked by deny rules.
+   1. Allowlist and denylist rules always allow built-in default servers, such as the built-in GitHub MCP server. In Copilot CLI, the account's Copilot MCP policy still applies: if it disables MCP, that server does not start.
    2. A match in `deniedMcpServers` blocks the server. Deny wins over allow.
    3. If `allowedMcpServers` exists, anything not matched is blocked. If the key is omitted, all servers are allowed unless denied. An empty list blocks everything except built-in servers.
    4. A URL or command with an unresolved `${VARIABLE}` is blocked.

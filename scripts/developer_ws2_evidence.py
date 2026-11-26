@@ -96,6 +96,7 @@ for _k in REUSE:
     SOURCES.setdefault(_s, ge.SOURCES[_s])
 
 QUOTES = list(NEW_QUOTES) + [(k, _ge_q[k][0], _ge_q[k][1]) for k in REUSE] + LATE_QUOTES
+QUOTES += [(k, *_ge_q[k]) for k in ("gh-builtin-cli", "gh-builtin-off")]
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
 
 # A text fragment cannot cross an HTML block (table cell, code line). For quotes that

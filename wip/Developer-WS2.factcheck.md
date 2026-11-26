@@ -72,7 +72,7 @@ Belongs to: [Developer-WS2.html](Developer-WS2.html)
 | label | Nothing tested in a real tenant |
 | label | Open gaps |
 | label | Rollout |
-| label | Checked 2026-11-06: every quote below matched its source word for word, by script. |
+| label | Checked 2026-11-06: every quote below matched its source word for word, by script. V21, V50, V51 matched on 2026-11-26. |
 | requirement | A match must be read as proof of the words only, not of the claim built on them. |
 | label | Tags: inference means reasoned from the quotes with no source of its own. Unverified means not checked. |
 | label | Evidence |
@@ -116,7 +116,8 @@ Each row is one claim paragraph on the page. Two steps were done. The script fou
 | 19 | Native MDM delivery is available on Windows and macOS. All native MDM values must be strings. | V8 V9 | Read against the quotes 2026-11-06; matches. |
 | 20 | The deploy and reference pages do not name Intune, so an Intune route is an inference. | none | Labelled inference. No quote. Drawn from pages read, not stated on them. |
 | 21 | The effective allowlist is the intersection of all sources: a server must be permitted by every source. | V10 | Read against the quotes 2026-11-06; matches. |
-| 22 | First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules and cannot be blocked. | V21 | Read against the quotes 2026-11-06; matches. |
+| 22 | First-party servers, such as the built-in GitHub MCP server, are exempt from deny rules. | V21 | Corrected 2026-11-26. The earlier wording added "cannot be blocked", which the page no longer says. Read against the quote; matches. |
+| 22a | In Copilot CLI, the account's Copilot MCP policy still applies to them. If it disables MCP, the built-in GitHub MCP server does not start. | V50 V51 | Added 2026-11-26. Read against the quotes; matches. Not tested. |
 | 23 | Intune can import custom ADMX and ADML templates. The import is a public preview. | V11 V12 | Read against the quotes 2026-11-06; matches. |
 | 24 | macOS settings must be in an .xml or .mobileconfig file. The channel cannot be changed after the profile is saved. | V13 V14 | Read against the quotes 2026-11-06; matches. |
 | 25 | Remediations need devices that are Microsoft Entra joined or hybrid joined. One license listed is Windows Enterprise E3 or E5, included in Microsoft 365 F3, E3 or E5. | V15 V16 | Read against the quotes 2026-11-06; matches. |
@@ -142,6 +143,8 @@ Each row is one claim paragraph on the page. Two steps were done. The script fou
 - The same script checks that every chip points at a listed quote, that no paragraph has more than 60 words, that no en or em dash is on the page, that the Made with AI note is word for word, that no note file is named on the page, and that the ledger above matches the page text exactly.
 - The ledger script proves a verdict was recorded for the exact wording. It does not prove the verdict is right. Each label or requirement was judged by reading it.
 - Scope cut on 2026-11-06: the page covers GitHub Copilot in VS Code only (D21). The quotes for Claude Code, Codex, Claude Desktop and Cursor, and for PowerShell scripts, macOS shell scripts and Win32 apps, were removed with their claims. Quote numbers were reassigned in that cut.
+
+- 2026-11-26, after the claim about the built-in GitHub MCP server was corrected: the same command ran against pages fetched that day. 51 quotes; V21, V50 and V51 found. V1 and V11 were not found word for word and stay open: they were not rechecked or changed. The ledger matches the page text. "Current as of" dates were not moved.
 
 ## Findings that rest on absence
 

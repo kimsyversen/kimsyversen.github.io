@@ -15,7 +15,7 @@ from urllib.parse import quote as urlquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from section_anchors import add_anchors  # noqa: E402
-from governance_evidence import CHECKED, IDS, QUOTES, SOURCES  # noqa: E402
+from governance_evidence import CHECKED, IDS, LATER, LATER_CHECKED, QUOTES, SOURCES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 LONG = "enterprise-ai-agent-security-recommendation.html"
@@ -194,8 +194,8 @@ def _row(n, path, where, text, keys):
 
 TRAFFIC_ROWS = "\n".join([
     _row(1, "GitHub settings file to VS Code", "Reaches the client",
-         "Policy, not traffic. Create or update the file in the <code>.github-private</code> repository. Updated settings are applied within about an hour. Coverage varies between environments. The built-in GitHub MCP server cannot be blocked.",
-         ["gh-file", "gh-server", "gh-hour", "gh-vary", "gh-builtin"]),
+         "Policy, not traffic. Create or update the file in the <code>.github-private</code> repository. Updated settings are applied within about an hour. Coverage varies between environments. The built-in GitHub MCP server is exempt from deny rules. In Copilot CLI, disabling MCP in the account policy stops it.",
+         ["gh-file", "gh-server", "gh-hour", "gh-vary", "gh-builtin", "gh-builtin-cli", "gh-builtin-off"]),
     _row(2, "VS Code to the Global Secure Access client", "End user client",
          f"The firewall prerequisites include the Global Secure Access client on a device that is Entra joined or hybrid joined, and TLS inspection, without which it cannot enforce MCP policy. It also needs an Entra Internet Access license, which E7 includes.",
          ["fw-client", "fw-tls", "fw-license", "e7-entra"]),
@@ -321,9 +321,9 @@ Q1 = f"""
 ROWS = "".join([
     route("pub-vscode", "VS Code and GitHub Copilot", "GitHub <code>managed-settings.json</code>",
           "Allow or deny MCP servers set in user and repository settings. Create or update the file in the <code>.github-private</code> repository. Updated settings apply automatically within about an hour.",
-          "Cover servers in repository custom agent profiles. Block the built-in GitHub server. Coverage varies by environment.",
+          "Cover servers in repository custom agent profiles. Block the built-in GitHub server with a deny rule. In Copilot CLI, disabling MCP in the account policy stops it. Coverage varies by environment.",
           f"Settings apply automatically once the file is updated. Using a pull request to approve each change is our own process. {REC}",
-          ["gh-file", "gh-server", "gh-hour", "gh-profiles", "gh-builtin", "gh-vary"]),
+          ["gh-file", "gh-server", "gh-hour", "gh-profiles", "gh-builtin", "gh-builtin-cli", "gh-builtin-off", "gh-vary"]),
     route("pub-a365", "Agent 365 Tools Gateway", "Agent 365 with Azure API Management",
           "Find MCP servers registered with the gateway. Discovery might take a few minutes. Block or allow a whole server, and single tools on supported servers. Block a tool in the admin center when the server is on the AI Gateway tier. Create MCP servers in API Management with REST API, ARM, Bicep, CLI or Terraform.",
           f"Connect the gateway without the Global Administrator role. Block a tool on API Management v1 tiers. Set allow or block from a pipeline: the page documents the admin center only. {UNV} Know whether a new server starts allowed or blocked. {UNV}",
@@ -491,7 +491,7 @@ GAPS_LIST = [
     f"<strong>Local servers.</strong> The network firewall and its logs do not see them. Defender for Endpoint discovers supported ones on onboarded devices. No source shows it blocking a server. {UNV} The GitHub exact-command list is the one restriction with a source, on supported clients. {ev('fw-remote', 'log-remote', 'def-disc', 'gh-exact')}",
     f"<strong>Intune allow list.</strong> The default outbound block stops all traffic that matches no rule, not only MCP, and Microsoft calls it fit for certain highly secure environments. Domain rules fail behind a proxy, secure DNS, some VPNs and cached addresses. Windows only. Whether the Intune firewall profile takes domain names directly: not shown. Not tested. {ev('ifw-block', 'ifw-ver', 'dk-secure', 'dk-limits')} {UNV}",
     f"<strong>Defender discovery needs.</strong> The commercial cloud, Defender for Endpoint Plan 2 at minimum, and antivirus in active mode. Windows needs antivirus platform 4.18.26090.9 or later. macOS needs Defender for Endpoint 101.26072.0017 or later. Microsoft says discovery is not a complete inventory of installed software. {ev('def-cloud', 'def-lic', 'def-av', 'def-os', 'def-win', 'def-mac', 'def-incomplete')}",
-    f"<strong>GitHub exemptions.</strong> Custom agent profiles and the built-in server are exempt. Coverage varies by environment. {ev('gh-profiles', 'gh-builtin', 'gh-vary')}",
+    f"<strong>GitHub exemptions.</strong> Allow and deny rules skip custom agent profiles. Deny rules exempt the built-in server, but in Copilot CLI disabling MCP in the account policy stops it. Coverage varies by environment. {ev('gh-profiles', 'gh-builtin', 'gh-builtin-cli', 'gh-builtin-off', 'gh-vary')}",
     f"<strong>Direct connections.</strong> The gateway does not route agents by itself. Restrict server connectivity so the gateway is the only caller. Permissions at the API or data source still apply. {ev('apim-route', 'apim-restrict')}",
     f"<strong>Agent Builder.</strong> It has no external actions of its own, and draft agents from it are not in the inventory. An on or off switch is the only control the page documents. {ev('ab-ext', 'ab-copy', 'ab-draft', 'ab-admin')}",
     f"<strong>Agents Toolkit.</strong> Developers can add an MCP server as a plugin to a declarative agent. The admin center can block the plugin, but no source shows the Git list, the gateway or the firewall applying to it. {ev('tk-build', 'tk-block', 'tk-noaccess')} {UNV}",
@@ -539,7 +539,7 @@ EVIDENCE = f"""
       <h2 id="h-e">Quotes behind the route table</h2>
     </div>
     <div class="blk" style="margin-top:20px">
-      <p class="sub">Each quote was found word for word on its source page on {CHECKED}. The link opens the page at the quote. Page date is the date the page shows.</p>
+      <p class="sub">Each quote was found word for word on its source page on {CHECKED}, except {', '.join(IDS[k] for k in LATER)}, found on {LATER_CHECKED}. The link opens the page at the quote. Page date is the date the page shows.</p>
       <div class="tbl-wrap"><table class="tbl src">
         <thead><tr><th>Id</th><th>Quote</th><th>Source</th><th>Page date</th></tr></thead>
         <tbody>

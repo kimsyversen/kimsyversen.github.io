@@ -6,6 +6,14 @@
 **Not tested:** nothing was run in a real tenant. All verdicts come from documentation, not behavior.
 
 
+## Built-in GitHub MCP server (2026-11-26)
+
+Corrects one list item under "How GitHub decides" in section 2.3 and qualifies row 44. Only this item was rechecked.
+
+| Claim | Verdict | What the source says | Source |
+|---|---|---|---|
+| Allowlist and denylist rules always allow built-in default servers. In Copilot CLI, the account's Copilot MCP policy still applies: if it disables MCP, the built-in GitHub MCP server does not start. | Corrected. The old item said the server cannot be blocked, with no CLI exception. | "First-party Copilot servers, such as the built-in GitHub MCP server, are exempt from these deny rules." "If that policy disables MCP, the built-in GitHub MCP server does not start." "Always allow built-in default servers, such as the built-in GitHub MCP server." | [Managed settings reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings), [Allowlist page](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-enterprise-allowlist) |
+
 ## Current review status (2026-11-05)
 
 This statement review supersedes earlier verdicts where they conflict. Earlier passes remain below as history, including their unresolved questions. Their claims of exhaustive reading and absence of documentation are not evidence of universal product behavior.

@@ -79,7 +79,7 @@ QUOTES = [
     ("gh-file", "gh-deploy", "In the repository, create or update copilot/managed-settings.json"),
     ("gh-server", "gh-deploy", "Server-managed (.github-private repository)"),
     ("gh-profiles", "gh-ref", "allowedMcpServers and deniedMcpServers apply to MCP servers defined in user settings and repository settings, but don't apply to MCP servers defined in repository custom agent profiles."),
-    ("gh-builtin", "gh-ref", "First-party Copilot servers, such as the built-in GitHub MCP server, are exempt from deny rules and cannot be blocked."),
+    ("gh-builtin", "gh-ref", "First-party Copilot servers, such as the built-in GitHub MCP server, are exempt from these deny rules."),
     ("gh-exact", "gh-ref", "Matches the exact command and each argument for a local server"),
     ("gh-wild", "gh-ref", "Wildcards and command-line expansion are not supported."),
     ("gh-vary", "gh-ref", "Coverage of policies and enterprise managed settings currently varies between environments."),
@@ -163,6 +163,11 @@ QUOTES = [
     ("dk-limits", "win-dk", "Limitations include: websites accessed via proxy, secure DNS services, certain VPN tunnel configurations, cached IPs on the endpoint"),
     ("dk-secure", "win-dk", "The default configuration of Blocked for Outbound rules can be considered for certain highly secure environments."),
     ("graph-cp", "graph-cp", "Create a new deviceManagementConfigurationPolicy object."),
+    ("gh-builtin-cli", "gh-ref", "In Copilot CLI, the account's Copilot MCP policy still applies to trusted first-party servers"),
+    ("gh-builtin-off", "gh-ref", "If that policy disables MCP, the built-in GitHub MCP server does not start."),
 ]
 
 IDS = {key: f"V{i}" for i, (key, _, _) in enumerate(QUOTES, 1)}
+# Quotes found after CHECKED. The evidence tables name them with their own date.
+LATER_CHECKED = "2026-11-26"
+LATER = ["gh-builtin", "gh-builtin-cli", "gh-builtin-off"]

@@ -1010,7 +1010,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 </ul>
 </li>
 <li><strong>How GitHub decides [verified]:</strong><ol>
-<li>Built-in default servers, such as the built-in GitHub MCP server, are always allowed and cannot be blocked by deny rules.</li>
+<li>Allowlist and denylist rules always allow built-in default servers, such as the built-in GitHub MCP server. In Copilot CLI, the account's Copilot MCP policy still applies: if it disables MCP, that server does not start.</li>
 <li>A match in <code>deniedMcpServers</code> blocks the server. Deny wins over allow.</li>
 <li>If <code>allowedMcpServers</code> exists, anything not matched is blocked. If the key is omitted, all servers are allowed unless denied. An empty list blocks everything except built-in servers.</li>
 <li>A URL or command with an unresolved <code>${VARIABLE}</code> is blocked.</li>
