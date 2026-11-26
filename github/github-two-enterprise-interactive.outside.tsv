@@ -285,7 +285,7 @@ L	B.people description[2]	Partners added as outside collaborators are not covere
 L	B.people description[3]	Do not require corporate SSO for external contributors to public repositories; members still authenticate through SAML.
 L	B.people description[4]	Contributors may also hold separately approved private access, so review grants rather than assuming identity categories are exclusive.
 R	B.idp description[0]	Use a separate SAML and SCIM integration for each B organization, with credentials separate from A.
-R	B.idp description[3]	Configure supported team synchronization or separate automation and reconcile it.
+R	B.idp description[3]	For team grants, configure supported team synchronization or separate automation and reconcile it.
 R	B.scim description[1]	Enforce SAML and configure SCIM separately in each organization.
 R	A.p1 description[1]	This design uses private only.
 R	A.p1 description[2]	User-owned repos and private forking are turned off, and visibility changes are restricted.
@@ -388,8 +388,10 @@ R	A.o2 description[0]	A second critical system with its own owners, security lea
 R	A.o2 description[1]	Its credentials and teams are not shared with critical-system-a.
 R	A.o2.src description[0]	Same baseline as the other system, with CODEOWNERS that name this system's reviewers.
 R	A.o2.iac description[0]	Apply the same checks with separate state, protected environments and credentials.
+R	A.o2.iac description[1]	Backend access controls and deployment trust policies must reject the other system.
 R	A.o3 description[0]	Holds shared tooling and policy automation.
 R	A.o3 description[1]	Do not grant platform-team members blanket read access to system repositories.
+R	A.o3 description[3]	Scope policy credentials, reusable workflows and runner administration, and review platform changes as a supply-chain trust path.
 R	A.o3.pol description[0]	Settings and rules as code.
 R	A.o3.pol description[1]	Changes need two approvals including security, and the result is compared with live settings to catch drift.
 R	A.o3.tool description[0]	Shared actions and tools used by builds are pinned to commits, signed and reviewed before any system uses them.
@@ -418,6 +420,7 @@ R	B.o3.exp description[1]	No secrets and no internal data.
 R	B.o3.exp description[2]	Archived when unused, and review remaining access separately.
 R	B.o3.part description[0]	Partners are recertified on their own review cycle, with scoped roles and an expiry.
 R	A.e1 description[0]	Require disposable runners per system or trust level, selected repository/workflow access, restricted repository-level runner creation, patched images, removed disks/caches and controlled egress.
+R	A.e1 description[4]	Do not rely on groups or disposal alone to isolate untrusted code.
 R	A.e2 description[0]	Use short-lived OIDC deployment credentials.
 R	A.e2 description[1]	On github.com, configure the enterprise-specific issuer and require the exact issuer, audience and approved repository/environment subject in target trust policies.
 R	A.e2 description[2]	Match enterprise claims where supported, or encode required constraints in the subject.
@@ -613,7 +616,10 @@ N	script	tw-a pa
 N	script	tw-b pb
 N	script	" id="enterprise-
 N	script	" aria-label="Enterprise
-N	script	<a class="sec-link" href="#enterprise-
+N	script	enterprise-a-sensitive
+N	script	enterprise-b-internal-and-public
+N	script	<h2 id="
+N	script	"><a class="sec-link" href="#
 L	script	ENTERPRISE A · SENSITIVE
 L	script	ENTERPRISE B · INTERNAL AND PUBLIC
 R	script	Enterprise Managed Users. Source code and IaC for classified critical systems.
@@ -652,14 +658,18 @@ L	script	SCIM suspension and IdP triggers
 L	script	Enterprise teams
 L	script	Enterprise Managed Users concept
 L	script	SAML scope
+L	script	Authentication methods
+L	script	Team synchronization
 L	script	Security manager role
 L	script	Runner groups
 L	script	Reusable workflows
+L	script	How reused workflows run
 L	script	Available rules
 L	script	CODEOWNERS
 L	script	Push protection limits
 L	script	Deployment environments
 L	script	OIDC issuer, audience and subject
+L	script	Terraform CLI workspaces
 L	script	Enterprise rulesets
 L	script	npm trusted publishing
 L	script	PyPI trusted publishing
@@ -677,6 +687,7 @@ L	script	Custom properties
 L	script	Organization archiving
 L	script	Enterprise roles
 L	script	Repository policies (preview)
+L	script	Repository roles
 L	script	Ruleset layering
 L	script	Security configurations
 L	script	Advanced Security products

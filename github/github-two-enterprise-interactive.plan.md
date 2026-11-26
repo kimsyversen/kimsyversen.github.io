@@ -14,3 +14,5 @@ Goal: a reader can check every factual claim from the diagram itself.
 8. Keep the fact check, decisions and the index date in step.
 
 Open: confirm in a browser that text-fragment links highlight the passage.
+
+26 November 2026: checked the inference tags against sources. 7 removed, 5 stay. Results are in the fact check.

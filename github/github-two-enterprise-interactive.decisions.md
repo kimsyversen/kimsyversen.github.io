@@ -132,3 +132,9 @@ Belongs to: [GitHub two-enterprise reference](github-two-enterprise-interactive.
 22 November 2026: added a GitHub Pages sentence and test to B.p2, because B uses personal accounts and Pages sites are public by default there. A needs nothing, since EMU Pages sites are always private.
 
 22 November 2026: A.p3, B.p3, A.p4, B.p4 now require status checks and code scanning results, because L.a depended on required checks that no box defined. B.idp says "supports" instead of "works only with", matching the docs wording.
+
+## 26 November 2026: inference tags
+
+- Removed a tag only when a source supports the new wording. Where a source covered part of a sentence, the sentence was narrowed to that part and the rest was dropped or written as a requirement.
+- Added Terraform's workspaces page to A.o2.iac as an example. The page otherwise names no infrastructure tool.
+- Reviewed list: added verdicts for four new requirement sentences and five source titles, and for four section-link script fragments that had no verdict, and removed one stale entry. Set by the AI. Sign-off by a person stays NONE.
