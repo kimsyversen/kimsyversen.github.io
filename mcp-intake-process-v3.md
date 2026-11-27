@@ -136,11 +136,66 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ## Security assessment methodology
 
-This section supports Step 3. It defines what evidence to collect, how to collect it and how to evaluate it. The intake workflow remains independent of specific scanning products.
+<a id="3-assessment-execution"></a>
 
-Assess the MCP server in the context of its intended execution environment: the MCP client, execution identity, accessible credentials, other available tools, exposure to untrusted content and runtime security controls. A server that is acceptable in isolation may introduce unacceptable risk when combined with other agent capabilities.
+### 1. Assessment execution
 
-### 1. Security signals and verification methods
+| Order | Activity | Output |
+|---|---|---|
+| 1 | Identify the publisher, operator, package or endpoint. [Select checks for the deployment model](#2-scanning-techniques-and-applicability). Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls. | Assessment scope and selected checks |
+| 2 | Obtain available artifacts without executing them. Use the [domain verification methods](#3-security-signals-and-verification-methods) to check provenance and scan code, dependencies, malware indicators and embedded secrets. | Static assessment evidence |
+
+**Before connecting or running code**, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.
+
+| Order | Activity | Output |
+|---|---|---|
+| 3 | Connect from the test environment. List the server's capabilities and identify its authentication requirements. | Capability and authentication inventory |
+| 4 | Inspect tool definitions, resources, prompts and sample responses. Treat server content as untrusted, including during AI-assisted scanning. Check who controls that content and what the agent can do with its other tools. | Findings on server content and combined tool access |
+| 5 | Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems. | Test results and evidence of enforcement |
+| 6 | Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions. | Proposed approval baseline |
+| 7 | [Record the evidence](#4-evaluate-and-record-evidence), identify unresolved controls and specify any safeguards needed for approval. | Completed assessment and recommendation |
+
+### 2. Scanning techniques and applicability
+
+- **Required** means collect evidence for this area.
+- **As applicable** means perform the check when the feature or control is in scope.
+- **If available** means use the source, artifact or other material if you can obtain it.
+- **Risk-based** means choose the depth of testing based on exposure, effective privileges and potential impact. Record your rationale.
+
+If evidence is missing for an applicable control, record UNKNOWN and assess alternative evidence or enforceable safeguards. Use N/A only when the control does not apply, and record why.
+
+| Technique | Local or internally hosted | Externally hosted | Example tools or methods |
+|---|---|---|---|
+| Provenance and identity verification | Required | Required | MCP Registry, Sigstore, npm provenance, vendor verification |
+| Dependency inventory and vulnerability scanning | Required | If available | Syft (SBOM), OSV-Scanner (SCA) |
+| Static code analysis (SAST) | Required | If available | Semgrep, CodeQL |
+| Malware and behavioral code analysis | Required | If available | YARA, Cisco MCP Scanner |
+| Secret scanning | Required | If available | Gitleaks |
+| MCP-specific scanning and capability discovery | Required | Required | Cisco MCP Scanner, MCP Inspector |
+| Authentication and authorization testing | As applicable | As applicable | MCP Inspector, dedicated protocol and access-control tests |
+| Ambient credential and execution identity analysis | Required | Required for client/agent; supplier evidence for server | Process identity, environment and credential isolation tests |
+| Untrusted content and cross-tool exposure analysis | Required | Required | Data-flow and agent capability analysis |
+| Indirect prompt injection testing | Risk-based | Risk-based | Synthetic adversarial content and controlled agent tests |
+| Runtime behavioral analysis | Required | Limited to observable behavior | Isolated sandbox, filesystem, network and process monitoring |
+| Supplier security assessment | As applicable | Required | Existing supplier assessment process |
+| Update mechanism analysis | Required | Supplier evidence; inspect observable changes | Startup and dependency configuration, code and runtime inspection |
+| MCP client configuration scanning | Required | Required | Managed configuration inventory and comparison against approved catalogue |
+| Change baseline and runtime enforcement verification | Required | Required | Artifact hashes, metadata fingerprints, configuration and functional tests |
+| Agent-to-tool activity traceability | As applicable | As applicable | Correlated audit events and representative tool-call tests |
+
+For externally hosted servers, check whether the supplier's audit reports, penetration-test summaries or security documentation cover the service, period and controls under review. Tests from outside the service can establish only what you observe.
+
+Reuse enterprise tools where possible. The examples do not guarantee detection coverage. Maintain tool versions and configurations separately. Check how a scanner handles data before sending code, tool metadata or responses to an external service.
+
+#### MCP client configuration scanning
+
+Inspect user, workspace and centrally managed configurations, including startup executables and arguments, package versions or digests, remote URLs, credential references and inherited environment settings. Verify policy precedence and whether user or repository configuration can bypass the approved configuration. Do not collect raw credential values.
+
+During intake, inspect the proposed configuration. Before production enablement, verify that the deployed configuration and runtime restrictions match the approved baseline. After approval, repeat discovery and comparison to detect unauthorized servers and drift. Configuration discovery alone does not prove that unapproved servers cannot execute; test enforcement separately.
+
+<a id="1-security-signals-and-verification-methods"></a>
+
+### 3. Security signals and verification methods
 
 Collect the applicable signals in each of the four assessment domains. Use deterministic tests where possible, heuristic scanning to identify suspicious behavior, and manual review where technical evidence is insufficient.
 
@@ -152,8 +207,8 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 |---|---|---|
 | Server identity, URL, domain and operator | Verify publisher affiliation, endpoint identity and TLS where applicable | Partial |
 | Authentication mechanism and OAuth metadata | Protocol discovery, configuration review and metadata validation | Partial |
-| Token audience, issuer and expiration | Positive and negative authentication tests using dedicated test credentials | Partial |
-| Requested and granted scopes | OAuth flow inspection and comparison with required permissions | Partial |
+| Token audience, issuer and expiration | Use test credentials to confirm that valid tokens work and tokens with the wrong audience, an untrusted issuer or an expired lifetime are rejected | Partial |
+| Requested and granted scopes | Compare the scopes requested and granted during authorization with the permissions the use case requires | Partial |
 | Credential handling and inherited environment variables | Source-code and configuration scanning; sandbox inspection | Partial |
 | Effective execution identity and ambient credentials (SSH keys, Git, cloud and package registry credentials) | Inspect process identity, inherited privileges and accessible credential stores; test isolation using synthetic credentials | Partial |
 | Token passthrough and downstream credentials | Trace credential use and verify that downstream API calls use credentials intended for that API | Partial |
@@ -165,14 +220,14 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 
 | Signal to collect | Verification method | Automation |
 |---|---|---|
-| Available tools, resources and prompts | MCP protocol enumeration, including pagination and relevant identity contexts | Automatable |
+| Available tools, resources and prompts | List capabilities for each relevant identity and follow pagination until the inventory is complete | Automatable |
 | Tool names, descriptions, schemas and annotations | MCP-specific scanning and baseline comparison | Automatable |
 | Read, write, delete and administrative capabilities | Semantic classification, source analysis and controlled testing | Partial |
 | Prompt injection and tool poisoning indicators | Signature-based and AI-assisted analysis of metadata and representative responses | Partial |
 | Exposure to untrusted content and indirect prompt injection | Identify who can control retrieved content; perform risk-based adversarial tests with synthetic content in the intended client or agent | Partial |
 | Cross-tool attack potential | Review other available tools and their combined permissions; test representative attack paths where warranted | Partial |
-| Effective permissions to underlying systems | Credential inspection, authorization tests and comparison with business needs | Partial |
-| Filesystem access, network destinations and child processes | Static analysis and sandbox monitoring | Partial |
+| Effective permissions to underlying systems | Inspect the granted permissions and test whether the identity can access systems or actions outside the business need | Partial |
+| Filesystem access, network destinations and child processes | Inspect the code and observe which files, network destinations and child processes the server accesses in the sandbox | Partial |
 | Telemetry, external data recipients and sensitive data disclosure | Data-flow analysis, source inspection, controlled network monitoring and supplier documentation | Partial |
 | Hidden functionality and input validation | Source analysis and authorized negative testing | Partial |
 | Tool naming collisions | Comparison with other approved servers | Automatable |
@@ -183,7 +238,7 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 
 | Signal to collect | Verification method | Automation |
 |---|---|---|
-| Publisher, maintainer and vendor affiliation | Registry, repository and official vendor documentation comparison | Partial |
+| Publisher, maintainer and vendor affiliation | Check that the registry and repository identify the publisher named in official vendor documentation | Partial |
 | Relationship between repository and distributed artifact | Build provenance and attestation verification where available | Partial |
 | Package version and artifact digest | Compare against an independently established approved digest | Automatable |
 | Signatures and attestations | Verify signatures, trusted signer identity and artifact binding | Automatable |
@@ -208,60 +263,11 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 | Update mechanisms, floating versions/tags and runtime code downloads | Inspect startup commands, package configuration and source code; monitor controlled execution | Partial |
 | Deployed MCP client configuration and configuration drift | Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline | Automatable |
 | Enforcement of approved servers, tools and access restrictions | Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway | Partial |
-| Ability to disable the integration and revoke access | Functional testing of enforcement and revocation mechanisms | Partial |
+| Ability to disable the integration and revoke access | Disable the test integration, revoke its access and verify that it can no longer reach the target system with its previous credentials | Partial |
 | Audit logging and agent-to-tool traceability | Generate test events and correlate initiating user or agent, tool call, authorization decision and outcome where supported; avoid recording secrets or unnecessary sensitive payloads | Partial |
-| Supplier change notification | Documentation and contractual review | Manual |
+| Supplier change notification | Check the supplier documentation and contract for which changes the supplier reports and how it gives notice | Manual |
 
 **Investigate:** Unapproved changes, mutable execution dependencies, uncontrolled upgrades, unauthorized client configurations, bypassable policies, missing audit evidence and inability to revoke access. Remote capability fingerprints detect observable interface changes, not changes to hidden backend behavior.
-
-### 2. Scanning techniques and applicability
-
-Select the techniques appropriate to the deployment model. Reuse existing enterprise security tooling where possible.
-
-For externally hosted servers, review provider-supplied security information when available, such as independent audit reports, penetration-test summaries and security documentation. Check its scope and date against the service being assessed.
-
-| Technique | Local | Internally hosted | Externally hosted | Example tools or methods |
-|---|---|---|---|---|
-| Provenance and identity verification | Required | Required | Required | MCP Registry, Sigstore, npm provenance, vendor verification |
-| Dependency inventory and vulnerability scanning | Required | Required | If available | Syft (SBOM), OSV-Scanner (SCA) |
-| Static code analysis (SAST) | Required | Required | If available | Semgrep, CodeQL |
-| Malware and behavioral code analysis | Required | Required | If available | YARA, Cisco MCP Scanner |
-| Secret scanning | Required | Required | If available | Gitleaks |
-| MCP-specific scanning and capability discovery | Required | Required | Required | Cisco MCP Scanner, MCP Inspector |
-| Authentication and authorization testing | As applicable | As applicable | As applicable | MCP Inspector, dedicated protocol and access-control tests |
-| Ambient credential and execution identity analysis | Required | Required | Required for client/agent; supplier evidence for server | Process identity, environment and credential isolation tests |
-| Untrusted content and cross-tool exposure analysis | Required | Required | Required | Data-flow and agent capability analysis |
-| Indirect prompt injection testing | Risk-based | Risk-based | Risk-based | Synthetic adversarial content and controlled agent tests |
-| Runtime behavioral analysis | Required | Required | Limited to observable behavior | Isolated sandbox, filesystem, network and process monitoring |
-| Supplier security assessment | As applicable | As applicable | Required | Existing supplier assessment process |
-| Update mechanism analysis | Required | Required | Supplier evidence; inspect observable changes | Startup and dependency configuration, code and runtime inspection |
-| MCP client configuration scanning | Required | Required | Required | Managed configuration inventory and comparison against approved catalogue |
-| Change baseline and runtime enforcement verification | Required | Required | Required | Artifact hashes, metadata fingerprints, configuration and functional tests |
-| Agent-to-tool activity traceability | As applicable | As applicable | As applicable | Correlated audit events and representative tool-call tests |
-
-Required means evidence is expected for that assessment area, not that every named product must be used. Risk-based testing is selected according to exposure, effective privileges and potential impact; document the rationale. Supplier evidence must be evaluated for scope and adequacy. Where an applicable control cannot be verified, record UNKNOWN and assess alternative evidence or enforceable compensating controls. N/A requires a justification. External black-box testing cannot establish the absence of hidden server-side behavior.
-
-The named tools are illustrative candidates, not mandated products or validated detection-coverage guarantees. Maintain the actual toolset, versions and configurations separately. Verify scanner data handling before sending code, tool metadata or responses to external services.
-
-#### MCP client configuration scanning
-
-Inspect user, workspace and centrally managed configurations, including startup executables and arguments, package versions or digests, remote URLs, credential references and inherited environment settings. Verify policy precedence and whether user or repository configuration can bypass the approved configuration. Do not collect raw credential values.
-
-During intake, inspect the proposed configuration. Before production enablement, verify that the deployed configuration and runtime restrictions match the approved baseline. After approval, repeat discovery and comparison to detect unauthorized servers and drift. Configuration discovery alone does not prove that unapproved servers cannot execute; test enforcement separately.
-
-### 3. Assessment execution
-
-| Order | Activity | Output |
-|---|---|---|
-| 1 | Identify the publisher, operator, deployment model, package or endpoint, intended client configuration and agent environment | Identified assessment target and execution context |
-| 2 | Acquire available artifacts without executing untrusted code; verify provenance and perform static, dependency, malware and secret scans | Static assessment evidence |
-| 3 | Connect from an isolated test environment and enumerate capabilities and authentication requirements | Capability and authentication inventory |
-| 4 | Scan tool definitions, resources, prompts and representative responses; evaluate untrusted content exposure and combined tool capabilities | MCP-specific and agent-context findings |
-| 5 | Perform authorized authentication, authorization, credential isolation, behavioral and risk-based indirect prompt injection tests; verify proposed enforcement controls | Protocol, runtime and enforcement findings |
-| 6 | Record artifact and dependency identities, client and endpoint configuration, permissions, capability fingerprints and required runtime restrictions | Proposed approval baseline |
-| 7 | Evaluate findings and unresolved controls; identify required safeguards | Completed assessment and recommendation |
-
-**Safe execution:** Do not install or execute unapproved MCP servers on ordinary employee workstations. Use isolated test environments, restricted network access, synthetic data and dedicated least-privileged test credentials. Perform static scanning before launching local servers. Active testing of external services requires authorization. Treat server-provided content as untrusted data, including when using AI-assisted scanners. Use synthetic credentials and isolated test systems for adversarial tests; do not invoke destructive actions against production systems.
 
 ### 4. Evaluate and record evidence
 
