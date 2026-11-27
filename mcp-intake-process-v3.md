@@ -1,4 +1,4 @@
-# MCP Server Intake Process
+# MCP Governance and Assessment Process
 
 **Purpose:** Ensure MCP servers are security assessed, approved and securely configured before use within the organization.
 
@@ -295,7 +295,7 @@ Maintain four components initially:
 
 | Component | Purpose | Audience |
 |---|---|---|
-| MCP Intake Process | The five-step process above (target: 1–2 pages) | Everyone |
+| MCP Governance and Assessment Process | The five-step process above (target: 1–2 pages) | Everyone |
 | MCP Request Form | The seven questions the requester must answer (target: 5 minutes) | Requesters |
 | MCP Security Assessment Checklist | Detailed security controls, verification methods, automated scan results, evidence and approval decision | Security and platform teams |
 | Approved MCP Catalogue | Searchable register of approved servers, configurations, restrictions and owners | Everyone |

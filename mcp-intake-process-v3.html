@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Five steps to request, assess, approve and monitor an MCP server, with a security assessment methodology.">
-<title>MCP Server Intake Process</title>
+<title>MCP Governance and Assessment Process</title>
 <style>
 :root{
   color-scheme:light;
@@ -100,9 +100,6 @@ tbody tr:nth-child(even){background:#f3f6ef}
 .document-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;margin-block:1rem 0}
 .reference{padding:clamp(1rem,3.4vw,2.25rem);background:var(--white);border:1px solid var(--line);border-radius:.85rem;min-width:0}
 .reference>h2{margin-bottom:1.1rem}
-.toc{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.2rem}
-.toc a{font-size:.84rem;font-weight:650;background:#edf3e9;border:1px solid var(--line);border-radius:2rem;padding:.35rem .7rem;text-decoration:none}
-.toc a:hover{background:#dcebd8}
 .major{border-top:1px solid var(--line);padding-top:1rem;margin-top:1rem}
 .major h3,.major h4{margin-bottom:.65rem}
 .methods h4{margin-top:1rem}
@@ -301,7 +298,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   .pane-meta{border:0;padding:0}
   .pane dl{display:flex;gap:1.4rem}
   .map-view .panes[hidden]{display:block!important}
-  .mast,.steps,.pane-nav,.toc,.view-picker,.workflow-map,.action-pop,footer a{display:none!important}
+  .mast,.steps,.pane-nav,.view-picker,.workflow-map,.action-pop,footer a{display:none!important}
   .hero{padding:0}
   .reference{margin-top:.5rem}
   details::details-content{content-visibility:visible;display:block}
@@ -331,7 +328,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       </nav>
     </div>
     <div class="hero">
-      <h1>MCP Server Intake Process</h1>
+      <h1>MCP Governance and Assessment Process</h1>
       <p class="hero-copy">Assess, approve and securely configure local, internally hosted and externally hosted MCP servers before organizational use.</p>
     </div>
   </header>
@@ -623,13 +620,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <section class="reference" aria-labelledby="security-assessment-methodology">
         <h2 id="security-assessment-methodology"><a class="sec-link" href="#security-assessment-methodology">Security assessment methodology</a></h2>
         <p>The four-domain structure is adapted from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">NHI MCP Server Trust Assessment Guide</a>.</p>
-        <nav class="toc" aria-label="Assessment topics">
-          <a href="#1-assessment-execution">Execution</a>
-          <a href="#mandatory-controls-for-production-approval">Mandatory controls</a>
-          <a href="#2-scanning-techniques-and-applicability">Scanning</a>
-          <a href="#3-security-signals-and-verification-methods">Verification methods</a>
-          <a href="#4-evaluate-and-record-evidence">Evidence</a>
-        </nav>
         <section class="major methods" aria-labelledby="1-assessment-execution">
           <span id="3-assessment-execution"></span>
           <h3 id="1-assessment-execution"><a class="sec-link" href="#1-assessment-execution">1. Assessment execution</a></h3>
@@ -808,7 +798,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Component table"><table>
         <thead><tr><th scope="col">Component</th><th scope="col">Purpose</th><th scope="col">Audience</th></tr></thead>
         <tbody>
-          <tr><th scope="row">MCP Intake Process</th><td>The five-step process above (target: 1 to 2 pages)</td><td>Everyone</td></tr>
+          <tr><th scope="row">MCP Governance and Assessment Process</th><td>The five-step process above (target: 1 to 2 pages)</td><td>Everyone</td></tr>
           <tr><th scope="row">MCP Request Form</th><td>The seven questions the requester must answer (target: 5 minutes)</td><td>Requesters</td></tr>
           <tr><th scope="row">MCP Security Assessment Checklist</th><td>Detailed security controls, verification methods, automated scan results, evidence and approval decision</td><td>Security and platform teams</td></tr>
           <tr><th scope="row">Approved MCP Catalogue</th><td>Searchable register of approved servers, configurations, restrictions and owners</td><td>Everyone</td></tr>

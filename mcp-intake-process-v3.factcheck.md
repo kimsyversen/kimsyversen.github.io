@@ -1,4 +1,4 @@
-# Fact check: MCP Server Intake Process
+# Fact check: MCP Governance and Assessment Process
 
 Checked 27 November 2026.
 

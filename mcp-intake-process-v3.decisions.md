@@ -1,4 +1,4 @@
-# MCP Server Intake Process v3 decisions
+# MCP Governance and Assessment Process decisions
 
 Recorded 27 November 2026.
 
