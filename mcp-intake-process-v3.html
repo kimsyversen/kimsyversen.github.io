@@ -526,7 +526,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             </dl>
           </div>
           <div class="pane-content">
-          <p data-for="assess-scan">Perform a security assessment using the four domains from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">MCP Server Trust Assessment Guide</a>. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the <a href="#security-assessment-methodology">Security assessment methodology</a> for signals, scanning techniques and assessment execution.</p>
+          <p data-for="assess-scan">Assess the server against the four domains below. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the <a href="#security-assessment-methodology">security assessment methodology in this guide</a> for signals, scanning techniques and assessment execution.</p>
           <div class="table-scroll" data-for="assess-domains"><table>
           <thead><tr><th scope="col">Assessment domain</th><th scope="col">Key question</th></tr></thead>
           <tbody>
@@ -607,6 +607,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <div class="document-grid">
       <section class="reference" aria-labelledby="security-assessment-methodology">
         <h2 id="security-assessment-methodology"><a class="sec-link" href="#security-assessment-methodology">Security assessment methodology</a></h2>
+        <p>The four-domain structure is adapted from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">NHI MCP Server Trust Assessment Guide</a>.</p>
         <nav class="toc" aria-label="Assessment topics">
           <a href="#1-assessment-execution">Execution</a>
           <a href="#mandatory-controls-for-production-approval">Mandatory controls</a>
@@ -811,14 +812,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row"><strong>Continuous assurance</strong></th><td>Material changes require reassessment, and trust must be revocable.</td></tr>
         </tbody>
       </table></div>
-      </section>
-      <section class="reference" aria-labelledby="implementation-notes">
-        <h2 id="implementation-notes"><a class="sec-link" href="#implementation-notes">Implementation notes</a></h2>
-        <p>Keep the five-step process simple. Use the separate security assessment methodology to guide evidence collection and place detailed control tests in the security assessment checklist and supporting automation. Developers only need to understand how to request a server and where to find approved servers. Security assessors should have a repeatable checklist rather than having to interpret a lengthy policy for every request.</p>
-        <p>Avoid numerical trust scores, complicated RACI matrices and additional risk tiers initially.</p>
-        <p>The three risk levels and approval authorities are proposed organizational choices rather than requirements from the original guide. Adapt them to the existing security governance model. The separate security assessment methodology provides a common evidence collection procedure. Use the <a href="#mandatory-controls-for-production-approval">mandatory controls for production approval</a> in the detailed checklist and add platform-specific tests where needed. The scanning applicability matrix is a proposed organizational baseline and should be validated against the available tooling and deployment environments.</p>
-        <p>The four assessment domains come from the NHI guide. Backslash Security provides supplementary vendor guidance on endpoint and agent-context risks. <a href="https://nhimg.org/mcp-server-trust-assessment-guide">NHI MCP Server Trust Assessment Guide</a> · <a href="https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it">Backslash Security guidance</a></p>
-        <p>The verification methods and applicability matrix are proposed engineering requirements. Scanner coverage has yet to be independently benchmarked for these checks.</p>
       </section>
     </div>
   </main>

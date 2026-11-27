@@ -58,7 +58,7 @@ Use the highest applicable risk level. The classification must consider the serv
 
 ## Step 3 – Assess
 
-Perform a security assessment using the four domains from the [MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide). Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the [Security assessment methodology](#security-assessment-methodology) for signals, scanning techniques and assessment execution.
+Assess the server against the four domains below. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the [security assessment methodology in this guide](#security-assessment-methodology) for signals, scanning techniques and assessment execution.
 
 Wiz reported that about 70% of exposed MCP servers it tested returned their full tool catalog to anonymous callers, reinforcing the need to verify authentication and authorization ([Wiz Research](https://www.wiz.io/blog/the-risk-hiding-behind-exposed-mcp-servers)).
 
@@ -120,6 +120,8 @@ Reassess planned material changes before enabling them. If an unexpected change 
 ---
 
 ## Security assessment methodology
+
+The four-domain structure is adapted from the [NHI MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide).
 
 <a id="3-assessment-execution"></a>
 
@@ -308,13 +310,3 @@ Maintain four components initially:
 | **Least privilege** | Only necessary permissions and capabilities are permitted. |
 | **Verifiable trust** | Approval must be supported by evidence and bound to an identified artifact or remote integration. |
 | **Continuous assurance** | Material changes require reassessment, and trust must be revocable. |
-
-## Implementation notes
-
-Keep the five-step process simple. Use the separate security assessment methodology to guide evidence collection and place detailed control tests in the security assessment checklist and supporting automation. Developers only need to understand how to request a server and where to find approved servers. Security assessors should have a repeatable checklist rather than having to interpret a lengthy policy for every request.
-
-Avoid numerical trust scores, complicated RACI matrices and additional risk tiers initially.
-
-The three risk levels and approval authorities are proposed organizational choices rather than requirements from the original guide. Adapt them to the existing security governance model. The separate security assessment methodology provides a common evidence collection procedure. Use the [mandatory controls for production approval](#mandatory-controls-for-production-approval) in the detailed checklist and add platform-specific tests where needed. The scanning applicability matrix is a proposed organizational baseline and should be validated against the available tooling and deployment environments.
-
-**References:** [NHI MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide) (four assessment domains); [Backslash Security – How to Evaluate an MCP Server’s Risk Before Employees Install It](https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it) (supplementary vendor guidance on endpoint and agent-context risks). The added verification methods and applicability decisions are proposed engineering requirements, not independently benchmarked scanner coverage.
