@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Five steps to request, assess, approve and monitor an MCP server, with a security assessment methodology.">
+<title>MCP Server Intake Process</title>
+<style>
+:root{
+  color-scheme:light;
+  --paper:#f8f7f2;--ink:#162b29;--muted:#4e635e;--line:#d0dad1;--green:#145b49;
+  --dark:#122c29;--dark-line:#4c6760;--mint:#d8f99f;--white:#fffefa;
+  --sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:1rem/1.57 var(--sans)}
+a{color:var(--green);text-underline-offset:.2em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+[hidden]{display:none!important}
+[id]{scroll-margin-top:1rem}
+.wrap{width:min(1220px,calc(100% - clamp(28px,8vw,110px)));margin-inline:auto}
+.mast{display:flex;align-items:center;justify-content:space-between;gap:.75rem 1.5rem;flex-wrap:wrap;padding-block:1.05rem;border-bottom:1px solid var(--line)}
+.mast a{font-size:.88rem;font-weight:650;text-decoration:none}
+.mast a:hover{text-decoration:underline}
+.mast nav{display:flex;gap:.6rem 1.25rem;flex-wrap:wrap}
+.hero{padding-block:clamp(2rem,4vw,3.75rem) clamp(1.65rem,3.8vw,3.25rem)}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,.pane h3{font-family:var(--serif);font-weight:400;line-height:1.04;letter-spacing:-.035em}
+h1{font-size:clamp(2.55rem,6.7vw,5.15rem)}
+.hero-copy{margin-top:1.1rem;color:var(--muted);font-size:clamp(1rem,1.7vw,1.25rem)}
+h2{font-size:clamp(2rem,4vw,3.6rem)}
+h3{font-size:1.3rem;line-height:1.25}
+h4{font-size:1.04rem}
+p+p,p+ul,ul+p,dl+p,table+p{margin-top:.8rem}
+ol,ul{padding-left:1.35rem}
+.flow{
+  padding:clamp(1rem,3vw,2.2rem);
+  background:linear-gradient(120deg,#1b3b34,var(--dark) 63%);
+  color:var(--white);border-radius:1.15rem;
+}
+.flow-head{display:flex;align-items:center;justify-content:space-between;gap:.7rem 1.2rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.flow h2{font-size:clamp(1.75rem,3vw,2.65rem)}
+.flow .steps a:focus-visible{outline-color:var(--mint)}
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.55rem;list-style:none;margin:0 0 1.25rem;padding:0}
+.steps li{position:relative;min-width:0}
+.steps li:not(:last-child)::after{
+  content:"";position:absolute;top:50%;translate:0 -50%;left:calc(100% + .24rem);width:1.05rem;height:.55rem;
+  clip-path:polygon(0 41%,68% 41%,68% 0,100% 50%,68% 100%,68% 59%,0 59%);
+  background-color:var(--mint);opacity:.7;pointer-events:none;
+}
+.steps a{
+  display:grid;grid-template-rows:auto 1fr;gap:.65rem;height:100%;min-height:5.65rem;
+  padding:.8rem .9rem;border:1px solid var(--dark-line);border-radius:.66rem;
+  background:#24433c;color:var(--white);text-decoration:none;
+  transition:background .17s,border-color .17s;
+}
+.steps a:hover{border-color:var(--mint);background:#30574c}
+.steps a[aria-current="step"]{background:var(--mint);border-color:var(--mint);color:#162b29}
+.step-number{font:650 .82rem/1.2 var(--mono);letter-spacing:.08em}
+.step-name{font-weight:700;line-height:1.25}
+.pane{
+  background:var(--white);color:var(--ink);border-radius:.8rem;padding:clamp(1rem,3vw,2.15rem);
+  display:grid;grid-template-columns:minmax(10rem,.83fr) minmax(0,2.25fr);gap:clamp(1rem,3.5vw,2.7rem)
+}
+.pane:not([hidden]) ~ .pane:not([hidden]){margin-top:1rem}
+.pane h3:focus{outline:none}
+.pane-meta{padding-right:clamp(.7rem,2vw,1.6rem);border-right:1px solid var(--line)}
+.pane .step-number{color:var(--green);display:block;margin-bottom:.55rem}
+.pane h3{font-size:clamp(1.8rem,3.4vw,3rem);margin-bottom:1rem}
+.pane dl{margin:0}
+.pane dt,.criteria dt,.eyebrow{font:700 .73rem/1.4 var(--mono);letter-spacing:.075em;text-transform:uppercase;color:var(--green)}
+.pane dd,.criteria dd{margin:.19rem 0 .7rem}
+.pane-content>:first-child{margin-top:0}
+.pane-content>:last-child{margin-bottom:0}
+.pane-content h4{margin-block:.95rem .4rem}
+.pane-nav{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem 1rem;border-top:1px solid var(--line);padding-top:.75rem;font-size:.86rem;font-weight:650}
+.pane-nav a{padding-block:.2rem}
+.pane-nav a+a{margin-left:auto}
+.reuse{margin:0 0 1.25rem;border:1px solid var(--dark-line);background:#203d35;color:#e0ebe4;font-size:.88rem}
+.reuse summary{color:var(--mint);background:transparent;padding:.52rem .85rem}
+.reuse summary:hover,.reuse[open]>summary{background:#28473d}
+.reuse[open]>summary{border-color:var(--dark-line)}
+.reuse p{padding:.65rem .85rem}
+.criteria{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin:.5rem 0 1rem}
+.criteria>div{padding:.7rem;background:#f0f4ed;border-radius:.45rem}
+.criteria dd{margin-bottom:0}
+blockquote{margin:.85rem 0;padding:.6rem .8rem;border-left:3px solid #83ab7a;background:#eff5eb}
+blockquote p{margin:0}
+.table-scroll{max-width:100%;overflow:auto;border:1px solid var(--line);border-radius:.45rem;margin:.6rem 0}
+.table-scroll:focus-visible{outline-color:var(--green)}
+table{border-collapse:collapse;width:100%;font-size:.91rem}
+.table-scroll.roomy table{min-width:35rem}
+th,td{text-align:left;vertical-align:top;padding:.62rem .78rem;overflow-wrap:anywhere}
+thead th{background:#e7f0e5;color:#204c3e}
+tbody th{font-weight:650}
+tbody tr+tr>*{border-top:1px solid var(--line)}
+tbody tr:nth-child(even){background:#f3f6ef}
+.document-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;margin-block:1rem 0}
+.reference{padding:clamp(1rem,3.4vw,2.25rem);background:var(--white);border:1px solid var(--line);border-radius:.85rem;min-width:0}
+.reference>h2{margin-bottom:1.1rem}
+.toc{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.2rem}
+.toc a{font-size:.84rem;font-weight:650;background:#edf3e9;border:1px solid var(--line);border-radius:2rem;padding:.35rem .7rem;text-decoration:none}
+.toc a:hover{background:#dcebd8}
+.major{border-top:1px solid var(--line);padding-top:1rem;margin-top:1rem}
+.major h3,.major h4{margin-bottom:.65rem}
+.methods h4{margin-top:1rem}
+details{border:1px solid var(--line);border-radius:.55rem;margin:.65rem 0;background:var(--white)}
+summary{cursor:pointer;padding:.75rem .9rem;color:var(--green);font-weight:650;overflow-wrap:anywhere}
+summary:hover{background:#edf3e9}
+details[open]>summary{background:#edf3e9;border-bottom:1px solid var(--line)}
+.details-content{padding:.7rem .85rem .85rem}
+.execution{margin:.65rem 0;padding:0;list-style:none;counter-reset:task}
+.execution[start="3"]{counter-reset:task 2}
+.execution li{display:grid;grid-template-columns:minmax(1.9rem,auto) minmax(0,1fr);column-gap:.75rem;padding:.65rem 0;border-bottom:1px solid var(--line);counter-increment:task}
+.execution li::before{content:counter(task,decimal-leading-zero);grid-row:span 2;align-self:start;background:#e7f0e5;border-radius:.3rem;padding:.25rem .3rem;color:var(--green);font:700 .79rem var(--mono);text-align:center}
+.execution strong{color:var(--green);font-size:.93rem}
+.gate{margin:.9rem 0;padding:.75rem .9rem;background:#eaf2dc;border-left:3px solid #578045;border-radius:.2rem}
+.reference ul{margin:.6rem 0}
+.tool-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.3rem 1rem}
+footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1.4rem 0 2.5rem;color:var(--muted);font-size:.85rem}
+.skip{position:absolute;left:1rem;top:1rem;translate:0 -200%;z-index:1;background:var(--white);padding:.6rem}
+.skip:focus{translate:0}
+@media(max-width:850px){
+  .steps{gap:1rem}
+  .steps li:not(:last-child)::after{left:calc(100% + .12rem);width:.72rem}
+  .steps a{padding:.65rem}
+}
+@media(max-width:640px){
+  .steps{display:block;margin-bottom:1rem}
+  .steps li+li{margin-top:.38rem}
+  .steps li:not(:last-child)::after{display:none}
+  .steps a{grid-template-columns:2.2rem minmax(0,1fr);grid-template-rows:auto;min-height:2.65rem;align-items:center;gap:.4rem;padding:.4rem .65rem}
+  .pane{grid-template-columns:minmax(0,1fr);gap:.85rem}
+  .pane-meta{border-right:0;border-bottom:1px solid var(--line);padding:0 0 .4rem}
+  .pane dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:.45rem}
+  .pane h3{margin-bottom:.7rem}
+  .criteria{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important}
+}
+@media print{
+  .wrap{width:auto}
+  .flow,.pane,.reference{color:#000;background:#fff;border:0;padding:.5rem 0}
+  .flow h2{color:#000}
+  .pane[hidden]{display:grid!important}
+  .pane{display:block!important;border-top:1px solid #999;border-radius:0}
+  .pane-meta{border:0;padding:0}
+  .pane dl{display:flex;gap:1.4rem}
+  .mast,.steps,.pane-nav,.toc,footer a{display:none!important}
+  .hero{padding:0}
+  .reuse,.reuse summary,.reuse[open]>summary{color:#000;background:#fff}
+  .reference{margin-top:.5rem}
+  details::details-content{content-visibility:visible;display:block}
+  .table-scroll.roomy table{min-width:0}
+  h2,h3,h4,summary{break-after:avoid}
+  tr{break-inside:avoid}
+}
+/* section links */
+h2 a.sec-link,h3 a.sec-link,h4 a.sec-link{color:inherit;text-decoration:none;font:inherit;letter-spacing:inherit;text-transform:inherit}
+h2 a.sec-link::after,h3 a.sec-link::after,h4 a.sec-link::after{content:"#";margin-left:.45em;font-weight:400;opacity:0;transition:opacity .12s}
+h2:hover a.sec-link::after,h3:hover a.sec-link::after,h4:hover a.sec-link::after,a.sec-link:focus-visible::after{opacity:.5}
+a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+@media (hover:none){h2 a.sec-link::after,h3 a.sec-link::after,h4 a.sec-link::after{opacity:.35}}
+@media print{h2 a.sec-link::after,h3 a.sec-link::after,h4 a.sec-link::after{display:none}}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header>
+    <div class="mast">
+      <a href="index.html">← All pages</a>
+      <nav aria-label="On this page">
+        <a href="#process-overview">Process</a>
+        <a href="#security-assessment-methodology">Assessment</a>
+        <a href="#supporting-documentation">Supporting documentation</a>
+      </nav>
+    </div>
+    <div class="hero">
+      <h1>MCP Server Intake Process</h1>
+      <p class="hero-copy">Assess, approve and securely configure local, internally hosted and externally hosted MCP servers before organizational use.</p>
+    </div>
+  </header>
+  <main id="main">
+    <section class="flow" aria-labelledby="process-overview">
+      <div class="flow-head">
+        <h2 id="process-overview"><a class="sec-link" href="#process-overview">Process overview</a></h2>
+      </div>
+      <nav aria-label="Intake steps" id="intake-steps" tabindex="-1">
+        <ol class="steps">
+          <li><a href="#step-1-request" data-step><span class="step-number">01</span><span class="step-name">Request</span></a></li>
+          <li><a href="#step-2-classify" data-step><span class="step-number">02</span><span class="step-name">Classify</span></a></li>
+          <li><a href="#step-3-assess" data-step><span class="step-number">03</span><span class="step-name">Assess</span></a></li>
+          <li><a href="#step-4-approve" data-step><span class="step-number">04</span><span class="step-name">Approve</span></a></li>
+          <li><a href="#step-5-enable-and-monitor" data-step><span class="step-number">05</span><span class="step-name">Enable and monitor</span></a></li>
+        </ol>
+      </nav>
+      <details class="reuse" id="reuse-current-approval">
+        <summary>Reuse a current approval</summary>
+        <p>The platform team may skip steps 2 to 4 when a current approval covers the same server, configuration and intended use. Check the recorded scope against the requested client, execution identity, tools, data access and restrictions.</p>
+      </details>
+      <div class="panes">
+        <article class="pane" id="step-1-request" aria-labelledby="step-1-request-heading">
+          <div class="pane-meta">
+            <span class="step-number">Step 01</span>
+            <h3 id="step-1-request-heading" tabindex="-1"><a class="sec-link" href="#step-1-request-heading">Request</a></h3>
+            <dl>
+              <div><dt>Responsible</dt><dd>Requester</dd></div>
+              <div><dt>Outcome</dt><dd>A completed intake request</dd></div>
+            </dl>
+          </div>
+          <div class="pane-content">
+          <div class="table-scroll"><table>
+          <thead><tr><th scope="col">Information</th><th scope="col">Example</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">MCP server</th><td>GitHub MCP Server</td></tr>
+            <tr><th scope="row">Link to server or package</th><td>Official repository</td></tr>
+            <tr><th scope="row">Business justification</th><td>Assist developers with issue management</td></tr>
+            <tr><th scope="row">Intended users</th><td>Development team</td></tr>
+            <tr><th scope="row">Systems and data accessed</th><td>Internal GitHub repositories</td></tr>
+            <tr><th scope="row">Required permissions</th><td>Read repositories, create issues</td></tr>
+            <tr><th scope="row">Business owner</th><td>Development team manager</td></tr>
+          </tbody>
+        </table></div>
+          <p>Keep technical security questions for the assessment.</p>
+          </div>
+          <nav class="pane-nav" aria-label="Step 1 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-2-classify" data-step>Classify →</a></nav>
+        </article>
+        <article class="pane" id="step-2-classify" aria-labelledby="step-2-classify-heading">
+          <div class="pane-meta">
+            <span class="step-number">Step 02</span>
+            <h3 id="step-2-classify-heading" tabindex="-1"><a class="sec-link" href="#step-2-classify-heading">Classify</a></h3>
+            <dl>
+              <div><dt>Responsible</dt><dd>Platform team</dd></div>
+              <div><dt>Outcome</dt><dd>Deployment model and risk classification</dd></div>
+            </dl>
+          </div>
+          <div class="pane-content">
+          <p>Determine how the MCP server is deployed and the risk associated with its intended use.</p>
+          <h4>Deployment model</h4>
+          <dl class="criteria">
+            <div><dt>Local</dt><dd>Executed on the user&#x27;s device</dd></div>
+            <div><dt>Internally hosted</dt><dd>Executed in organization-controlled infrastructure</dd></div>
+            <div><dt>Externally hosted</dt><dd>Executed in third-party infrastructure</dd></div>
+          </dl>
+          <h4>Risk level</h4>
+          <dl class="criteria">
+            <div><dt>Low</dt><dd>Public data, read-only access and restricted execution</dd></div>
+            <div><dt>Medium</dt><dd>Internal data or limited write access</dd></div>
+            <div><dt>High</dt><dd>Sensitive data, privileged access, destructive operations or unrestricted local execution</dd></div>
+          </dl>
+          <p>Use the highest risk level that applies to the server’s <strong>effective privileges</strong>.</p>
+          </div>
+          <nav class="pane-nav" aria-label="Step 2 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-3-assess" data-step>Assess →</a></nav>
+        </article>
+        <article class="pane" id="step-3-assess" aria-labelledby="step-3-assess-heading">
+          <div class="pane-meta">
+            <span class="step-number">Step 03</span>
+            <h3 id="step-3-assess-heading" tabindex="-1"><a class="sec-link" href="#step-3-assess-heading">Assess</a></h3>
+            <dl>
+              <div><dt>Responsible</dt><dd>Security team / automation</dd></div>
+              <div><dt>Outcome</dt><dd>A completed security assessment with findings and recommended safeguards</dd></div>
+            </dl>
+          </div>
+          <div class="pane-content">
+          <p>Perform a security assessment using the four domains from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">MCP Server Trust Assessment Guide</a>. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the <a href="#security-assessment-methodology">Security assessment methodology</a> for signals, scanning techniques and assessment execution.</p>
+          <div class="table-scroll"><table>
+          <thead><tr><th scope="col">Assessment domain</th><th scope="col">Key question</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><a href="#identity-and-authentication">Identity and authentication</a></th><td>Can we trust the server&#x27;s identity and authentication mechanisms?</td></tr>
+            <tr><th scope="row"><a href="#permissions-and-tool-surface">Permissions and tool surface</a></th><td>Does the server only have the access and functionality it needs?</td></tr>
+            <tr><th scope="row"><a href="#provenance-and-supply-chain">Provenance</a></th><td>Can we trust where the server and its software originate from?</td></tr>
+            <tr><th scope="row"><a href="#change-control">Change control</a></th><td>Can we detect, control and respond to changes?</td></tr>
+          </tbody>
+        </table></div>
+          <blockquote><p>About 70% of the exposed MCP servers in Wiz’s research <q>return their full tool catalog to an anonymous caller</q>. <a href="https://www.wiz.io/blog/the-risk-hiding-behind-exposed-mcp-servers#:~:text=full%20tool%20catalog%20to%20an%20anonymous%20caller">Wiz Research</a></p></blockquote>
+          </div>
+          <nav class="pane-nav" aria-label="Step 3 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-4-approve" data-step>Approve →</a></nav>
+        </article>
+        <article class="pane" id="step-4-approve" aria-labelledby="step-4-approve-heading">
+          <div class="pane-meta">
+            <span class="step-number">Step 04</span>
+            <h3 id="step-4-approve-heading" tabindex="-1"><a class="sec-link" href="#step-4-approve-heading">Approve</a></h3>
+            <dl>
+              <div><dt>Responsible</dt><dd>Designated approver</dd></div>
+              <div><dt>Outcome</dt><dd>A documented approval decision with any conditions</dd></div>
+            </dl>
+          </div>
+          <div class="pane-content">
+          <p>The designated approver reviews the assessment and makes a decision.</p>
+          <p>Record a result for each security control, then record the overall decision:</p>
+          <div class="table-scroll"><table>
+          <thead><tr><th scope="col">Outcome</th><th scope="col">Meaning</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Control: PASS</th><td>Requirement satisfied, supported by evidence</td></tr>
+            <tr><th scope="row">Control: FAIL</th><td>Requirement not satisfied</td></tr>
+            <tr><th scope="row">Control: UNKNOWN</th><td>Insufficient evidence</td></tr>
+            <tr><th scope="row">Control: N/A</th><td>Not applicable, with justification</td></tr>
+            <tr><th scope="row">Approval: Approved</th><td>Security requirements are satisfied</td></tr>
+            <tr><th scope="row">Approval: Approved with restrictions</th><td>Identified risks are mitigated through enforceable safeguards</td></tr>
+            <tr><th scope="row">Approval: Rejected</th><td>Security risks are unacceptable or mandatory requirements cannot be verified</td></tr>
+          </tbody>
+        </table></div>
+          <h4>Approval authority</h4>
+          <div class="table-scroll"><table>
+          <thead><tr><th scope="col">Risk level</th><th scope="col">Approver</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Low</th><td>Platform team</td></tr>
+            <tr><th scope="row">Medium</th><td>Security team</td></tr>
+            <tr><th scope="row">High</th><td>Security team and relevant system or data owner, with escalation where required</td></tr>
+          </tbody>
+        </table></div>
+          <p class="gate">Approve for production only when every applicable <a href="#mandatory-controls-for-production-approval">mandatory control</a> has passed. This also applies to approval with restrictions.</p>
+          </div>
+          <nav class="pane-nav" aria-label="Step 4 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-5-enable-and-monitor" data-step>Enable and monitor →</a></nav>
+        </article>
+        <article class="pane" id="step-5-enable-and-monitor" aria-labelledby="step-5-enable-and-monitor-heading">
+          <div class="pane-meta">
+            <span class="step-number">Step 05</span>
+            <h3 id="step-5-enable-and-monitor-heading" tabindex="-1"><a class="sec-link" href="#step-5-enable-and-monitor-heading">Enable and monitor</a></h3>
+            <dl>
+              <div><dt>Responsible</dt><dd>Platform team</dd></div>
+              <div><dt>Outcome</dt><dd>A securely configured and continuously governed MCP integration</dd></div>
+            </dl>
+          </div>
+          <div class="pane-content">
+          <p>The platform team registers the server in the approved MCP catalogue and ensures the approved configuration and restrictions are enforced.</p>
+          <p>Reassessment is required when there is a material change to:</p>
+          <ul>
+            <li>Software version or artifact.</li>
+            <li>Client configuration, available tools, agent capabilities, permissions, accessible credentials or enforcement controls.</li>
+            <li>Authentication mechanisms.</li>
+            <li>Server operator or hosting environment.</li>
+            <li>Intended use, content sources or data access.</li>
+            <li>Known security risks.</li>
+          </ul>
+          <p>Reassess planned material changes before enabling them. If an unexpected change invalidates a mandatory approval condition, the platform team suspends affected access pending reassessment. Approval can be revoked at any time.</p>
+          </div>
+          <nav class="pane-nav" aria-label="Step 5 navigation"><a href="#intake-steps">↑ All steps</a></nav>
+        </article>
+      </div>
+    </section>
+
+    <div class="document-grid">
+      <section class="reference" aria-labelledby="security-assessment-methodology">
+        <h2 id="security-assessment-methodology"><a class="sec-link" href="#security-assessment-methodology">Security assessment methodology</a></h2>
+        <nav class="toc" aria-label="Assessment topics">
+          <a href="#1-assessment-execution">Execution</a>
+          <a href="#mandatory-controls-for-production-approval">Mandatory controls</a>
+          <a href="#2-scanning-techniques-and-applicability">Scanning</a>
+          <a href="#3-security-signals-and-verification-methods">Verification methods</a>
+          <a href="#4-evaluate-and-record-evidence">Evidence</a>
+          <a href="#tool-references">Tools</a>
+        </nav>
+        <section class="major methods" aria-labelledby="1-assessment-execution">
+          <span id="3-assessment-execution"></span>
+          <h3 id="1-assessment-execution"><a class="sec-link" href="#1-assessment-execution">1. Assessment execution</a></h3>
+          <ol class="execution" start="1">
+            <li><span>Identify the publisher, operator, package or endpoint. Identify the applicable <a href="#mandatory-controls-for-production-approval">mandatory controls</a> and <a href="#scanning-applicability-matrix">select checks for the deployment model</a>. Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls.</span><strong>Assessment scope and selected checks</strong></li>
+            <li><span>Obtain available artifacts without executing them. Use the <a href="#3-security-signals-and-verification-methods">domain verification methods</a> to check provenance and scan code, dependencies, malware indicators and embedded secrets.</span><strong>Static assessment evidence</strong></li>
+          </ol>
+        <p class="gate"><strong>Before connecting or running code</strong>, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.</p>
+        <ol class="execution" start="3">
+            <li><span>Connect from the test environment. List the server&#x27;s capabilities and identify its authentication requirements.</span><strong>Capability and authentication inventory</strong></li>
+            <li><span>Inspect tool definitions, resources, prompts and sample responses. Treat server content as untrusted, including during AI-assisted scanning. Check who controls that content and what the agent can do with its other tools.</span><strong>Findings on server content and combined tool access</strong></li>
+            <li><span>Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems.</span><strong>Test results and evidence of enforcement</strong></li>
+            <li><span>Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions.</span><strong>Proposed approval baseline</strong></li>
+            <li><span><a href="#4-evaluate-and-record-evidence">Record the evidence</a>, identify unresolved controls and specify any safeguards needed for approval.</span><strong>Completed assessment and recommendation</strong></li>
+          </ol>
+          <h4 id="mandatory-controls-for-production-approval"><a class="sec-link" href="#mandatory-controls-for-production-approval">Mandatory controls for production approval</a></h4>
+          <p>For any additional mandatory control, the security team records when it applies and what evidence counts as a pass before testing.</p>
+        <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Mandatory control table"><table>
+        <thead><tr><th scope="col">Mandatory control</th><th scope="col">Applies to</th><th scope="col">Pass condition</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Server identity</th><td>All integrations</td><td>The artifact or endpoint matches the verified publisher or operator and is identified in the approval record.</td></tr>
+          <tr><th scope="row">Access limits</th><td>All integrations</td><td>Checks of the execution identity and effective permissions confirm that access stays within the approved scope.</td></tr>
+          <tr><th scope="row">Token handling</th><td>Servers accepting MCP OAuth access tokens</td><td>The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API.</td></tr>
+          <tr><th scope="row">Enforcement of restrictions</th><td>Approvals that depend on a restriction</td><td>A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied.</td></tr>
+          <tr><th scope="row">Revocation</th><td>All integrations</td><td>A test confirms that the platform team can disable the integration and cut off its access.</td></tr>
+        </tbody>
+      </table></div>
+        </section>
+        <section class="major methods" aria-labelledby="2-scanning-techniques-and-applicability">
+          <h3 id="2-scanning-techniques-and-applicability"><a class="sec-link" href="#2-scanning-techniques-and-applicability">2. Scanning techniques and applicability</a></h3>
+          <ul>
+          <li><strong>Required</strong> means collect evidence for this area.</li>
+          <li><strong>As applicable</strong> means perform the check when the feature or control is in scope.</li>
+          <li><strong>If available</strong> means use the source, artifact or other material if you can obtain it.</li>
+          <li><strong>Risk-based</strong> means choose the depth of testing based on exposure, effective privileges and potential impact. Record your rationale.</li>
+        </ul>
+        <p>If evidence is missing for an applicable control, record UNKNOWN and assess alternative evidence or enforceable safeguards. Use N/A only when the control does not apply, and record why.</p>
+          <details id="scanning-applicability-matrix"><summary>Scanning applicability matrix</summary><div class="details-content">
+          <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Technique table"><table>
+        <thead><tr><th scope="col">Technique</th><th scope="col">Local or internally hosted</th><th scope="col">Externally hosted</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Provenance and identity verification</th><td>Required</td><td>Required</td></tr>
+          <tr><th scope="row">Dependency inventory and vulnerability scanning</th><td>Required</td><td>If available</td></tr>
+          <tr><th scope="row">Static code analysis (SAST)</th><td>Required</td><td>If available</td></tr>
+          <tr><th scope="row">Malware and behavioral code analysis</th><td>Required</td><td>If available</td></tr>
+          <tr><th scope="row">Secret scanning</th><td>Required</td><td>If available</td></tr>
+          <tr><th scope="row">MCP-specific scanning and capability discovery</th><td>Required</td><td>Required</td></tr>
+          <tr><th scope="row">Authentication and authorization testing</th><td>As applicable</td><td>As applicable</td></tr>
+          <tr><th scope="row">Ambient credential and execution identity analysis</th><td>Required</td><td>Required for client/agent; supplier evidence for server</td></tr>
+          <tr><th scope="row">Untrusted content and cross-tool exposure analysis</th><td>Required</td><td>Required</td></tr>
+          <tr><th scope="row">Indirect prompt injection testing</th><td>Risk-based</td><td>Risk-based</td></tr>
+          <tr><th scope="row">Runtime behavioral analysis</th><td>Required</td><td>Limited to observable behavior</td></tr>
+          <tr><th scope="row">Supplier security assessment</th><td>As applicable</td><td>Required</td></tr>
+          <tr><th scope="row">Update mechanism analysis</th><td>Required</td><td>Supplier evidence; inspect observable changes</td></tr>
+          <tr><th scope="row">MCP client configuration scanning</th><td>Required</td><td>Required</td></tr>
+          <tr><th scope="row">Change baseline and runtime enforcement verification</th><td>Required</td><td>Required</td></tr>
+          <tr><th scope="row">Agent-to-tool activity traceability</th><td>As applicable</td><td>As applicable</td></tr>
+        </tbody>
+      </table></div>
+            </div>
+          </details>
+          <p>For externally hosted servers, check whether the supplier&#x27;s audit reports, penetration-test summaries or security documentation cover the service, period and controls under review. Tests from outside the service can establish only what you observe.</p>
+        <p>Reuse enterprise tools where possible. The examples do not guarantee detection coverage. Maintain tool versions and configurations separately. Check how a scanner handles data before sending code, tool metadata or responses to an external service.</p>
+          <details id="mcp-client-configuration-scanning"><summary>MCP client configuration scanning</summary><div class="details-content">
+          <p>Inspect user, workspace and centrally managed configurations, including startup executables and arguments, package versions or digests, remote URLs, credential references and inherited environment settings. Verify policy precedence and whether user or repository configuration can bypass the approved configuration. Do not collect raw credential values.</p>
+        <p>During intake, inspect the proposed configuration. Before production enablement, verify that the deployed configuration and runtime restrictions match the approved baseline. After approval, repeat discovery and comparison to detect unauthorized servers and drift. Configuration discovery alone does not prove that unapproved servers cannot execute; test enforcement separately.</p>
+            </div>
+          </details>
+        </section>
+        <section class="major methods" aria-labelledby="3-security-signals-and-verification-methods">
+          <span id="1-security-signals-and-verification-methods"></span>
+          <h3 id="3-security-signals-and-verification-methods"><a class="sec-link" href="#3-security-signals-and-verification-methods">3. Security signals and verification methods</a></h3>
+          <p>Collect the applicable signals in each of the four assessment domains. Use deterministic tests where possible, heuristic scanning to identify suspicious behavior, and manual review where technical evidence is insufficient.</p>
+        <p>Automation: <strong>Automatable</strong> means machine-checkable; <strong>Partial</strong> means automated evidence still needs human review; <strong>Manual</strong> means document or judgment review.</p>
+          <details id="identity-and-authentication"><summary>Identity and authentication</summary><div class="details-content">
+          <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
+        <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Server identity, URL, domain and operator</th><td>Verify publisher affiliation, endpoint identity and TLS where applicable</td><td>Partial</td></tr>
+          <tr><th scope="row">Authentication mechanism and OAuth metadata</th><td>Protocol discovery, configuration review and metadata validation</td><td>Partial</td></tr>
+          <tr><th scope="row">Token audience, issuer and expiration</th><td>Use test credentials to confirm that valid tokens work and tokens with the wrong audience, an untrusted issuer or an expired lifetime are rejected</td><td>Partial</td></tr>
+          <tr><th scope="row">Requested and granted scopes</th><td>Compare the scopes requested and granted during authorization with the permissions the use case requires</td><td>Partial</td></tr>
+          <tr><th scope="row">Credential handling and inherited environment variables</th><td>Source-code and configuration scanning; sandbox inspection</td><td>Partial</td></tr>
+          <tr><th scope="row">Effective execution identity and ambient credentials (SSH keys, Git, cloud and package registry credentials)</th><td>Inspect process identity, inherited privileges and accessible credential stores; test isolation using synthetic credentials</td><td>Partial</td></tr>
+          <tr><th scope="row">Token passthrough and downstream credentials</th><td>Trace credential use and verify that downstream API calls use credentials intended for that API</td><td>Partial</td></tr>
+          <tr><th scope="row">Shared or long-lived credentials</th><td>Configuration and documentation review</td><td>Partial</td></tr>
+        </tbody>
+      </table></div>
+        <p><strong>Investigate:</strong> Invalid credentials being accepted, insecure token handling, token passthrough, unnecessarily privileged credentials and access to unrelated credentials.</p>
+            </div>
+          </details>
+          <details id="permissions-and-tool-surface"><summary>Permissions and tool surface</summary><div class="details-content">
+          <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
+        <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Available tools, resources and prompts</th><td>List capabilities for each relevant identity and follow pagination until the inventory is complete</td><td>Automatable</td></tr>
+          <tr><th scope="row">Tool names, descriptions, schemas and annotations</th><td>MCP-specific scanning and baseline comparison</td><td>Automatable</td></tr>
+          <tr><th scope="row">Read, write, delete and administrative capabilities</th><td>Semantic classification, source analysis and controlled testing</td><td>Partial</td></tr>
+          <tr><th scope="row">Prompt injection and tool poisoning indicators</th><td>Signature-based and AI-assisted analysis of metadata and representative responses</td><td>Partial</td></tr>
+          <tr><th scope="row">Exposure to untrusted content and indirect prompt injection</th><td>Identify who can control retrieved content; perform risk-based adversarial tests with synthetic content in the intended client or agent</td><td>Partial</td></tr>
+          <tr><th scope="row">Cross-tool attack potential</th><td>Review other available tools and their combined permissions; test representative attack paths where warranted</td><td>Partial</td></tr>
+          <tr><th scope="row">Effective permissions to underlying systems</th><td>Inspect the granted permissions and test whether the identity can access systems or actions outside the business need</td><td>Partial</td></tr>
+          <tr><th scope="row">Filesystem access, network destinations and child processes</th><td>Inspect the code and observe which files, network destinations and child processes the server accesses in the sandbox</td><td>Partial</td></tr>
+          <tr><th scope="row">Telemetry, external data recipients and sensitive data disclosure</th><td>Data-flow analysis, source inspection, controlled network monitoring and supplier documentation</td><td>Partial</td></tr>
+          <tr><th scope="row">Hidden functionality and input validation</th><td>Source analysis and authorized negative testing</td><td>Partial</td></tr>
+          <tr><th scope="row">Tool naming collisions</th><td>Comparison with other approved servers</td><td>Automatable</td></tr>
+        </tbody>
+      </table></div>
+        <p><strong>Investigate:</strong> Excessive privileges, model-directed malicious instructions, arbitrary command execution, unexpected data destinations, disclosure of sensitive data, unsafe combinations of tools and discrepancies between declared and observed behavior. Tool annotations are not proof of actual behavior.</p>
+            </div>
+          </details>
+          <details id="provenance-and-supply-chain"><summary>Provenance and supply chain</summary><div class="details-content">
+          <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
+        <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Publisher, maintainer and vendor affiliation</th><td>Check that the registry and repository identify the publisher named in official vendor documentation</td><td>Partial</td></tr>
+          <tr><th scope="row">Relationship between repository and distributed artifact</th><td>Build provenance and attestation verification where available</td><td>Partial</td></tr>
+          <tr><th scope="row">Package version and artifact digest</th><td>Compare against an independently established approved digest</td><td>Automatable</td></tr>
+          <tr><th scope="row">Signatures and attestations</th><td>Verify signatures, trusted signer identity and artifact binding</td><td>Automatable</td></tr>
+          <tr><th scope="row">Direct and transitive dependencies</th><td>SBOM generation and software composition analysis (SCA)</td><td>Automatable</td></tr>
+          <tr><th scope="row">Known vulnerabilities and malware</th><td>Vulnerability databases, malware signatures and threat intelligence</td><td>Automatable</td></tr>
+          <tr><th scope="row">Suspicious code, obfuscation, installation scripts and dynamic downloads</th><td>Static code analysis, malware scanning and AI-assisted review</td><td>Partial</td></tr>
+          <tr><th scope="row">Embedded credentials</th><td>Secret scanning</td><td>Automatable</td></tr>
+          <tr><th scope="row">Maintenance, publisher and release history</th><td>Review package age, release activity, maintainer and ownership changes, and changes in signing identity where historical evidence is available</td><td>Partial</td></tr>
+          <tr><th scope="row">Package impersonation and typosquatting</th><td>Compare names and publisher namespaces against official vendor and registry information</td><td>Partial</td></tr>
+          <tr><th scope="row">External hosting and supplier security</th><td>Supplier documentation and security assessment</td><td>Manual</td></tr>
+        </tbody>
+      </table></div>
+        <p><strong>Investigate:</strong> Unverified publishers, impersonation, compromised packages, exploitable vulnerabilities, unexplained obfuscation and unverified executable dependencies. Provenance does not prove that software is safe. Package age, popularity and ownership changes are risk signals, not proof of compromise or trustworthiness.</p>
+            </div>
+          </details>
+          <details id="change-control"><summary>Change control</summary><div class="details-content">
+          <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
+        <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Approved artifact and resolved dependency identities</th><td>Digest and dependency integrity verification</td><td>Automatable</td></tr>
+          <tr><th scope="row">Approved endpoint, transport and authentication configuration</th><td>Configuration and protocol inspection</td><td>Partial</td></tr>
+          <tr><th scope="row">Tool, resource and prompt definitions</th><td>Canonicalized metadata fingerprints and baseline comparison</td><td>Automatable</td></tr>
+          <tr><th scope="row">Changes to code, dependencies and permissions</th><td>Differential scanning and configuration comparison</td><td>Automatable</td></tr>
+          <tr><th scope="row">Update mechanisms, floating versions/tags and runtime code downloads</th><td>Inspect startup commands, package configuration and source code; monitor controlled execution</td><td>Partial</td></tr>
+          <tr><th scope="row">Deployed MCP client configuration and configuration drift</th><td>Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline</td><td>Automatable</td></tr>
+          <tr><th scope="row">Enforcement of approved servers, tools and access restrictions</th><td>Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway</td><td>Partial</td></tr>
+          <tr><th scope="row">Ability to disable the integration and revoke access</th><td>Disable the test integration, revoke its access and verify that it can no longer reach the target system with its previous credentials</td><td>Partial</td></tr>
+          <tr><th scope="row">Audit logging and agent-to-tool traceability</th><td>Generate test events and correlate initiating user or agent, tool call, authorization decision and outcome where supported; avoid recording secrets or unnecessary sensitive payloads</td><td>Partial</td></tr>
+          <tr><th scope="row">Supplier change notification</th><td>Check the supplier documentation and contract for which changes the supplier reports and how it gives notice</td><td>Manual</td></tr>
+        </tbody>
+      </table></div>
+        <p><strong>Investigate:</strong> Unapproved changes, mutable execution dependencies, uncontrolled upgrades, unauthorized client configurations, bypassable policies, missing audit evidence and inability to revoke access. Remote capability fingerprints detect observable interface changes, not changes to hidden backend behavior.</p>
+            </div>
+          </details>
+        </section>
+        <section class="major methods" aria-labelledby="4-evaluate-and-record-evidence">
+          <h3 id="4-evaluate-and-record-evidence"><a class="sec-link" href="#4-evaluate-and-record-evidence">4. Evaluate and record evidence</a></h3>
+          <p>Record each applicable control using the following fields:</p>
+        <div class="table-scroll"><table>
+        <thead><tr><th scope="col">Field</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Domain / control</th><td>Provenance / artifact integrity</td></tr>
+          <tr><th scope="row">Signal</th><td>SHA-256 digest of executable artifact</td></tr>
+          <tr><th scope="row">Verification method</th><td>Compare with independently established approved digest</td></tr>
+          <tr><th scope="row">Expected result</th><td>Digests match</td></tr>
+          <tr><th scope="row">Observed result</th><td>Digests match (illustrative)</td></tr>
+          <tr><th scope="row">Status</th><td>PASS</td></tr>
+          <tr><th scope="row">Evidence</th><td>Artifact verification report</td></tr>
+          <tr><th scope="row">Assessment context</th><td>Date, assessor, target identity, scanner version, configuration and test scope</td></tr>
+        </tbody>
+      </table></div>
+        <p>Use the PASS, FAIL, UNKNOWN and N/A results defined in Step 4. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.</p>
+        <p>Retain evidence with the approval record. Protect sensitive information and exclude raw credentials from stored reports. Repeat relevant checks when Step 5 reassessment triggers occur, and retain the updated evidence. Monitor deployed configuration and publisher changes where feasible and investigate drift.</p>
+        </section>
+        <section class="major methods" aria-labelledby="tool-references">
+          <h3 id="tool-references"><a class="sec-link" href="#tool-references">Tool references</a></h3>
+          <ul class="tool-links">
+          <li><a href="https://github.com/cisco-ai-defense/mcp-scanner">Cisco MCP Scanner</a></li>
+          <li><a href="https://github.com/modelcontextprotocol/inspector">MCP Inspector</a></li>
+          <li><a href="https://google.github.io/osv-scanner/">OSV-Scanner</a></li>
+          <li><a href="https://github.com/anchore/syft">Syft</a></li>
+          <li><a href="https://semgrep.dev/">Semgrep</a></li>
+          <li><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a></li>
+          <li><a href="https://www.sigstore.dev/">Sigstore</a></li>
+          <li><a href="https://registry.modelcontextprotocol.io/">Official MCP Registry</a></li>
+        </ul>
+        </section>
+      </section>
+      <section class="reference" aria-labelledby="supporting-documentation">
+        <h2 id="supporting-documentation"><a class="sec-link" href="#supporting-documentation">Supporting documentation</a></h2>
+        <p>Maintain four components initially:</p>
+        <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Component table"><table>
+        <thead><tr><th scope="col">Component</th><th scope="col">Purpose</th><th scope="col">Audience</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">MCP Intake Process</th><td>The five-step process above (target: 1 to 2 pages)</td><td>Everyone</td></tr>
+          <tr><th scope="row">MCP Request Form</th><td>The seven questions the requester must answer (target: 5 minutes)</td><td>Requesters</td></tr>
+          <tr><th scope="row">MCP Security Assessment Checklist</th><td>Detailed security controls, verification methods, automated scan results, evidence and approval decision</td><td>Security and platform teams</td></tr>
+          <tr><th scope="row">Approved MCP Catalogue</th><td>Searchable register of approved servers, configurations, restrictions and owners</td><td>Everyone</td></tr>
+        </tbody>
+      </table></div>
+      </section>
+      <section class="reference" aria-labelledby="governing-principles">
+        <h2 id="governing-principles"><a class="sec-link" href="#governing-principles">Governing principles</a></h2>
+        <div class="table-scroll"><table>
+        <thead><tr><th scope="col">Principle</th><th scope="col">Requirement</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><strong>Default deny</strong></th><td>Only approved MCP servers may be used.</td></tr>
+          <tr><th scope="row"><strong>Automation first</strong></th><td>Automate security verification wherever possible.</td></tr>
+          <tr><th scope="row"><strong>Risk-based</strong></th><td>Assessment effort must be proportional to risk.</td></tr>
+          <tr><th scope="row"><strong>Least privilege</strong></th><td>Only necessary permissions and capabilities are permitted.</td></tr>
+          <tr><th scope="row"><strong>Verifiable trust</strong></th><td>Approval must be supported by evidence and bound to an identified artifact or remote integration.</td></tr>
+          <tr><th scope="row"><strong>Continuous assurance</strong></th><td>Material changes require reassessment, and trust must be revocable.</td></tr>
+        </tbody>
+      </table></div>
+      </section>
+      <section class="reference" aria-labelledby="implementation-notes">
+        <h2 id="implementation-notes"><a class="sec-link" href="#implementation-notes">Implementation notes</a></h2>
+        <p>Keep the five-step process simple. Use the separate security assessment methodology to guide evidence collection and place detailed control tests in the security assessment checklist and supporting automation. Developers only need to understand how to request a server and where to find approved servers. Security assessors should have a repeatable checklist rather than having to interpret a lengthy policy for every request.</p>
+        <p>Avoid numerical trust scores, complicated RACI matrices and additional risk tiers initially.</p>
+        <p>The three risk levels and approval authorities are proposed organizational choices rather than requirements from the original guide. Adapt them to the existing security governance model. The separate security assessment methodology provides a common evidence collection procedure. Use the <a href="#mandatory-controls-for-production-approval">mandatory controls for production approval</a> in the detailed checklist and add platform-specific tests where needed. The scanning applicability matrix is a proposed organizational baseline and should be validated against the available tooling and deployment environments.</p>
+        <p>The four assessment domains come from the NHI guide. Backslash Security provides supplementary vendor guidance on endpoint and agent-context risks. <a href="https://nhimg.org/mcp-server-trust-assessment-guide">NHI MCP Server Trust Assessment Guide</a> · <a href="https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it">Backslash Security guidance</a></p>
+        <p>The verification methods and applicability matrix are proposed engineering requirements. Scanner coverage has yet to be independently benchmarked for these checks.</p>
+      </section>
+    </div>
+  </main>
+  <footer>
+    <p><strong>Made with AI</strong> · <a href="mcp-intake-process-v3.md">Markdown source</a></p>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+</div>
+<script>
+const stepLinks = Array.from(document.querySelectorAll('.steps a'));
+const panes = Array.from(document.querySelectorAll('.pane'));
+const narrow = matchMedia('(max-width: 640px)');
+
+function showStep(pane) {
+  for (const item of panes) item.hidden = item !== pane;
+  for (const link of stepLinks) {
+    if (link.hash === '#' + pane.id) link.setAttribute('aria-current', 'step');
+    else link.removeAttribute('aria-current');
+  }
+}
+
+function revealTarget(scroll) {
+  const hash = location.hash.slice(1);
+  const target = document.getElementById(hash);
+  const pane = target?.closest('.pane');
+  if (pane) showStep(pane);
+  else if (!hash) showStep(panes[0]);
+
+  if (!target) return;
+  for (let disclosure = target.closest('details'); disclosure; disclosure = disclosure.parentElement.closest('details')) {
+    disclosure.open = true;
+  }
+  if (scroll) target.scrollIntoView();
+}
+
+showStep(panes[0]);
+revealTarget(Boolean(location.hash));
+window.addEventListener('hashchange', () => revealTarget(true));
+
+document.querySelector('.flow').addEventListener('click', (event) => {
+  const link = event.target.closest('a[data-step]');
+  if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.button !== 0) return;
+  const pane = document.getElementById(link.hash.slice(1));
+  event.preventDefault();
+  showStep(pane);
+  if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+  if (narrow.matches || event.detail === 0 || link.closest('.pane')) {
+    pane.querySelector('h3').focus({preventScroll:true});
+    pane.scrollIntoView();
+  }
+});
+</script>
+</body>
+</html>
