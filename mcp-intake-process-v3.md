@@ -98,17 +98,7 @@ Record a result for each security control, then record the overall decision:
 | Medium | Security team |
 | High | Security team and relevant system or data owner, with escalation where required |
 
-Use these mandatory controls as the minimum production approval checklist. For any additional mandatory control, the security team records when it applies and what evidence counts as a pass before testing.
-
-| Mandatory control | Applies to | Pass condition |
-|---|---|---|
-| Server identity | All integrations | The artifact or endpoint matches the verified publisher or operator and is identified in the approval record. |
-| Access limits | All integrations | Checks of the execution identity and effective permissions confirm that access stays within the approved scope. |
-| Token handling | Servers accepting MCP OAuth access tokens | The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API. |
-| Enforcement of restrictions | Approvals that depend on a restriction | A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied. |
-| Revocation | All integrations | A test confirms that the platform team can disable the integration and cut off its access. |
-
-Every applicable mandatory control must pass for production approval, including approval with restrictions. A FAIL or UNKNOWN blocks approval until evidence supports a PASS.
+Approve for production only when every applicable [mandatory control](#mandatory-controls-for-production-approval) has passed. This also applies to approval with restrictions.
 
 **Outcome:** A documented approval decision with any conditions.
 
@@ -139,7 +129,7 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 | Order | Activity | Output |
 |---|---|---|
-| 1 | Identify the publisher, operator, package or endpoint. [Select checks for the deployment model](#2-scanning-techniques-and-applicability). Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls. | Assessment scope and selected checks |
+| 1 | Identify the publisher, operator, package or endpoint. Identify the applicable [mandatory controls](#mandatory-controls-for-production-approval) and [select checks for the deployment model](#2-scanning-techniques-and-applicability). Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls. | Assessment scope and selected checks |
 | 2 | Obtain available artifacts without executing them. Use the [domain verification methods](#3-security-signals-and-verification-methods) to check provenance and scan code, dependencies, malware indicators and embedded secrets. | Static assessment evidence |
 
 **Before connecting or running code**, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.
@@ -151,6 +141,18 @@ Reassess planned material changes before enabling them. If an unexpected change 
 | 5 | Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems. | Test results and evidence of enforcement |
 | 6 | Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions. | Proposed approval baseline |
 | 7 | [Record the evidence](#4-evaluate-and-record-evidence), identify unresolved controls and specify any safeguards needed for approval. | Completed assessment and recommendation |
+
+#### Mandatory controls for production approval
+
+For any additional mandatory control, the security team records when it applies and what evidence counts as a pass before testing.
+
+| Mandatory control | Applies to | Pass condition |
+|---|---|---|
+| Server identity | All integrations | The artifact or endpoint matches the verified publisher or operator and is identified in the approval record. |
+| Access limits | All integrations | Checks of the execution identity and effective permissions confirm that access stays within the approved scope. |
+| Token handling | Servers accepting MCP OAuth access tokens | The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API. |
+| Enforcement of restrictions | Approvals that depend on a restriction | A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied. |
+| Revocation | All integrations | A test confirms that the platform team can disable the integration and cut off its access. |
 
 ### 2. Scanning techniques and applicability
 
@@ -326,6 +328,6 @@ Keep the five-step process simple. Use the separate security assessment methodol
 
 Avoid numerical trust scores, complicated RACI matrices and additional risk tiers initially.
 
-The three risk levels and approval authorities are proposed organizational choices rather than requirements from the original guide. Adapt them to the existing security governance model. The separate security assessment methodology provides a common evidence collection procedure. Use the Step 4 minimum controls in the detailed checklist and add platform-specific tests where needed. The scanning applicability matrix is a proposed organizational baseline and should be validated against the available tooling and deployment environments.
+The three risk levels and approval authorities are proposed organizational choices rather than requirements from the original guide. Adapt them to the existing security governance model. The separate security assessment methodology provides a common evidence collection procedure. Use the [mandatory controls for production approval](#mandatory-controls-for-production-approval) in the detailed checklist and add platform-specific tests where needed. The scanning applicability matrix is a proposed organizational baseline and should be validated against the available tooling and deployment environments.
 
 **References:** [NHI MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide) (four assessment domains); [Backslash Security – How to Evaluate an MCP Server’s Risk Before Employees Install It](https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it) (supplementary vendor guidance on endpoint and agent-context risks). The added verification methods and applicability decisions are proposed engineering requirements, not independently benchmarked scanner coverage.
