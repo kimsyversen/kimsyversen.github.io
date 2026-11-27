@@ -235,6 +235,8 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 
 #### Provenance and supply chain
 
+When an MCP client starts a local server with `npx`, it runs code from an npm package. Apply your usual npm package controls and reuse existing review evidence for that version. Then assess [what the server exposes to the AI client](#permissions-and-tool-surface) and what its tools can access or change.
+
 | Signal to collect | Verification method | Automation |
 |---|---|---|
 | Publisher, maintainer and vendor affiliation | Check that the registry and repository identify the publisher named in official vendor documentation | Partial |
