@@ -119,7 +119,11 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ---
 
-## Enterprise controls that put the principles into practice
+<a id="enterprise-controls-that-put-the-principles-into-practice"></a>
+
+## How to govern MCP servers
+
+Apply your existing software controls to servers you deploy. For every integration, decide which tools to allow, what they can access and which changes require review.
 
 | Control | Recommendation |
 |---|---|
