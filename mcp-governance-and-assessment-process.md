@@ -239,7 +239,7 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 |---|---|---|
 | Publisher, maintainer and vendor affiliation | Check that the registry and repository identify the publisher named in official vendor documentation | Partial |
 | Relationship between repository and distributed artifact | Build provenance and attestation verification where available | Partial |
-| Package version and artifact digest | Compare against an independently established approved digest | Automatable |
+| Package version and artifact digest pinning | Compare the version and digest with independently approved values | Automatable |
 | Signatures and attestations | Verify signatures, trusted signer identity and artifact binding | Automatable |
 | Direct and transitive dependencies | SBOM generation and software composition analysis (SCA) | Automatable |
 | Known vulnerabilities and malware | Vulnerability databases, malware signatures and threat intelligence | Automatable |
@@ -276,7 +276,7 @@ Record each applicable control using the following fields:
 |---|---|
 | Domain / control | Provenance / artifact integrity |
 | Signal | SHA-256 digest of executable artifact |
-| Verification method | Compare with independently established approved digest |
+| Verification method | Compare with independently established pinned digest |
 | Expected result | Digests match |
 | Observed result | Digests match (illustrative) |
 | Status | PASS |

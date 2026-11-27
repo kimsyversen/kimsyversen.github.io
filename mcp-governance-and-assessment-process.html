@@ -728,7 +728,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <tbody>
           <tr><th scope="row">Publisher, maintainer and vendor affiliation</th><td>Check that the registry and repository identify the publisher named in official vendor documentation</td><td>Partial</td></tr>
           <tr><th scope="row">Relationship between repository and distributed artifact</th><td>Build provenance and attestation verification where available</td><td>Partial</td></tr>
-          <tr><th scope="row">Package version and artifact digest</th><td>Compare against an independently established approved digest</td><td>Automatable</td></tr>
+          <tr><th scope="row">Package version and artifact digest pinning</th><td>Compare the version and digest with independently approved values</td><td>Automatable</td></tr>
           <tr><th scope="row">Signatures and attestations</th><td>Verify signatures, trusted signer identity and artifact binding</td><td>Automatable</td></tr>
           <tr><th scope="row">Direct and transitive dependencies</th><td>SBOM generation and software composition analysis (SCA)</td><td>Automatable</td></tr>
           <tr><th scope="row">Known vulnerabilities and malware</th><td>Vulnerability databases, malware signatures and threat intelligence</td><td>Automatable</td></tr>
@@ -770,7 +770,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <tbody>
           <tr><th scope="row">Domain / control</th><td>Provenance / artifact integrity</td></tr>
           <tr><th scope="row">Signal</th><td>SHA-256 digest of executable artifact</td></tr>
-          <tr><th scope="row">Verification method</th><td>Compare with independently established approved digest</td></tr>
+          <tr><th scope="row">Verification method</th><td>Compare with independently established pinned digest</td></tr>
           <tr><th scope="row">Expected result</th><td>Digests match</td></tr>
           <tr><th scope="row">Observed result</th><td>Digests match (illustrative)</td></tr>
           <tr><th scope="row">Status</th><td>PASS</td></tr>
