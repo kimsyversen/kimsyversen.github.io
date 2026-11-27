@@ -80,15 +80,15 @@ The designated approver reviews the assessment and makes a decision.
 
 Record a result for each security control, then record the overall decision:
 
-| Level | Outcome | Meaning |
-|---|---|---|
-| Control | PASS | Requirement satisfied, supported by evidence |
-| Control | FAIL | Requirement not satisfied |
-| Control | UNKNOWN | Insufficient evidence |
-| Control | N/A | Not applicable, with justification |
-| Approval | Approved | Security requirements are satisfied |
-| Approval | Approved with restrictions | Identified risks are mitigated through enforceable safeguards |
-| Approval | Rejected | Security risks are unacceptable or mandatory requirements cannot be verified |
+| Outcome | Meaning |
+|---|---|
+| Control: PASS | Requirement satisfied, supported by evidence |
+| Control: FAIL | Requirement not satisfied |
+| Control: UNKNOWN | Insufficient evidence |
+| Control: N/A | Not applicable, with justification |
+| Approval: Approved | Security requirements are satisfied |
+| Approval: Approved with restrictions | Identified risks are mitigated through enforceable safeguards |
+| Approval: Rejected | Security risks are unacceptable or mandatory requirements cannot be verified |
 
 ### Approval authority
 
