@@ -166,3 +166,4 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - Incident response isolates hosts before revocation, and revocation waits only for isolation or removal of the monitor, not for the whole cleanup.
 - D01 covers npm 10 and 11 by behaviour, without listing which Node.js release bundles which npm version, because that list ages quickly.
 - Preview tags go on the feature noun, not on the setting that blocks it. Only the Codex Agent Host integration is tagged, because the extension route has no stage label.
+- Where VS Code source reading differs from the documents (saved approvals under `ChatToolsAutoApprove`), D08 states both, tags the source reading `[inference]` and says not to rely on the policy.
