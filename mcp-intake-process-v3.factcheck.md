@@ -11,3 +11,5 @@ Checked 27 November 2026.
 HTML checked in Chrome at 320, 390, 640, 850 and 1440 CSS pixels. All five steps, shared links, browser history, keyboard activation and reference disclosures worked without page overflow or console errors. Static checks covered local links, unique IDs and section anchors. The page retained all five steps with JavaScript disabled. Browser testing covered Chrome.
 
 The workflow map was checked against steps 1 to 5 in the Markdown. Its branches show a rejected decision and reassessment after material change. Chrome checks at eight widths from 320 to 1600 CSS pixels covered both view links, the index link, expandable actions and branches, keyboard activation, history, direct links and page overflow. The print view includes all five steps and the assessment reference.
+
+The canonical URL now opens the workflow map. Chrome checks at 320 to 1600 CSS pixels confirmed that opening and closing each of the 15 action dialogs preserves every card's dimensions and position. Keyboard dismissal, focus return, the detail-view link and the existing map URL also passed. With JavaScript disabled, action text remains available through inline disclosures.

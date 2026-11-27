@@ -143,7 +143,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 .map-card{
   --accent:#8b4120;--tint:#f7e9de;
   position:relative;display:flex;flex-direction:column;min-width:0;
-  background:var(--white);border:1px solid var(--line);border-top:3px solid var(--accent);
+  background:var(--white);border:1px solid var(--line);
   border-radius:.65rem;padding:clamp(.65rem,1.15vw,1.15rem);
 }
 .map-card:nth-child(2){--accent:#2d538d;--tint:#eaf0fa}
@@ -155,7 +155,6 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   background:var(--connector);clip-path:polygon(0 41%,76% 41%,76% 0,100% 50%,76% 100%,76% 59%,0 59%);
   pointer-events:none;
 }
-.map-card:hover,.map-card:focus-within{border-inline-color:var(--accent)}
 .map-card-head{border-bottom:1px solid var(--line);padding-bottom:.65rem;min-height:6rem}
 .map-number{
   display:inline-block;margin-bottom:.36rem;padding:.3rem .45rem;border-radius:.3rem;
@@ -166,20 +165,37 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 .map-actions{flex:1;display:flex;flex-direction:column;padding-block:.32rem .5rem}
 .map-action{flex:1;margin:0;border:0;border-bottom:1px solid #e8ede6;border-radius:0;background:transparent}
 .map-action:last-child{border-bottom:0}
-.map-action summary,.map-route summary{
+.map-action :is(summary,button),.map-route summary{
   list-style:none;position:relative;padding:.6rem 1rem .6rem 0;
   font-size:.87rem;line-height:1.3;color:var(--ink);
 }
+.map-action button{display:block;width:100%;border:0;background:transparent;text-align:left;font-family:inherit;font-weight:650;cursor:pointer}
 .map-action summary::-webkit-details-marker,.map-route summary::-webkit-details-marker{display:none}
-.map-action summary::after,.map-route summary::after{
+.map-action :is(summary,button)::after,.map-route summary::after{
   content:"+";position:absolute;right:0;top:.61rem;font-weight:700;color:var(--accent);
 }
+.map-action button::after{content:"↗"}
 .map-action[open]>summary::after,.map-route[open]>summary::after{content:"−"}
-.map-action summary:hover,.map-action[open]>summary,.map-route summary:hover,.map-route[open]>summary{
+.map-action :is(summary,button):hover,.map-action[open]>summary,.map-route summary:hover,.map-route[open]>summary{
   color:var(--accent);background:transparent;border-bottom:0;
 }
-.map-action summary small{display:block;margin-top:.2rem;color:var(--muted);font-size:.77rem;font-weight:400;line-height:1.34}
+.map-action small{display:block;margin-top:.2rem;color:var(--muted);font-size:.77rem;font-weight:400;line-height:1.34}
 .map-action p,.map-route p{margin:0 0 .65rem;font-size:.8rem;line-height:1.45}
+.action-dialog{
+  width:min(32rem,calc(100% - 2rem));max-height:calc(100% - 2rem);padding:0;
+  border:1px solid var(--line);border-radius:.7rem;background:var(--white);color:var(--ink);
+  box-shadow:0 16px 46px #162b2926;
+}
+.action-dialog::backdrop{background:#162b2960}
+.action-dialog-panel{display:grid;gap:1rem;padding:clamp(1rem,4vw,1.6rem)}
+.action-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.action-dialog-stage{margin:0 0 .3rem;color:var(--muted);font-size:.82rem;font-weight:650}
+.action-dialog h4{font-size:1.35rem;line-height:1.25}
+.action-dialog-close{
+  min-width:2.75rem;min-height:2.75rem;border:1px solid var(--line);border-radius:.35rem;
+  background:var(--white);color:var(--ink);font:inherit;font-size:1.25rem;cursor:pointer;
+}
+.action-dialog-close:hover{background:var(--paper)}
 .map-outcome{
   display:block;padding:.5rem .65rem;border-radius:.35rem;background:var(--tint);color:var(--accent);
   font-size:.77rem;line-height:1.35;font-weight:750;text-decoration:none;
@@ -220,8 +236,8 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   .map-card-head{min-height:0}
   .map-card h3{font-size:1.25rem}
   .map-card:not(:last-child)::after{top:100%;left:50%;width:1.45rem;transform-origin:left center;transform:rotate(90deg);translate:0 -.32rem}
-  .map-action summary{font-size:.93rem}
-  .map-action summary small,.map-action p,.map-route p,.map-outcome{font-size:.85rem}
+  .map-action :is(summary,button){font-size:.93rem}
+  .map-action small,.map-action p,.map-route p,.map-outcome{font-size:.85rem}
   .map-branches::before,.map-branches::after,.map-stop::before{display:none}
   .map-route{width:auto;max-width:none}
   .map-stop{margin-top:.85rem}
@@ -254,7 +270,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   .pane-meta{border:0;padding:0}
   .pane dl{display:flex;gap:1.4rem}
   .map-view .panes[hidden]{display:block!important}
-  .mast,.steps,.pane-nav,.toc,.view-picker,.workflow-map,footer a{display:none!important}
+  .mast,.steps,.pane-nav,.toc,.view-picker,.workflow-map,.action-dialog,footer a{display:none!important}
   .hero{padding:0}
   .reference{margin-top:.5rem}
   details::details-content{content-visibility:visible;display:block}
@@ -271,7 +287,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 @media print{h2 a.sec-link::after,h3 a.sec-link::after,h4 a.sec-link::after{display:none}}
 </style>
 </head>
-<body id="top">
+<body id="top" class="map-view">
 <a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
   <header>
@@ -293,11 +309,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <div class="flow-head">
         <h2 id="process-overview"><a class="sec-link" href="#process-overview">Process overview</a></h2>
         <nav class="view-picker" aria-label="Process view" hidden>
-          <a href="mcp-intake-process-v3.html" data-view="detail" aria-current="true">Detail view</a>
-          <a href="?view=map" data-view="map">Workflow map</a>
+          <a href="mcp-intake-process-v3.html" data-view="map" aria-current="true">Workflow map</a>
+          <a href="?view=detail" data-view="detail">Detail view</a>
         </nav>
       </div>
-      <nav aria-label="Intake steps" id="intake-steps" tabindex="-1">
+      <nav aria-label="Intake steps" id="intake-steps" tabindex="-1" hidden>
         <ol class="steps">
           <li><a href="#step-1-request" data-step><span class="step-number">01</span><span class="step-name">Request</span></a></li>
           <li><a href="#step-2-classify" data-step><span class="step-number">02</span><span class="step-name">Classify</span></a></li>
@@ -306,7 +322,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <li><a href="#step-5-enable-and-monitor" data-step><span class="step-number">05</span><span class="step-name">Enable and monitor</span></a></li>
         </ol>
       </nav>
-      <div class="workflow-map" id="workflow-map" tabindex="-1" hidden>
+      <div class="workflow-map" id="workflow-map" tabindex="-1">
         <ol class="map-steps" role="list" aria-label="Intake workflow">
           <li class="map-card">
             <header class="map-card-head">
@@ -455,7 +471,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         </table></div>
           <p>Keep technical security questions for the assessment.</p>
           </div>
-          <nav class="pane-nav" aria-label="Step 1 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-2-classify" data-step>Classify →</a></nav>
+          <nav class="pane-nav" aria-label="Step 1 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-2-classify" data-step>Classify →</a></nav>
         </article>
         <article class="pane" id="step-2-classify" aria-labelledby="step-2-classify-heading">
           <div class="pane-meta">
@@ -482,7 +498,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           </dl>
           <p>Use the highest risk level that applies to the server’s <strong>effective privileges</strong>.</p>
           </div>
-          <nav class="pane-nav" aria-label="Step 2 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-3-assess" data-step>Assess →</a></nav>
+          <nav class="pane-nav" aria-label="Step 2 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-3-assess" data-step>Assess →</a></nav>
         </article>
         <article class="pane" id="step-3-assess" aria-labelledby="step-3-assess-heading">
           <div class="pane-meta">
@@ -506,7 +522,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         </table></div>
           <blockquote><p>About 70% of the exposed MCP servers in Wiz’s research <q>return their full tool catalog to an anonymous caller</q>. <a href="https://www.wiz.io/blog/the-risk-hiding-behind-exposed-mcp-servers#:~:text=full%20tool%20catalog%20to%20an%20anonymous%20caller">Wiz Research</a></p></blockquote>
           </div>
-          <nav class="pane-nav" aria-label="Step 3 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-4-approve" data-step>Approve →</a></nav>
+          <nav class="pane-nav" aria-label="Step 3 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-4-approve" data-step>Approve →</a></nav>
         </article>
         <article class="pane" id="step-4-approve" aria-labelledby="step-4-approve-heading">
           <div class="pane-meta">
@@ -543,7 +559,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         </table></div>
           <p class="gate">Approve for production only when every applicable <a href="#mandatory-controls-for-production-approval">mandatory control</a> has passed. This also applies to approval with restrictions.</p>
           </div>
-          <nav class="pane-nav" aria-label="Step 4 navigation"><a href="#intake-steps">↑ All steps</a> <a href="#step-5-enable-and-monitor" data-step>Enable and monitor →</a></nav>
+          <nav class="pane-nav" aria-label="Step 4 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-5-enable-and-monitor" data-step>Enable and monitor →</a></nav>
         </article>
         <article class="pane" id="step-5-enable-and-monitor" aria-labelledby="step-5-enable-and-monitor-heading">
           <div class="pane-meta">
@@ -567,7 +583,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           </ul>
           <p>Reassess planned material changes before enabling them. If an unexpected change invalidates a mandatory approval condition, the platform team suspends affected access pending reassessment. Approval can be revoked at any time.</p>
           </div>
-          <nav class="pane-nav" aria-label="Step 5 navigation"><a href="#intake-steps">↑ All steps</a></nav>
+          <nav class="pane-nav" aria-label="Step 5 navigation"><a href="#workflow-map">↑ All steps</a></nav>
         </article>
       </div>
     </section>
@@ -795,8 +811,22 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <a href="#top">Back to top ↑</a>
   </footer>
 </div>
+<dialog class="action-dialog" id="action-dialog" aria-labelledby="action-dialog-title">
+  <div class="action-dialog-panel">
+    <div class="action-dialog-head">
+      <div>
+        <p class="action-dialog-stage"></p>
+        <h4 id="action-dialog-title"></h4>
+      </div>
+      <form method="dialog">
+        <button class="action-dialog-close" type="submit" aria-label="Close action details" autofocus>×</button>
+      </form>
+    </div>
+    <div class="action-dialog-body"></div>
+  </div>
+</dialog>
 <script>
-const mapView = new URLSearchParams(location.search).get('view') === 'map';
+const mapView = new URLSearchParams(location.search).get('view') !== 'detail';
 const stepLinks = Array.from(document.querySelectorAll(mapView ? '.map-outcome' : '.steps a'));
 const panes = Array.from(document.querySelectorAll('.pane'));
 const paneGroup = document.querySelector('.panes');
@@ -806,15 +836,45 @@ const viewPicker = document.querySelector('.view-picker');
 const narrow = matchMedia('(max-width: 640px)');
 
 viewPicker.hidden = false;
-if (mapView) {
-  document.body.classList.add('map-view');
-  viewPicker.querySelector('[data-view=detail]').removeAttribute('aria-current');
-  viewPicker.querySelector('[data-view=map]').setAttribute('aria-current', 'true');
-  stepNav.hidden = true;
-  workflowMap.hidden = false;
-  for (const link of document.querySelectorAll('.pane-nav a[href="#intake-steps"]')) {
-    link.href = '#workflow-map';
+if (!mapView) {
+  document.body.classList.remove('map-view');
+  viewPicker.querySelector('[data-view=map]').removeAttribute('aria-current');
+  viewPicker.querySelector('[data-view=detail]').setAttribute('aria-current', 'true');
+  stepNav.hidden = false;
+  workflowMap.hidden = true;
+}
+for (const link of document.querySelectorAll('.pane-nav a:first-child')) {
+  link.href = mapView ? '#workflow-map' : '#intake-steps';
+}
+
+const actionDialog = document.getElementById('action-dialog');
+if (mapView && typeof actionDialog.showModal === 'function') {
+  const stageLabel = actionDialog.querySelector('.action-dialog-stage');
+  const title = document.getElementById('action-dialog-title');
+  const body = actionDialog.querySelector('.action-dialog-body');
+  for (const action of workflowMap.querySelectorAll('.map-action')) {
+    const summary = action.querySelector('summary');
+    const actionTitle = summary.firstChild.textContent.trim();
+    const stageTitle = action.closest('.map-card').querySelector('h3').textContent.trim();
+    const content = action.querySelector('p');
+    const item = document.createElement('div');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.append(...summary.childNodes);
+    button.addEventListener('click', () => {
+      stageLabel.textContent = stageTitle;
+      title.textContent = actionTitle;
+      body.replaceChildren(content.cloneNode(true));
+      actionDialog.showModal();
+    });
+    item.className = action.className;
+    item.append(button);
+    action.replaceWith(item);
   }
+  actionDialog.addEventListener('click', (event) => {
+    if (event.target === actionDialog || event.target.closest('a[href]')) actionDialog.close();
+  });
 }
 
 function showStep(pane) {
