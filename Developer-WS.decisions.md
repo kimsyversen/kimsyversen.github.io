@@ -160,3 +160,4 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - Where VS Code and GitHub documents disagree (terminal prompts, identity capture), the page says so or gives advice that holds under both.
 - Managed sandbox and browser use keys are preview features, so each has a non-preview fallback or a VS Code setting beside it.
 - The OWASP Agentic Skills label was removed from D06 instead of adding a third framework.
+- Instructions are not listed under `strictPluginOnlyCustomization` on D06, because the VS Code and GitHub documents disagree on that category.
