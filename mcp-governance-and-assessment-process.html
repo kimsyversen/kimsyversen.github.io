@@ -610,22 +610,39 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <div class="document-grid">
       <section class="reference" aria-labelledby="enterprise-controls-that-put-the-principles-into-practice">
         <h2 id="enterprise-controls-that-put-the-principles-into-practice"><a class="sec-link" href="#enterprise-controls-that-put-the-principles-into-practice">How to govern MCP servers</a></h2>
-        <p>When an MCP client starts a local server with <code>npx</code>, it runs code from an npm package. Apply the same controls you use for other third-party packages and reuse the review evidence for that version.</p>
-        <p>MCP also lets a model choose which tools to call. Malicious instructions in one tool's description can steer the model into misusing a tool from another server. Review <a href="#permissions-and-tool-surface">the tools available to the model and their combined permissions</a>.</p>
-        <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Enterprise controls table"><table>
-          <thead><tr><th scope="col">Control</th><th scope="col">Recommendation</th></tr></thead>
+        <section class="major" aria-labelledby="governing-principles">
+          <h3 id="governing-principles"><a class="sec-link" href="#governing-principles">Governing principles</a></h3>
+          <div class="table-scroll"><table>
+          <thead><tr><th scope="col">Principle</th><th scope="col">Requirement</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Package governance</th><td>Approved publishers and packages</td></tr>
-            <tr><th scope="row">Software distribution</th><td>Controlled internal artifact registry</td></tr>
-            <tr><th scope="row">Version management</th><td>Pinned versions and locked dependencies</td></tr>
-            <tr><th scope="row">Supply chain security</th><td>Verify package provenance and scan the package and its direct and transitive dependencies for vulnerabilities and malware.</td></tr>
-            <tr><th scope="row">Execution isolation</th><td>Run local servers in a restricted container, sandbox or VM. Without isolation, package code can read local credentials available to its process.</td></tr>
-            <tr><th scope="row">Network security</th><td>Restricted outbound connectivity</td></tr>
-            <tr><th scope="row">Identity</th><td>Dedicated, least-privileged credentials per server</td></tr>
-            <tr><th scope="row">MCP governance</th><td>Approved servers and tools</td></tr>
-            <tr><th scope="row">Change management</th><td>Review package and tool definition changes</td></tr>
+            <tr><th scope="row"><strong>Default deny</strong></th><td>Only approved MCP servers may be used.</td></tr>
+            <tr><th scope="row"><strong>Automation first</strong></th><td>Automate security verification wherever possible.</td></tr>
+            <tr><th scope="row"><strong>Risk-based</strong></th><td>Assessment effort must be proportional to risk.</td></tr>
+            <tr><th scope="row"><strong>Least privilege</strong></th><td>Only necessary permissions and capabilities are permitted.</td></tr>
+            <tr><th scope="row"><strong>Verifiable trust</strong></th><td>Approval must be supported by evidence and bound to an identified artifact or remote integration.</td></tr>
+            <tr><th scope="row"><strong>Continuous assurance</strong></th><td>Material changes require reassessment, and trust must be revocable.</td></tr>
           </tbody>
         </table></div>
+        </section>
+        <section class="major" aria-labelledby="recommended-controls">
+          <h3 id="recommended-controls"><a class="sec-link" href="#recommended-controls">Recommended controls</a></h3>
+          <p>When an MCP client starts a local server with <code>npx</code>, it runs code from an npm package. Apply the same controls you use for other third-party packages and reuse the review evidence for that version.</p>
+          <p>MCP also lets a model choose which tools to call. Malicious instructions in one tool's description can steer the model into misusing a tool from another server. Review <a href="#permissions-and-tool-surface">the tools available to the model and their combined permissions</a>.</p>
+          <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Enterprise controls table"><table>
+            <thead><tr><th scope="col">Control</th><th scope="col">Recommendation</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Package governance</th><td>Approved publishers and packages</td></tr>
+              <tr><th scope="row">Software distribution</th><td>Controlled internal artifact registry</td></tr>
+              <tr><th scope="row">Version management</th><td>Pinned versions and locked dependencies</td></tr>
+              <tr><th scope="row">Supply chain security</th><td>Verify package provenance and scan the package and its direct and transitive dependencies for vulnerabilities and malware.</td></tr>
+              <tr><th scope="row">Execution isolation</th><td>Run local servers in a restricted container, sandbox or VM. Without isolation, package code can read local credentials available to its process.</td></tr>
+              <tr><th scope="row">Network security</th><td>Restricted outbound connectivity</td></tr>
+              <tr><th scope="row">Identity</th><td>Dedicated, least-privileged credentials per server</td></tr>
+              <tr><th scope="row">MCP governance</th><td>Approved servers and tools</td></tr>
+              <tr><th scope="row">Change management</th><td>Review package and tool definition changes</td></tr>
+            </tbody>
+          </table></div>
+        </section>
       </section>
       <section class="reference" aria-labelledby="security-assessment-methodology">
         <h2 id="security-assessment-methodology"><a class="sec-link" href="#security-assessment-methodology">Security assessment methodology</a></h2>
@@ -816,20 +833,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">MCP Request Form</th><td>The seven questions the requester must answer (target: 5 minutes)</td><td>Requesters</td></tr>
           <tr><th scope="row">MCP Security Assessment Checklist</th><td>Detailed security controls, verification methods, automated scan results, evidence and approval decision</td><td>Security and platform teams</td></tr>
           <tr><th scope="row">Approved MCP Catalogue</th><td>Searchable register of approved servers, configurations, restrictions and owners</td><td>Everyone</td></tr>
-        </tbody>
-      </table></div>
-      </section>
-      <section class="reference" aria-labelledby="governing-principles">
-        <h2 id="governing-principles"><a class="sec-link" href="#governing-principles">Governing principles</a></h2>
-        <div class="table-scroll"><table>
-        <thead><tr><th scope="col">Principle</th><th scope="col">Requirement</th></tr></thead>
-        <tbody>
-          <tr><th scope="row"><strong>Default deny</strong></th><td>Only approved MCP servers may be used.</td></tr>
-          <tr><th scope="row"><strong>Automation first</strong></th><td>Automate security verification wherever possible.</td></tr>
-          <tr><th scope="row"><strong>Risk-based</strong></th><td>Assessment effort must be proportional to risk.</td></tr>
-          <tr><th scope="row"><strong>Least privilege</strong></th><td>Only necessary permissions and capabilities are permitted.</td></tr>
-          <tr><th scope="row"><strong>Verifiable trust</strong></th><td>Approval must be supported by evidence and bound to an identified artifact or remote integration.</td></tr>
-          <tr><th scope="row"><strong>Continuous assurance</strong></th><td>Material changes require reassessment, and trust must be revocable.</td></tr>
         </tbody>
       </table></div>
       </section>

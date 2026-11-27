@@ -125,6 +125,19 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ## How to govern MCP servers
 
+### Governing principles
+
+| Principle | Requirement |
+|---|---|
+| **Default deny** | Only approved MCP servers may be used. |
+| **Automation first** | Automate security verification wherever possible. |
+| **Risk-based** | Assessment effort must be proportional to risk. |
+| **Least privilege** | Only necessary permissions and capabilities are permitted. |
+| **Verifiable trust** | Approval must be supported by evidence and bound to an identified artifact or remote integration. |
+| **Continuous assurance** | Material changes require reassessment, and trust must be revocable. |
+
+### Recommended controls
+
 When an MCP client starts a local server with `npx`, it runs code from an npm package. Apply the same controls you use for other third-party packages and reuse the review evidence for that version.
 
 MCP also lets a model choose which tools to call. Malicious instructions in one tool's description can steer the model into misusing a tool from another server. Review [the tools available to the model and their combined permissions](#permissions-and-tool-surface).
@@ -325,14 +338,3 @@ Maintain four components initially:
 | MCP Request Form | The seven questions the requester must answer (target: 5 minutes) | Requesters |
 | MCP Security Assessment Checklist | Detailed security controls, verification methods, automated scan results, evidence and approval decision | Security and platform teams |
 | Approved MCP Catalogue | Searchable register of approved servers, configurations, restrictions and owners | Everyone |
-
-## Governing principles
-
-| Principle | Requirement |
-|---|---|
-| **Default deny** | Only approved MCP servers may be used. |
-| **Automation first** | Automate security verification wherever possible. |
-| **Risk-based** | Assessment effort must be proportional to risk. |
-| **Least privilege** | Only necessary permissions and capabilities are permitted. |
-| **Verifiable trust** | Approval must be supported by evidence and bound to an identified artifact or remote integration. |
-| **Continuous assurance** | Material changes require reassessment, and trust must be revocable. |
