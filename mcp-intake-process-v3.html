@@ -174,28 +174,42 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 .map-action :is(summary,button)::after,.map-route summary::after{
   content:"+";position:absolute;right:0;top:.61rem;font-weight:700;color:var(--accent);
 }
-.map-action button::after{content:"↗"}
+.map-action button[aria-expanded="true"]{color:var(--accent)}
+.map-action button[aria-expanded="true"]::after{content:"−"}
 .map-action[open]>summary::after,.map-route[open]>summary::after{content:"−"}
 .map-action :is(summary,button):hover,.map-action[open]>summary,.map-route summary:hover,.map-route[open]>summary{
   color:var(--accent);background:transparent;border-bottom:0;
 }
 .map-action small{display:block;margin-top:.2rem;color:var(--muted);font-size:.77rem;font-weight:400;line-height:1.34}
 .map-action p,.map-route p{margin:0 0 .65rem;font-size:.8rem;line-height:1.45}
-.action-dialog{
-  width:min(32rem,calc(100% - 2rem));max-height:calc(100% - 2rem);padding:0;
-  border:1px solid var(--line);border-radius:.7rem;background:var(--white);color:var(--ink);
-  box-shadow:0 16px 46px #162b2926;
+.action-pop{
+  --accent:var(--green);--tint:#e7f0e5;
+  position:fixed;inset:auto;margin:0;width:min(30rem,calc(100vw - 1rem));max-height:min(32rem,calc(100vh - 1rem));overflow:auto;
+  padding:.9rem 1rem 1rem;border:1px solid var(--line);border-radius:.6rem;background:var(--white);color:var(--ink);
+  box-shadow:0 10px 32px #162b2924,0 1px 3px #162b291a;
 }
-.action-dialog::backdrop{background:#162b2960}
-.action-dialog-panel{display:grid;gap:1rem;padding:clamp(1rem,4vw,1.6rem)}
-.action-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
-.action-dialog-stage{margin:0 0 .3rem;color:var(--muted);font-size:.82rem;font-weight:650}
-.action-dialog h4{font-size:1.35rem;line-height:1.25}
-.action-dialog-close{
-  min-width:2.75rem;min-height:2.75rem;border:1px solid var(--line);border-radius:.35rem;
-  background:var(--white);color:var(--ink);font:inherit;font-size:1.25rem;cursor:pointer;
+.action-pop:focus{outline:none}
+.action-pop-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.45rem}
+.action-pop-stage{margin:0;padding:.28rem .45rem;border-radius:.3rem;background:var(--tint);color:var(--accent);font:700 .74rem/1 var(--mono)}
+.action-pop-close{
+  display:grid;place-items:center;width:2rem;height:2rem;margin:-.35rem -.45rem -.35rem 0;padding:0;border:0;border-radius:.3rem;
+  background:transparent;color:var(--muted);font:inherit;font-size:1.2rem;line-height:1;cursor:pointer;
 }
-.action-dialog-close:hover{background:var(--paper)}
+.action-pop-close:hover{background:var(--paper);color:var(--ink)}
+.action-pop h4{margin-bottom:.55rem;font-size:1.02rem;line-height:1.3}
+.action-pop-body{font-size:.86rem;line-height:1.48}
+.action-pop-body>:first-child{margin-top:0}
+.action-pop-body>:last-child{margin-bottom:0}
+.action-pop-body h4{display:none}
+.action-pop-body table{font-size:.84rem}
+.action-pop-body th,.action-pop-body td{padding:.45rem .6rem;overflow-wrap:normal}
+.action-pop-body th:first-child{width:40%}
+.action-pop-body .criteria{grid-template-columns:minmax(0,1fr);gap:.3rem;margin:0}
+.action-pop-body .criteria>div{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:.6rem;padding:.45rem .6rem}
+.action-pop-body .criteria dd{margin:0}
+.action-pop-body .gate,.action-pop-body ul{margin-block:.6rem 0}
+.action-pop-body blockquote{display:none}
+.action-pop-more{display:inline-block;margin-top:.8rem;font-size:.82rem;font-weight:650}
 .map-outcome{
   display:block;padding:.5rem .65rem;border-radius:.35rem;background:var(--tint);color:var(--accent);
   font-size:.77rem;line-height:1.35;font-weight:750;text-decoration:none;
@@ -270,7 +284,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   .pane-meta{border:0;padding:0}
   .pane dl{display:flex;gap:1.4rem}
   .map-view .panes[hidden]{display:block!important}
-  .mast,.steps,.pane-nav,.toc,.view-picker,.workflow-map,.action-dialog,footer a{display:none!important}
+  .mast,.steps,.pane-nav,.toc,.view-picker,.workflow-map,.action-pop,footer a{display:none!important}
   .hero{padding:0}
   .reference{margin-top:.5rem}
   details::details-content{content-visibility:visible;display:block}
@@ -331,15 +345,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
               <p class="map-owner">Requester</p>
             </header>
             <div class="map-actions">
-              <details class="map-action">
+              <details class="map-action" data-detail="request-name">
                 <summary>Name the server<small>Server name and official link</small></summary>
                 <p>Include a link to the server or package so the platform team can identify what will run.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="request-use">
                 <summary>Describe the use<small>Business need, users, systems and data</small></summary>
                 <p>For example, a development team wants help managing issues in its internal repositories.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="request-access">
                 <summary>Specify access and owner<small>Required permissions and business owner</small></summary>
                 <p>For example, request permission to read repositories and create issues, and name the team manager as the owner.</p>
               </details>
@@ -353,7 +367,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
               <p class="map-owner">Platform team</p>
             </header>
             <div class="map-actions">
-              <details class="map-action">
+              <details class="map-action" data-detail="classify-where">
                 <summary>Identify where it runs<small>Local, internal or external</small></summary>
                 <p>Distinguish user devices, organization-controlled infrastructure and third-party infrastructure.</p>
               </details>
@@ -361,7 +375,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
                 <summary>Check effective access<small>What the integration can actually reach or change</small></summary>
                 <p>Consider data sensitivity, write and destructive actions, and privileges available to the running server.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="classify-risk">
                 <summary>Assign the highest risk level<small>Low, medium or high</small></summary>
                 <p>For example, an integration with limited write access is medium risk. Access to sensitive data raises it to high risk.</p>
               </details>
@@ -375,11 +389,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
               <p class="map-owner">Security team / automation</p>
             </header>
             <div class="map-actions">
-              <details class="map-action">
+              <details class="map-action" data-detail="assess-scan">
                 <summary>Scan before running code<small>Check available artifacts and prepare isolated tests</small></summary>
                 <p>Use automated checks where possible. Finish static scans before launching a local server and obtain authorization before actively testing an external service. <a href="#1-assessment-execution">Assessment execution</a></p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="assess-domains">
                 <summary>Verify the four domains<small>Identity, permissions, provenance and change</small></summary>
                 <p>Verify identity and authentication, permissions and tool surface, provenance, and change control. Review controls manually when automation supplies insufficient evidence. <a href="#3-security-signals-and-verification-methods">Verification methods</a></p>
               </details>
@@ -397,15 +411,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
               <p class="map-owner">Designated approver</p>
             </header>
             <div class="map-actions">
-              <details class="map-action">
+              <details class="map-action" data-detail="approve-route">
                 <summary>Route by risk<small>Use the designated approval authority</small></summary>
                 <p>Low risk goes to the platform team, medium to security, and high to security and the relevant system or data owner.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="approve-controls">
                 <summary>Record the control results<small>PASS, FAIL, UNKNOWN or N/A</small></summary>
                 <p>Base results on the available evidence, and justify any control marked N/A.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="approve-decide">
                 <summary>Decide whether to approve<small>Advance to step 5 only with approval</small></summary>
                 <p>Every applicable mandatory control must pass for production approval, including approval with restrictions. <a href="#mandatory-controls-for-production-approval">Mandatory controls</a></p>
               </details>
@@ -419,15 +433,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
               <p class="map-owner">Platform team</p>
             </header>
             <div class="map-actions">
-              <details class="map-action">
+              <details class="map-action" data-detail="enable-register">
                 <summary>Register and enforce<small>Approved catalogue, configuration and restrictions</small></summary>
                 <p>Register the server in the approved catalogue. Check that the deployed configuration and restrictions match the approval.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="enable-changes">
                 <summary>Watch for material changes<small>Software, access, hosting, usage and risks</small></summary>
                 <p>Reassess planned material changes before enabling them. Follow the reassessment path to revisit the affected controls.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="enable-suspend">
                 <summary>Suspend affected access<small>When an unexpected change breaks a mandatory condition</small></summary>
                 <p>Keep affected access suspended pending reassessment. Approval may be revoked at any time.</p>
               </details>
@@ -460,13 +474,13 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <div class="table-scroll"><table>
           <thead><tr><th scope="col">Information</th><th scope="col">Example</th></tr></thead>
           <tbody>
-            <tr><th scope="row">MCP server</th><td>GitHub MCP Server</td></tr>
-            <tr><th scope="row">Link to server or package</th><td>Official repository</td></tr>
-            <tr><th scope="row">Business justification</th><td>Assist developers with issue management</td></tr>
-            <tr><th scope="row">Intended users</th><td>Development team</td></tr>
-            <tr><th scope="row">Systems and data accessed</th><td>Internal GitHub repositories</td></tr>
-            <tr><th scope="row">Required permissions</th><td>Read repositories, create issues</td></tr>
-            <tr><th scope="row">Business owner</th><td>Development team manager</td></tr>
+            <tr data-for="request-name"><th scope="row">MCP server</th><td>GitHub MCP Server</td></tr>
+            <tr data-for="request-name"><th scope="row">Link to server or package</th><td>Official repository</td></tr>
+            <tr data-for="request-use"><th scope="row">Business justification</th><td>Assist developers with issue management</td></tr>
+            <tr data-for="request-use"><th scope="row">Intended users</th><td>Development team</td></tr>
+            <tr data-for="request-use"><th scope="row">Systems and data accessed</th><td>Internal GitHub repositories</td></tr>
+            <tr data-for="request-access"><th scope="row">Required permissions</th><td>Read repositories, create issues</td></tr>
+            <tr data-for="request-access"><th scope="row">Business owner</th><td>Development team manager</td></tr>
           </tbody>
         </table></div>
           <p>Keep technical security questions for the assessment.</p>
@@ -484,19 +498,19 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           </div>
           <div class="pane-content">
           <p>Determine how the MCP server is deployed and the risk associated with its intended use.</p>
-          <h4>Deployment model</h4>
-          <dl class="criteria">
+          <h4 data-for="classify-where">Deployment model</h4>
+          <dl class="criteria" data-for="classify-where">
             <div><dt>Local</dt><dd>Executed on the user&#x27;s device</dd></div>
             <div><dt>Internally hosted</dt><dd>Executed in organization-controlled infrastructure</dd></div>
             <div><dt>Externally hosted</dt><dd>Executed in third-party infrastructure</dd></div>
           </dl>
-          <h4>Risk level</h4>
-          <dl class="criteria">
+          <h4 data-for="classify-risk">Risk level</h4>
+          <dl class="criteria" data-for="classify-risk">
             <div><dt>Low</dt><dd>Public data, read-only access and restricted execution</dd></div>
             <div><dt>Medium</dt><dd>Internal data or limited write access</dd></div>
             <div><dt>High</dt><dd>Sensitive data, privileged access, destructive operations or unrestricted local execution</dd></div>
           </dl>
-          <p>Use the highest risk level that applies to the server’s <strong>effective privileges</strong>.</p>
+          <p data-for="classify-risk">Use the highest risk level that applies to the server’s <strong>effective privileges</strong>.</p>
           </div>
           <nav class="pane-nav" aria-label="Step 2 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-3-assess" data-step>Assess →</a></nav>
         </article>
@@ -510,8 +524,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             </dl>
           </div>
           <div class="pane-content">
-          <p>Perform a security assessment using the four domains from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">MCP Server Trust Assessment Guide</a>. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the <a href="#security-assessment-methodology">Security assessment methodology</a> for signals, scanning techniques and assessment execution.</p>
-          <div class="table-scroll"><table>
+          <p data-for="assess-scan">Perform a security assessment using the four domains from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">MCP Server Trust Assessment Guide</a>. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the <a href="#security-assessment-methodology">Security assessment methodology</a> for signals, scanning techniques and assessment execution.</p>
+          <div class="table-scroll" data-for="assess-domains"><table>
           <thead><tr><th scope="col">Assessment domain</th><th scope="col">Key question</th></tr></thead>
           <tbody>
             <tr><th scope="row"><a href="#identity-and-authentication">Identity and authentication</a></th><td>Can we trust the server&#x27;s identity and authentication mechanisms?</td></tr>
@@ -539,17 +553,17 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <div class="table-scroll"><table>
           <thead><tr><th scope="col">Outcome</th><th scope="col">Meaning</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Control: PASS</th><td>Requirement satisfied, supported by evidence</td></tr>
-            <tr><th scope="row">Control: FAIL</th><td>Requirement not satisfied</td></tr>
-            <tr><th scope="row">Control: UNKNOWN</th><td>Insufficient evidence</td></tr>
-            <tr><th scope="row">Control: N/A</th><td>Not applicable, with justification</td></tr>
-            <tr><th scope="row">Approval: Approved</th><td>Security requirements are satisfied</td></tr>
-            <tr><th scope="row">Approval: Approved with restrictions</th><td>Identified risks are mitigated through enforceable safeguards</td></tr>
-            <tr><th scope="row">Approval: Rejected</th><td>Security risks are unacceptable or mandatory requirements cannot be verified</td></tr>
+            <tr data-for="approve-controls"><th scope="row">Control: PASS</th><td>Requirement satisfied, supported by evidence</td></tr>
+            <tr data-for="approve-controls"><th scope="row">Control: FAIL</th><td>Requirement not satisfied</td></tr>
+            <tr data-for="approve-controls"><th scope="row">Control: UNKNOWN</th><td>Insufficient evidence</td></tr>
+            <tr data-for="approve-controls"><th scope="row">Control: N/A</th><td>Not applicable, with justification</td></tr>
+            <tr data-for="approve-decide"><th scope="row">Approval: Approved</th><td>Security requirements are satisfied</td></tr>
+            <tr data-for="approve-decide"><th scope="row">Approval: Approved with restrictions</th><td>Identified risks are mitigated through enforceable safeguards</td></tr>
+            <tr data-for="approve-decide"><th scope="row">Approval: Rejected</th><td>Security risks are unacceptable or mandatory requirements cannot be verified</td></tr>
           </tbody>
         </table></div>
-          <h4>Approval authority</h4>
-          <div class="table-scroll"><table>
+          <h4 data-for="approve-route">Approval authority</h4>
+          <div class="table-scroll" data-for="approve-route"><table>
           <thead><tr><th scope="col">Risk level</th><th scope="col">Approver</th></tr></thead>
           <tbody>
             <tr><th scope="row">Low</th><td>Platform team</td></tr>
@@ -557,7 +571,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <tr><th scope="row">High</th><td>Security team and relevant system or data owner, with escalation where required</td></tr>
           </tbody>
         </table></div>
-          <p class="gate">Approve for production only when every applicable <a href="#mandatory-controls-for-production-approval">mandatory control</a> has passed. This also applies to approval with restrictions.</p>
+          <p class="gate" data-for="approve-decide">Approve for production only when every applicable <a href="#mandatory-controls-for-production-approval">mandatory control</a> has passed. This also applies to approval with restrictions.</p>
           </div>
           <nav class="pane-nav" aria-label="Step 4 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-5-enable-and-monitor" data-step>Enable and monitor →</a></nav>
         </article>
@@ -571,9 +585,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             </dl>
           </div>
           <div class="pane-content">
-          <p>The platform team registers the server in the approved MCP catalogue and ensures the approved configuration and restrictions are enforced.</p>
-          <p>Reassessment is required when there is a material change to:</p>
-          <ul>
+          <p data-for="enable-register">The platform team registers the server in the approved MCP catalogue and ensures the approved configuration and restrictions are enforced.</p>
+          <p data-for="enable-changes">Reassessment is required when there is a material change to:</p>
+          <ul data-for="enable-changes">
             <li>Software version or artifact.</li>
             <li>Client configuration, available tools, agent capabilities, permissions, accessible credentials or enforcement controls.</li>
             <li>Authentication mechanisms.</li>
@@ -581,7 +595,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <li>Intended use, content sources or data access.</li>
             <li>Known security risks.</li>
           </ul>
-          <p>Reassess planned material changes before enabling them. If an unexpected change invalidates a mandatory approval condition, the platform team suspends affected access pending reassessment. Approval can be revoked at any time.</p>
+          <p data-for="enable-suspend">Reassess planned material changes before enabling them. If an unexpected change invalidates a mandatory approval condition, the platform team suspends affected access pending reassessment. Approval can be revoked at any time.</p>
           </div>
           <nav class="pane-nav" aria-label="Step 5 navigation"><a href="#workflow-map">↑ All steps</a></nav>
         </article>
@@ -811,20 +825,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <a href="#top">Back to top ↑</a>
   </footer>
 </div>
-<dialog class="action-dialog" id="action-dialog" aria-labelledby="action-dialog-title">
-  <div class="action-dialog-panel">
-    <div class="action-dialog-head">
-      <div>
-        <p class="action-dialog-stage"></p>
-        <h4 id="action-dialog-title"></h4>
-      </div>
-      <form method="dialog">
-        <button class="action-dialog-close" type="submit" aria-label="Close action details" autofocus>×</button>
-      </form>
-    </div>
-    <div class="action-dialog-body"></div>
+<div class="action-pop" id="action-pop" popover tabindex="-1" role="dialog" aria-labelledby="action-pop-title">
+  <div class="action-pop-head">
+    <p class="action-pop-stage"></p>
+    <button class="action-pop-close" type="button" aria-label="Close">×</button>
   </div>
-</dialog>
+  <h4 id="action-pop-title"></h4>
+  <div class="action-pop-body"></div>
+  <a class="action-pop-more" href="?view=detail"></a>
+</div>
 <script>
 const mapView = new URLSearchParams(location.search).get('view') !== 'detail';
 const stepLinks = Array.from(document.querySelectorAll(mapView ? '.map-outcome' : '.steps a'));
@@ -847,34 +856,113 @@ for (const link of document.querySelectorAll('.pane-nav a:first-child')) {
   link.href = mapView ? '#workflow-map' : '#intake-steps';
 }
 
-const actionDialog = document.getElementById('action-dialog');
-if (mapView && typeof actionDialog.showModal === 'function') {
-  const stageLabel = actionDialog.querySelector('.action-dialog-stage');
-  const title = document.getElementById('action-dialog-title');
-  const body = actionDialog.querySelector('.action-dialog-body');
+const pop = document.getElementById('action-pop');
+if (mapView && typeof pop.showPopover === 'function') {
+  const popStage = pop.querySelector('.action-pop-stage');
+  const popTitle = document.getElementById('action-pop-title');
+  const popBody = pop.querySelector('.action-pop-body');
+  const popMore = pop.querySelector('.action-pop-more');
+  let openButton = null;
+  let closedButton = null;
+
+  // Copy the detail view's own rows and paragraphs, so the popover never holds a second version of the text.
+  const detailFragment = (key, fallback) => {
+    const parts = [];
+    let table = null;
+    for (const source of document.querySelectorAll(`.panes [data-for~="${key}"]`)) {
+      if (source.tagName === 'TR') {
+        if (!table) {
+          const sourceTable = source.closest('table');
+          table = document.createElement('table');
+          table.append(sourceTable.tHead.cloneNode(true), document.createElement('tbody'));
+          const wrap = document.createElement('div');
+          wrap.className = 'table-scroll';
+          wrap.append(table);
+          parts.push(wrap);
+        }
+        table.tBodies[0].append(source.cloneNode(true));
+      } else {
+        table = null;
+        parts.push(source.cloneNode(true));
+      }
+    }
+    if (!parts.length) parts.push(fallback.cloneNode(true));
+    for (const part of parts) {
+      for (const node of [part, ...part.querySelectorAll('*')]) {
+        node.removeAttribute('id');
+        node.removeAttribute('data-for');
+        node.removeAttribute('tabindex');
+      }
+    }
+    return parts;
+  };
+
+  const place = () => {
+    if (!openButton) return;
+    const gap = 8;
+    const anchor = openButton.getBoundingClientRect();
+    const width = pop.offsetWidth;
+    const height = pop.offsetHeight;
+    let top = anchor.bottom + gap;
+    if (top + height > innerHeight - gap && anchor.top - height - gap >= gap) top = anchor.top - height - gap;
+    top = Math.max(gap, Math.min(top, innerHeight - height - gap));
+    const left = Math.max(gap, Math.min(anchor.left, innerWidth - width - gap));
+    pop.style.top = `${top}px`;
+    pop.style.left = `${left}px`;
+  };
+
   for (const action of workflowMap.querySelectorAll('.map-action')) {
     const summary = action.querySelector('summary');
     const actionTitle = summary.firstChild.textContent.trim();
-    const stageTitle = action.closest('.map-card').querySelector('h3').textContent.trim();
-    const content = action.querySelector('p');
+    const card = action.closest('.map-card');
+    const stage = `${card.querySelector('.map-number').textContent.trim()} ${card.querySelector('h3').textContent.trim()}`;
+    const stepHref = card.querySelector('.map-outcome').hash;
+    const parts = detailFragment(action.dataset.detail, action.querySelector('p'));
     const item = document.createElement('div');
     const button = document.createElement('button');
     button.type = 'button';
     button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-expanded', 'false');
     button.append(...summary.childNodes);
     button.addEventListener('click', () => {
-      stageLabel.textContent = stageTitle;
-      title.textContent = actionTitle;
-      body.replaceChildren(content.cloneNode(true));
-      actionDialog.showModal();
+      if (closedButton === button) { closedButton = null; return; }
+      if (openButton) pop.hidePopover();
+      popStage.textContent = stage;
+      popTitle.textContent = actionTitle;
+      popBody.replaceChildren(...parts.map((part) => part.cloneNode(true)));
+      popMore.href = `?view=detail${stepHref}`;
+      popMore.textContent = `Open step ${stage.slice(0, 2)} in detail view →`;
+      pop.style.setProperty('--accent', getComputedStyle(card).getPropertyValue('--accent'));
+      pop.style.setProperty('--tint', getComputedStyle(card).getPropertyValue('--tint'));
+      openButton = button;
+      button.setAttribute('aria-expanded', 'true');
+      pop.showPopover();
+      place();
+      pop.focus({preventScroll:true});
     });
     item.className = action.className;
     item.append(button);
     action.replaceWith(item);
   }
-  actionDialog.addEventListener('click', (event) => {
-    if (event.target === actionDialog || event.target.closest('a[href]')) actionDialog.close();
+
+  // Light dismiss closes on pointerdown, so remember the button to stop its click from reopening.
+  document.addEventListener('pointerdown', (event) => {
+    closedButton = openButton && event.target.closest('.map-action button') === openButton ? openButton : null;
+  }, true);
+  pop.addEventListener('toggle', (event) => {
+    if (event.newState !== 'closed' || !openButton) return;
+    const button = openButton;
+    openButton = null;
+    button.setAttribute('aria-expanded', 'false');
+    if (!pop.contains(document.activeElement) && document.activeElement !== document.body) return;
+    button.focus({preventScroll:true});
   });
+  pop.querySelector('.action-pop-close').addEventListener('click', () => pop.hidePopover());
+  pop.addEventListener('click', (event) => {
+    if (event.target.closest('a[href]')) pop.hidePopover();
+  });
+  addEventListener('resize', place);
+  addEventListener('scroll', place, {passive:true});
 }
 
 function showStep(pane) {
