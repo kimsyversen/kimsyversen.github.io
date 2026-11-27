@@ -127,12 +127,12 @@ The four-domain structure is adapted from the [NHI MCP Server Trust Assessment G
 
 ### 1. Assessment execution
 
+**Before connecting or running code**, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.
+
 | Order | Activity | Output |
 |---|---|---|
 | 1 | Identify the publisher, operator, package or endpoint. Identify the applicable [mandatory controls](#mandatory-controls-for-production-approval) and [select checks for the deployment model](#2-scanning-techniques-and-applicability). Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls. | Assessment scope and selected checks |
 | 2 | Obtain available artifacts without executing them. Use the [domain verification methods](#3-security-signals-and-verification-methods) to check provenance and scan code, dependencies, malware indicators and embedded secrets. | Static assessment evidence |
-
-**Before connecting or running code**, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.
 
 | Order | Activity | Output |
 |---|---|---|

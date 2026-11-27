@@ -118,6 +118,8 @@ details[open]>summary{background:#edf3e9;border-bottom:1px solid var(--line)}
 .execution strong{color:var(--green);font-size:.93rem}
 .gate{margin:.9rem 0;padding:.75rem .9rem;background:#eaf2dc;border-left:3px solid #578045;border-radius:.2rem}
 .reference ul{margin:.6rem 0}
+.bulk-toggle{margin:.45rem 0 .2rem;padding:.38rem .65rem;border:1px solid var(--line);border-radius:.35rem;background:var(--white);color:var(--green);font:inherit;font-size:.82rem;font-weight:650;cursor:pointer}
+.bulk-toggle:hover{background:#edf3e9}
 footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1.4rem 0 2.5rem;color:var(--muted);font-size:.85rem}
 .skip{position:absolute;left:1rem;top:1rem;translate:0 -200%;z-index:1;background:var(--white);padding:.6rem}
 .skip:focus{translate:0}
@@ -184,32 +186,45 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 .map-action p,.map-route p{margin:0 0 .65rem;font-size:.8rem;line-height:1.45}
 .action-pop{
   --accent:var(--green);--tint:#e7f0e5;
-  position:fixed;inset:auto;margin:0;width:min(30rem,calc(100vw - 1rem));max-height:min(32rem,calc(100vh - 1rem));overflow:auto;
-  padding:.9rem 1rem 1rem;border:1px solid var(--line);border-radius:.6rem;background:var(--white);color:var(--ink);
+  position:fixed;inset:auto;margin:0;width:min(46rem,calc(100vw - 1rem));max-height:calc(100vh - 1rem);overflow:auto;
+  padding:1rem 1.15rem 1.15rem;border:1px solid var(--line);border-radius:.6rem;background:var(--white);color:var(--ink);
   box-shadow:0 10px 32px #162b2924,0 1px 3px #162b291a;
 }
 .action-pop:focus{outline:none}
-.action-pop-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.45rem}
-.action-pop-stage{margin:0;padding:.28rem .45rem;border-radius:.3rem;background:var(--tint);color:var(--accent);font:700 .74rem/1 var(--mono)}
+.action-pop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;padding-bottom:.7rem;border-bottom:1px solid var(--line)}
+.action-pop-stage{display:inline-block;margin:0 0 .4rem;padding:.28rem .45rem;border-radius:.3rem;background:var(--tint);color:var(--accent);font:700 .74rem/1 var(--mono)}
+#action-pop-title{font-family:var(--serif);font-weight:400;font-size:1.6rem;line-height:1.1;letter-spacing:-.02em}
+.action-pop-meta{display:flex;flex-wrap:wrap;gap:.2rem 1.4rem;margin:.45rem 0 0;font-size:.82rem}
+.action-pop-meta dt{display:inline;color:var(--muted);font-weight:650}
+.action-pop-meta dt::after{content:": "}
+.action-pop-meta dd{display:inline;margin:0}
 .action-pop-close{
-  display:grid;place-items:center;width:2rem;height:2rem;margin:-.35rem -.45rem -.35rem 0;padding:0;border:0;border-radius:.3rem;
+  display:grid;place-items:center;flex:none;width:2rem;height:2rem;margin:-.3rem -.45rem 0 0;padding:0;border:0;border-radius:.3rem;
   background:transparent;color:var(--muted);font:inherit;font-size:1.2rem;line-height:1;cursor:pointer;
 }
 .action-pop-close:hover{background:var(--paper);color:var(--ink)}
-.action-pop h4{margin-bottom:.55rem;font-size:1.02rem;line-height:1.3}
-.action-pop-body{font-size:.86rem;line-height:1.48}
-.action-pop-body>:first-child{margin-top:0}
-.action-pop-body>:last-child{margin-bottom:0}
-.action-pop-body h4{display:none}
-.action-pop-body table{font-size:.84rem}
-.action-pop-body th,.action-pop-body td{padding:.45rem .6rem;overflow-wrap:normal}
-.action-pop-body th:first-child{width:40%}
-.action-pop-body .criteria{grid-template-columns:minmax(0,1fr);gap:.3rem;margin:0}
-.action-pop-body .criteria>div{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:.6rem;padding:.45rem .6rem}
-.action-pop-body .criteria dd{margin:0}
-.action-pop-body .gate,.action-pop-body ul{margin-block:.6rem 0}
-.action-pop-body blockquote{display:none}
-.action-pop-more{display:inline-block;margin-top:.8rem;font-size:.82rem;font-weight:650}
+.action-pop-controls{display:flex;align-items:center;gap:.2rem;flex:none}
+.action-pop-step{display:grid;place-items:center;width:2rem;height:2rem;padding:0;border:0;border-radius:.3rem;background:transparent;color:var(--muted);font:inherit;font-size:1.25rem;line-height:1;cursor:pointer}
+.action-pop-step:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.action-pop-step:disabled{opacity:.35;cursor:default}
+.action-pop-controls .action-pop-close{margin:0}
+.action-pop-body{font-size:.88rem;line-height:1.5}
+.action-pop-body .pane-content>:first-child{margin-top:0}
+.action-pop-body .pane-content>:last-child{margin-bottom:0}
+.action-pop-body h4{margin-block:.9rem .35rem;font-size:.95rem}
+.action-pop-body table{font-size:.85rem}
+.action-pop-body th,.action-pop-body td{padding:.45rem .65rem;overflow-wrap:normal}
+.action-pop-body th:first-child{width:38%}
+.action-pop-body .criteria{margin:.35rem 0 .6rem}
+.action-pop-body .criteria>div{padding:.55rem .6rem}
+.action-pop-body tr.is-current>*{background:var(--tint)}
+.action-pop-body tr.is-current>th{box-shadow:inset 3px 0 0 var(--accent)}
+.action-pop-body .table-scroll.is-current tbody th{box-shadow:inset 3px 0 0 var(--accent)}
+.action-pop-body :is(p,ul,.criteria).is-current{padding:.45rem .65rem;border-left:3px solid var(--accent);border-radius:.2rem;background:var(--tint)}
+.action-pop-body .criteria.is-current>div{background:var(--white)}
+@media(max-width:640px){
+  .action-pop-body .criteria{grid-template-columns:minmax(0,1fr)}
+}
 .action-pop-body :is(blockquote,.gate,p.is-current,ul.is-current,.criteria.is-current){border-left:0}
 .action-pop-body tr.is-current>th,.action-pop-body .table-scroll.is-current tbody th{box-shadow:none}
 .map-outcome{
@@ -618,17 +633,17 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <section class="major methods" aria-labelledby="1-assessment-execution">
           <span id="3-assessment-execution"></span>
           <h3 id="1-assessment-execution"><a class="sec-link" href="#1-assessment-execution">1. Assessment execution</a></h3>
-          <ol class="execution" start="1">
-            <li><span>Identify the publisher, operator, package or endpoint. Identify the applicable <a href="#mandatory-controls-for-production-approval">mandatory controls</a> and <a href="#scanning-applicability-matrix">select checks for the deployment model</a>. Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls.</span><strong>Assessment scope and selected checks</strong></li>
-            <li><span>Obtain available artifacts without executing them. Use the <a href="#3-security-signals-and-verification-methods">domain verification methods</a> to check provenance and scan code, dependencies, malware indicators and embedded secrets.</span><strong>Static assessment evidence</strong></li>
-          </ol>
         <p class="gate"><strong>Before connecting or running code</strong>, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.</p>
+          <ol class="execution" start="1">
+            <li><span>Identify the publisher, operator, package or endpoint. Identify the applicable <a href="#mandatory-controls-for-production-approval">mandatory controls</a> and <a href="#scanning-applicability-matrix">select checks for the deployment model</a>. Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls.</span><strong>Output: Assessment scope and selected checks</strong></li>
+            <li><span>Obtain available artifacts without executing them. Use the <a href="#3-security-signals-and-verification-methods">domain verification methods</a> to check provenance and scan code, dependencies, malware indicators and embedded secrets.</span><strong>Output: Static assessment evidence</strong></li>
+          </ol>
         <ol class="execution" start="3">
-            <li><span>Connect from the test environment. List the server&#x27;s capabilities and identify its authentication requirements.</span><strong>Capability and authentication inventory</strong></li>
-            <li><span>Inspect tool definitions, resources, prompts and sample responses. Treat server content as untrusted, including during AI-assisted scanning. Check who controls that content and what the agent can do with its other tools.</span><strong>Findings on server content and combined tool access</strong></li>
-            <li><span>Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems.</span><strong>Test results and evidence of enforcement</strong></li>
-            <li><span>Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions.</span><strong>Proposed approval baseline</strong></li>
-            <li><span><a href="#4-evaluate-and-record-evidence">Record the evidence</a>, identify unresolved controls and specify any safeguards needed for approval.</span><strong>Completed assessment and recommendation</strong></li>
+            <li><span>Connect from the test environment. List the server&#x27;s capabilities and identify its authentication requirements.</span><strong>Output: Capability and authentication inventory</strong></li>
+            <li><span>Inspect tool definitions, resources, prompts and sample responses. Treat server content as untrusted, including during AI-assisted scanning. Check who controls that content and what the agent can do with its other tools.</span><strong>Output: Findings on server content and combined tool access</strong></li>
+            <li><span>Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems.</span><strong>Output: Test results and evidence of enforcement</strong></li>
+            <li><span>Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions.</span><strong>Output: Proposed approval baseline</strong></li>
+            <li><span><a href="#4-evaluate-and-record-evidence">Record the evidence</a>, identify unresolved controls and specify any safeguards needed for approval.</span><strong>Output: Completed assessment and recommendation</strong></li>
           </ol>
           <h4 id="mandatory-controls-for-production-approval"><a class="sec-link" href="#mandatory-controls-for-production-approval">Mandatory controls for production approval</a></h4>
           <p>For any additional mandatory control, the security team records when it applies and what evidence counts as a pass before testing.</p>
@@ -689,7 +704,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <h3 id="3-security-signals-and-verification-methods"><a class="sec-link" href="#3-security-signals-and-verification-methods">3. Security signals and verification methods</a></h3>
           <p>Collect the applicable signals in each of the four assessment domains. Use deterministic tests where possible, heuristic scanning to identify suspicious behavior, and manual review where technical evidence is insufficient.</p>
         <p>Automation: <strong>Automatable</strong> means machine-checkable; <strong>Partial</strong> means automated evidence still needs human review; <strong>Manual</strong> means document or judgment review.</p>
-          <details id="identity-and-authentication"><summary>Identity and authentication</summary><div class="details-content">
+        <button class="bulk-toggle" id="expand-assessment-domains" type="button" aria-controls="identity-and-authentication permissions-and-tool-surface provenance-and-supply-chain change-control" aria-expanded="false" hidden>Expand all domains</button>
+          <details class="assessment-domain" id="identity-and-authentication"><summary>Identity and authentication</summary><div class="details-content">
           <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
         <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
         <tbody>
@@ -706,7 +722,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <p><strong>Investigate:</strong> Invalid credentials being accepted, insecure token handling, token passthrough, unnecessarily privileged credentials and access to unrelated credentials.</p>
             </div>
           </details>
-          <details id="permissions-and-tool-surface"><summary>Permissions and tool surface</summary><div class="details-content">
+          <details class="assessment-domain" id="permissions-and-tool-surface"><summary>Permissions and tool surface</summary><div class="details-content">
           <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
         <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
         <tbody>
@@ -726,7 +742,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <p><strong>Investigate:</strong> Excessive privileges, model-directed malicious instructions, arbitrary command execution, unexpected data destinations, disclosure of sensitive data, unsafe combinations of tools and discrepancies between declared and observed behavior. Tool annotations are not proof of actual behavior.</p>
             </div>
           </details>
-          <details id="provenance-and-supply-chain"><summary>Provenance and supply chain</summary><div class="details-content">
+          <details class="assessment-domain" id="provenance-and-supply-chain"><summary>Provenance and supply chain</summary><div class="details-content">
           <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
         <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
         <tbody>
@@ -746,7 +762,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <p><strong>Investigate:</strong> Unverified publishers, impersonation, compromised packages, exploitable vulnerabilities, unexplained obfuscation and unverified executable dependencies. Provenance does not prove that software is safe. Package age, popularity and ownership changes are risk signals, not proof of compromise or trustworthiness.</p>
             </div>
           </details>
-          <details id="change-control"><summary>Change control</summary><div class="details-content">
+          <details class="assessment-domain" id="change-control"><summary>Change control</summary><div class="details-content">
           <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Signal to collect table"><table>
         <thead><tr><th scope="col">Signal to collect</th><th scope="col">Verification method</th><th scope="col">Automation</th></tr></thead>
         <tbody>
@@ -822,15 +838,38 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 </div>
 <div class="action-pop" id="action-pop" popover tabindex="-1" role="dialog" aria-labelledby="action-pop-title">
   <div class="action-pop-head">
-    <p class="action-pop-stage"></p>
-    <button class="action-pop-close" type="button" aria-label="Close">×</button>
+    <div>
+      <p class="action-pop-stage"></p>
+      <h4 id="action-pop-title"></h4>
+      <dl class="action-pop-meta"></dl>
+    </div>
+    <nav class="action-pop-controls" aria-label="Step details">
+      <button class="action-pop-step" id="action-pop-prev" type="button" aria-label="Previous step" title="Previous step" disabled>‹</button>
+      <button class="action-pop-step" id="action-pop-next" type="button" aria-label="Next step" title="Next step" disabled>›</button>
+      <button class="action-pop-close" type="button" aria-label="Close">×</button>
+    </nav>
   </div>
-  <h4 id="action-pop-title"></h4>
   <div class="action-pop-body"></div>
-  <a class="action-pop-more" href="?view=detail"></a>
 </div>
 <script>
 const mapView = new URLSearchParams(location.search).get('view') !== 'detail';
+const assessmentDomains = [...document.querySelectorAll('.assessment-domain')];
+const expandAssessmentDomains = document.getElementById('expand-assessment-domains');
+if (expandAssessmentDomains && assessmentDomains.length) {
+  const updateDomainToggle = () => {
+    const allOpen = assessmentDomains.every((domain) => domain.open);
+    expandAssessmentDomains.textContent = allOpen ? 'Collapse all domains' : 'Expand all domains';
+    expandAssessmentDomains.setAttribute('aria-expanded', String(allOpen));
+  };
+  expandAssessmentDomains.hidden = false;
+  expandAssessmentDomains.addEventListener('click', () => {
+    const open = !assessmentDomains.every((domain) => domain.open);
+    for (const domain of assessmentDomains) domain.open = open;
+    updateDomainToggle();
+  });
+  for (const domain of assessmentDomains) domain.addEventListener('toggle', updateDomainToggle);
+  updateDomainToggle();
+}
 const stepLinks = Array.from(document.querySelectorAll(mapView ? '.map-outcome' : '.steps a'));
 const panes = Array.from(document.querySelectorAll('.pane'));
 const paneGroup = document.querySelector('.panes');
@@ -855,47 +894,27 @@ const pop = document.getElementById('action-pop');
 if (mapView && typeof pop.showPopover === 'function') {
   const popStage = pop.querySelector('.action-pop-stage');
   const popTitle = document.getElementById('action-pop-title');
+  const popMeta = pop.querySelector('.action-pop-meta');
   const popBody = pop.querySelector('.action-pop-body');
-  const popMore = pop.querySelector('.action-pop-more');
-  let openButton = null;
-  let closedButton = null;
+  const previousStep = document.getElementById('action-pop-prev');
+  const nextStep = document.getElementById('action-pop-next');
+  const stepCards = [...workflowMap.querySelectorAll('.map-card')];
+  let openTrigger = null;
+  let closedTrigger = null;
 
-  // Copy the detail view's own rows and paragraphs, so the popover never holds a second version of the text.
-  const detailFragment = (key, fallback) => {
-    const parts = [];
-    let table = null;
-    for (const source of document.querySelectorAll(`.panes [data-for~="${key}"]`)) {
-      if (source.tagName === 'TR') {
-        if (!table) {
-          const sourceTable = source.closest('table');
-          table = document.createElement('table');
-          table.append(sourceTable.tHead.cloneNode(true), document.createElement('tbody'));
-          const wrap = document.createElement('div');
-          wrap.className = 'table-scroll';
-          wrap.append(table);
-          parts.push(wrap);
-        }
-        table.tBodies[0].append(source.cloneNode(true));
-      } else {
-        table = null;
-        parts.push(source.cloneNode(true));
-      }
+  const cleanCopy = (node) => {
+    const copy = node.cloneNode(true);
+    for (const element of [copy, ...copy.querySelectorAll('*')]) {
+      element.removeAttribute('id');
+      element.removeAttribute('tabindex');
     }
-    if (!parts.length) parts.push(fallback.cloneNode(true));
-    for (const part of parts) {
-      for (const node of [part, ...part.querySelectorAll('*')]) {
-        node.removeAttribute('id');
-        node.removeAttribute('data-for');
-        node.removeAttribute('tabindex');
-      }
-    }
-    return parts;
+    return copy;
   };
 
   const place = () => {
-    if (!openButton) return;
+    if (!openTrigger) return;
     const gap = 8;
-    const anchor = openButton.getBoundingClientRect();
+    const anchor = openTrigger.getBoundingClientRect();
     const width = pop.offsetWidth;
     const height = pop.offsetHeight;
     let top = anchor.bottom + gap;
@@ -906,51 +925,82 @@ if (mapView && typeof pop.showPopover === 'function') {
     pop.style.left = `${left}px`;
   };
 
+  // The popover shows a copy of the step's detail pane, so the text keeps one source.
+  const open = (trigger, card, key) => {
+    const pane = document.getElementById(card.querySelector('.map-outcome').hash.slice(1));
+    if (openTrigger) {
+      openTrigger.setAttribute('aria-expanded', 'false');
+      pop.hidePopover();
+    }
+    popStage.textContent = pane.querySelector('.step-number').textContent;
+    popTitle.textContent = pane.querySelector('h3').textContent.trim();
+    popMeta.replaceChildren(...[...pane.querySelectorAll('.pane-meta dl > div')].map(cleanCopy));
+    popBody.replaceChildren(cleanCopy(pane.querySelector('.pane-content')));
+    if (key) for (const part of popBody.querySelectorAll(`[data-for~="${key}"]`)) part.classList.add('is-current');
+    pop.style.setProperty('--accent', getComputedStyle(card).getPropertyValue('--accent'));
+    pop.style.setProperty('--tint', getComputedStyle(card).getPropertyValue('--tint'));
+    const stepIndex = stepCards.indexOf(card);
+    previousStep.disabled = stepIndex <= 0;
+    nextStep.disabled = stepIndex < 0 || stepIndex >= stepCards.length - 1;
+    openTrigger = trigger;
+    trigger.setAttribute('aria-expanded', 'true');
+    pop.showPopover();
+    place();
+    pop.scrollTop = 0;
+    const current = popBody.querySelector('.is-current');
+    if (current && pop.scrollHeight > pop.clientHeight) {
+      pop.scrollTop = current.getBoundingClientRect().top - pop.getBoundingClientRect().top - pop.clientHeight / 3;
+    }
+    pop.focus({preventScroll:true});
+  };
+
+  const bind = (trigger, card, key) => {
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.addEventListener('click', (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (closedTrigger === trigger) { closedTrigger = null; return; }
+      open(trigger, card, key);
+    });
+  };
+
   for (const action of workflowMap.querySelectorAll('.map-action')) {
     const summary = action.querySelector('summary');
-    const actionTitle = summary.firstChild.textContent.trim();
-    const card = action.closest('.map-card');
-    const stage = `${card.querySelector('.map-number').textContent.trim()} ${card.querySelector('h3').textContent.trim()}`;
-    const stepHref = card.querySelector('.map-outcome').hash;
-    const parts = detailFragment(action.dataset.detail, action.querySelector('p'));
     const item = document.createElement('div');
     const button = document.createElement('button');
     button.type = 'button';
-    button.setAttribute('aria-haspopup', 'dialog');
-    button.setAttribute('aria-expanded', 'false');
     button.append(...summary.childNodes);
-    button.addEventListener('click', () => {
-      if (closedButton === button) { closedButton = null; return; }
-      if (openButton) pop.hidePopover();
-      popStage.textContent = stage;
-      popTitle.textContent = actionTitle;
-      popBody.replaceChildren(...parts.map((part) => part.cloneNode(true)));
-      popMore.href = `?view=detail${stepHref}`;
-      popMore.textContent = `Open step ${stage.slice(0, 2)} in detail view →`;
-      pop.style.setProperty('--accent', getComputedStyle(card).getPropertyValue('--accent'));
-      pop.style.setProperty('--tint', getComputedStyle(card).getPropertyValue('--tint'));
-      openButton = button;
-      button.setAttribute('aria-expanded', 'true');
-      pop.showPopover();
-      place();
-      pop.focus({preventScroll:true});
-    });
+    bind(button, action.closest('.map-card'), action.dataset.detail);
     item.className = action.className;
     item.append(button);
     action.replaceWith(item);
   }
+  for (const outcome of workflowMap.querySelectorAll('.map-outcome')) {
+    bind(outcome, outcome.closest('.map-card'), null);
+  }
+  const navigateStep = (offset) => {
+    if (!openTrigger) return;
+    const currentIndex = stepCards.indexOf(openTrigger.closest('.map-card'));
+    const card = stepCards[currentIndex + offset];
+    if (card) open(card.querySelector('.map-outcome'), card, null);
+  };
+  previousStep.addEventListener('click', () => navigateStep(-1));
+  nextStep.addEventListener('click', () => navigateStep(1));
 
-  // Light dismiss closes on pointerdown, so remember the button to stop its click from reopening.
+  // Light dismiss closes on pointerdown, so remember the trigger to stop its click from reopening.
   document.addEventListener('pointerdown', (event) => {
-    closedButton = openButton && event.target.closest('.map-action button') === openButton ? openButton : null;
+    const trigger = event.target.closest('.map-action button, .map-outcome');
+    closedTrigger = openTrigger && trigger === openTrigger ? openTrigger : null;
   }, true);
   pop.addEventListener('toggle', (event) => {
-    if (event.newState !== 'closed' || !openButton) return;
-    const button = openButton;
-    openButton = null;
-    button.setAttribute('aria-expanded', 'false');
+    if (event.newState !== 'closed' || !openTrigger) return;
+    const trigger = openTrigger;
+    openTrigger = null;
+    trigger.setAttribute('aria-expanded', 'false');
     if (!pop.contains(document.activeElement) && document.activeElement !== document.body) return;
-    button.focus({preventScroll:true});
+    trigger.focus({preventScroll:true});
   });
   pop.querySelector('.action-pop-close').addEventListener('click', () => pop.hidePopover());
   pop.addEventListener('click', (event) => {
