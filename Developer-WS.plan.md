@@ -29,3 +29,5 @@ Goal: every statement on the page is correct and the guidance is complete for it
 3. Fix confirmed deviations. Keep ids, anchors and storage keys.
 4. Run a fresh full review pass. Repeat 2 and 3 until two passes in a row find nothing.
 5. Record verdicts in the fact check and choices in the decisions file. Update index dates. Run the section and browser checks.
+
+Completed on 27 November 2026. Iterations 4 and 5 had no findings. The fact check records the corrections and validation.

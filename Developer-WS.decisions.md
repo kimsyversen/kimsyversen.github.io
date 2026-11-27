@@ -167,3 +167,10 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - D01 covers npm 10 and 11 by behaviour, without listing which Node.js release bundles which npm version, because that list ages quickly.
 - Preview tags go on the feature noun, not on the setting that blocks it. Only the Codex Agent Host integration is tagged, because the extension route has no stage label.
 - Where VS Code source reading differs from the documents (saved approvals under `ChatToolsAutoApprove`), D08 states both, tags the source reading `[inference]` and says not to rely on the policy.
+
+## 27 November 2026, follow-up review
+
+- Keep the checklist as the detailed control reference for D01–D10. Further risks open directly from map markers to their mitigation. The zone table still shows where all 17 risks are placed, and governance-only D10 remains visible under All in the attack-path filter.
+- Use the existing risk and disclosure anchors for links between controls. A link to a disclosure opens it, and keyboard activation moves focus to its summary below the sticky tabs.
+- Preserve the browser storage keys. Returning one risk to Not assessed removes that risk’s saved status. Reset still clears all ten statuses and returns focus to the Reset button.
+- Describe the interactive diagram’s flows in its caption. Keep detailed product evidence with the applicable checks, including the Remote Tunnels route in D13.
