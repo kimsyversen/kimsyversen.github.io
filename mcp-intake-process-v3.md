@@ -60,7 +60,9 @@ Use the highest applicable risk level. The classification must consider the serv
 
 ## Step 3 – Assess
 
-Perform a security assessment using the four domains from the [MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide).
+Perform a security assessment using the four domains from the [MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide). Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the [Security assessment methodology](#security-assessment-methodology) for signals, scanning techniques and assessment execution.
+
+Wiz reported that about 70% of exposed MCP servers it tested returned their full tool catalog to anonymous callers, reinforcing the need to verify authentication and authorization ([Wiz Research](https://www.wiz.io/blog/the-risk-hiding-behind-exposed-mcp-servers)).
 
 | Assessment domain | Key question |
 |---|---|
@@ -69,7 +71,6 @@ Perform a security assessment using the four domains from the [MCP Server Trust 
 | **Provenance** | Can we trust where the server and its software originate from? |
 | **Change control** | Can we detect, control and respond to changes? |
 
-Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the [Security assessment methodology](#security-assessment-methodology) for signals, scanning techniques and assessment execution.
 
 Each security control receives one of four results:
 
@@ -143,77 +144,81 @@ Assess the MCP server in the context of its intended execution environment: the 
 
 Collect the applicable signals in each of the four assessment domains. Use deterministic tests where possible, heuristic scanning to identify suspicious behavior, and manual review where technical evidence is insufficient.
 
+Automation: **Automatable** means machine-checkable; **Partial** means automated evidence still needs human review; **Manual** means document or judgment review.
+
 #### Identity and authentication
 
-| Signal to collect | Verification method |
-|---|---|
-| Server identity, URL, domain and operator | Verify publisher affiliation, endpoint identity and TLS where applicable |
-| Authentication mechanism and OAuth metadata | Protocol discovery, configuration review and metadata validation |
-| Token audience, issuer and expiration | Positive and negative authentication tests using dedicated test credentials |
-| Requested and granted scopes | OAuth flow inspection and comparison with required permissions |
-| Credential handling and inherited environment variables | Source-code and configuration scanning; sandbox inspection |
-| Effective execution identity and ambient credentials (SSH keys, Git, cloud and package registry credentials) | Inspect process identity, inherited privileges and accessible credential stores; test isolation using synthetic credentials |
-| Token passthrough and downstream credentials | Trace credential use and verify that downstream API calls use credentials intended for that API |
-| Shared or long-lived credentials | Configuration and documentation review |
+| Signal to collect | Verification method | Automation |
+|---|---|---|
+| Server identity, URL, domain and operator | Verify publisher affiliation, endpoint identity and TLS where applicable | Partial |
+| Authentication mechanism and OAuth metadata | Protocol discovery, configuration review and metadata validation | Partial |
+| Token audience, issuer and expiration | Positive and negative authentication tests using dedicated test credentials | Partial |
+| Requested and granted scopes | OAuth flow inspection and comparison with required permissions | Partial |
+| Credential handling and inherited environment variables | Source-code and configuration scanning; sandbox inspection | Partial |
+| Effective execution identity and ambient credentials (SSH keys, Git, cloud and package registry credentials) | Inspect process identity, inherited privileges and accessible credential stores; test isolation using synthetic credentials | Partial |
+| Token passthrough and downstream credentials | Trace credential use and verify that downstream API calls use credentials intended for that API | Partial |
+| Shared or long-lived credentials | Configuration and documentation review | Partial |
 
 **Investigate:** Invalid credentials being accepted, insecure token handling, token passthrough, unnecessarily privileged credentials and access to unrelated credentials.
 
 #### Permissions and tool surface
 
-| Signal to collect | Verification method |
-|---|---|
-| Available tools, resources and prompts | MCP protocol enumeration, including pagination and relevant identity contexts |
-| Tool names, descriptions, schemas and annotations | MCP-specific scanning and baseline comparison |
-| Read, write, delete and administrative capabilities | Semantic classification, source analysis and controlled testing |
-| Prompt injection and tool poisoning indicators | Signature-based and AI-assisted analysis of metadata and representative responses |
-| Exposure to untrusted content and indirect prompt injection | Identify who can control retrieved content; perform risk-based adversarial tests with synthetic content in the intended client or agent |
-| Cross-tool attack potential | Review other available tools and their combined permissions; test representative attack paths where warranted |
-| Effective permissions to underlying systems | Credential inspection, authorization tests and comparison with business needs |
-| Filesystem access, network destinations and child processes | Static analysis and sandbox monitoring |
-| Telemetry, external data recipients and sensitive data disclosure | Data-flow analysis, source inspection, controlled network monitoring and supplier documentation |
-| Hidden functionality and input validation | Source analysis and authorized negative testing |
-| Tool naming collisions | Comparison with other approved servers |
+| Signal to collect | Verification method | Automation |
+|---|---|---|
+| Available tools, resources and prompts | MCP protocol enumeration, including pagination and relevant identity contexts | Automatable |
+| Tool names, descriptions, schemas and annotations | MCP-specific scanning and baseline comparison | Automatable |
+| Read, write, delete and administrative capabilities | Semantic classification, source analysis and controlled testing | Partial |
+| Prompt injection and tool poisoning indicators | Signature-based and AI-assisted analysis of metadata and representative responses | Partial |
+| Exposure to untrusted content and indirect prompt injection | Identify who can control retrieved content; perform risk-based adversarial tests with synthetic content in the intended client or agent | Partial |
+| Cross-tool attack potential | Review other available tools and their combined permissions; test representative attack paths where warranted | Partial |
+| Effective permissions to underlying systems | Credential inspection, authorization tests and comparison with business needs | Partial |
+| Filesystem access, network destinations and child processes | Static analysis and sandbox monitoring | Partial |
+| Telemetry, external data recipients and sensitive data disclosure | Data-flow analysis, source inspection, controlled network monitoring and supplier documentation | Partial |
+| Hidden functionality and input validation | Source analysis and authorized negative testing | Partial |
+| Tool naming collisions | Comparison with other approved servers | Automatable |
 
 **Investigate:** Excessive privileges, model-directed malicious instructions, arbitrary command execution, unexpected data destinations, disclosure of sensitive data, unsafe combinations of tools and discrepancies between declared and observed behavior. Tool annotations are not proof of actual behavior.
 
 #### Provenance and supply chain
 
-| Signal to collect | Verification method |
-|---|---|
-| Publisher, maintainer and vendor affiliation | Registry, repository and official vendor documentation comparison |
-| Relationship between repository and distributed artifact | Build provenance and attestation verification where available |
-| Package version and artifact digest | Compare against an independently established approved digest |
-| Signatures and attestations | Verify signatures, trusted signer identity and artifact binding |
-| Direct and transitive dependencies | SBOM generation and software composition analysis (SCA) |
-| Known vulnerabilities and malware | Vulnerability databases, malware signatures and threat intelligence |
-| Suspicious code, obfuscation, installation scripts and dynamic downloads | Static code analysis, malware scanning and AI-assisted review |
-| Embedded credentials | Secret scanning |
-| Maintenance, publisher and release history | Review package age, release activity, maintainer and ownership changes, and changes in signing identity where historical evidence is available |
-| Package impersonation and typosquatting | Compare names and publisher namespaces against official vendor and registry information |
-| External hosting and supplier security | Supplier documentation and security assessment |
+| Signal to collect | Verification method | Automation |
+|---|---|---|
+| Publisher, maintainer and vendor affiliation | Registry, repository and official vendor documentation comparison | Partial |
+| Relationship between repository and distributed artifact | Build provenance and attestation verification where available | Partial |
+| Package version and artifact digest | Compare against an independently established approved digest | Automatable |
+| Signatures and attestations | Verify signatures, trusted signer identity and artifact binding | Automatable |
+| Direct and transitive dependencies | SBOM generation and software composition analysis (SCA) | Automatable |
+| Known vulnerabilities and malware | Vulnerability databases, malware signatures and threat intelligence | Automatable |
+| Suspicious code, obfuscation, installation scripts and dynamic downloads | Static code analysis, malware scanning and AI-assisted review | Partial |
+| Embedded credentials | Secret scanning | Automatable |
+| Maintenance, publisher and release history | Review package age, release activity, maintainer and ownership changes, and changes in signing identity where historical evidence is available | Partial |
+| Package impersonation and typosquatting | Compare names and publisher namespaces against official vendor and registry information | Partial |
+| External hosting and supplier security | Supplier documentation and security assessment | Manual |
 
 **Investigate:** Unverified publishers, impersonation, compromised packages, exploitable vulnerabilities, unexplained obfuscation and unverified executable dependencies. Provenance does not prove that software is safe. Package age, popularity and ownership changes are risk signals, not proof of compromise or trustworthiness.
 
 #### Change control
 
-| Signal to collect | Verification method |
-|---|---|
-| Approved artifact and resolved dependency identities | Digest and dependency integrity verification |
-| Approved endpoint, transport and authentication configuration | Configuration and protocol inspection |
-| Tool, resource and prompt definitions | Canonicalized metadata fingerprints and baseline comparison |
-| Changes to code, dependencies and permissions | Differential scanning and configuration comparison |
-| Update mechanisms, floating versions/tags and runtime code downloads | Inspect startup commands, package configuration and source code; monitor controlled execution |
-| Deployed MCP client configuration and configuration drift | Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline |
-| Enforcement of approved servers, tools and access restrictions | Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway |
-| Ability to disable the integration and revoke access | Functional testing of enforcement and revocation mechanisms |
-| Audit logging and agent-to-tool traceability | Generate test events and correlate initiating user or agent, tool call, authorization decision and outcome where supported; avoid recording secrets or unnecessary sensitive payloads |
-| Supplier change notification | Documentation and contractual review |
+| Signal to collect | Verification method | Automation |
+|---|---|---|
+| Approved artifact and resolved dependency identities | Digest and dependency integrity verification | Automatable |
+| Approved endpoint, transport and authentication configuration | Configuration and protocol inspection | Partial |
+| Tool, resource and prompt definitions | Canonicalized metadata fingerprints and baseline comparison | Automatable |
+| Changes to code, dependencies and permissions | Differential scanning and configuration comparison | Automatable |
+| Update mechanisms, floating versions/tags and runtime code downloads | Inspect startup commands, package configuration and source code; monitor controlled execution | Partial |
+| Deployed MCP client configuration and configuration drift | Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline | Automatable |
+| Enforcement of approved servers, tools and access restrictions | Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway | Partial |
+| Ability to disable the integration and revoke access | Functional testing of enforcement and revocation mechanisms | Partial |
+| Audit logging and agent-to-tool traceability | Generate test events and correlate initiating user or agent, tool call, authorization decision and outcome where supported; avoid recording secrets or unnecessary sensitive payloads | Partial |
+| Supplier change notification | Documentation and contractual review | Manual |
 
 **Investigate:** Unapproved changes, mutable execution dependencies, uncontrolled upgrades, unauthorized client configurations, bypassable policies, missing audit evidence and inability to revoke access. Remote capability fingerprints detect observable interface changes, not changes to hidden backend behavior.
 
 ### 2. Scanning techniques and applicability
 
 Select the techniques appropriate to the deployment model. Reuse existing enterprise security tooling where possible.
+
+For externally hosted servers, review provider-supplied security information when available, such as independent audit reports, penetration-test summaries and security documentation. Check its scope and date against the service being assessed.
 
 | Technique | Local | Internally hosted | Externally hosted | Example tools or methods |
 |---|---|---|---|---|
