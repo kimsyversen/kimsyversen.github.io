@@ -19,3 +19,13 @@ Working notes (repo is a public GitHub Pages site).
 6. Claim-by-claim ledger: Developer-WS.factcheck.md lists every statement (965 rows after pass 9) with its source, verdict and the pass that changed it. Done 1 Nov.
 7. Final checks after the last edit (pass 9): data arrays parse, no em or en dashes, render with 62 sources, tabs and map popover. Done 1 Nov.
 8. Pass 9: no paragraph, list item, table cell or caption row over 60 words, measured on the source and on the rendered page. Done 1 Nov.
+
+## Plan: statement-by-statement verification, 27 November 2026
+
+Goal: every statement on the page is correct and the guidance is complete for its stated scope (GitHub Copilot in VS Code on a managed workstation). Done when two review passes in a row report no findings.
+
+1. Check each statement against its primary source and list deviations.
+2. A second reviewer (a different persona with enterprise VS Code and GitHub Copilot security competence) confirms, changes or rejects each deviation.
+3. Fix confirmed deviations. Keep ids, anchors and storage keys.
+4. Run a fresh full review pass. Repeat 2 and 3 until two passes in a row find nothing.
+5. Record verdicts in the fact check and choices in the decisions file. Update index dates. Run the section and browser checks.

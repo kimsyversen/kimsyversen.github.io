@@ -153,3 +153,10 @@ The notes above use different names for the same passes. In Developer-WS.factche
 ## 26 Nov 2026, recommendation tags removed
 
 - The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
+
+## 27 November 2026, statement-by-statement verification
+
+- "Oldest HTML file" means this page: its content checks date from 29 October 2026, before the other published pages.
+- Where VS Code and GitHub documents disagree (terminal prompts, identity capture), the page says so or gives advice that holds under both.
+- Managed sandbox and browser use keys are preview features, so each has a non-preview fallback or a VS Code setting beside it.
+- The OWASP Agentic Skills label was removed from D06 instead of adding a third framework.
