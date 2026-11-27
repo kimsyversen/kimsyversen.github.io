@@ -123,15 +123,17 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ## How to govern MCP servers
 
-When an MCP client starts a local server with `npx`, it runs code from an npm package. Apply the same controls you use for other third-party packages and reuse the review evidence for that version. For every MCP integration, decide [which tools to allow and what they can access](#permissions-and-tool-surface), and which changes require review.
+When an MCP client starts a local server with `npx`, it runs code from an npm package. Apply the same controls you use for other third-party packages and reuse the review evidence for that version.
+
+MCP also lets a model choose which tools to call. Malicious instructions in one tool's description can steer the model into misusing a tool from another server. Review [the tools available to the model and their combined permissions](#permissions-and-tool-surface).
 
 | Control | Recommendation |
 |---|---|
 | Package governance | Approved publishers and packages |
 | Software distribution | Controlled internal artifact registry |
 | Version management | Pinned versions and locked dependencies |
-| Supply chain security | SCA, malware scanning and provenance verification |
-| Execution isolation | Restricted containers, sandboxes or VMs |
+| Supply chain security | Verify package provenance and scan the package and its direct and transitive dependencies for vulnerabilities and malware. |
+| Execution isolation | Run local servers in a restricted container, sandbox or VM. Without isolation, package code can read local credentials available to its process. |
 | Network security | Restricted outbound connectivity |
 | Identity | Dedicated, least-privileged credentials per server |
 | MCP governance | Approved servers and tools |
