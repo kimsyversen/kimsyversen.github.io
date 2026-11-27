@@ -43,6 +43,10 @@ ol,ul{padding-left:1.35rem}
 }
 .flow-head{display:flex;align-items:center;justify-content:space-between;gap:.7rem 1.2rem;flex-wrap:wrap;margin-bottom:1.5rem}
 .flow h2{font-size:clamp(1.75rem,3vw,2.65rem)}
+.view-picker{display:flex;align-items:center;gap:.2rem;padding:.22rem;border:1px solid var(--dark-line);border-radius:2rem}
+.view-picker a{padding:.35rem .72rem;border-radius:2rem;color:var(--white);font-size:.82rem;font-weight:700;text-decoration:none}
+.view-picker a:hover{text-decoration:underline}
+.view-picker a[aria-current="true"]{background:var(--mint);color:var(--dark)}
 .flow .steps a:focus-visible{outline-color:var(--mint)}
 .steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.55rem;list-style:none;margin:0 0 1.25rem;padding:0}
 .steps li{position:relative;min-width:0}
@@ -79,11 +83,6 @@ ol,ul{padding-left:1.35rem}
 .pane-nav{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem 1rem;border-top:1px solid var(--line);padding-top:.75rem;font-size:.86rem;font-weight:650}
 .pane-nav a{padding-block:.2rem}
 .pane-nav a+a{margin-left:auto}
-.reuse{margin:0 0 1.25rem;border:1px solid var(--dark-line);background:#203d35;color:#e0ebe4;font-size:.88rem}
-.reuse summary{color:var(--mint);background:transparent;padding:.52rem .85rem}
-.reuse summary:hover,.reuse[open]>summary{background:#28473d}
-.reuse[open]>summary{border-color:var(--dark-line)}
-.reuse p{padding:.65rem .85rem}
 .criteria{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin:.5rem 0 1rem}
 .criteria>div{padding:.7rem;background:#f0f4ed;border-radius:.45rem}
 .criteria dd{margin-bottom:0}
@@ -119,10 +118,123 @@ details[open]>summary{background:#edf3e9;border-bottom:1px solid var(--line)}
 .execution strong{color:var(--green);font-size:.93rem}
 .gate{margin:.9rem 0;padding:.75rem .9rem;background:#eaf2dc;border-left:3px solid #578045;border-radius:.2rem}
 .reference ul{margin:.6rem 0}
-.tool-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.3rem 1rem}
 footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1.4rem 0 2.5rem;color:var(--muted);font-size:.85rem}
 .skip{position:absolute;left:1rem;top:1rem;translate:0 -200%;z-index:1;background:var(--white);padding:.6rem}
 .skip:focus{translate:0}
+
+.map-view .wrap{width:min(1510px,calc(100% - clamp(28px,6.7vw,100px)))}
+.map-view .hero{padding-block:clamp(1.5rem,2.5vw,2.15rem) 1.25rem}
+.map-view h1{font-size:clamp(2.45rem,5vw,4.6rem)}
+.map-view .hero-copy{margin-top:.75rem}
+.map-view .flow{background:none;color:var(--ink);padding:1.1rem 0 0;border-top:1px solid var(--line);border-radius:0}
+.map-view .flow-head{margin-bottom:.65rem}
+.map-view .view-picker{border-color:var(--line);background:#e9eee7}
+.map-view .view-picker a{color:var(--green)}
+.map-view .view-picker a[aria-current="true"]{background:var(--dark);color:var(--white)}
+.map-view .pane{margin-top:1.2rem;border:1px solid var(--line)}
+.workflow-map{
+  --map-gap:clamp(1.2rem,2vw,2rem);
+  --half-card:calc((100% - 4 * var(--map-gap)) / 10);
+  --connector:#6c817a;
+  --loop:#744b80;
+}
+.map-steps,.map-branches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));column-gap:var(--map-gap)}
+.map-steps{margin:0;padding:0;list-style:none}
+.map-card{
+  --accent:#8b4120;--tint:#f7e9de;
+  position:relative;display:flex;flex-direction:column;min-width:0;
+  background:var(--white);border:1px solid var(--line);border-top:3px solid var(--accent);
+  border-radius:.65rem;padding:clamp(.65rem,1.15vw,1.15rem);
+}
+.map-card:nth-child(2){--accent:#2d538d;--tint:#eaf0fa}
+.map-card:nth-child(3){--accent:#1c6450;--tint:#e5f1e9}
+.map-card:nth-child(4){--accent:#765525;--tint:#f5eddb}
+.map-card:nth-child(5){--accent:#744b80;--tint:#f2eaf5}
+.map-card:not(:last-child)::after{
+  content:"";position:absolute;top:3.8rem;left:100%;width:calc(var(--map-gap) + 2px);height:.65rem;
+  background:var(--connector);clip-path:polygon(0 41%,76% 41%,76% 0,100% 50%,76% 100%,76% 59%,0 59%);
+  pointer-events:none;
+}
+.map-card:hover,.map-card:focus-within{border-inline-color:var(--accent)}
+.map-card-head{border-bottom:1px solid var(--line);padding-bottom:.65rem;min-height:6rem}
+.map-number{
+  display:inline-block;margin-bottom:.36rem;padding:.3rem .45rem;border-radius:.3rem;
+  background:var(--tint);color:var(--accent);font:700 .76rem/1 var(--mono);
+}
+.map-card h3{font-size:clamp(1.08rem,1.48vw,1.43rem);letter-spacing:-.025em;overflow-wrap:anywhere}
+.map-owner{margin-top:.2rem;color:var(--muted);font-size:.76rem}
+.map-actions{flex:1;display:flex;flex-direction:column;padding-block:.32rem .5rem}
+.map-action{flex:1;margin:0;border:0;border-bottom:1px solid #e8ede6;border-radius:0;background:transparent}
+.map-action:last-child{border-bottom:0}
+.map-action summary,.map-route summary{
+  list-style:none;position:relative;padding:.6rem 1rem .6rem 0;
+  font-size:.87rem;line-height:1.3;color:var(--ink);
+}
+.map-action summary::-webkit-details-marker,.map-route summary::-webkit-details-marker{display:none}
+.map-action summary::after,.map-route summary::after{
+  content:"+";position:absolute;right:0;top:.61rem;font-weight:700;color:var(--accent);
+}
+.map-action[open]>summary::after,.map-route[open]>summary::after{content:"−"}
+.map-action summary:hover,.map-action[open]>summary,.map-route summary:hover,.map-route[open]>summary{
+  color:var(--accent);background:transparent;border-bottom:0;
+}
+.map-action summary small{display:block;margin-top:.2rem;color:var(--muted);font-size:.77rem;font-weight:400;line-height:1.34}
+.map-action p,.map-route p{margin:0 0 .65rem;font-size:.8rem;line-height:1.45}
+.map-outcome{
+  display:block;padding:.5rem .65rem;border-radius:.35rem;background:var(--tint);color:var(--accent);
+  font-size:.77rem;line-height:1.35;font-weight:750;text-decoration:none;
+}
+.map-outcome::after{content:" ↗";white-space:nowrap}
+.map-outcome:hover{text-decoration:underline}
+.map-outcome[aria-current="step"]{outline:1px solid var(--accent)}
+.map-route{
+  position:relative;width:fit-content;max-width:min(100%,38rem);margin:0 auto;
+  border-color:var(--route-line);background:var(--tint);
+}
+.map-route summary{padding:.55rem 1.95rem .55rem .75rem;color:var(--accent);font-size:.82rem}
+.map-route summary::after{right:.7rem;top:.55rem}
+.map-route p{padding:0 .75rem}
+.route-steps{display:inline-block;margin-right:.42rem;font:700 .75rem var(--mono)}
+.map-bypass{position:relative;padding-bottom:1.1rem;--accent:#265947;--tint:#e9f2e7;--route-line:#adc5b8}
+.map-bypass::before{
+  content:"";position:absolute;inset:1.1rem var(--half-card) 0;
+  border:1px dashed #6a8d7a;border-bottom:0;border-radius:.55rem .55rem 0 0;pointer-events:none;
+}
+.map-bypass::after{
+  content:"";position:absolute;bottom:0;right:calc(var(--half-card) - 4px);
+  border:4px solid transparent;border-top-color:#6a8d7a;border-bottom:0;pointer-events:none;
+}
+.map-branches{position:relative;padding-bottom:.1rem}
+.map-branches::before{
+  content:"";position:absolute;inset:0 var(--half-card) 1.18rem calc(50% - 1px);
+  border:1px dashed var(--loop);border-top:0;border-radius:0 0 .55rem .55rem;pointer-events:none;
+}
+.map-branches::after{
+  content:"";position:absolute;top:0;left:calc(50% - 4px);
+  border:4px solid transparent;border-bottom-color:var(--loop);border-top:0;pointer-events:none;
+}
+.map-stop{grid-column:4;margin:1.6rem 0 .65rem;position:relative;--accent:#923926;--tint:#faece6;--route-line:#dfb8aa}
+.map-stop::before{
+  content:"";position:absolute;bottom:100%;left:1rem;width:.55rem;height:1.67rem;
+  background:var(--accent);clip-path:polygon(41% 0,59% 0,59% 76%,100% 76%,50% 100%,0 76%,41% 76%);
+}
+.map-return{grid-column:3/6;--accent:var(--loop);--tint:#f2eaf5;--route-line:#d4bddb}
+.map-branches a{font-weight:700}
+
+@media(max-width:1080px){
+  .map-view .wrap{width:min(48rem,calc(100% - clamp(28px,6.7vw,100px)))}
+  .map-steps,.map-branches{display:block}
+  .map-card{padding:.9rem 1rem}
+  .map-card+.map-card{margin-top:1.4rem}
+  .map-card-head{min-height:0}
+  .map-card h3{font-size:1.25rem}
+  .map-card:not(:last-child)::after{top:100%;left:50%;width:1.45rem;transform-origin:left center;transform:rotate(90deg);translate:0 -.32rem}
+  .map-action summary{font-size:.93rem}
+  .map-action summary small,.map-action p,.map-route p,.map-outcome{font-size:.85rem}
+  .map-bypass::before,.map-bypass::after,.map-branches::before,.map-branches::after,.map-stop::before{display:none}
+  .map-route{width:auto;max-width:none}
+  .map-stop{margin-top:.85rem}
+}
 @media(max-width:850px){
   .steps{gap:1rem}
   .steps li:not(:last-child)::after{left:calc(100% + .12rem);width:.72rem}
@@ -143,16 +255,16 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   *,*::before,*::after{transition:none!important}
 }
 @media print{
-  .wrap{width:auto}
+  .wrap,.map-view .wrap{width:auto}
   .flow,.pane,.reference{color:#000;background:#fff;border:0;padding:.5rem 0}
   .flow h2{color:#000}
   .pane[hidden]{display:grid!important}
   .pane{display:block!important;border-top:1px solid #999;border-radius:0}
   .pane-meta{border:0;padding:0}
   .pane dl{display:flex;gap:1.4rem}
-  .mast,.steps,.pane-nav,.toc,footer a{display:none!important}
+  .map-view .panes[hidden]{display:block!important}
+  .mast,.steps,.pane-nav,.toc,.view-picker,.workflow-map,footer a{display:none!important}
   .hero{padding:0}
-  .reuse,.reuse summary,.reuse[open]>summary{color:#000;background:#fff}
   .reference{margin-top:.5rem}
   details::details-content{content-visibility:visible;display:block}
   .table-scroll.roomy table{min-width:0}
@@ -189,6 +301,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="flow" aria-labelledby="process-overview">
       <div class="flow-head">
         <h2 id="process-overview"><a class="sec-link" href="#process-overview">Process overview</a></h2>
+        <nav class="view-picker" aria-label="Process view" hidden>
+          <a href="mcp-intake-process-v3.html" data-view="detail" aria-current="true">Detail view</a>
+          <a href="?view=map" data-view="map">Workflow map</a>
+        </nav>
       </div>
       <nav aria-label="Intake steps" id="intake-steps" tabindex="-1">
         <ol class="steps">
@@ -199,10 +315,130 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <li><a href="#step-5-enable-and-monitor" data-step><span class="step-number">05</span><span class="step-name">Enable and monitor</span></a></li>
         </ol>
       </nav>
-      <details class="reuse" id="reuse-current-approval">
-        <summary>Reuse a current approval</summary>
-        <p>The platform team may skip steps 2 to 4 when a current approval covers the same server, configuration and intended use. Check the recorded scope against the requested client, execution identity, tools, data access and restrictions.</p>
-      </details>
+      <div class="workflow-map" id="workflow-map" tabindex="-1" hidden>
+        <ol class="map-steps" role="list" aria-label="Intake workflow">
+          <li class="map-card">
+            <header class="map-card-head">
+              <span class="map-number" aria-hidden="true">01</span>
+              <h3 id="map-request"><a class="sec-link" href="#map-request">Request</a></h3>
+              <p class="map-owner">Requester</p>
+            </header>
+            <div class="map-actions">
+              <details class="map-action">
+                <summary>Name the server<small>Server name and official link</small></summary>
+                <p>Include a link to the server or package so the platform team can identify what will run.</p>
+              </details>
+              <details class="map-action">
+                <summary>Describe the use<small>Business need, users, systems and data</small></summary>
+                <p>For example, a development team wants help managing issues in its internal repositories.</p>
+              </details>
+              <details class="map-action">
+                <summary>Specify access and owner<small>Required permissions and business owner</small></summary>
+                <p>For example, request permission to read repositories and create issues, and name the team manager as the owner.</p>
+              </details>
+            </div>
+            <a class="map-outcome" href="#step-1-request" data-step>Completed intake request</a>
+          </li>
+          <li class="map-card">
+            <header class="map-card-head">
+              <span class="map-number" aria-hidden="true">02</span>
+              <h3 id="map-classify"><a class="sec-link" href="#map-classify">Classify</a></h3>
+              <p class="map-owner">Platform team</p>
+            </header>
+            <div class="map-actions">
+              <details class="map-action">
+                <summary>Identify where it runs<small>Local, internal or external</small></summary>
+                <p>Distinguish user devices, organization-controlled infrastructure and third-party infrastructure.</p>
+              </details>
+              <details class="map-action">
+                <summary>Check effective access<small>What the integration can actually reach or change</small></summary>
+                <p>Consider data sensitivity, write and destructive actions, and privileges available to the running server.</p>
+              </details>
+              <details class="map-action">
+                <summary>Assign the highest risk level<small>Low, medium or high</small></summary>
+                <p>For example, an integration with limited write access is medium risk. Access to sensitive data raises it to high risk.</p>
+              </details>
+            </div>
+            <a class="map-outcome" href="#step-2-classify" data-step>Deployment and risk recorded</a>
+          </li>
+          <li class="map-card">
+            <header class="map-card-head">
+              <span class="map-number" aria-hidden="true">03</span>
+              <h3 id="map-assess"><a class="sec-link" href="#map-assess">Assess</a></h3>
+              <p class="map-owner">Security team / automation</p>
+            </header>
+            <div class="map-actions">
+              <details class="map-action">
+                <summary>Scan before running code<small>Check available artifacts and prepare isolated tests</small></summary>
+                <p>Use automated checks where possible. Finish static scans before launching a local server and obtain authorization before actively testing an external service. <a href="#1-assessment-execution">Assessment execution</a></p>
+              </details>
+              <details class="map-action">
+                <summary>Verify the four domains<small>Identity, permissions, provenance and change</small></summary>
+                <p>Verify identity and authentication, permissions and tool surface, provenance, and change control. Review controls manually when automation supplies insufficient evidence. <a href="#3-security-signals-and-verification-methods">Verification methods</a></p>
+              </details>
+              <details class="map-action">
+                <summary>Record evidence and safeguards<small>Findings, unresolved controls and proposed restrictions</small></summary>
+                <p>Keep the evidence and proposed approval baseline for the designated approver. <a href="#4-evaluate-and-record-evidence">Evidence record</a></p>
+              </details>
+            </div>
+            <a class="map-outcome" href="#step-3-assess" data-step>Completed security assessment</a>
+          </li>
+          <li class="map-card">
+            <header class="map-card-head">
+              <span class="map-number" aria-hidden="true">04</span>
+              <h3 id="map-approve"><a class="sec-link" href="#map-approve">Approve</a></h3>
+              <p class="map-owner">Designated approver</p>
+            </header>
+            <div class="map-actions">
+              <details class="map-action">
+                <summary>Route by risk<small>Use the designated approval authority</small></summary>
+                <p>Low risk goes to the platform team, medium to security, and high to security and the relevant system or data owner.</p>
+              </details>
+              <details class="map-action">
+                <summary>Record the control results<small>PASS, FAIL, UNKNOWN or N/A</small></summary>
+                <p>Base results on the available evidence, and justify any control marked N/A.</p>
+              </details>
+              <details class="map-action">
+                <summary>Decide whether to approve<small>Advance to step 5 only with approval</small></summary>
+                <p>Every applicable mandatory control must pass for production approval, including approval with restrictions. <a href="#mandatory-controls-for-production-approval">Mandatory controls</a></p>
+              </details>
+            </div>
+            <a class="map-outcome" href="#step-4-approve" data-step>Documented decision</a>
+          </li>
+          <li class="map-card">
+            <header class="map-card-head">
+              <span class="map-number" aria-hidden="true">05</span>
+              <h3 id="map-enable"><a class="sec-link" href="#map-enable">Enable and monitor</a></h3>
+              <p class="map-owner">Platform team</p>
+            </header>
+            <div class="map-actions">
+              <details class="map-action">
+                <summary>Register and enforce<small>Approved catalogue, configuration and restrictions</small></summary>
+                <p>Register the server in the approved catalogue. Check that the deployed configuration and restrictions match the approval.</p>
+              </details>
+              <details class="map-action">
+                <summary>Watch for material changes<small>Software, access, hosting, usage and risks</small></summary>
+                <p>Reassess planned material changes before enabling them. Follow the reassessment path to revisit the affected controls.</p>
+              </details>
+              <details class="map-action">
+                <summary>Suspend affected access<small>When an unexpected change breaks a mandatory condition</small></summary>
+                <p>Keep affected access suspended pending reassessment. Approval may be revoked at any time.</p>
+              </details>
+            </div>
+            <a class="map-outcome" href="#step-5-enable-and-monitor" data-step>Governed integration</a>
+          </li>
+        </ol>
+        <div class="map-branches">
+          <details class="map-route map-stop" id="map-rejected">
+            <summary>04 → Rejected</summary>
+            <p>Record the decision and keep the integration disabled if the risks are unacceptable or mandatory controls cannot be verified.</p>
+          </details>
+          <details class="map-route map-return" id="map-reassessment">
+            <summary><span class="route-steps">05 → 03</span> Reassess after a material change</summary>
+            <p>Repeat the relevant checks and retain the updated evidence with the approval record. <a href="#map-assess">Return to step 3</a></p>
+          </details>
+        </div>
+      </div>
       <div class="panes">
         <article class="pane" id="step-1-request" aria-labelledby="step-1-request-heading">
           <div class="pane-meta">
@@ -354,7 +590,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <a href="#2-scanning-techniques-and-applicability">Scanning</a>
           <a href="#3-security-signals-and-verification-methods">Verification methods</a>
           <a href="#4-evaluate-and-record-evidence">Evidence</a>
-          <a href="#tool-references">Tools</a>
         </nav>
         <section class="major methods" aria-labelledby="1-assessment-execution">
           <span id="3-assessment-execution"></span>
@@ -526,19 +761,6 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <p>Use the PASS, FAIL, UNKNOWN and N/A results defined in Step 4. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.</p>
         <p>Retain evidence with the approval record. Protect sensitive information and exclude raw credentials from stored reports. Repeat relevant checks when Step 5 reassessment triggers occur, and retain the updated evidence. Monitor deployed configuration and publisher changes where feasible and investigate drift.</p>
         </section>
-        <section class="major methods" aria-labelledby="tool-references">
-          <h3 id="tool-references"><a class="sec-link" href="#tool-references">Tool references</a></h3>
-          <ul class="tool-links">
-          <li><a href="https://github.com/cisco-ai-defense/mcp-scanner">Cisco MCP Scanner</a></li>
-          <li><a href="https://github.com/modelcontextprotocol/inspector">MCP Inspector</a></li>
-          <li><a href="https://google.github.io/osv-scanner/">OSV-Scanner</a></li>
-          <li><a href="https://github.com/anchore/syft">Syft</a></li>
-          <li><a href="https://semgrep.dev/">Semgrep</a></li>
-          <li><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a></li>
-          <li><a href="https://www.sigstore.dev/">Sigstore</a></li>
-          <li><a href="https://registry.modelcontextprotocol.io/">Official MCP Registry</a></li>
-        </ul>
-        </section>
       </section>
       <section class="reference" aria-labelledby="supporting-documentation">
         <h2 id="supporting-documentation"><a class="sec-link" href="#supporting-documentation">Supporting documentation</a></h2>
@@ -583,23 +805,43 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   </footer>
 </div>
 <script>
-const stepLinks = Array.from(document.querySelectorAll('.steps a'));
+const mapView = new URLSearchParams(location.search).get('view') === 'map';
+const stepLinks = Array.from(document.querySelectorAll(mapView ? '.map-outcome' : '.steps a'));
 const panes = Array.from(document.querySelectorAll('.pane'));
+const paneGroup = document.querySelector('.panes');
+const stepNav = document.getElementById('intake-steps');
+const workflowMap = document.getElementById('workflow-map');
+const viewPicker = document.querySelector('.view-picker');
 const narrow = matchMedia('(max-width: 640px)');
 
+viewPicker.hidden = false;
+if (mapView) {
+  document.body.classList.add('map-view');
+  viewPicker.querySelector('[data-view=detail]').removeAttribute('aria-current');
+  viewPicker.querySelector('[data-view=map]').setAttribute('aria-current', 'true');
+  stepNav.hidden = true;
+  workflowMap.hidden = false;
+  for (const link of document.querySelectorAll('.pane-nav a[href="#intake-steps"]')) {
+    link.href = '#workflow-map';
+  }
+}
+
 function showStep(pane) {
+  paneGroup.hidden = !pane;
   for (const item of panes) item.hidden = item !== pane;
   for (const link of stepLinks) {
-    if (link.hash === '#' + pane.id) link.setAttribute('aria-current', 'step');
+    if (pane && link.hash === '#' + pane.id) link.setAttribute('aria-current', 'step');
     else link.removeAttribute('aria-current');
   }
 }
 
 function revealTarget(scroll) {
   const hash = location.hash.slice(1);
-  const target = document.getElementById(hash);
+  let target = document.getElementById(hash);
+  if (mapView && target === stepNav) target = workflowMap;
   const pane = target?.closest('.pane');
   if (pane) showStep(pane);
+  else if (mapView) showStep(null);
   else if (!hash) showStep(panes[0]);
 
   if (!target) return;
@@ -609,7 +851,7 @@ function revealTarget(scroll) {
   if (scroll) target.scrollIntoView();
 }
 
-showStep(panes[0]);
+if (!mapView) showStep(panes[0]);
 revealTarget(Boolean(location.hash));
 window.addEventListener('hashchange', () => revealTarget(true));
 
@@ -620,7 +862,7 @@ document.querySelector('.flow').addEventListener('click', (event) => {
   event.preventDefault();
   showStep(pane);
   if (location.hash !== link.hash) history.pushState(null, '', link.hash);
-  if (narrow.matches || event.detail === 0 || link.closest('.pane')) {
+  if (mapView || narrow.matches || event.detail === 0 || link.closest('.pane')) {
     pane.querySelector('h3').focus({preventScroll:true});
     pane.scrollIntoView();
   }
