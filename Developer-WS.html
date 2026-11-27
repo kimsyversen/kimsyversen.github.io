@@ -126,6 +126,7 @@ input:checked+.pill.v-unk{background:var(--unk-soft);color:var(--ink);border-col
 .tbl{border-collapse:collapse;width:100%;min-width:720px;font-size:0.86rem}
 .tbl th,.tbl td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
 .tbl thead th{font:500 0.7rem/1.4 var(--mono);letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tbl thead th .tag{text-transform:none;letter-spacing:0}
 .tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:0}
 .tbl tbody th{font-weight:600}
 .tbl-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -292,6 +293,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 
     <section id="risk-by-zone">
       <h2 id="risk-by-zone-2"><a class="sec-link" href="#risk-by-zone-2">Risk by zone</a></h2>
+      <p class="sub">Risk placements on the map and in this table are interpretations. <span class="tag">[inference]</span></p>
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Risk by zone table">
         <table class="mx">
           <colgroup><col class="c-rk"><col class="c-in"><col class="c-z"><col class="c-z"><col class="c-z"></colgroup>
@@ -331,7 +333,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       <div class="tbl-wrap" tabindex="0" role="region" aria-label="Where to start table">
         <table class="tbl start">
           <colgroup><col class="c-id"><col><col class="c-fr"></colgroup>
-          <thead><tr><th scope="col">Risk</th><th scope="col">First control</th><th scope="col">Effort</th></tr></thead>
+          <thead><tr><th scope="col">Risk</th><th scope="col">First control</th><th scope="col">Effort <span class="tag">[inference]</span></th></tr></thead>
           <tbody id="startRows"></tbody>
         </table>
       </div>
@@ -384,11 +386,12 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div><span class="lbl">Check</span></div>
         <ul class="checks">
           <li>Can Copilot install dependencies from public registries? Use an approved registry or proxy where policy requires package blocks or a release cooldown. A managed <code>.npmrc</code> sets defaults that a project, environment variable or command line can override.</li>
-          <li>For npm 12, review <code>allowScripts</code> in <code>package.json</code>, or <code>allow-scripts</code> in <code>.npmrc</code> where <code>package.json</code> has no entries, and check that <code>dangerously-allow-all-scripts</code> is disabled. Review the project’s npm extension separately: root <code>.npm-extension.mjs</code> or <code>.npm-extension.cjs</code>, or the file selected by <code>extension-file</code>. npm runs it during <code>npm install</code> and checks its recorded hash during <code>npm ci</code>.</li>
+          <li>Check the npm version on each workstation and execution host. Node.js can bundle npm older than 12, and npm 10 and 11 run dependency install scripts by default. Prefer npm 12. Otherwise set <code>ignore-scripts</code> to <code>true</code> where builds allow it, or use a current npm 11 release with <code>strict-allow-scripts</code> set to <code>true</code>. Strict mode does not cover the project’s own scripts. Neither setting stops package code that runs later. On npm 10, do not rely on <code>ignore-scripts</code> for Git dependencies.</li>
+          <li>With npm 11.16.0 or later, review <code>allowScripts</code> in <code>package.json</code>, or <code>allow-scripts</code> in <code>.npmrc</code> where <code>package.json</code> has no entries, and check that <code>dangerously-allow-all-scripts</code> is disabled. Set <code>allow-git</code> to <code>none</code> where the project needs no Git dependencies. For npm 12, also review the project’s npm extension: root <code>.npm-extension.mjs</code> or <code>.npm-extension.cjs</code>, or the file selected by <code>extension-file</code>. npm runs it during <code>npm install</code> and checks its recorded hash during <code>npm ci</code>. Setting <code>ignore-scripts</code> also disables it.</li>
           <li>Include each package manager the VS Code fleet uses. Decide who can approve urgent updates that a cooldown would block. Test using an approved package and a blocked package in the Copilot terminal.</li>
         </ul>
-        <p class="finding"><span class="lbl">Look for</span>Direct public registry access, broad script grants, repository-controlled install settings and unreviewed npm extensions.</p>
-        <p class="note"><a href="https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/">Microsoft ChainDrop analysis</a> · <a href="https://docs.npmjs.com/cli/v12/using-npm/config">npm v12 configuration</a> · <a href="https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/">npm project extensions</a></p>
+        <p class="finding"><span class="lbl">Look for</span>Direct public registry access, unblocked dependency install scripts, broad script grants, repository-controlled install settings and unreviewed npm extensions.</p>
+        <p class="note"><a href="https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/">Microsoft ChainDrop analysis</a> · <a href="https://docs.npmjs.com/cli/v12/using-npm/config">npm v12 configuration</a> · <a href="https://docs.npmjs.com/cli/v11/using-npm/config">npm v11 configuration</a> · <a href="https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/">npm project extensions</a></p>
         <div class="paths"><span>Supply chain</span><span>Credential theft</span></div>
         <div class="seg" data-id="D01"></div>
       </article>
@@ -541,13 +544,13 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     <section id="respond">
       <h2 id="incident-response"><a class="sec-link" href="#incident-response">Incident response</a></h2>
       <ol class="ir">
-        <li><b>Contain the workstation and affected remote hosts.</b> End active Copilot sessions and remote connections through your response process. Assess the GitHub identity’s access from other devices.</li>
+        <li><b>Contain the workstation and affected remote hosts.</b> Isolate them from the network, keep them powered on and keep them isolated until they are cleaned or rebuilt. End active Copilot sessions, background commands and remote connections through your response process. Disable Copilot automations, without deleting them, and stop active runs. Handle cloud automations <span class="tag">[preview]</span> on GitHub from a clean device. They run while the computer is off, and turning off the VS Code settings does not stop them. Assess the GitHub identity’s access from other devices.</li>
         <li><b>Preserve evidence before cleanup.</b> Collect available Copilot logs and session data, VS Code and Agent Host configuration, extensions, tool definitions, and GitHub and endpoint events. Limit access to the collected data.</li>
-        <li><b>Revoke exposed access.</b> Check GitHub sessions and tokens, SSH, registry and cloud credentials, and MCP authorisations. Rotate credentials from a clean environment.</li>
-        <li><b>Check for persistence.</b> Review VS Code user and workspace settings, tasks, extensions, Copilot instructions, custom agents, skills, hooks, plugins and memory (D14), saved approvals and path grants on each Agent Host, MCP configuration, Git hooks, operating system scheduled tasks and remote tunnel services.</li>
-        <li><b>Trace downstream changes.</b> Check pushes, pull requests, workflow runs, package releases and actions taken by connected tools. Restore the workstation and affected projects from a known-good state.</li>
+        <li><b>Revoke exposed access.</b> In one fallback path, ChainDrop tries to install a token monitor with a destructive handler that reacts to token revocation. Before you revoke, make sure every host that may have run it is isolated or has the monitor removed. Then revoke promptly, without waiting for the rest of the cleanup. Check GitHub sessions and tokens, SSH, registry and cloud credentials, and MCP authorisations. Rotate credentials from a clean environment.</li>
+        <li><b>Check for persistence.</b> Review VS Code user and workspace settings, tasks, extensions, Copilot instructions, custom agents, skills, hooks, plugins and memory (D14), saved approvals and path grants on each Agent Host, Copilot automations, MCP configuration, Git hooks, login agents, user services, operating system scheduled tasks and remote tunnel services. Check for cloud automations <span class="tag">[preview]</span> in every repository the account can write to.</li>
+        <li><b>Trace downstream changes.</b> Check pushes on all branches, including any new or changed editor and agent startup files. Check pull requests, workflow runs, package releases and actions taken by connected tools. Restore the workstation and affected projects from a known-good state.</li>
       </ol>
-      <p class="note"><a href="https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents">Microsoft incident response guidance</a></p>
+      <p class="note"><a href="https://learn.microsoft.com/en-us/security/zero-trust/security-adoption-discipline-security-operations-incidents">Microsoft incident response guidance</a> · <a href="https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/">Microsoft ChainDrop analysis</a> · <a href="https://code.visualstudio.com/docs/agents/run/security#_respond-to-unexpected-behavior">VS Code response to unexpected behaviour</a> · <a href="https://code.visualstudio.com/docs/agents/run/automations">VS Code automations</a></p>
     </section>
   </div>
 
@@ -757,6 +760,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
   ];
   var SOURCES = [
     {"t": "VS Code AI security", "u": "https://code.visualstudio.com/docs/agents/run/security", "n": "Microsoft. Risks, trust boundaries and tool permissions."},
+    {"t": "VS Code automations", "u": "https://code.visualstudio.com/docs/agents/run/automations", "n": "Microsoft. Local and cloud automations, and how to stop them."},
     {"t": "VS Code enterprise AI settings", "u": "https://code.visualstudio.com/docs/enterprise/manage-ai-settings", "n": "Microsoft. Device, runtime and account controls, including harness-specific limits."},
     {"t": "VS Code enterprise policy reference", "u": "https://code.visualstudio.com/docs/enterprise/policies", "n": "Microsoft. Policy names and diagnostics."},
     {"t": "GitHub Copilot enterprise-managed settings", "u": "https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings", "n": "GitHub. Permissions, sandbox, MCP, features and telemetry by client."},
@@ -784,6 +788,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     {"t": "Dev Container metadata", "u": "https://github.com/devcontainers/spec/blob/main/docs/specs/devcontainerjson-reference.md", "n": "Dev Container specification. Host-side initialisation."},
     {"t": "Dev Container Git credentials", "u": "https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials", "n": "Microsoft. Credential sharing and SSH forwarding."},
     {"t": "npm v12 configuration", "u": "https://docs.npmjs.com/cli/v12/using-npm/config", "n": "npm. Configuration precedence and package-script controls."},
+    {"t": "npm v11 configuration", "u": "https://docs.npmjs.com/cli/v11/using-npm/config", "n": "npm. Package-script controls in npm 11."},
     {"t": "npm project extensions", "u": "https://docs.npmjs.com/cli/v12/configuring-npm/npm-extension/", "n": "npm. Project extensions during npm install and npm ci."},
     {"t": "Git credential store", "u": "https://git-scm.com/docs/git-credential-store", "n": "Git. Plaintext credential storage."},
     {"t": "ChainDrop analysis", "u": "https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/", "n": "Microsoft Threat Intelligence. Dependency scripts, credential theft and package propagation."},
@@ -1188,7 +1193,8 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     }
     var go;
     if (isX(r)){
-      pop.appendChild(htmlEl('p', 'pop-st', 'Estimated relevance · ' + { h:'High', m:'Medium', l:'Low' }[MOREBY[r].l] + '.'));
+      var rel = htmlEl('p', 'pop-st', 'Estimated relevance · ' + { h:'High', m:'Medium', l:'Low' }[MOREBY[r].l] + ' ');
+      rel.appendChild(htmlEl('span', 'tag', '[inference]')); pop.appendChild(rel);
       go = htmlEl('button', 'btn', 'Show ' + r + ' by zone'); go.type = 'button';
       go.addEventListener('click', function(){ openZoneRow(r); });
     } else {

@@ -163,3 +163,5 @@ The notes above use different names for the same passes. In Developer-WS.factche
 - Instructions are not listed under `strictPluginOnlyCustomization` on D06, because the VS Code and GitHub documents disagree on that category.
 - D16 keeps its title when computer use is added. The managed `features.computerUse` key is mentioned only as not to be relied on for VS Code.
 - D13 now blocks the tunnel service domains from the Dev Tunnels documentation instead of the single VS Code port forwarding domain.
+- Incident response isolates hosts before revocation, and revocation waits only for isolation or removal of the monitor, not for the whole cleanup.
+- D01 covers npm 10 and 11 by behaviour, without listing which Node.js release bundles which npm version, because that list ages quickly.
