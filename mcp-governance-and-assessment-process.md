@@ -119,6 +119,20 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ---
 
+## Enterprise controls that put the principles into practice
+
+| Control | Recommendation |
+|---|---|
+| Package governance | Approved publishers and packages |
+| Software distribution | Controlled internal artifact registry |
+| Version management | Pinned versions and locked dependencies |
+| Supply chain security | SCA, malware scanning and provenance verification |
+| Execution isolation | Restricted containers, sandboxes or VMs |
+| Network security | Restricted outbound connectivity |
+| Identity | Dedicated, least-privileged credentials per server |
+| MCP governance | Approved servers and tools |
+| Change management | Review package and tool definition changes |
+
 ## Security assessment methodology
 
 The four-domain structure is adapted from the [NHI MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide), with endpoint and agent-context guidance from [Backslash Security](https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it).
