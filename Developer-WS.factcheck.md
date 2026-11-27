@@ -63,6 +63,16 @@ Reviewer: an AI application security auditor. Second reviewer: an AI platform en
 | P2-F9 | D02 | A missing comma joined two list items. | Fixed. | Page text |
 | P2-X1 | D01 | `allow-scripts` in `.npmrc` also approves install scripts. | Added by second reviewer. | [npm config](https://docs.npmjs.com/cli/v12/using-npm/config): "or configure it in .npmrc"; [npm source](https://raw.githubusercontent.com/npm/cli/latest/lib/utils/resolve-allow-scripts.js): "The first source with any configuration wins for the entire install" |
 
+### Pass 3
+
+Reviewer: an AI penetration tester. Second reviewer: an AI network and endpoint security engineer. No computer use session, Dev Container or tunnel was run.
+
+| ID | Location | Deviation | Verdict | Source checked 27 November 2026 |
+|---|---|---|---|---|
+| P3-F1 | D16, Sources | Computer use was not covered. | Added (second reviewer narrowed: VS Code 1.148 code reads the managed key, so the page only says what GitHub lists as supported). The policy list has no entry containing "computer". | [VS Code tools](https://code.visualstudio.com/docs/agents/run/tools#_control-desktop-applications): "Computer use is off by default."; "Activation persists across chats and also applies to Copilot CLI on the same computer."; [GitHub managed settings](https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/enterprise-administrators/enterprise-managed-settings): "Controls whether users can enable computer use in GitHub Copilot CLI and the GitHub Copilot app", support table marks VS Code not supported; [Policy list](https://raw.githubusercontent.com/microsoft/vscode/1.148.0/build/lib/policies/policyData.jsonc) |
+| P3-F2 | D07 | The sandbox relaxes Dev Container isolation. | Added. | [Agent sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing#_use-sandboxing-in-dev-containers): "These Docker options relax the container's isolation from the host." |
+| P3-F3 | D13, Sources | Blocking one domain may not block dev tunnels. Replaces C22. | Fixed. A tunnel with only the global host blocked is not observed. | [Dev Tunnels security](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security#domains): "Access to dev tunnels can be controlled by allowing or denying outbound access to the following domains" |
+
 ## VS Code and GitHub Copilot review, 19 November 2026
 
 The active page now covers Copilot in managed VS Code, with the legacy VS Code Local harness mentioned where an enforcement boundary differs. Review baseline: `e51e24b`. The original statement ledger below records the previous scope. Product statements were checked against the listed primary sources. Questions and proposed controls were reviewed for scope and placement. Deployment results require testing on the actual fleet.
