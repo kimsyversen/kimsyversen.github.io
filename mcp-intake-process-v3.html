@@ -210,6 +210,8 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 .action-pop-body .gate,.action-pop-body ul{margin-block:.6rem 0}
 .action-pop-body blockquote{display:none}
 .action-pop-more{display:inline-block;margin-top:.8rem;font-size:.82rem;font-weight:650}
+.action-pop-body :is(blockquote,.gate,p.is-current,ul.is-current,.criteria.is-current){border-left:0}
+.action-pop-body tr.is-current>th,.action-pop-body .table-scroll.is-current tbody th{box-shadow:none}
 .map-outcome{
   display:block;padding:.5rem .65rem;border-radius:.35rem;background:var(--tint);color:var(--accent);
   font-size:.77rem;line-height:1.35;font-weight:750;text-decoration:none;
