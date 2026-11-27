@@ -172,6 +172,9 @@ For any additional mandatory control, the security team records when it applies 
 | Access limits | All integrations | Checks of the execution identity and effective permissions confirm that access stays within the approved scope. |
 | Token handling | Servers accepting MCP OAuth access tokens | The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API. |
 | Enforcement of restrictions | Approvals that depend on a restriction | A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied. |
+| Human approval for sensitive actions | Tool actions that policy requires a person to approve | In a test, the action has no effect while approval is pending or after it is denied. It proceeds only when an authorized person approves that specific action. |
+| Action traceability | All integrations | Using the intended production logs, the reviewer traces a representative test action from the initiating user or accountable workload owner through the operation requested, authorization decision and outcome. |
+| Resource limits and secure failure | All integrations | One test shows that a configured resource limit stops or rejects excess work. A separate test shows that a protected action has no effect if authorization is denied or the check cannot complete. |
 | Revocation | All integrations | A test confirms that the platform team can disable the integration and cut off its access. |
 
 ### 2. Scanning techniques and applicability
@@ -200,7 +203,7 @@ If evidence is missing for an applicable control, record UNKNOWN and assess alte
 | Update mechanism analysis | Required | Supplier evidence; inspect observable changes |
 | MCP client configuration scanning | Required | Required |
 | Change baseline and runtime enforcement verification | Required | Required |
-| Agent-to-tool activity traceability | As applicable | As applicable |
+| Action traceability | Required | Required |
 
 For externally hosted servers, check whether the supplier's audit reports, penetration-test summaries or security documentation cover the service, period and controls under review. Tests from outside the service can establish only what you observe.
 
@@ -283,7 +286,7 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 | Deployed MCP client configuration and configuration drift | Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline | Automatable |
 | Enforcement of approved servers, tools and access restrictions | Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway | Partial |
 | Ability to disable the integration and revoke access | Disable the test integration, revoke its access and verify that it can no longer reach the target system with its previous credentials | Partial |
-| Audit logging and agent-to-tool traceability | Generate test events and correlate initiating user or agent, tool call, authorization decision and outcome where supported; avoid recording secrets or unnecessary sensitive payloads | Partial |
+| Audit logging and action traceability | Correlate a test request with its authorization and execution records. For unattended actions, use the workload identity to look up its accountable owner. Exclude secrets and unnecessary sensitive payloads. | Partial |
 | Supplier change notification | Check the supplier documentation and contract for which changes the supplier reports and how it gives notice | Manual |
 
 **Investigate:** Unapproved changes, mutable execution dependencies, uncontrolled upgrades, unauthorized client configurations, bypassable policies, missing audit evidence and inability to revoke access. Remote capability fingerprints detect observable interface changes, not changes to hidden backend behavior.

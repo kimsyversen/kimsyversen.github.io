@@ -653,6 +653,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Access limits</th><td>All integrations</td><td>Checks of the execution identity and effective permissions confirm that access stays within the approved scope.</td></tr>
           <tr><th scope="row">Token handling</th><td>Servers accepting MCP OAuth access tokens</td><td>The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API.</td></tr>
           <tr><th scope="row">Enforcement of restrictions</th><td>Approvals that depend on a restriction</td><td>A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied.</td></tr>
+          <tr><th scope="row">Human approval for sensitive actions</th><td>Tool actions that policy requires a person to approve</td><td>In a test, the action has no effect while approval is pending or after it is denied. It proceeds only when an authorized person approves that specific action.</td></tr>
+          <tr><th scope="row">Action traceability</th><td>All integrations</td><td>Using the intended production logs, the reviewer traces a representative test action from the initiating user or accountable workload owner through the operation requested, authorization decision and outcome.</td></tr>
+          <tr><th scope="row">Resource limits and secure failure</th><td>All integrations</td><td>One test shows that a configured resource limit stops or rejects excess work. A separate test shows that a protected action has no effect if authorization is denied or the check cannot complete.</td></tr>
           <tr><th scope="row">Revocation</th><td>All integrations</td><td>A test confirms that the platform team can disable the integration and cut off its access.</td></tr>
         </tbody>
       </table></div>
@@ -685,7 +688,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Update mechanism analysis</th><td>Required</td><td>Supplier evidence; inspect observable changes</td></tr>
           <tr><th scope="row">MCP client configuration scanning</th><td>Required</td><td>Required</td></tr>
           <tr><th scope="row">Change baseline and runtime enforcement verification</th><td>Required</td><td>Required</td></tr>
-          <tr><th scope="row">Agent-to-tool activity traceability</th><td>As applicable</td><td>As applicable</td></tr>
+          <tr><th scope="row">Action traceability</th><td>Required</td><td>Required</td></tr>
         </tbody>
       </table></div>
             </div>
@@ -773,7 +776,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Deployed MCP client configuration and configuration drift</th><td>Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline</td><td>Automatable</td></tr>
           <tr><th scope="row">Enforcement of approved servers, tools and access restrictions</th><td>Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway</td><td>Partial</td></tr>
           <tr><th scope="row">Ability to disable the integration and revoke access</th><td>Disable the test integration, revoke its access and verify that it can no longer reach the target system with its previous credentials</td><td>Partial</td></tr>
-          <tr><th scope="row">Audit logging and agent-to-tool traceability</th><td>Generate test events and correlate initiating user or agent, tool call, authorization decision and outcome where supported; avoid recording secrets or unnecessary sensitive payloads</td><td>Partial</td></tr>
+          <tr><th scope="row">Audit logging and action traceability</th><td>Correlate a test request with its authorization and execution records. For unattended actions, use the workload identity to look up its accountable owner. Exclude secrets and unnecessary sensitive payloads.</td><td>Partial</td></tr>
           <tr><th scope="row">Supplier change notification</th><td>Check the supplier documentation and contract for which changes the supplier reports and how it gives notice</td><td>Manual</td></tr>
         </tbody>
       </table></div>
