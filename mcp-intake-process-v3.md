@@ -78,20 +78,17 @@ Wiz reported that about 70% of exposed MCP servers it tested returned their full
 
 The designated approver reviews the assessment and makes a decision.
 
-Use these results for each security control:
+Record a result for each security control, then record the overall decision:
 
-| Result | Meaning |
-|---|---|
-| PASS | Requirement satisfied, supported by evidence |
-| FAIL | Requirement not satisfied |
-| UNKNOWN | Insufficient evidence |
-| N/A | Not applicable, with justification |
-
-| Decision | Description |
-|---|---|
-| Approved | Security requirements are satisfied |
-| Approved with restrictions | Identified risks are mitigated through enforceable safeguards |
-| Rejected | Security risks are unacceptable or mandatory requirements cannot be verified |
+| Level | Outcome | Meaning |
+|---|---|---|
+| Control | PASS | Requirement satisfied, supported by evidence |
+| Control | FAIL | Requirement not satisfied |
+| Control | UNKNOWN | Insufficient evidence |
+| Control | N/A | Not applicable, with justification |
+| Approval | Approved | Security requirements are satisfied |
+| Approval | Approved with restrictions | Identified risks are mitigated through enforceable safeguards |
+| Approval | Rejected | Security risks are unacceptable or mandatory requirements cannot be verified |
 
 ### Approval authority
 
