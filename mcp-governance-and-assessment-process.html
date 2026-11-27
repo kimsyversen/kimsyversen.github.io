@@ -438,8 +438,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             </header>
             <div class="map-actions">
               <details class="map-action" data-detail="enable-register">
-                <summary>Register and enforce<small>Approved catalogue, configuration and restrictions</small></summary>
-                <p>Register the server in the approved catalogue. Check that the deployed configuration and restrictions match the approval.</p>
+                <summary>Register and set up monitoring<small>Catalogue, restrictions and monitoring owner</small></summary>
+                <p>Register the server in the approved catalogue. Verify the deployed restrictions and confirm that the monitoring owner receives a test event.</p>
               </details>
               <details class="map-action" data-detail="enable-changes">
                 <summary>Watch for material changes<small>Software, access, hosting, usage and risks</small></summary>
@@ -590,6 +590,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           </div>
           <div class="pane-content">
           <p data-for="enable-register">The platform team registers the server in the approved MCP catalogue and ensures the approved configuration and restrictions are enforced.</p>
+          <p data-for="enable-register">Before enablement, the platform team records which production events to monitor, who reviews them and when to investigate or escalate. Confirm that the reviewer receives a representative event from the traceability test through the normal monitoring channel.</p>
           <p data-for="enable-changes">Reassessment is required when there is a material change to:</p>
           <ul data-for="enable-changes">
             <li>Software version or artifact.</li>
@@ -640,7 +641,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <ol class="execution" start="3">
             <li><span>Connect from the test environment. List the server&#x27;s capabilities and identify its authentication requirements.</span><strong>Output: Capability and authentication inventory</strong></li>
             <li><span>Inspect tool definitions, resources, prompts and sample responses. Treat server content as untrusted, including during AI-assisted scanning. Check who controls that content and what the agent can do with its other tools.</span><strong>Output: Findings on server content and combined tool access</strong></li>
-            <li><span>Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems.</span><strong>Output: Test results and evidence of enforcement</strong></li>
+            <li><span>Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. For untrusted input, scale indirect prompt injection testing to the assessed risk. Keep destructive tests off production systems.</span><strong>Output: Test results and evidence of enforcement</strong></li>
             <li><span>Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions.</span><strong>Output: Proposed approval baseline</strong></li>
             <li><span><a href="#4-evaluate-and-record-evidence">Record the evidence</a>, identify unresolved controls and specify any safeguards needed for approval.</span><strong>Output: Completed assessment and recommendation</strong></li>
           </ol>
@@ -649,10 +650,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Mandatory control table"><table>
         <thead><tr><th scope="col">Mandatory control</th><th scope="col">Applies to</th><th scope="col">Pass condition</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Server identity</th><td>All integrations</td><td>The artifact or endpoint matches the verified publisher or operator and is identified in the approval record.</td></tr>
-          <tr><th scope="row">Access limits</th><td>All integrations</td><td>Checks of the execution identity and effective permissions confirm that access stays within the approved scope.</td></tr>
+          <tr><th scope="row">Server identity and connection security</th><td>All integrations</td><td>The artifact or endpoint matches the verified publisher or operator and is identified in the approval record. For network connections, verify the endpoint identity and encrypted transport, and check that only authorized callers can connect. For local process connections, verify who controls the launch configuration, which account runs the server and which credentials it inherits.</td></tr>
+          <tr><th scope="row">Access limits</th><td>All integrations</td><td>Record the permitted system and network access. Verify that the production configuration enforces those limits for the execution identity, including filesystem access and outbound connectivity. For externally hosted servers, test the client-side restrictions and obtain supplier evidence for boundaries the provider controls.</td></tr>
+          <tr><th scope="row">Permitted data use</th><td>Integrations that access or transmit data</td><td>The approval record identifies the applicable data-handling rule and shows that it permits the intended use and recipients. Resolve unclear cases with the data owner before approval.</td></tr>
           <tr><th scope="row">Token handling</th><td>Servers accepting MCP OAuth access tokens</td><td>The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API.</td></tr>
-          <tr><th scope="row">Enforcement of restrictions</th><td>Approvals that depend on a restriction</td><td>A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied.</td></tr>
+          <tr><th scope="row">Enforcement of restrictions</th><td>Integrations with access restrictions or untrusted content</td><td>Verify that the intended configuration enforces each approval restriction, such as denying a write under read-only access. Where the agent reads untrusted content, use representative input to confirm that an out-of-scope action stays blocked and any required human approval still applies.</td></tr>
           <tr><th scope="row">Human approval for sensitive actions</th><td>Tool actions that policy requires a person to approve</td><td>In a test, the action has no effect while approval is pending or after it is denied. It proceeds only when an authorized person approves that specific action.</td></tr>
           <tr><th scope="row">Action traceability</th><td>All integrations</td><td>Using the intended production logs, the reviewer traces a representative test action from the initiating user or accountable workload owner through the operation requested, authorization decision and outcome.</td></tr>
           <tr><th scope="row">Resource limits and secure failure</th><td>All integrations</td><td>One test shows that a configured resource limit stops or rejects excess work. A separate test shows that a protected action has no effect if authorization is denied or the check cannot complete.</td></tr>
@@ -679,10 +681,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Malware and behavioral code analysis</th><td>Required</td><td>If available</td></tr>
           <tr><th scope="row">Secret scanning</th><td>Required</td><td>If available</td></tr>
           <tr><th scope="row">MCP-specific scanning and capability discovery</th><td>Required</td><td>Required</td></tr>
-          <tr><th scope="row">Authentication and authorization testing</th><td>As applicable</td><td>As applicable</td></tr>
+          <tr><th scope="row">Connection security and caller access</th><td>Required for the configured transport</td><td>Required for the configured transport</td></tr>
           <tr><th scope="row">Ambient credential and execution identity analysis</th><td>Required</td><td>Required for client/agent; supplier evidence for server</td></tr>
           <tr><th scope="row">Untrusted content and cross-tool exposure analysis</th><td>Required</td><td>Required</td></tr>
-          <tr><th scope="row">Indirect prompt injection testing</th><td>Risk-based</td><td>Risk-based</td></tr>
+          <tr><th scope="row">Indirect prompt injection testing</th><td>Required for untrusted input, with risk-based depth</td><td>Required for untrusted input, with risk-based depth</td></tr>
           <tr><th scope="row">Runtime behavioral analysis</th><td>Required</td><td>Limited to observable behavior</td></tr>
           <tr><th scope="row">Supplier security assessment</th><td>As applicable</td><td>Required</td></tr>
           <tr><th scope="row">Update mechanism analysis</th><td>Required</td><td>Supplier evidence; inspect observable changes</td></tr>

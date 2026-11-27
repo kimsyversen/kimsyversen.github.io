@@ -104,6 +104,8 @@ Approve for production only when every applicable [mandatory control](#mandatory
 
 The platform team registers the server in the approved MCP catalogue and ensures the approved configuration and restrictions are enforced.
 
+Before enablement, the platform team records which production events to monitor, who reviews them and when to investigate or escalate. Confirm that the reviewer receives a representative event from the traceability test through the normal monitoring channel.
+
 Reassessment is required when there is a material change to:
 
 - Software version or artifact.
@@ -158,7 +160,7 @@ The four-domain structure is adapted from the [NHI MCP Server Trust Assessment G
 |---|---|---|
 | 3 | Connect from the test environment. List the server's capabilities and identify its authentication requirements. | Capability and authentication inventory |
 | 4 | Inspect tool definitions, resources, prompts and sample responses. Treat server content as untrusted, including during AI-assisted scanning. Check who controls that content and what the agent can do with its other tools. | Findings on server content and combined tool access |
-| 5 | Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. Test indirect prompt injection where the risk warrants it. Keep destructive tests off production systems. | Test results and evidence of enforcement |
+| 5 | Test authentication, permissions, credential isolation, runtime behavior and proposed restrictions within the authorized scope. For untrusted input, scale indirect prompt injection testing to the assessed risk. Keep destructive tests off production systems. | Test results and evidence of enforcement |
 | 6 | Record artifact and dependency identities, client and endpoint settings, permissions, capability fingerprints and required runtime restrictions. | Proposed approval baseline |
 | 7 | [Record the evidence](#4-evaluate-and-record-evidence), identify unresolved controls and specify any safeguards needed for approval. | Completed assessment and recommendation |
 
@@ -168,10 +170,11 @@ For any additional mandatory control, the security team records when it applies 
 
 | Mandatory control | Applies to | Pass condition |
 |---|---|---|
-| Server identity | All integrations | The artifact or endpoint matches the verified publisher or operator and is identified in the approval record. |
-| Access limits | All integrations | Checks of the execution identity and effective permissions confirm that access stays within the approved scope. |
+| Server identity and connection security | All integrations | The artifact or endpoint matches the verified publisher or operator and is identified in the approval record. For network connections, verify the endpoint identity and encrypted transport, and check that only authorized callers can connect. For local process connections, verify who controls the launch configuration, which account runs the server and which credentials it inherits. |
+| Access limits | All integrations | Record the permitted system and network access. Verify that the production configuration enforces those limits for the execution identity, including filesystem access and outbound connectivity. For externally hosted servers, test the client-side restrictions and obtain supplier evidence for boundaries the provider controls. |
+| Permitted data use | Integrations that access or transmit data | The approval record identifies the applicable data-handling rule and shows that it permits the intended use and recipients. Resolve unclear cases with the data owner before approval. |
 | Token handling | Servers accepting MCP OAuth access tokens | The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API. |
-| Enforcement of restrictions | Approvals that depend on a restriction | A test in the intended configuration shows that the restriction works. For read-only access, verify that a write is denied. |
+| Enforcement of restrictions | Integrations with access restrictions or untrusted content | Verify that the intended configuration enforces each approval restriction, such as denying a write under read-only access. Where the agent reads untrusted content, use representative input to confirm that an out-of-scope action stays blocked and any required human approval still applies. |
 | Human approval for sensitive actions | Tool actions that policy requires a person to approve | In a test, the action has no effect while approval is pending or after it is denied. It proceeds only when an authorized person approves that specific action. |
 | Action traceability | All integrations | Using the intended production logs, the reviewer traces a representative test action from the initiating user or accountable workload owner through the operation requested, authorization decision and outcome. |
 | Resource limits and secure failure | All integrations | One test shows that a configured resource limit stops or rejects excess work. A separate test shows that a protected action has no effect if authorization is denied or the check cannot complete. |
@@ -194,10 +197,10 @@ If evidence is missing for an applicable control, record UNKNOWN and assess alte
 | Malware and behavioral code analysis | Required | If available |
 | Secret scanning | Required | If available |
 | MCP-specific scanning and capability discovery | Required | Required |
-| Authentication and authorization testing | As applicable | As applicable |
+| Connection security and caller access | Required for the configured transport | Required for the configured transport |
 | Ambient credential and execution identity analysis | Required | Required for client/agent; supplier evidence for server |
 | Untrusted content and cross-tool exposure analysis | Required | Required |
-| Indirect prompt injection testing | Risk-based | Risk-based |
+| Indirect prompt injection testing | Required for untrusted input, with risk-based depth | Required for untrusted input, with risk-based depth |
 | Runtime behavioral analysis | Required | Limited to observable behavior |
 | Supplier security assessment | As applicable | Required |
 | Update mechanism analysis | Required | Supplier evidence; inspect observable changes |
