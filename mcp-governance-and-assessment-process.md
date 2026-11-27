@@ -123,7 +123,7 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ## How to govern MCP servers
 
-Apply your existing software controls to servers you deploy. For every integration, decide which tools to allow, what they can access and which changes require review.
+When an MCP client starts a local server with `npx`, it runs code from an npm package. Apply the same controls you use for other third-party packages and reuse the review evidence for that version. For every MCP integration, decide [which tools to allow and what they can access](#permissions-and-tool-surface), and which changes require review.
 
 | Control | Recommendation |
 |---|---|
@@ -252,8 +252,6 @@ Automation: **Automatable** means machine-checkable; **Partial** means automated
 **Investigate:** Excessive privileges, model-directed malicious instructions, arbitrary command execution, unexpected data destinations, disclosure of sensitive data, unsafe combinations of tools and discrepancies between declared and observed behavior. Tool annotations are not proof of actual behavior.
 
 #### Provenance and supply chain
-
-When an MCP client starts a local server with `npx`, it runs code from an npm package. Apply your usual npm package controls and reuse existing review evidence for that version. Then assess [what the server exposes to the AI client](#permissions-and-tool-surface) and what its tools can access or change.
 
 | Signal to collect | Verification method | Automation |
 |---|---|---|
