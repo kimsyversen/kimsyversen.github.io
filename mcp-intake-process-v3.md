@@ -163,24 +163,24 @@ For any additional mandatory control, the security team records when it applies 
 
 If evidence is missing for an applicable control, record UNKNOWN and assess alternative evidence or enforceable safeguards. Use N/A only when the control does not apply, and record why.
 
-| Technique | Local or internally hosted | Externally hosted | Example tools or methods |
-|---|---|---|---|
-| Provenance and identity verification | Required | Required | MCP Registry, Sigstore, npm provenance, vendor verification |
-| Dependency inventory and vulnerability scanning | Required | If available | Syft (SBOM), OSV-Scanner (SCA) |
-| Static code analysis (SAST) | Required | If available | Semgrep, CodeQL |
-| Malware and behavioral code analysis | Required | If available | YARA, Cisco MCP Scanner |
-| Secret scanning | Required | If available | Gitleaks |
-| MCP-specific scanning and capability discovery | Required | Required | Cisco MCP Scanner, MCP Inspector |
-| Authentication and authorization testing | As applicable | As applicable | MCP Inspector, dedicated protocol and access-control tests |
-| Ambient credential and execution identity analysis | Required | Required for client/agent; supplier evidence for server | Process identity, environment and credential isolation tests |
-| Untrusted content and cross-tool exposure analysis | Required | Required | Data-flow and agent capability analysis |
-| Indirect prompt injection testing | Risk-based | Risk-based | Synthetic adversarial content and controlled agent tests |
-| Runtime behavioral analysis | Required | Limited to observable behavior | Isolated sandbox, filesystem, network and process monitoring |
-| Supplier security assessment | As applicable | Required | Existing supplier assessment process |
-| Update mechanism analysis | Required | Supplier evidence; inspect observable changes | Startup and dependency configuration, code and runtime inspection |
-| MCP client configuration scanning | Required | Required | Managed configuration inventory and comparison against approved catalogue |
-| Change baseline and runtime enforcement verification | Required | Required | Artifact hashes, metadata fingerprints, configuration and functional tests |
-| Agent-to-tool activity traceability | As applicable | As applicable | Correlated audit events and representative tool-call tests |
+| Technique | Local or internally hosted | Externally hosted |
+|---|---|---|
+| Provenance and identity verification | Required | Required |
+| Dependency inventory and vulnerability scanning | Required | If available |
+| Static code analysis (SAST) | Required | If available |
+| Malware and behavioral code analysis | Required | If available |
+| Secret scanning | Required | If available |
+| MCP-specific scanning and capability discovery | Required | Required |
+| Authentication and authorization testing | As applicable | As applicable |
+| Ambient credential and execution identity analysis | Required | Required for client/agent; supplier evidence for server |
+| Untrusted content and cross-tool exposure analysis | Required | Required |
+| Indirect prompt injection testing | Risk-based | Risk-based |
+| Runtime behavioral analysis | Required | Limited to observable behavior |
+| Supplier security assessment | As applicable | Required |
+| Update mechanism analysis | Required | Supplier evidence; inspect observable changes |
+| MCP client configuration scanning | Required | Required |
+| Change baseline and runtime enforcement verification | Required | Required |
+| Agent-to-tool activity traceability | As applicable | As applicable |
 
 For externally hosted servers, check whether the supplier's audit reports, penetration-test summaries or security documentation cover the service, period and controls under review. Tests from outside the service can establish only what you observe.
 
