@@ -121,7 +121,7 @@ Reassess planned material changes before enabling them. If an unexpected change 
 
 ## Security assessment methodology
 
-The four-domain structure is adapted from the [NHI MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide).
+The four-domain structure is adapted from the [NHI MCP Server Trust Assessment Guide](https://nhimg.org/mcp-server-trust-assessment-guide), with endpoint and agent-context guidance from [Backslash Security](https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it).
 
 <a id="3-assessment-execution"></a>
 
