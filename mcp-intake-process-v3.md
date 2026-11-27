@@ -72,7 +72,13 @@ Wiz reported that about 70% of exposed MCP servers it tested returned their full
 | **Change control** | Can we detect, control and respond to changes? |
 
 
-Each security control receives one of four results:
+**Outcome:** A completed security assessment with findings and recommended safeguards.
+
+## Step 4 – Approve
+
+The designated approver reviews the assessment and makes a decision.
+
+Use these results for each security control:
 
 | Result | Meaning |
 |---|---|
@@ -80,12 +86,6 @@ Each security control receives one of four results:
 | FAIL | Requirement not satisfied |
 | UNKNOWN | Insufficient evidence |
 | N/A | Not applicable, with justification |
-
-**Outcome:** A completed security assessment with findings and recommended safeguards.
-
-## Step 4 – Approve
-
-The designated approver reviews the assessment and makes a decision.
 
 | Decision | Description |
 |---|---|
@@ -284,7 +284,7 @@ Record each applicable control using the following fields:
 | Evidence | Artifact verification report |
 | Assessment context | Date, assessor, target identity, scanner version, configuration and test scope |
 
-Use the PASS, FAIL, UNKNOWN and N/A results defined in Step 3. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.
+Use the PASS, FAIL, UNKNOWN and N/A results defined in Step 4. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.
 
 Retain evidence with the approval record. Protect sensitive information and exclude raw credentials from stored reports. Repeat relevant checks when Step 5 reassessment triggers occur, and retain the updated evidence. Monitor deployed configuration and publisher changes where feasible and investigate drift.
 
