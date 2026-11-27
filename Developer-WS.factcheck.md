@@ -91,6 +91,16 @@ Reviewer: an AI incident responder and detection engineer. Second reviewer: an A
 | P5-X2 | Incident response | Downstream checks did not name startup files pushed to branches. | Added by second reviewer. | [Microsoft ChainDrop analysis](https://www.microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm/): "inject the malware and supporting setup files into eligible repository branches" |
 | P5-X3 | Risk map, Risk by zone | Risk placements had no inference tag. | Added by second reviewer. | Page text; this file lists placements as interpretation by AI |
 
+### Pass 6
+
+Reviewer: an AI identity and access management engineer. Second reviewer: an AI developer platform release engineer.
+
+| ID | Location | Deviation | Verdict | Source checked 27 November 2026 |
+|---|---|---|---|---|
+| P6-F1 | D02, D06, Incident response | Agent hooks are in preview in VS Code and had no preview tag. | Fixed. GitHub lists its other hook surfaces without that label. | [VS Code hooks](https://code.visualstudio.com/docs/agent-customization/hooks): "Agent hooks is in preview and might change before it becomes generally available."; [GitHub hooks](https://docs.github.com/en/copilot/concepts/customizations/hooks): "Visual Studio Code, where the hooks experience is in public preview." |
+| P6-F2 | D08 | The Agent Host custom terminal tool is experimental and had no tag. | Fixed. | [VS Code sandboxing](https://code.visualstudio.com/docs/agents/run/agent-sandboxing#_agent-host-custom-terminal-tool-experimental): "Agent Host custom terminal tool (Experimental)" |
+| P6-F3 | Control boundaries, Sources | One of the two Codex routes is experimental and was not marked. | Fixed (second reviewer changed the wording so the blocking control is not tagged). Whether `vscode.temporaryAllowLocalHarness` false also blocks the OpenAI Codex extension is theoretical, not observed. | [VS Code harnesses](https://code.visualstudio.com/docs/agents/run/agent-harnesses): "OpenAI Codex runs through the OpenAI Codex extension or the experimental Agent Host integration."; [VS Code managed AI settings](https://code.visualstudio.com/docs/enterprise/manage-ai-settings#_claude-and-codex-availability): "To prohibit Local, Claude, and Codex, set vscode.temporaryAllowLocalHarness to false" |
+
 ## VS Code and GitHub Copilot review, 19 November 2026
 
 The active page now covers Copilot in managed VS Code, with the legacy VS Code Local harness mentioned where an enforcement boundary differs. Review baseline: `e51e24b`. The original statement ledger below records the previous scope. Product statements were checked against the listed primary sources. Questions and proposed controls were reviewed for scope and placement. Deployment results require testing on the actual fleet.
