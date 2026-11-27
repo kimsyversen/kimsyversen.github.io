@@ -14,8 +14,6 @@
 | 4 | Approve | Designated approver | Documented approval decision |
 | 5 | Enable and monitor | Platform team | Securely configured and monitored integration |
 
-The platform team may skip steps 2 to 4 if a current approval covers the same server, configuration and intended use. Check its recorded scope against the requested client, execution identity, available tools, data access and restrictions.
-
 ## Step 1 – Request
 
 The requester provides the following information:
@@ -286,17 +284,6 @@ Record each applicable control using the following fields:
 Use the PASS, FAIL, UNKNOWN and N/A results defined in Step 4. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.
 
 Retain evidence with the approval record. Protect sensitive information and exclude raw credentials from stored reports. Repeat relevant checks when Step 5 reassessment triggers occur, and retain the updated evidence. Monitor deployed configuration and publisher changes where feasible and investigate drift.
-
-### Tool references
-
-- [Cisco MCP Scanner](https://github.com/cisco-ai-defense/mcp-scanner)
-- [MCP Inspector](https://github.com/modelcontextprotocol/inspector)
-- [OSV-Scanner](https://google.github.io/osv-scanner/)
-- [Syft](https://github.com/anchore/syft)
-- [Semgrep](https://semgrep.dev/)
-- [Gitleaks](https://github.com/gitleaks/gitleaks)
-- [Sigstore](https://www.sigstore.dev/)
-- [Official MCP Registry](https://registry.modelcontextprotocol.io/)
 
 ---
 
