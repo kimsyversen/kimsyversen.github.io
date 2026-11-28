@@ -151,3 +151,10 @@ Where a source changed, the claim was narrowed or cut instead of tagged `unverif
 ## 26 Nov 2026, inference tags
 
 A tag is removed only when a quoted source states the claim, or the claim was narrowed to what a source states. A repeated conclusion is cut and left at its tagged home. Interpretation keeps its tag.
+
+## 28 Nov 2026, statement review
+
+- Changes apply to the interactive page only, in its own builder modules. The shared first-page builder is unchanged because the review covered one page.
+- The documentation date stays 2026-11-19: quotes were fetched again, but statements about missing source coverage, uncited statements and new announcements were not checked.
+- Defender on Agent 365 tool servers is shown as released, because Microsoft labels it GA. The box stays in the preview view, since the pilot reaches it through preview BYO registration.
+- Where two Microsoft pages differ on MCP resources in API Management, the page states both instead of choosing one.

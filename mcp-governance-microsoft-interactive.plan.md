@@ -110,3 +110,8 @@ This workspace again denied a local branch switch because `.git/index.lock` cann
 ## 26 Nov 2026, verify inference tags
 
 - [x] Check tagged claims against primary sources, edit builders, rebuild, run quote and label checks.
+
+## 28 Nov 2026, statement review
+
+- [x] Review rounds by five personas until two rounds in a row had no findings (rounds 13 and 14); fix verified findings in the builders; rebuild; record in the fact check.
+- Open, outside this review: the first page may share the Defender status, GitHub switch, hook wording, device network link, private backend and figure description issues. Its connector and API Management resources statements were not checked. The threat model page's statements were not compared with these changes.
