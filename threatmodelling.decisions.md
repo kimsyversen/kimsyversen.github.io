@@ -98,3 +98,25 @@ index.html has no decisions file. Same note as the other pages, centred in the f
 
 - The `recommendation` tags and their tag key row are removed. Reason (owner): a recommendation is implicit, while exceptions such as `unverified`, `inference` and `preview` stay tagged. Advice is worded as advice.
 - Superseded: the 3 Nov entry that added the tags and tag key. The page uses no tags, so the key is gone; its anchors stay as empty spans.
+
+## 28 Nov 2026, persona review fixes
+
+Findings and verdicts are in the [fact check](threatmodelling.factcheck.md).
+
+- **Handlers stay out of the drawing.** The scope line and slide 1 now exclude how the handlers' system gets the documents. Adding a handler and flows was the larger change, and slide 5 uses the handler as the exercise for extending the model.
+- **Only four responses.** The low band says "Accept in writing and keep watch".
+- **A ready-made service is an example of Move, not a condition.** Supersedes the 3 Nov wording "a ready-made service and a written agreement".
+- **Residual risk is shown as expected** until the tests pass.
+- **Done means passed.** "Done when" asks for an owner, a test and a passed result. The 4.1.3 and 7.2.2 rows have tests with a pass or fail.
+- **A link replaces "below".** The row key handler ignores keys that come from links.
+- **Accessible names.** The table dots and the residual score have `role="img"`, and the scrolling table wrappers are named groups. The 15 Nov removal of `role="img"` from the SVGs still holds.
+- **Full width.** The width limits on the lead and the captions are gone.
+- **Left as is:** owners and tests are worked out for threat I only; the presentation address does not follow Previous and Next.
+
+## 28 Nov 2026, independent review
+
+- **Three confirmations to change the page.** Six separate agents reviewed it. Candidates with one or two confirmations are listed in the fact check and not fixed.
+- **The example says it is shortened.** Chosen over adding an owner, test and date to every threat.
+- **Red ring for a focused, selected marker or dot.** The ink ring was invisible on the ink fill. Red uses the page's one accent colour.
+- **Click hint under Fig. 1 kept** (the 15 Nov decision).
+- **Third round cancelled by the owner** before two of six reviewers reported.
