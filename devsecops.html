@@ -466,7 +466,7 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     <div class="mast">
       <p>Software delivery / Security</p>
       <nav class="switch" aria-label="Version">
-        <a href="#view-devsecops" data-go="devsecops" aria-current="true">DevSecOps</a>
+        <a href="#view-devsecops" data-go="devsecops">DevSecOps</a>
         <a href="#view-agentic" data-go="agentic">Agentic DevSecOps</a>
       </nav>
       <button type="button" id="start-presentation" class="present-button present-start" aria-haspopup="dialog" hidden>Present</button>
@@ -1649,7 +1649,11 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
   <footer id="shared-risk-audit">
     <p class="ai-note" id="shared-risk-audit-heading"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span><span class="interpretation" data-view="devsecops">The lifecycle mapping, the risks and the match between each risk and its case are an interpretation by AI.</span></p>
     <section class="tag-key" id="tag-key" aria-labelledby="h-tag-key">
-      <h2 id="h-tag-key"><span id="tag-key-devsecops" aria-hidden="true"></span><span id="h-tag-key-devsecops" aria-hidden="true"></span><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
+      <h2 id="h-tag-key">
+        <span id="tag-key-devsecops" aria-hidden="true"></span><span id="h-tag-key-devsecops" aria-hidden="true"></span>
+        <span id="agentic-tag-key" data-anchor-view="agentic" aria-hidden="true"></span><span id="agentic-h-tag-key" data-anchor-view="agentic" aria-hidden="true"></span>
+        <a class="sec-link" href="#h-tag-key">Tags on this page</a>
+      </h2>
       <dl>
         <dt><span class="tag">[inference]</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
       </dl>
@@ -1869,7 +1873,8 @@ a.sec-link:hover::after, a.sec-link:focus-visible::after { opacity: 1; }
     if (presentation && presentation.syncHash(raw)) return;
     if (raw === "view-agentic" || raw === "view-devsecops") { showView(raw.slice(5)); if (scroll) scrollTo(0, 0); return; }
     var v = el && el.closest("[data-view]");
-    showView(v ? v.getAttribute("data-view") : current || "devsecops");
+    var anchorView = el && el.getAttribute("data-anchor-view");
+    showView(v ? v.getAttribute("data-view") : anchorView || current || "devsecops");
     maps.forEach(function (m) {
       var id = phaseOf(m, raw);
       if (id) showPhase(m, id);

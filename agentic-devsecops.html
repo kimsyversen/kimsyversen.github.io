@@ -8,10 +8,19 @@
 <meta http-equiv="refresh" content="0; url=devsecops.html#view-agentic">
 <script>
 (function () {
-  var h = location.hash.slice(1);
-  var own = /^(risk-|agent-risks$|what-changes$|tag-key$|h-tag-key$)/;
-  var t = !h ? "view-agentic" : own.test(h) ? h : "agentic-" + h;
-  location.replace("devsecops.html#" + t);
+  var fragment;
+  try {
+    fragment = decodeURIComponent(location.hash.slice(1));
+  } catch {
+    fragment = "";
+  }
+
+  var target = "view-agentic";
+  var renamed = /^(lifecycle|map-heading|(phase-)?(plan|code|review|build|test|release|deploy|operate)|tag-key|h-tag-key)$/;
+  var retained = /^(agent-risks|what-changes|risk-(untrusted-input|agent-access|human-approval|traceable-handoffs))$/;
+  if (renamed.test(fragment)) target = "agentic-" + fragment;
+  if (retained.test(fragment)) target = fragment;
+  location.replace("devsecops.html#" + target);
 })();
 </script>
 </head>
