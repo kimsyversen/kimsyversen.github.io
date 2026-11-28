@@ -232,7 +232,6 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 .map-route summary{padding:.55rem 1.95rem .55rem .75rem;color:var(--accent);font-size:.82rem}
 .map-route summary::after{right:.7rem;top:.55rem}
 .map-route p{padding:0 .75rem}
-.route-steps{display:inline-block;margin-right:.42rem;font:700 .75rem var(--mono)}
 .map-branches{position:relative;padding-bottom:.1rem}
 .map-branches::before{
   content:"";position:absolute;inset:0 var(--half-card) 1.18rem calc(50% - 1px);
@@ -373,15 +372,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <div class="map-actions">
               <details class="map-action" data-detail="classify-where">
                 <summary>Identify where it runs<small>Local, internal or external</small></summary>
-                <p>Distinguish user devices, organization-controlled infrastructure and third-party infrastructure.</p>
+                <p>Distinguish user-device execution, organization-operated hosting and third-party-operated hosting.</p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="classify-access">
                 <summary>Check effective access<small>What the integration can actually reach or change</small></summary>
-                <p>Consider data sensitivity, write and destructive actions, and privileges available to the running server.</p>
+                <p>Check what the execution identity and tools can actually access or change, including inherited credentials and data reachable through other tools. If the available information cannot establish the tier, use the highest plausible tier to plan the assessment. Security confirms the final tier during assessment. If evidence still cannot establish the tier, keep the request pending and access disabled while security seeks evidence.</p>
               </details>
               <details class="map-action" data-detail="classify-risk">
                 <summary>Assign the highest risk level<small>Low, medium or high</small></summary>
-                <p>For example, an integration with limited write access is medium risk. Access to sensitive data raises it to high risk.</p>
+                <p>For example, limited write access with restricted execution is medium risk. Access to sensitive data raises it to high risk.</p>
               </details>
             </div>
             <a class="map-outcome" href="#step-2-classify" data-step>Deployment and risk recorded</a>
@@ -390,20 +389,20 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <header class="map-card-head">
               <span class="map-number" aria-hidden="true">03</span>
               <h3 id="map-assess"><a class="sec-link" href="#map-assess">Assess</a></h3>
-              <p class="map-owner">Security team / automation</p>
+              <p class="map-owner">Security team</p>
             </header>
             <div class="map-actions">
               <details class="map-action" data-detail="assess-scan">
                 <summary>Scan before running code<small>Check available artifacts and prepare isolated tests</small></summary>
-                <p>Use automated checks where possible. Finish static scans before launching a local server and obtain authorization before actively testing an external service. <a href="#1-assessment-execution">Assessment execution</a></p>
+                <p>Complete applicable static checks before running artifacts you control. Obtain authorization before any active testing. <a href="#1-assessment-execution">Assessment execution</a></p>
               </details>
               <details class="map-action" data-detail="assess-domains">
                 <summary>Verify the four domains<small>Identity, permissions, provenance and change</small></summary>
-                <p>Verify identity and authentication, permissions and tool surface, provenance, and change control. Review controls manually when automation supplies insufficient evidence. <a href="#3-security-signals-and-verification-methods">Verification methods</a></p>
+                <p>Review the four domains and verify controls manually where automated evidence is insufficient. <a href="#3-security-signals-and-verification-methods">Verification methods</a></p>
               </details>
-              <details class="map-action">
+              <details class="map-action" data-detail="assess-record">
                 <summary>Record evidence and safeguards<small>Findings, unresolved controls and proposed restrictions</small></summary>
-                <p>Keep the evidence and proposed approval baseline for the designated approver. <a href="#4-evaluate-and-record-evidence">Evidence record</a></p>
+                <p>Send the control results, evidence, proposed approval baseline and recommended safeguards to the designated approver. <a href="#4-evaluate-and-record-evidence">Evidence record</a></p>
               </details>
             </div>
             <a class="map-outcome" href="#step-3-assess" data-step>Completed security assessment</a>
@@ -420,11 +419,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
                 <p>Low risk goes to the platform team, medium to security, and high to security and the relevant system or data owner.</p>
               </details>
               <details class="map-action" data-detail="approve-controls">
-                <summary>Record the control results<small>PASS, FAIL, UNKNOWN or N/A</small></summary>
-                <p>Base results on the available evidence, and justify any control marked N/A.</p>
+                <summary>Review the control results<small>PASS, FAIL, UNKNOWN or N/A</small></summary>
+                <p>Check the evidence for each result and the justification for any control marked N/A.</p>
               </details>
               <details class="map-action" data-detail="approve-decide">
-                <summary>Decide whether to approve<small>Advance to step 5 only with approval</small></summary>
+                <summary>Decide whether to approve<small>Production enablement requires approval</small></summary>
                 <p>Every applicable mandatory control must pass for production approval, including approval with restrictions. <a href="#mandatory-controls-for-production-approval">Mandatory controls</a></p>
               </details>
             </div>
@@ -439,15 +438,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <div class="map-actions">
               <details class="map-action" data-detail="enable-register">
                 <summary>Register and set up monitoring<small>Catalogue, restrictions and monitoring owner</small></summary>
-                <p>Register the server in the approved catalogue. Verify the deployed restrictions and confirm that the monitoring owner receives a test event.</p>
+                <p>Before enabling production access, verify the deployed configuration and restrictions against the approval record, and confirm that the monitoring owner receives a test event.</p>
               </details>
               <details class="map-action" data-detail="enable-changes">
                 <summary>Watch for material changes<small>Software, access, hosting, usage and risks</small></summary>
-                <p>Reassess planned material changes before enabling them. Follow the reassessment path to revisit the affected controls.</p>
+                <p>Reassess planned material changes before enabling them. Revisit classification if the change affects its inputs, then obtain a new approval decision.</p>
               </details>
               <details class="map-action" data-detail="enable-suspend">
-                <summary>Suspend affected access<small>When an unexpected change breaks a mandatory condition</small></summary>
-                <p>Keep affected access suspended pending reassessment. Approval may be revoked at any time.</p>
+                <summary>Suspend affected access<small>When an unexpected change invalidates an approval condition</small></summary>
+                <p>Keep affected access suspended until the new approval and release checks pass. If approval is revoked, disable access and update the catalogue.</p>
               </details>
             </div>
             <a class="map-outcome" href="#step-5-enable-and-monitor" data-step>Governed integration</a>
@@ -456,11 +455,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <div class="map-branches">
           <details class="map-route map-stop" id="map-rejected">
             <summary>04 → Rejected</summary>
-            <p>Record the decision and keep the integration disabled if the risks are unacceptable or mandatory controls cannot be verified.</p>
+            <p>Record the decision and keep the integration disabled if the risks are unacceptable or an applicable mandatory control fails or lacks sufficient evidence.</p>
           </details>
           <details class="map-route map-return" id="map-reassessment">
-            <summary><span class="route-steps">05 → 03</span> Reassess after a material change</summary>
-            <p>Repeat the relevant checks and retain the updated evidence with the approval record. <a href="#map-assess">Return to step 3</a></p>
+            <summary>Reassess after a material change</summary>
+            <p>If deployment or risk inputs change, <a href="#map-classify">return to Classify</a> first. In every case, <a href="#map-assess">repeat the affected assessment checks</a>, retain the updated evidence and <a href="#map-approve">obtain a new decision</a> before enabling changed or suspended access.</p>
           </details>
         </div>
       </div>
@@ -505,16 +504,18 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <h4 data-for="classify-where">Deployment model</h4>
           <dl class="criteria" data-for="classify-where">
             <div><dt>Local</dt><dd>Executed on the user&#x27;s device</dd></div>
-            <div><dt>Internally hosted</dt><dd>Executed in organization-controlled infrastructure</dd></div>
-            <div><dt>Externally hosted</dt><dd>Executed in third-party infrastructure</dd></div>
+            <div><dt>Internally hosted</dt><dd>Operated by the organization on shared infrastructure, including its own deployments on cloud services</dd></div>
+            <div><dt>Externally hosted</dt><dd>Operated remotely by a third party</dd></div>
           </dl>
-          <h4 data-for="classify-risk">Risk level</h4>
+          <h4 data-for="classify-risk">Proposed risk levels</h4>
           <dl class="criteria" data-for="classify-risk">
-            <div><dt>Low</dt><dd>Public data, read-only access and restricted execution</dd></div>
-            <div><dt>Medium</dt><dd>Internal data or limited write access</dd></div>
-            <div><dt>High</dt><dd>Sensitive data, privileged access, destructive operations or unrestricted local execution</dd></div>
+            <div><dt>Low</dt><dd>Public data or no data access, with read-only access where applicable and restricted execution</dd></div>
+            <div><dt>Medium</dt><dd>Non-sensitive internal data or limited write access, with restricted execution</dd></div>
+            <div><dt>High</dt><dd>Sensitive data, privileged access, broad write access, destructive operations or unrestricted execution</dd></div>
           </dl>
+          <p data-for="classify-access">Check what the execution identity and tools can actually access or change, including inherited credentials and data reachable through other tools. If the available information cannot establish the tier, use the highest plausible tier to plan the assessment. Security confirms the final tier during assessment. If evidence still cannot establish the tier, keep the request pending and access disabled while security seeks evidence.</p>
           <p data-for="classify-risk">Use the highest risk level that applies to the server’s <strong>effective privileges</strong>.</p>
+          <p data-for="classify-risk">For example, limited write access with restricted execution is medium risk. Access to sensitive data raises it to high risk.</p>
           </div>
           <nav class="pane-nav" aria-label="Step 2 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-3-assess" data-step>Assess →</a></nav>
         </article>
@@ -523,12 +524,13 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <span class="step-number">Step 03</span>
             <h3 id="step-3-assess-heading" tabindex="-1"><a class="sec-link" href="#step-3-assess-heading">Assess</a></h3>
             <dl>
-              <div><dt>Responsible</dt><dd>Security team / automation</dd></div>
+              <div><dt>Responsible</dt><dd>Security team</dd></div>
               <div><dt>Outcome</dt><dd>A completed security assessment with findings and recommended safeguards</dd></div>
             </dl>
           </div>
           <div class="pane-content">
-          <p data-for="assess-scan">Assess the server against the four domains below. Use automated scanning wherever possible. Manually assess controls where automated verification is insufficient. Follow the <a href="#security-assessment-methodology">security assessment methodology in this guide</a> for signals, scanning techniques and assessment execution.</p>
+          <p data-for="assess-scan">Follow <a href="#1-assessment-execution">assessment execution</a> to collect static evidence before running artifacts you control and to prepare isolated, authorized tests.</p>
+          <p data-for="assess-domains">Use <a href="#3-security-signals-and-verification-methods">the domain verification methods</a> to automate checks where possible. Verify controls manually where automated evidence is insufficient.</p>
           <div class="table-scroll" data-for="assess-domains"><table>
           <thead><tr><th scope="col">Assessment domain</th><th scope="col">Key question</th></tr></thead>
           <tbody>
@@ -538,7 +540,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <tr><th scope="row"><a href="#change-control">Change control</a></th><td>Can we detect, control and respond to changes?</td></tr>
           </tbody>
         </table></div>
+          <p data-for="assess-record">Send the <a href="#4-evaluate-and-record-evidence">control results and evidence</a>, proposed approval baseline and recommended safeguards to the designated approver.</p>
           <blockquote><p>About 70% of the exposed MCP servers in Wiz’s research <q>return their full tool catalog to an anonymous caller</q>. <a href="https://www.wiz.io/blog/the-risk-hiding-behind-exposed-mcp-servers#:~:text=full%20tool%20catalog%20to%20an%20anonymous%20caller">Wiz Research</a></p></blockquote>
+          <p>Verify that capability discovery and invocation each follow the approved caller policy.</p>
           </div>
           <nav class="pane-nav" aria-label="Step 3 navigation"><a href="#workflow-map">↑ All steps</a> <a href="#step-4-approve" data-step>Approve →</a></nav>
         </article>
@@ -552,8 +556,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             </dl>
           </div>
           <div class="pane-content">
-          <p>The designated approver reviews the assessment and makes a decision.</p>
-          <p>Record a result for each security control, then record the overall decision:</p>
+          <p data-for="approve-controls">The designated approver checks the control results and N/A justifications.</p>
+          <p data-for="approve-decide">Record the decision, date, approver names, rationale and, for approvals, the approved baseline and any restrictions.</p>
           <div class="table-scroll"><table>
           <thead><tr><th scope="col">Outcome</th><th scope="col">Meaning</th></tr></thead>
           <tbody>
@@ -561,12 +565,12 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <tr data-for="approve-controls"><th scope="row">Control: FAIL</th><td>Requirement not satisfied</td></tr>
             <tr data-for="approve-controls"><th scope="row">Control: UNKNOWN</th><td>Insufficient evidence</td></tr>
             <tr data-for="approve-controls"><th scope="row">Control: N/A</th><td>Not applicable, with justification</td></tr>
-            <tr data-for="approve-decide"><th scope="row">Approval: Approved</th><td>Security requirements are satisfied</td></tr>
-            <tr data-for="approve-decide"><th scope="row">Approval: Approved with restrictions</th><td>Identified risks are mitigated through enforceable safeguards</td></tr>
-            <tr data-for="approve-decide"><th scope="row">Approval: Rejected</th><td>Security risks are unacceptable or mandatory requirements cannot be verified</td></tr>
+            <tr data-for="approve-decide"><th scope="row">Approval: Approved</th><td>Production requirements are satisfied without additional approval restrictions</td></tr>
+            <tr data-for="approve-decide"><th scope="row">Approval: Approved with restrictions</th><td>Production requirements are satisfied with additional, tested and enforceable safeguards</td></tr>
+            <tr data-for="approve-decide"><th scope="row">Approval: Rejected</th><td>Security risks are unacceptable or a mandatory control fails or lacks sufficient evidence</td></tr>
           </tbody>
         </table></div>
-          <h4 data-for="approve-route">Approval authority</h4>
+          <h4 data-for="approve-route">Proposed approval authority</h4>
           <div class="table-scroll" data-for="approve-route"><table>
           <thead><tr><th scope="col">Risk level</th><th scope="col">Approver</th></tr></thead>
           <tbody>
@@ -589,9 +593,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             </dl>
           </div>
           <div class="pane-content">
-          <p data-for="enable-register">The platform team registers the server in the approved MCP catalogue and ensures the approved configuration and restrictions are enforced.</p>
-          <p data-for="enable-register">Before enablement, the platform team records which production events to monitor, who reviews them and when to investigate or escalate. Confirm that the reviewer receives a representative event from the traceability test through the normal monitoring channel.</p>
-          <p data-for="enable-changes">Reassessment is required when there is a material change to:</p>
+          <p data-for="enable-register">Before enabling production access, the platform team verifies that the deployed configuration and restrictions match the documented approval. Keep access disabled if approval is missing or production checks fail. Refer deviations for reassessment and approval.</p>
+          <p data-for="enable-register">Before enablement, the platform team records which production events to monitor, who reviews them and when to investigate or escalate. Confirm that the reviewer receives a representative test event through the normal monitoring channel. Once the checks pass, the platform team registers or updates the integration in the approved MCP catalogue, enables access, then marks it active.</p>
+          <p data-for="enable-changes">Monitor <a href="#mcp-client-configuration-scanning">configuration drift</a>, publisher or operator notifications and new security risks. Reassessment is required when there is a material change to:</p>
           <ul data-for="enable-changes">
             <li>Software version or artifact.</li>
             <li>Client configuration, available tools, agent capabilities, permissions, accessible credentials or enforcement controls.</li>
@@ -600,7 +604,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
             <li>Intended use, content sources or data access.</li>
             <li>Known security risks.</li>
           </ul>
-          <p data-for="enable-suspend">Reassess planned material changes before enabling them. If an unexpected change invalidates a mandatory approval condition, the platform team suspends affected access pending reassessment. Approval can be revoked at any time.</p>
+          <p data-for="enable-changes">Reassess planned material changes before enabling them. Revisit <a href="#step-2-classify">classification</a> if deployment or risk inputs changed. Repeat the affected assessment checks and obtain <a href="#step-4-approve">a new approval decision</a> before enabling changed or suspended access.</p>
+          <p data-for="enable-suspend">If an unexpected change invalidates a mandatory control or another approval condition, the platform team suspends affected access and updates the catalogue. Keep the affected access suspended until the new approval and release checks pass.</p>
+          <p data-for="enable-suspend">The designated approver may revoke approval at any time and records the decision and rationale with the approval record. The platform team disables the integration, removes its access and updates the catalogue status.</p>
           </div>
           <nav class="pane-nav" aria-label="Step 5 navigation"><a href="#workflow-map">↑ All steps</a></nav>
         </article>
@@ -615,7 +621,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <div class="table-scroll"><table>
           <thead><tr><th scope="col">Principle</th><th scope="col">Requirement</th></tr></thead>
           <tbody>
-            <tr><th scope="row"><strong>Default deny</strong></th><td>Only approved MCP servers may be used.</td></tr>
+            <tr><th scope="row"><strong>Default deny</strong></th><td>Allow only approved servers for organizational use. Permit pre-approval execution or connection only for <a href="#1-assessment-execution">isolated, authorized assessment</a>.</td></tr>
             <tr><th scope="row"><strong>Automation first</strong></th><td>Automate security verification wherever possible.</td></tr>
             <tr><th scope="row"><strong>Risk-based</strong></th><td>Assessment effort must be proportional to risk.</td></tr>
             <tr><th scope="row"><strong>Least privilege</strong></th><td>Only necessary permissions and capabilities are permitted.</td></tr>
@@ -646,11 +652,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       </section>
       <section class="reference" aria-labelledby="security-assessment-methodology">
         <h2 id="security-assessment-methodology"><a class="sec-link" href="#security-assessment-methodology">Security assessment methodology</a></h2>
-        <p>The four-domain structure is adapted from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">NHI MCP Server Trust Assessment Guide</a>, with endpoint and agent-context guidance from <a href="https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it">Backslash Security</a>.</p>
+        <p>Adapt the proposed risk tiers, approval authorities and scanning matrix to your organization's governance. The four-domain structure is adapted from the <a href="https://nhimg.org/mcp-server-trust-assessment-guide">NHI MCP Server Trust Assessment Guide</a>, with endpoint and agent-context guidance from <a href="https://www.backslash.security/learning/how-to-evaluate-an-mcp-server-s-risk-before-employees-install-it">Backslash Security</a>.</p>
         <section class="major methods" aria-labelledby="1-assessment-execution">
           <span id="3-assessment-execution"></span>
           <h3 id="1-assessment-execution"><a class="sec-link" href="#1-assessment-execution">1. Assessment execution</a></h3>
-        <p class="gate"><strong>Before connecting or running code</strong>, prepare an isolated test environment with restricted network access, synthetic data and credentials, and dedicated least-privileged test accounts. Keep unapproved servers off employee workstations. Complete static scans before launching a local server and obtain authorization before actively testing an external service.</p>
+        <p class="gate"><strong>Before connecting or running code</strong>, prepare an isolated test environment with restricted network access and synthetic data. Use dedicated least-privileged test credentials for authentication and mock secrets when testing credential isolation. Keep unapproved servers off employee workstations. Assess the configuration and policy intended for production in the test environment. Step 5 verifies the deployed configuration before release. Complete applicable static checks before running artifacts you control. Obtain authorization for any active testing, including testing of a third-party service.</p>
           <ol class="execution" start="1">
             <li><span>Identify the publisher, operator, package or endpoint. Identify the applicable <a href="#mandatory-controls-for-production-approval">mandatory controls</a> and <a href="#scanning-applicability-matrix">select checks for the deployment model</a>. Record the intended client, execution identity, accessible credentials, other tools, untrusted content sources and runtime controls.</span><strong>Output: Assessment scope and selected checks</strong></li>
             <li><span>Obtain available artifacts without executing them. Use the <a href="#3-security-signals-and-verification-methods">domain verification methods</a> to check provenance and scan code, dependencies, malware indicators and embedded secrets.</span><strong>Output: Static assessment evidence</strong></li>
@@ -667,14 +673,14 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <div class="table-scroll roomy" tabindex="0" role="region" aria-label="Mandatory control table"><table>
         <thead><tr><th scope="col">Mandatory control</th><th scope="col">Applies to</th><th scope="col">Pass condition</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Server identity and connection security</th><td>All integrations</td><td>The artifact or endpoint matches the verified publisher or operator and is identified in the approval record. For network connections, verify the endpoint identity and encrypted transport, and check that only authorized callers can connect. For local process connections, verify who controls the launch configuration, which account runs the server and which credentials it inherits.</td></tr>
-          <tr><th scope="row">Access limits</th><td>All integrations</td><td>Record the permitted system and network access. Verify that the production configuration enforces those limits for the execution identity, including filesystem access and outbound connectivity. For externally hosted servers, test the client-side restrictions and obtain supplier evidence for boundaries the provider controls.</td></tr>
-          <tr><th scope="row">Permitted data use</th><td>Integrations that access or transmit data</td><td>The approval record identifies the applicable data-handling rule and shows that it permits the intended use and recipients. Resolve unclear cases with the data owner before approval.</td></tr>
-          <tr><th scope="row">Token handling</th><td>Servers accepting MCP OAuth access tokens</td><td>The server rejects tokens issued for another audience. If it calls a downstream API, it uses a separate credential intended for that API.</td></tr>
-          <tr><th scope="row">Enforcement of restrictions</th><td>Integrations with access restrictions or untrusted content</td><td>Verify that the intended configuration enforces each approval restriction, such as denying a write under read-only access. Where the agent reads untrusted content, use representative input to confirm that an out-of-scope action stays blocked and any required human approval still applies.</td></tr>
+          <tr><th scope="row">Server identity and connection security</th><td>All integrations</td><td>Verify the publisher or operator and record the reviewed artifact or endpoint in the proposed baseline. For executable artifacts under organizational control, verify the identities and integrity of the artifact and resolved executable dependencies using digests or other integrity evidence. For network connections, verify endpoint identity and encrypted transport. Verify that only approved callers can discover capabilities or invoke operations. Allow anonymous access only where explicitly approved. For local process connections, verify who controls the launch configuration, which account runs the server and which credentials it inherits.</td></tr>
+          <tr><th scope="row">Access limits</th><td>All integrations</td><td>Record the permitted system and network access. Test that the configuration intended for production enforces those limits for the execution identity, including filesystem access and outbound connectivity. For externally hosted servers, test the client-side restrictions and obtain evidence from the operator for boundaries it controls.</td></tr>
+          <tr><th scope="row">Permitted data use</th><td>Integrations that access or transmit data</td><td>Record the applicable data-handling rule and evidence that it permits the intended use and recipients. Resolve unclear cases with the data owner before approval.</td></tr>
+          <tr><th scope="row">Token handling</th><td>Servers accepting MCP OAuth access tokens</td><td>Verify that the server rejects invalid tokens, including those from untrusted issuers, expired tokens and tokens issued for another audience. It checks sufficient scope for the requested operation. If the server calls a downstream API, it uses a credential issued for that API and never forwards the inbound MCP access token.</td></tr>
+          <tr><th scope="row">Enforcement of restrictions</th><td>All integrations</td><td>Test that the intended production policy permits only approved servers and configurations, and enforces each integration restriction, such as denying a write under read-only access. Where the agent reads untrusted content, use representative input to confirm that an out-of-scope action stays blocked and any required human approval still applies.</td></tr>
           <tr><th scope="row">Human approval for sensitive actions</th><td>Tool actions that policy requires a person to approve</td><td>In a test, the action has no effect while approval is pending or after it is denied. It proceeds only when an authorized person approves that specific action.</td></tr>
-          <tr><th scope="row">Action traceability</th><td>All integrations</td><td>Using the intended production logs, the reviewer traces a representative test action from the initiating user or accountable workload owner through the operation requested, authorization decision and outcome.</td></tr>
-          <tr><th scope="row">Resource limits and secure failure</th><td>All integrations</td><td>One test shows that a configured resource limit stops or rejects excess work. A separate test shows that a protected action has no effect if authorization is denied or the check cannot complete.</td></tr>
+          <tr><th scope="row">Action traceability</th><td>All integrations</td><td>Using the logging configuration intended for production, the reviewer traces a representative test action from the initiating user or accountable workload owner through the operation requested, authorization decision and outcome.</td></tr>
+          <tr><th scope="row">Resource limits and secure failure</th><td>All integrations</td><td>One test shows that a configured resource limit stops or rejects excess work. If an operation requires authorization, test that it has no effect when authorization is denied or the check cannot complete.</td></tr>
           <tr><th scope="row">Revocation</th><td>All integrations</td><td>A test confirms that the platform team can disable the integration and cut off its access.</td></tr>
         </tbody>
       </table></div>
@@ -695,16 +701,16 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Provenance and identity verification</th><td>Required</td><td>Required</td></tr>
           <tr><th scope="row">Dependency inventory and vulnerability scanning</th><td>Required</td><td>If available</td></tr>
           <tr><th scope="row">Static code analysis (SAST)</th><td>Required</td><td>If available</td></tr>
-          <tr><th scope="row">Malware and behavioral code analysis</th><td>Required</td><td>If available</td></tr>
+          <tr><th scope="row">Static malware indicator scanning</th><td>Required</td><td>If available</td></tr>
           <tr><th scope="row">Secret scanning</th><td>Required</td><td>If available</td></tr>
           <tr><th scope="row">MCP-specific scanning and capability discovery</th><td>Required</td><td>Required</td></tr>
           <tr><th scope="row">Connection security and caller access</th><td>Required for the configured transport</td><td>Required for the configured transport</td></tr>
-          <tr><th scope="row">Ambient credential and execution identity analysis</th><td>Required</td><td>Required for client/agent; supplier evidence for server</td></tr>
+          <tr><th scope="row">Ambient credential and execution identity analysis</th><td>Required</td><td>Required for client/agent; operator evidence for server</td></tr>
           <tr><th scope="row">Untrusted content and cross-tool exposure analysis</th><td>Required</td><td>Required</td></tr>
           <tr><th scope="row">Indirect prompt injection testing</th><td>Required for untrusted input, with risk-based depth</td><td>Required for untrusted input, with risk-based depth</td></tr>
-          <tr><th scope="row">Runtime behavioral analysis</th><td>Required</td><td>Limited to observable behavior</td></tr>
-          <tr><th scope="row">Supplier security assessment</th><td>As applicable</td><td>Required</td></tr>
-          <tr><th scope="row">Update mechanism analysis</th><td>Required</td><td>Supplier evidence; inspect observable changes</td></tr>
+          <tr><th scope="row">Runtime behavioral analysis</th><td>Required</td><td>Required for observable behavior</td></tr>
+          <tr><th scope="row">Third-party operator security assessment</th><td>As applicable</td><td>Required</td></tr>
+          <tr><th scope="row">Update mechanism analysis</th><td>Required</td><td>Operator evidence and inspection of observable changes</td></tr>
           <tr><th scope="row">MCP client configuration scanning</th><td>Required</td><td>Required</td></tr>
           <tr><th scope="row">Change baseline and runtime enforcement verification</th><td>Required</td><td>Required</td></tr>
           <tr><th scope="row">Action traceability</th><td>Required</td><td>Required</td></tr>
@@ -712,11 +718,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       </table></div>
             </div>
           </details>
-          <p>For externally hosted servers, check whether the supplier&#x27;s audit reports, penetration-test summaries or security documentation cover the service, period and controls under review. Tests from outside the service can establish only what you observe.</p>
-        <p>Reuse enterprise tools where possible. The examples do not guarantee detection coverage. Maintain tool versions and configurations separately. Check how a scanner handles data before sending code, tool metadata or responses to an external service.</p>
+          <p>For externally hosted servers, check whether available audit reports, security test summaries or operator documentation cover the service, period and controls under review. Tests from outside the service can establish only what you observe.</p>
+        <p>Reuse enterprise tools where possible. Maintain tool versions and configurations separately. Check how a scanner handles data before sending code, tool metadata or responses to an external service.</p>
           <details id="mcp-client-configuration-scanning"><summary>MCP client configuration scanning</summary><div class="details-content">
           <p>Inspect user, workspace and centrally managed configurations, including startup executables and arguments, package versions or digests, remote URLs, credential references and inherited environment settings. Verify policy precedence and whether user or repository configuration can bypass the approved configuration. Do not collect raw credential values.</p>
-        <p>During intake, inspect the proposed configuration. Before production enablement, verify that the deployed configuration and runtime restrictions match the approved baseline. After approval, repeat discovery and comparison to detect unauthorized servers and drift. Configuration discovery alone does not prove that unapproved servers cannot execute; test enforcement separately.</p>
+        <p>During assessment, inspect the proposed configuration. To detect configuration drift, repeat discovery and compare settings with the approval baseline. Verify enforcement separately at the relevant client, endpoint or gateway.</p>
             </div>
           </details>
         </section>
@@ -752,12 +758,12 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Read, write, delete and administrative capabilities</th><td>Semantic classification, source analysis and controlled testing</td><td>Partial</td></tr>
           <tr><th scope="row">Prompt injection and tool poisoning indicators</th><td>Signature-based and AI-assisted analysis of metadata and representative responses</td><td>Partial</td></tr>
           <tr><th scope="row">Exposure to untrusted content and indirect prompt injection</th><td>Identify who can control retrieved content; perform risk-based adversarial tests with synthetic content in the intended client or agent</td><td>Partial</td></tr>
-          <tr><th scope="row">Cross-tool attack potential</th><td>Review other available tools and their combined permissions; test representative attack paths where warranted</td><td>Partial</td></tr>
+          <tr><th scope="row">Cross-tool attack potential</th><td>Review the combined permissions of available tools. Check with representative synthetic inputs that out-of-scope actions stay blocked.</td><td>Partial</td></tr>
           <tr><th scope="row">Effective permissions to underlying systems</th><td>Inspect the granted permissions and test whether the identity can access systems or actions outside the business need</td><td>Partial</td></tr>
           <tr><th scope="row">Filesystem access, network destinations and child processes</th><td>Inspect the code and observe which files, network destinations and child processes the server accesses in the sandbox</td><td>Partial</td></tr>
-          <tr><th scope="row">Telemetry, external data recipients and sensitive data disclosure</th><td>Data-flow analysis, source inspection, controlled network monitoring and supplier documentation</td><td>Partial</td></tr>
+          <tr><th scope="row">Telemetry, external data recipients and sensitive data disclosure</th><td>Use data-flow analysis, source inspection, controlled network monitoring or available operator documentation as applicable</td><td>Partial</td></tr>
           <tr><th scope="row">Hidden functionality and input validation</th><td>Source analysis and authorized negative testing</td><td>Partial</td></tr>
-          <tr><th scope="row">Tool naming collisions</th><td>Comparison with other approved servers</td><td>Automatable</td></tr>
+          <tr><th scope="row">Tool naming collisions</th><td>Verify that the client or gateway distinguishes tools with the same name across approved servers</td><td>Automatable</td></tr>
         </tbody>
       </table></div>
         <p><strong>Investigate:</strong> Excessive privileges, model-directed malicious instructions, arbitrary command execution, unexpected data destinations, disclosure of sensitive data, unsafe combinations of tools and discrepancies between declared and observed behavior. Tool annotations are not proof of actual behavior.</p>
@@ -777,7 +783,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Embedded credentials</th><td>Secret scanning</td><td>Automatable</td></tr>
           <tr><th scope="row">Maintenance, publisher and release history</th><td>Review package age, release activity, maintainer and ownership changes, and changes in signing identity where historical evidence is available</td><td>Partial</td></tr>
           <tr><th scope="row">Package impersonation and typosquatting</th><td>Compare names and publisher namespaces against official vendor and registry information</td><td>Partial</td></tr>
-          <tr><th scope="row">External hosting and supplier security</th><td>Supplier documentation and security assessment</td><td>Manual</td></tr>
+          <tr><th scope="row">Externally hosted service security</th><td>Operator documentation and security assessment</td><td>Manual</td></tr>
         </tbody>
       </table></div>
         <p><strong>Investigate:</strong> Unverified publishers, impersonation, compromised packages, exploitable vulnerabilities, unexplained obfuscation and unverified executable dependencies. Provenance does not prove that software is safe. Package age, popularity and ownership changes are risk signals, not proof of compromise or trustworthiness.</p>
@@ -794,9 +800,9 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Update mechanisms, floating versions/tags and runtime code downloads</th><td>Inspect startup commands, package configuration and source code; monitor controlled execution</td><td>Partial</td></tr>
           <tr><th scope="row">Deployed MCP client configuration and configuration drift</th><td>Enumerate configured servers and compare endpoints, commands, arguments, environment and overrides with the approved baseline</td><td>Automatable</td></tr>
           <tr><th scope="row">Enforcement of approved servers, tools and access restrictions</th><td>Test that unauthorized connections, execution and tool calls are blocked at the relevant client, endpoint or gateway</td><td>Partial</td></tr>
-          <tr><th scope="row">Ability to disable the integration and revoke access</th><td>Disable the test integration, revoke its access and verify that it can no longer reach the target system with its previous credentials</td><td>Partial</td></tr>
+          <tr><th scope="row">Ability to disable the integration and revoke access</th><td>Disable the test integration and verify that its managed access path no longer reaches the target system. If the integration has credentials, revoke them and verify they no longer work</td><td>Partial</td></tr>
           <tr><th scope="row">Audit logging and action traceability</th><td>Correlate a test request with its authorization and execution records. For unattended actions, use the workload identity to look up its accountable owner. Exclude secrets and unnecessary sensitive payloads.</td><td>Partial</td></tr>
-          <tr><th scope="row">Supplier change notification</th><td>Check the supplier documentation and contract for which changes the supplier reports and how it gives notice</td><td>Manual</td></tr>
+          <tr><th scope="row">Third-party operator change notification</th><td>Check available operator documentation and agreements for which changes are reported and how notice is delivered</td><td>Manual</td></tr>
         </tbody>
       </table></div>
         <p><strong>Investigate:</strong> Unapproved changes, mutable execution dependencies, uncontrolled upgrades, unauthorized client configurations, bypassable policies, missing audit evidence and inability to revoke access. Remote capability fingerprints detect observable interface changes, not changes to hidden backend behavior.</p>
@@ -805,7 +811,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         </section>
         <section class="major methods" aria-labelledby="4-evaluate-and-record-evidence">
           <h3 id="4-evaluate-and-record-evidence"><a class="sec-link" href="#4-evaluate-and-record-evidence">4. Evaluate and record evidence</a></h3>
-          <p>Record each applicable control using the following fields:</p>
+          <p>The security team records a result for every mandatory control and each additional control selected for assessment, including a reason for each N/A. Use these fields for the controls that apply.</p>
         <div class="table-scroll"><table>
         <thead><tr><th scope="col">Field</th><th scope="col">Example</th></tr></thead>
         <tbody>
@@ -819,8 +825,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <tr><th scope="row">Assessment context</th><td>Date, assessor, target identity, scanner version, configuration and test scope</td></tr>
         </tbody>
       </table></div>
-        <p>Use the PASS, FAIL, UNKNOWN and N/A results defined in Step 4. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.</p>
-        <p>Retain evidence with the approval record. Protect sensitive information and exclude raw credentials from stored reports. Repeat relevant checks when Step 5 reassessment triggers occur, and retain the updated evidence. Monitor deployed configuration and publisher changes where feasible and investigate drift.</p>
+        <p>Use the <a href="#step-4-approve">control results defined in Step 4</a>. A clean scan means no findings were detected within its scope; it does not independently prove the absence of vulnerabilities or malicious behavior. Heuristic or AI-generated findings require appropriate validation before a decision. Failed or unknown mandatory controls block production approval as defined in Step 4.</p>
+        <p>Retain evidence with the approval record. Protect sensitive information and exclude raw credentials from stored reports. After a reassessment, retain the updated evidence with the new decision.</p>
         </section>
       </section>
       <section class="reference" aria-labelledby="supporting-documentation">
@@ -910,7 +916,6 @@ if (mapView && typeof pop.showPopover === 'function') {
     const copy = node.cloneNode(true);
     for (const element of [copy, ...copy.querySelectorAll('*')]) {
       element.removeAttribute('id');
-      element.removeAttribute('tabindex');
     }
     return copy;
   };
