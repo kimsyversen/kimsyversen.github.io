@@ -143,7 +143,7 @@ for cid, title, meta, req, doc in PV_ROW.findall(pv_block):
                          layers=PV_LAYER[cid], objs=objs_of(meta), preview=True, guardrail=False))
 
 PV_GR_LAYERS = {"Tool call and tool response guardrails": [3, 6], "Threat detection": [3],
-                "Defender real-time protection": [3, 6], "Defender on the Agent 365 path": [3],
+                "Defender real-time protection": [3, 6], "Defender on the Agent 365 path": [3, 6],
                 "Defender rules and scope": [3, 6]}
 for name, product, layer, text in [GR_PREV_FY] + [r[1] for r in GR_PREV_RAW]:
     CONTROLS.append(dict(id="g-" + slug(name), title=name, meta="Guardrail", applies=product, req=None,
@@ -154,8 +154,7 @@ for name, product, layer, text in [GR_PREV_FY] + [r[1] for r in GR_PREV_RAW]:
 for _c in CONTROLS:
     if _c["id"] == "foundry-network":
         _c["doc"] = (f"For a Foundry toolbox, its hosting project governs network access {ev('fy-gov')}. "
-                     f"Downstream connectivity depends on the tool and its hosting {ev('fy-tool')}. "
-                     f"Configure egress separately from inbound private access.")
+                     f"Downstream connectivity depends on the tool and its hosting {ev('fy-tool')}.")
 CONTROLS.append(dict(
     id="foundry-egress", title="Foundry Network guardrail", meta="Objective B",
     applies="Foundry hosted agents", layers=[4], objs=["B"], preview=False, guardrail=False,
@@ -180,7 +179,34 @@ CONTROLS.append(dict(
 
 CTRL = {c["id"]: c for c in CONTROLS}
 byo_defender = CTRL["g-defender-on-the-agent-365-path"]
-byo_defender["title"] = "Defender on the Agent 365 BYO path"
+byo_defender["title"] = "Defender on Agent 365 tool servers"
+byo_defender["status_tag"] = ""
+byo_defender["layer_text"] = "3 and 6"
+byo_defender["doc"] = (
+    f"Microsoft labels Defender protection for Agent 365 Tooling Servers generally available {ev('def-a365-ga')}. "
+    f"It evaluates tool calls and responses through Work IQ MCP, including customer tools onboarded to Agent 365 "
+    f"{ev('pv-gr-def-a365', 'pv-gr-def-unsup')}. "
+    f"Agent 365 documentation labels BYO registration and Azure AI Gateway onboarding preview "
+    f"{evp('pv-byo-surf', 'a365-gw-pre', 'rel-agent-admin')} {PRE}; Azure announced the gateway integration as generally available {evp('rel-agent-az')}.")
+CTRL["g-prompt-attack-block"]["doc"] = (
+    f"Published agents block prompt attacks by default "
+    f"{ev('cs-rt-published', 'cs-rt-blocked')}. Microsoft says potential threats are either direct or indirect {ev('cs-rt-types')}. "
+    f"{INF} The source does not say at which layer. It is listed here because indirect attacks can arrive in tool results.")
+CTRL["g-defender-rules-and-scope"]["doc"] += (
+    f" Copilot Studio blocking set up through the existing onboarding does not migrate when that experience retires on "
+    f"23 December 2026 {evp('def-migrate')}. Disable that onboarding, then re-create and enable the blocking rules before then "
+    f"{evp('def-disable', 'def-recreate')}. Afterwards, agents without an enabled blocking rule only audit {evp('def-after')}.")
+CTRL["g-defender-rules-and-scope"]["status_tag"] = ""
+CTRL["g-defender-rules-and-scope"]["doc"] += (
+    f" Protection is preview {PRE} for Foundry and Copilot Studio agents and generally available for Agent 365 tool servers "
+    f"{evp('pv-gr-def-fy', 'pv-gr-def-cs', 'def-a365-ga')}.")
+CTRL["g-defender-real-time-protection"]["doc"] += (
+    f" Copilot Studio support covers only agents built with the standard agent harness {evp('def-harness')}.")
+_mde = CTRL["g-defender-for-endpoint-runtime-protection"]
+_advice = " Verify inspection and blocking on the target extension."
+assert _mde["doc"].count(_advice) == 1 and not _mde["req"]
+_mde["doc"] = _mde["doc"].replace(_advice, "")
+_mde["req"] = _advice.strip()
 CTRL["a365"]["status_tag"] = UNV
 CTRL["a365-consent"]["status_tag"] = ""
 if len(CTRL) != len(CONTROLS):
@@ -194,7 +220,8 @@ for name_html, does, where, use in DESIGN_ROWS:
 
 
 PART["Azure API Management"] = (
-    f"The company gateway exposes MCP tools. API Management does not support MCP resources or prompts {ev('apim-mcp-scope')}.",
+    f"The company gateway exposes MCP tools. For an existing MCP server, API Management supports tools and resources but not prompts {ev('apim-mcp-existing')}. "
+    f"Its overview page says resources are not supported either {ev('apim-mcp-scope')}. Test how the gateway handles resource requests before relying on them.",
     f"Supported classic and v2 tiers can host MCP routes. Check individual capabilities by tier {ev('mcp-tiers', 'pv-apim-tier')}. "
     f"The self-hosted gateway can also manage MCP servers {ev('apim-ga-tiers')}.",
     f'Choose a tier that can reach the <a href="#ctrl-backend">private backend</a> and enforce the required policies.',
@@ -237,7 +264,7 @@ NODES = [
     dict(id="fy", kind="Client", role="call", place=(4, 5, 6, 7), title=["Foundry agents"], sub="",
          parts=[], ctl=["g-approval", "g-untrusted-results", "foundry-network", "foundry-routing",
                         "g-tool-call-and-tool-response-guardrails", "foundry-egress"]),
-    dict(id="defender", kind="Preview guardrail product", role="pv", place=(6, 7, 6, 8), title=["Microsoft", "Defender"], sub="Checks tool calls",
+    dict(id="defender", kind="Guardrail product, preview pilot", role="pv", place=(6, 7, 6, 8), title=["Microsoft", "Defender"], sub="Checks tool calls",
          parts=[], ctl=["g-defender-real-time-protection", "g-defender-on-the-agent-365-path", "g-defender-rules-and-scope"],
          preview=True, applies=True),
     dict(id="pp", kind="Policy target", role="pol", place=(2, 3, 7, 8), title=["Power Platform"], sub="Manual until API verified",
@@ -329,11 +356,11 @@ PATHS = [
          note="Microsoft 365 Copilot calls the gateway from the Microsoft cloud, from fixed outbound addresses. No device is on this path."),
     dict(id="fy", label="Foundry agents", k="call", nodes=["fy", "gw", "be"], nodes_pv=["defender"],
          note="Foundry agents call the gateway, which calls the company MCP server.",
-         note_pv=f"Foundry agents call the gateway, which calls the company MCP server. Microsoft Defender checks the tool call before it runs. "
+         note_pv=f"Foundry agents call the gateway, which calls the company MCP server. Microsoft Defender {PRE} checks the tool call before it runs. "
                  f"{INF} Interpretation by AI: the sources do not say where Defender runs."),
     dict(id="cs", label="Copilot Studio", k="call", nodes=["cs", "gw", "be"], nodes_pv=["defender"],
          note="Copilot Studio calls the gateway, which calls the company MCP server.",
-         note_pv=f"Copilot Studio calls the gateway, which calls the company MCP server. Microsoft Defender checks the tool call before it runs. "
+         note_pv=f"Copilot Studio calls the gateway, which calls the company MCP server. Microsoft Defender {PRE} checks the tool call before it runs. "
                  f"{INF} Interpretation by AI: the sources do not say where Defender runs."),
     dict(id="direct", label="Direct call", k="red", nodes=["vs", "m365", "fy", "cs", "be"],
          note="Design requirement: reject direct client access to the company MCP server. Verify every bypass route in the acceptance tests."),
@@ -410,8 +437,8 @@ DESC_FIG = ("Design requirements, not a deployed or tested topology. Git holds a
             "The proposed pipeline updates GitHub settings and Foundry connection tool lists. Power Platform is manual until MCP API support is verified; Microsoft 365 connector access is manual. "
             "Approved clients call the gateway; only the gateway reaches the private company MCP backend. VS Code runs on the managed Windows device. "
             "Microsoft 365 Copilot calls from the Microsoft cloud; its documented egress addresses do not replace authentication. "
-            "Logging joins gateway and client records; Purview coverage depends on the agent integration. "
-            "The pilot adds optional detection and tests Azure AI Gateway private networking. The alternative Agent 365 BYO route is excluded from direct backend access.")
+            "Logging joins gateway and client records; Purview coverage depends on the agent integration.")
+DESC_FIG_PREVIEW = "The pilot adds optional preview detection and tests preview private networking on Azure AI Gateway. The alternative Agent 365 BYO route is excluded from direct backend access."
 
 
 # ---- panels --------------------------------------------------------------
@@ -481,7 +508,7 @@ def panel(n):
         extra = ('<p class="q-note">' + INF + ' Interpretation by AI: Defender is drawn between the agents and the gateway because the sources say it checks tool calls before they run. They do not say where it runs.</p>')
     if n["id"] == "device":
         extra = ('<p class="q-note">' + INF + ' Interpretation by AI: a device rule sees only calls that leave the device. '
-                 'Microsoft 365 Copilot, Copilot Studio and Foundry calls leave from Microsoft cloud services, so these controls do not cover them. Not tested.</p>')
+                 'Microsoft 365 Copilot, Copilot Studio and Foundry calls leave from Microsoft cloud services, so these controls do not cover them.</p>')
     # The layer gaps the first page states in its controls table. Without this the reader sees them
     # only when a layer filter is on.
     if n["id"] == "fy":
@@ -933,7 +960,6 @@ SCRIPT = """<script>
     grid.classList.toggle('filtering', active);
     document.querySelectorAll('.np').forEach(function(p){
       if(safe && p.classList.contains('view-preview')) return;
-      nb++;
       var k = 0, n = 0;
       p.querySelectorAll('.ctl').forEach(function(c){
         var vis = !(safe && c.classList.contains('view-preview'));
@@ -941,6 +967,7 @@ SCRIPT = """<script>
         c.classList.toggle('off', active && !m);
         if(vis){ n++; total++; if(m){ k++; shown++; } }
       });
+      if(n) nb++;
       var b = document.getElementById('b-' + p.getAttribute('data-node'));
       if(b){
         b.classList.toggle('dim', active && k === 0);
@@ -953,10 +980,10 @@ SCRIPT = """<script>
       fn.textContent = on ? ('(' + on + ' on)') : '';
     }
     var s = document.getElementById('dgSum');
-    var gaps = {'3': 'Layer 3: this review established no released content guardrail for Foundry or Copilot Studio agents.',
-                '6': 'Layer 6: the reviewed Foundry content guardrails are preview; MCP coverage is not established.'};
+    var gaps = {'3': 'Layer 3: this review established no released content guardrail for Foundry or Copilot Studio agents on the company gateway path.',
+                '6': 'Layer 6: on the company gateway path, the reviewed Foundry content guardrails are preview; MCP coverage is not established.'};
     var gapTxt = Object.keys(gaps).filter(function(k){ return laySel[k]; }).map(function(k){ return ' ' + gaps[k]; }).join('');
-    if(s){ s.textContent = active ? (shown + ' of ' + total + ' controls match. Boxes without a match are dimmed.' + gapTxt) : (total + ' controls in ' + nb + ' boxes.'); }
+    if(s){ s.textContent = active ? (shown + ' of ' + total + ' controls match.' + gapTxt) : (total + ' controls in ' + nb + ' boxes.'); }
   }
   /* on phones the filters start folded so the map follows the path chips */
   var flt = document.querySelector('.flt');
@@ -1083,7 +1110,7 @@ DESIGN = f"""
 {map_html()}
         {KEY}
         <figcaption class="view-preview">Hatching marks preview-only boxes; preview controls also live on shared boxes. The BYO line is a rejected alternative for this private backend.</figcaption>
-        <div class="vh" id="figDesc">{"".join(f"<p>{esc(s)}</p>" for s in re.split(r"(?<=[.]) (?=Every client|A direct call|In the preview)", DESC_FIG))}</div>
+        <div class="vh" id="figDesc"><p>{esc(DESC_FIG)}</p><p class="view-preview">{esc(DESC_FIG_PREVIEW)}</p></div>
       </figure>
       <div class="panels" id="details">
         <div class="pnav"><button type="button" data-step-by="-1">Previous</button><span class="pos" id="pPos"></span><button type="button" data-step-by="1">Next</button><a class="back" href="#map">Back to diagram</a></div>
@@ -1101,7 +1128,7 @@ def cut_block(start, end):
 
 
 pv_header = f"""<header class="sh"><h2 id="h-preview">With preview&nbsp;{PRE}</h2>
-    <p class="goal"><b>Sandbox scope</b>Test private connectivity, tool threat protection and Agent 365 enforcement independently.
+    <p class="goal"><b>Sandbox scope</b>Test private connectivity and Agent 365 blocking separately. Tool threat protection needs the Agent 365 integration.
     Verify direct access to the company backend is denied with each gateway configuration.</p></header>"""
 
 WF_STEPS = [
@@ -1139,13 +1166,13 @@ PREVIEW = f"""
       <h3>Approval and denial workflow</h3>
       <p>Use two gates: the company's reviewed inventory change, then Microsoft's tenant approval for the preview Agent 365 server route. An approval in one gate does not replace the other.</p>
       {workflow_html()}
-      <p class="q-note">The Git pull request is the internal source-of-truth decision. The Microsoft 365 admin-center request is a separate product approval for the preview BYO route. Rejecting either stops rollout. This is the MCP server request queue {ev('a365-tools-tabs', 'review-req-queue')}. </p><p class="q-note">Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. {ev('a365-agent-approve', 'a365-agent-request-review', 'a365-agent-readonly', 'a365-agent-incomplete')} These are distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')}</p>
+      <p class="q-note">Rejecting at either gate stops rollout. The Microsoft 365 admin center holds the Agent 365 request in its MCP server request queue {ev('a365-tools-tabs', 'review-req-queue')}.</p><p class="q-note">Approval of an agent publication is a separate workflow. The All agents registry is an inventory view; its Data &amp; tools details are read-only and may be missing for some agents. {ev('a365-agent-approve', 'a365-agent-request-review', 'a365-agent-readonly', 'a365-agent-incomplete')} These are distinct admin pages: Agents &gt; All agents &gt; Registry, and Agents &gt; Tools &gt; Registry or Requests (preview). {ev('a365-agent-all', 'a365-tools-tabs', 'a365-tools-status')}</p>
     </div>
     {cut_block('<div class="sub3" id="preview-tests">', '<div class="sub3" id="pilot">')}
     <div class="sub3" id="pilot"><h3>Preview pilot, after the baseline</h3>
       <ol class="steps">
         <li>Choose a low-risk server with two read-only tools and one controlled write. Record its owner, data class and expected callers.</li>
-        <li>Create the dedicated gateway in a supported region {ev('gateway-regions')}. Test private backend connectivity and direct-call denial {evp('gateway-network')}.</li>
+        <li>Create the AI Gateway resource in a supported region {ev('gateway-regions')}. Test private backend connectivity and direct-call denial {evp('gateway-network')}.</li>
         <li>Have a Global Administrator review and grant the tenant consent. Verify server discovery and block/unblock on the selected gateway {evp('review-gateway-admin', 'pv-a365-role', 'pv-a365-rw', 'pv-a365-matrix')}.</li>
         <li>On Azure AI Gateway, test per-tool blocking with a static tool list. Test preview threat protection with delegated user tokens, including evaluator failure in Audit and Block modes {evp('pv-a365-static', 'pv-ttp-token', 'pv-ttp-app', 'gateway-threat')}.</li>
         <li>Keep production on the released path until required features have confirmed support and the team has tested rollback.</li>
@@ -1158,9 +1185,9 @@ FOOTER = f"""
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human. <span id="evidence">Sources and review notes: <a href="{FACTCHECK_URL}">fact check</a>.</span></span></p>
     <section class="tag-key" id="tag-key"><h2 id="h-tag-key"><a class="sec-link" href="#tag-key">Tags on this page</a></h2>
       <dl>
-        <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI. It is not stated in a source.</dd>
+        <dt><span class="tg i">inference</span></dt><dd>Interpretation by AI that is not stated in a source.</dd>
         <dt><span class="tg u">unverified</span></dt><dd>Not confirmed in a quoted source.</dd>
-        <dt><span class="tg pv">preview</span></dt><dd>The feature is in preview. Use it for a sandbox pilot only.</dd>
+        <dt><span class="tg pv">preview</span></dt><dd>A feature in preview; use it for a sandbox pilot only.</dd>
       </dl>
     </section>
   </footer>
@@ -1190,7 +1217,7 @@ def stack_tables(src):
 
 
 _extra_tests = [
-    ("Clear publisher defaults, enable one approved Microsoft 365 connector and check an unapproved connector", "Only the individually approved connector is available within User access; review existing overrides", "B"),
+    ("Clear all publisher types, enable one approved Microsoft 365 connector and check an unapproved connector", "Only the individually approved connector is available within User access; review existing overrides", "B"),
     ("In a write-capable Microsoft 365 experience, repeat a write tool after one-time, conversation and saved approval", "Confirmation follows the selected approval scope; backend authorization still applies to every action", "A and B"),
     ("Use a valid token with the wrong audience, tenant or caller permission", "Rejected before backend execution", "A"),
     ("A read-only caller requests a write tool through the shared gateway identity", "Denied by caller-specific authorization", "A"),
@@ -1203,6 +1230,7 @@ _extra_tests = [
     ("Deny a company MCP server while a client has stale policy or an active session", "Company gateway and backend reject new calls; automated targets update after refresh, and manual targets need recorded administrator changes", "A and B"),
     ("Check custom and HTTP connector restrictions while ACP is enabled", "Mixed mode retains the required classic policy blocks", "B"),
     ("Send one tool call and inspect gateway, backend and Purview records", "Caller and request correlate where supported; secrets are redacted and access is restricted", "A and B"),
+    ("Ask a Foundry agent to call a tool that is not on the connection's allowed tool list", "The tool is not called", "B"),
 ]
 _test_rows = "".join("<tr>" + "".join(f"<td>{v}</td>" for v in row) + "</tr>" for row in _extra_tests)
 assert ROLLOUT_HTML.count("</tbody>") == 1
@@ -1246,7 +1274,7 @@ for _old, _new in EDITS:
         sys.exit(f"page edit does not apply exactly once: {_old[:80]!r}")
     FINAL = FINAL.replace(_old, _new)
 from mcp_governance_interactive_review import apply_review
-FINAL = add_anchors(apply_review(FINAL, ev, INF, UNV, evp))
+FINAL = add_anchors(apply_review(FINAL, ev, INF, UNV, evp, PRE))
 
 for ch in (chr(0x2014), chr(0x2013)):
     if ch in FINAL:

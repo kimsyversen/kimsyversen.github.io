@@ -50,7 +50,7 @@ VERIFIED_SOURCE_DATES = {
     "azmcp-sec": "2026-07-31",
     "apim-sec": "2026-09-11",
     "apim-mi": "2026-10-22",
-    "apim-a365": "2026-10-06",
+    "apim-a365": "2026-11-28",
     "func-net": "2026-09-16",
     "fy-tb": "2026-10-26",
     "studio": "2026-10-22",
@@ -198,6 +198,38 @@ SOURCES["review-apim-auth"] = ("Microsoft Learn, API Management authentication a
                               "https://learn.microsoft.com/en-us/azure/api-management/authentication-authorization-overview", "2025-09-25")
 QUOTES.append(("review-key-weak", "review-apim-auth", "On its own, a subscription key isn't a strong form of authentication"))
 IDS["review-key-weak"] = f"V{len(QUOTES)}"
+
+SOURCES["apim-mcp-existing"] = ("Microsoft Learn, expose an existing MCP server in API Management",
+                                "https://learn.microsoft.com/en-us/azure/api-management/expose-existing-mcp-server", None)
+SOURCES["cs-runtime"] = ("Microsoft Learn, agent runtime protection status in Copilot Studio",
+                         "https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-agent-runtime-view", None)
+for _key, _source, _quote in [
+    ("def-a365-ga", "def-rt", "Agent 365 Tooling Servers (GA)"),
+    ("def-migrate", "def-rt", "your blocking settings won't migrate when that experience retires on December 23, 2026."),
+    ("def-recreate", "def-rt", "re-create and enable your blocking rules before December 23."),
+    ("def-after", "def-rt", "After retirement, agents without an enabled blocking rule operate in audit mode, which generates security alerts without blocking actions."),
+    ("def-harness", "def-rt", "Real-time protection for Copilot Studio agents is supported only for agents built using the standard agent harness."),
+    ("cs-rt-blocked", "cs-runtime", "This component shows statistics on blocked prompt attacks, which are actively blocked by default."),
+    ("cs-rt-published", "cs-runtime", "All published agents automatically have threat detection enabled and display the Active label."),
+    ("cs-rt-types", "cs-runtime", "Potential threats are either direct or indirect."),
+    ("aig-sku-deprecated", "aig-res", "As a consequence, the AI Gateway SKU in Azure API Management service is deprecated."),
+    ("ttp-integration", "ga-launch", "Through the Microsoft Agent 365 integration, Microsoft Defender and Microsoft Purview inspect tool calls and results and block threats before an agent acts."),
+    ("ttp-policy-mode", "aig-ttp", "You configure policy mode in Microsoft Defender and can't change it at the gateway."),
+    ("fy-never-none", "fy-mcp", "never: No approval is required."),
+    ("aig-own-apis", "ga-compare", "Dedicated AI Gateway portal, CLI, and management APIs."),
+    ("byo-no-republish", "a365-byo", "You can't republish new versions of your remote MCP server during preview."),
+    ("a365-apim-title", "apim-a365", "Govern tools with Microsoft Agent 365 and Azure API Management (preview)"),
+    ("def-disable", "def-rt", "first disable the existing onboarding"),
+    ("apim-mcp-existing", "apim-mcp-existing", "For external MCP servers, API Management currently supports MCP server tools and resources, but it doesn't support MCP prompts."),
+    ("m365-access-scope", "m365-manage", "Agent and plugin access controls which types of agents and plugins, including connectors and MCP servers, are available in your organization."),
+]:
+    if _key in IDS:
+        raise ValueError(f"duplicate quote key: {_key}")
+    QUOTES.append((_key, _source, _quote))
+    IDS[_key] = f"V{len(QUOTES)}"
+# Microsoft labels Defender protection for Agent 365 tool servers generally available.
+PREVIEW_ONLY.difference_update({"pv-gr-def-a365", "pv-gr-def-unsup"})
+PREVIEW_ONLY.update({"def-migrate", "def-recreate", "def-after", "def-harness", "ttp-integration", "ttp-policy-mode", "byo-no-republish", "a365-apim-title", "def-disable"})
 
 QUOTES.extend(RELEASE_QUOTES)
 IDS.update(RELEASE_IDS)
