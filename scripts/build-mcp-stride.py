@@ -319,8 +319,8 @@ Governance:
   EE3 Requester/approver -> DS1 Approved list in Git -> P1 Sync pipeline
   P1 -> [F1 Policy update] -> DS2 Policy targets -> P2 Managed client
                                              -> P3 Cloud agents
-  Microsoft 365 access is manual; Power Platform MCP policy stays manual until API validation.
-  F1 aggregates validated automation and manual changes; it does not establish API support.
+  F1 draws pipeline updates only. Manual Microsoft 365 connector access changes
+  and Power Platform MCP policy changes pending API validation are also in scope.
 
 Tool execution:
   EE1 Developer -> P2 --[F2 Tool call]--> P4 Gateway --[F3]--> P5 MCP server
@@ -336,7 +336,8 @@ Attempted bypasses (requirements to prevent, not verified blocks):
 Flow description: a reviewed list supplies policy targets through a pipeline where
 automation is supported. Clients and cloud agents request tools through a gateway;
 the gateway calls the backend and exports audit data. F5 covers direct backend
-access and unapproved external servers. F4 draws the backend response leg only;
+access and unapproved external servers. F4 covers the response from backend to
+caller via the gateway. The diagram shows the backend-to-gateway leg only;
 gateway-to-client response legs and cloud-agent bypass legs are not drawn.
 A Foundry tool uses its configured endpoint or project connection. Verify that
 its effective URL points to the gateway. See T15 and I15.
@@ -352,7 +353,7 @@ Logical zones (not proof of effective security boundaries):
   TB7 Monitoring: DS3
 
 P4 shows either API Management or standalone Azure AI Gateway. See D12 for
-the released private-backend path and preview networking alternative.
+the proposed path using released API Management networking and the preview alternative.
 OAuth exchanges, downstream APIs and
 stores, package distribution, external detector boundaries and non-gateway audit
 feeds need more detailed models. A gateway does not inspect local stdio traffic. The direct Agent 365 BYO route is

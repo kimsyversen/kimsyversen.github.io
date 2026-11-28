@@ -56,7 +56,7 @@ p,li,dd{text-wrap:pretty}
 .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font-size:0.82rem;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule)}
 h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-height:0.95;letter-spacing:-0.035em;margin:26px 0 0 -0.04em}
 .intro{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:24px 56px;align-items:start;padding:26px 0 30px}
-.lead{font-size:clamp(1.1rem,1.9vw,1.36rem);line-height:1.42;max-width:38rem}
+.lead{font-size:clamp(1.1rem,1.9vw,1.36rem);line-height:1.42}
 .spec{margin:0;display:grid;grid-template-columns:auto 1fr;font-size:0.9rem;border-top:1px solid var(--line)}
 .spec dt,.spec dd{padding:7px 0;border-bottom:1px solid var(--line)}
 .spec dt{padding-right:18px;color:var(--muted)}
@@ -68,7 +68,7 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 /* section heads */
 .sec{margin-top:42px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 24px;border-top:2px solid var(--rule);padding-top:12px}
-.sec-head p{color:var(--muted);font-size:0.92rem;max-width:44rem}
+.sec-head p{color:var(--muted);font-size:0.92rem}
 
 /* filters, shared by the diagram and the register */
 .filters{position:sticky;top:0;z-index:6;background:var(--bg);display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:10px 0;margin-top:12px;border-bottom:1px solid var(--line)}
@@ -176,7 +176,7 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 .cid{width:64px}
 .chip-b{font:600 0.84rem/1 var(--mono);padding:4px 7px;border:1.3px solid var(--c);background:var(--soft);color:var(--c);border-radius:3px;cursor:pointer}
 .chip-b.pub{background:var(--c);color:var(--bg)}
-.tx p{max-width:46rem}
+.reg tbody tr[hidden]{display:none}
 .tx .sub{font-size:0.8rem;color:var(--muted);margin-top:3px}
 .tx .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
 .f{width:46px;font:500 0.86rem var(--mono);font-variant-numeric:tabular-nums}
@@ -206,7 +206,7 @@ h1{font-size:clamp(2.9rem,7.5vw,5.5rem);font-weight:800;font-stretch:112%;line-h
 .method{display:grid;grid-template-columns:minmax(9rem,1fr) minmax(0,4fr);margin:14px 0 0;font-size:0.94rem}
 .method dt,.method dd{padding:10px 0;border-bottom:1px solid var(--line)}
 .method dt{font-weight:600;padding-right:16px}
-.method dd{margin:0;max-width:52rem}
+.method dd{margin:0}
 @media (max-width:620px){.method{grid-template-columns:1fr}.method dt{border:0;padding-bottom:0}}
 
 /* detail drawer */
@@ -297,14 +297,14 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 <a class="skip" href="#register">Skip to the register</a>
 <div class="page">
   <header class="mast">
-    <div class="meta"><span>Threat model · STRIDE and DREAD · MCP</span><span>Threat evidence reviewed <time datetime="{{ASOF}}">{{ASOFT}}</time> · Architecture updated <time datetime="2026-11-19">19 Nov 2026</time></span></div>
+    <div class="meta"><span>Threat model · STRIDE and DREAD · MCP</span><span>Public record survey <time datetime="{{ASOF}}">{{ASOFT}}</time> · Architecture updated <time datetime="2026-11-19">19 Nov 2026</time></span></div>
     <h1>MCP governance threat model</h1>
     <div class="intro">
       <p class="lead">STRIDE per element and DREAD scores for the <a href="{{DESIGN}}">proposed design for MCP governance in a Microsoft ecosystem</a>.</p>
       <dl class="spec">
         <dt>Threats</dt><dd>{{N}}: {{HIGH}} High, {{MED}} Medium, {{LOW}} Low
           <span class="ratio" aria-hidden="true"><i class="r-high" style="flex:{{HIGH}}"></i><i class="r-medium" style="flex:{{MED}}"></i><i class="r-low" style="flex:{{LOW}}"></i></span></dd>
-        <dt>Public record</dt><dd>{{EXPL}} exploited, {{DISC}} disclosed, {{THEO}} theoretical</dd>
+        <dt>Threats by evidence level</dt><dd>{{EXPL}} exploited, {{DISC}} disclosed, {{THEO}} theoretical</dd>
         <dt>Elements</dt><dd>{{NEXT}} external entities, {{NPROC}} processes, {{NSTORE}} data stores, {{NFLOW}} data flows, {{NTB}} trust boundaries</dd>
         <dt>Source files</dt><dd><a href="mcp-governance-stride.drawio">draw.io diagram</a>, <a href="mcp-governance-stride.dfd.txt">text flow description</a>, <a href="mcp-governance-stride.threats.tsv">register as TSV</a></dd>
       </dl>
@@ -338,11 +338,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <figure class="fig">
         <div class="fig-scroll" tabindex="0" role="region" aria-label="Data flow diagram">{{SVG}}</div>
         <figcaption>
-          <p>F5 covers attempted direct backend and unapproved-server calls, including cloud-agent paths omitted from the drawing. F4 shows the backend-to-gateway response.</p>
-          <p>P4 represents API Management or standalone Azure AI Gateway. The released private-backend design uses API Management. Microsoft describes &ldquo;VNet integration (preview) for private backends&rdquo; for Azure AI Gateway and documents outbound VNet integration on &ldquo;Standard v2 and Premium v2 tiers&rdquo; for API Management. <a href="https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound#:~:text=Standard%20v2%20and%20Premium%20v2%20tiers">API Management networking</a> · <a href="https://techcommunity.microsoft.com/blog/integrationsonazureblog/azure-ai-gateway-is-now-generally-available-ship-faster-stay-in-control/4572644#:~:text=VNet%20integration%20%28preview%29%20for%20private%20backends">Azure AI Gateway release</a></p>
+          <p>F1 shows pipeline updates. Its scope also includes manual Microsoft 365 connector access changes and Power Platform MCP policy changes pending API adapter validation. F4 shows the backend-to-gateway leg of the response. F5 includes attempted bypasses from cloud agents as well as the managed-client paths shown.</p>
+          <p>P4 represents API Management or standalone Azure AI Gateway. The proposed private-backend path uses the released API Management outbound VNet integration on &ldquo;Standard v2 and Premium v2 tiers&rdquo;. Microsoft lists &ldquo;VNet integration (preview) for private backends&rdquo; for standalone Azure AI Gateway. <a href="https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound#:~:text=Standard%20v2%20and%20Premium%20v2%20tiers">API Management networking</a> · <a href="https://techcommunity.microsoft.com/blog/integrationsonazureblog/azure-ai-gateway-is-now-generally-available-ship-faster-stay-in-control/4572644#:~:text=VNet%20integration%20%28preview%29%20for%20private%20backends">Azure AI Gateway release</a></p>
           <ul class="legend">
             <li><span class="sw r-high">E4</span><span class="sw r-medium">S1</span><span class="sw r-low">R2</span> DREAD rating</li>
-            <li><span class="sw pub r-medium">S8</span> Solid: matches a public record</li>
+            <li><span class="sw pub r-medium">S8</span> Solid fill indicates a public record for a matching failure class</li>
             <li><span class="bx"></span> Trust boundary</li>
             <li><span class="ln"></span> Bypass flow</li>
           </ul>
@@ -380,12 +380,12 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     <section class="sec" id="method">
       <div class="sec-head"><h2 id="h-method"><a class="sec-link" href="#h-method">Method</a></h2></div>
       <dl class="method">
-        <dt>Scope and assets</dt><dd>This is a design-stage review of the proposed governance architecture. Protected assets are credentials, company data, tool and policy integrity, attribution records and service availability. The boxes aggregate products with different enforcement paths.</dd>
+        <dt>Scope and assets</dt><dd>This design-stage review covers MCP tool calls and the policy and audit paths that govern them. Protected assets are credentials, company data, tool and policy integrity, attribution records and service availability. The boxes aggregate products with different enforcement paths.</dd>
         <dt>STRIDE per element</dt><dd>External entities are checked for spoofing and repudiation, processes for all six categories, data stores for tampering, repudiation, information disclosure and denial of service, and data flows for tampering, information disclosure and denial of service. Store repudiation covers approval and change history in DS1 and DS2, and audit evidence in DS3. The 71 selected cells have threats; this checks enumeration, not completeness or correct mitigation. Related rows can describe stages or consequences of the same attack; their scores are not additive.</dd>
         <dt>DREAD</dt><dd>Damage, Reproducibility, Exploitability, Affected users and Discoverability, each 1 to 10. The score is the mean of the five. High is 6 or above, Medium 4 to 5.9, Low below 4. These bands are local choices. Scores are uncalibrated AI estimates for the stated scenarios, not measured likelihood, CVSS or residual risk.</dd>
-        <dt>Evidence</dt><dd><b>Exploited</b>: the linked failure class was used in attacks, shown by a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident. <b>Disclosed</b>: a public CVE, vendor advisory or researcher demo; exploitation was not confirmed by the sources checked. <b>Theoretical</b>: no matching public record is attached. Records from other products do not establish that this design, its Microsoft services or their current versions are affected. Record matching is <span class="tg i">inference</span> Records do not change scores.</dd>
-        <dt>Related controls</dt><dd>Control links locate relevant design choices, not verified fixes. Server-side input validation, per-caller tool authorization, TLS validation and local process isolation still need implementation-specific review. Preview detection is an optional layer; authentication, authorization and network restrictions must work without it.</dd>
-        <dt>Unmodeled detail</dt><dd>OAuth authorization servers and consent exchanges, downstream APIs and data stores, package distribution, individual product boundaries, full response routes and non-gateway audit feeds are not drawn. Microsoft 365 access is manual; Power Platform MCP policy remains manual until its API adapter is validated. Hosted-agent egress rules are generally available. <a href="#t-I15">I15</a> covers preview exceptions and toolbox egress. The direct Agent 365 BYO route is excluded from this private backend; a gateway-fronted BYO composition is untested. OAuth confused-deputy, token-passthrough, state-handle and protocol-version-specific session attacks in the <a href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices">MCP security guidance</a> need a separate detailed review. A gateway does not inspect local stdio traffic.</dd>
+        <dt>Evidence</dt><dd><b>Exploited</b>: a CISA Known Exploited Vulnerabilities entry or a vendor-confirmed incident documents use of the linked failure class in attacks. <b>Disclosed</b>: the sources document a failure through a CVE, advisory, incident report or research, with no confirmed exploitation in the sources checked. <b>Theoretical</b>: no matching public record is attached. These levels count modeled threats, and one record can inform more than one scenario. Failure-class matching <span class="tg i">inference</span>. Evidence levels leave scores unchanged. Applicability to the proposed deployment requires separate validation.</dd>
+        <dt>Related controls</dt><dd>Control links locate relevant design choices. Validate server-side input checks, per-caller tool authorization, TLS validation and local process isolation for the chosen implementation. The proposed API Management path needs backend tool authorization. Microsoft lists Agent 365 tool-level blocking and tool threat protection as unavailable on <a href="https://learn.microsoft.com/en-us/azure/api-management/agent-365#supported-capabilities">API Management v2 tiers</a>. Treat preview detection as supplemental to authentication, authorization and network restrictions.</dd>
+        <dt>Scope limits</dt><dd>Tool discovery, MCP prompts and resources, downstream APIs and stores, package distribution, and audit feeds outside the gateway require separate modeling. See <a href="#t-I15">I15</a> for Foundry egress coverage. The private backend excludes the direct Agent 365 bring-your-own server route. Validate any gateway-fronted version separately. Review consent exchanges, token passthrough and protocol-version-specific state using the <a href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices">MCP security guidance</a>. Local stdio calls require local controls.</dd>
         <dt>Basis and verification</dt><dd>V numbers point to quoted claims in the design page's <a href="{{REPO}}mcp-governance-microsoft-interactive.factcheck.md">fact check</a>. Ids starting with ctrl- or gap- link to that design. The <a href="{{REPO}}mcp-governance-stride.factcheck.md#row-by-row-review-2026-11-12">row-by-row review</a> records corrections, evidence exclusions and unresolved validation work.</dd>
       </dl>
     </section>
@@ -553,7 +553,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       (pub ? pub + ' of them ' + (pub === 1 ? 'matches' : 'match') + ' a public record.' : 'None matches a public record.');
     $('#e-max').textContent = ts.length ? ts[0].score.toFixed(1) : '';
     $('#e-ratio').innerHTML = ['High', 'Medium', 'Low'].map(r => '<i class="r-' + r.toLowerCase() + '" style="flex:' + n(r) + '"></i>').join('');
-    $('#e-stride-l').textContent = 'STRIDE checks for a ' + kind.toLowerCase();
+    $('#e-stride-l').textContent = 'STRIDE checks by category';
     $('#e-stride').innerHTML = [...'STRIDE'].map(c => {
       const on = D.applies[e[0]].includes(c);
       const k = ts.filter(t => t.cat === c).length;
@@ -568,8 +568,13 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   function open(id, opts = {}) {
     const t = T[id];
     if (!t) return;
-    back = drawer.hidden ? null : mode === 'element' ? elPanel : (back === t.el ? back : null);
+    const previousElement = mode === 'element' ? elPanel : back;
+    back = !drawer.hidden && previousElement === t.el ? previousElement : null;
     if (drawer.hidden) trigger = opts.from || document.activeElement;
+    if (st.el && st.el !== t.el) {
+      st.el = null;
+      apply();
+    }
     mode = 'threat';
     st.sel = id;
     const el = D.elements[t.el];
@@ -598,6 +603,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     $('#d-ctrl').innerHTML = t.ctrls.map(c => '<li><a href="' + D.design + '#' + c + '">' + esc(D.ctrl[c] || c) + '</a></li>').join('');
     const basis = esc(t.basis.charAt(0).toUpperCase() + t.basis.slice(1));
     $('#d-basis').innerHTML = basis
+      .replace(/\b[STRIDE]\d+\b/g, tid => T[tid] ? '<a href="#t-' + tid + '">' + tid + '</a>' : tid)
       .replace(/\bV\d+\b/g, v => '<a href="' + D.fc + v + '" rel="noopener">' + v + '</a>')
       .replace(/\b(?:gap|ctrl)-[a-z0-9-]+/g, g => '<a href="' + D.design + '#' + g + '">' + g + '</a>');
     const sib = D.threats.filter(x => x.el === t.el && x.id !== t.id);
@@ -607,7 +613,7 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     reveal('#t-' + id, 'Link to this threat', 'threat', opts);
   }
 
-  function close() {
+  function close({ restoreFocus = true } = {}) {
     if (drawer.hidden) return;
     drawer.hidden = true;
     st.sel = null;
@@ -615,8 +621,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     elPanel = null; mode = null; back = null;
     $$('.sel').forEach(x => x.classList.remove('sel'));
     $$('.focus').forEach(x => x.classList.remove('focus'));
-    history.replaceState(null, '', location.pathname + location.search);
-    if (trigger && document.contains(trigger) && trigger.focus) trigger.focus({ preventScroll: true });
+    if (/^(?:#t-[STRIDE]\d+|#el-[A-Z]+\d+)$/.test(location.hash)) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    if (restoreFocus && trigger && document.contains(trigger)) trigger.focus({ preventScroll: true });
     trigger = null;
   }
 
@@ -635,6 +643,14 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
   }
 
   document.addEventListener('click', e => {
+    const relatedThreat = e.target.closest('#d-basis a[href^="#t-"]');
+    if (relatedThreat && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+      e.preventDefault();
+      const hash = relatedThreat.getAttribute('href');
+      if (location.hash !== hash) history.pushState(null, '', hash);
+      open(hash.slice(3));
+      return;
+    }
     if (e.target.closest('a')) return;
     const fb = e.target.closest('.fb');
     if (fb) {
@@ -663,8 +679,8 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     }
   });
   $('#d-back').addEventListener('click', () => { if (back) openEl(back); });
-  $('#el-pill-x').addEventListener('click', () => { st.el = null; elPanel = null; apply(); });
-  $('#fclear').addEventListener('click', () => { st.cat.clear(); st.rating.clear(); st.pub = false; st.el = null; elPanel = null; apply(); });
+  $('#el-pill-x').addEventListener('click', () => { st.el = null; apply(); });
+  $('#fclear').addEventListener('click', () => { st.cat.clear(); st.rating.clear(); st.pub = false; st.el = null; apply(); });
   $('#d-close').addEventListener('click', close);
   $('#d-prev').addEventListener('click', () => step(-1));
   $('#d-next').addEventListener('click', () => step(1));
@@ -686,10 +702,12 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
     }
   });
   const fromHash = () => {
+    const focus = !drawer.hidden;
     const m = location.hash.match(/^#t-([A-Z]\d+)$/);
-    if (m && T[m[1]]) { open(m[1], { focus: false }); return; }
+    if (m && T[m[1]]) { open(m[1], { focus }); return; }
     const k = location.hash.match(/^#el-([A-Z]+\d+)$/);
-    if (k && D.elements[k[1]]) openEl(k[1], { focus: false });
+    if (k && D.elements[k[1]]) { openEl(k[1], { focus }); return; }
+    close({ restoreFocus: false });
   };
   addEventListener('hashchange', fromHash);
   apply();
